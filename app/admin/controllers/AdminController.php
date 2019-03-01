@@ -60,34 +60,16 @@ class AdminController extends Controller
     }
 
 	public function indexAction() {
-        echo 3388;
-        $class = new \ReflectionClass($this->getModelName());
-        var_dump($class->inNamespace());
-var_dump($class->getName());
-var_dump($class->getNamespaceName());
-var_dump($class->getShortName());
-
-        try {
-            $instance = $class->newInstance();
-            $instance->name = "Tom";
-            $instance->age = 15;
-            $instance->in_time = time();
-            $instance->save();
-        }
-        catch(Exception $e) {
-            echo $e->getMessage();   
-        }
-        echo 44;
-        exit;
-        $this->view->disable();
+        $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
+	    $result = $findFirst->invokeArgs(null, array());
+	    
+	    $this->view->setVar("result", $result->toArray());
 	}
 
 
 	function editAction() {
 	    //print_r($this->dispatcher->getParams());exit;
 	    $this->doEdit();
-
-	    echo "sd";exit;
 	}
 
 	function deleteAction() {
@@ -110,16 +92,21 @@ var_dump($class->getShortName());
 	            }
 	        }
 
+            $result = array("code"=>200, "messages" => array());
 	        if ($row->create() === false) {
                 $messages = $row->getMessages();
 
                 foreach ($messages as $message) {
-                    echo 'Message: ', $message->getMessage();
-                    echo 'Field: ', $message->getField();
-                    echo 'Type: ', $message->getType();
+                    //echo 'Message: ', $message->getMessage();
+                    //echo 'Field: ', $message->getField();
+                    //echo 'Type: ', $message->getType();
+                    $result["messages"][] = $message->getMessage();
                 }
             }
+            echo json_encode($result);
+            $this->view->disable();
 	    }
+
 	}
 
 	function doEdit() {
@@ -136,15 +123,16 @@ var_dump($class->getShortName());
     	            }
     	        }
 
+                $result = array("code"=>200, "messages" => array());
     	        if ($row->save() === false) {
                     $messages = $row->getMessages();
 
                     foreach ($messages as $message) {
-                        echo 'Message: ', $message->getMessage();
-                        echo 'Field: ', $message->getField();
-                        echo 'Type: ', $message->getType();
+                        $result["messages"][] = $message->getMessage();
                     }
                 }
+                echo json_encode($result);
+                $this->view->disable();
     	    }
 	    }
 	    else {
@@ -161,8 +149,18 @@ var_dump($class->getShortName());
 	function doDelete() {
 	    $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
 	    $row = $findFirst->invokeArgs(null, array($this->getCondition()));
+	    
+	    $result = array("code"=>200, "messages" => array());
 	    if($row!=false) {
-	        $row->delete();
+	        if ($row->delete() == false) {
+	            $messages = $row->getMessages();
+
+                foreach ($messages as $message) {
+                    $result["messages"][] = $message->getMessage();
+                }
+	        }
 	    }
+	    echo json_encode($result);
+        $this->view->disable();
 	}
 }

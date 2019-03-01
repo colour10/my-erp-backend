@@ -34,8 +34,6 @@ try {
     
     $di['config'] = $config;
 
-//print_r($config->database->db->toArray());exit;
-
     // Set the database service
     $di['db'] = function() use($config) {
         $connection = new DbAdapter($config->database->db->toArray());
@@ -113,8 +111,6 @@ try {
             );
             
             
-            //$router->handle();
-            //print_r($router->getMatchedRoute());
             return $router;
         }
     );
@@ -136,8 +132,6 @@ try {
         ]
     );
     
-    //phpinfo();
-    //print_r($_SERVER);exit;
 
     echo $application->handle()->getContent();
 } catch (Exception $e) {

@@ -25,6 +25,7 @@ class SysStudent extends BaseModel
                 ]
             )
         );
+        
         $validator->add(
             'name',
             new Uniqueness(
