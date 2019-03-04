@@ -52,169 +52,152 @@
   <body>
   <div id="app">
     <section class="el-container is-vertical" style="height: auto; border: 1px solid rgb(238, 238, 238);">
-        <header class="el-header" style="height: 60px; text-align: left; font-size: 24px;">ERP管理系统</header>
+        <header class="el-header" style="height: 60px; text-align: left; font-size: 24px;"><?=$system_language['system_name']?></header>
         <div id="top-menu">
             <el-menu class="el-menu-demo" mode="horizontal" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
               <el-submenu index="1">
                 <template #title><?=$system_language['menu-1']?></template>
-                <el-menu-item index="1-1">员工信息</el-menu-item>
-                <el-menu-item index="1-2">组信息</el-menu-item>
-                <el-menu-item index="1-3">职能信息</el-menu-item>
-                <el-submenu index="2-4">
-                  <template #title>部门信息</template>
-                  <el-menu-item index="2-4-1">选项1</el-menu-item>
-                  <el-menu-item index="2-4-2">选项2</el-menu-item>
-                  <el-menu-item index="2-4-3">选项3</el-menu-item>
+                <el-menu-item index="1-1"><?=$system_language["menu-1-1"]?></el-menu-item>
+                <el-menu-item index="1-2"><?=$system_language["menu-1-2"]?></el-menu-item>
+                <el-menu-item index="1-3"><?=$system_language["menu-1-3"]?></el-menu-item>
+                <el-submenu index="1-4">
+                  <template #title><?=$system_language["menu-1-4"]?></template>
+                  <el-menu-item index="1-4-1"><?=$system_language["menu-1-4-1"]?></el-menu-item>
+                  <el-menu-item index="1-4-2"><?=$system_language["menu-1-4-2"]?></el-menu-item>
+                  <el-menu-item index="1-4-3"><?=$system_language["menu-1-4-3"]?></el-menu-item>
                 </el-submenu>
               </el-submenu>
               <el-submenu index="2">
-                <template #title>基础数据</template>
+                <template #title><?=$system_language["menu-2"]?></template>
                 <el-submenu index="2-1">
-                  <template #title>商品相关</template>
-                  <el-menu-item index="2-1-1">品牌维护</el-menu-item>
-                 <el-menu-item index="2-1-2">品类维护</el-menu-item>
-                 <el-menu-item index="2-1-3">款式年代</el-menu-item>
-                 <el-menu-item index="2-1-4">颜色模板</el-menu-item>
-                 <el-menu-item index="2-1-5">商品尺码</el-menu-item>
-                 <el-menu-item index="2-1-6">材质管理</el-menu-item>
-                 <el-menu-item index="2-1-7">商品尺寸</el-menu-item>
-                 <el-menu-item index="2-1-8">商品别名</el-menu-item>
-                 <el-menu-item index="2-1-9">内部结构</el-menu-item>
-                 <el-menu-item index="2-1-10">附带配件</el-menu-item>
-                 <el-menu-item index="2-1-11">场合风格</el-menu-item>
-                 <el-menu-item index="2-1-12">闭合方式</el-menu-item>
-                 <el-menu-item index="2-1-13">执行标准</el-menu-item>
-                 <el-menu-item index="2-1-14">安全类别</el-menu-item>
-                 <el-menu-item index="2-1-15">洗涤说明</el-menu-item>
-                 <el-menu-item index="2-1-16">防寒指数</el-menu-item>
+                  <template #title><?=$system_language["menu-2-1"]?></template>
+                  <el-menu-item index="2-1-1"><?=$system_language["menu-2-1-1"]?></el-menu-item>
+                  <el-menu-item index="2-1-2"><?=$system_language["menu-2-1-2"]?></el-menu-item>
+                  <el-menu-item index="2-1-3"><?=$system_language["menu-2-1-3"]?></el-menu-item>
+                  <el-menu-item index="2-1-4"><?=$system_language["menu-2-1-4"]?></el-menu-item>
+                  <el-menu-item index="2-1-5"><?=$system_language["menu-2-1-5"]?></el-menu-item>
+                  <el-menu-item index="2-1-6"><?=$system_language["menu-2-1-6"]?></el-menu-item>
+                  <el-menu-item index="2-1-7"><?=$system_language["menu-2-1-7"]?></el-menu-item>
+                  <el-menu-item index="2-1-8"><?=$system_language["menu-2-1-8"]?></el-menu-item>
+                  <el-menu-item index="2-1-9"><?=$system_language["menu-2-1-9"]?></el-menu-item>
+                  <el-menu-item index="2-1-10"><?=$system_language["menu-2-1-10"]?></el-menu-item>
+                  <el-menu-item index="2-1-11"><?=$system_language["menu-2-1-11"]?></el-menu-item>
+                  <el-menu-item index="2-1-12"><?=$system_language["menu-2-1-12"]?></el-menu-item>
+                  <el-menu-item index="2-1-13"><?=$system_language["menu-2-1-13"]?></el-menu-item>
+                  <el-menu-item index="2-1-14"><?=$system_language["menu-2-1-14"]?></el-menu-item>
+                  <el-menu-item index="2-1-15"><?=$system_language["menu-2-1-15"]?></el-menu-item>
+                  <el-menu-item index="2-1-16"><?=$system_language["menu-2-1-16"]?></el-menu-item>
                 </el-submenu>
                 
                 <el-submenu index="2-2">
-                  <template #title>价格相关</template>
-                  <el-menu-item index="2-2-1">商品价格管理</el-menu-item>
-                  <el-menu-item index="2-2-2">成本计算管理</el-menu-item>
+                  <template #title><?=$system_language["menu-2-2"]?></template>
+                  <el-menu-item index="2-2-1"><?=$system_language["menu-2-2-1"]?></el-menu-item>
+                  <el-menu-item index="2-2-2"><?=$system_language["menu-2-2-2"]?></el-menu-item>
                 </el-submenu>
                 
                 <el-submenu index="2-3">
-                  <template #title>其他</template>
-                  <el-menu-item index="2-3-1">仓库管理</el-menu-item>
-                  <el-menu-item index="2-3-2">销售端口管理</el-menu-item>
-                  <el-menu-item index="2-3-3">国际及地区信息维护</el-menu-item>
-                  <el-menu-item index="2-3-4">费用名称</el-menu-item>
-                  <el-menu-item index="2-3-5">运输方式</el-menu-item>
-                  <el-menu-item index="2-3-6">销售性质</el-menu-item>
-                  <el-menu-item index="2-3-7">业务类型</el-menu-item>
-                  <el-menu-item index="2-3-8">打印机设置</el-menu-item>
-                  <el-menu-item index="2-3-9">快递单样式</el-menu-item>
-                  <el-menu-item index="2-3-10">图片工具</el-menu-item>
-                  <el-menu-item index="2-3-11">价格来源</el-menu-item>
-                  <el-menu-item index="2-3-12">报表模板</el-menu-item>
-                  <el-menu-item index="2-3-13">接口代码对照</el-menu-item>
+                  <template #title><?=$system_language["menu-2-3"]?></template>
+                  <el-menu-item index="2-3-1"><?=$system_language["menu-2-3-1"]?></el-menu-item>
+                  <el-menu-item index="2-3-2"><?=$system_language["menu-2-3-2"]?></el-menu-item>
+                  <el-menu-item index="2-3-3"><?=$system_language["menu-2-3-3"]?></el-menu-item>
+                  <el-menu-item index="2-3-4"><?=$system_language["menu-2-3-4"]?></el-menu-item>
+                  <el-menu-item index="2-3-5"><?=$system_language["menu-2-3-5"]?></el-menu-item>
+                  <el-menu-item index="2-3-6"><?=$system_language["menu-2-3-6"]?></el-menu-item>
+                  <el-menu-item index="2-3-7"><?=$system_language["menu-2-3-7"]?></el-menu-item>
+                  <el-menu-item index="2-3-8"><?=$system_language["menu-2-3-8"]?></el-menu-item>
+                  <el-menu-item index="2-3-9"><?=$system_language["menu-2-3-9"]?></el-menu-item>
+                  <el-menu-item index="2-3-10"><?=$system_language["menu-2-3-10"]?></el-menu-item>
+                  <el-menu-item index="2-3-11"><?=$system_language["menu-2-3-11"]?></el-menu-item>
+                  <el-menu-item index="2-3-12"><?=$system_language["menu-2-3-12"]?></el-menu-item>
+                  <el-menu-item index="2-3-13"><?=$system_language["menu-2-3-13"]?></el-menu-item>
                 </el-submenu>                
               </el-submenu>
               
               <el-submenu index="3">
-                <template #title>商品管理</template>
-                <el-menu-item index="3-1">商品信息</el-menu-item>
-                <el-menu-item index="3-2">图片管理</el-menu-item>
-                <el-menu-item index="3-3">图片上传</el-menu-item>
+                <template #title><?=$system_language["menu-3"]?></template>
+                <el-menu-item index="3-1"><?=$system_language["menu-3-1"]?></el-menu-item>
+                <el-menu-item index="3-2"><?=$system_language["menu-3-2"]?></el-menu-item>
+                <el-menu-item index="3-3"><?=$system_language["menu-3-3"]?></el-menu-item>
               </el-submenu>
               
               <el-submenu index="4">
-                <template #title>客户管理</template>
-                <el-menu-item index="4-1">关系单位信息</el-menu-item>
-                <el-menu-item index="4-2">供货商报价</el-menu-item>
-                <el-menu-item index="4-3">供货商级别</el-menu-item>
+                <template #title><?=$system_language["menu-4"]?></template>
+                <el-menu-item index="4-1"><?=$system_language["menu-4-1"]?></el-menu-item>
+                <el-menu-item index="4-2"><?=$system_language["menu-4-2"]?></el-menu-item>
+                <el-menu-item index="4-3"><?=$system_language["menu-4-3"]?></el-menu-item>
               </el-submenu>
               
               <el-submenu index="5">
-                <template #title>供应链管理</template>
+                <template #title><?=$system_language["menu-5"]?></template>
                 <el-submenu index="5-1">
-                  <template #title>订单管理</template>
-                  <el-menu-item index="5-1-1">订单管理</el-menu-item>
-                  <el-menu-item index="5-1-2">订单状态查询</el-menu-item>
-                  <el-menu-item index="5-1-3">订单导出</el-menu-item>
+                  <template #title><?=$system_language["menu-5-1"]?></template>
+                  <el-menu-item index="5-1-1"><?=$system_language["menu-5-1-1"]?></el-menu-item>
+                  <el-menu-item index="5-1-2"><?=$system_language["menu-5-1-2"]?></el-menu-item>
+                  <el-menu-item index="5-1-3"><?=$system_language["menu-5-1-3"]?></el-menu-item>
                 </el-submenu>
-                <el-menu-item index="5-2">发货单管理</el-menu-item>
+                <el-menu-item index="5-2"><?=$system_language["menu-5-2"]?></el-menu-item>
                 
                 <el-submenu index="5-3">
-                  <template #title>到货入库</template>
-                  <el-menu-item index="5-3-1">到货入库</el-menu-item>
-                  <el-menu-item index="5-3-2">入库单查询</el-menu-item>
+                  <template #title><?=$system_language["menu-5-3"]?></template>
+                  <el-menu-item index="5-3-1"><?=$system_language["menu-5-3-1"]?></el-menu-item>
+                  <el-menu-item index="5-3-2"><?=$system_language["menu-5-3-2"]?></el-menu-item>
                 </el-submenu>
               </el-submenu>
               
               <el-submenu index="6">
-                <template #title>库存管理</template>
-                <el-menu-item index="2-1">选项1</el-menu-item>
-                <el-menu-item index="2-2">选项2</el-menu-item>
-                <el-menu-item index="2-3">选项3</el-menu-item>
-                <el-submenu index="2-4">
-                  <template #title>选项4</template>
-                  <el-menu-item index="2-4-1">选项1</el-menu-item>
-                  <el-menu-item index="2-4-2">选项2</el-menu-item>
-                  <el-menu-item index="2-4-3">选项3</el-menu-item>
+                <template #title><?=$system_language["menu-6"]?></template>
+                <el-submenu index="6-1">
+                  <template #title><?=$system_language["menu-6-1"]?></template>
+                  <el-menu-item index="6-1-1"><?=$system_language["menu-6-1-1"]?></el-menu-item>
+                  <el-menu-item index="6-1-2"><?=$system_language["menu-6-1-2"]?></el-menu-item>
+                  <el-menu-item index="6-1-3"><?=$system_language["menu-6-1-3"]?></el-menu-item>
                 </el-submenu>
+                <el-submenu index="6-2">
+                  <template #title><?=$system_language["menu-6-2"]?></template>
+                  <el-menu-item index="6-2-1"><?=$system_language["menu-6-2-1"]?></el-menu-item>
+                  <el-menu-item index="6-2-2"><?=$system_language["menu-6-2-2"]?></el-menu-item>
+                </el-submenu>
+                <el-menu-item index="6-3"><?=$system_language["menu-6-3"]?></el-menu-item>
+                <el-menu-item index="6-4"><?=$system_language["menu-6-4"]?></el-menu-item>
               </el-submenu>
               
               <el-submenu index="7">
-                <template #title>销售管理</template>
-                <el-menu-item index="2-1">选项1</el-menu-item>
-                <el-menu-item index="2-2">选项2</el-menu-item>
-                <el-menu-item index="2-3">选项3</el-menu-item>
-                <el-submenu index="2-4">
-                  <template #title>选项4</template>
-                  <el-menu-item index="2-4-1">选项1</el-menu-item>
-                  <el-menu-item index="2-4-2">选项2</el-menu-item>
-                  <el-menu-item index="2-4-3">选项3</el-menu-item>
+                <template #title><?=$system_language["menu-7"]?></template>
+                <el-menu-item index="7-1"><?=$system_language["menu-7-1"]?></el-menu-item>
+                <el-menu-item index="7-2"><?=$system_language["menu-7-2"]?></el-menu-item>
+                <el-menu-item index="7-3"><?=$system_language["menu-7-3"]?></el-menu-item>
+                <el-submenu index="7-4">
+                  <template #title><?=$system_language["menu-7-4"]?></template>
+                  <el-menu-item index="7-4-1"><?=$system_language["menu-7-4-1"]?></el-menu-item>
+                  <el-menu-item index="7-4-2"><?=$system_language["menu-7-4-2"]?></el-menu-item>
                 </el-submenu>
+                <el-menu-item index="7-5"><?=$system_language["menu-7-5"]?></el-menu-item>
               </el-submenu>
               
               <el-submenu index="8">
-                <template #title>会员管理</template>
-                <el-menu-item index="2-1">选项1</el-menu-item>
-                <el-menu-item index="2-2">选项2</el-menu-item>
-                <el-menu-item index="2-3">选项3</el-menu-item>
-                <el-submenu index="2-4">
-                  <template #title>选项4</template>
-                  <el-menu-item index="2-4-1">选项1</el-menu-item>
-                  <el-menu-item index="2-4-2">选项2</el-menu-item>
-                  <el-menu-item index="2-4-3">选项3</el-menu-item>
-                </el-submenu>
+                <template #title><?=$system_language["menu-8"]?></template>
+                <el-menu-item index="8-1"><?=$system_language["menu-8-1"]?></el-menu-item>
+                <el-menu-item index="8-2"><?=$system_language["menu-8-2"]?></el-menu-item>
               </el-submenu>
               
               <el-submenu index="9">
-                <template #title>费用管理</template>
-                <el-menu-item index="2-1">选项1</el-menu-item>
-                <el-menu-item index="2-2">选项2</el-menu-item>
-                <el-menu-item index="2-3">选项3</el-menu-item>
-                <el-submenu index="2-4">
-                  <template #title>选项4</template>
-                  <el-menu-item index="2-4-1">选项1</el-menu-item>
-                  <el-menu-item index="2-4-2">选项2</el-menu-item>
-                  <el-menu-item index="2-4-3">选项3</el-menu-item>
-                </el-submenu>
+                <template #title><?=$system_language["menu-9"]?></template>
+                <el-menu-item index="9-1"><?=$system_language["menu-9-1"]?></el-menu-item>
+                <el-menu-item index="9-2"><?=$system_language["menu-9-2"]?></el-menu-item>
+                <el-menu-item index="9-3"><?=$system_language["menu-9-3"]?></el-menu-item>
+                <el-menu-item index="9-3"><?=$system_language["menu-9-3"]?></el-menu-item>
               </el-submenu>
               
               <el-submenu index="10">
-                <template #title>财务管理</template>
-                <el-menu-item index="2-1">选项1</el-menu-item>
-                <el-menu-item index="2-2">选项2</el-menu-item>
-                <el-menu-item index="2-3">选项3</el-menu-item>
-                <el-submenu index="2-4">
-                  <template #title>选项4</template>
-                  <el-menu-item index="2-4-1">选项1</el-menu-item>
-                  <el-menu-item index="2-4-2">选项2</el-menu-item>
-                  <el-menu-item index="2-4-3">选项3</el-menu-item>
-                </el-submenu>
+                <template #title><?=$system_language["menu-10"]?></template>
+                <el-menu-item index="10-1"><?=$system_language["menu-10-1"]?></el-menu-item>
               </el-submenu>              
               
               <el-submenu index="11">
-                <template #title>系统</template>
-                <el-menu-item index="11-1">系统帮助</el-menu-item>
-                <!--<el-menu-item index="11-2">联系客服</el-menu-item>-->
-                <el-menu-item index="11-3"><a href="/user/modifypassowrd">修改密码</a></el-menu-item>
-                <el-menu-item index="11-4">退出</el-menu-item>                
+                <template #title><?=$system_language["menu-11"]?></template>
+                <el-menu-item index="11-1"><?=$system_language["menu-11-1"]?></el-menu-item>
+                <el-menu-item index="11-2"><a href="/user/modifypassowrd"><?=$system_language["menu-11-2"]?></a></el-menu-item>
+                <el-menu-item index="11-3"><?=$system_language["menu-11-3"]?></el-menu-item>                
               </el-submenu>
             </el-menu>
         </div>
