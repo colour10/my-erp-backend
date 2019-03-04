@@ -31,7 +31,7 @@ try {
         )
     )->register();
     
-    require_once(APP_PATH."/app/models/vendor/autoload.php");
+    //require_once(APP_PATH."/app/models/vendor/autoload.php");
 
     // Create a DI
     $di = new FactoryDefault();
