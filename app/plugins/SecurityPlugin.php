@@ -11,10 +11,8 @@ use Phalcon\Acl\Role;
 class SecurityPlugin extends Plugin
 {
     function getAcl() {
-        echo "111";
         $acl = $this->session->get("acl");
         if(!$acl) {
-            echo "222";
             $acl = new AclList();    
             $acl->addRole("Guests");
             
@@ -26,7 +24,7 @@ class SecurityPlugin extends Plugin
             $acl->addResource($customersResource, array("create", "update"));
             $acl->addResource("depart", array("index", "update"));
             
-            $acl->deny("Guests", "depart", "index");
+            //$acl->deny("Guests", "depart", "index");
             
             $this->session->set("acl", $acl);
         }
@@ -54,7 +52,7 @@ class SecurityPlugin extends Plugin
         // Check if the Role have access to the controller (resource)
         $allowed = $acl->isAllowed($role, $controller, $action);
         
-        if ($allowed != Acl::ALLOW) {
+        if ($allowed != Acl::ALLOW && false) {
             // If he doesn't have access forward him to the index controller  
             if($this->request->isAjax()) {
                 $result = array();

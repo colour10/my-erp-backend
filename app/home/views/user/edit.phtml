@@ -18,6 +18,7 @@
 
 <script>
 $(document).ready(function(){
+    console.log($ASA)
     new Vue({
         el:"#ell",
         data() {
@@ -34,26 +35,7 @@ $(document).ready(function(){
             window.location = "/user/index";    
         },
         onSubmit() {
-            var self = this;
-            $.post("/user/edit",this.form, function(res){
-                //console.log(res)
-                if(res.messages.length>0) {
-                    const h = self.$createElement;
-                    var message = h("ul", null, res.messages.map(function(v){
-                        return h("li",null,v)    
-                    }))
-                    
-                    self.$alert(message, '错误提示', {
-                        confirmButtonText: '确定'
-                    });   
-                }    
-                else {
-                    self.$message({
-                        message: '恭喜你，保存成功',
-                        type: 'success'
-                    });
-                }
-            },"json")
+            $ASA.post.call(this, "/user/edit", this.form)
         }
     }  
     })

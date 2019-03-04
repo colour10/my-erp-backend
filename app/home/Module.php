@@ -8,7 +8,7 @@ use Phalcon\DiInterface;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 use Phalcon\Events\Manager as EventsManager;
-use  SecurityPlugin;
+use SecurityPlugin;
 
 class Module implements ModuleDefinitionInterface
 {

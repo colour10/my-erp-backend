@@ -19,7 +19,8 @@ try {
     $loader = new Loader();
     $loader->registerNamespaces(
         array(
-            "Demo" => APP_PATH . '/app/models/demo'
+            "Demo" => APP_PATH . '/app/models/demo',
+            "Asa/Erp" => APP_PATH . '/app/models/erp'
         )
     );
     $loader->registerDirs(
