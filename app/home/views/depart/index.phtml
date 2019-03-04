@@ -1,0 +1,89 @@
+<div id="ell">
+<el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" default-expand-all :expand-on-click-node="false"></el-tree>
+</div>
+
+<script>
+$(document).ready(function(){
+    new Vue({
+        el:"#ell",
+        data() {
+            return {
+                data: [{
+          label: '一级 1',
+          children: [{
+            label: '二级 1-1',
+            children: [{
+              label: '三级 1-1-1'
+            }]
+          }]
+        }, {
+          label: '一级 2',
+          children: [{
+            label: '二级 2-1',
+            children: [{
+              label: '三级 2-1-1'
+            }]
+          }, {
+            label: '二级 2-2',
+            children: [{
+              label: '三级 2-2-1'
+            }]
+          }]
+        }, {
+          label: '一级 3',
+          children: [{
+            label: '二级 3-1',
+            children: [{
+              label: '三级 3-1-1'
+            }]
+          }, {
+            label: '二级 3-2',
+            children: [{
+              label: '三级 3-2-1'
+            }]
+          }]
+        }],
+        defaultProps: {
+          children: 'children',
+          label: 'label'
+        }
+            }
+        },
+        methods: {
+            handleEdit(rowIndex, row){
+               window.location = "/user/edit?id="+row.id;
+            },
+            handleDelete(rowIndex, row) {
+                var self = this;
+
+                self.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    $.get("/user/delete?id="+row.id, function(res){
+                        if(res.messages.length>0) {
+                            const h = self.$createElement;
+                            var message = h("ul", null, res.messages.map(function(v){
+                                return h("li",null,v)
+                            }))
+
+                            self.$alert(message, '错误提示', {
+                                confirmButtonText: '确定'
+                            });
+                        }
+                        else {
+                            self.$delete(self.tableData,rowIndex)
+                            self.$message({
+                                message: '删除成功',
+                                type: 'success'
+                            });
+                        }
+                    },"json")
+                });
+            }
+        }
+    })
+})
+</script>
+

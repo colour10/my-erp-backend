@@ -5,6 +5,8 @@ use Phalcon\Mvc\Application;
 use Phalcon\Mvc\Router;
 use Phalcon\DI\FactoryDefault;
 use Phalcon\Db\Adapter\Pdo\Mysql as DbAdapter;
+use Phalcon\Session\Adapter\Files as Session;
+
 
 try {
     define('APP_PATH', dirname(dirname(__FILE__)));
@@ -23,7 +25,8 @@ try {
     $loader->registerDirs(
         array(
             '../app/controllers/',
-            '../app/models/'
+            '../app/models/',
+            '../app/plugins/'
         )
     )->register();
     
@@ -33,6 +36,14 @@ try {
     $di = new FactoryDefault();
     
     $di['config'] = $config;
+
+    // Start the session the first time when some component request the session service
+    $di->setShared('session', function () {
+        $session = new Session();
+        $session->start();
+        return $session;
+    });
+    
 
     // Set the database service
     $di['db'] = function() use($config) {
