@@ -11,4 +11,16 @@ class LoginController extends Controller
             View::LEVEL_MAIN_LAYOUT
         );
 	}
+	
+	function loginAction() {
+	    if($this->request->isPost()) {
+	        //µÇÂ¼ÑéÖ¤   
+	    }	    
+	}
+	
+	function logoutAction() {
+	    $this->session->destroy();
+	    
+	    header("location:/login");   
+	}
 }

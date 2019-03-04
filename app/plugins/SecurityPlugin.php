@@ -11,18 +11,26 @@ use Phalcon\Acl\Role;
 class SecurityPlugin extends Plugin
 {
     function getAcl() {
-        $acl = new AclList();    
-        $acl->addRole("Guests");
-        
-        // 定义 "Customers" 资源
-        $customersResource = new Resource("Customers");
+        echo "111";
+        $acl = $this->session->get("acl");
+        if(!$acl) {
+            echo "222";
+            $acl = new AclList();    
+            $acl->addRole("Guests");
+            
+            // 定义 "Customers" 资源
+            $customersResource = new Resource("Customers");
+    
+            // 为 "customers"资源添加一组操作
+            $acl->addResource($customersResource, "search");
+            $acl->addResource($customersResource, array("create", "update"));
+            $acl->addResource("depart", array("index", "update"));
+            
+            $acl->deny("Guests", "depart", "index");
+            
+            $this->session->set("acl", $acl);
+        }
 
-        // 为 "customers"资源添加一组操作
-        $acl->addResource($customersResource, "search");
-        $acl->addResource($customersResource, array("create", "update"));
-        $acl->addResource("depart", array("index", "update"));
-        
-        $acl->deny("Guests", "depart", "index");
         return $acl;
     }
     
@@ -54,6 +62,8 @@ class SecurityPlugin extends Plugin
                 echo json_encode($result);     
             }
             else {
+                $this->session->destroy();
+                
                 $this->flash->error("You don't have access to this module");
                 $dispatcher->forward(
                     array(
