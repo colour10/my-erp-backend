@@ -24,4 +24,7 @@ return array(
         //表前缀
         'prefix' => '',
     ),
+    
+    //默认语言
+    "language" => "zh-cn"
 );
