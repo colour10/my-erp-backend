@@ -8,16 +8,40 @@
 <el-row :gutter="20">
   <el-col :span="24">
     <el-table :data="tableData" stripe border style="width: 100%;">
-      <el-table-column prop="id" label="ID" align="center" width="180">
+      <el-table-column prop="name" label="<?=$system_language["pinpaishangbiao"]?>" align="center" width="180">
       </el-table-column>
 
-      <el-table-column prop="name" label="姓名" align="center" width="180">
+      <el-table-column prop="age" label="<?=$system_language["yingwenmingcheng"]?>" width="100" align="center">
       </el-table-column>
-
-      <el-table-column prop="age" label="年龄" width="180" align="center">
+      
+      <el-table-column prop="age" label="<?=$system_language["pinpaimingcheng"]?>" width="80" align="center">
       </el-table-column>
-
-      <el-table-column label="操作" width="150" align="center">
+      
+      <el-table-column prop="age" label="<?=$system_language["pinpaibianhao"]?>" width="80" align="center">
+      </el-table-column>
+      
+      <el-table-column prop="age" label="<?=$system_language["shifoushouquanpinpai"]?>" width="130" align="center">
+      </el-table-column>
+      
+      <el-table-column prop="age" label="<?=$system_language["memo"]?>" width="100" align="center">
+      </el-table-column>
+      
+      <el-table-column prop="age" label="<?=$system_language["guishujituan"]?>" width="100" align="center">
+      </el-table-column>
+      
+      <el-table-column prop="age" label="<?=$system_language["guishuguojia"]?>" width="100" align="center">
+      </el-table-column>
+      
+      <el-table-column prop="age" label="<?=$system_language["miaoshu"]?>" width="100" align="center">
+      </el-table-column>
+      
+      <el-table-column prop="age" label="<?=$system_language["guanwangdizhi"]?>" width="100" align="center">
+      </el-table-column>
+      
+      <el-table-column prop="age" label="<?=$system_language["duizhaodaima"]?>" width="100" align="center">
+      </el-table-column>
+      
+      <el-table-column label="<?=$system_language["caozuo"]?>" width="150" align="center">
         <template v-slot="scope">
           <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
@@ -29,93 +53,102 @@
 
 <el-dialog class="user-form" :title="labels[action_type][0]" :visible.sync="dialogVisible" :center="true" width="80%">
   <el-tabs type="border-card" @tab-click="onTabClick">
-    <el-tab-pane label="<?=$system_language["user-setting"]?>">
-      <el-form :model="form" label-width="100px"  :inline="true" style="width:700px;" size="small">
-        <el-form-item label="<?=$system_language["user-loginname"]?>">
+    <el-tab-pane label="<?=$system_language["jibenziliao"]?>"> 
+      <!--基本资料-->     
+      <el-row>
+      <el-col :span="5">
+        <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+      <img v-if="imageUrl" :src="imageUrl" class="avatar">
+      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+    </el-upload>
+      </el-col>
+      
+      <el-col :span="19">
+        <el-form class="user-form" :model="form" label-width="100px"  :inline="true" style="width:700px;" size="small">
+        <el-form-item label="<?=$system_language["yingwenmingcheng"]?>">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
 
-        <el-form-item label="<?=$system_language["password"]?>">
+        <el-form-item label="<?=$system_language["zhongwenmingcheng"]?>">
           <el-input v-model="form.description"></el-input>
         </el-form-item>
+        
+        <el-form-item label="<?=$system_language["pinpaibianhao"]?>">
+          <el-input v-model="form.description"></el-input>
+        </el-form-item>
+        
+        <el-form-item label="<?=$system_language["guishuguojia"]?>">
+          <el-select v-model="form.country" placeholder="<?=$system_language["qingxuanze"]?>" style="width:150">
+            <el-option v-for="item in country_list" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
 
-        <el-form-item label="<?=$system_language["depart"]?>">
+        <el-form-item label="<?=$system_language["pinpaifenlei"]?>">
           <el-select v-model="form.depart_id" placeholder="<?=$system_language["qingxuanze"]?>" style="width:150">
             <el-option v-for="item in departs" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
 
-        <el-form-item label="<?=$system_language["bu"]?>">
+        <el-form-item label="<?=$system_language["guishujituan"]?>">
           <el-select v-model="form.bu" placeholder="<?=$system_language["qingxuanze"]?>" style="width:150">
             <el-option v-for="item in bu_list" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
+        </el-form-item>        
+        
+        <el-form-item label="<?=$system_language["miaoshu"]?>">
+          <el-input type="textarea" v-model="form.description"></el-input>
         </el-form-item>
-        <el-form-item label="<?=$system_language["country"]?>">
-          <el-select v-model="form.country" placeholder="<?=$system_language["qingxuanze"]?>" style="width:150">
-            <el-option v-for="item in country_list" :key="item.value" :label="item.label" :value="item.value"></el-option>
-          </el-select>
+        
+        <el-form-item label="<?=$system_language["memo"]?>">
+          <el-input type="textarea" v-model="form.description"></el-input>
         </el-form-item>
-        <el-form-item label="<?=$system_language["gender"]?>">
-          <el-radio-group v-model="form.gender" style="width:200px">
-            <el-radio :label="1"><?=$system_language["man"]?></el-radio>
-            <el-radio :label="0"><?=$system_language["woman"]?></el-radio>
-          </el-radio-group>
+        
+        <div class="site">
+        <el-form-item label="<?=$system_language["guanwangdizhi"]?>">
+          <el-input v-model="form.parent_name">
+            <el-button slot="append" icon="el-icon-search"></el-button>  
+          </el-input>
         </el-form-item>
-        <el-form-item label="<?=$system_language["user-join"]?>">
-          <el-date-picker v-model="form.joindate" type="date" placeholder="<?=$system_language["xuanzeriqi"]?>"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="<?=$system_language["user-left"]?>">
-          <el-date-picker v-model="form.leftdate" type="date" placeholder="<?=$system_language["xuanzeriqi"]?>"></el-date-picker>
-        </el-form-item>
-
-        <el-form-item label="<?=$system_language["user-realname"]?>">
-          <el-input v-model="form.parent_name"></el-input>
-        </el-form-item>
-
-        <el-form-item label="<?=$system_language["user-linkman"]?>">
-          <el-input v-model="form.parent_name"></el-input>
+        </div>
+        
+        <el-form-item label="<?=$system_language["shifoushouquanpinpai"]?>">
+          <el-checkbox v-model="checked"><?=$system_language["shifoushouquanpinpai"]?></el-checkbox>
         </el-form-item>
 
-        <el-form-item label="<?=$system_language["telephone"]?>">
-          <el-input v-model="form.parent_name"></el-input>
-        </el-form-item>
-        <el-form-item label="<?=$system_language["mobile"]?>">
-          <el-input v-model="form.parent_name"></el-input>
-        </el-form-item>
-
-        <el-form-item label="<?=$system_language["email"]?>">
-          <el-input v-model="form.parent_name"></el-input>
-        </el-form-item>
-        <el-form-item label="<?=$system_language["email-password"]?>">
-          <el-input v-model="form.parent_name"></el-input>
-        </el-form-item>
       </el-form>
+      </el-col>
+    </el-row>
+      
     </el-tab-pane>
     
-    <el-tab-pane label="<?=$system_language["group-info"]?>" name="group-info">
+    <el-tab-pane label="<?=$system_language["yanse"]?>" name="group-info">
       <el-radio-group v-model="form.group">
         <el-radio v-for="item in group_list" :label="item.value">{{item.label}}</el-radio>
       </el-radio-group>
     </el-tab-pane>
   
-    <el-tab-pane label="<?=$system_language["sale-port"]?>">
+    <el-tab-pane label="<?=$system_language["pinlei"]?>">
       <el-checkbox-group v-model="form.sale_port">
         <el-checkbox v-for="item in sale_port_list" :label="item.value">{{item.label}}</el-checkbox>
       </el-checkbox-group>    
     </el-tab-pane>
-  <el-tab-pane label="<?=$system_language["jiesuandanwei"]?>">定时任务补偿</el-tab-pane>
-    <el-tab-pane label="<?=$system_language["cangku"]?>">
+  <el-tab-pane label="<?=$system_language["jiagebili"]?>">定时任务补偿</el-tab-pane>
+    <el-tab-pane label="<?=$system_language["bieming"]?>">
       <el-checkbox-group v-model="form.cangku">
         <el-checkbox v-for="item in cangku_list" :label="item.value">{{item.label}}</el-checkbox>
       </el-checkbox-group> 
     </el-tab-pane>
     
-    <el-tab-pane label="<?=$system_language["jiagedan"]?>">
+    <el-tab-pane label="<?=$system_language["xilie"]?>">
       <el-checkbox-group v-model="form.jiagedan">
         <el-checkbox v-for="item in jiagedan_list" :label="item.value">{{item.label}}</el-checkbox>
       </el-checkbox-group> 
     </el-tab-pane>
-  <el-tab-pane label="<?=$system_language["gerenshezhi"]?>">定时任务补偿</el-tab-pane>
+    <el-tab-pane label="<?=$system_language["jiekoudaimaduizhao"]?>">定时任务补偿</el-tab-pane>
+    <el-tab-pane label="<?=$system_language["xiaoshouduankoudengji"]?>">定时任务补偿</el-tab-pane>
+    <el-tab-pane label="<?=$system_language["teshyanse"]?>">定时任务补偿</el-tab-pane>
+    <el-tab-pane label="<?=$system_language["gonghuoshangdengji"]?>">定时任务补偿</el-tab-pane>
+    <el-tab-pane label="<?=$system_language["zhekoubili"]?>">定时任务补偿</el-tab-pane>
   </el-tabs>
   
   <span slot="footer" class="dialog-footer">
@@ -150,7 +183,7 @@ $(document).ready(function(){
                 bu_list:[],
                 action_type:"create",
                 labels:{
-                    create:['<?=$system_language["xinjianyonghu"]?>','<?=$system_language["button-save"]?>'],
+                    create:['<?=$system_language["xinjianpinpai"]?>','<?=$system_language["button-save"]?>'],
                     update:['<?=$system_language["yuangongxinxi"]?>','<?=$system_language["button-save"]?>']       
                 },
                 group_list:[{value:1,"label":"测试一"},{value:2,"label":"测试2"}],//分组信息
@@ -207,8 +240,41 @@ $(document).ready(function(){
     .user-form .el-input__inner {
         width:200px;
     }
+    
+    .user-form .site .el-input__inner {
+        width:470px;
+    }
+        
     .user-form .el-date-editor.el-input, .el-date-editor.el-input__inner {
         width:200px
     }
-    </style>
+    
+    .el-textarea__inner {
+        width:515px    
+    }
+
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
+</style>
 
