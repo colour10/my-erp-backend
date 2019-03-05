@@ -3,25 +3,15 @@ namespace Multiple\Home\Controllers;
 
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
-use Demo\SysStudent;
+use Asa\Erp\User;
 
 class UserController extends AdminController {    
     public function initialize() {
 	    parent::initialize();
 	    
-	    $this->setModelName('Demo\\SysStudent');
+	    $this->setModelName('Asa\\Erp\\User');
     }
-    
-    function formAction() {
-        try {
-            $s = SysStudent::findFirst("id=3");
-            echo $s->name;exit;
-        }
-        catch(Exception $e) {
-            echo $e->getMessage();
-        }
-    }
-    
+        
     function modifypasswordAction() {
         // Disable several levels
         $this->view->disableLevel(

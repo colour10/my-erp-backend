@@ -171,7 +171,5 @@ return array(
     "teshyanse" => "特殊颜色",
     "gonghuoshangdengji" => "供货商等级",
     "zhekoubili" => "折扣比例",
-    "miaoshu" => "描述",
-    
-    
+    "niandai" => "年代",
 );

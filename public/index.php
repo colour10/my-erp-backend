@@ -21,7 +21,7 @@ try {
     $loader->registerNamespaces(
         array(
             "Demo" => APP_PATH . '/app/models/demo',
-            "Asa/Erp" => APP_PATH . '/app/models/erp'
+            "Asa\Erp" => APP_PATH . '/app/models/erp'
         )
     );
     $loader->registerDirs(
