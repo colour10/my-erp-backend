@@ -1,5 +1,7 @@
 <?php
+
 namespace Asa\Erp;
+
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Between;
 use Phalcon\Validation\Validator\Uniqueness;
@@ -11,8 +13,9 @@ class User extends BaseModel
         //$this->setConnectionService('db_workshop');
         $this->setSource('user');
     }
-    
-    public function validation() {
+
+    public function validation()
+    {
         $validator = new Validation();
 
 //        $validator->add(
