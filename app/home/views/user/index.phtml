@@ -1,21 +1,108 @@
 <div id="ell">
-<el-table :data="tableData" stripe border style="width: 100%;">
-    <el-table-column prop="id" label="ID" align="center" width="180">
-    </el-table-column>
+<el-row>
+  <el-col :span="24">
+  <el-button type="primary" @click="showForm('create')"><?=$system_language["button-create"]?></el-button>
+  </el-col>
+</el-row>
 
-    <el-table-column prop="name" label="姓名" align="center" width="180">
-    </el-table-column>
+<el-row :gutter="20">
+  <el-col :span="24">
+    <el-table :data="tableData" stripe border style="width: 100%;">
+      <el-table-column prop="id" label="ID" align="center" width="180">
+      </el-table-column>
 
-    <el-table-column prop="age" label="年龄" width="180" align="center">
-    </el-table-column>
+      <el-table-column prop="name" label="姓名" align="center" width="180">
+      </el-table-column>
 
-    <el-table-column label="操作" width="150" align="center">
-      <template v-slot="scope">
-        <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-        <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-      </template>
-    </el-table-column>
-  </el-table>
+      <el-table-column prop="age" label="年龄" width="180" align="center">
+      </el-table-column>
+
+      <el-table-column label="操作" width="150" align="center">
+        <template v-slot="scope">
+          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+  </el-col>
+</el-row>
+
+<el-dialog class="user-form" :title="labels[action_type][0]" :visible.sync="dialogVisible" :center="true" width="80%">
+  <el-tabs type="border-card">
+    <el-tab-pane label="<?=$system_language["user-setting"]?>">
+      <el-form :model="form" label-width="100px"  :inline="true" style="width:700px;" size="small">
+        <el-form-item label="<?=$system_language["user-loginname"]?>">
+          <el-input v-model="form.name"></el-input>
+        </el-form-item>
+
+        <el-form-item label="<?=$system_language["password"]?>">
+          <el-input v-model="form.description"></el-input>
+        </el-form-item>
+
+        <el-form-item label="<?=$system_language["depart"]?>">
+          <el-select v-model="form.depart_id" placeholder="请选择" style="width:150">
+            <el-option v-for="item in departs" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="<?=$system_language["bu"]?>">
+          <el-select v-model="form.bu" placeholder="请选择" style="width:150">
+            <el-option v-for="item in bu_list" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="<?=$system_language["country"]?>">
+          <el-select v-model="form.country" placeholder="请选择" style="width:150">
+            <el-option v-for="item in country_list" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="<?=$system_language["gender"]?>">
+          <el-radio-group v-model="form.gender" style="width:200px">
+            <el-radio :label="1">男</el-radio>
+            <el-radio :label="0">女</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="<?=$system_language["user-join"]?>">
+          <el-date-picker v-model="form.joindate" type="date" placeholder="选择日期"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="<?=$system_language["user-left"]?>">
+          <el-date-picker v-model="form.leftdate" type="date" placeholder="选择日期"></el-date-picker>
+        </el-form-item>
+
+        <el-form-item label="<?=$system_language["user-realname"]?>">
+          <el-input v-model="form.parent_name"></el-input>
+        </el-form-item>
+
+        <el-form-item label="<?=$system_language["user-linkman"]?>">
+          <el-input v-model="form.parent_name"></el-input>
+        </el-form-item>
+
+        <el-form-item label="<?=$system_language["telephone"]?>">
+          <el-input v-model="form.parent_name"></el-input>
+        </el-form-item>
+        <el-form-item label="<?=$system_language["mobile"]?>">
+          <el-input v-model="form.parent_name"></el-input>
+        </el-form-item>
+
+        <el-form-item label="<?=$system_language["email"]?>">
+          <el-input v-model="form.parent_name"></el-input>
+        </el-form-item>
+        <el-form-item label="<?=$system_language["email-password"]?>">
+          <el-input v-model="form.parent_name"></el-input>
+        </el-form-item>
+
+        <el-form-item style="text-align:center;width:100%">
+          <el-button type="primary">{{labels[action_type][1]}}</el-button>
+        </el-form-item>
+      </el-form>
+    </el-tab-pane>
+  <el-tab-pane label="<?=$system_language["group-info"]?>">配置管理</el-tab-pane>
+  <el-tab-pane label="<?=$system_language["sale-port"]?>">角色管理</el-tab-pane>
+  <el-tab-pane label="<?=$system_language["jiesuandanwei"]?>">定时任务补偿</el-tab-pane>
+  <el-tab-pane label="<?=$system_language["cangku"]?>">角色管理</el-tab-pane>
+  <el-tab-pane label="<?=$system_language["jiagedan"]?>">定时任务补偿</el-tab-pane>
+  <el-tab-pane label="<?=$system_language["gerenshezhi"]?>">定时任务补偿</el-tab-pane>
+  </el-tabs>
+</el-dialog>
 </div>
 
 <script>
@@ -24,10 +111,32 @@ $(document).ready(function(){
         el:"#ell",
         data() {
             return {
-                tableData: <?=json_encode($result)?>
+                tableData: <?=json_encode($result)?>,
+                dialogVisible:false,
+                form: {
+                    name: '',
+                    depart_id: '',
+                    bu:'',
+                    country:'',
+                    gender:"",
+                    joindate:"",
+                    leftdate:""
+                },
+                departs:[],
+                country_list:[],
+                bu_list:[],
+                action_type:"create",
+                labels:{
+                    create:['<?=$system_language["xinjianyonghu"]?>','<?=$system_language["button-save"]?>'],
+                    update:['<?=$system_language["yuangongxinxi"]?>','<?=$system_language["button-save"]?>']       
+                }
             }
         },
         methods: {
+            showForm(action) {
+                this.dialogVisible = true;
+                this.action_type = action;
+            },
             handleEdit(rowIndex, row){
                window.location = "/user/edit?id="+row.id;
             },
@@ -64,4 +173,12 @@ $(document).ready(function(){
     })
 })
 </script>
+<style>
+    .user-form .el-input__inner {
+        width:200px;
+    }
+    .user-form .el-date-editor.el-input, .el-date-editor.el-input__inner {
+        width:200px
+    }
+    </style>
 

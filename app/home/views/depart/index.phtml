@@ -1,5 +1,48 @@
-<div id="ell">
-<el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" default-expand-all :expand-on-click-node="false"></el-tree>
+<div id="ell" style="width:100%">
+<el-row :gutter="20">
+  <el-col :span="8">
+    <el-tree :data="data" :props="defaultProps" default-expand-all :expand-on-click-node="false" @node-click="onNodeClick"></el-tree>
+  </el-col>
+  <el-col :span="5">
+    <el-button type="info" @click="showDepartCreate" style="margin-bottom:30px;"><?=$system_language["depart-create"]?></el-button>
+    
+    <el-form ref="form" :model="form" label-width="80px">
+      <el-form-item label="<?=$system_language["depart-name"]?>">
+        <el-input v-model="form.name"></el-input>
+      </el-form-item>     
+      
+      <el-form-item label="<?=$system_language["description"]?>">
+        <el-input type="textarea" v-model="form.description"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="onSubmit" :disabled="is_save_disabled"><?=$system_language["button-save"]?></el-button>
+        <el-button><?=$system_language["button-cancel"]?></el-button>
+      </el-form-item>
+    </el-form>
+    
+    
+  </el-col>
+</el-row>
+
+<el-dialog title="<?=$system_language["depart-create"]?>" :visible.sync="dialogTableVisible" :center="true" width="35%">
+  <el-form :model="form_create" label-width="80px">
+    <el-form-item label="<?=$system_language["depart-name"]?>">
+      <el-input v-model="form_create.name"></el-input>
+    </el-form-item>     
+    
+    <el-form-item label="<?=$system_language["description"]?>">
+      <el-input type="textarea" v-model="form_create.description"></el-input>
+    </el-form-item>
+    
+    <el-form-item label="<?=$system_language["depart-parent"]?>">
+      <el-input v-model="form_create.parent_name" disabled></el-input>
+    </el-form-item> 
+  </el-form>
+  <div slot="footer" class="dialog-footer" style="text-align:center">
+    <el-button type="primary" @click="onDepartCreate"><?=$system_language["button-ok"]?></el-button>
+    <el-button @click="dialogTableVisible = false"><?=$system_language["button-cancel"]?></el-button>    
+  </div>
+</el-dialog>
 </div>
 
 <script>
@@ -8,79 +51,46 @@ $(document).ready(function(){
         el:"#ell",
         data() {
             return {
-                data: [{
-          label: '一级 1',
-          children: [{
-            label: '二级 1-1',
-            children: [{
-              label: '三级 1-1-1'
-            }]
-          }]
-        }, {
-          label: '一级 2',
-          children: [{
-            label: '二级 2-1',
-            children: [{
-              label: '三级 2-1-1'
-            }]
-          }, {
-            label: '二级 2-2',
-            children: [{
-              label: '三级 2-2-1'
-            }]
-          }]
-        }, {
-          label: '一级 3',
-          children: [{
-            label: '二级 3-1',
-            children: [{
-              label: '三级 3-1-1'
-            }]
-          }, {
-            label: '二级 3-2',
-            children: [{
-              label: '三级 3-2-1'
-            }]
-          }]
-        }],
-        defaultProps: {
-          children: 'children',
-          label: 'label'
-        }
+                form: {
+                    name: '',
+                    description: '',
+                    id: ''
+                },
+                form_create: {
+                    name: '',
+                    description: '',
+                    parent_id:'',
+                    parent_name:''
+                },
+                data: <?=$depart_tree?>,
+                defaultProps: {
+                    children: 'children',
+                    label: 'label'
+                },
+                is_save_disabled:true,
+                dialogTableVisible:false
             }
         },
         methods: {
-            handleEdit(rowIndex, row){
-               window.location = "/user/edit?id="+row.id;
+            onNodeClick(el,node) {
+                //console.log(node , node.label, node.id, node.parent.id)   
+                var data = node.data;
+                this.form.name = data.label
+                this.form.description = data.description
+                this.form.id = data.id
+                this.form_create.parent_name = data.label
+                this.form_create.parent_id = data.id
+                
+                this.is_save_disabled = node.parent.id<=0
             },
-            handleDelete(rowIndex, row) {
-                var self = this;
-
-                self.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    $.get("/user/delete?id="+row.id, function(res){
-                        if(res.messages.length>0) {
-                            const h = self.$createElement;
-                            var message = h("ul", null, res.messages.map(function(v){
-                                return h("li",null,v)
-                            }))
-
-                            self.$alert(message, '错误提示', {
-                                confirmButtonText: '确定'
-                            });
-                        }
-                        else {
-                            self.$delete(self.tableData,rowIndex)
-                            self.$message({
-                                message: '删除成功',
-                                type: 'success'
-                            });
-                        }
-                    },"json")
-                });
+            onSubmit() {
+                $ASA.submit.call(this, "/depart/edit", this.form)
+            },
+            showDepartCreate() {
+                this.dialogTableVisible = true;
+            },
+            onDepartCreate() {
+                $ASA.submit.call(this, "/depart/add", this.form_create)
             }
         }
     })
