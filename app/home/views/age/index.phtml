@@ -6,23 +6,18 @@
     </el-row>
 
 <el-row>
-  <el-col :span="8">
+  <el-col :span="24">
     <el-table :data="tableData" stripe border style="width: 100%;">
-      <el-table-column prop="name" label="<?=$system_language["group-name"]?>" align="center" width="180">
+      <el-table-column prop="name" label="<?=$system_language["niandai"]?>" align="center" width="180">
       </el-table-column>
 
-      <el-table-column label="<?=$system_language["action"]?>" width="250" align="center">
+      <el-table-column label="<?=$system_language["caozuo"]?>" width="250" align="center">
         <template v-slot="scope">
-          <el-button size="mini" @click="showUserList(scope.row)"><?=$system_language["user-list"]?></el-button>
           <el-button size="mini" @click="handleEdit('update', scope.row)"><?=$system_language["button-modify"]?></el-button>
           <el-button size="mini" @click="handleDelete(scope.$index, scope.row)"><?=$system_language["button-delete"]?></el-button>
         </template>
       </el-table-column>
     </el-table>
-  </el-col>
-
-  <el-col :span="16">
-    <el-tree :data="data2" show-checkbox node-key="id" :default-expanded-keys="[2, 3]" :default-checked-keys="[5]"></el-tree>
   </el-col>
 </el-row>
 
@@ -113,16 +108,11 @@ $(document).ready(function(){
         },
         methods: {
             showForm(action) {
-                this.form.name = '';
-                this.form.id = ''
-                this.form.description = ''
                 this.dialogVisible = true;
                 this.action_type = action;
             },
             handleEdit(action, row){
                 this.form.name = row.name;
-                this.form.id = row.id;
-                this.form.description = row.description;
                 this.action_type = action;
                 this.dialogVisible = true;
             },
@@ -130,33 +120,16 @@ $(document).ready(function(){
                 this.dialogListVisible = true;
             },
             saveGroup() {
-                var self = this
                 var form = this.form
                 if(form.id!="") {
-                    $ASA.submit.call(self, "/role/edit", form, function(res){
-                        var list = self.tableData;
-                        for(var i=0;i<list.length;i++) {
-                            if(list[i].id==form.id) {
-                                list[i].name = form.name;
-                                list[i].description = form.description;
-                                break;   
-                            }   
-                        }
-                        self.dialogVisible = false;
+                    $ASA.submit.call(this, "/role/edit", function(res){
+                        form.id = res.id;
+                        tableData.push({name:form.name, description:form.description, id:form.id})
+                        this.dialogVisible = false;
                     }) 
                 }
                 else {
-                    $ASA.submit.call(self, "/role/add", form, function(res){
-                        self.tableData.push({
-                            name:self.form.name,
-                            description:self.form.description,
-                            id:res.id    
-                        })
-                        
-                        form.id = res.id;
-                        
-                        self.dialogVisible = false;
-                    }) 
+                    $ASA.submit.call(this, "/role/add") 
                 }  
             },
             handleDelete(rowIndex, row) {

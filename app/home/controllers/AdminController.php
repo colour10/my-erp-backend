@@ -104,6 +104,10 @@ class AdminController extends BaseController
                     $result["messages"][] = $message->getMessage();
                 }
             }
+            else {
+                $result['id'] = $row->id;
+                //$message['idd'] = "999";
+            }
             echo json_encode($result);
             $this->view->disable();
 	    }

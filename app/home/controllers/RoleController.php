@@ -2,7 +2,7 @@
 namespace Multiple\Home\Controllers;
 
 use Phalcon\Mvc\Controller;
-use Demo\SysStudent;
+use Asa\Erp\Role;
 
 class RoleController extends AdminController
 {
@@ -10,7 +10,7 @@ class RoleController extends AdminController
 	public function initialize()
     {
         parent::initialize();
-        $this->setModelName('Demo\\SysStudent');
+        $this->setModelName('Asa\\Erp\\Role');
     }
     
     function addAction() {
@@ -18,6 +18,6 @@ class RoleController extends AdminController
     }
     
     function editAction() {
-        $this->doAdd();
+        $this->doEdit();
     }
 }
