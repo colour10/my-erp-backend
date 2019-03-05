@@ -9,16 +9,15 @@ class RoleController extends AdminController
 
 	public function initialize()
     {
+        parent::initialize();
         $this->setModelName('Demo\\SysStudent');
     }
     
-    function formAction() {
-        try {
-        $s = SysStudent::findFirst("id=3");
-        echo $s->name;exit;
+    function addAction() {
+        $this->doAdd();
     }
-    catch(Exception $e) {
-        echo $e->getMessage();
-    }
+    
+    function editAction() {
+        $this->doAdd();
     }
 }
