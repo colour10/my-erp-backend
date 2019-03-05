@@ -35,7 +35,7 @@ $(document).ready(function(){
             window.location = "/user/index";    
         },
         onSubmit() {
-            $ASA.post.call(this, "/user/edit", this.form)
+            $ASA.submit.call(this, "/user/edit", this.form)
         }
     }  
     })
