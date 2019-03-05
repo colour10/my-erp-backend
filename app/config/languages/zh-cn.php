@@ -2,6 +2,8 @@
 
 return array(
     "system_name" => "ERP管理系统",
+    "lang" => "zh-cn",
+    "language" => "简体中文",
     "menu-1" => "用户管理",
     "menu-1-1" => "员工信息",
     "menu-1-2" => "组信息",
@@ -99,7 +101,7 @@ return array(
     "button-cancel" => "取消",
     "button-add" => "添加",
     "button-create" => "新建",
-    "button-modify" => "保存",
+    "button-modify" => "编辑",
     "button-submit" => "提交",
     "button-delete" => "删除",
     "button-ok" => "确定",
@@ -132,5 +134,14 @@ return array(
     "jiagedan" => "价格单",
     "gerenshezhi" => "个人设置",
     "yuangongxinxi" => "用户信息",
-    "xinjianyonghu" => "新建用户"
+    "xinjianyonghu" => "新建用户",
+    "qingxuanze" => "请选择",
+    "xuanzeriqi" => "选择日期",
+    "man" => "男",
+    "woman" => "女",
+    "group-add" => "新建组",
+    "group-modify" => "编辑组信息",
+    "group-name" => "组名称",
+    "action" => "操作",
+    "user-list" => "用户列表",
 );
