@@ -13,6 +13,8 @@ class Role extends BaseModel
     }
     
     public function validation() {
+        $language = $this->getDI()->get("language");
+        
         $validator = new Validation();
 
 //        $validator->add(
@@ -30,10 +32,12 @@ class Role extends BaseModel
             'name',
             new Uniqueness(
                 [
-                    'message' => '组名称不能重复',
+                    'message' => sprintf($language['template']["uniqueness"], $language['group-name'])
                 ]
             )
         );
+        
+        //print_r($this->getDI()->get("language"));exit;
 
         return $this->validate($validator);
     }

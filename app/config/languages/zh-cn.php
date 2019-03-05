@@ -172,4 +172,8 @@ return array(
     "gonghuoshangdengji" => "供货商等级",
     "zhekoubili" => "折扣比例",
     "niandai" => "年代",
+    
+    "template" => array(
+        "uniqueness" => "%s不能重复"
+    )
 );

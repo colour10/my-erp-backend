@@ -45,6 +45,12 @@ try {
         $session->start();
         return $session;
     });
+    
+    $di->setShared('language', function () use($config,$di) {
+        $language = $config->language;
+        //$system_language = new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
+        return new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
+    });
 
 
     // Set the database service
