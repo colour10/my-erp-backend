@@ -41,13 +41,7 @@ CREATE TABLE `user`
   UNIQUE `user_mobile` (`mobile`),
   UNIQUE `user_email` (`email`),
   UNIQUE `user_identity_number` (`identity_number`),
-  UNIQUE `user_wechat` (`wechat`),
-  foreign key (`country_id`) references `country` (`id`) on delete cascade on update cascade,
-  foreign key (`business_department_id`) references `department` (`id`) on delete cascade on update cascade,
-  foreign key (`department_id`) references `department` (`id`) on delete cascade on update cascade,
-  foreign key (`default_pricelist_id`) references `pricelist` (`id`) on delete cascade on update cascade,
-  foreign key (`default_warehouse_id`) references `warehouse` (`id`) on delete cascade on update cascade,
-  foreign key (`default_sellsport_id`) references `sellsport` (`id`) on delete cascade on update cascade
+  UNIQUE `user_wechat` (`wechat`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -67,9 +61,7 @@ create table `country`
   PRIMARY KEY (`id`),
   UNIQUE `country_name` (`name`),
   UNIQUE `country_english_name` (`english_name`),
-  UNIQUE `country_code` (`code`),
-  foreign key (`money_id`) references `money` (`id`) on delete cascade on update cascade,
-  foreign key (`is_delete_user`) references `user` (`id`) on delete cascade on update cascade
+  UNIQUE `country_code` (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -87,8 +79,7 @@ create table `department`
   `created_at`     timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_at`     timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`),
-  UNIQUE `department_name` (`name`),
-  foreign key (`is_delete_user`) references `user` (`id`) on delete cascade on update cascade
+  UNIQUE `department_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 #价格单表
@@ -106,9 +97,7 @@ create table `pricelist`
   `created_at`     timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_at`     timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`),
-  UNIQUE `pricelist_name` (`name`),
-  foreign key (`money_id`) references `money` (`id`) on delete cascade on update cascade,
-  foreign key (`is_delete_user`) references `user` (`id`) on delete cascade on update cascade
+  UNIQUE `pricelist_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 #币种表
@@ -126,8 +115,7 @@ create table `money`
   `updated_at`     timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`),
   UNIQUE `money_name` (`name`),
-  UNIQUE `money_code` (`code`),
-  foreign key (`is_delete_user`) references `user` (`id`) on delete cascade on update cascade
+  UNIQUE `money_code` (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 #仓库表
@@ -156,9 +144,7 @@ create table `warehouse`
   `updated_at`     timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`),
   UNIQUE `warehouse_name` (`name`),
-  UNIQUE `warehouse_code` (`code`),
-  foreign key (`country_id`) references `country` (`id`) on delete cascade on update cascade,
-  foreign key (`is_delete_user`) references `user` (`id`) on delete cascade on update cascade
+  UNIQUE `warehouse_code` (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -182,9 +168,7 @@ create table `sellsport`
   `created_at`      timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_at`      timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`),
-  UNIQUE `sellsport_name` (`name`),
-  foreign key (`supplier_id`) references `supplier` (`id`) on delete cascade on update cascade,
-  foreign key (`is_delete_user`) references `user` (`id`) on delete cascade on update cascade
+  UNIQUE `sellsport_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -236,8 +220,7 @@ create table `supplier`
   `created_at`                timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_at`                timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`),
-  unique `supplier_code` (`code`),
-  foreign key (`is_delete_user`) references `user` (`id`) on delete cascade on update cascade
+  unique `supplier_code` (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 #角色表
@@ -252,8 +235,7 @@ create table `role`
   `created_at`     timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_at`     timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`),
-  UNIQUE `role_name` (`name`),
-  foreign key (`is_delete_user`) references `user` (`id`) on delete cascade on update cascade
+  UNIQUE `role_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 #权限表
@@ -269,8 +251,7 @@ create table `permission`
   `created_at`     timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_at`     timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`),
-  UNIQUE `permission_name` (`name`),
-  foreign key (`is_delete_user`) references `user` (`id`) on delete cascade on update cascade
+  UNIQUE `permission_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 #角色权限多对多表
@@ -284,10 +265,7 @@ CREATE TABLE `permission_role`
   `is_delete_user` bigint UNSIGNED DEFAULT NULL COMMENT '软删除操作人ID',
   `created_at`     timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_at`     timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-  PRIMARY KEY (`id`),
-  foreign key (`role_id`) references `role` (`id`) on delete cascade on update cascade,
-  foreign key (`permission_id`) references `permission` (`id`) on delete cascade on update cascade,
-  foreign key (`is_delete_user`) references `user` (`id`) on delete cascade on update cascade
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE =utf8mb4_unicode_ci;
 
 #角色用户多对多表
@@ -301,9 +279,67 @@ CREATE TABLE `role_user`
   `is_delete_user` bigint UNSIGNED DEFAULT NULL COMMENT '软删除操作人ID',
   `created_at`     timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_at`     timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-  PRIMARY KEY (`id`),
-  foreign key (`role_id`) references `role` (`id`) on delete cascade on update cascade,
-  foreign key (`user_id`) references `user` (`id`) on delete cascade on update cascade,
-  foreign key (`is_delete_user`) references `user` (`id`) on delete cascade on update cascade
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+#添加外键约束索引
+#用户表
+ALTER TABLE `user`
+  ADD CONSTRAINT `user_ibfk_1` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `user_ibfk_2` FOREIGN KEY (`business_department_id`) REFERENCES `department` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `user_ibfk_3` FOREIGN KEY (`department_id`) REFERENCES `department` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `user_ibfk_4` FOREIGN KEY (`default_pricelist_id`) REFERENCES `pricelist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `user_ibfk_5` FOREIGN KEY (`default_warehouse_id`) REFERENCES `warehouse` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `user_ibfk_6` FOREIGN KEY (`default_sellsport_id`) REFERENCES `sellsport` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+#国家表
+ALTER TABLE `country`
+  ADD CONSTRAINT `country_ibfk_1` foreign key (`money_id`) references `money` (`id`) on delete cascade on update cascade,
+  ADD CONSTRAINT `country_ibfk_2` foreign key (`is_delete_user`) references `user` (`id`) on delete cascade on update cascade;
+
+#部门表
+ALTER TABLE `department`
+	ADD CONSTRAINT `department_ibfk_1` foreign key (`is_delete_user`) references `user` (`id`) on delete cascade on update cascade;
+
+#价格单表
+ALTER TABLE `pricelist`
+	ADD CONSTRAINT `pricelist_ibfk_1` foreign key (`is_delete_user`) references `user` (`id`) on delete cascade on update cascade;
+
+#币种表
+ALTER TABLE `money`
+  ADD CONSTRAINT `money_ibfk_1` FOREIGN KEY (`is_delete_user`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+#仓库表
+ALTER TABLE `warehouse`
+  ADD CONSTRAINT `warehouse_ibfk_1` foreign key (`country_id`) references `country` (`id`) on delete cascade on update cascade,
+  ADD CONSTRAINT `warehouse_ibfk_2` foreign key (`is_delete_user`) references `user` (`id`) on delete cascade on update cascade;
+
+#销售端口表
+ALTER TABLE `sellsport`
+  ADD CONSTRAINT `sellsport_ibfk_1` foreign key (`supplier_id`) references `country` (`id`) on delete cascade on update cascade,
+  ADD CONSTRAINT `sellsport_ibfk_2` foreign key (`is_delete_user`) references `user` (`id`) on delete cascade on update cascade;
+
+#供货商表
+ALTER TABLE `supplier`
+	ADD CONSTRAINT `supplier_ibfk_1` foreign key (`is_delete_user`) references `user` (`id`) on delete cascade on update cascade;
+
+#角色表
+ALTER TABLE `role`
+	ADD CONSTRAINT `role_ibfk_1` foreign key (`is_delete_user`) references `user` (`id`) on delete cascade on update cascade;
+
+#权限表
+ALTER TABLE `permission`
+  ADD CONSTRAINT `permission_ibfk_1` FOREIGN KEY (`is_delete_user`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+#角色权限多对多表
+ALTER TABLE `permission_role`
+  ADD CONSTRAINT `permission_role_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `permission_role_ibfk_2` FOREIGN KEY (`permission_id`) REFERENCES `permission` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `permission_role_ibfk_3` FOREIGN KEY (`is_delete_user`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+#角色用户表
+ALTER TABLE `role_user`
+  ADD CONSTRAINT `role_user_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `role_user_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `role_user_ibfk_3` FOREIGN KEY (`is_delete_user`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
