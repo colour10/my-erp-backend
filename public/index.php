@@ -20,7 +20,6 @@ try {
     $loader = new Loader();
     $loader->registerNamespaces(
         array(
-            "Demo" => APP_PATH . '/app/models/demo',
             "Asa\Erp" => APP_PATH . '/app/models/erp'
         )
     );
@@ -51,8 +50,7 @@ try {
         //$system_language = new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
         return new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
     });
-
-
+        
     // Set the database service
     $di['db'] = function () use ($config) {
         $connection = new DbAdapter($config->database->db->toArray());

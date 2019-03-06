@@ -13,18 +13,34 @@ class SecurityPlugin extends Plugin
     function getAcl() {
         $acl = $this->session->get("acl");
         if(!$acl) {
-            $acl = new AclList();    
+            $acl = new AclList();  
+            $acl->setDefaultAction(Acl::DENY);
+              
             $acl->addRole("Guests");
             
-            // 定义 "Customers" 资源
-            $customersResource = new Resource("Customers");
-    
-            // 为 "customers"资源添加一组操作
-            $acl->addResource($customersResource, "search");
-            $acl->addResource($customersResource, array("create", "update"));
-            $acl->addResource("depart", array("index", "update"));
+            //所有人都可以访问的资源
+            $public_resources = array(
+                "login" => ['index', "login", "logout"]
+            );
             
-            //$acl->deny("Guests", "depart", "index");
+            foreach($public_resources as $key => $actions) {
+                $acl->addResource($key, $actions);
+                $acl->allow("Guests", $key, $actions);           
+            }
+            
+            
+            // 定义 "Users" 资源
+            $privateResources = array(
+                'index' => array("index"),
+                'user' => array("index","add",'edit','delete'),
+                'errors' => array('index', 'show500', 'show404', 'show401')
+            );
+            foreach ($privateResources as $resource => $actions) {
+                $acl->addResource(new Resource($resource), $actions);
+            }
+            
+            //$acl->allow("Guests", "login", "index");
+            //$acl->allow("Guests", "login", "login");            
             
             $this->session->set("acl", $acl);
         }
@@ -35,11 +51,11 @@ class SecurityPlugin extends Plugin
     public function beforeExecuteRoute(Event $event, Dispatcher $dispatcher)
     {
         // Check whether the "auth" variable exists in session to define the active role
-        $auth = $this->session->get('auth');
-        if (!$auth) {
-            $role = 'Guests';
-        } else {
+        $user = $this->session->get('user');
+        if ($user) {
             $role = 'Users';
+        } else {
+            $role = 'Guests';            
         }
 
         // Take the active controller/action from the dispatcher
