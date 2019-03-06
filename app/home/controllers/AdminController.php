@@ -69,7 +69,35 @@ class AdminController extends BaseController
 	    
 	    $this->view->setVar("result", $result->toArray());
 	}
-
+	
+	public function listAction() {
+	    $this->doList([]); 
+	}
+	
+	public function doList($columns=array()) {
+	    if($this->request->isAjax()) {	        
+	        $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
+	        $result = $findFirst->invokeArgs(null, array());
+	        
+	        if(is_array($columns) && count($columns)>0) {
+	            $list = array();
+	            foreach($result as $row) {
+	                $line = array();
+	                
+	                foreach($columns as $name) {
+	                    $line[$name] = $row->$name;  
+	                }
+	                $list[] = $line;   
+	            }
+	            
+	            echo json_encode($list);
+	        }
+	        else {
+	            echo json_encode($result->toArray());
+	        }
+	    }
+	    $this->view->disable();  
+	}
 
 	function editAction() {
 	    //print_r($this->dispatcher->getParams());exit;
