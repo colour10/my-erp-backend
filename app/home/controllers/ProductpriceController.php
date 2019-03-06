@@ -3,12 +3,12 @@ namespace Multiple\Home\Controllers;
 
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
-use Demo\SysStudent;
+use Asa\Erp\ZlProductprice;
 
-class AliasController extends AdminController {    
+class ProductpriceController extends AdminController {    
     public function initialize() {
 	    parent::initialize();
 	    
-	    $this->setModelName('Demo\\SysStudent');
+	    $this->setModelName('Asa\\Erp\\ZlProductprice');
     }
 }

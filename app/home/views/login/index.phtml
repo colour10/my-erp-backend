@@ -33,13 +33,13 @@
 			<i>Log In </i> or <span> Sign Up</span>
 		</div>
 		<div class="am-u-sm-10 login-am-center">
-			<form class="am-form">
+			<form class="am-form" action="/login/login" method="post">
 				<fieldset>
 					<div class="am-form-group">
-						<input type="email" class="" id="doc-ipt-email-1" placeholder="输入电子邮件">
+						<input type="text" name="username" placeholder="用户名">
 					</div>
 					<div class="am-form-group">
-						<input type="password" class="" id="doc-ipt-pwd-1" placeholder="设置个密码吧">
+						<input type="password" name="password" placeholder="输入密码">
 					</div>
 					<p><button type="submit" class="am-btn am-btn-default">登录</button></p>
 				</fieldset>
@@ -47,10 +47,6 @@
 		</div>
 	</div>
 </div>
-
-  <script src="assets/js/jquery.min.js"></script>
-  <script src="assets/js/amazeui.min.js"></script>
-  <script src="assets/js/app.js"></script>
 </body>
 
 </html>

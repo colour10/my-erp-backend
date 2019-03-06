@@ -162,31 +162,11 @@ $(document).ready(function(){
             handleDelete(rowIndex, row) {
                 var self = this;
 
-                self.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    $.get("/user/delete?id="+row.id, function(res){
-                        if(res.messages.length>0) {
-                            const h = self.$createElement;
-                            var message = h("ul", null, res.messages.map(function(v){
-                                return h("li",null,v)
-                            }))
-
-                            self.$alert(message, '错误提示', {
-                                confirmButtonText: '确定'
-                            });
-                        }
-                        else {
-                            self.$delete(self.tableData,rowIndex)
-                            self.$message({
-                                message: '删除成功',
-                                type: 'success'
-                            });
-                        }
-                    },"json")
-                });
+                $ASA.remove.call(self, "/role/delete?id=" + row.id, function(res){                        
+                        self.$delete(self.tableData,rowIndex)
+                        
+                        //self.dialogVisible = false;
+                }) 
             }
         }
     })
