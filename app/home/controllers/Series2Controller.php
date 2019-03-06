@@ -1,0 +1,18 @@
+<?php
+namespace Multiple\Home\Controllers;
+
+use Phalcon\Mvc\Controller;
+use Phalcon\Mvc\View;
+use Asa\Erp\ZlSeries2;
+
+/**
+ * 子系列，品牌相关
+ */
+class Series2Controller extends AdminController {    
+    public function initialize() {
+	    parent::initialize();
+	    
+	    $this->setModelName('Asa\\Erp\\ZlSeries2');
+    }
+}
+        
