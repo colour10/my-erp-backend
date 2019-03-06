@@ -6,7 +6,7 @@ use Phalcon\Mvc\Model\Message;
 
 class AsaBehabior extends Behavior implements BehaviorInterface {
     public function notify($eventType, $model) {
-        echo $eventType."\n";
+        //echo $eventType."\n";
         if($eventType=="beforeValidationOnCreate") {
             $current = $model->getDI()->get("currentUser");
         

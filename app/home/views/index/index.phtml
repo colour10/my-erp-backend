@@ -132,10 +132,10 @@ $(document).ready(function(){
                 
                 var tmp;
                 if(this.form.trim_prex) {
-                    tmp = convertName(this.form.name.replace(/^[a-z]+_/,""))
+                    tmp = convertName(this.form.name.replace(/^[a-z]+_/,"").replace(/_/g,""))
                 }
                 else {
-                    tmp = convertName(this.form.name)
+                    tmp = convertName(this.form.name.replace(/_/g,""))
                 }
                 this.form.controller = tmp + "Controller"
                 this.form.path = '/'+ tmp.substring(0,1).toLowerCase()+tmp.substring(1);
