@@ -11,7 +11,7 @@ class ZlFeenames extends BaseModel
 {
     public function initialize()
     {
-        //$this->setConnectionService('db_workshop');
+        parent::initialize();
         $this->setSource('zl_feenames');
     }
     

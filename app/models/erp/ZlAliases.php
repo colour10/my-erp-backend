@@ -4,14 +4,17 @@ use Phalcon\Validation;
 use Phalcon\Validation\Validator\Between;
 use Phalcon\Validation\Validator\Uniqueness;
 
-class Aliases extends BaseModel
+/**
+ * 基础资料 别名表
+ */
+class ZlAliases extends BaseModel
 {
     public function initialize()
     {
-        //$this->setConnectionService('db_workshop');
-        $this->setSource('aliases');
+        parent::initialize();
+        $this->setSource('zl_aliases');
     }
-    
+
     public function validation() {
         $validator = new Validation();
 
@@ -25,7 +28,7 @@ class Aliases extends BaseModel
 //                ]
 //            )
 //        );
-//        
+//
 //        $validator->add(
 //            'name',
 //            new Uniqueness(
