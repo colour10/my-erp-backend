@@ -4784,6 +4784,7 @@ create table tb_user
   real_name          varchar(50),
   departmentid       int UNSIGNED NULL,
   selfcompanyid      int UNSIGNED NULL,
+  companyid          int UNSIGNED NULL COMMENT '公司ID',
   groupid            int UNSIGNED NULL,
   storeid            int UNSIGNED NULL,
   sys_create_stuff   int UNSIGNED NOT NULL,
@@ -4888,10 +4889,10 @@ alter table tb_warehousing comment '入库单主表';
 /*==============================================================*/
 create table tb_warehousing_detail
 (
-  id               varchar(36)   not null,
-  sys_create_stuff varchar(36)   not null,
+  id               int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  sys_create_stuff int UNSIGNED NOT NULL,
   sys_create_date  datetime      not null,
-  sys_modify_stuff varchar(36)   not null,
+  sys_modify_stuff int UNSIGNED NOT NULL,
   sys_modify_date  datetime      not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
@@ -5723,6 +5724,7 @@ create table zl_brand
   Code             varchar(50),
   BrandName        varchar(50),
   BrandEnglishName varchar(50),
+  lang_code        varchar(20),
   CountryID        int UNSIGNED NULL,
   ChildBrand       varchar(36),
   Description      varchar(1000),
@@ -5973,6 +5975,7 @@ create table zl_country
   id               int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   code             varchar(20)  not null,
   name             varchar(100) not null,
+  lang_code        varchar(20) null COMMENT '语言编码',
   sys_create_stuff int UNSIGNED NOT NULL,
   sys_create_date  datetime     not null,
   sys_modify_stuff int UNSIGNED NOT NULL,
@@ -5986,6 +5989,31 @@ create table zl_country
 );
 
 alter table zl_country comment '国家表';
+
+
+/*==============================================================*/
+/* Table: zl_language                                            */
+/*==============================================================*/
+create table zl_language
+(
+  id               int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  name             varchar(50) not null,
+  code             varchar(20) not null,
+  sys_create_stuff int UNSIGNED NOT NULL,
+  sys_create_date  datetime    not null,
+  sys_modify_stuff int UNSIGNED NOT NULL,
+  sys_modify_date  datetime    not null,
+  sys_delete_stuff int UNSIGNED NULL,
+  sys_delete_date  datetime,
+  sys_delete_flag  tinyint     not null comment '0-未删除 1-已删除',
+
+  primary key (id),
+  UNIQUE `zl_language_name` (`name`),
+  UNIQUE `zl_language_code` (`code`)
+);
+
+alter table zl_language comment '语言表';
+
 
 /*==============================================================*/
 /* Table: zl_currency                                           */
@@ -6372,6 +6400,7 @@ create table zl_materialstatus
   EnglishName      varchar(20),
   Code             varchar(20),
   Name             varchar(50),
+  lang_code        varchar(20) null COMMENT '语言编码',
   primary key (id)
 );
 
@@ -6439,6 +6468,7 @@ create table zl_pricesource
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   Name             varchar(50),
+  lang_code        varchar(20),
   Remark           varchar(500),
   primary key (id)
 );
@@ -6460,6 +6490,7 @@ create table zl_productdscrb
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   Name             varchar(50),
+  lang_code        varchar(20),
   Remark           varchar(100),
   primary key (id)
 );
@@ -6481,6 +6512,7 @@ create table zl_productinnards
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   PartsName        varchar(50),
+  lang_code        varchar(20),
   primary key (id)
 );
 
@@ -6502,6 +6534,7 @@ create table zl_productparts
 
   PartsCode        varchar(50),
   PartsName        varchar(50),
+  lang_code        varchar(20),
   PackFlag         varchar(1),
   primary key (id)
 );
@@ -6524,6 +6557,7 @@ create table zl_productprice
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   SaleName         varchar(50),
+  lang_code        varchar(20),
   IsDefault        varchar(1) comment '0 - 默认
             1 - 不默认',
   CurreancyID      int UNSIGNED NULL,
@@ -6549,6 +6583,7 @@ create table zl_productstyle
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   BrandGroup       varchar(36),
+  lang_code        varchar(20),
   ChildBrand       varchar(36),
   ProductStyle     varchar(10),
   primary key (id)
@@ -6571,6 +6606,8 @@ create table zl_producttemplate
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   TemplateName     varchar(50),
+  lang_code        varchar(20),
+  lang_code        varchar(20),
   Picture          longblob,
   primary key (id)
 );
@@ -6592,6 +6629,7 @@ create table zl_quotedprice
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   S_ID             varchar(50),
+  lang_code        varchar(20),
   Currency         varchar(50),
   QuotedPrice      decimal(10,0),
   QuotedDate       datetime,
@@ -6616,6 +6654,7 @@ create table zl_reportset
 
   Code             varchar(50),
   Name             varchar(50),
+  lang_code        varchar(20),
   Remark           varchar(500),
   primary key (id)
 );
@@ -6638,6 +6677,7 @@ create table zl_reportset_detail
 
   SetID            int UNSIGNED NULL,
   Code             varchar(50),
+  lang_code        varchar(20),
   `Index`          int,
   Width            int,
   primary key (id)
@@ -6660,6 +6700,7 @@ create table zl_salesmethods
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   SalesMethodsName varchar(50),
+  lang_code        varchar(20),
   SalesMethodsMode varchar(200),
   BrandType        varchar(36),
   primary key (id)
@@ -6682,6 +6723,7 @@ create table zl_salesport
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   ProtName         varchar(20),
+  lang_code        varchar(20),
   Remark           varchar(500),
   StoreName        varchar(50),
   Isonline         varchar(1) comment '0-否 1-是',
@@ -6711,6 +6753,7 @@ create table zl_salesport_mission
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   SaleSpotID       int UNSIGNED NULL,
+  lang_code        varchar(20),
   YearMonth        varchar(10) comment '格式为201801',
   SaleSum          decimal(10,2),
   Profit           decimal(10,2),
@@ -6736,6 +6779,7 @@ create table zl_series
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   Name             varchar(50),
+  lang_code        varchar(20),
   Code             varchar(50),
   BrandID          int UNSIGNED NULL,
   primary key (id)
@@ -6759,6 +6803,7 @@ create table zl_series2
 
   SeriesID         int UNSIGNED NULL,
   Name             varchar(50),
+  lang_code        varchar(20),
   Code             varchar(50),
   primary key (id)
 );
@@ -6781,6 +6826,7 @@ create table zl_shippingtype
 
   code             varchar(10),
   name             varchar(10),
+  lang_code        varchar(20),
   remark           varchar(50),
   primary key (id)
 );
@@ -6802,6 +6848,7 @@ create table zl_sizecontent
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   TopID            int UNSIGNED NULL,
+  lang_code        varchar(20),
   Content          varchar(10),
   SortNum          int,
   Remark           varchar(100),
@@ -6825,6 +6872,7 @@ create table zl_sizetop
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   Name             varchar(50),
+  lang_code        varchar(20),
   Code             varchar(50),
   primary key (id)
 );
@@ -6846,6 +6894,7 @@ create table zl_storemove
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   ProductID        int UNSIGNED NULL,
+  lang_code        varchar(20),
   StoreId          int UNSIGNED NULL,
   MoveMan          varchar(50),
   MoveDate         datetime,
@@ -6871,6 +6920,7 @@ create table zl_style
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   StyleName        varchar(50),
+  lang_code        varchar(20),
   StyleMode        varchar(200),
   primary key (id)
 );
@@ -6892,6 +6942,7 @@ create table zl_supplier_type
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   SupplierID       int UNSIGNED NULL,
+  lang_code        varchar(20),
   Type             varchar(1) comment '0-供货商 1-报关行 2-供应商 3-承运人 4-客户',
   primary key (id)
 );
@@ -6913,6 +6964,7 @@ create table zl_supplierlevel
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   LevelName        varchar(50),
+  lang_code        varchar(20),
   LevelNote        varchar(100),
   primary key (id)
 );
@@ -6934,6 +6986,7 @@ create table zl_sys_selfcompany
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   supplier_id      int UNSIGNED NULL,
+  lang_code        varchar(20),
   primary key (id)
 );
 
@@ -6954,6 +7007,7 @@ create table zl_template_descrb
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   TempID           int UNSIGNED NULL,
+  lang_code        varchar(20),
   SizeTopID        int UNSIGNED NULL,
   SizeID           int UNSIGNED NULL,
   BaseLenth        decimal(10,2),
@@ -6978,6 +7032,7 @@ create table zl_templatelist
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   TemplateName     varchar(36),
+  lang_code        varchar(20),
   SizeName         varchar(36),
   Content          varchar(20),
   ProductID        int UNSIGNED NULL,
@@ -7001,6 +7056,7 @@ create table zl_templatemanage
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   TemplateName     varchar(20),
+  lang_code        varchar(20),
   TempID           int UNSIGNED NULL,
   SortNum          int,
   primary key (id)
@@ -7023,6 +7079,7 @@ create table zl_trans_code
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   Name             varchar(50),
+  lang_code        varchar(20),
   Code             varchar(50),
   Remark           varchar(500),
   primary key (id)
@@ -7233,3 +7290,93 @@ alter table tb_user
   add constraint FK_Reference_Tb_User_To_Group foreign key (groupid)
     references tb_group (id);
 
+
+#公司表
+drop table if exists `company`;
+CREATE TABLE `company`
+(
+  id               int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  sys_create_stuff int UNSIGNED NOT NULL,
+  sys_create_date  datetime     not null,
+  sys_modify_stuff int UNSIGNED NOT NULL,
+  sys_modify_date  datetime     not null,
+  sys_delete_stuff int UNSIGNED NULL,
+  sys_delete_date  datetime,
+  sys_delete_flag  tinyint      not null comment '0-未删除 1-已删除',
+  `name`           varchar(191) NOT NULL COMMENT '公司名称',
+  `country_id`     int UNSIGNED NULL COMMENT '国家ID',
+  `remark`         TEXT COMMENT '备注说明',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+#角色表
+drop table if exists `role`;
+create table `role`
+(
+  id               int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  sys_create_stuff int UNSIGNED NOT NULL,
+  sys_create_date  datetime     not null,
+  sys_modify_stuff int UNSIGNED NOT NULL,
+  sys_modify_date  datetime     not null,
+  sys_delete_stuff int UNSIGNED NULL,
+  sys_delete_date  datetime,
+  sys_delete_flag  tinyint      not null comment '0-未删除 1-已删除',
+  `name`           varchar(100) NOT NULL DEFAULT '' COMMENT '角色名称',
+  `description`    varchar(100) NOT NULL DEFAULT '' COMMENT '角色描述',
+  PRIMARY KEY (`id`),
+  UNIQUE `role_name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+#权限表
+drop table if exists `permission`;
+create table `permission`
+(
+  id               int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  sys_create_stuff int UNSIGNED NOT NULL,
+  sys_create_date  datetime     not null,
+  sys_modify_stuff int UNSIGNED NOT NULL,
+  sys_modify_date  datetime     not null,
+  sys_delete_stuff int UNSIGNED NULL,
+  sys_delete_date  datetime,
+  sys_delete_flag  tinyint      not null comment '0-未删除 1-已删除',
+  `pid`            int UNSIGNED NOT NULL DEFAULT '0' COMMENT '所属权限ID，默认0为顶级权限',
+  `name`           varchar(100) NOT NULL DEFAULT '' COMMENT '权限名称',
+  `description`    varchar(100) NOT NULL DEFAULT '' COMMENT '权限描述',
+  PRIMARY KEY (`id`),
+  UNIQUE `permission_name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+#角色权限多对多表
+drop table if exists `permission_role`;
+CREATE TABLE `permission_role`
+(
+  id               int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  sys_create_stuff int UNSIGNED NOT NULL,
+  sys_create_date  datetime not null,
+  sys_modify_stuff int UNSIGNED NOT NULL,
+  sys_modify_date  datetime not null,
+  sys_delete_stuff int UNSIGNED NULL,
+  sys_delete_date  datetime,
+  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  `role_id`        int UNSIGNED NOT NULL COMMENT '角色ID',
+  `permission_id`  int UNSIGNED NOT NULL COMMENT '权限ID',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE =utf8mb4_unicode_ci;
+
+#角色用户多对多表
+drop table if exists `role_user`;
+CREATE TABLE `role_user`
+(
+  id               int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  sys_create_stuff int UNSIGNED NOT NULL,
+  sys_create_date  datetime not null,
+  sys_modify_stuff int UNSIGNED NOT NULL,
+  sys_modify_date  datetime not null,
+  sys_delete_stuff int UNSIGNED NULL,
+  sys_delete_date  datetime,
+  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  `role_id`        int UNSIGNED NOT NULL COMMENT '角色ID',
+  `user_id`        bigint UNSIGNED NOT NULL COMMENT '用户ID',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
