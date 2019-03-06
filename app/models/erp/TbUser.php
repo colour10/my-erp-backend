@@ -4,14 +4,17 @@ use Phalcon\Validation;
 use Phalcon\Validation\Validator\Between;
 use Phalcon\Validation\Validator\Uniqueness;
 
-class Money extends BaseModel
+/**
+ * 用户表
+ */
+class TbUser extends BaseModel
 {
     public function initialize()
     {
         //$this->setConnectionService('db_workshop');
-        $this->setSource('money');
+        $this->setSource('tb_user');
     }
-    
+
     public function validation() {
         $validator = new Validation();
 
@@ -25,7 +28,7 @@ class Money extends BaseModel
 //                ]
 //            )
 //        );
-//        
+//
 //        $validator->add(
 //            'name',
 //            new Uniqueness(

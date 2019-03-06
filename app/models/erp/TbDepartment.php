@@ -4,14 +4,17 @@ use Phalcon\Validation;
 use Phalcon\Validation\Validator\Between;
 use Phalcon\Validation\Validator\Uniqueness;
 
-class Permission extends BaseModel
+/**
+ * 部门表
+ */
+class TbDepartment extends BaseModel
 {
     public function initialize()
     {
-        //$this->setConnectionService('db_workshop');
-        $this->setSource('permission');
+        parent::initialize(); 
+        $this->setSource('tb_department');
     }
-    
+
     public function validation() {
         $validator = new Validation();
 
@@ -25,7 +28,7 @@ class Permission extends BaseModel
 //                ]
 //            )
 //        );
-//        
+//
 //        $validator->add(
 //            'name',
 //            new Uniqueness(

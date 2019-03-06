@@ -1,13 +1,14 @@
 <?php
 namespace Multiple\Home\Controllers;
 use Phalcon\Mvc\Controller;
-use Demo\SysStudent;
+use Asa\Erp\TbDepartment;
 
 class IndexController extends BaseController
 {
 
 	public function indexAction()
 	{
+	    
 	}
     
     function saveAction() {
@@ -32,5 +33,64 @@ class IndexController extends BaseController
             echo json_encode($result);
             $this->view->disable();
         }           
+    }
+    
+    function createAction() {
+        $d = new TbDepartment();
+        $d->Name = "hellow".time();
+        if($d->save()==false) {
+            $messages = $d->getMessages();
+
+            foreach ($messages as $message) {
+                echo 'Message: ', $message->getMessage()."\n";
+                echo 'Field: ', $message->getField()."\n";
+                echo 'Type: ', $message->getType()."\n";
+               
+            }
+        }
+        exit;        
+    }
+    
+    function save2Action() {
+        $depart = TbDepartment::findFirst("id=4");   
+        if($depart!=false) {
+            $depart->Name = "新名字2";
+            if($depart->save()==false) {
+                $messages = $depart->getMessages();
+    
+                foreach ($messages as $message) {
+                    echo 'Message: ', $message->getMessage();
+                    echo 'Field: ', $message->getField();
+                    echo 'Type: ', $message->getType();
+                   
+                }
+            }
+        }
+        else {
+            echo "record not exist.";   
+        }
+        
+        exit;
+    }
+    
+    function deleteAction() {
+        $depart = TbDepartment::findFirst("id=4");   
+        if($depart!=false) {
+            if($depart->delete()==false) {
+                $messages = $depart->getMessages();
+    
+                foreach ($messages as $message) {
+                    echo 'Message: ', $message->getMessage();
+                    echo 'Field: ', $message->getField();
+                    echo 'Type: ', $message->getType();
+                   
+                }
+            }
+        }
+        else {
+            echo "record not exist.";   
+        }
+        
+        exit;
     }
 }

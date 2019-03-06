@@ -11,6 +11,8 @@ use Phalcon\Session\Adapter\Files as Session;
 use Common\Common as Common;
 use Common\Validate as Validate;
 
+ini_set('date.timezone','Asia/Shanghai');
+
 try {
     define('APP_PATH', dirname(dirname(__FILE__)));
 
@@ -23,6 +25,7 @@ try {
     $loader->registerNamespaces(
         array(
             "Asa\Erp" => APP_PATH . '/app/models/erp',
+            "Asa\Erp\Behavior" => APP_PATH . '/app/models/erp/behavior',
             // 引入公共函数库
             'Common' => APP_PATH . '/common',
         )
@@ -55,6 +58,18 @@ try {
         $language = $config->language;
         //$system_language = new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
         return new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
+    });
+    
+    $di->setShared('currentUser', function () use($config,$di) {
+        $session = $di->get('session');
+        if ($session->has("user")) {
+            // Retrieve its value
+            $user = $session->get("user");
+            return $user["id"];
+        }
+        else {
+            return "";   
+        }
     });
         
     // Set the database service

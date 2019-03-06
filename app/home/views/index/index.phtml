@@ -1,1 +1,156 @@
-首页
+<div id="ell" style="width:100%">
+<el-row :gutter="20">
+  <el-col :span="24">
+    <el-form ref="form" :model="form" label-width="80px">
+      <el-form-item label="表明">
+        <el-input v-model="form.name"></el-input>
+      </el-form-item>
+
+      <el-form-item label="说明">
+        <el-input v-model="form.description"></el-input>
+      </el-form-item>
+
+      <el-form-item label="去掉前缀">
+        <el-checkbox v-model="form.trim_prex">Controller去掉前缀</el-checkbox>
+      </el-form-item>
+
+      <el-form-item label="Controller">
+        <textarea style="width:100%;height:200px;" :form="form" id="model">
+{{'<'}}?php
+namespace Asa\Erp;
+use Phalcon\Validation;
+use Phalcon\Validation\Validator\Between;
+use Phalcon\Validation\Validator\Uniqueness;
+
+/**
+ * {{form.description}}
+ */
+class {{form.model}} extends BaseModel
+{
+    public function initialize()
+    {
+        //$this->setConnectionService('db_workshop');
+        $this->setSource('{{form.name}}');
+    }
+
+    public function validation() {
+        $validator = new Validation();
+
+//        $validator->add(
+//            "age",
+//            new Between(
+//                [
+//                    "minimum" => 18,
+//                    "maximum" => 60,
+//                    "message" => "年龄必须是18~60岁",
+//                ]
+//            )
+//        );
+//
+//        $validator->add(
+//            'name',
+//            new Uniqueness(
+//                [
+//                    'message' => '姓名不能重复',
+//                ]
+//            )
+//        );
+
+        return $this->validate($validator);
+    }
+}
+</textarea>
+      </el-form-item>
+
+      <el-form-item label="Controller">
+        <textarea style="width:100%;height:200px;" :form="form" id="controller">
+{{'<'}}?php
+namespace Multiple\Home\Controllers;
+
+use Phalcon\Mvc\Controller;
+use Phalcon\Mvc\View;
+use Asa\Erp\{{form.model}};
+
+/**
+ * {{form.description}}
+ */
+class {{form.controller}} extends AdminController {
+    public function initialize() {
+	    parent::initialize();
+
+	    $this->setModelName('Asa\\Erp\\{{form.model}}');
+    }
+}
+</textarea>
+      </el-form-item>
+
+
+      <el-form-item>
+        <el-button type="primary" @click="onSubmit">生成代码</el-button>
+        <el-button type="primary" @click="onSave">保存代码</el-button>
+      </el-form-item>
+    </el-form>
+
+
+  </el-col>
+</el-row>
+
+</div>
+
+<script>
+$(document).ready(function(){
+    function ucfirst(s) {
+        s = s.toLowerCase();
+        return s.substring(0,1).toUpperCase()+s.substring(1);
+    }
+
+    function convertName(s) {
+        var arr = s.split('_');
+        return arr.map(function(item){
+            return ucfirst(item)
+        }).join("");
+    }
+
+    new Vue({
+        el:"#ell",
+        data() {
+            return {
+                form: {
+                    name: '',
+                    model: '',
+                    controller: '',
+                    description:"",
+                    path:'',
+                    trim_prex:true
+                }
+            }
+        },
+        methods: {
+            onSubmit() {
+                var arr = this.form.name.split('_');
+                this.form.model = convertName(this.form.name)
+                
+                var tmp;
+                if(this.form.trim_prex) {
+                    tmp = convertName(this.form.name.replace(/^[a-z]+_/,""))
+                }
+                else {
+                    tmp = convertName(this.form.name)
+                }
+                this.form.controller = tmp + "Controller"
+                this.form.path = '/'+ tmp.substring(0,1).toLowerCase()+tmp.substring(1);
+            },
+            onSave() {
+                var form = this.form; 
+                var self = this; 
+                $ASA.submit.call(self, "/index/save", {model:$("#model").val(), controller:$("#controller").val(), modelName:form.model, controllerName:form.controller}, function(){
+                    self.$alert(self.form.path, '标题名称', {
+                        confirmButtonText: '确定'
+                    });
+                })
+            }
+        }
+    })
+})
+</script>
+

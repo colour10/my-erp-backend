@@ -172,6 +172,7 @@ return array(
     "zhekoubili" => "折扣比例",
     "niandai" => "年代",
     
+    "model-delete-message" => "请先登录",
     "template" => array(
         "uniqueness" => "%s不能重复"
     )

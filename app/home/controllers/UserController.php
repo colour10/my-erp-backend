@@ -3,13 +3,13 @@ namespace Multiple\Home\Controllers;
 
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
-use Asa\Erp\User;
+use Asa\Erp\TbUser;
 
 class UserController extends AdminController {    
     public function initialize() {
 	    parent::initialize();
 	    
-	    $this->setModelName('Asa\\Erp\\User');
+	    $this->setModelName('Asa\\Erp\\TbUser');
     }
         
     function modifypasswordAction() {
