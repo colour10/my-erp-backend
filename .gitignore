@@ -3,4 +3,4 @@ erp.DESKTOP-02PODLG.changwei.pui
 erp.prj
 app/config/config.php
 app/cache
-app/home/controller/TestController.php
+app/home/controllers/TestController.php
