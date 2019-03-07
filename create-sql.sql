@@ -3337,7 +3337,7 @@ create table sys_selfcompany
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  selfcompanyid    int UNSIGNED NULL,
+  companyid    int UNSIGNED NULL,
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -3541,7 +3541,7 @@ create table tb_department
 
   Name             varchar(100),
   Remark           varchar(1000),
-  selfcompanyid    int UNSIGNED NULL,
+  companyid    int UNSIGNED NULL COMMENT '公司ID',
   Priceid          int UNSIGNED NULL comment '此价格id可以是基础价格id，也可以是销售端口id',
   SpotID           int UNSIGNED NULL,
   up_dp_id         int UNSIGNED NULL,
@@ -3758,7 +3758,7 @@ create table tb_group
   id               int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   group_name       varchar(50),
   group_memo       varchar(500),
-  selfcompanyid    int UNSIGNED NULL,
+  companyid    int UNSIGNED NULL,
   sys_create_stuff int UNSIGNED NOT NULL,
   sys_create_date  datetime not null,
   sys_modify_stuff int UNSIGNED NOT NULL,
@@ -4577,7 +4577,7 @@ create table tb_rule
   id               int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   rule_name        varchar(50),
   rule_memo        varchar(500),
-  selfcompanyid    int UNSIGNED NULL,
+  companyid    int UNSIGNED NULL,
   sys_create_stuff int UNSIGNED NOT NULL,
   sys_create_date  datetime not null,
   sys_modify_stuff int UNSIGNED NOT NULL,
@@ -4783,7 +4783,6 @@ create table tb_user
   password           varchar(50),
   real_name          varchar(50),
   departmentid       int UNSIGNED NULL,
-  selfcompanyid      int UNSIGNED NULL,
   companyid          int UNSIGNED NULL COMMENT '公司ID',
   groupid            int UNSIGNED NULL,
   storeid            int UNSIGNED NULL,
@@ -5535,7 +5534,7 @@ create table zl_ac_km
   up_km_id         int UNSIGNED NULL,
   is_havexj        varchar(1) not null comment '0-没有,1-有',
   jord             varchar(1) not null comment 'J-借方,D-贷方',
-  selfcompanyid    int UNSIGNED NOT NULL,
+  companyid    int UNSIGNED NOT NULL,
   sys_create_stuff int UNSIGNED NOT NULL,
   sys_create_date  datetime   not null,
   sys_modify_stuff int UNSIGNED NOT NULL,
@@ -5631,7 +5630,7 @@ create table zl_ac_ztb
   is_end           varchar(1)   not null comment '0-未结束,1-结束',
   is_default       varchar(1)   not null comment '0-不是,1-是',
   pwd              varchar(50),
-  selfcompanyid    int UNSIGNED NOT NULL,
+  companyid    int UNSIGNED NOT NULL,
   sys_create_stuff int UNSIGNED NOT NULL,
   sys_create_date  datetime     not null,
   sys_modify_stuff int UNSIGNED NOT NULL,
@@ -6161,7 +6160,7 @@ create table zl_ex_reportstyle
   tdBackWidth      int,
   tdBackHeight     int,
   memo             varchar(1000),
-  selfcompanyid    int UNSIGNED NULL,
+  companyid    int UNSIGNED NULL,
   Picid            int UNSIGNED NULL,
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -7366,23 +7365,23 @@ alter table 模版 comment '任何表都应该包含的列';
 
 alter table link_group_to_navigation
   add constraint FK_Reference_link_group_to_navigation_TO_group foreign key (groupid)
-    references tb_group (id) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    references tb_group (id);
 
 alter table link_rule_to_operation
   add constraint FK_Reference_link_rule_to_operationTO_rule_ID foreign key (ruleid)
-    references tb_rule (id) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    references tb_rule (id);
 
 alter table link_user_to_rule
   add constraint FK_Reference_link_user_to_rule_To_tb_rule foreign key (ruleid)
-    references tb_rule (id) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    references tb_rule (id);
 
 alter table link_user_to_rule
   add constraint FK_Reference_link_userid foreign key (loginid)
-    references tb_user (id) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    references tb_user (id);
 
 alter table tb_user
   add constraint FK_Reference_Tb_User_To_Group foreign key (groupid)
-    references tb_group (id) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    references tb_group (id);
 
 
 #公司表
