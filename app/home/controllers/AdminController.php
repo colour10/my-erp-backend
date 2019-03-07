@@ -1,6 +1,9 @@
 <?php
+
 namespace Multiple\Home\Controllers;
 
+use Asa\Erp\TbDepartment;
+use Asa\Erp\TbUser;
 use Phalcon\Mvc\Controller;
 use Phalcon\Db\Column;
 use  Phalcon\Mvc\Model\Message;
@@ -13,15 +16,18 @@ class AdminController extends BaseController
     protected $list_columns;
     protected $is_language = false;
 
-    public function initialize() {
+    public function initialize() 
+    {
 	    parent::initialize();
     }
 
-    function setModelName($modelName) {
+    function setModelName($modelName)
+    {
         $this->modelName = $modelName;
     }
 
-    function configList($key_column, $columns) {
+    function configList($key_column, $columns) 
+    {
         $this->list_key_column = $key_column;
         $this->list_columns = $columns;
     }
@@ -30,12 +36,14 @@ class AdminController extends BaseController
         $this->is_language = $boolValue;
     }
 
-    function getModelName() {
+    function getModelName()
+    {
         return $this->modelName;
     }
 
-    function getModelObject() {
-        if(!$this->modelObject) {
+    function getModelObject()
+    {
+        if (!$this->modelObject) {
             $class = new \ReflectionClass($this->getModelName());
             $this->modelObject = $class->newInstance();
         }
@@ -43,19 +51,20 @@ class AdminController extends BaseController
         return $this->modelObject;
     }
 
-    function getAttributes() {
+    function getAttributes()
+    {
         $model = $this->getModelObject();
 
         try {
             $metaData = $model->getModelsMetaData();
             return $metaData->getAttributes($model);
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             echo $e->getMessage();
         }
     }
 
-    function getCondition() {
+    function getCondition()
+    {
         $model = $this->getModelObject();
         $metaData = $model->getModelsMetaData();
         $primaryKeys = $metaData->getPrimaryKeyAttributes($model);
@@ -63,19 +72,19 @@ class AdminController extends BaseController
 
         $array = array();
 
-        foreach($primaryKeys as $key) {
-            if($fieldTypes[$key]==Column::TYPE_INTEGER || $fieldTypes[$key]==Column::TYPE_BIGINTEGER || $fieldTypes[$key]==Column::TYPE_MEDIUMINTEGER || $fieldTypes[$key]==Column::TYPE_SMALLINTEGER || $fieldTypes[$key]==Column::TYPE_TINYINTEGER) {
-                $array[] = sprintf("%s=%d", $key,$this->request->get($key));
-            }
-            else if($fieldTypes[$key]==Column::TYPE_CHAR || $fieldTypes[$key]==Column::TYPE_VARCHAR || $fieldTypes[$key]==Column::TYPE_ENUM ) {
-                $array[] = sprintf("%s='%s'", $key,addslashes($this->request->get($key)));
+        foreach ($primaryKeys as $key) {
+            if ($fieldTypes[$key] == Column::TYPE_INTEGER || $fieldTypes[$key] == Column::TYPE_BIGINTEGER || $fieldTypes[$key] == Column::TYPE_MEDIUMINTEGER || $fieldTypes[$key] == Column::TYPE_SMALLINTEGER || $fieldTypes[$key] == Column::TYPE_TINYINTEGER) {
+                $array[] = sprintf("%s=%d", $key, $this->request->get($key));
+            } else if ($fieldTypes[$key] == Column::TYPE_CHAR || $fieldTypes[$key] == Column::TYPE_VARCHAR || $fieldTypes[$key] == Column::TYPE_ENUM) {
+                $array[] = sprintf("%s='%s'", $key, addslashes($this->request->get($key)));
             }
         }
 
         return implode(' and ', $array);
     }
 
-	public function indexAction() {
+    public function indexAction()
+    {
         $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
 	    $result = $findFirst->invokeArgs(null, array("sys_delete_flag=0"));
 
@@ -90,7 +99,7 @@ class AdminController extends BaseController
 	    if($this->request->isAjax()) {
 	        $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
 	        
-	        //ÊÇ·ñÖ§³Ö¶à¹úÓïÑÔ
+	        //æ˜¯å¦æ”¯æŒå¤šå›½è¯­è¨€
 	        if($this->is_language) {
 	            $where = sprintf("sys_delete_flag=0 and lang_code='%s'", addslashes($this->language["code"]));    
 	        }
@@ -136,7 +145,7 @@ class AdminController extends BaseController
 
 	function doAdd() {
 	    if($this->request->isPost()) {
-	        //¸üĞÂÊı¾İ¿â
+	        //æ›´æ–°æ•°æ®åº“
 	        $row = $this->getModelObject();
 
 	        $fields = $this->getAttributes();
@@ -153,34 +162,34 @@ class AdminController extends BaseController
                 foreach ($messages as $message) {
                     $result["messages"][] = $message->getMessage();
                 }
-            }
-            else {
+            } else {
                 $result['is_add'] = "1";
                 $result['id'] = $row->id;
                 //$message['idd'] = "999";
             }
             echo json_encode($result);
             $this->view->disable();
-	    }
+        }
 
-	}
+    }
 
-	function doEdit() {
-	    if($this->request->isPost()) {
-	        //¸üĞÂÊı¾İ¿â
-	        $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
-	        $row = $findFirst->invokeArgs(null, array($this->getCondition()));
+    function doEdit()
+    {
+        if ($this->request->isPost()) {
+            //é”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹·é”Ÿæ–¤æ‹·é”Ÿæ·åŒ¡æ‹·
+            $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
+            $row = $findFirst->invokeArgs(null, array($this->getCondition()));
 
-	        if($row!=false) {
-    	        $fields = $this->getAttributes();
-    	        foreach($fields as $name) {
-    	            if(isset($_POST[$name])) {
-    	                $row->$name = $_POST[$name];
-    	            }
-    	        }
+            if ($row != false) {
+                $fields = $this->getAttributes();
+                foreach ($fields as $name) {
+                    if (isset($_POST[$name])) {
+                        $row->$name = $_POST[$name];
+                    }
+                }
 
-                $result = array("code"=>200, "messages" => array());
-    	        if ($row->save() === false) {
+                $result = array("code" => 200, "messages" => array());
+                if ($row->save() === false) {
                     $messages = $row->getMessages();
 
                     foreach ($messages as $message) {
@@ -190,7 +199,7 @@ class AdminController extends BaseController
                 echo json_encode($result);
     	    }
     	    else {
-    	        $result = array("code"=>200, "messages" => array("Êı¾İ²»´æÔÚ"));
+    	        $result = array("code"=>200, "messages" => array("æ•°æ®ä¸å­˜åœ¨"));
 
                 echo json_encode($result);
                 exit;
@@ -198,7 +207,7 @@ class AdminController extends BaseController
     	    $this->view->disable();
 	    }
 	    else {
-	        //´ÓÊı¾İ¿âÖĞ²éÕÒÊı¾İ£¬¸øµ½Ä£°å
+	        //ä»æ•°æ®åº“ä¸­æŸ¥æ‰¾æ•°æ®ï¼Œç»™åˆ°æ¨¡æ¿
 	        $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
 	        $info = $findFirst->invokeArgs(null, array($this->getCondition()));
 
@@ -220,9 +229,9 @@ class AdminController extends BaseController
                 foreach ($messages as $message) {
                     $result["messages"][] = $message->getMessage();
                 }
-	        }
-	    }
-	    echo json_encode($result);
+            }
+        }
+        echo json_encode($result);
         $this->view->disable();
-	}
+    }
 }
