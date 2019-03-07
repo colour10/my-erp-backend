@@ -6006,6 +6006,7 @@ create table zl_country
   name             varchar(100) not null,
   lang_code        varchar(20) NULL COMMENT '语言编码',
   `relateid` INT NULL COMMENT '对应主键ID',
+  `languages` VARCHAR(100) NULL,
   sys_create_stuff int UNSIGNED NOT NULL,
   sys_create_date  datetime     not null,
   sys_modify_stuff int UNSIGNED NOT NULL,
