@@ -3542,6 +3542,7 @@ create table tb_department
   Name             varchar(100),
   Remark           varchar(1000),
   selfcompanyid    int UNSIGNED NULL,
+  companyid        int UNSIGNED NULL COMMENT '公司ID',
   Priceid          int UNSIGNED NULL comment '此价格id可以是基础价格id，也可以是销售端口id',
   SpotID           int UNSIGNED NULL,
   up_dp_id         int UNSIGNED NULL,
@@ -5744,10 +5745,10 @@ create table zl_brand
   ChildBrand       varchar(36),
   Description      varchar(1000),
   ImageUrl         varchar(200),
-  memo             char(1),
+  memo             TEXT,
   Supplier         varchar(36),
   Officialwebsite  varchar(500),
-  IsAuthorized     varchar(1),
+  IsAuthorized     tinyint,
   primary key (id)
 );
 
