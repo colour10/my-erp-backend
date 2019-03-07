@@ -13,6 +13,7 @@ class BaseController extends Controller
 
         //����ѡ��
         $this->view->setVar("system_language", $this->language);
+        $this->view->setVar("__sytem_time", time());
     }
 
     /**

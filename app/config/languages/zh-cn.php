@@ -183,7 +183,7 @@ return array(
     "xiugaixinxi" => "修改信息",
     "yuzhong" => "语种",
     "pinpaijieshao" => "品牌介绍",
-    "dianshangduizhaobiao" => "电商对照表",
+    "department-tip1" => "点击左侧部门树，添加或者修改部门信息。",
     "dianshangduizhaobiao" => "电商对照表",
     "dianshangduizhaobiao" => "电商对照表",
     "dianshangduizhaobiao" => "电商对照表",

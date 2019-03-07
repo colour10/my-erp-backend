@@ -9,7 +9,7 @@ use Asa\Erp\Util;
 /**
  * 部门表
  */
-class DepartmentController extends AdminController {
+class DepartmentController extends CadminController {
     public function initialize() {
 	    parent::initialize();
 
@@ -56,8 +56,7 @@ class DepartmentController extends AdminController {
         
         // 取出公司下面的所有部门
         $departments = TbDepartment::find([
-            'companyid' => $auth['companyid'],
-            'sys_delete_flag' => '0',
+            sprintf("sys_delete_flag=0 and companyid=%d", $auth['companyid'])
         ]);
         if(!$departments) {
             return $this->error(['departments are not exist']);
@@ -65,5 +64,20 @@ class DepartmentController extends AdminController {
 
         // 交给下面的格式化为目录树处理并返回
         return json_encode(Util::format_tree($departments->toArray()));
+    }
+    
+    function treeAction() {
+        $result = array();
+        
+        $result[] = array(
+            "label" => "爱莎",
+            "description" => "",
+            "id" => 1,
+            "children" => array($this->createNode("销售部",2,"销售部说明"), $this->createNode("技术部",3,"技术部备注"))
+        );
+        //print_r($result);
+        //echo json_encode($result);exit;
+        echo json_encode($result);
+        $this->view->disable();
     }
 }

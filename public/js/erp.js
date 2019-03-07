@@ -100,6 +100,16 @@ var $ASA = (function(){
         return target;
     }
     
+    function deleteObject(arr, obj) {
+        for(var i=0;i<arr.length;i++) {
+            if(arr[i]==obj) {
+                arr.splice(i,1) 
+                break;  
+            }   
+        }
+        return arr
+    }
+    
     var languages = {
         "zh-cn":{
             success:"操作成功",
@@ -121,5 +131,5 @@ var $ASA = (function(){
         }    
     }
     
-    return {submit:submit, setLanguage:setLanguage, remove:remove, copyTo:copyTo, clone:clone, empty:empty}    
+    return {submit:submit, setLanguage:setLanguage, remove:remove, copyTo:copyTo, clone:clone, empty:empty, deleteObject: deleteObject}    
 })()

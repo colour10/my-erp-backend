@@ -13,7 +13,7 @@ class LoginController extends Controller
 
     function loginAction() {
         if($this->request->isPost()) {
-            //µÇÂ¼ÑéÖ¤
+            //
             $username = $this->request->getPost('username');
             $password = $this->request->getPost('password');
             //Find the user in the database
