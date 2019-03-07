@@ -18,7 +18,7 @@ class Util {
             // 找到父级是0的
             if ($v['up_dp_id'] == $pid) {
                 // 判断当前模型是否有子集
-                $children = $this->format_tree($result, $v['id'], $level + 1);
+                $children = self::format_tree($result, $v['id'], $level + 1);
                 // 数据合并
                 // 并判断是否有子集加不加children
                 if (empty($children)) {
@@ -26,6 +26,7 @@ class Util {
                         'id' => $v['id'],
                         'label' => $v['Name'],
                         'level' => $level,
+                        'children' =>[]
                     ];
                 } else {
                     $tree[] = [
