@@ -524,7 +524,7 @@ create table ac_invoice
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   InvoiceDate      datetime,
   SupplierID       int UNSIGNED NULL,
@@ -560,7 +560,7 @@ create table ac_invoice_fee
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   InvoiceDate      datetime,
   SupplierID       int UNSIGNED NULL,
@@ -620,7 +620,7 @@ create table ac_invoice_prepay
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   InvoiceDate      datetime,
   SupplierID       int UNSIGNED NULL,
@@ -653,7 +653,7 @@ create table ac_kmyue_wb
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ztid             int UNSIGNED NULL,
   kmid             int UNSIGNED NULL,
@@ -688,7 +688,7 @@ create table ac_pzhb
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ztid             int UNSIGNED NULL,
   pzh_flow_type    varchar(2) comment 'TH-调汇 JZ-结转 FY-费用 FP-发票
@@ -722,7 +722,7 @@ create table ac_pzhh
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ztid             int UNSIGNED NULL,
   nf               varchar(5),
@@ -748,7 +748,7 @@ create table ac_pzhmxb
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   pzhid            int UNSIGNED NULL,
   kmid             int UNSIGNED NULL,
@@ -780,7 +780,7 @@ create table ac_sf_sheet
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   SheetNo          varchar(50),
   SorF             varchar(1),
@@ -815,7 +815,7 @@ create table ac_sf_sheet_code
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Year             varchar(5),
   Code             varchar(10),
@@ -837,7 +837,7 @@ create table ac_sf_sheet_refund
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   SheetID          int UNSIGNED NULL,
   RefundDate       datetime,
@@ -863,7 +863,7 @@ create table dd_arrivalnotice
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   CorderID         int UNSIGNED NULL,
   OrderNo          varchar(50),
@@ -897,7 +897,7 @@ create table dd_arrivalnotice_detail
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ArrivalID        int UNSIGNED NULL,
   DetailID         int UNSIGNED NULL,
@@ -993,7 +993,7 @@ create table dd_corder_ctn
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   CorderID         int UNSIGNED NULL,
   CtnNo            varchar(50),
@@ -1020,7 +1020,7 @@ create table dd_corder_temp
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   CorderID         int UNSIGNED NULL,
   cDetailID        int UNSIGNED NULL,
@@ -1048,7 +1048,7 @@ create table dd_corderdetails
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   CorderID         int UNSIGNED NULL,
   DetailID         int UNSIGNED NULL,
@@ -1083,7 +1083,7 @@ create table dd_fee
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Dd_ID            int UNSIGNED NULL,
   FeeID            int UNSIGNED NULL,
@@ -1118,7 +1118,7 @@ create table dd_order
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   BussinesstypeID  int UNSIGNED NULL,
   MakeDate         datetime,
@@ -1169,7 +1169,7 @@ create table dd_ordercode
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Year             varchar(5),
   Code             varchar(10),
@@ -1190,7 +1190,7 @@ create table dd_orderdetails
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   OrderID          int UNSIGNED NULL,
   SizeID           int UNSIGNED NULL,
@@ -1228,7 +1228,7 @@ create table dd_quotation
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   SupplierID       int UNSIGNED NULL,
   ForM             varchar(1) comment 'F-女款，M-男款',
@@ -1254,7 +1254,7 @@ create table dd_quotation_detail
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   QuotationID      int UNSIGNED NULL,
   ProductID        int UNSIGNED NULL,
@@ -1285,7 +1285,7 @@ create table if_cfashion
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   CreationTime     datetime,
   ProductID        int UNSIGNED NULL,
@@ -1320,7 +1320,7 @@ create table if_exception
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductID        int UNSIGNED NULL,
   OperationType    int comment '0-添加 1-修改',
@@ -1344,7 +1344,7 @@ create table if_imgorder
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductID        int UNSIGNED NULL,
   IfID             INT UNSIGNED NULL comment '0-添加 1-修改',
@@ -1369,7 +1369,7 @@ create table if_jingdong
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   CreationTime     datetime,
   ProductID        int UNSIGNED NULL,
@@ -1405,7 +1405,7 @@ create table if_meilihui
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   CreationTime     datetime,
   ProductID        int UNSIGNED NULL,
@@ -1440,7 +1440,7 @@ create table if_meixi
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   CreationTime     datetime,
   ProductID        int UNSIGNED NULL,
@@ -1476,7 +1476,7 @@ create table if_ofashion
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   CreationTime     datetime,
   ProductID        int UNSIGNED NULL,
@@ -1511,7 +1511,7 @@ create table if_shangpin
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   CreationTime     datetime,
   ProductID        int UNSIGNED NULL,
@@ -1546,7 +1546,7 @@ create table if_shangpin_direct
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   CreationTime     datetime,
   ProductID        int UNSIGNED NULL,
@@ -1582,7 +1582,7 @@ create table if_siku
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   CreationTime     datetime,
   ProductID        int UNSIGNED NULL,
@@ -1612,7 +1612,7 @@ create table if_sxdzb
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductID        int UNSIGNED NULL,
   ZpID             bigint,
@@ -1633,7 +1633,7 @@ create table if_zhenpin
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   CreationTime     datetime,
   ProductID        int UNSIGNED NULL,
@@ -1666,7 +1666,7 @@ create table if_zouxiu
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   CreationTime     datetime,
   ProductID        int UNSIGNED NULL,
@@ -1698,7 +1698,7 @@ create table link_actual_to_productstock
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductstockID   int UNSIGNED NULL,
   ActualID         int UNSIGNED NULL,
@@ -1719,7 +1719,7 @@ create table link_barcode_to_size
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   SizeID           int UNSIGNED NULL,
   ProductID        int UNSIGNED NULL,
@@ -1741,7 +1741,7 @@ create table link_brand_to_brandgroup
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   BrandID          int UNSIGNED NULL,
   GroupID          int UNSIGNED NULL,
@@ -1764,7 +1764,7 @@ create table link_brand_to_discount
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   BrandID          int UNSIGNED NULL,
   Decade           varchar(36),
@@ -1790,7 +1790,7 @@ create table link_brand_to_priced
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   BrandTypeID      int UNSIGNED NULL,
   Priced           decimal(19,6),
@@ -1821,7 +1821,7 @@ create table link_brandgroup_to_supplier
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   SupplierID       int UNSIGNED NULL,
   BrandGroupID     int UNSIGNED NULL,
@@ -1846,7 +1846,7 @@ create table link_cdetail_to_ddetail
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   cDetailID        int UNSIGNED NULL,
   ddetailID        varchar(36),
@@ -1867,7 +1867,7 @@ create table link_childbrand_to_execution
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ChildBrandID     varchar(36),
   ExecutionID      varchar(36),
@@ -1888,7 +1888,7 @@ create table link_childbrand_to_innards
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ChildBrandID     varchar(36),
   InnardsID        varchar(36),
@@ -1909,7 +1909,7 @@ create table link_childbrand_to_material
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ChildBrandID     varchar(36),
   MaterialID       varchar(36),
@@ -1934,7 +1934,7 @@ create table link_childbrand_to_outinnards
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ChildBrandID     varchar(36),
   OutInnardsID     varchar(36),
@@ -1955,7 +1955,7 @@ create table link_childbrand_to_safety
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ChildBrandID     varchar(36),
   SafetyID         varchar(36),
@@ -1976,7 +1976,7 @@ create table link_color_to_brand
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ColorID          int UNSIGNED NULL,
   BrandID          int UNSIGNED NULL,
@@ -2020,7 +2020,7 @@ create table link_ctn_to_cdetail
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   cOrderDetailID   varchar(36),
   CtnID            varchar(36),
@@ -2042,7 +2042,7 @@ create table link_data_to_file
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   DataID           varchar(36) comment '上传附件的相关数据ID，例如：订单ID等',
   PictureName      varchar(500),
@@ -2080,7 +2080,7 @@ create table link_department_to_salesport
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   DepartmentID     int UNSIGNED NULL,
   SportID          int UNSIGNED NULL,
@@ -2101,7 +2101,7 @@ create table link_detail_to_detail
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   pDetailID        varchar(36),
   cDetailID        int UNSIGNED NULL,
@@ -2123,7 +2123,7 @@ create table link_distribute_to_cdetail
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   cOrderDetailID   varchar(36),
   DstributeID      varchar(36),
@@ -2147,7 +2147,7 @@ create table link_group_to_navigation
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   primary key (id)
 );
@@ -2166,7 +2166,7 @@ create table link_invoice_to_order
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   InvoiceID        varchar(36),
   OrderID          int UNSIGNED NULL,
@@ -2188,7 +2188,7 @@ create table link_invoice_to_requisition
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   InvoiceID        varchar(36),
   RequisitionID    int UNSIGNED NULL,
@@ -2210,7 +2210,7 @@ create table link_invoice_to_warehousing
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   InvoiceID        varchar(36),
   WarehousingID    int UNSIGNED NULL,
@@ -2232,7 +2232,7 @@ create table link_kp_to_store
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   KPID             int UNSIGNED NULL,
   ProductstockID   int UNSIGNED NULL,
@@ -2253,7 +2253,7 @@ create table link_prep_to_productstock
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductstockID   int UNSIGNED NULL,
   PrepID           varchar(36),
@@ -2274,7 +2274,7 @@ create table link_pricelist_to_salesport
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   PriceListID      int UNSIGNED NULL,
   SportID          int UNSIGNED NULL,
@@ -2295,7 +2295,7 @@ create table link_product_to_MaterislStatus
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductID        int UNSIGNED NULL,
   MaterislStatusID varchar(36),
@@ -2316,7 +2316,7 @@ create table link_product_to_SalesNature
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductID        int UNSIGNED NULL,
   SalesNatureID    varchar(36),
@@ -2337,7 +2337,7 @@ create table link_product_to_closedway
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductID        int UNSIGNED NULL,
   ClosedWayID      varchar(36),
@@ -2358,7 +2358,7 @@ create table link_product_to_decade
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductID        int UNSIGNED NULL,
   DecadeID         int UNSIGNED NOT NULL,
@@ -2379,7 +2379,7 @@ create table link_product_to_dscrb
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductID        int UNSIGNED NULL,
   DscrbID          varchar(36),
@@ -2400,7 +2400,7 @@ create table link_product_to_marketprice
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductID        int UNSIGNED NULL,
   Price            decimal(16,9),
@@ -2432,7 +2432,7 @@ create table link_product_to_material
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductID        int UNSIGNED NULL,
   MaterialID       varchar(36),
@@ -2455,7 +2455,7 @@ create table link_product_to_material2
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductID        int UNSIGNED NULL,
   MaterialID       varchar(36),
@@ -2478,7 +2478,7 @@ create table link_product_to_occasions
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductID        int UNSIGNED NULL,
   OccasionsID      varchar(36),
@@ -2499,7 +2499,7 @@ create table link_product_to_origin
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductID        int UNSIGNED NULL,
   OriginID         varchar(36),
@@ -2520,7 +2520,7 @@ create table link_product_to_outproductinnards
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductID        int UNSIGNED NULL,
   InnardsID        varchar(36),
@@ -2542,7 +2542,7 @@ create table link_product_to_picture
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductID        int UNSIGNED NULL,
   PictureID        varchar(36),
@@ -2565,7 +2565,7 @@ create table link_product_to_picture_ftp
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductID        int UNSIGNED NULL,
   PictureName      varchar(500),
@@ -2591,7 +2591,7 @@ create table link_product_to_price
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   PriceID          int UNSIGNED NULL,
   CurrencyID       int UNSIGNED NULL,
@@ -2620,7 +2620,7 @@ create table link_product_to_price2
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   PriceID          int UNSIGNED NULL,
   CurrencyID       int UNSIGNED NULL,
@@ -2644,7 +2644,7 @@ create table link_product_to_price_history
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   PriceID          int UNSIGNED NULL,
   CurrencyID       int UNSIGNED NULL,
@@ -2672,7 +2672,7 @@ create table link_product_to_productinnards
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductID        int UNSIGNED NULL,
   InnardsID        varchar(36),
@@ -2694,7 +2694,7 @@ create table link_product_to_productparts
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductID        int UNSIGNED NULL,
   PartsID          varchar(36),
@@ -2715,7 +2715,7 @@ create table link_product_to_salesport
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductID        int UNSIGNED NULL,
   SportID          int UNSIGNED NULL,
@@ -2740,7 +2740,7 @@ create table link_product_to_salesport_history
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductID        int UNSIGNED NULL,
   SportID          int UNSIGNED NULL,
@@ -2766,7 +2766,7 @@ create table link_product_to_size
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductID        int UNSIGNED NULL,
   SizeID           int UNSIGNED NULL,
@@ -2862,7 +2862,7 @@ create table link_pzh_to_order
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   OrderID          int UNSIGNED NULL,
   pzhid            int UNSIGNED NULL,
@@ -2887,7 +2887,7 @@ create table link_pzh_to_sales
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   SalesID          int UNSIGNED NULL,
   pzhid            int UNSIGNED NULL,
@@ -2912,7 +2912,7 @@ create table link_pzh_to_sales_trans
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   SalesID          int UNSIGNED NULL,
   pzhid            int UNSIGNED NULL,
@@ -2962,7 +2962,7 @@ create table link_return_to_productstock
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductstockID   int UNSIGNED NULL,
   DealPrice        varchar(36),
@@ -2989,7 +2989,7 @@ create table link_rule_to_operation
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   primary key (id)
 );
@@ -3008,7 +3008,7 @@ create table link_sales_to_productstock
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductstockID   int UNSIGNED NULL,
   DealPrice        decimal(10,2),
@@ -3045,7 +3045,7 @@ create table link_salespot_to_childbrand
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   SaleSpotID       int UNSIGNED NULL,
   BrandTypeID      int UNSIGNED NULL,
@@ -3093,7 +3093,7 @@ create table link_special_to_productstock
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductstockID   int UNSIGNED NULL,
   SpecialID        int UNSIGNED NOT NULL,
@@ -3114,7 +3114,7 @@ create table link_spot_warehouse
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   SpotID           int UNSIGNED NULL,
   WarehouseID      int UNSIGNED NULL,
@@ -3164,7 +3164,7 @@ create table link_user_to_labourcontactor
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   UserID           int UNSIGNED NULL,
   DateFrom         datetime,
@@ -3187,7 +3187,7 @@ create table link_user_to_price
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   UserID           int UNSIGNED NULL,
   PriceID          int UNSIGNED NULL,
@@ -3208,7 +3208,7 @@ create table link_user_to_reportset
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   UserID           int UNSIGNED NULL,
   reportID         int UNSIGNED NULL,
@@ -3231,7 +3231,7 @@ create table link_user_to_rule
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   primary key (id)
 );
@@ -3250,7 +3250,7 @@ create table link_user_to_salesport
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   UserID           int UNSIGNED NULL,
   SportID          int UNSIGNED NULL,
@@ -3271,7 +3271,7 @@ create table link_user_to_supplier
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   UserID           int UNSIGNED NULL,
   SupplierID       int UNSIGNED NULL,
@@ -3292,7 +3292,7 @@ create table link_user_to_warehouse
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   UserID           int UNSIGNED NULL,
   WarehouseID      int UNSIGNED NULL,
@@ -3313,7 +3313,7 @@ create table sys_config
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Code             varchar(100) comment 'FTP-ftp文件服务器ip地址，value值不以/结尾',
   Value            varchar(100),
@@ -3335,7 +3335,7 @@ create table sys_selfcompany
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   selfcompanyid    int UNSIGNED NULL,
   primary key (id)
@@ -3356,7 +3356,7 @@ create table tb_card
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Member_id        int UNSIGNED NULL,
   CardNo           varchar(50),
@@ -3381,7 +3381,7 @@ create table tb_check
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   checkNo          varchar(10),
   WarehouseID      int UNSIGNED NULL,
@@ -3409,7 +3409,7 @@ create table tb_check_detail
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   CheckID          int UNSIGNED NULL,
   ProductID        int UNSIGNED NULL,
@@ -3437,7 +3437,7 @@ create table tb_contactlist
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   CorderID         int UNSIGNED NULL,
   addName          varchar(36),
@@ -3482,7 +3482,7 @@ create table tb_declaration
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   No               varchar(50),
   Remark           varchar(1000),
@@ -3507,7 +3507,7 @@ create table tb_declaration_detail
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   DeclarationID    int UNSIGNED NULL,
   ProductName      varchar(100),
@@ -3537,7 +3537,7 @@ create table tb_department
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Name             varchar(100),
   Remark           varchar(1000),
@@ -3563,7 +3563,7 @@ create table tb_discount_card
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Number           varchar(50),
   Amount           decimal(16,9),
@@ -3588,7 +3588,7 @@ create table tb_distribute
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   DistributeNo     varchar(50),
   Owner            varchar(36),
@@ -3614,7 +3614,7 @@ create table tb_distributecode
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Year             varchar(5),
   Code             varchar(10),
@@ -3635,7 +3635,7 @@ create table tb_express
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ExpressCompany   varchar(1) comment '0-顺丰 1-德邦 2-京东 3-其他 4-圆通',
   ExpressNo        varchar(50),
@@ -3707,7 +3707,7 @@ create table tb_fee_detail
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   TbFeeID          INT UNSIGNED NULL,
   FeeID            int UNSIGNED NULL,
@@ -3740,7 +3740,7 @@ create table tb_feecode
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Year             varchar(5),
   Code             varchar(10),
@@ -3765,7 +3765,7 @@ create table tb_group
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   primary key (id)
 );
@@ -3784,7 +3784,7 @@ create table tb_inve_actual
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   form_num         varchar(30),
   checker          varchar(36),
@@ -3808,7 +3808,7 @@ create table tb_inve_actual_dtl
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   curr_quantity    bigint,
   real_quantity    bigint,
@@ -3834,7 +3834,7 @@ create table tb_inve_prep
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   form_num         varchar(30),
   checker          varchar(36),
@@ -3859,7 +3859,7 @@ create table tb_inve_prep_dtl
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Product_id       int UNSIGNED NULL,
   Size_id          int UNSIGNED NULL,
@@ -3883,7 +3883,7 @@ create table tb_kp
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   InvoiceNo        varchar(50),
   KPDate           datetime,
@@ -3908,7 +3908,7 @@ create table tb_member
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   name             varchar(50),
   code             varchar(20),
@@ -3955,7 +3955,7 @@ create table tb_member_address
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Member_id        int UNSIGNED NULL,
   Name             varchar(50),
@@ -3983,7 +3983,7 @@ create table tb_member_bank
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Member_id        int UNSIGNED NULL,
   Account_name     varchar(1000),
@@ -4009,7 +4009,7 @@ create table tb_member_card
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Number           varchar(50),
   Is_used          varchar(1) comment '0-否 1-是',
@@ -4030,7 +4030,7 @@ create table tb_member_card_history
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Member_id        int UNSIGNED NULL,
   Type             varchar(1) comment '0-充值 1-消费 ',
@@ -4054,7 +4054,7 @@ create table tb_member_contactor
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Member_id        int UNSIGNED NULL,
   Name             char(10),
@@ -4088,7 +4088,7 @@ create table tb_member_header
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Member_id        int UNSIGNED NULL,
   Chinese_header   varchar(1000),
@@ -4157,7 +4157,7 @@ create table tb_member_preordination
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   OrderDate        datetime,
   MemberID         int UNSIGNED NULL,
@@ -4181,7 +4181,7 @@ create table tb_picture
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   PictureName      varchar(20),
   PictureStream    longblob,
@@ -4204,7 +4204,7 @@ create table tb_pre_requisition
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductStock_id  int UNSIGNED NULL,
   StockID          int UNSIGNED NULL,
@@ -4342,7 +4342,7 @@ create table tb_productstock
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductID        int UNSIGNED NULL,
   SizeID           int UNSIGNED NULL,
@@ -4392,7 +4392,7 @@ create table tb_productstock_snapshot
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   SnapDate         datetime,
   ProductstockID   int UNSIGNED NULL,
@@ -4484,7 +4484,7 @@ create table tb_requisition_detail
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Requisition_id   int UNSIGNED NOT NULL,
   stock_id         INT UNSIGNED NULL,
@@ -4506,7 +4506,7 @@ create table tb_requisition_detail_group
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Requisition_id   int UNSIGNED NOT NULL,
   Product_id       int UNSIGNED NULL,
@@ -4533,7 +4533,7 @@ create table tb_requisition_express
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   RequisitionID    int UNSIGNED NULL,
   ExpressCompany   varchar(1) comment '0-顺丰 1-德邦 2-京东 3-其他 4-圆通',
@@ -4560,7 +4560,7 @@ create table tb_requisitioncode
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Year             varchar(5),
   Code             varchar(10),
@@ -4584,7 +4584,7 @@ create table tb_rule
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   primary key (id)
 );
@@ -4603,7 +4603,7 @@ create table tb_savings_card
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Number           varchar(50),
   Password         varchar(10),
@@ -4628,7 +4628,7 @@ create table tb_special_requisition
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   No               varchar(10),
   StuffID          int UNSIGNED NULL,
@@ -4654,7 +4654,7 @@ create table tb_special_requisition_detail
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   SpecialID        int UNSIGNED NOT NULL,
   ProductID        int UNSIGNED NULL,
@@ -4680,7 +4680,7 @@ create table tb_stock
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   DeclarationID    int UNSIGNED NULL,
   ProductName      varchar(100),
@@ -4759,7 +4759,7 @@ create table tb_supplier_orderdate
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   SupplierID       int UNSIGNED NULL,
   BrandID          int UNSIGNED NULL,
@@ -4840,7 +4840,7 @@ create table tb_verificationcode
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   verificationCode varchar(50),
   source           varchar(100) comment '注册，绑定，支付',
@@ -4863,7 +4863,7 @@ create table tb_warehousing
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ArrivalID        int UNSIGNED NULL,
   EntryDate        datetime not null,
@@ -4896,7 +4896,7 @@ create table tb_warehousing_detail
   sys_modify_date  datetime      not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint       not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint       not null default '0' comment '0-未删除 1-已删除',
 
   DetailID         int UNSIGNED NULL,
   Warehousing_id   int UNSIGNED NOT NULL,
@@ -4927,7 +4927,7 @@ create table tb_warehousing_fee
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   WarehousingID    int UNSIGNED NULL,
   FeeID            int UNSIGNED NULL,
@@ -4951,7 +4951,7 @@ create table trans_brand_code
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   BrandID          int UNSIGNED NULL,
   Code             varchar(50),
@@ -4974,7 +4974,7 @@ create table trans_color_code
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ColorID          int UNSIGNED NULL,
   Code             varchar(50),
@@ -4996,7 +4996,7 @@ create table trans_group_code
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   GroupID          int UNSIGNED NULL,
   Code             varchar(50),
@@ -5018,7 +5018,7 @@ create table trans_size_code
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   SizeID           int UNSIGNED NULL,
   TypeID           int UNSIGNED NULL,
@@ -5041,7 +5041,7 @@ create table xs_afterservice
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   MemberID         int UNSIGNED NULL,
   SalesStaff       varchar(36),
@@ -5068,7 +5068,7 @@ create table xs_afterservice_detail
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   AfterServiceID   int UNSIGNED NULL,
   DetailID         int UNSIGNED NULL,
@@ -5096,7 +5096,7 @@ create table xs_pre_sales
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   MemberID         int UNSIGNED NULL,
   PriceListID      int UNSIGNED NULL,
@@ -5130,7 +5130,7 @@ create table xs_pre_salescode
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Year             varchar(5),
   Code             varchar(10),
@@ -5152,7 +5152,7 @@ create table xs_pre_salesdetails
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Sales_id         int UNSIGNED NOT NULL,
   Product_id       int UNSIGNED NULL,
@@ -5180,7 +5180,7 @@ create table xs_pricelist
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   BeginDate        datetime,
   EndDate          datetime,
@@ -5206,7 +5206,7 @@ create table xs_pricelistdetails
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductID        int UNSIGNED NULL,
   ProductPrice     decimal(10,2),
@@ -5228,7 +5228,7 @@ create table xs_return
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ActualPrice      decimal(16,9),
   SellSpotID       int UNSIGNED NULL,
@@ -5253,7 +5253,7 @@ create table xs_returncode
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Year             varchar(5),
   Code             varchar(10),
@@ -5274,7 +5274,7 @@ create table xs_sales
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ActualPrice      decimal(16,9),
   MemberID         int UNSIGNED NULL,
@@ -5332,7 +5332,7 @@ create table xs_sales_card
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ActualPrice      decimal(16,9),
   MemberID         int UNSIGNED NULL,
@@ -5360,7 +5360,7 @@ create table xs_sales_cardetails
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Sales_id         int UNSIGNED NOT NULL,
   DealPrice        decimal(16,9),
@@ -5386,7 +5386,7 @@ create table xs_sales_pay
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Sales_id         int UNSIGNED NOT NULL,
   PaidType         varchar(5) comment '0-现金
@@ -5428,7 +5428,7 @@ create table xs_salescode
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Year             varchar(5),
   Code             varchar(10),
@@ -5484,10 +5484,11 @@ create table zl_ac_cashflow_statement
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   subject_name     varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   subject_type     int comment '0-正，1-负',
   orderno          int,
   parentid         int UNSIGNED NULL,
@@ -5508,10 +5509,11 @@ create table zl_ac_cashflow_subject
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   SorF             varchar(1) comment '0-正，1-负',
   primary key (id)
 );
@@ -5527,6 +5529,7 @@ create table zl_ac_km
   code             char(1)    not null,
   chinese_name     char(1)    not null,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   km_type_id       int UNSIGNED NOT NULL,
   up_km_id         int UNSIGNED NULL,
   is_havexj        varchar(1) not null comment '0-没有,1-有',
@@ -5553,6 +5556,7 @@ create table zl_ac_km_type
   code             varchar(1) not null,
   chinese_memo     char(1)    not null,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   sys_create_stuff int UNSIGNED NOT NULL,
   sys_create_date  datetime   not null,
   sys_modify_stuff int UNSIGNED NOT NULL,
@@ -5578,7 +5582,7 @@ create table zl_ac_pzh_rule
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   RuleCode         varchar(50),
   kmid             int UNSIGNED NULL,
@@ -5597,6 +5601,7 @@ create table zl_ac_pzh_type
   code             varchar(4) not null,
   chinese_memo     char(1)    not null,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   sys_create_stuff int UNSIGNED NOT NULL,
   sys_create_date  datetime   not null,
   sys_modify_stuff int UNSIGNED NOT NULL,
@@ -5618,6 +5623,7 @@ create table zl_ac_ztb
   id               int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   zt_name          varchar(100) not null,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   km_code_rule     varchar(50)  not null,
   star_date        datetime     not null,
   end_date         datetime comment '只有结束了才有值',
@@ -5650,11 +5656,12 @@ create table zl_ageseason
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   SessionMark      varchar(10),
   SessionName      varchar(10),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   primary key (id)
 );
 
@@ -5672,10 +5679,11 @@ create table zl_aliases
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   Code             varchar(50),
   BrandID          int UNSIGNED NULL,
   primary key (id)
@@ -5695,10 +5703,11 @@ create table zl_bankinformation
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   BankName         varchar(100),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   BankName2        varchar(100),
   BankAddress      varchar(100),
   BankAccount      varchar(50),
@@ -5725,15 +5734,16 @@ create table zl_brand
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Code             varchar(50),
   BrandName        varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   CountryID        int UNSIGNED NULL,
   ChildBrand       varchar(36),
   Description      varchar(1000),
-  ImageStream      longblob,
+  ImageUrl         varchar(200),
   memo             char(1),
   Supplier         varchar(36),
   Officialwebsite  varchar(500),
@@ -5755,11 +5765,12 @@ create table zl_brandgroup
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Code             varchar(50),
   BrandGroupName   varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   primary key (id)
 );
 
@@ -5777,11 +5788,12 @@ create table zl_brandremark
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   BrandID          int UNSIGNED NULL,
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   Remark           varchar(100),
   Pic              longblob,
   primary key (id)
@@ -5801,10 +5813,11 @@ create table zl_businesstype
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   primary key (id)
 );
 
@@ -5826,6 +5839,7 @@ create table zl_childproductgroup
 
   ChildName         varchar(50),
   lang_code         varchar(20) NULL COMMENT '语言编码',
+  relateid          int UNSIGNED NULL COMMENT '关联ID',
   ChildCode         varchar(50),
   ProductGroupID    int UNSIGNED NULL,
   ProductTemplateID int UNSIGNED NULL,
@@ -5854,6 +5868,7 @@ create table zl_closedway
 
   closedWayName     varchar(50),
   lang_code         varchar(20) NULL COMMENT '语言编码',
+  relateid          int UNSIGNED NULL COMMENT '关联ID',
   closedWayNameNote varchar(100),
   primary key (id)
 );
@@ -5872,11 +5887,12 @@ create table zl_color
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Code             varchar(10),
   colorName        varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   colorMatter      varchar(100),
   ASAColorID       int UNSIGNED NULL,
   BrandID          int UNSIGNED NULL,
@@ -5898,10 +5914,11 @@ create table zl_colortemplate
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Color_Name       varchar(20),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   Code             varchar(4),
   Color_Note       varchar(200),
   ColorType        varchar(50),
@@ -5922,10 +5939,11 @@ create table zl_companycontacts
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   Gender           varchar(10),
   Department       varchar(20),
   Position         varchar(20),
@@ -5963,7 +5981,7 @@ create table zl_costformula
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductPriceID   int UNSIGNED NULL,
   Symbol_1         char(10),
@@ -5972,6 +5990,7 @@ create table zl_costformula
   Coefficient_2    decimal(10,2),
   FormulaName      varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   primary key (id)
 );
 
@@ -5986,6 +6005,7 @@ create table zl_country
   code             varchar(20)  not null,
   name             varchar(100) not null,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   sys_create_stuff int UNSIGNED NOT NULL,
   sys_create_date  datetime     not null,
   sys_modify_stuff int UNSIGNED NOT NULL,
@@ -6037,10 +6057,11 @@ create table zl_currency
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   CurrencyName     varchar(20),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   CurrencyCode     varchar(10),
   CurrencyMark     bool,
   UserFlag         varchar(1),
@@ -6061,10 +6082,11 @@ create table zl_customs_name
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   Remark           varchar(100),
   primary key (id)
 );
@@ -6084,7 +6106,7 @@ create table zl_decade
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Decade           varchar(10),
   primary key (id)
@@ -6104,10 +6126,11 @@ create table zl_delare_makings
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   Remark           varchar(100),
   primary key (id)
 );
@@ -6126,11 +6149,12 @@ create table zl_ex_reportstyle
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   code             varchar(20),
   chinese_name     varchar(100),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   tdBackX          int,
   tdBackY          int,
   tdBackWidth      int,
@@ -6155,7 +6179,7 @@ create table zl_ex_reportstyle_detail
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   type_id          int UNSIGNED NULL,
   tdfield          varchar(200),
@@ -6181,7 +6205,7 @@ create table zl_exchangerate
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ExchangeRateDate varchar(50),
   ExportCurrency   varchar(36) comment '汇出币种',
@@ -6204,10 +6228,11 @@ create table zl_executioncategory
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ExecutionName    varchar(100),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   ExecutionMatter  varchar(500),
   Note             varchar(500),
   primary key (id)
@@ -6227,10 +6252,11 @@ create table zl_exhibition
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   Remark           varchar(100),
   Status           varchar(1) comment '0-不可用 1-可用',
   primary key (id)
@@ -6250,11 +6276,12 @@ create table zl_feenames
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Code             varchar(20),
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   kmid             int UNSIGNED NULL,
   IsAmortize       tinyint comment '0-不摊销 1-金额摊销 2-件数摊销',
   IsUsed           varchar(1) comment '0-不常用 1-常用',
@@ -6275,10 +6302,11 @@ create table zl_forbiddenword
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Word             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   Remark           varchar(100),
   primary key (id)
 );
@@ -6297,10 +6325,11 @@ create table zl_imagetool
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   Type             varchar(1) comment '0-修改尺寸
             1-修改尺寸并添加
             2-裁剪并对齐',
@@ -6325,7 +6354,7 @@ create table zl_invite_rule
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Bonus            bigint,
   Remark           text,
@@ -6346,11 +6375,12 @@ create table zl_invoice_header
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   SupplierID       int UNSIGNED NULL,
   Header           varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   Remark           varchar(200),
   IsDefault        varchar(1) comment '1-默认 0-非默认',
   primary key (id)
@@ -6370,11 +6400,12 @@ create table zl_material
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   MaterialName     varchar(20),
   Code             varchar(20),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   primary key (id)
 );
 
@@ -6393,10 +6424,11 @@ create table zl_materialnote
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Content          varchar(100),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   primary key (id)
 );
 
@@ -6414,11 +6446,12 @@ create table zl_materialstatus
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Code             varchar(20),
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   primary key (id)
 );
 
@@ -6436,10 +6469,11 @@ create table zl_memberlevel
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   MemberLevel      varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   Discount         decimal(16,9),
   LevelBasicScore  bigint,
   IntegralRule     decimal(16,9) comment '实际成交价格x积分规则=获得积分',
@@ -6467,6 +6501,7 @@ create table zl_occasionsstyle
 
   OccasionsStyleName varchar(50),
   lang_code          varchar(20) NULL COMMENT '语言编码',
+  relateid           int UNSIGNED NULL COMMENT '关联ID',
   OccasionsStyleMode varchar(200),
   primary key (id)
 );
@@ -6485,10 +6520,11 @@ create table zl_pricesource
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   Remark           varchar(500),
   primary key (id)
 );
@@ -6507,10 +6543,11 @@ create table zl_productdscrb
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   Remark           varchar(100),
   primary key (id)
 );
@@ -6529,10 +6566,11 @@ create table zl_productinnards
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   PartsName        varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   primary key (id)
 );
 
@@ -6550,11 +6588,12 @@ create table zl_productparts
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   PartsCode        varchar(50),
   PartsName        varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   PackFlag         varchar(1),
   primary key (id)
 );
@@ -6574,10 +6613,11 @@ create table zl_productprice
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   SaleName         varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   IsDefault        varchar(1) comment '0 - 默认
             1 - 不默认',
   CurreancyID      int UNSIGNED NULL,
@@ -6600,10 +6640,11 @@ create table zl_productstyle
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   BrandGroup       varchar(36),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   ChildBrand       varchar(36),
   ProductStyle     varchar(10),
   primary key (id)
@@ -6623,10 +6664,11 @@ create table zl_producttemplate
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   TemplateName     varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   Picture          longblob,
   primary key (id)
 );
@@ -6645,10 +6687,11 @@ create table zl_quotedprice
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   S_ID             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   Currency         varchar(50),
   QuotedPrice      decimal(10,0),
   QuotedDate       datetime,
@@ -6669,11 +6712,12 @@ create table zl_reportset
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Code             varchar(50),
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   Remark           varchar(500),
   primary key (id)
 );
@@ -6692,11 +6736,12 @@ create table zl_reportset_detail
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   SetID            int UNSIGNED NULL,
   Code             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   `Index`          int,
   Width            int,
   primary key (id)
@@ -6716,10 +6761,11 @@ create table zl_salesmethods
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   SalesMethodsName varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   SalesMethodsMode varchar(200),
   BrandType        varchar(36),
   primary key (id)
@@ -6739,10 +6785,11 @@ create table zl_salesport
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProtName         varchar(20),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   Remark           varchar(500),
   StoreName        varchar(50),
   Isonline         varchar(1) comment '0-否 1-是',
@@ -6769,10 +6816,11 @@ create table zl_salesport_mission
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   SaleSpotID       int UNSIGNED NULL,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   YearMonth        varchar(10) comment '格式为201801',
   SaleSum          decimal(10,2),
   Profit           decimal(10,2),
@@ -6795,10 +6843,11 @@ create table zl_series
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   Code             varchar(50),
   BrandID          int UNSIGNED NULL,
   primary key (id)
@@ -6818,11 +6867,12 @@ create table zl_series2
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   SeriesID         int UNSIGNED NULL,
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   Code             varchar(50),
   primary key (id)
 );
@@ -6841,11 +6891,12 @@ create table zl_shippingtype
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   code             varchar(10),
   name             varchar(10),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   remark           varchar(50),
   primary key (id)
 );
@@ -6864,10 +6915,11 @@ create table zl_sizecontent
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   TopID            int UNSIGNED NULL,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   Content          varchar(10),
   SortNum          int,
   Remark           varchar(100),
@@ -6888,10 +6940,11 @@ create table zl_sizetop
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   Code             varchar(50),
   primary key (id)
 );
@@ -6910,10 +6963,11 @@ create table zl_storemove
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   ProductID        int UNSIGNED NULL,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   StoreId          int UNSIGNED NULL,
   MoveMan          varchar(50),
   MoveDate         datetime,
@@ -6936,10 +6990,11 @@ create table zl_style
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   StyleName        varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   StyleMode        varchar(200),
   primary key (id)
 );
@@ -6958,10 +7013,11 @@ create table zl_supplier_type
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   SupplierID       int UNSIGNED NULL,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   Type             varchar(1) comment '0-供货商 1-报关行 2-供应商 3-承运人 4-客户',
   primary key (id)
 );
@@ -6980,10 +7036,11 @@ create table zl_supplierlevel
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   LevelName        varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   LevelNote        varchar(100),
   primary key (id)
 );
@@ -7002,10 +7059,11 @@ create table zl_sys_selfcompany
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   supplier_id      int UNSIGNED NULL,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   primary key (id)
 );
 
@@ -7023,10 +7081,11 @@ create table zl_template_descrb
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   TempID           int UNSIGNED NULL,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   SizeTopID        int UNSIGNED NULL,
   SizeID           int UNSIGNED NULL,
   BaseLenth        decimal(10,2),
@@ -7048,10 +7107,11 @@ create table zl_templatelist
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   TemplateName     varchar(36),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   SizeName         varchar(36),
   Content          varchar(20),
   ProductID        int UNSIGNED NULL,
@@ -7072,10 +7132,11 @@ create table zl_templatemanage
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   TemplateName     varchar(20),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   TempID           int UNSIGNED NULL,
   SortNum          int,
   primary key (id)
@@ -7095,10 +7156,11 @@ create table zl_trans_code
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   Code             varchar(50),
   Remark           varchar(500),
   primary key (id)
@@ -7118,10 +7180,11 @@ create table zl_ulnarinch
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   primary key (id)
 );
 
@@ -7139,10 +7202,11 @@ create table zl_unit
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   UnitName         varchar(20),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   UnitGroupID      varchar(50),
   primary key (id)
 );
@@ -7161,10 +7225,11 @@ create table zl_unitgroup
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   GroupName        varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   Crew             varchar(100),
   primary key (id)
 );
@@ -7183,12 +7248,13 @@ create table zl_warehouse
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Country          varchar(36),
   City             varchar(20),
   StoreName        varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   StoreAddress     varchar(100),
   Contact          varchar(20),
   Toll             varchar(20),
@@ -7218,10 +7284,11 @@ create table zl_washinginstructions
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   name             varchar(10),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   remark           varchar(50),
   image            longblob,
   primary key (id)
@@ -7241,10 +7308,11 @@ create table zl_winterproofing
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   Name             varchar(20),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  relateid         int UNSIGNED NULL COMMENT '关联ID',
   Remark           varchar(100),
   primary key (id)
 );
@@ -7263,7 +7331,7 @@ create table zl_yearexchange
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   YearDate         varchar(50),
   Money            decimal(16,9) comment 'import:export',
@@ -7288,7 +7356,7 @@ create table 模版
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
 
   primary key (id)
 );
@@ -7386,7 +7454,7 @@ CREATE TABLE `permission_role`
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
   `role_id`        int UNSIGNED NOT NULL COMMENT '角色ID',
   `permission_id`  int UNSIGNED NOT NULL COMMENT '权限ID',
   PRIMARY KEY (`id`)
@@ -7403,7 +7471,7 @@ CREATE TABLE `role_user`
   sys_modify_date  datetime not null,
   sys_delete_stuff int UNSIGNED NULL,
   sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  sys_delete_flag  tinyint  not null default '0' comment '0-未删除 1-已删除',
   `role_id`        int UNSIGNED NOT NULL COMMENT '角色ID',
   `user_id`        bigint UNSIGNED NOT NULL COMMENT '用户ID',
   PRIMARY KEY (`id`)
