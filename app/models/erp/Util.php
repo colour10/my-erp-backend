@@ -25,6 +25,7 @@ class Util {
                     $tree[] = [
                         'id' => $v['id'],
                         'label' => $v['Name'],
+                        'remark' => $v['Remark'],
                         'level' => $level,
                         'children' =>[]
                     ];
@@ -32,6 +33,7 @@ class Util {
                     $tree[] = [
                         'id' => $v['id'],
                         'label' => $v['Name'],
+                        'remark' => $v['Remark'],
                         'level' => $level,
                         // 新增children
                         'children' => $children,

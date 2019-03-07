@@ -544,7 +544,7 @@ create table ac_invoice
   CheckID          int UNSIGNED NULL,
   GLStatus         varchar(1),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table ac_invoice comment '货款发票主表';
 
@@ -576,7 +576,7 @@ create table ac_invoice_fee
   CheckID          int UNSIGNED NULL,
   GLStatus         varchar(1),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table ac_invoice_fee comment '运费发票主表';
 
@@ -604,7 +604,7 @@ create table ac_invoice_fee_detail
   Remark            varchar(100),
   SFCompany         varchar(36),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table ac_invoice_fee_detail comment '运费发票明细表';
 
@@ -637,7 +637,7 @@ create table ac_invoice_prepay
   CheckStatus      varchar(1) comment '0-未审核，1-已审核',
   CheckID          int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table ac_invoice_prepay comment '订金发票主表';
 
@@ -672,7 +672,7 @@ create table ac_kmyue_wb
   cus_id           int UNSIGNED NULL,
   dep_id           int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table ac_kmyue_wb comment '科目余额表';
 
@@ -706,7 +706,7 @@ create table ac_pzhb
   jzr              varchar(36),
   jzrq             datetime,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table ac_pzhb comment '凭证表';
 
@@ -732,7 +732,7 @@ create table ac_pzhh
   pzhxh            int,
   yjbz             varchar(1),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table ac_pzhh comment '凭证号表';
 
@@ -764,7 +764,7 @@ create table ac_pzhmxb
   dep_id           int UNSIGNED NULL,
   jord             varchar(1),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table ac_pzhmxb comment '凭证明细表';
 
@@ -799,7 +799,7 @@ create table ac_sf_sheet
   RefundRemark     text,
   IsRefund         varchar(1),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table ac_sf_sheet comment '对账费单';
 
@@ -821,7 +821,7 @@ create table ac_sf_sheet_code
   Code             varchar(10),
   Month            varchar(5),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table ac_sf_sheet_code comment '对账单号表';
 
@@ -847,7 +847,7 @@ create table ac_sf_sheet_refund
   InvoiceNo        varchar(100),
   Remark           varchar(1000),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table ac_sf_sheet_refund comment '对账单回款情况';
 
@@ -881,7 +881,7 @@ create table dd_arrivalnotice
   BrandID          int UNSIGNED NULL,
   FinalSupplierID  int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table dd_arrivalnotice comment '到货单';
 
@@ -910,7 +910,7 @@ create table dd_arrivalnotice_detail
   cjj              decimal(16,9),
   yj               decimal(16,9),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table dd_arrivalnotice_detail comment '到货单明细';
 
@@ -977,7 +977,7 @@ create table dd_confirmorder
   InvoiceNo          varchar(50),
   DD_Company         varchar(36) not null,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table dd_confirmorder comment '发货单';
 
@@ -1004,7 +1004,7 @@ create table dd_corder_ctn
   CBM              decimal(16,9),
   Remark           varchar(500),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table dd_corder_ctn comment '发货单装箱信息';
 
@@ -1032,7 +1032,7 @@ create table dd_corder_temp
   CurrencyID       int UNSIGNED NULL,
   Price            decimal(16,9),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table dd_corder_temp comment '发货单入库快照';
 
@@ -1067,7 +1067,7 @@ create table dd_corderdetails
   Size             varchar(50),
   Weight           varchar(50),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table dd_corderdetails comment '发货单明细';
 
@@ -1102,7 +1102,7 @@ create table dd_fee
   ExchangeRate     decimal(16,9),
   StandarySum      decimal(10,2),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table dd_fee comment '供应链费用';
 
@@ -1153,7 +1153,7 @@ create table dd_order
   tsl              decimal(16,9),
   Property         varchar(1) comment '0-自采 1-代销',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table dd_order comment '订单主表';
 
@@ -1174,7 +1174,7 @@ create table dd_ordercode
   Year             varchar(5),
   Code             varchar(10),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table dd_ordercode comment '订单号表';
 
@@ -1212,7 +1212,7 @@ create table dd_orderdetails
   Add_Flag         varchar(1),
   ThatTimeStock    int,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table dd_orderdetails comment '订单明细';
 
@@ -1238,7 +1238,7 @@ create table dd_quotation
   FileName         varchar(100),
   S_FileName       varchar(100) comment '在服务器上的文件名',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table dd_quotation comment '报价单主表';
 
@@ -1269,7 +1269,7 @@ create table dd_quotation_detail
   Remark           varchar(1000),
   SaveSize         varchar(50),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table dd_quotation_detail comment '报价单明细表';
 
@@ -1304,7 +1304,7 @@ create table if_cfashion
   Stockchange      varchar(500),
   ImgList          text,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table if_cfashion comment '迷橙接口数据表';
 
@@ -1328,7 +1328,7 @@ create table if_exception
   Exception        char(1),
   SizeID           int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table if_exception comment '库存变动日志数据表';
 
@@ -1353,7 +1353,7 @@ create table if_imgorder
   Imgsize          varchar(50),
   ImgType          varchar(50) comment '缩略图，详细图',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table if_imgorder comment '上传图片顺序';
 
@@ -1389,7 +1389,7 @@ create table if_jingdong
   ExternalNo       varchar(50),
   SizeID           int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table if_jingdong comment '京东接口数据表';
 
@@ -1424,7 +1424,7 @@ create table if_meilihui
   Stockchange      varchar(500),
   ImgList          text,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table if_meilihui comment '魅力惠接口数据表';
 
@@ -1460,7 +1460,7 @@ create table if_meixi
   Stockchange      varchar(500),
   ImgList          text,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table if_meixi comment '美西接口数据表';
 
@@ -1495,7 +1495,7 @@ create table if_ofashion
   Stockchange      varchar(500),
   ImgList          text,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table if_ofashion comment '迷橙接口数据表';
 
@@ -1530,7 +1530,7 @@ create table if_shangpin
   Stockchange      varchar(500),
   ImgList          text,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table if_shangpin comment '尚品接口数据表';
 
@@ -1566,7 +1566,7 @@ create table if_shangpin_direct
   ImgList          text,
   CategoryNo       varchar(50),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table if_shangpin_direct comment '尚品直发接口数据表';
 
@@ -1596,7 +1596,7 @@ create table if_siku
   Stockchange      int,
   ImgList          text,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table if_siku comment '美西接口数据表';
 
@@ -1617,7 +1617,7 @@ create table if_sxdzb
   ProductID        int UNSIGNED NULL,
   ZpID             bigint,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table if_sxdzb comment '珍品上传商品对照';
 
@@ -1650,7 +1650,7 @@ create table if_zhenpin
   CPrice           varchar(50),
   Description      text,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table if_zhenpin comment '珍品接口数据表';
 
@@ -1682,7 +1682,7 @@ create table if_zouxiu
   Stockchange      int,
   ImgList          text,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table if_zouxiu comment '美西接口数据表';
 
@@ -1703,7 +1703,7 @@ create table link_actual_to_productstock
   ProductstockID   int UNSIGNED NULL,
   ActualID         int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_actual_to_productstock comment '实盘单到库存之间的记录';
 
@@ -1725,7 +1725,7 @@ create table link_barcode_to_size
   ProductID        int UNSIGNED NULL,
   BarCode          varchar(50),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_barcode_to_size comment '任何表都应该包含的列';
 
@@ -1748,7 +1748,7 @@ create table link_brand_to_brandgroup
   BrandGroupID     int UNSIGNED NULL,
   Note             varchar(50),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_brand_to_brandgroup comment '任何表都应该包含的列';
 
@@ -1774,7 +1774,7 @@ create table link_brand_to_discount
   Gender           varchar(1) comment '0-女式 1-男士 2-中性',
   Note             varchar(50),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_brand_to_discount comment '品牌出厂价折扣';
 
@@ -1805,7 +1805,7 @@ create table link_brand_to_priced
   Decade           varchar(36),
   CurrencyID       int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_brand_to_priced comment '任何表都应该包含的列';
 
@@ -1830,7 +1830,7 @@ create table link_brandgroup_to_supplier
   CurrencyID       int UNSIGNED NULL,
   Sum              decimal(10,2),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_brandgroup_to_supplier comment '供货商品类连接表';
 
@@ -1851,7 +1851,7 @@ create table link_cdetail_to_ddetail
   cDetailID        int UNSIGNED NULL,
   ddetailID        varchar(36),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_cdetail_to_ddetail comment '连接表 发货单明细 to 报关明细';
 
@@ -1872,7 +1872,7 @@ create table link_childbrand_to_execution
   ChildBrandID     varchar(36),
   ExecutionID      varchar(36),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_childbrand_to_execution comment '任何表都应该包含的列';
 
@@ -1893,7 +1893,7 @@ create table link_childbrand_to_innards
   ChildBrandID     varchar(36),
   InnardsID        varchar(36),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_childbrand_to_innards comment '连接表 子品类 to 内部结构';
 
@@ -1918,7 +1918,7 @@ create table link_childbrand_to_material
   Sex              varchar(1) comment '0-女式 1-男士(中性也算男士)',
   IsFJ             varchar(1) comment '0-否 1-法检',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_childbrand_to_material comment '连接表 子品类 to 材质';
 
@@ -1939,7 +1939,7 @@ create table link_childbrand_to_outinnards
   ChildBrandID     varchar(36),
   OutInnardsID     varchar(36),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_childbrand_to_outinnards comment '连接表 子品类 to 外部结构';
 
@@ -1960,7 +1960,7 @@ create table link_childbrand_to_safety
   ChildBrandID     varchar(36),
   SafetyID         varchar(36),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_childbrand_to_safety comment '任何表都应该包含的列';
 
@@ -1983,7 +1983,7 @@ create table link_color_to_brand
   ColorName        varchar(50),
   ColorCode        varchar(50),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_color_to_brand comment '连接表 颜色模板与品牌链接的关系';
 
@@ -2004,7 +2004,7 @@ create table link_contacts_to_supplier
   supplierid        varchar(36),
   companycontactsid varchar(36),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_contacts_to_supplier comment '表暂时未使用';
 
@@ -2026,7 +2026,7 @@ create table link_ctn_to_cdetail
   CtnID            varchar(36),
   Sum              int,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_ctn_to_cdetail comment '装箱单 发货单明细 连接表';
 
@@ -2064,7 +2064,7 @@ create table link_data_to_file
             13.供货商合同
             14.付汇水单',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_data_to_file comment '连接表 数据 to 文件（上传附件）';
 
@@ -2085,7 +2085,7 @@ create table link_department_to_salesport
   DepartmentID     int UNSIGNED NULL,
   SportID          int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_department_to_salesport comment '销售端口部门连接表';
 
@@ -2107,7 +2107,7 @@ create table link_detail_to_detail
   cDetailID        int UNSIGNED NULL,
   Sum              int,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_detail_to_detail comment '品牌订单 客户订单连接表';
 
@@ -2129,7 +2129,7 @@ create table link_distribute_to_cdetail
   DstributeID      varchar(36),
   Sum              int,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_distribute_to_cdetail comment '分货单 发货单明细 连接表';
 
@@ -2150,7 +2150,7 @@ create table link_group_to_navigation
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_group_to_navigation comment '组导航连接表';
 
@@ -2172,7 +2172,7 @@ create table link_invoice_to_order
   OrderID          int UNSIGNED NULL,
   OrderSum         decimal(19,6),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_invoice_to_order comment '连接表 运费发票 to 发货单';
 
@@ -2194,7 +2194,7 @@ create table link_invoice_to_requisition
   RequisitionID    int UNSIGNED NULL,
   Type             varchar(1) comment '0-按金额 1-按件数',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_invoice_to_requisition comment '连接表 运费发票 to 调拨单';
 
@@ -2216,7 +2216,7 @@ create table link_invoice_to_warehousing
   WarehousingID    int UNSIGNED NULL,
   Type             varchar(1) comment '0-按金额 1-按件数',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_invoice_to_warehousing comment '连接表 运费发票 to 入库单';
 
@@ -2237,7 +2237,7 @@ create table link_kp_to_store
   KPID             int UNSIGNED NULL,
   ProductstockID   int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_kp_to_store comment '开票库存链接表';
 
@@ -2258,7 +2258,7 @@ create table link_prep_to_productstock
   ProductstockID   int UNSIGNED NULL,
   PrepID           varchar(36),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_prep_to_productstock comment '预盘单到库存之间的记录';
 
@@ -2279,7 +2279,7 @@ create table link_pricelist_to_salesport
   PriceListID      int UNSIGNED NULL,
   SportID          int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_pricelist_to_salesport comment '连接表 价格单 to 销售端口';
 
@@ -2300,7 +2300,7 @@ create table link_product_to_MaterislStatus
   ProductID        int UNSIGNED NULL,
   MaterislStatusID varchar(36),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_product_to_MaterislStatus comment '连接表 商品表与材质状态';
 
@@ -2321,7 +2321,7 @@ create table link_product_to_SalesNature
   ProductID        int UNSIGNED NULL,
   SalesNatureID    varchar(36),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_product_to_SalesNature comment '销售性质连接表';
 
@@ -2342,7 +2342,7 @@ create table link_product_to_closedway
   ProductID        int UNSIGNED NULL,
   ClosedWayID      varchar(36),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_product_to_closedway comment '连接表 商品 to 闭合方式';
 
@@ -2363,7 +2363,7 @@ create table link_product_to_decade
   ProductID        int UNSIGNED NULL,
   DecadeID         int UNSIGNED NOT NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_product_to_decade comment '商品表连接 年代季节';
 
@@ -2384,7 +2384,7 @@ create table link_product_to_dscrb
   ProductID        int UNSIGNED NULL,
   DscrbID          varchar(36),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_product_to_dscrb comment '商品表连接 商品描述';
 
@@ -2416,7 +2416,7 @@ create table link_product_to_marketprice
   ReplyDate        datetime,
   PriceID          int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_product_to_marketprice comment '商品表连接 市场价格';
 
@@ -2439,7 +2439,7 @@ create table link_product_to_material
   Percentage       varchar(50),
   Note             varchar(36),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_product_to_material comment '连接表 商品 to 材质';
 
@@ -2462,7 +2462,7 @@ create table link_product_to_material2
   Percentage       varchar(50),
   Note             varchar(36),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_product_to_material2 comment '连接表 商品 to 材质2';
 
@@ -2483,7 +2483,7 @@ create table link_product_to_occasions
   ProductID        int UNSIGNED NULL,
   OccasionsID      varchar(36),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_product_to_occasions comment '连接表 商品 to 场合风格';
 
@@ -2504,7 +2504,7 @@ create table link_product_to_origin
   ProductID        int UNSIGNED NULL,
   OriginID         varchar(36),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_product_to_origin comment '商品表连接 产地';
 
@@ -2526,7 +2526,7 @@ create table link_product_to_outproductinnards
   InnardsID        varchar(36),
   Sum              int,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_product_to_outproductinnards comment '连接表 商品 to 外部结构';
 
@@ -2549,7 +2549,7 @@ create table link_product_to_picture
   pictureType      varchar(500),
   SizeType         int,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_product_to_picture comment '图片表';
 
@@ -2575,7 +2575,7 @@ create table link_product_to_picture_ftp
             3-1200*1200',
   UpLoadFlag       varchar(1) comment '0-无需上传，1-需要上传',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_product_to_picture_ftp comment '连接表 商品 to FTp图片';
 
@@ -2604,7 +2604,7 @@ create table link_product_to_price
   Symbol           varchar(1),
   LockStatus       varchar(1) comment '0-未锁定 1-锁定',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_product_to_price comment '连接表 商品 商品销售价格(国内外零售价、批发价格)';
 
@@ -2628,7 +2628,7 @@ create table link_product_to_price2
   ProductID        int UNSIGNED NULL,
   Jsfs             varchar(100),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_product_to_price2 comment '连接表 商品 商品销售价格(国内外零售价、批发价格)';
 
@@ -2656,7 +2656,7 @@ create table link_product_to_price_history
   Rate             decimal(10,2),
   Symbol           varchar(1),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_product_to_price_history comment '连接表 商品 商品销售价格(国内外零售价、批发价格) 历史记录';
 
@@ -2678,7 +2678,7 @@ create table link_product_to_productinnards
   InnardsID        varchar(36),
   Sum              int,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_product_to_productinnards comment '连接表 商品 to 内部结构';
 
@@ -2699,7 +2699,7 @@ create table link_product_to_productparts
   ProductID        int UNSIGNED NULL,
   PartsID          varchar(36),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_product_to_productparts comment '连接表 商品 to 附带配件';
 
@@ -2724,7 +2724,7 @@ create table link_product_to_salesport
   Discount         decimal(16,9),
   SellSpotName     varchar(100),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_product_to_salesport comment '销售端口商品连接表';
 
@@ -2750,7 +2750,7 @@ create table link_product_to_salesport_history
             1-修改',
   Discount         decimal(16,9),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_product_to_salesport_history comment '销售端口商品连接 历史记录表';
 
@@ -2773,7 +2773,7 @@ create table link_product_to_size
   JDCode           varchar(50),
   SpotID           varchar(36) comment '空就是京东',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_product_to_size comment '连接表 商品 to 尺码';
 
@@ -2794,7 +2794,7 @@ create table link_product_to_washinginstructions
   ProductID             int UNSIGNED NULL,
   WashinginstructionsID int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_product_to_washinginstructions comment '连接表 商品 to 洗涤标准';
 
@@ -2820,7 +2820,7 @@ create table link_pzh_to_invoice
   PzhSum            decimal(16,9),
   ExchangeRate      decimal(16,9),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_pzh_to_invoice comment '连接表 凭证表 to 普通发票';
 
@@ -2846,7 +2846,7 @@ create table link_pzh_to_invoicefee
   PzhSum            decimal(16,9),
   ExchangeRate      decimal(16,9),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_pzh_to_invoicefee comment '连接表 凭证表 to 运费发票';
 
@@ -2871,7 +2871,7 @@ create table link_pzh_to_order
   PzhCurrencyID    varchar(36),
   PzhSum           decimal(16,9),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_pzh_to_order comment '连接表 凭证表 to 订单';
 
@@ -2896,7 +2896,7 @@ create table link_pzh_to_sales
   PzhCurrencyID    varchar(36),
   PzhSum           decimal(16,9),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_pzh_to_sales comment '连接表 凭证表 to 对账单（回款）';
 
@@ -2921,7 +2921,7 @@ create table link_pzh_to_sales_trans
   PzhCurrencyID    varchar(36),
   PzhSum           decimal(16,9),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_pzh_to_sales_trans comment '连接表 凭证表 to 对账单（转账）';
 
@@ -2946,7 +2946,7 @@ create table link_pzh_to_warehousing_fee
   PzhCurrencyID            int UNSIGNED NULL,
   PzhSum                   decimal(16,9),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_pzh_to_warehousing_fee comment '连接表 凭证表 to 入库单费用';
 
@@ -2971,7 +2971,7 @@ create table link_return_to_productstock
   ReturnID         int UNSIGNED NULL,
   SaleLinkID       int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_return_to_productstock comment '连接表 退货单 to 库存';
 
@@ -2992,7 +2992,7 @@ create table link_rule_to_operation
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_rule_to_operation comment '职能功能连接表';
 
@@ -3029,7 +3029,7 @@ create table link_sales_to_productstock
   DetailID         int UNSIGNED NULL,
   BGJ              decimal(16,9),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_sales_to_productstock comment '销售到库存之间的记录';
 
@@ -3052,7 +3052,7 @@ create table link_salespot_to_childbrand
   Rate             decimal(19,6),
   IsRounded        varchar(1) comment '0-不取整 1-取整',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_salespot_to_childbrand comment '销售端口 扣点连接表';
 
@@ -3077,7 +3077,7 @@ create table link_sellspot_to_brand
             C
             D',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_sellspot_to_brand comment '销售端口品牌连接表';
 
@@ -3098,7 +3098,7 @@ create table link_special_to_productstock
   ProductstockID   int UNSIGNED NULL,
   SpecialID        int UNSIGNED NOT NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_special_to_productstock comment '其他出入库表到库存之间的记录';
 
@@ -3119,7 +3119,7 @@ create table link_spot_warehouse
   SpotID           int UNSIGNED NULL,
   WarehouseID      int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_spot_warehouse comment '仓库销售端口连接表';
 
@@ -3148,7 +3148,7 @@ create table link_supplier_to_brand
   CurrencyID       int UNSIGNED NULL,
   Sum              decimal(10,2),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_supplier_to_brand comment '供货商品牌连接表';
 
@@ -3171,7 +3171,7 @@ create table link_user_to_labourcontactor
   DataTo           datetime,
   Remark           text,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_user_to_labourcontactor comment '员工合同记录';
 
@@ -3192,7 +3192,7 @@ create table link_user_to_price
   UserID           int UNSIGNED NULL,
   PriceID          int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_user_to_price comment '价格单用户连接表';
 
@@ -3213,7 +3213,7 @@ create table link_user_to_reportset
   UserID           int UNSIGNED NULL,
   reportID         int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_user_to_reportset comment '连接表用户与报表样式';
 
@@ -3234,7 +3234,7 @@ create table link_user_to_rule
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_user_to_rule comment '任何表都应该包含的列';
 
@@ -3255,7 +3255,7 @@ create table link_user_to_salesport
   UserID           int UNSIGNED NULL,
   SportID          int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_user_to_salesport comment '销售端口用户连接表';
 
@@ -3276,7 +3276,7 @@ create table link_user_to_supplier
   UserID           int UNSIGNED NULL,
   SupplierID       int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_user_to_supplier comment '连接表用户与结算单位';
 
@@ -3297,7 +3297,7 @@ create table link_user_to_warehouse
   UserID           int UNSIGNED NULL,
   WarehouseID      int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table link_user_to_warehouse comment '仓库用户连接表';
 
@@ -3319,7 +3319,7 @@ create table sys_config
   Value            varchar(100),
   Comment          varchar(100),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table sys_config comment '系统参数值备注 Code-文件服务器地址,fileipValue - 文件名';
 
@@ -3337,9 +3337,9 @@ create table sys_selfcompany
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  selfcompanyid    int UNSIGNED NULL,
+  companyid    int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table sys_selfcompany comment '系统参数值 本公司ID
 ';
@@ -3365,7 +3365,7 @@ create table tb_card
   TelNo            varchar(20),
   Status           varchar(1),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_card comment '消费卡';
 
@@ -3393,7 +3393,7 @@ create table tb_check
   check_date       datetime,
   form_memo        varchar(500),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_check comment '盘点主表';
 
@@ -3421,7 +3421,7 @@ create table tb_check_detail
   ExcelSize        varchar(50),
   ExcelCount       varchar(50),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_check_detail comment '盘点明细表';
 
@@ -3466,7 +3466,7 @@ create table tb_contactlist
   Remarks          text,
   FlightNo         varchar(50),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_contactlist comment '发货联系单';
 
@@ -3491,7 +3491,7 @@ create table tb_declaration
   PriceRate        decimal(16,9),
   TaxRate          decimal(16,9),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_declaration comment '报关单主表';
 
@@ -3521,7 +3521,7 @@ create table tb_declaration_detail
   TotalTax         decimal(16,9),
   TotalCost        decimal(16,9),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_declaration_detail comment '报关单明细表';
 
@@ -3541,13 +3541,13 @@ create table tb_department
 
   Name             varchar(100),
   Remark           varchar(1000),
-  selfcompanyid    int UNSIGNED NULL,
+  companyid    int UNSIGNED NULL COMMENT '公司ID',
   Priceid          int UNSIGNED NULL comment '此价格id可以是基础价格id，也可以是销售端口id',
   SpotID           int UNSIGNED NULL,
   up_dp_id         int UNSIGNED NULL,
   CheckingFlag     varchar(1),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_department comment '部门';
 
@@ -3572,7 +3572,7 @@ create table tb_discount_card
   ActivedID        int UNSIGNED NULL,
   UsedID           int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_discount_card comment '优惠卷';
 
@@ -3598,7 +3598,7 @@ create table tb_distribute
   Op_date          datetime,
   Remark           text,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_distribute comment '分货单主表';
 
@@ -3619,7 +3619,7 @@ create table tb_distributecode
   Year             varchar(5),
   Code             varchar(10),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_distributecode comment '分货单号表';
 
@@ -3651,7 +3651,7 @@ create table tb_express
   s_telno          varchar(50),
   s_address        varchar(500),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_express comment '单快递信息';
 
@@ -3691,7 +3691,7 @@ create table tb_fee
   Reason             text,
   SheetID            INT UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_fee comment '费用申请';
 
@@ -3724,7 +3724,7 @@ create table tb_fee_detail
   IsCheck          varchar(1) comment '0-未对账，1-已对账',
   IsReturn         varchar(1) comment '0-未入账，1-已入账',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_fee_detail comment '费用申请明细表';
 
@@ -3746,7 +3746,7 @@ create table tb_feecode
   Code             varchar(10),
   Month            varchar(5),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_feecode comment '费用申请号表';
 
@@ -3758,7 +3758,7 @@ create table tb_group
   id               int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   group_name       varchar(50),
   group_memo       varchar(500),
-  selfcompanyid    int UNSIGNED NULL,
+  companyid    int UNSIGNED NULL,
   sys_create_stuff int UNSIGNED NOT NULL,
   sys_create_date  datetime not null,
   sys_modify_stuff int UNSIGNED NOT NULL,
@@ -3768,7 +3768,7 @@ create table tb_group
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_group comment '组信息';
 
@@ -3792,7 +3792,7 @@ create table tb_inve_actual
   check_date       datetime,
   form_memo        varchar(500),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_inve_actual comment 'tb_inve_actual';
 
@@ -3818,7 +3818,7 @@ create table tb_inve_actual_dtl
   inve_actual_id   INT UNSIGNED NULL,
   stock_id         INT UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_inve_actual_dtl comment 'tb_inve_actual_dtl';
 
@@ -3843,7 +3843,7 @@ create table tb_inve_prep
   form_memo        varchar(500),
   inve_actual_id   INT UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_inve_prep comment 'tb_inve_prep';
 
@@ -3867,7 +3867,7 @@ create table tb_inve_prep_dtl
   inve_prep_id     INT UNSIGNED NULL,
   stock_id         INT UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_inve_prep_dtl comment 'tb_inve_prep_dtl';
 
@@ -3892,7 +3892,7 @@ create table tb_kp
   Header           text,
   Remark           text,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_kp comment '开票信息';
 
@@ -3939,7 +3939,7 @@ create table tb_member
   InviteTotal      bigint,
   InvoteUser       varchar(36),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_member comment '会员表';
 
@@ -3967,7 +3967,7 @@ create table tb_member_address
   City             varchar(20),
   Is_default       varchar(1) comment '0-否 1-是',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_member_address comment '会员地址信息';
 
@@ -3993,7 +3993,7 @@ create table tb_member_bank
   Bank_address     varchar(1000),
   Is_default       varchar(1) comment '0-否 1-是',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_member_bank comment '会员银行';
 
@@ -4014,7 +4014,7 @@ create table tb_member_card
   Number           varchar(50),
   Is_used          varchar(1) comment '0-否 1-是',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_member_card comment '会员卡号';
 
@@ -4038,7 +4038,7 @@ create table tb_member_card_history
   OpDate           datetime,
   TotalSum         decimal(19,6),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_member_card_history comment '储值卡操作记录';
 
@@ -4072,7 +4072,7 @@ create table tb_member_contactor
   Remark           varchar(50),
   Is_default       varchar(1) comment '0-否 1-是',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_member_contactor comment '会员（公司）联系人';
 
@@ -4095,7 +4095,7 @@ create table tb_member_header
   English_header   varchar(1000),
   Is_default       varchar(1) comment '0-否 1-是',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_member_header comment '会员发票抬头';
 
@@ -4119,7 +4119,7 @@ create table tb_member_preference
   ChildBrandGroup_id INT UNSIGNED NULL,
   SizeTop_id         INT UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_member_preference comment '会员偏好';
 
@@ -4141,7 +4141,7 @@ create table tb_member_preference_size
   SizeContent_id      INT UNSIGNED NULL,
   SizeTop_id          INT UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_member_preference_size comment '会员偏好尺码表';
 
@@ -4165,7 +4165,7 @@ create table tb_member_preordination
   SizeID           int UNSIGNED NULL,
   Remark           text,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_member_preordination comment '预定信息';
 
@@ -4188,7 +4188,7 @@ create table tb_picture
   PictureType      char(10),
   PictureGroup     varchar(50),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_picture comment '图片表';
 
@@ -4211,7 +4211,7 @@ create table tb_pre_requisition
   ToStockID        int UNSIGNED NULL,
   OpID             int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_pre_requisition comment '预调拨单明细';
 
@@ -4298,7 +4298,7 @@ create table tb_product
   IsFJ                 varchar(1) comment '0-否 1-法检',
   Discount             decimal(10,2),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_product comment '商品表';
 
@@ -4326,7 +4326,7 @@ create table tb_product_price
   BasePrice            decimal(16,9),
   NationalPrice        decimal(16,9),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_product_price comment '成交价，参考价，基准零售价，国内零售价 历史记录';
 
@@ -4376,7 +4376,7 @@ create table tb_productstock
   KPFlag           varchar(1) comment '0-未开票 1-已开票',
   DecadeID         int UNSIGNED NOT NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_productstock comment '库存';
 
@@ -4422,7 +4422,7 @@ create table tb_productstock_snapshot
   KPFlag           varchar(1) comment '0-未开票 1-已开票',
   DecadeID         int UNSIGNED NOT NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_productstock_snapshot comment '库存快照表';
 
@@ -4468,7 +4468,7 @@ create table tb_requisition
   MarkNo            varchar(50),
   ReturnFlag        varchar(1) comment '0-普通调拨单，1-反向调拨单',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_requisition comment '调拨单主表';
 
@@ -4490,7 +4490,7 @@ create table tb_requisition_detail
   stock_id         INT UNSIGNED NULL,
   Remark           varchar(500),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_requisition_detail comment '调拨单明细';
 
@@ -4517,7 +4517,7 @@ create table tb_requisition_detail_group
   OutCount         int,
   InCount          int,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_requisition_detail_group comment '调拨单明细(数量)';
 
@@ -4544,7 +4544,7 @@ create table tb_requisition_express
   DepartmentID     int UNSIGNED NULL,
   Type             varchar(1) comment '0-个人，1-部门，2-事业部，3-公司',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_requisition_express comment '调拨单快递信息';
 
@@ -4565,7 +4565,7 @@ create table tb_requisitioncode
   Year             varchar(5),
   Code             varchar(10),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_requisitioncode comment '调拨单号表';
 
@@ -4577,7 +4577,7 @@ create table tb_rule
   id               int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   rule_name        varchar(50),
   rule_memo        varchar(500),
-  selfcompanyid    int UNSIGNED NULL,
+  companyid    int UNSIGNED NULL,
   sys_create_stuff int UNSIGNED NOT NULL,
   sys_create_date  datetime not null,
   sys_modify_stuff int UNSIGNED NOT NULL,
@@ -4587,7 +4587,7 @@ create table tb_rule
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_rule comment '用于存放系统的全部信息';
 
@@ -4612,7 +4612,7 @@ create table tb_savings_card
   Is_used          varchar(1) comment '0-否 1-是',
   Is_actived       varchar(1) comment '0-否 1-是',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_savings_card comment '储值卡';
 
@@ -4638,7 +4638,7 @@ create table tb_special_requisition
   check_date       datetime,
   Remark           varchar(1000),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_special_requisition comment '其他出入库主表';
 
@@ -4664,7 +4664,7 @@ create table tb_special_requisition_detail
   Type             varchar(1) comment '0-出库 1-入库',
   Remark           varchar(500),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_special_requisition_detail comment '其他出入库明细表';
 
@@ -4693,7 +4693,7 @@ create table tb_stock
   Cost             decimal(16,9),
   KPCount          int,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_stock comment '账面库存表';
 
@@ -4743,7 +4743,7 @@ create table tb_supplier
   ContractRemind    int,
   SettleCompanyID   int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_supplier comment '任何表都应该包含的列';
 
@@ -4769,7 +4769,7 @@ create table tb_supplier_orderdate
   CloseDate        datetime,
   Remark           text,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_supplier_orderdate comment '订货日期';
 
@@ -4783,7 +4783,6 @@ create table tb_user
   password           varchar(50),
   real_name          varchar(50),
   departmentid       int UNSIGNED NULL,
-  selfcompanyid      int UNSIGNED NULL,
   companyid          int UNSIGNED NULL COMMENT '公司ID',
   groupid            int UNSIGNED NULL,
   storeid            int UNSIGNED NULL,
@@ -4825,7 +4824,7 @@ create table tb_user
   OpenID             varchar(50),
   primary key (id),
   UNIQUE `tb_user_login_name` (`login_name`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_user comment '用户表';
 
@@ -4848,7 +4847,7 @@ create table tb_verificationcode
   sourceID         varchar(36) comment '前端发起动态密码验证，生成一次性guid，验证使用',
   phoneNo          varchar(20) comment '手机号',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_verificationcode comment '动态密码验证表';
 
@@ -4881,7 +4880,7 @@ create table tb_warehousing
   SupplierID       int UNSIGNED NOT NULL,
   Property         varchar(1) comment '0-自采 1-代销',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_warehousing comment '入库单主表';
 
@@ -4912,7 +4911,7 @@ create table tb_warehousing_detail
   FinalCost        decimal(16,9),
   CurrencyID       int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_warehousing_detail comment '入库单明细表';
 
@@ -4936,7 +4935,7 @@ create table tb_warehousing_fee
   FeePrice         decimal(10,2),
   Payment          varchar(36),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table tb_warehousing_fee comment '入库表-费用说明';
 
@@ -4959,7 +4958,7 @@ create table trans_brand_code
   TransCode        varchar(50),
   Unit             varchar(10),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table trans_brand_code comment '品牌对照表';
 
@@ -4981,7 +4980,7 @@ create table trans_color_code
   Code             varchar(50),
   TransCode        varchar(50),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table trans_color_code comment '颜色对照表';
 
@@ -5003,7 +5002,7 @@ create table trans_group_code
   Code             varchar(50),
   TransCode        varchar(50),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table trans_group_code comment '品类对照表';
 
@@ -5026,7 +5025,7 @@ create table trans_size_code
   Code             varchar(50),
   TransCode        varchar(50),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table trans_size_code comment '尺码对照表';
 
@@ -5053,7 +5052,7 @@ create table xs_afterservice
   CusTel           varchar(50),
   Status           varchar(1) comment '0-接收 1-处理中 2-完结',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table xs_afterservice comment '售后单';
 
@@ -5081,7 +5080,7 @@ create table xs_afterservice_detail
   BackDate         datetime,
   BackStuff        varchar(36),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table xs_afterservice_detail comment '售后单明细';
 
@@ -5115,7 +5114,7 @@ create table xs_pre_sales
   RemainingFund    decimal(16,9),
   ActualPrice      decimal(16,9),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table xs_pre_sales comment '预售主表';
 
@@ -5137,7 +5136,7 @@ create table xs_pre_salescode
   Code             varchar(10),
   Month            varchar(5),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table xs_pre_salescode comment '预售单号表';
 
@@ -5165,7 +5164,7 @@ create table xs_pre_salesdetails
   Remark           varchar(500),
   TotalSellPrice   decimal(16,9),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table xs_pre_salesdetails comment '预售单明细(数量)';
 
@@ -5190,7 +5189,7 @@ create table xs_pricelist
   Remark           varchar(500),
   PriceID          int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table xs_pricelist comment '价格单基础资料 主表
 ';
@@ -5213,7 +5212,7 @@ create table xs_pricelistdetails
   ProductPrice     decimal(10,2),
   PriceListID      int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table xs_pricelistdetails comment '价格单基础资料 明细从表';
 
@@ -5238,7 +5237,7 @@ create table xs_return
   ReturnDate       datetime,
   ReturnNo         varchar(50),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table xs_return comment '退货单';
 
@@ -5259,7 +5258,7 @@ create table xs_returncode
   Year             varchar(5),
   Code             varchar(10),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table xs_returncode comment '退货单号表';
 
@@ -5317,7 +5316,7 @@ create table xs_sales
   IsUsed           varchar(1),
   InviteSum        bigint,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table xs_sales comment '销售主表';
 
@@ -5345,7 +5344,7 @@ create table xs_sales_card
   IsCheck          varchar(1),
   SheetID          int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table xs_sales_card comment '销售储值卡主表';
 
@@ -5371,7 +5370,7 @@ create table xs_sales_cardetails
   TotalSellPrice   decimal(16,9),
   StockID          int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table xs_sales_cardetails comment '储值卡销售单明细';
 
@@ -5413,7 +5412,7 @@ create table xs_sales_pay
   Remark           varchar(500),
   CurrencyID       int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table xs_sales_pay comment '销售单付款明细';
 
@@ -5435,7 +5434,7 @@ create table xs_salescode
   Code             varchar(10),
   Month            varchar(5),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table xs_salescode comment '销售单号表';
 
@@ -5469,7 +5468,7 @@ create table xs_salesdetails
   ExchangeRate      decimal(16,9),
   TotalSellPriceBwb decimal(16,9),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table xs_salesdetails comment '销售单明细(数量)';
 
@@ -5489,11 +5488,12 @@ create table zl_ac_cashflow_statement
 
   subject_name     varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   subject_type     int comment '0-正，1-负',
   orderno          int,
   parentid         int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_ac_cashflow_statement comment '现金流量表格式';
 
@@ -5513,9 +5513,10 @@ create table zl_ac_cashflow_subject
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   SorF             varchar(1) comment '0-正，1-负',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_ac_cashflow_subject comment '现金流量项目';
 
@@ -5528,11 +5529,12 @@ create table zl_ac_km
   code             char(1)    not null,
   chinese_name     char(1)    not null,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   km_type_id       int UNSIGNED NOT NULL,
   up_km_id         int UNSIGNED NULL,
   is_havexj        varchar(1) not null comment '0-没有,1-有',
   jord             varchar(1) not null comment 'J-借方,D-贷方',
-  selfcompanyid    int UNSIGNED NOT NULL,
+  companyid    int UNSIGNED NOT NULL,
   sys_create_stuff int UNSIGNED NOT NULL,
   sys_create_date  datetime   not null,
   sys_modify_stuff int UNSIGNED NOT NULL,
@@ -5541,7 +5543,7 @@ create table zl_ac_km
   sys_delete_date  datetime,
   sys_delete_flag  tinyint    not null comment '0-未删除 1-已删除',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_ac_km comment '科目表';
 
@@ -5554,6 +5556,7 @@ create table zl_ac_km_type
   code             varchar(1) not null,
   chinese_memo     char(1)    not null,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   sys_create_stuff int UNSIGNED NOT NULL,
   sys_create_date  datetime   not null,
   sys_modify_stuff int UNSIGNED NOT NULL,
@@ -5563,7 +5566,7 @@ create table zl_ac_km_type
   sys_delete_flag  tinyint    not null comment '0-未删除 1-已删除',
 
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_ac_km_type comment '科目类别';
 
@@ -5584,7 +5587,7 @@ create table zl_ac_pzh_rule
   RuleCode         varchar(50),
   kmid             int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_ac_pzh_rule comment '凭证科目规则';
 
@@ -5598,6 +5601,7 @@ create table zl_ac_pzh_type
   code             varchar(4) not null,
   chinese_memo     char(1)    not null,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   sys_create_stuff int UNSIGNED NOT NULL,
   sys_create_date  datetime   not null,
   sys_modify_stuff int UNSIGNED NOT NULL,
@@ -5607,7 +5611,7 @@ create table zl_ac_pzh_type
   sys_delete_flag  tinyint    not null comment '0-未删除 1-已删除',
 
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_ac_pzh_type comment '现金、银行、转账';
 
@@ -5619,13 +5623,14 @@ create table zl_ac_ztb
   id               int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   zt_name          varchar(100) not null,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   km_code_rule     varchar(50)  not null,
   star_date        datetime     not null,
   end_date         datetime comment '只有结束了才有值',
   is_end           varchar(1)   not null comment '0-未结束,1-结束',
   is_default       varchar(1)   not null comment '0-不是,1-是',
   pwd              varchar(50),
-  selfcompanyid    int UNSIGNED NOT NULL,
+  companyid    int UNSIGNED NOT NULL,
   sys_create_stuff int UNSIGNED NOT NULL,
   sys_create_date  datetime     not null,
   sys_modify_stuff int UNSIGNED NOT NULL,
@@ -5635,7 +5640,7 @@ create table zl_ac_ztb
   sys_delete_flag  tinyint      not null comment '0-未删除 1-已删除',
 
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_ac_ztb comment '帐套表';
 
@@ -5656,8 +5661,9 @@ create table zl_ageseason
   SessionMark      varchar(10),
   SessionName      varchar(10),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_ageseason comment '年代季节';
 
@@ -5677,10 +5683,11 @@ create table zl_aliases
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Code             varchar(50),
   BrandID          int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_aliases comment '任何表都应该包含的列';
 
@@ -5700,6 +5707,7 @@ create table zl_bankinformation
 
   BankName         varchar(100),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   BankName2        varchar(100),
   BankAddress      varchar(100),
   BankAccount      varchar(50),
@@ -5710,7 +5718,7 @@ create table zl_bankinformation
   IsUsed           varchar(1) comment '0-常用，1-禁用',
   Remark           varchar(200),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_bankinformation comment '银行信息';
 
@@ -5731,16 +5739,17 @@ create table zl_brand
   Code             varchar(50),
   BrandName        varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   CountryID        int UNSIGNED NULL,
   ChildBrand       varchar(36),
   Description      varchar(1000),
   ImageStream      longblob,
-  memo             char(1),
+  memo             TEXT,
   Supplier         varchar(36),
   Officialwebsite  varchar(500),
-  IsAuthorized     varchar(1),
+  IsAuthorized     tinyint,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_brand comment '品牌表';
 
@@ -5761,8 +5770,9 @@ create table zl_brandgroup
   Code             varchar(50),
   BrandGroupName   varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_brandgroup comment '品类表';
 
@@ -5783,10 +5793,11 @@ create table zl_brandremark
   BrandID          int UNSIGNED NULL,
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Remark           varchar(100),
   Pic              longblob,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_brandremark comment '品牌颜色材质备注';
 
@@ -5806,8 +5817,9 @@ create table zl_businesstype
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_businesstype comment '业务类型';
 
@@ -5827,6 +5839,7 @@ create table zl_childproductgroup
 
   ChildName         varchar(50),
   lang_code         varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   ChildCode         varchar(50),
   ProductGroupID    int UNSIGNED NULL,
   ProductTemplateID int UNSIGNED NULL,
@@ -5835,7 +5848,7 @@ create table zl_childproductgroup
   Cname4male        varchar(36),
   Cname4female      varchar(36),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_childproductgroup comment '子品类';
 
@@ -5855,9 +5868,10 @@ create table zl_closedway
 
   closedWayName     varchar(50),
   lang_code         varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   closedWayNameNote varchar(100),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_closedway comment '闭合方式';
 
@@ -5878,12 +5892,13 @@ create table zl_color
   Code             varchar(10),
   colorName        varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   colorMatter      varchar(100),
   ASAColorID       int UNSIGNED NULL,
   BrandID          int UNSIGNED NULL,
   ImageStream      longblob,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_color comment '其他品牌颜色模板';
 
@@ -5903,11 +5918,12 @@ create table zl_colortemplate
 
   Color_Name       varchar(20),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Code             varchar(4),
   Color_Note       varchar(200),
   ColorType        varchar(50),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_colortemplate comment 'ASA颜色模板';
 
@@ -5927,6 +5943,7 @@ create table zl_companycontacts
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Gender           varchar(10),
   Department       varchar(20),
   Position         varchar(20),
@@ -5947,7 +5964,7 @@ create table zl_companycontacts
   Address          varchar(500),
   ZipCode          varchar(10),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_companycontacts comment '联系人
 ';
@@ -5973,8 +5990,9 @@ create table zl_costformula
   Coefficient_2    decimal(10,2),
   FormulaName      varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_costformula comment '成本计算公式';
 
@@ -5987,6 +6005,8 @@ create table zl_country
   code             varchar(20)  not null,
   name             varchar(100) not null,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
+  `languages` VARCHAR(100) NULL,
   sys_create_stuff int UNSIGNED NOT NULL,
   sys_create_date  datetime     not null,
   sys_modify_stuff int UNSIGNED NOT NULL,
@@ -5997,7 +6017,7 @@ create table zl_country
 
   LocalCurrency    varchar(36),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_country comment '国家表';
 
@@ -6021,7 +6041,7 @@ create table zl_language
   primary key (id),
   UNIQUE `zl_language_name` (`name`),
   UNIQUE `zl_language_code` (`code`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_language comment '语言表';
 
@@ -6042,11 +6062,12 @@ create table zl_currency
 
   CurrencyName     varchar(20),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   CurrencyCode     varchar(10),
   CurrencyMark     bool,
   UserFlag         varchar(1),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_currency comment '币种表';
 
@@ -6066,9 +6087,10 @@ create table zl_customs_name
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Remark           varchar(100),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_customs_name comment '商品报关名称
 ';
@@ -6089,7 +6111,7 @@ create table zl_decade
 
   Decade           varchar(10),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_decade comment '商品年代';
 
@@ -6109,9 +6131,10 @@ create table zl_delare_makings
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Remark           varchar(100),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_delare_makings comment '申报要素';
 
@@ -6132,15 +6155,16 @@ create table zl_ex_reportstyle
   code             varchar(20),
   chinese_name     varchar(100),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   tdBackX          int,
   tdBackY          int,
   tdBackWidth      int,
   tdBackHeight     int,
   memo             varchar(1000),
-  selfcompanyid    int UNSIGNED NULL,
+  companyid    int UNSIGNED NULL,
   Picid            int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_ex_reportstyle comment '快递单样式主表';
 
@@ -6166,7 +6190,7 @@ create table zl_ex_reportstyle_detail
   tdfieldHeight    int,
   is_visiable      varchar(1),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_ex_reportstyle_detail comment '快递单样式明细表';
 
@@ -6189,7 +6213,7 @@ create table zl_exchangerate
   ImportCurrency   varchar(36) comment '汇入币种',
   ExchangeRate     decimal(10,5),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_exchangerate comment '汇率';
 
@@ -6209,10 +6233,11 @@ create table zl_executioncategory
 
   ExecutionName    varchar(100),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   ExecutionMatter  varchar(500),
   Note             varchar(500),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_executioncategory comment '执行标准';
 
@@ -6232,10 +6257,11 @@ create table zl_exhibition
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Remark           varchar(100),
   Status           varchar(1) comment '0-不可用 1-可用',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_exhibition comment '展会';
 
@@ -6256,11 +6282,12 @@ create table zl_feenames
   Code             varchar(20),
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   kmid             int UNSIGNED NULL,
   IsAmortize       tinyint comment '0-不摊销 1-金额摊销 2-件数摊销',
   IsUsed           varchar(1) comment '0-不常用 1-常用',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_feenames comment '费用名称';
 
@@ -6280,9 +6307,10 @@ create table zl_forbiddenword
 
   Word             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Remark           varchar(100),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_forbiddenword comment '违禁词';
 
@@ -6302,6 +6330,7 @@ create table zl_imagetool
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Type             varchar(1) comment '0-修改尺寸
             1-修改尺寸并添加
             2-裁剪并对齐',
@@ -6310,7 +6339,7 @@ create table zl_imagetool
   IsNeed           varchar(1),
   Quality          int,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_imagetool comment '图片导出方式';
 
@@ -6331,7 +6360,7 @@ create table zl_invite_rule
   Bonus            bigint,
   Remark           text,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_invite_rule comment '会员邀请规则';
 
@@ -6352,10 +6381,11 @@ create table zl_invoice_header
   SupplierID       int UNSIGNED NULL,
   Header           varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Remark           varchar(200),
   IsDefault        varchar(1) comment '1-默认 0-非默认',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_invoice_header comment '客户 发票抬头';
 
@@ -6376,8 +6406,9 @@ create table zl_material
   MaterialName     varchar(20),
   Code             varchar(20),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_material comment '材质
 ';
@@ -6398,8 +6429,9 @@ create table zl_materialnote
 
   Content          varchar(100),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_materialnote comment '材质备注';
 
@@ -6420,8 +6452,9 @@ create table zl_materialstatus
   Code             varchar(20),
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_materialstatus comment '材质状态';
 
@@ -6441,6 +6474,7 @@ create table zl_memberlevel
 
   MemberLevel      varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Discount         decimal(16,9),
   LevelBasicScore  bigint,
   IntegralRule     decimal(16,9) comment '实际成交价格x积分规则=获得积分',
@@ -6448,7 +6482,7 @@ create table zl_memberlevel
   LevelContent     varchar(50),
   IsRetail         varchar(1) comment '0-非零售等级，不能升级，1-零售等级，可以升级',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_memberlevel comment '会员等级设置';
 
@@ -6468,9 +6502,10 @@ create table zl_occasionsstyle
 
   OccasionsStyleName varchar(50),
   lang_code          varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   OccasionsStyleMode varchar(200),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_occasionsstyle comment '场合风格';
 
@@ -6490,9 +6525,10 @@ create table zl_pricesource
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Remark           varchar(500),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_pricesource comment '价格来源';
 
@@ -6512,9 +6548,10 @@ create table zl_productdscrb
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Remark           varchar(100),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_productdscrb comment '商品描述';
 
@@ -6534,8 +6571,9 @@ create table zl_productinnards
 
   PartsName        varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_productinnards comment '内部结构';
 
@@ -6556,9 +6594,10 @@ create table zl_productparts
   PartsCode        varchar(50),
   PartsName        varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   PackFlag         varchar(1),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_productparts comment '附带配件
 ';
@@ -6579,13 +6618,14 @@ create table zl_productprice
 
   SaleName         varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   IsDefault        varchar(1) comment '0 - 默认
             1 - 不默认',
   CurreancyID      int UNSIGNED NULL,
   SortNum          varchar(4),
   IsRound          varchar(1),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_productprice comment '商品销售价格 国内外零售价、批发价';
 
@@ -6605,10 +6645,11 @@ create table zl_productstyle
 
   BrandGroup       varchar(36),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   ChildBrand       varchar(36),
   ProductStyle     varchar(10),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_productstyle comment '商品款号';
 
@@ -6628,9 +6669,10 @@ create table zl_producttemplate
 
   TemplateName     varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Picture          longblob,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_producttemplate comment '商品模板-主表';
 
@@ -6650,11 +6692,12 @@ create table zl_quotedprice
 
   S_ID             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Currency         varchar(50),
   QuotedPrice      decimal(10,0),
   QuotedDate       datetime,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_quotedprice comment 'zl_quotedprice';
 
@@ -6675,9 +6718,10 @@ create table zl_reportset
   Code             varchar(50),
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Remark           varchar(500),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_reportset comment '报表样式设置';
 
@@ -6698,10 +6742,11 @@ create table zl_reportset_detail
   SetID            int UNSIGNED NULL,
   Code             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   `Index`          int,
   Width            int,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_reportset_detail comment '报表样式设置明细';
 
@@ -6721,10 +6766,11 @@ create table zl_salesmethods
 
   SalesMethodsName varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   SalesMethodsMode varchar(200),
   BrandType        varchar(36),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_salesmethods comment '销售方式';
 
@@ -6744,6 +6790,7 @@ create table zl_salesport
 
   ProtName         varchar(20),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Remark           varchar(500),
   StoreName        varchar(50),
   Isonline         varchar(1) comment '0-否 1-是',
@@ -6754,7 +6801,7 @@ create table zl_salesport
   PostRemark       text,
   CusID            int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_salesport comment '销售端口基础资料';
 
@@ -6774,13 +6821,14 @@ create table zl_salesport_mission
 
   SaleSpotID       int UNSIGNED NULL,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   YearMonth        varchar(10) comment '格式为201801',
   SaleSum          decimal(10,2),
   Profit           decimal(10,2),
   Rate             decimal(10,2),
   Remark           varchar(500),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_salesport_mission comment '销售端口任务额';
 
@@ -6800,10 +6848,11 @@ create table zl_series
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Code             varchar(50),
   BrandID          int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_series comment '任何表都应该包含的列';
 
@@ -6824,9 +6873,10 @@ create table zl_series2
   SeriesID         int UNSIGNED NULL,
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Code             varchar(50),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_series2 comment '子系列';
 
@@ -6847,9 +6897,10 @@ create table zl_shippingtype
   code             varchar(10),
   name             varchar(10),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   remark           varchar(50),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_shippingtype comment '运输方式';
 
@@ -6869,11 +6920,12 @@ create table zl_sizecontent
 
   TopID            int UNSIGNED NULL,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Content          varchar(10),
   SortNum          int,
   Remark           varchar(100),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_sizecontent comment '尺码明细';
 
@@ -6893,9 +6945,10 @@ create table zl_sizetop
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Code             varchar(50),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_sizetop comment '尺码组';
 
@@ -6915,13 +6968,14 @@ create table zl_storemove
 
   ProductID        int UNSIGNED NULL,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   StoreId          int UNSIGNED NULL,
   MoveMan          varchar(50),
   MoveDate         datetime,
   MoveState        varchar(50),
   Note             varchar(1000),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_storemove comment '??未使用';
 
@@ -6941,9 +6995,10 @@ create table zl_style
 
   StyleName        varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   StyleMode        varchar(200),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_style comment '未使用';
 
@@ -6963,9 +7018,10 @@ create table zl_supplier_type
 
   SupplierID       int UNSIGNED NULL,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Type             varchar(1) comment '0-供货商 1-报关行 2-供应商 3-承运人 4-客户',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_supplier_type comment '关系单位类型';
 
@@ -6985,9 +7041,10 @@ create table zl_supplierlevel
 
   LevelName        varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   LevelNote        varchar(100),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_supplierlevel comment '供货商级别';
 
@@ -7007,8 +7064,9 @@ create table zl_sys_selfcompany
 
   supplier_id      int UNSIGNED NULL,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_sys_selfcompany comment '分公司列表';
 
@@ -7028,12 +7086,13 @@ create table zl_template_descrb
 
   TempID           int UNSIGNED NULL,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   SizeTopID        int UNSIGNED NULL,
   SizeID           int UNSIGNED NULL,
   BaseLenth        decimal(10,2),
   Lenth            decimal(10,2),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_template_descrb comment '商品模板-尺码大小描述';
 
@@ -7053,11 +7112,12 @@ create table zl_templatelist
 
   TemplateName     varchar(36),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   SizeName         varchar(36),
   Content          varchar(20),
   ProductID        int UNSIGNED NULL,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_templatelist comment '商品模板-数据表';
 
@@ -7077,10 +7137,11 @@ create table zl_templatemanage
 
   TemplateName     varchar(20),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   TempID           int UNSIGNED NULL,
   SortNum          int,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_templatemanage comment '商品模板-从表';
 
@@ -7100,10 +7161,11 @@ create table zl_trans_code
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Code             varchar(50),
   Remark           varchar(500),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_trans_code comment '接口基础资料';
 
@@ -7123,8 +7185,9 @@ create table zl_ulnarinch
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_ulnarinch comment '任何表都应该包含的列';
 
@@ -7144,9 +7207,10 @@ create table zl_unit
 
   UnitName         varchar(20),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   UnitGroupID      varchar(50),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_unit comment '未使用';
 
@@ -7166,9 +7230,10 @@ create table zl_unitgroup
 
   GroupName        varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Crew             varchar(100),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_unitgroup comment 'zl_unitgroup';
 
@@ -7190,6 +7255,7 @@ create table zl_warehouse
   City             varchar(20),
   StoreName        varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   StoreAddress     varchar(100),
   Contact          varchar(20),
   Toll             varchar(20),
@@ -7203,7 +7269,7 @@ create table zl_warehouse
   MaxStock         bigint,
   MaxSku           bigint,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_warehouse comment '仓库信息';
 
@@ -7223,10 +7289,11 @@ create table zl_washinginstructions
 
   name             varchar(10),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   remark           varchar(50),
   image            longblob,
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_washinginstructions comment '洗涤标准';
 
@@ -7246,9 +7313,10 @@ create table zl_winterproofing
 
   Name             varchar(20),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Remark           varchar(100),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_winterproofing comment '防寒指数';
 
@@ -7273,7 +7341,7 @@ create table zl_yearexchange
   Import           varchar(36),
   Export           varchar(36),
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table zl_yearexchange comment '任何表都应该包含的列';
 
@@ -7292,7 +7360,7 @@ create table 模版
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   primary key (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 alter table 模版 comment '任何表都应该包含的列';
 
@@ -7331,6 +7399,7 @@ CREATE TABLE `tb_company`
   sys_delete_flag  tinyint      not null comment '0-未删除 1-已删除',
   `name`           varchar(191) NOT NULL COMMENT '公司名称',
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   `country_id`     int UNSIGNED NULL COMMENT '国家ID',
   `remark`         TEXT COMMENT '备注说明',
   PRIMARY KEY (`id`)
@@ -7351,6 +7420,7 @@ create table `role`
   sys_delete_flag  tinyint      not null comment '0-未删除 1-已删除',
   `name`           varchar(100) NOT NULL DEFAULT '' COMMENT '角色名称',
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   `description`    varchar(100) NOT NULL DEFAULT '' COMMENT '角色描述',
   PRIMARY KEY (`id`),
   UNIQUE `role_name` (`name`)
@@ -7371,6 +7441,7 @@ create table `permission`
   `pid`            int UNSIGNED NOT NULL DEFAULT '0' COMMENT '所属权限ID，默认0为顶级权限',
   `name`           varchar(100) NOT NULL DEFAULT '' COMMENT '权限名称',
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   `description`    varchar(100) NOT NULL DEFAULT '' COMMENT '权限描述',
   PRIMARY KEY (`id`),
   UNIQUE `permission_name` (`name`)
