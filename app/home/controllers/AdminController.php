@@ -1,6 +1,9 @@
 <?php
+
 namespace Multiple\Home\Controllers;
 
+use Asa\Erp\TbDepartment;
+use Asa\Erp\TbUser;
 use Phalcon\Mvc\Controller;
 use Phalcon\Db\Column;
 use  Phalcon\Mvc\Model\Message;
@@ -11,27 +14,32 @@ class AdminController extends BaseController
     protected $modelObject;
     protected $list_key_column;
     protected $list_columns;
-    
-    
-    public function initialize() {
-	    parent::initialize();
+
+
+    public function initialize()
+    {
+        parent::initialize();
     }
 
-    function setModelName($modelName) {
+    function setModelName($modelName)
+    {
         $this->modelName = $modelName;
     }
-    
-    function configList($key_column, $columns) {
+
+    function configList($key_column, $columns)
+    {
         $this->list_key_column = $key_column;
         $this->list_columns = $columns;
     }
 
-    function getModelName() {
+    function getModelName()
+    {
         return $this->modelName;
     }
 
-    function getModelObject() {
-        if(!$this->modelObject) {
+    function getModelObject()
+    {
+        if (!$this->modelObject) {
             $class = new \ReflectionClass($this->getModelName());
             $this->modelObject = $class->newInstance();
         }
@@ -39,19 +47,20 @@ class AdminController extends BaseController
         return $this->modelObject;
     }
 
-    function getAttributes() {
+    function getAttributes()
+    {
         $model = $this->getModelObject();
 
         try {
             $metaData = $model->getModelsMetaData();
             return $metaData->getAttributes($model);
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             echo $e->getMessage();
         }
     }
 
-    function getCondition() {
+    function getCondition()
+    {
         $model = $this->getModelObject();
         $metaData = $model->getModelsMetaData();
         $primaryKeys = $metaData->getPrimaryKeyAttributes($model);
@@ -59,157 +68,195 @@ class AdminController extends BaseController
 
         $array = array();
 
-        foreach($primaryKeys as $key) {
-            if($fieldTypes[$key]==Column::TYPE_INTEGER || $fieldTypes[$key]==Column::TYPE_BIGINTEGER || $fieldTypes[$key]==Column::TYPE_MEDIUMINTEGER || $fieldTypes[$key]==Column::TYPE_SMALLINTEGER || $fieldTypes[$key]==Column::TYPE_TINYINTEGER) {
-                $array[] = sprintf("%s=%d", $key,$this->request->get($key));
-            }
-            else if($fieldTypes[$key]==Column::TYPE_CHAR || $fieldTypes[$key]==Column::TYPE_VARCHAR || $fieldTypes[$key]==Column::TYPE_ENUM ) {
-                $array[] = sprintf("%s='%s'", $key,addslashes($this->request->get($key)));
+        foreach ($primaryKeys as $key) {
+            if ($fieldTypes[$key] == Column::TYPE_INTEGER || $fieldTypes[$key] == Column::TYPE_BIGINTEGER || $fieldTypes[$key] == Column::TYPE_MEDIUMINTEGER || $fieldTypes[$key] == Column::TYPE_SMALLINTEGER || $fieldTypes[$key] == Column::TYPE_TINYINTEGER) {
+                $array[] = sprintf("%s=%d", $key, $this->request->get($key));
+            } else if ($fieldTypes[$key] == Column::TYPE_CHAR || $fieldTypes[$key] == Column::TYPE_VARCHAR || $fieldTypes[$key] == Column::TYPE_ENUM) {
+                $array[] = sprintf("%s='%s'", $key, addslashes($this->request->get($key)));
             }
         }
 
         return implode(' and ', $array);
     }
 
-	public function indexAction() {
+    public function indexAction()
+    {
         $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
-	    $result = $findFirst->invokeArgs(null, array("sys_delete_flag=0"));
-	    
-	    $this->view->setVar("result", $result->toArray());
-	}
-	
-	public function listAction() {
-	    $this->doList(); 
-	}
-	
-	public function doList($columns=array()) {
-	    if($this->request->isAjax()) {	        
-	        $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
-	        $result = $findFirst->invokeArgs(null, array());
-	        
-	        if($this->list_key_column!="" && count($this->list_columns)>0) {
-	            $column_name = $this->list_key_column;
-	            $list = array();
-	            foreach($result as $row) {
-	                $line = array();
-	                
-	                foreach($this->list_columns as $name) {
-	                    $line[$name] = $row->$name;  
-	                }
-	                $list[$row->$column_name] = $line;   
-	            }
-	            
-	            echo json_encode($list);
-	        }
-	        else {
-	            echo json_encode($result->toArray());
-	        }
-	    }
-	    $this->view->disable();  
-	}
+        $result = $findFirst->invokeArgs(null, array("sys_delete_flag=0"));
 
-	function editAction() {
-	    //print_r($this->dispatcher->getParams());exit;
-	    $this->doEdit();
-	}
+        $this->view->setVar("result", $result->toArray());
+    }
 
-	function deleteAction() {
-	    $this->doDelete();
-	}
+    public function listAction()
+    {
+        $this->doList();
+    }
 
-	function addAction() {
-	    $this->doAdd();
-	}
+    public function doList($columns = array())
+    {
+        if ($this->request->isAjax()) {
+            $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
+            $result = $findFirst->invokeArgs(null, array());
 
-	function doAdd() {
-	    if($this->request->isPost()) {
-	        //¸üÐÂÊý¾Ý¿â
-	        $row = $this->getModelObject();
+            if ($this->list_key_column != "" && count($this->list_columns) > 0) {
+                $column_name = $this->list_key_column;
+                $list = array();
+                foreach ($result as $row) {
+                    $line = array();
 
-	        $fields = $this->getAttributes();
-	        foreach($fields as $name) {
-	            if(isset($_POST[$name])) {
-	                $row->$name = $_POST[$name];
-	            }
-	        }
+                    foreach ($this->list_columns as $name) {
+                        $line[$name] = $row->$name;
+                    }
+                    $list[$row->$column_name] = $line;
+                }
 
-            $result = array("code"=>200, "messages" => array());
-	        if ($row->create() === false) {
+                echo json_encode($list);
+            } else {
+                echo json_encode($result->toArray());
+            }
+        }
+        $this->view->disable();
+    }
+
+    function editAction()
+    {
+        //print_r($this->dispatcher->getParams());exit;
+        $this->doEdit();
+    }
+
+    function deleteAction()
+    {
+        $this->doDelete();
+    }
+
+    function addAction()
+    {
+        $this->doAdd();
+    }
+
+    function doAdd()
+    {
+        if ($this->request->isPost()) {
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½
+            $row = $this->getModelObject();
+
+            $fields = $this->getAttributes();
+            foreach ($fields as $name) {
+                if (isset($_POST[$name])) {
+                    $row->$name = $_POST[$name];
+                }
+            }
+
+            $result = array("code" => 200, "messages" => array());
+            if ($row->create() === false) {
                 $messages = $row->getMessages();
 
                 foreach ($messages as $message) {
                     $result["messages"][] = $message->getMessage();
                 }
-            }
-            else {
+            } else {
                 $result['is_add'] = "1";
                 $result['id'] = $row->id;
                 //$message['idd'] = "999";
             }
             echo json_encode($result);
             $this->view->disable();
-	    }
+        }
 
-	}
+    }
 
-	function doEdit() {
-	    if($this->request->isPost()) {
-	        //¸üÐÂÊý¾Ý¿â
-	        $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
-	        $row = $findFirst->invokeArgs(null, array($this->getCondition()));
+    function doEdit()
+    {
+        if ($this->request->isPost()) {
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½
+            $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
+            $row = $findFirst->invokeArgs(null, array($this->getCondition()));
 
-	        if($row!=false) {
-    	        $fields = $this->getAttributes();
-    	        foreach($fields as $name) {
-    	            if(isset($_POST[$name])) {
-    	                $row->$name = $_POST[$name];
-    	            }
-    	        }
+            if ($row != false) {
+                $fields = $this->getAttributes();
+                foreach ($fields as $name) {
+                    if (isset($_POST[$name])) {
+                        $row->$name = $_POST[$name];
+                    }
+                }
 
-                $result = array("code"=>200, "messages" => array());
-    	        if ($row->save() === false) {
+                $result = array("code" => 200, "messages" => array());
+                if ($row->save() === false) {
                     $messages = $row->getMessages();
 
                     foreach ($messages as $message) {
                         $result["messages"][] = $message->getMessage();
                     }
                 }
-                echo json_encode($result);                
-    	    }
-    	    else {
-    	        $result = array("code"=>200, "messages" => array("Êý¾Ý²»´æÔÚ"));
-    	        
+                echo json_encode($result);
+            } else {
+                $result = array("code" => 200, "messages" => array("ï¿½ï¿½ï¿½Ý²ï¿½ï¿½ï¿½ï¿½ï¿½"));
+
                 echo json_encode($result);
                 exit;
-    	    }
-    	    $this->view->disable();
-	    }
-	    else {
-	        //´ÓÊý¾Ý¿âÖÐ²éÕÒÊý¾Ý£¬¸øµ½Ä£°å
-	        $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
-	        $info = $findFirst->invokeArgs(null, array($this->getCondition()));
+            }
+            $this->view->disable();
+        } else {
+            //ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½Ð²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
+            $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
+            $info = $findFirst->invokeArgs(null, array($this->getCondition()));
 
-	        if($info!=false) {
-	            $this->view->setVar("info", $info);
-	        }
-	    }
-	}
+            if ($info != false) {
+                $this->view->setVar("info", $info);
+            }
+        }
+    }
 
-	function doDelete() {
-	    $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
-	    $row = $findFirst->invokeArgs(null, array($this->getCondition()));
-	    
-	    $result = array("code"=>200, "messages" => array());
-	    if($row!=false) {
-	        if ($row->delete() == false) {
-	            $messages = $row->getMessages();
+    function doDelete()
+    {
+        $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
+        $row = $findFirst->invokeArgs(null, array($this->getCondition()));
+
+        $result = array("code" => 200, "messages" => array());
+        if ($row != false) {
+            if ($row->delete() == false) {
+                $messages = $row->getMessages();
 
                 foreach ($messages as $message) {
                     $result["messages"][] = $message->getMessage();
                 }
-	        }
-	    }
-	    echo json_encode($result);
+            }
+        }
+        echo json_encode($result);
         $this->view->disable();
-	}
+    }
+
+
+    /**
+     * å–å‡ºå…¬å¸å†…éƒ¨éƒ¨é—¨ç›®å½•æ ‘
+     * @return false|string
+     */
+    public function departmentsAction()
+    {
+        // åˆ¤æ–­æ˜¯å¦ç™»å½•
+        if (!$this->session->get('user')) {
+            return $this->error(['login is required']);
+        }
+
+        // å–å‡ºç”¨æˆ·ç›¸å…³æ•°æ®
+        $user_id = $this->session->get('user')['id'];
+        $user = TbUser::findFirst(['id' => $user_id, 'sys_delete_flag' => '0']);
+        if (!$user) {
+            return $this->error(['user is not exist']);
+        }
+
+        // å–å‡ºå…¬å¸ä¸‹é¢çš„æ‰€æœ‰éƒ¨é—¨
+        $departments = TbDepartment::find([
+            'companyid' => $user->companyid,
+            'sys_delete_flag' => '0',
+        ]);
+        if (!$departments) {
+            return $this->error(['departments are not exist']);
+        }
+
+        // äº¤ç»™ä¸‹é¢çš„æ ¼å¼åŒ–ä¸ºç›®å½•æ ‘å¤„ç†å¹¶è¿”å›ž
+        return json_encode($this->format_tree($departments->toArray()));
+    }
+
+
 }
