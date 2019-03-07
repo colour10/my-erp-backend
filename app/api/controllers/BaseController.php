@@ -5,7 +5,7 @@
  * @date 2018年5月8日 下午10:37:37
  */
 
-namespace Common;
+namespace Multiple\Api\Controllers;
 
 use Phalcon\Mvc\Controller;
 use Phalcon\Exception;

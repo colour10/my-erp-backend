@@ -11,7 +11,7 @@ use Phalcon\Session\Adapter\Files as Session;
 use Common\Common as Common;
 use Common\Validate as Validate;
 
-ini_set('date.timezone','Asia/Shanghai');
+ini_set('date.timezone', 'Asia/Shanghai');
 
 try {
     define('APP_PATH', dirname(dirname(__FILE__)));
@@ -53,25 +53,24 @@ try {
         $session->start();
         return $session;
     });
-    
-    $di->setShared('language', function () use($config,$di) {
+
+    $di->setShared('language', function () use ($config, $di) {
         $language = $config->language;
         //$system_language = new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
         return new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
     });
-    
-    $di->setShared('currentUser', function () use($config,$di) {
+
+    $di->setShared('currentUser', function () use ($config, $di) {
         $session = $di->get('session');
         if ($session->has("user")) {
             // Retrieve its value
             $user = $session->get("user");
             return $user["id"];
-        }
-        else {
-            return "";   
+        } else {
+            return "";
         }
     });
-        
+
     // Set the database service
     $di['db'] = function () use ($config) {
         $connection = new DbAdapter($config->database->db->toArray());
@@ -163,25 +162,6 @@ try {
                 ]
             );
 
-            // 添加api
-            $router->add(
-                "/api/:controller/?",
-                [
-                    "module" => "api",
-                    "controller" => 1,
-                    "action" => "index",
-                ]
-            );
-
-            $router->add(
-                "/api/:controller/:action\??",
-                [
-                    "module" => "api",
-                    "controller" => 1,
-                    "action" => 2,
-                ]
-            );
-
             return $router;
         }
     );
@@ -199,11 +179,6 @@ try {
             "admin" => [
                 "className" => "Multiple\\Admin\\Module",
                 "path" => "../app/admin/Module.php",
-            ],
-            // 增加api
-            "api" => [
-                "className" => "Multiple\\Api\\Module",
-                "path" => "../app/api/Module.php",
             ]
         ]
     );

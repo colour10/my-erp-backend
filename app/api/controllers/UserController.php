@@ -7,7 +7,7 @@
 namespace Multiple\Api\Controllers;
 
 use Asa\Erp\User;
-use Common\BaseController;
+use Multiple\Api\Controllers\BaseController;
 
 class UserController extends BaseController
 {
