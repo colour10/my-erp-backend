@@ -52,19 +52,14 @@ class DepartmentController extends AdminController {
      */
     public function departmentsAction()
     {
-        // 取出用户相关数据
-        $user_id = $this->currentUser;
-        $user = TbUser::findFirst(['id' => $user_id, 'sys_delete_flag' => '0']);
-        if (!$user) {
-            return $this->error(['user is not exist']);
-        }
-
+        $auth = $this->auth;
+        
         // 取出公司下面的所有部门
         $departments = TbDepartment::find([
-            'companyid' => $user->companyid,
+            'companyid' => $auth['companyid'],
             'sys_delete_flag' => '0',
         ]);
-        if (!$departments) {
+        if(!$departments) {
             return $this->error(['departments are not exist']);
         }
 

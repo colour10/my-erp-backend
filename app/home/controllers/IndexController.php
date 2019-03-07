@@ -2,6 +2,8 @@
 namespace Multiple\Home\Controllers;
 use Phalcon\Mvc\Controller;
 use Asa\Erp\TbDepartment;
+use Asa\Erp\TbUser;
+use Asa\Erp\TbCompany;
 
 class IndexController extends BaseController
 {
@@ -92,5 +94,34 @@ class IndexController extends BaseController
         }
         
         exit;
+    }
+    
+    function initAction() {
+        $db = $this->db;
+        $db->execute("truncate table tb_company");
+        $db->execute("truncate table tb_user");
+        //$db->execute("truncate table tb_company");
+        $datetime = date('Y-m-d H:i:s');
+        $company = new TbCompany();
+        $company->sys_create_stuff = 1; 
+        $company->sys_modify_stuff = 1; 
+        $company->sys_create_date = $datetime; 
+        $company->sys_modify_date = $datetime; 
+        $company->sys_delete_flag = 0;  
+        $company->name = "company". time();
+        $company->save();
+        
+        $user = new TbUser();
+        $user->sys_create_stuff = 1; 
+        $user->sys_modify_stuff = 1; 
+        $user->sys_create_date = $datetime; 
+        $user->sys_modify_date = $datetime; 
+        $user->sys_delete_flag = 0;  
+        $user->login_name = "admin";
+        $user->password = md5("123456");
+        $user->companyid = $company->id;
+        $user->save();
+        
+        echo "Init Success.";exit;
     }
 }

@@ -27,7 +27,8 @@ class LoginController extends Controller
             if ($user!=false) {
                 $this->session->set('user', array(
                     'id' => $user->id,
-                    'username' => $user->login_name
+                    'username' => $user->login_name,
+                    'companyid' => $user->companyid
                 ));
 
                 //Forward to the 'invoices' controller if the user is valid

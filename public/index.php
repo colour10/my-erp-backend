@@ -70,6 +70,17 @@ try {
             return "";
         }
     });
+    
+    $di->setShared('auth', function () use ($config, $di) {
+        $session = $di->get('session');
+        if ($session->has("user")) {
+            // Retrieve its value
+            $user = $session->get("user");
+            return $user;
+        } else {
+            return false;
+        }
+    });
 
     // Set the database service
     $di['db'] = function () use ($config) {
