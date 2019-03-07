@@ -75,6 +75,22 @@ var $ASA = (function(){
         return languages[language][key]
     }
     
+    function copyTo(fromObj, target) {
+        Object.keys(target).forEach(function(key){
+            if(fromObj[key] ) {
+                target[key] =  fromObj[key]    
+            } 
+        });
+    }
+    
+    function clone(target) {
+        var obj = {}
+        Object.keys(target).forEach(function(key){
+            obj[key] =  target[key]    
+        });
+        return obj;
+    }
+    
     var languages = {
         "zh-cn":{
             success:"操作成功",
@@ -96,5 +112,5 @@ var $ASA = (function(){
         }    
     }
     
-    return {submit:submit, setLanguage:setLanguage, remove:remove}    
+    return {submit:submit, setLanguage:setLanguage, remove:remove, copyTo:copyTo, clone:clone}    
 })()

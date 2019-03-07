@@ -23,4 +23,10 @@ class CommonController extends BaseController {
 	    echo json_encode($result);
         $this->view->disable();
 	}
+	
+	function languageAction() {
+	    $config = $this->config;
+	    echo json_encode((array)$config["languages"]);
+        $this->view->disable();
+	}
 }

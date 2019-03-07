@@ -178,9 +178,9 @@ return array(
     "dianshangduizhaobiao" => "电商对照表",
     "bianji" => "编辑",
     "shanchu" => "删除",
-    "dianshangduizhaobiao" => "电商对照表",
-    "dianshangduizhaobiao" => "电商对照表",
-    "dianshangduizhaobiao" => "电商对照表",
+    "xinjianxinxi" => "新建信息",
+    "xiugaixinxi" => "修改信息",
+    "yuzhong" => "语种",
     "dianshangduizhaobiao" => "电商对照表",
     "dianshangduizhaobiao" => "电商对照表",
     "dianshangduizhaobiao" => "电商对照表",
@@ -198,11 +198,11 @@ return array(
     ),
     
     "currency" => [
-        array("code" => "CAD", "name" => "加元"),
-        array("code" => "EUR", "name" => "欧元"),
-        array("code" => "HKD", "name" => "港币"),
-        array("code" => "JPY", "name" => "日元"),
-        array("code" => "RMB", "name" => "人民币"),
-        array("code" => "USD", "name" => "美元"),
+        "CAD" => "加元",
+        "EUR" => "欧元",
+        "HKD" => "港币",
+        "JPY" => "日元",
+        "RMB" => "人民币",
+        "USD" => "美元",
     ]
 );
