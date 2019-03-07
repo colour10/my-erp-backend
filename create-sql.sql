@@ -4823,7 +4823,8 @@ create table tb_user
   CostDisplay        varchar(1),
   WeChat             varchar(50),
   OpenID             varchar(50),
-  primary key (id)
+  primary key (id),
+  UNIQUE `tb_user_login_name` (`login_name`)
 );
 
 alter table tb_user comment '用户表';
