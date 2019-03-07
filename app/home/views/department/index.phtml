@@ -3,97 +3,115 @@
   <el-col :span="8">
     <el-tree :data="data" :props="defaultProps" default-expand-all :expand-on-click-node="false" @node-click="onNodeClick"></el-tree>
   </el-col>
-  <el-col :span="5">
+  <el-col :span="7" v-if="form.id>0">
     <el-button type="info" @click="showDepartCreate" style="margin-bottom:30px;"><?=$system_language["depart-create"]?></el-button>
-    
+
     <el-form ref="form" :model="form" label-width="80px">
       <el-form-item label="<?=$system_language["depart-name"]?>">
-        <el-input v-model="form.name"></el-input>
-      </el-form-item>     
-      
+        <el-input v-model="form.Name"></el-input>
+      </el-form-item>
+
       <el-form-item label="<?=$system_language["description"]?>">
-        <el-input type="textarea" v-model="form.description"></el-input>
+        <el-input type="textarea" v-model="form.Remark"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit" :disabled="is_save_disabled"><?=$system_language["button-save"]?></el-button>
         <el-button><?=$system_language["button-cancel"]?></el-button>
       </el-form-item>
-    </el-form>
-    
-    
+    </el-form>s
   </el-col>
 </el-row>
 
 <el-dialog title="<?=$system_language["depart-create"]?>" :visible.sync="dialogTableVisible" :center="true" width="35%">
   <el-form :model="form_create" label-width="80px">
     <el-form-item label="<?=$system_language["depart-name"]?>">
-      <el-input v-model="form_create.name"></el-input>
-    </el-form-item>     
-    
-    <el-form-item label="<?=$system_language["description"]?>">
-      <el-input type="textarea" v-model="form_create.description"></el-input>
+      <el-input v-model="form_create.Name"></el-input>
     </el-form-item>
-    
+
+    <el-form-item label="<?=$system_language["description"]?>">
+      <el-input type="textarea" v-model="form_create.Remark"></el-input>
+    </el-form-item>
+
     <el-form-item label="<?=$system_language["depart-parent"]?>">
       <el-input v-model="form_create.parent_name" disabled></el-input>
-    </el-form-item> 
+    </el-form-item>
   </el-form>
   <div slot="footer" class="dialog-footer" style="text-align:center">
     <el-button type="primary" @click="onDepartCreate"><?=$system_language["button-ok"]?></el-button>
-    <el-button @click="dialogTableVisible = false"><?=$system_language["button-cancel"]?></el-button>    
+    <el-button @click="dialogTableVisible = false"><?=$system_language["button-cancel"]?></el-button>
   </div>
 </el-dialog>
 </div>
 
 <script>
 $(document).ready(function(){
-    new Vue({
-        el:"#ell",
-        data() {
-            return {
-                form: {
-                    name: '',
-                    description: '',
-                    id: ''
+    $.post("/department/departments", {}, function(departments){
+        //console.log(departments)
+
+        new Vue({
+            el:"#ell",
+            data() {
+                return {
+                    form: {
+                        Name: '',
+                        Remark: '',
+                        id: ''
+                    },
+                    form_create: {
+                        Name: '',
+                        Remark: '',
+                        up_dp_id:'',
+                        parent_name:''
+                    },
+                    data: departments,
+                    defaultProps: {
+                        children: 'children',
+                        label: 'label'
+                    },
+                    nodeData:'',
+                    is_save_disabled:true,
+                    dialogTableVisible:false
+                }
+            },
+            methods: {
+                onNodeClick(data, node) {
+                    console.log(data , node)
+                    this.nodeData = data;
+                    this.form.Name = data.label
+                    this.form.Remark = data.Remark
+                    this.form.id = data.id
+                    this.form_create.parent_name = data.label
+                    this.form_create.up_dp_id = data.id
+
+                    this.is_save_disabled = node.parent.id<=0
                 },
-                form_create: {
-                    name: '',
-                    description: '',
-                    parent_id:'',
-                    parent_name:''
+                onSubmit() {
+                    var self = this
+                    $ASA.submit.call(this, "/department/edit", this.form, function(res) {
+                        //$ASA.copyTo(self.form, self.node.data)
+                        console.log(self.nodeData.data, self.form)
+                        self.nodeData.label = self.form.Name;
+                    })
                 },
-                data: <?=$depart_tree?>,
-                defaultProps: {
-                    children: 'children',
-                    label: 'label'
+                showDepartCreate() {
+                    this.form_create.Name = ""
+                    this.form_create.Remark = ""
+                    this.form_create.id = ""
+                    this.dialogTableVisible = true;
                 },
-                is_save_disabled:true,
-                dialogTableVisible:false
+                onDepartCreate() {
+                    var self = this
+                    $ASA.submit.call(this, "/department/add", this.form_create, function(){
+                        var newNode = {}
+                        newNode.label = self.form_create.Name;
+                        newNode.id = self.form_create.id;
+                        newNode.children = []
+                        self.nodeData.children.push(newNode)    
+                    })
+                }
             }
-        },
-        methods: {
-            onNodeClick(el,node) {
-                //console.log(node , node.label, node.id, node.parent.id)   
-                var data = node.data;
-                this.form.name = data.label
-                this.form.description = data.description
-                this.form.id = data.id
-                this.form_create.parent_name = data.label
-                this.form_create.parent_id = data.id
-                
-                this.is_save_disabled = node.parent.id<=0
-            },
-            onSubmit() {
-                $ASA.submit.call(this, "/department/edit", this.form)
-            },
-            showDepartCreate() {
-                this.dialogTableVisible = true;
-            },
-            onDepartCreate() {
-                $ASA.submit.call(this, "/department/add", this.form_create)
-            }
-        }
-    })
+        })
+    },'json');
 })
 </script>
 

@@ -122,6 +122,17 @@ class IndexController extends BaseController
         $user->companyid = $company->id;
         $user->save();
         
+        $depart = new TbDepartment();
+        $depart->sys_create_stuff = 1; 
+        $depart->sys_modify_stuff = 1; 
+        $depart->sys_create_date = $datetime; 
+        $depart->sys_modify_date = $datetime; 
+        $depart->sys_delete_flag = 0;  
+        $depart->Name = $company->name;
+        $depart->Remark = $company->name;
+        $depart->companyid = $company->id;
+        $user->save();
+        
         echo "Init Success.";exit;
     }
 }
