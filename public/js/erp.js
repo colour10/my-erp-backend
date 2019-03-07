@@ -91,6 +91,15 @@ var $ASA = (function(){
         return obj;
     }
     
+    function empty(target) {
+        var obj = {}
+        Object.keys(target).forEach(function(key){
+            target[key] =  ""  
+        });
+        
+        return target;
+    }
+    
     var languages = {
         "zh-cn":{
             success:"操作成功",
@@ -112,5 +121,5 @@ var $ASA = (function(){
         }    
     }
     
-    return {submit:submit, setLanguage:setLanguage, remove:remove, copyTo:copyTo, clone:clone}    
+    return {submit:submit, setLanguage:setLanguage, remove:remove, copyTo:copyTo, clone:clone, empty:empty}    
 })()

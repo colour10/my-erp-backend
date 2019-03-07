@@ -11,8 +11,8 @@ class AdminController extends BaseController
     protected $modelObject;
     protected $list_key_column;
     protected $list_columns;
-    
-    
+    protected $is_language = false;
+
     public function initialize() {
 	    parent::initialize();
     }
@@ -20,10 +20,14 @@ class AdminController extends BaseController
     function setModelName($modelName) {
         $this->modelName = $modelName;
     }
-    
+
     function configList($key_column, $columns) {
         $this->list_key_column = $key_column;
         $this->list_columns = $columns;
+    }
+    
+    function setLanguageFlag($boolValue) {
+        $this->is_language = $boolValue;
     }
 
     function getModelName() {
@@ -74,38 +78,47 @@ class AdminController extends BaseController
 	public function indexAction() {
         $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
 	    $result = $findFirst->invokeArgs(null, array("sys_delete_flag=0"));
-	    
+
 	    $this->view->setVar("result", $result->toArray());
 	}
-	
+
 	public function listAction() {
-	    $this->doList(); 
+	    $this->doList();
 	}
-	
+
 	public function doList($columns=array()) {
-	    if($this->request->isAjax()) {	        
+	    if($this->request->isAjax()) {
 	        $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
-	        $result = $findFirst->invokeArgs(null, array());
 	        
+	        //是否支持多国语言
+	        if($this->is_language) {
+	            $where = sprintf("sys_delete_flag=0 and lang_code='%s'", addslashes($this->language["code"]));    
+	        }
+	        else {
+	            $where = "sys_delete_flag=0";
+	        }	        
+	        
+	        $result = $findFirst->invokeArgs(null, array($where));
+
 	        if($this->list_key_column!="" && count($this->list_columns)>0) {
 	            $column_name = $this->list_key_column;
 	            $list = array();
 	            foreach($result as $row) {
 	                $line = array();
-	                
+
 	                foreach($this->list_columns as $name) {
-	                    $line[$name] = $row->$name;  
+	                    $line[$name] = $row->$name;
 	                }
-	                $list[$row->$column_name] = $line;   
+	                $list[$row->$column_name] = $line;
 	            }
-	            
+
 	            echo json_encode($list);
 	        }
 	        else {
 	            echo json_encode($result->toArray());
 	        }
 	    }
-	    $this->view->disable();  
+	    $this->view->disable();
 	}
 
 	function editAction() {
@@ -174,11 +187,11 @@ class AdminController extends BaseController
                         $result["messages"][] = $message->getMessage();
                     }
                 }
-                echo json_encode($result);                
+                echo json_encode($result);
     	    }
     	    else {
     	        $result = array("code"=>200, "messages" => array("数据不存在"));
-    	        
+
                 echo json_encode($result);
                 exit;
     	    }
@@ -198,7 +211,7 @@ class AdminController extends BaseController
 	function doDelete() {
 	    $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
 	    $row = $findFirst->invokeArgs(null, array($this->getCondition()));
-	    
+
 	    $result = array("code"=>200, "messages" => array());
 	    if($row!=false) {
 	        if ($row->delete() == false) {

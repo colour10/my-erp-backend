@@ -8,11 +8,12 @@ use Asa\Erp\ZlCountry;
 /**
  * 基础资料，国家及地区信息表
  */
-class CountryController extends AdminController {
+class CountryController extends ZadminController {
     public function initialize() {
 	    parent::initialize();
 
 	    $this->setModelName('Asa\\Erp\\ZlCountry');
 	    $this->configList("code", ["name","code"]);
+	    $this->setLanguageFlag(true);
     }
 }

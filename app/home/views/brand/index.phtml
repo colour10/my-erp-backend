@@ -8,37 +8,37 @@
 <el-row :gutter="20">
   <el-col :span="24">
     <el-table :data="tableData" stripe border style="width: 100%;">
-      <el-table-column prop="name" label="<?=$system_language["pinpaishangbiao"]?>" align="center" width="180">
+      <el-table-column prop="ImageUrl" label="<?=$system_language["pinpaishangbiao"]?>" align="center" width="180">
       </el-table-column>
-
-      <el-table-column prop="age" label="<?=$system_language["yingwenmingcheng"]?>" width="100" align="center">
-      </el-table-column>
-      
-      <el-table-column prop="age" label="<?=$system_language["pinpaimingcheng"]?>" width="80" align="center">
+      <el-table-column prop="BrandEnglishName" label="<?=$system_language["yingwenmingcheng"]?>" width="100" align="center">
       </el-table-column>
       
-      <el-table-column prop="age" label="<?=$system_language["pinpaibianhao"]?>" width="80" align="center">
+      <el-table-column prop="BrandName" label="<?=$system_language["pinpaimingcheng"]?>" width="80" align="center">
       </el-table-column>
       
-      <el-table-column prop="age" label="<?=$system_language["shifoushouquanpinpai"]?>" width="130" align="center">
+      <el-table-column prop="Code" label="<?=$system_language["pinpaibianhao"]?>" width="80" align="center">
       </el-table-column>
       
-      <el-table-column prop="age" label="<?=$system_language["memo"]?>" width="100" align="center">
+      <el-table-column prop="IsAuthorized" label="<?=$system_language["shifoushouquanpinpai"]?>" width="130" align="center">
       </el-table-column>
       
-      <el-table-column prop="age" label="<?=$system_language["guishujituan"]?>" width="100" align="center">
+      <el-table-column prop="memo" label="<?=$system_language["memo"]?>" width="100" align="center">
       </el-table-column>
       
-      <el-table-column prop="age" label="<?=$system_language["guishuguojia"]?>" width="100" align="center">
+      <el-table-column prop="Supplier" label="<?=$system_language["guishujituan"]?>" width="100" align="center">
       </el-table-column>
       
-      <el-table-column prop="age" label="<?=$system_language["miaoshu"]?>" width="100" align="center">
+      <el-table-column prop="CountryID" label="<?=$system_language["guishuguojia"]?>" width="100" align="center">
       </el-table-column>
       
-      <el-table-column prop="age" label="<?=$system_language["guanwangdizhi"]?>" width="100" align="center">
+      <el-table-column prop="Description" label="<?=$system_language["miaoshu"]?>" width="100" align="center">
+        描述
       </el-table-column>
       
-      <el-table-column prop="age" label="<?=$system_language["duizhaodaima"]?>" width="100" align="center">
+      <el-table-column prop="Officialwebsite" label="<?=$system_language["guanwangdizhi"]?>" width="100" align="center">
+      </el-table-column>
+      
+      <el-table-column prop="ChildBrand" label="<?=$system_language["pinpaifenlei"]?>" width="100" align="center">
       </el-table-column>
       
       <el-table-column label="<?=$system_language["caozuo"]?>" width="150" align="center">
@@ -58,7 +58,7 @@
       <el-row>
       <el-col :span="5">
         <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-      <img v-if="imageUrl" :src="imageUrl" class="avatar">
+      <img v-if="form.imageUrl" :src="imageUrl" class="avatar">
       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
     </el-upload>
       </el-col>
@@ -66,82 +66,86 @@
       <el-col :span="19">
         <el-form class="user-form" :model="form" label-width="100px"  :inline="true" style="width:700px;" size="small">
         <el-form-item label="<?=$system_language["yingwenmingcheng"]?>">
-          <el-input v-model="form.name"></el-input>
+          <el-input v-model="form.BrandEnglishName"></el-input>
         </el-form-item>
 
         <el-form-item label="<?=$system_language["zhongwenmingcheng"]?>">
-          <el-input v-model="form.description"></el-input>
+          <el-input v-model="form.BrandName"></el-input>
         </el-form-item>
         
         <el-form-item label="<?=$system_language["pinpaibianhao"]?>">
-          <el-input v-model="form.description"></el-input>
+          <el-input v-model="form.Code"></el-input>
         </el-form-item>
         
         <el-form-item label="<?=$system_language["guishuguojia"]?>">
-          <el-select v-model="form.country" placeholder="<?=$system_language["qingxuanze"]?>" style="width:150">
+          <el-select v-model="form.CountryID" placeholder="<?=$system_language["qingxuanze"]?>" style="width:150">
             <el-option v-for="item in country_list" :key="item.code" :label="item.name" :value="item.code"></el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="<?=$system_language["pinpaifenlei"]?>">
-          <el-select v-model="form.depart_id" placeholder="<?=$system_language["qingxuanze"]?>" style="width:150">
+          <el-select v-model="form.ChildBrand" placeholder="<?=$system_language["qingxuanze"]?>" style="width:150">
             <el-option v-for="item in departs" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="<?=$system_language["guishujituan"]?>">
-          <el-select v-model="form.bu" placeholder="<?=$system_language["qingxuanze"]?>" style="width:150">
+          <el-select v-model="form.Supplier" placeholder="<?=$system_language["qingxuanze"]?>" style="width:150">
             <el-option v-for="item in bu_list" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>        
         
-        <el-form-item label="<?=$system_language["miaoshu"]?>">
-          <el-input type="textarea" v-model="form.description"></el-input>
+        <el-form-item label="<?=$system_language["pinpaijieshao"]?>">
+          <el-input type="textarea" v-model="form.Description"></el-input>
         </el-form-item>
         
         <el-form-item label="<?=$system_language["memo"]?>">
-          <el-input type="textarea" v-model="form.description"></el-input>
+          <el-input type="textarea" v-model="form.memo"></el-input>
         </el-form-item>
         
         <div class="site">
         <el-form-item label="<?=$system_language["guanwangdizhi"]?>">
-          <el-input v-model="form.parent_name">
+          <el-input v-model="form.Officialwebsite">
             <el-button slot="append" icon="el-icon-search"></el-button>  
           </el-input>
         </el-form-item>
         </div>
         
         <el-form-item label="<?=$system_language["shifoushouquanpinpai"]?>">
-          <el-checkbox v-model="checked"><?=$system_language["shifoushouquanpinpai"]?></el-checkbox>
+          <el-checkbox v-model="form.IsAuthorized" true-label="1"><?=$system_language["shifoushouquanpinpai"]?></el-checkbox>
         </el-form-item>
-
       </el-form>
+      
       </el-col>
+      
+      <div  style="text-align:center">
+        <el-button type="primary" @click="saveBrankInfo">{{labels[action_type][1]}}</el-button>
+      </div>
     </el-row>
       
     </el-tab-pane>
     
     <el-tab-pane label="<?=$system_language["yanse"]?>" name="group-info">
       <el-radio-group v-model="form.group">
-        <el-radio v-for="item in group_list" :label="item.value">{{item.label}}</el-radio>
+        <el-radio v-for="item in group_list" :key="item.value" :label="item.value">{{item.label}}</el-radio>
       </el-radio-group>
     </el-tab-pane>
   
     <el-tab-pane label="<?=$system_language["pinlei"]?>">
       <el-checkbox-group v-model="form.sale_port">
-        <el-checkbox v-for="item in sale_port_list" :label="item.value">{{item.label}}</el-checkbox>
+        <el-checkbox v-for="item in sale_port_list" :key="item.value" :label="item.value">{{item.label}}</el-checkbox>
       </el-checkbox-group>    
     </el-tab-pane>
   <el-tab-pane label="<?=$system_language["jiagebili"]?>">定时任务补偿</el-tab-pane>
     <el-tab-pane label="<?=$system_language["bieming"]?>">
       <el-checkbox-group v-model="form.cangku">
-        <el-checkbox v-for="item in cangku_list" :label="item.value">{{item.label}}</el-checkbox>
+        <el-checkbox v-for="item in cangku_list" :key="item.value" :label="item.value">{{item.label}}</el-checkbox>
       </el-checkbox-group> 
     </el-tab-pane>
     
     <el-tab-pane label="<?=$system_language["xilie"]?>">
       <el-checkbox-group v-model="form.jiagedan">
-        <el-checkbox v-for="item in jiagedan_list" :label="item.value">{{item.label}}</el-checkbox>
+        <el-checkbox v-for="item in jiagedan_list" :key="item.value" :label="item.value">{{item.label}}</el-checkbox>
       </el-checkbox-group> 
     </el-tab-pane>
     <el-tab-pane label="<?=$system_language["jiekoudaimaduizhao"]?>">定时任务补偿</el-tab-pane>
@@ -150,10 +154,6 @@
     <el-tab-pane label="<?=$system_language["gonghuoshangdengji"]?>">定时任务补偿</el-tab-pane>
     <el-tab-pane label="<?=$system_language["zhekoubili"]?>">定时任务补偿</el-tab-pane>
   </el-tabs>
-  
-  <span slot="footer" class="dialog-footer">
-    <el-button type="primary" @click="dialogVisible = false">{{labels[action_type][1]}}</el-button>
-  </span>
 </el-dialog>
 </div>
 
@@ -166,18 +166,24 @@ $(document).ready(function(){
                 tableData: <?=json_encode($result)?>,
                 dialogVisible:false,
                 form: {
-                    name: '',
-                    depart_id: '',
-                    bu:'',
-                    country:'',
-                    gender:"",
-                    joindate:"",
-                    leftdate:"",
-                    group:2,
-                    sale_port:[],
-                    cangku:[],
-                    jiagedan:[]
+                    Code:"",
+                    BrandName: '',
+                    BrandEnglishName: '',
+                    Description:'',
+                    CountryID:"",//归属国家
+                    Supplier:'',
+                    memo:"",
+                    IsAuthorized:"",
+                    ImageUrl:"",
+                    Officialwebsite:"",
+                    ChildBrand:"",//品牌分类
+                    
+                    id:""
                 },
+                rowIndex:'',
+                sale_port:[],
+                cangku:[],
+                jiagedan:[],
                 departs:[],
                 country_list:[],
                 bu_list:[],
@@ -193,15 +199,36 @@ $(document).ready(function(){
             }
         },
         methods: {
+            saveBrankInfo(){
+                var self = this;
+                if(this.form.id=="") {
+                    $ASA.submit.call(this, "/brand/add", this.form, function(){                        
+                        self.tableData.push($ASA.clone(self.form) )   
+                    })
+                }
+                else {
+                    $ASA.submit.call(this, "/brand/edit", this.form, function(){
+                        //self.tableData[self.rowIndex].lang_code = self.form.lang_code 
+                        $ASA.copyTo(self.form, self.tableData[self.rowIndex])
+                    }) 
+                }
+            },
             onTabClick(tab){
                 console.log(tab)
             },
+            handleAvatarSuccess(){},
+            beforeAvatarUpload(){},
             showForm(action) {
                 this.dialogVisible = true;
                 this.action_type = action;
             },
             handleEdit(rowIndex, row){
-               window.location = "/user/edit?id="+row.id;
+               $ASA.copyTo(row, this.form)
+               
+               this.rowIndex = rowIndex;
+               
+               this.action_type = 'update';
+               this.dialogVisible = true;
             },
             handleDelete(rowIndex, row) {
                 var self = this;
