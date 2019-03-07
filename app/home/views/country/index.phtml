@@ -1,0 +1,136 @@
+<div id="ell">
+<el-row>
+  <el-col :span="24">
+  <el-button type="primary" @click="showForm('create')"><?=$system_language["button-create"]?></el-button>
+  </el-col>
+</el-row>
+
+<el-row :gutter="20">
+  <el-col :span="24">
+    <el-table :data="tableData" stripe border style="width: 100%;">
+      <el-table-column prop="id" label="ID" align="center" width="180">
+      </el-table-column>
+
+      <el-table-column prop="code" label="<?=$system_language["guojiadaima"]?>" align="center" width="180">
+      </el-table-column>
+
+      <el-table-column prop="name" label="<?=$system_language["guojiamingcheng"]?>" width="180" align="center">
+      </el-table-column>
+      
+      <el-table-column prop="LocalCurrency" label="<?=$system_language["bizhong"]?>" width="180" align="center">
+      </el-table-column>
+
+      <el-table-column label="<?=$system_language["caozuo"]?>" width="150" align="center">
+        <template v-slot="scope">
+          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"><?=$system_language["bianji"]?></el-button>
+          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)"><?=$system_language["shanchu"]?></el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+  </el-col>
+</el-row>
+
+<el-dialog class="user-form" :title="labels[action_type][0]" :visible.sync="dialogVisible" :center="true" width="40%">
+    <el-tabs type="border-card" @tab-click="onTabClick">
+    <el-tab-pane label="<?=$system_language["jibenziliao"]?>"> 
+      <el-form ref="form" :model="form" label-width="80px">
+  <el-form-item label="<?=$system_language["guojiadaima"]?>">
+    <el-input v-model="form.code"></el-input>
+  </el-form-item>
+  
+  <el-form-item label="<?=$system_language["guojiamingcheng"]?>">
+    <el-input v-model="form.name"></el-input>
+  </el-form-item>
+      
+  <el-form-item label="<?=$system_language["bizhong"]?>">
+    <el-select v-model="form.LocalCurrency" placeholder="<?=$system_language["qingxuanze"]?>">
+      <el-option v-for="item in currency" :key="item.value" :label="item.name" :value="item.code">
+        <span style="float: left">{{ item.code }}</span>
+        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.name }}</span>  
+      </el-option>
+    </el-select>
+  </el-form-item>
+  <el-form-item>
+    <el-button type="primary" @click="onSubmit">{{labels[action_type][1]}}</el-button>
+  </el-form-item>
+</el-form>
+    </el-tab-pane>
+    <el-tab-pane label="<?=$system_language["dianshangduizhaobiao"]?>">定时任务补偿</el-tab-pane>
+  </el-tabs>  
+</el-dialog>
+</div>
+
+<script>
+$(document).ready(function(){
+    new Vue({
+        el:"#ell",
+        data() {
+            return {
+                tableData: <?=json_encode($result)?>,
+                dialogVisible:false,
+                form: {
+                    name: '',
+                    code: '',
+                    LocalCurrency:'',
+                    lang_code:'',
+                    id:''
+                },
+                currency:[],
+                action_type:"create",
+                labels:{
+                    create:['<?=$system_language["xinjianyonghu"]?>','<?=$system_language["button-save"]?>'],
+                    update:['<?=$system_language["yuangongxinxi"]?>','<?=$system_language["button-save"]?>']       
+                }
+            }
+        },
+        methods: {
+            onSubmit() {
+                if(this.form.id=="") {
+                    $ASA.submit.call(this, "/country/add", this.form)
+                }
+                else {
+                    $ASA.submit.call(this, "/country/edit", this.form)    
+                }
+            },
+            onTabClick(tab){
+                console.log(tab)
+            },
+            showForm(action) {
+                this.dialogVisible = true;
+                this.action_type = action;
+            },
+            handleEdit(rowIndex, row){
+               var form = this.form;
+               form.name = row.name;
+               form.code = row.code;
+               form.LocalCurrency = row.LocalCurrency;
+               form.lang_code = row.lang_code;
+               form.id = row.id;
+               
+               this.dialogVisible = true;
+            },
+            handleDelete(rowIndex, row) {
+                var self = this
+                $ASA.remove.call(this, "/country/delete?id="+row.id, function() {
+                    self.$delete(self.tableData,rowIndex)   
+                })
+            },
+            loadCurrency:function(language) {
+                var self = this;
+                $.post("/common/currency", {language:language}, function(res){
+                    console.log(res.currency)
+                     self.form.lang_code = res.language;
+                     self.currency = res.currency;
+                },"json")
+            }
+        },
+        mounted:function(){
+            this.loadCurrency();        
+        }
+    })
+})
+</script>
+<style>
+    
+    </style>
+

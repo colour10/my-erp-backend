@@ -65,7 +65,7 @@ class AdminController extends BaseController
 
 	public function indexAction() {
         $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
-	    $result = $findFirst->invokeArgs(null, array());
+	    $result = $findFirst->invokeArgs(null, array("sys_delete_flag=0"));
 	    
 	    $this->view->setVar("result", $result->toArray());
 	}
@@ -133,6 +133,7 @@ class AdminController extends BaseController
                 }
             }
             else {
+                $result['is_add'] = "1";
                 $result['id'] = $row->id;
                 //$message['idd'] = "999";
             }
@@ -164,9 +165,15 @@ class AdminController extends BaseController
                         $result["messages"][] = $message->getMessage();
                     }
                 }
-                echo json_encode($result);
-                $this->view->disable();
+                echo json_encode($result);                
     	    }
+    	    else {
+    	        $result = array("code"=>200, "messages" => array("数据不存在"));
+    	        
+                echo json_encode($result);
+                exit;
+    	    }
+    	    $this->view->disable();
 	    }
 	    else {
 	        //从数据库中查找数据，给到模板

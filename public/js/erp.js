@@ -1,10 +1,10 @@
 var $ASA = (function(){
     var language = 'zh-cn';
     
-    var submit = function(path, params, callback) {
+    var submit = function(path, form, callback) {
         var self = this;        
         
-        $.post(path, params, function(res){            
+        $.post(path, form, function(res){            
             if(res.messages.length>0) {
                 const h = self.$createElement;
                 var message = h("ul", null, res.messages.map(function(v){
@@ -21,12 +21,16 @@ var $ASA = (function(){
                     type: 'success'
                 });
                 
+                if(res.is_add=="1") {
+                    form.id = res.id;
+                }
+                
                 if(callback) {
                     callback(res)
                 }
             }
         },"json")
-    }
+    }    
     
     var remove = function(path,callback) {
         var self = this;

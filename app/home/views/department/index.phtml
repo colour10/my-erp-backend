@@ -84,13 +84,13 @@ $(document).ready(function(){
                 this.is_save_disabled = node.parent.id<=0
             },
             onSubmit() {
-                $ASA.submit.call(this, "/depart/edit", this.form)
+                $ASA.submit.call(this, "/department/edit", this.form)
             },
             showDepartCreate() {
                 this.dialogTableVisible = true;
             },
             onDepartCreate() {
-                $ASA.submit.call(this, "/depart/add", this.form_create)
+                $ASA.submit.call(this, "/department/add", this.form_create)
             }
         }
     })

@@ -2,7 +2,7 @@
 
 return array(
     "system_name" => "ERP管理系统",
-    "lang" => "zh-cn",
+    "code" => "zh-cn",
     "language" => "简体中文",
     "menu-1" => "用户管理",
     "menu-1-1" => "员工信息",
@@ -172,9 +172,37 @@ return array(
     "gonghuoshangdengji" => "供货商等级",
     "zhekoubili" => "折扣比例",
     "niandai" => "年代",
+    "guojiadaima" => "国家代码",
+    "guojiamingcheng" => "国家名称",
+    "bizhong" => "币种",
+    "dianshangduizhaobiao" => "电商对照表",
+    "bianji" => "编辑",
+    "shanchu" => "删除",
+    "dianshangduizhaobiao" => "电商对照表",
+    "dianshangduizhaobiao" => "电商对照表",
+    "dianshangduizhaobiao" => "电商对照表",
+    "dianshangduizhaobiao" => "电商对照表",
+    "dianshangduizhaobiao" => "电商对照表",
+    "dianshangduizhaobiao" => "电商对照表",
+    "dianshangduizhaobiao" => "电商对照表",
+    "dianshangduizhaobiao" => "电商对照表",
+    "dianshangduizhaobiao" => "电商对照表",
+    "dianshangduizhaobiao" => "电商对照表",
+    "dianshangduizhaobiao" => "电商对照表",
+    "dianshangduizhaobiao" => "电商对照表",
+    "dianshangduizhaobiao" => "电商对照表",
     
     "model-delete-message" => "请先登录",
     "template" => array(
         "uniqueness" => "%s不能重复"
-    )
+    ),
+    
+    "currency" => [
+        array("code" => "CAD", "name" => "加元"),
+        array("code" => "EUR", "name" => "欧元"),
+        array("code" => "HKD", "name" => "港币"),
+        array("code" => "JPY", "name" => "日元"),
+        array("code" => "RMB", "name" => "人民币"),
+        array("code" => "USD", "name" => "美元"),
+    ]
 );

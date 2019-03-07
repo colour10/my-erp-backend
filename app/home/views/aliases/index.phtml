@@ -1,0 +1,214 @@
+<div id="ell">
+<el-row>
+  <el-col :span="24">
+  <el-button type="primary" @click="showForm('create')"><?=$system_language["button-create"]?></el-button>
+  </el-col>
+</el-row>
+
+<el-row :gutter="20">
+  <el-col :span="24">
+    <el-table :data="tableData" stripe border style="width: 100%;">
+      <el-table-column prop="id" label="ID" align="center" width="180">
+      </el-table-column>
+
+      <el-table-column prop="name" label="姓名" align="center" width="180">
+      </el-table-column>
+
+      <el-table-column prop="age" label="年龄" width="180" align="center">
+      </el-table-column>
+
+      <el-table-column label="操作" width="150" align="center">
+        <template v-slot="scope">
+          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+  </el-col>
+</el-row>
+
+<el-dialog class="user-form" :title="labels[action_type][0]" :visible.sync="dialogVisible" :center="true" width="80%">
+  <el-tabs type="border-card" @tab-click="onTabClick">
+    <el-tab-pane label="<?=$system_language["user-setting"]?>">
+      <el-form :model="form" label-width="100px"  :inline="true" style="width:700px;" size="small">
+        <el-form-item label="<?=$system_language["user-loginname"]?>">
+          <el-input v-model="form.name"></el-input>
+        </el-form-item>
+
+        <el-form-item label="<?=$system_language["password"]?>">
+          <el-input v-model="form.description"></el-input>
+        </el-form-item>
+
+        <el-form-item label="<?=$system_language["depart"]?>">
+          <el-select v-model="form.depart_id" placeholder="<?=$system_language["qingxuanze"]?>" style="width:150">
+            <el-option v-for="item in departs" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="<?=$system_language["bu"]?>">
+          <el-select v-model="form.bu" placeholder="<?=$system_language["qingxuanze"]?>" style="width:150">
+            <el-option v-for="item in bu_list" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="<?=$system_language["country"]?>">
+          <el-select v-model="form.country" placeholder="<?=$system_language["qingxuanze"]?>" style="width:150">
+            <el-option v-for="item in country_list" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="<?=$system_language["gender"]?>">
+          <el-radio-group v-model="form.gender" style="width:200px">
+            <el-radio :label="1"><?=$system_language["man"]?></el-radio>
+            <el-radio :label="0"><?=$system_language["woman"]?></el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="<?=$system_language["user-join"]?>">
+          <el-date-picker v-model="form.joindate" type="date" placeholder="<?=$system_language["xuanzeriqi"]?>"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="<?=$system_language["user-left"]?>">
+          <el-date-picker v-model="form.leftdate" type="date" placeholder="<?=$system_language["xuanzeriqi"]?>"></el-date-picker>
+        </el-form-item>
+
+        <el-form-item label="<?=$system_language["user-realname"]?>">
+          <el-input v-model="form.parent_name"></el-input>
+        </el-form-item>
+
+        <el-form-item label="<?=$system_language["user-linkman"]?>">
+          <el-input v-model="form.parent_name"></el-input>
+        </el-form-item>
+
+        <el-form-item label="<?=$system_language["telephone"]?>">
+          <el-input v-model="form.parent_name"></el-input>
+        </el-form-item>
+        <el-form-item label="<?=$system_language["mobile"]?>">
+          <el-input v-model="form.parent_name"></el-input>
+        </el-form-item>
+
+        <el-form-item label="<?=$system_language["email"]?>">
+          <el-input v-model="form.parent_name"></el-input>
+        </el-form-item>
+        <el-form-item label="<?=$system_language["email-password"]?>">
+          <el-input v-model="form.parent_name"></el-input>
+        </el-form-item>
+      </el-form>
+    </el-tab-pane>
+    
+    <el-tab-pane label="<?=$system_language["group-info"]?>" name="group-info">
+      <el-radio-group v-model="form.group">
+        <el-radio v-for="item in group_list" :label="item.value">{{item.label}}</el-radio>
+      </el-radio-group>
+    </el-tab-pane>
+  
+    <el-tab-pane label="<?=$system_language["sale-port"]?>">
+      <el-checkbox-group v-model="form.sale_port">
+        <el-checkbox v-for="item in sale_port_list" :label="item.value">{{item.label}}</el-checkbox>
+      </el-checkbox-group>    
+    </el-tab-pane>
+  <el-tab-pane label="<?=$system_language["jiesuandanwei"]?>">定时任务补偿</el-tab-pane>
+    <el-tab-pane label="<?=$system_language["cangku"]?>">
+      <el-checkbox-group v-model="form.cangku">
+        <el-checkbox v-for="item in cangku_list" :label="item.value">{{item.label}}</el-checkbox>
+      </el-checkbox-group> 
+    </el-tab-pane>
+    
+    <el-tab-pane label="<?=$system_language["jiagedan"]?>">
+      <el-checkbox-group v-model="form.jiagedan">
+        <el-checkbox v-for="item in jiagedan_list" :label="item.value">{{item.label}}</el-checkbox>
+      </el-checkbox-group> 
+    </el-tab-pane>
+  <el-tab-pane label="<?=$system_language["gerenshezhi"]?>">定时任务补偿</el-tab-pane>
+  </el-tabs>
+  
+  <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="dialogVisible = false">{{labels[action_type][1]}}</el-button>
+  </span>
+</el-dialog>
+</div>
+
+<script>
+$(document).ready(function(){
+    new Vue({
+        el:"#ell",
+        data() {
+            return {
+                tableData: <?=json_encode($result)?>,
+                dialogVisible:false,
+                form: {
+                    name: '',
+                    depart_id: '',
+                    bu:'',
+                    country:'',
+                    gender:"",
+                    joindate:"",
+                    leftdate:"",
+                    group:2,
+                    sale_port:[],
+                    cangku:[],
+                    jiagedan:[]
+                },
+                departs:[],
+                country_list:[],
+                bu_list:[],
+                action_type:"create",
+                labels:{
+                    create:['<?=$system_language["xinjianyonghu"]?>','<?=$system_language["button-save"]?>'],
+                    update:['<?=$system_language["yuangongxinxi"]?>','<?=$system_language["button-save"]?>']       
+                },
+                group_list:[{value:1,"label":"测试一"},{value:2,"label":"测试2"}],//分组信息
+                sale_port_list:[{value:1,"label":"销售端口测试一"},{value:2,"label":"销售端口测试2"},{value:3,"label":"销售端口测试3"}],//销售端口信息
+                cangku_list:[{value:1,"label":"仓库测试一"},{value:2,"label":"仓库测试2"},{value:3,"label":"仓库测试3"}],//仓库信息
+                jiagedan_list:[{value:1,"label":"价格单测试一"},{value:2,"label":"价格单测试2"},{value:3,"label":"价格单测试3"}],//价格单信息
+            }
+        },
+        methods: {
+            onTabClick(tab){
+                console.log(tab)
+            },
+            showForm(action) {
+                this.dialogVisible = true;
+                this.action_type = action;
+            },
+            handleEdit(rowIndex, row){
+               window.location = "/user/edit?id="+row.id;
+            },
+            handleDelete(rowIndex, row) {
+                var self = this;
+
+                self.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    $.get("/user/delete?id="+row.id, function(res){
+                        if(res.messages.length>0) {
+                            const h = self.$createElement;
+                            var message = h("ul", null, res.messages.map(function(v){
+                                return h("li",null,v)
+                            }))
+
+                            self.$alert(message, '错误提示', {
+                                confirmButtonText: '确定'
+                            });
+                        }
+                        else {
+                            self.$delete(self.tableData,rowIndex)
+                            self.$message({
+                                message: '删除成功',
+                                type: 'success'
+                            });
+                        }
+                    },"json")
+                });
+            }
+        }
+    })
+})
+</script>
+<style>
+    .user-form .el-input__inner {
+        width:200px;
+    }
+    .user-form .el-date-editor.el-input, .el-date-editor.el-input__inner {
+        width:200px
+    }
+    </style>
+
