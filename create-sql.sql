@@ -5489,6 +5489,7 @@ create table zl_ac_cashflow_statement
 
   subject_name     varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   subject_type     int comment '0-正，1-负',
   orderno          int,
   parentid         int UNSIGNED NULL,
@@ -5513,6 +5514,7 @@ create table zl_ac_cashflow_subject
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   SorF             varchar(1) comment '0-正，1-负',
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -5528,6 +5530,7 @@ create table zl_ac_km
   code             char(1)    not null,
   chinese_name     char(1)    not null,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   km_type_id       int UNSIGNED NOT NULL,
   up_km_id         int UNSIGNED NULL,
   is_havexj        varchar(1) not null comment '0-没有,1-有',
@@ -5554,6 +5557,7 @@ create table zl_ac_km_type
   code             varchar(1) not null,
   chinese_memo     char(1)    not null,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   sys_create_stuff int UNSIGNED NOT NULL,
   sys_create_date  datetime   not null,
   sys_modify_stuff int UNSIGNED NOT NULL,
@@ -5598,6 +5602,7 @@ create table zl_ac_pzh_type
   code             varchar(4) not null,
   chinese_memo     char(1)    not null,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   sys_create_stuff int UNSIGNED NOT NULL,
   sys_create_date  datetime   not null,
   sys_modify_stuff int UNSIGNED NOT NULL,
@@ -5619,6 +5624,7 @@ create table zl_ac_ztb
   id               int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   zt_name          varchar(100) not null,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   km_code_rule     varchar(50)  not null,
   star_date        datetime     not null,
   end_date         datetime comment '只有结束了才有值',
@@ -5656,6 +5662,7 @@ create table zl_ageseason
   SessionMark      varchar(10),
   SessionName      varchar(10),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -5677,6 +5684,7 @@ create table zl_aliases
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Code             varchar(50),
   BrandID          int UNSIGNED NULL,
   primary key (id)
@@ -5700,6 +5708,7 @@ create table zl_bankinformation
 
   BankName         varchar(100),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   BankName2        varchar(100),
   BankAddress      varchar(100),
   BankAccount      varchar(50),
@@ -5731,14 +5740,15 @@ create table zl_brand
   Code             varchar(50),
   BrandName        varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   CountryID        int UNSIGNED NULL,
   ChildBrand       varchar(36),
   Description      varchar(1000),
   ImageStream      longblob,
-  memo             char(1),
+  memo             TEXT,
   Supplier         varchar(36),
   Officialwebsite  varchar(500),
-  IsAuthorized     varchar(1),
+  IsAuthorized     tinyint,
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -5761,6 +5771,7 @@ create table zl_brandgroup
   Code             varchar(50),
   BrandGroupName   varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -5783,6 +5794,7 @@ create table zl_brandremark
   BrandID          int UNSIGNED NULL,
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Remark           varchar(100),
   Pic              longblob,
   primary key (id)
@@ -5806,6 +5818,7 @@ create table zl_businesstype
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -5827,6 +5840,7 @@ create table zl_childproductgroup
 
   ChildName         varchar(50),
   lang_code         varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   ChildCode         varchar(50),
   ProductGroupID    int UNSIGNED NULL,
   ProductTemplateID int UNSIGNED NULL,
@@ -5855,6 +5869,7 @@ create table zl_closedway
 
   closedWayName     varchar(50),
   lang_code         varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   closedWayNameNote varchar(100),
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -5878,6 +5893,7 @@ create table zl_color
   Code             varchar(10),
   colorName        varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   colorMatter      varchar(100),
   ASAColorID       int UNSIGNED NULL,
   BrandID          int UNSIGNED NULL,
@@ -5903,6 +5919,7 @@ create table zl_colortemplate
 
   Color_Name       varchar(20),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Code             varchar(4),
   Color_Note       varchar(200),
   ColorType        varchar(50),
@@ -5927,6 +5944,7 @@ create table zl_companycontacts
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Gender           varchar(10),
   Department       varchar(20),
   Position         varchar(20),
@@ -5973,6 +5991,7 @@ create table zl_costformula
   Coefficient_2    decimal(10,2),
   FormulaName      varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -5987,6 +6006,7 @@ create table zl_country
   code             varchar(20)  not null,
   name             varchar(100) not null,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   sys_create_stuff int UNSIGNED NOT NULL,
   sys_create_date  datetime     not null,
   sys_modify_stuff int UNSIGNED NOT NULL,
@@ -6042,6 +6062,7 @@ create table zl_currency
 
   CurrencyName     varchar(20),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   CurrencyCode     varchar(10),
   CurrencyMark     bool,
   UserFlag         varchar(1),
@@ -6066,6 +6087,7 @@ create table zl_customs_name
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Remark           varchar(100),
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -6109,6 +6131,7 @@ create table zl_delare_makings
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Remark           varchar(100),
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -6132,6 +6155,7 @@ create table zl_ex_reportstyle
   code             varchar(20),
   chinese_name     varchar(100),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   tdBackX          int,
   tdBackY          int,
   tdBackWidth      int,
@@ -6209,6 +6233,7 @@ create table zl_executioncategory
 
   ExecutionName    varchar(100),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   ExecutionMatter  varchar(500),
   Note             varchar(500),
   primary key (id)
@@ -6232,6 +6257,7 @@ create table zl_exhibition
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Remark           varchar(100),
   Status           varchar(1) comment '0-不可用 1-可用',
   primary key (id)
@@ -6256,6 +6282,7 @@ create table zl_feenames
   Code             varchar(20),
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   kmid             int UNSIGNED NULL,
   IsAmortize       tinyint comment '0-不摊销 1-金额摊销 2-件数摊销',
   IsUsed           varchar(1) comment '0-不常用 1-常用',
@@ -6280,6 +6307,7 @@ create table zl_forbiddenword
 
   Word             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Remark           varchar(100),
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -6302,6 +6330,7 @@ create table zl_imagetool
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Type             varchar(1) comment '0-修改尺寸
             1-修改尺寸并添加
             2-裁剪并对齐',
@@ -6352,6 +6381,7 @@ create table zl_invoice_header
   SupplierID       int UNSIGNED NULL,
   Header           varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Remark           varchar(200),
   IsDefault        varchar(1) comment '1-默认 0-非默认',
   primary key (id)
@@ -6376,6 +6406,7 @@ create table zl_material
   MaterialName     varchar(20),
   Code             varchar(20),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -6398,6 +6429,7 @@ create table zl_materialnote
 
   Content          varchar(100),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -6420,6 +6452,7 @@ create table zl_materialstatus
   Code             varchar(20),
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -6441,6 +6474,7 @@ create table zl_memberlevel
 
   MemberLevel      varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Discount         decimal(16,9),
   LevelBasicScore  bigint,
   IntegralRule     decimal(16,9) comment '实际成交价格x积分规则=获得积分',
@@ -6468,6 +6502,7 @@ create table zl_occasionsstyle
 
   OccasionsStyleName varchar(50),
   lang_code          varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   OccasionsStyleMode varchar(200),
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -6490,6 +6525,7 @@ create table zl_pricesource
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Remark           varchar(500),
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -6512,6 +6548,7 @@ create table zl_productdscrb
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Remark           varchar(100),
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -6534,6 +6571,7 @@ create table zl_productinnards
 
   PartsName        varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -6556,6 +6594,7 @@ create table zl_productparts
   PartsCode        varchar(50),
   PartsName        varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   PackFlag         varchar(1),
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -6579,6 +6618,7 @@ create table zl_productprice
 
   SaleName         varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   IsDefault        varchar(1) comment '0 - 默认
             1 - 不默认',
   CurreancyID      int UNSIGNED NULL,
@@ -6605,6 +6645,7 @@ create table zl_productstyle
 
   BrandGroup       varchar(36),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   ChildBrand       varchar(36),
   ProductStyle     varchar(10),
   primary key (id)
@@ -6628,6 +6669,7 @@ create table zl_producttemplate
 
   TemplateName     varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Picture          longblob,
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -6650,6 +6692,7 @@ create table zl_quotedprice
 
   S_ID             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Currency         varchar(50),
   QuotedPrice      decimal(10,0),
   QuotedDate       datetime,
@@ -6675,6 +6718,7 @@ create table zl_reportset
   Code             varchar(50),
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Remark           varchar(500),
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -6698,6 +6742,7 @@ create table zl_reportset_detail
   SetID            int UNSIGNED NULL,
   Code             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   `Index`          int,
   Width            int,
   primary key (id)
@@ -6721,6 +6766,7 @@ create table zl_salesmethods
 
   SalesMethodsName varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   SalesMethodsMode varchar(200),
   BrandType        varchar(36),
   primary key (id)
@@ -6744,6 +6790,7 @@ create table zl_salesport
 
   ProtName         varchar(20),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Remark           varchar(500),
   StoreName        varchar(50),
   Isonline         varchar(1) comment '0-否 1-是',
@@ -6774,6 +6821,7 @@ create table zl_salesport_mission
 
   SaleSpotID       int UNSIGNED NULL,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   YearMonth        varchar(10) comment '格式为201801',
   SaleSum          decimal(10,2),
   Profit           decimal(10,2),
@@ -6800,6 +6848,7 @@ create table zl_series
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Code             varchar(50),
   BrandID          int UNSIGNED NULL,
   primary key (id)
@@ -6824,6 +6873,7 @@ create table zl_series2
   SeriesID         int UNSIGNED NULL,
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Code             varchar(50),
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -6847,6 +6897,7 @@ create table zl_shippingtype
   code             varchar(10),
   name             varchar(10),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   remark           varchar(50),
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -6869,6 +6920,7 @@ create table zl_sizecontent
 
   TopID            int UNSIGNED NULL,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Content          varchar(10),
   SortNum          int,
   Remark           varchar(100),
@@ -6893,6 +6945,7 @@ create table zl_sizetop
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Code             varchar(50),
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -6915,6 +6968,7 @@ create table zl_storemove
 
   ProductID        int UNSIGNED NULL,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   StoreId          int UNSIGNED NULL,
   MoveMan          varchar(50),
   MoveDate         datetime,
@@ -6941,6 +6995,7 @@ create table zl_style
 
   StyleName        varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   StyleMode        varchar(200),
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -6963,6 +7018,7 @@ create table zl_supplier_type
 
   SupplierID       int UNSIGNED NULL,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Type             varchar(1) comment '0-供货商 1-报关行 2-供应商 3-承运人 4-客户',
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -6985,6 +7041,7 @@ create table zl_supplierlevel
 
   LevelName        varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   LevelNote        varchar(100),
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -7007,6 +7064,7 @@ create table zl_sys_selfcompany
 
   supplier_id      int UNSIGNED NULL,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -7028,6 +7086,7 @@ create table zl_template_descrb
 
   TempID           int UNSIGNED NULL,
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   SizeTopID        int UNSIGNED NULL,
   SizeID           int UNSIGNED NULL,
   BaseLenth        decimal(10,2),
@@ -7053,6 +7112,7 @@ create table zl_templatelist
 
   TemplateName     varchar(36),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   SizeName         varchar(36),
   Content          varchar(20),
   ProductID        int UNSIGNED NULL,
@@ -7077,6 +7137,7 @@ create table zl_templatemanage
 
   TemplateName     varchar(20),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   TempID           int UNSIGNED NULL,
   SortNum          int,
   primary key (id)
@@ -7100,6 +7161,7 @@ create table zl_trans_code
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Code             varchar(50),
   Remark           varchar(500),
   primary key (id)
@@ -7123,6 +7185,7 @@ create table zl_ulnarinch
 
   Name             varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -7144,6 +7207,7 @@ create table zl_unit
 
   UnitName         varchar(20),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   UnitGroupID      varchar(50),
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -7166,6 +7230,7 @@ create table zl_unitgroup
 
   GroupName        varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Crew             varchar(100),
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -7190,6 +7255,7 @@ create table zl_warehouse
   City             varchar(20),
   StoreName        varchar(50),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   StoreAddress     varchar(100),
   Contact          varchar(20),
   Toll             varchar(20),
@@ -7223,6 +7289,7 @@ create table zl_washinginstructions
 
   name             varchar(10),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   remark           varchar(50),
   image            longblob,
   primary key (id)
@@ -7246,6 +7313,7 @@ create table zl_winterproofing
 
   Name             varchar(20),
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   Remark           varchar(100),
   primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -7331,6 +7399,7 @@ CREATE TABLE `tb_company`
   sys_delete_flag  tinyint      not null comment '0-未删除 1-已删除',
   `name`           varchar(191) NOT NULL COMMENT '公司名称',
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   `country_id`     int UNSIGNED NULL COMMENT '国家ID',
   `remark`         TEXT COMMENT '备注说明',
   PRIMARY KEY (`id`)
@@ -7351,6 +7420,7 @@ create table `role`
   sys_delete_flag  tinyint      not null comment '0-未删除 1-已删除',
   `name`           varchar(100) NOT NULL DEFAULT '' COMMENT '角色名称',
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   `description`    varchar(100) NOT NULL DEFAULT '' COMMENT '角色描述',
   PRIMARY KEY (`id`),
   UNIQUE `role_name` (`name`)
@@ -7371,6 +7441,7 @@ create table `permission`
   `pid`            int UNSIGNED NOT NULL DEFAULT '0' COMMENT '所属权限ID，默认0为顶级权限',
   `name`           varchar(100) NOT NULL DEFAULT '' COMMENT '权限名称',
   lang_code        varchar(20) NULL COMMENT '语言编码',
+  `relateid` INT NULL COMMENT '对应主键ID',
   `description`    varchar(100) NOT NULL DEFAULT '' COMMENT '权限描述',
   PRIMARY KEY (`id`),
   UNIQUE `permission_name` (`name`)
