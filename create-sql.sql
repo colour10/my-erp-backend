@@ -7317,8 +7317,8 @@ alter table tb_user
 
 
 #公司表
-drop table if exists `company`;
-CREATE TABLE `company`
+drop table if exists `tb_company`;
+CREATE TABLE `tb_company`
 (
   id               int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
   sys_create_stuff int UNSIGNED NOT NULL,
