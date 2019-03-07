@@ -7,9 +7,6 @@ use Phalcon\Mvc\Router;
 use Phalcon\DI\FactoryDefault;
 use Phalcon\Db\Adapter\Pdo\Mysql as DbAdapter;
 use Phalcon\Session\Adapter\Files as Session;
-// 注入公共函数库
-use Common\Common as Common;
-use Common\Validate as Validate;
 
 ini_set('date.timezone', 'Asia/Shanghai');
 
@@ -26,8 +23,6 @@ try {
         array(
             "Asa\Erp" => APP_PATH . '/app/models/erp',
             "Asa\Erp\Behavior" => APP_PATH . '/app/models/erp/behavior',
-            // 引入公共函数库
-            'Common' => APP_PATH . '/common',
         )
     );
     $loader->registerDirs(
@@ -35,8 +30,6 @@ try {
             '../app/controllers/',
             '../app/models/',
             '../app/plugins/',
-            // 引入公共函数库
-            '../common/',
         )
     )->register();
 
@@ -97,20 +90,6 @@ try {
         return $view;
     };
 
-    /**
-     * 注册公共函数库
-     */
-    $di->setShared('common', function () {
-        return new Common();
-    });
-
-    /**
-     * 注册validation验证器
-     */
-    $di->set('validate', function () {
-        $validate = new Validate();
-        return $validate;
-    });
 
     $di->set(
         "router",
