@@ -9,6 +9,9 @@ class AdminController extends BaseController
 {
     protected $modelName;
     protected $modelObject;
+    protected $list_key_column;
+    protected $list_columns;
+    
     
     public function initialize() {
 	    parent::initialize();
@@ -16,6 +19,11 @@ class AdminController extends BaseController
 
     function setModelName($modelName) {
         $this->modelName = $modelName;
+    }
+    
+    function configList($key_column, $columns) {
+        $this->list_key_column = $key_column;
+        $this->list_columns = $columns;
     }
 
     function getModelName() {
@@ -71,7 +79,7 @@ class AdminController extends BaseController
 	}
 	
 	public function listAction() {
-	    $this->doList([]); 
+	    $this->doList(); 
 	}
 	
 	public function doList($columns=array()) {
@@ -79,15 +87,16 @@ class AdminController extends BaseController
 	        $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
 	        $result = $findFirst->invokeArgs(null, array());
 	        
-	        if(is_array($columns) && count($columns)>0) {
+	        if($this->list_key_column!="" && count($this->list_columns)>0) {
+	            $column_name = $this->list_key_column;
 	            $list = array();
 	            foreach($result as $row) {
 	                $line = array();
 	                
-	                foreach($columns as $name) {
+	                foreach($this->list_columns as $name) {
 	                    $line[$name] = $row->$name;  
 	                }
-	                $list[] = $line;   
+	                $list[$row->$column_name] = $line;   
 	            }
 	            
 	            echo json_encode($list);

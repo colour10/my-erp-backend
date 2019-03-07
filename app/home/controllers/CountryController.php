@@ -13,5 +13,6 @@ class CountryController extends AdminController {
 	    parent::initialize();
 
 	    $this->setModelName('Asa\\Erp\\ZlCountry');
+	    $this->configList("code", ["name","code"]);
     }
 }

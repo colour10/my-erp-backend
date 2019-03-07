@@ -26,5 +26,11 @@ return array(
     ),
     
     //默认语言
-    "language" => "zh-cn"
+    "language" => "zh-cn",
+    
+    "languages" => array(
+        "zh-cn" => "简体中文",
+        "zh-hk" => "繁体中文",
+        "en-us" => "英文"
+    )
 );

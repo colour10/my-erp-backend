@@ -79,7 +79,7 @@
         
         <el-form-item label="<?=$system_language["guishuguojia"]?>">
           <el-select v-model="form.country" placeholder="<?=$system_language["qingxuanze"]?>" style="width:150">
-            <el-option v-for="item in country_list" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            <el-option v-for="item in country_list" :key="item.code" :label="item.name" :value="item.code"></el-option>
           </el-select>
         </el-form-item>
 
@@ -235,6 +235,11 @@ $(document).ready(function(){
         },
         mounted:function () {
             $("#ell").show()
+            var self = this;
+            $.post("/country/list", {}, function(res){
+                console.log(res)
+                 self.country_list = res;
+            },"json")
         }
     })
 })
