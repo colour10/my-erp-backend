@@ -24,16 +24,16 @@ class Util {
                 if (empty($children)) {
                     $tree[] = [
                         'id' => $v['id'],
-                        'label' => $v['Name'],
-                        'remark' => $v['Remark'],
+                        'label' => $v['name'],
+                        'remark' => $v['remark'],
                         'level' => $level,
                         'children' =>[]
                     ];
                 } else {
                     $tree[] = [
                         'id' => $v['id'],
-                        'label' => $v['Name'],
-                        'remark' => $v['Remark'],
+                        'label' => $v['name'],
+                        'remark' => $v['remark'],
                         'level' => $level,
                         // 新增children
                         'children' => $children,
