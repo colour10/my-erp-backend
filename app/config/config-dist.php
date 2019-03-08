@@ -133,7 +133,7 @@ return array(
         // 基础数据
         [
             'id' => '17',
-            'name' => 'product',
+            'name' => 'database',
             'description' => '基础数据',
             'children' => [
                 [
