@@ -1,9 +1,12 @@
+
 <div id="ell">
 <el-row>
   <el-col :span="24">
   <el-button type="primary" @click="showForm('create')"><?=$system_language["button-create"]?></el-button>
   </el-col>
 </el-row>
+
+
 
 <el-row :gutter="20">
   <el-col :span="24">
@@ -39,8 +42,11 @@
         </template>
       </el-table-column>
     </el-table>
+    
   </el-col>
 </el-row>
+
+
 
 <el-dialog class="user-form" :title="langName" :visible.sync="dialogVisible" :center="true" width="40%">
     <el-tabs type="border-card" @tab-click="onTabClick">

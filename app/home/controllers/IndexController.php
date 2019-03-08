@@ -100,7 +100,7 @@ class IndexController extends BaseController
         $db = $this->db;
         $db->execute("truncate table tb_company");
         $db->execute("truncate table tb_user");
-        //$db->execute("truncate table tb_company");
+        $db->execute("truncate table tb_department");
         $datetime = date('Y-m-d H:i:s');
         $company = new TbCompany();
         $company->sys_create_stuff = 1; 
@@ -128,10 +128,10 @@ class IndexController extends BaseController
         $depart->sys_create_date = $datetime; 
         $depart->sys_modify_date = $datetime; 
         $depart->sys_delete_flag = 0;  
-        $depart->Name = $company->name;
-        $depart->Remark = $company->name;
+        $depart->name = $company->name;
+        $depart->remark = $company->name;
         $depart->companyid = $company->id;
-        $user->save();
+        $depart->save();
         
         echo "Init Success.";exit;
     }

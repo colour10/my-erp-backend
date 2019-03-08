@@ -33,11 +33,11 @@ $(document).ready(function(){
             action:"操作"    
         },
         options:{
-            dialogWidth:"35%"
+            dialogWidth:"35%",
+            parent_id:"brandid",
+            parent_id_value:10
         },
-        controller:"aliases",
-        parent_value:10,
-        parent_name:"brandid"
+        controller:"aliases"
     }
     
     new Vue({
@@ -48,7 +48,7 @@ $(document).ready(function(){
             }
         },
         methods: {
-        }        
+        }
     })
 })
 </script>
