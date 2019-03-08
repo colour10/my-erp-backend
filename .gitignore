@@ -4,4 +4,6 @@ erp.prj
 app/config/config.php
 app/cache
 app/home/controllers/TestController.php
+app/home/controllers/PermissionController.php
+app/models/erp/Permission.php
 create-sql.sql.bak
