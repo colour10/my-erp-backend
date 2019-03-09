@@ -7468,7 +7468,7 @@ create table `tb_company`
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
   `languages` varchar(191) NULL,
-  `companyid`     int unsigned null comment '国家id',
+  `countryid`     int unsigned null comment '国家id',
   `remark`         text comment '备注说明',
   primary key (`id`)
 ) engine=innodb default charset=utf8mb4;
