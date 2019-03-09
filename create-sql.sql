@@ -5869,23 +5869,24 @@ alter table zl_childproductgroup comment '子品类';
 /*==============================================================*/
 /* table: zl_closedway                                          */
 /*==============================================================*/
-CREATE TABLE `zl_closedway` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `sys_create_stuff` int(10) unsigned NOT NULL,
-  `sys_create_date` datetime NOT NULL,
-  `sys_modify_stuff` int(10) unsigned NOT NULL,
-  `sys_modify_date` datetime NOT NULL,
-  `sys_delete_stuff` int(10) unsigned DEFAULT NULL,
-  `sys_delete_date` datetime DEFAULT NULL,
-  `sys_delete_flag` tinyint(4) NOT NULL COMMENT '0-未删除 1-已删除',
-  `name` varchar(50) DEFAULT NULL,
-  `description` varchar(100) DEFAULT NULL,
-  `lang_code` varchar(20) DEFAULT NULL COMMENT '语言编码',
-  `relateid` int(11) DEFAULT NULL COMMENT '对应主键id',
-  `languages` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+create table zl_closedway
+(
+  id                int unsigned not null auto_increment comment '主键id',
+  sys_create_stuff  int unsigned not null,
+  sys_create_date   datetime not null,
+  sys_modify_stuff  int unsigned not null,
+  sys_modify_date   datetime not null,
+  sys_delete_stuff  int unsigned null,
+  sys_delete_date   datetime,
+  sys_delete_flag   tinyint  not null comment '0-未删除 1-已删除',
 
+  closedwayname     varchar(50),
+  lang_code         varchar(20) null comment '语言编码',
+  `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
+  closedwaynamenote varchar(100),
+  primary key (id)
+) engine=innodb default charset=utf8mb4;
 
 alter table zl_closedway comment '闭合方式';
 
@@ -6242,24 +6243,25 @@ alter table zl_exchangerate comment '汇率';
 /*==============================================================*/
 /* table: zl_executioncategory                                  */
 /*==============================================================*/
-CREATE TABLE `zl_executioncategory` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `sys_create_stuff` int(10) unsigned NOT NULL,
-  `sys_create_date` datetime NOT NULL,
-  `sys_modify_stuff` int(10) unsigned NOT NULL,
-  `sys_modify_date` datetime NOT NULL,
-  `sys_delete_stuff` int(10) unsigned DEFAULT NULL,
-  `sys_delete_date` datetime DEFAULT NULL,
-  `sys_delete_flag` tinyint(4) NOT NULL COMMENT '0-未删除 1-已删除',
-  `name` varchar(100) DEFAULT NULL,
-  `matter` varchar(500) DEFAULT NULL,
-  `relateid` int(11) DEFAULT NULL COMMENT '对应主键id',
-  `languages` varchar(200) DEFAULT NULL,
-  `description` varchar(500) DEFAULT NULL,
-  `lang_code` varchar(20) DEFAULT NULL COMMENT '语言编码',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+create table zl_executioncategory
+(
+  id               int unsigned not null auto_increment comment '主键id',
+  sys_create_stuff int unsigned not null,
+  sys_create_date  datetime not null,
+  sys_modify_stuff int unsigned not null,
+  sys_modify_date  datetime not null,
+  sys_delete_stuff int unsigned null,
+  sys_delete_date  datetime,
+  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
+  executionname    varchar(100),
+  lang_code        varchar(20) null comment '语言编码',
+  `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
+  executionmatter  varchar(500),
+  note             varchar(500),
+  primary key (id)
+) engine=innodb default charset=utf8mb4;
 
 alter table zl_executioncategory comment '执行标准';
 
@@ -6419,25 +6421,24 @@ alter table zl_invoice_header comment '客户 发票抬头';
 /*==============================================================*/
 /* table: zl_material                                           */
 /*==============================================================*/
-CREATE TABLE `zl_material` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `sys_create_stuff` int(10) unsigned NOT NULL,
-  `sys_create_date` datetime NOT NULL,
-  `sys_modify_stuff` int(10) unsigned NOT NULL,
-  `sys_modify_date` datetime NOT NULL,
-  `sys_delete_stuff` int(10) unsigned DEFAULT NULL,
-  `sys_delete_date` datetime DEFAULT NULL,
-  `sys_delete_flag` tinyint(4) NOT NULL COMMENT '0-未删除 1-已删除',
-  `name` varchar(20) DEFAULT NULL,
-  `code` varchar(20) DEFAULT NULL,
-  `lang_code` varchar(20) DEFAULT NULL COMMENT '语言编码',
-  `relateid` int(11) DEFAULT NULL COMMENT '对应主键id',
-  `languages` varchar(100) DEFAULT NULL,
-  `english_name` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+create table zl_material
+(
+  id               int unsigned not null auto_increment comment '主键id',
+  sys_create_stuff int unsigned not null,
+  sys_create_date  datetime not null,
+  sys_modify_stuff int unsigned not null,
+  sys_modify_date  datetime not null,
+  sys_delete_stuff int unsigned null,
+  sys_delete_date  datetime,
+  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-
+  materialname     varchar(20),
+  code             varchar(20),
+  lang_code        varchar(20) null comment '语言编码',
+  `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
+  primary key (id)
+) engine=innodb default charset=utf8mb4;
 
 alter table zl_material comment '材质
 ';
@@ -6468,25 +6469,24 @@ alter table zl_materialnote comment '材质备注';
 /*==============================================================*/
 /* table: zl_materialstatus                                     */
 /*==============================================================*/
-CREATE TABLE `zl_materialstatus` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `sys_create_stuff` int(10) unsigned NOT NULL,
-  `sys_create_date` datetime NOT NULL,
-  `sys_modify_stuff` int(10) unsigned NOT NULL,
-  `sys_modify_date` datetime NOT NULL,
-  `sys_delete_stuff` int(10) unsigned DEFAULT NULL,
-  `sys_delete_date` datetime DEFAULT NULL,
-  `sys_delete_flag` tinyint(4) NOT NULL COMMENT '0-未删除 1-已删除',
-  `code` varchar(20) DEFAULT NULL,
-  `name` varchar(50) DEFAULT NULL,
-  `lang_code` varchar(20) DEFAULT NULL COMMENT '语言编码',
-  `relateid` int(11) DEFAULT NULL COMMENT '对应主键id',
-  `english_name` varchar(100) DEFAULT NULL COMMENT '英文名称',
-  `languages` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+create table zl_materialstatus
+(
+  id               int unsigned not null auto_increment comment '主键id',
+  sys_create_stuff int unsigned not null,
+  sys_create_date  datetime not null,
+  sys_modify_stuff int unsigned not null,
+  sys_modify_date  datetime not null,
+  sys_delete_stuff int unsigned null,
+  sys_delete_date  datetime,
+  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-
+  code             varchar(20),
+  name             varchar(50),
+  lang_code        varchar(20) null comment '语言编码',
+  `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
+  primary key (id)
+) engine=innodb default charset=utf8mb4;
 
 alter table zl_materialstatus comment '材质状态';
 
@@ -6522,23 +6522,24 @@ alter table zl_memberlevel comment '会员等级设置';
 /*==============================================================*/
 /* table: zl_occasionsstyle                                     */
 /*==============================================================*/
-CREATE TABLE `zl_occasionsstyle` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `sys_create_stuff` int(10) unsigned NOT NULL,
-  `sys_create_date` datetime NOT NULL,
-  `sys_modify_stuff` int(10) unsigned NOT NULL,
-  `sys_modify_date` datetime NOT NULL,
-  `sys_delete_stuff` int(10) unsigned DEFAULT NULL,
-  `sys_delete_date` datetime DEFAULT NULL,
-  `sys_delete_flag` tinyint(4) NOT NULL COMMENT '0-未删除 1-已删除',
-  `name` varchar(50) DEFAULT NULL,
-  `lang_code` varchar(20) DEFAULT NULL COMMENT '语言编码',
-  `relateid` int(11) DEFAULT NULL COMMENT '对应主键id',
-  `description` varchar(200) DEFAULT NULL,
-  `languages` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+create table zl_occasionsstyle
+(
+  id                 int unsigned not null auto_increment comment '主键id',
+  sys_create_stuff   int unsigned not null,
+  sys_create_date    datetime not null,
+  sys_modify_stuff   int unsigned not null,
+  sys_modify_date    datetime not null,
+  sys_delete_stuff   int unsigned null,
+  sys_delete_date    datetime,
+  sys_delete_flag    tinyint  not null comment '0-未删除 1-已删除',
 
+  occasionsstylename varchar(50),
+  lang_code          varchar(20) null comment '语言编码',
+  `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
+  occasionsstylemode varchar(200),
+  primary key (id)
+) engine=innodb default charset=utf8mb4;
 
 alter table zl_occasionsstyle comment '场合风格';
 
@@ -7340,24 +7341,25 @@ alter table zl_warehouse comment '仓库信息';
 /*==============================================================*/
 /* table: zl_washinginstructions                                */
 /*==============================================================*/
-CREATE TABLE `zl_washinginstructions` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `sys_create_stuff` int(10) unsigned NOT NULL,
-  `sys_create_date` datetime NOT NULL,
-  `sys_modify_stuff` int(10) unsigned NOT NULL,
-  `sys_modify_date` datetime NOT NULL,
-  `sys_delete_stuff` int(10) unsigned DEFAULT NULL,
-  `sys_delete_date` datetime DEFAULT NULL,
-  `sys_delete_flag` tinyint(4) NOT NULL COMMENT '0-未删除 1-已删除',
-  `name` varchar(10) DEFAULT NULL,
-  `lang_code` varchar(20) DEFAULT NULL COMMENT '语言编码',
-  `relateid` int(11) DEFAULT NULL COMMENT '对应主键id',
-  `remark` varchar(50) DEFAULT NULL,
-  `image` varchar(100) DEFAULT NULL,
-  `languages` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+create table zl_washinginstructions
+(
+  id               int unsigned not null auto_increment comment '主键id',
+  sys_create_stuff int unsigned not null,
+  sys_create_date  datetime not null,
+  sys_modify_stuff int unsigned not null,
+  sys_modify_date  datetime not null,
+  sys_delete_stuff int unsigned null,
+  sys_delete_date  datetime,
+  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
+  name             varchar(10),
+  lang_code        varchar(20) null comment '语言编码',
+  `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
+  remark           varchar(50),
+  image            longblob,
+  primary key (id)
+) engine=innodb default charset=utf8mb4;
 
 alter table zl_washinginstructions comment '洗涤标准';
 
@@ -7550,27 +7552,6 @@ create table `role_user`
 ) engine=innodb default charset=utf8mb4;
 
 
-CREATE TABLE `zl_securitycategory` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `sys_create_stuff` int(10) unsigned NOT NULL,
-  `sys_create_date` datetime NOT NULL,
-  `sys_modify_stuff` int(10) unsigned NOT NULL,
-  `sys_modify_date` datetime NOT NULL,
-  `sys_delete_stuff` int(10) unsigned DEFAULT NULL,
-  `sys_delete_date` datetime DEFAULT NULL,
-  `sys_delete_flag` tinyint(4) NOT NULL COMMENT '0-未删除 1-已删除',
-  `name` varchar(100) DEFAULT NULL COMMENT '名称',
-  `matter` varchar(500) DEFAULT NULL COMMENT '事项',
-  `description` varchar(500) DEFAULT NULL COMMENT '备注',
-  `relateid` int(11) DEFAULT NULL COMMENT '对应主键id',
-  `languages` varchar(200) DEFAULT NULL,
-  `lang_code` varchar(20) DEFAULT NULL COMMENT '语言编码',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
-
-alter table zl_securitycategory comment '安全类别';
 
 
 --
