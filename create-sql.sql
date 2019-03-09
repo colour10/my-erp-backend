@@ -3541,10 +3541,10 @@ create table tb_department
 
   name             varchar(100),
   remark           varchar(1000),
-  companyid    int unsigned null comment '公司id',
+  companyid    int unsigned not null comment '公司id',
   priceid          int unsigned null comment '此价格id可以是基础价格id，也可以是销售端口id',
   spotid           int unsigned null,
-  up_dp_id         int unsigned null,
+  up_dp_id         int unsigned default '0' comment '上级部门ID',
   checkingflag     varchar(1),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
