@@ -3549,7 +3549,7 @@ create table tb_department
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
-alter table tb_department comment '部门';
+alter table tb_department comment '部门表';
 
 /*==============================================================*/
 /* table: tb_discount_card                                      */
