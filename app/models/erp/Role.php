@@ -31,11 +31,11 @@ class Permission extends BaseModel
 
         // name-权限名称不能为空或者重复
         $validator->add('name', new PresenceOf([
-            'message' => 'The name is required',
+            'message' => 'The permission is required',
             'cancelOnFail' => true,
         ]));
         $validator->add('name', new Uniqueness([
-            'message' => 'The name field must be unique',
+            'message' => 'The permission field must be unique',
             'cancelOnFail' => true,
         ]));
         // pid-父级别权限
