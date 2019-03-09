@@ -8,9 +8,9 @@ use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Regex;
 
 /**
- * 权限表
+ * 角色表，也就是组信息表
  */
-class Permission extends BaseModel
+class Role extends BaseModel
 {
     /**
      * 初始化
@@ -18,7 +18,7 @@ class Permission extends BaseModel
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('permission');
+        $this->setSource('role');
     }
 
     /**
@@ -29,24 +29,15 @@ class Permission extends BaseModel
     {
         $validator = new Validation();
 
-        // name-权限名称不能为空或者重复
+        // name-角色名称不能为空或者重复
         $validator->add('name', new PresenceOf([
-            'message' => 'The permission is required',
+            'message' => 'The name is required',
             'cancelOnFail' => true,
         ]));
         $validator->add('name', new Uniqueness([
-            'message' => 'The permission field must be unique',
+            'message' => 'The name field must be unique',
             'cancelOnFail' => true,
         ]));
-        // pid-父级别权限
-        $validator->add('pid', new Regex(
-            [
-                "message" => "The pid is invalid",
-                "pattern" => "/[0-9]+/",
-                "allowEmpty" => true,
-                'cancelOnFail' => true,
-            ]
-        ));
         // relateid-关联ID
         $validator->add('relateid', new Regex(
             [
@@ -56,11 +47,6 @@ class Permission extends BaseModel
                 'cancelOnFail' => true,
             ]
         ));
-        // description-描述
-        $validator->add('description', new PresenceOf([
-            'message' => 'The description is required',
-            'cancelOnFail' => true,
-        ]));
         // lang_code-语言编码
         $validator->add('lang_code', new Regex(
             [
@@ -81,7 +67,6 @@ class Permission extends BaseModel
         ));
         // 过滤
         $validator->setFilters('name', 'trim');
-        $validator->setFilters('description', 'trim');
 
         return $this->validate($validator);
     }
