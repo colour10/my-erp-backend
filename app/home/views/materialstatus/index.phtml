@@ -1,0 +1,54 @@
+<script src="/js/asa.js?33"></script>
+<div id="ell">
+<multiple-admin-page v-bind="props" ref="page"></multiple-admin-page>
+</div>
+
+<script>
+$(document).ready(function(){
+    var props = {
+        data: <?=json_encode($result)?>,
+        columns:[
+            {name:"code", label:"编号", is_create:true, is_update:true, is_show:true, width:200, disable_change:true, is_focus:true},
+            {name:"name", label:"中文名称", is_create:true, is_update:true, is_show:true, width:200, is_focus:true},
+            {name:"english_name", label:"英文名称", is_create:true, is_update:true, is_show:true, width:200, disable_change:true}
+        ],
+        buttons:{
+            "create":{
+                label:"创建"    
+            },
+            "save":{
+                label:"保存"    
+            },
+            "remove":{
+                label:"删除"    
+            },
+            "edit":{
+                label:"编辑"    
+            } 
+        },
+        labels:{
+            formTitleCreate:"添加信息",
+            formTitleUpdate:"编辑信息",
+            action:"操作",
+            language:"语言"
+        },
+        options:{
+            dialogWidth:"35%"
+        },
+        default_language:'zh-cn',
+        controller:"materialstatus"
+    }
+    
+    new Vue({
+        el:"#ell",
+        data() {
+            return {
+                props:props   
+            }
+        }
+    })
+})
+</script>
+<style>
+</style>
+

@@ -1,0 +1,63 @@
+<script src="/js/asa.js?3377"></script>
+<div id="ell">
+<simple-admin-page v-bind="props" ref="page"></simple-admin-page>
+</div>
+
+<script>
+$(document).ready(function(){
+    var props = {
+        columns:[
+            {name:"sessionmark", label:"季", is_create:true, is_update:true, is_show:false, width:200, type:'select', data_source:{"SS":"SS","FW":"FW","XX":"XX"}},
+            {
+                name:"sessionname", 
+                label:"名称", 
+                is_create:true, 
+                is_update:true, 
+                is_show:true, 
+                width:200, 
+                is_focus:true, 
+                convert:function(row, rowIndex, column){
+                    return row.sessionmark+ row.sessionname
+                }
+            }
+        ],
+        buttons:{
+            "create":{
+                label:"创建"    
+            },
+            "save":{
+                label:"保存"    
+            },
+            "remove":{
+                label:"删除"    
+            },
+            "edit":{
+                label:"编辑"    
+            } 
+        },
+        labels:{
+            formTitleCreate:"添加信息",
+            formTitleUpdate:"编辑信息",
+            action:"操作",
+            language:"语言"
+        },
+        options:{
+            dialogWidth:"35%"
+        },
+        default_language:'zh-cn',
+        controller:"ageseason"
+    }
+    
+    new Vue({
+        el:"#ell",
+        data() {
+            return {
+                props:props   
+            }
+        }
+    })
+})
+</script>
+<style>
+</style>
+

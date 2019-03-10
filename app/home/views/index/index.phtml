@@ -9,6 +9,14 @@
       <el-form-item label="说明">
         <el-input v-model="form.description"></el-input>
       </el-form-item>
+      
+      <el-form-item label="Controller基类">
+        <el-select v-model="form.base_controller" placeholder="请选择">
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+      </el-form-item>
+      
+      
 
       <el-form-item label="去掉前缀">
         <el-checkbox v-model="form.trim_prex">Controller去掉前缀</el-checkbox>
@@ -74,7 +82,7 @@ use Asa\Erp\{{form.model}};
 /**
  * {{form.description}}
  */
-class {{form.controller}} extends AdminController {
+class {{form.controller}} extends {{form.base_controller}} {
     public function initialize() {
 	    parent::initialize();
 
@@ -119,10 +127,22 @@ $(document).ready(function(){
                     name: '',
                     model: '',
                     controller: '',
+                    base_controller:"AdminController",
                     description:"",
                     path:'',
                     trim_prex:true
-                }
+                },
+                options: [{
+                    value: 'AdminController',
+                    label: 'AdminController'
+                }, {
+                    value: 'ZadminController',
+                    label: '多语言基础资料'
+                }, {
+                    value: 'CadminController',
+                    label: '用户录入的表'
+                }],
+                value: ''
             }
         },
         methods: {

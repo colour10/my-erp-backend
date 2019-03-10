@@ -8,7 +8,7 @@ use Asa\Erp\ZlOccasionsstyle;
 /**
  * 基础资料，场合风格表
  */
-class OccasionsstyleController extends AdminController {
+class OccasionsstyleController extends ZadminController {
     public function initialize() {
 	    parent::initialize();
 
