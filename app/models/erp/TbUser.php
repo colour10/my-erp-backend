@@ -1,8 +1,12 @@
 <?php
+
 namespace Asa\Erp;
+
 use Phalcon\Validation;
-use Phalcon\Validation\Validator\Between;
 use Phalcon\Validation\Validator\Uniqueness;
+use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Validation\Validator\Regex;
+use Phalcon\Validation\Validator\Email;
 
 /**
  * 用户表
@@ -15,28 +19,78 @@ class TbUser extends BaseModel
         $this->setSource('tb_user');
     }
 
-    public function validation() {
+    /**
+     * 验证器
+     * @return bool
+     */
+    public function validation()
+    {
         $validator = new Validation();
 
-//        $validator->add(
-//            "age",
-//            new Between(
-//                [
-//                    "minimum" => 18,
-//                    "maximum" => 60,
-//                    "message" => "年龄必须是18~60岁",
-//                ]
-//            )
-//        );
-//
-//        $validator->add(
-//            'name',
-//            new Uniqueness(
-//                [
-//                    'message' => '姓名不能重复',
-//                ]
-//            )
-//        );
+        // login_name-用户名不能为空或者重复
+        $validator->add('login_name', new PresenceOf([
+            'message' => 'The login_name is required',
+            'cancelOnFail' => true,
+        ]));
+        $validator->add('login_name', new Uniqueness([
+            'message' => 'The login_name field must be unique',
+            'cancelOnFail' => true,
+        ]));
+        // password-密码不能为空
+        $validator->add('password', new PresenceOf([
+            'message' => 'The password is required',
+            'cancelOnFail' => true,
+        ]));
+        // e_mail-邮箱
+        $validator->add('e_mail', new Email([
+            'message' => 'The email is invalid',
+            "allowEmpty" => true,
+            'cancelOnFail' => true,
+        ]));
+        // departmentid-部门ID，也就是事业部ID
+        $validator->add('departmentid', new Regex([
+            'message' => 'The departmentid is invalid',
+            "pattern" => "/[0-9]+/",
+            "allowEmpty" => true,
+            'cancelOnFail' => true,
+        ]));
+        // groupid-组ID
+        $validator->add('groupid', new Regex([
+            'message' => 'The groupid is invalid',
+            "pattern" => "/[0-9]+/",
+            "allowEmpty" => true,
+            'cancelOnFail' => true,
+        ]));
+        // companyid-公司ID
+        $validator->add('companyid', new Regex([
+            'message' => 'The companyid is invalid',
+            "pattern" => "/[0-9]+/",
+            "allowEmpty" => true,
+            'cancelOnFail' => true,
+        ]));
+        // storeid-所属门店仓库ID
+        $validator->add('storeid', new Regex([
+            'message' => 'The storeid is invalid',
+            "pattern" => "/[0-9]+/",
+            "allowEmpty" => true,
+            'cancelOnFail' => true,
+        ]));
+        // countryid-国家ID
+        $validator->add('countryid', new Regex([
+            'message' => 'The countryid is invalid',
+            "pattern" => "/[0-9]+/",
+            "allowEmpty" => true,
+            'cancelOnFail' => true,
+        ]));
+        // 个人状态
+        $validator->add('status', new Regex([
+            'message' => 'The status is invalid',
+            "pattern" => "/[0-2]+/",
+            "allowEmpty" => true,
+            'cancelOnFail' => true,
+        ]));
+        // 过滤
+        $validator->setFilters('login_name', 'trim');
 
         return $this->validate($validator);
     }

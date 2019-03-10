@@ -3541,15 +3541,15 @@ create table tb_department
 
   name             varchar(100),
   remark           varchar(1000),
-  companyid    int unsigned null comment '公司id',
+  companyid    int unsigned not null comment '公司id',
   priceid          int unsigned null comment '此价格id可以是基础价格id，也可以是销售端口id',
   spotid           int unsigned null,
-  up_dp_id         int unsigned null,
+  up_dp_id         int unsigned default '0' comment '上级部门ID',
   checkingflag     varchar(1),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
-alter table tb_department comment '部门';
+alter table tb_department comment '部门表';
 
 /*==============================================================*/
 /* table: tb_discount_card                                      */
@@ -5489,6 +5489,7 @@ create table zl_ac_cashflow_statement
   subject_name     varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   subject_type     int comment '0-正，1-负',
   orderno          int,
   parentid         int unsigned null,
@@ -5514,6 +5515,7 @@ create table zl_ac_cashflow_subject
   name             varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   sorf             varchar(1) comment '0-正，1-负',
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -5530,6 +5532,7 @@ create table zl_ac_km
   chinese_name     char(1)    not null,
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   km_type_id       int unsigned not null,
   up_km_id         int unsigned null,
   is_havexj        varchar(1) not null comment '0-没有,1-有',
@@ -5557,6 +5560,7 @@ create table zl_ac_km_type
   chinese_memo     char(1)    not null,
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   sys_create_stuff int unsigned not null,
   sys_create_date  datetime   not null,
   sys_modify_stuff int unsigned not null,
@@ -5602,6 +5606,7 @@ create table zl_ac_pzh_type
   chinese_memo     char(1)    not null,
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   sys_create_stuff int unsigned not null,
   sys_create_date  datetime   not null,
   sys_modify_stuff int unsigned not null,
@@ -5624,6 +5629,7 @@ create table zl_ac_ztb
   zt_name          varchar(100) not null,
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   km_code_rule     varchar(50)  not null,
   star_date        datetime     not null,
   end_date         datetime comment '只有结束了才有值',
@@ -5662,6 +5668,7 @@ create table zl_ageseason
   sessionname      varchar(10),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -5684,6 +5691,7 @@ create table zl_aliases
   name             varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   code             varchar(50),
   brandid          int unsigned null,
   primary key (id)
@@ -5708,6 +5716,7 @@ create table zl_bankinformation
   bankname         varchar(100),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   bankname2        varchar(100),
   bankaddress      varchar(100),
   bankaccount      varchar(50),
@@ -5740,6 +5749,7 @@ create table zl_brand
   brandname        varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   countryid        int unsigned null,
   childbrand       varchar(36),
   description      varchar(1000),
@@ -5771,6 +5781,7 @@ create table zl_brandgroup
   brandgroupname   varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -5794,6 +5805,7 @@ create table zl_brandremark
   name             varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   remark           varchar(100),
   pic              longblob,
   primary key (id)
@@ -5818,6 +5830,7 @@ create table zl_businesstype
   name             varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -5840,6 +5853,7 @@ create table zl_childproductgroup
   childname         varchar(50),
   lang_code         varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   childcode         varchar(50),
   productgroupid    int unsigned null,
   producttemplateid int unsigned null,
@@ -5869,6 +5883,7 @@ create table zl_closedway
   closedwayname     varchar(50),
   lang_code         varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   closedwaynamenote varchar(100),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -5893,6 +5908,7 @@ create table zl_color
   colorname        varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   colormatter      varchar(100),
   asacolorid       int unsigned null,
   brandid          int unsigned null,
@@ -5919,6 +5935,7 @@ create table zl_colortemplate
   color_name       varchar(20),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   code             varchar(4),
   color_note       varchar(200),
   colortype        varchar(50),
@@ -5944,6 +5961,7 @@ create table zl_companycontacts
   name             varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   gender           varchar(10),
   department       varchar(20),
   position         varchar(20),
@@ -5991,6 +6009,7 @@ create table zl_costformula
   formulaname      varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6006,7 +6025,7 @@ create table zl_country
   name             varchar(100) not null,
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
-  `languages` varchar(100) null,
+  `languages` varchar(191) NULL,
   sys_create_stuff int unsigned not null,
   sys_create_date  datetime     not null,
   sys_modify_stuff int unsigned not null,
@@ -6063,6 +6082,7 @@ create table zl_currency
   currencyname     varchar(20),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   currencycode     varchar(10),
   currencymark     bool,
   userflag         varchar(1),
@@ -6088,6 +6108,7 @@ create table zl_customs_name
   name             varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   remark           varchar(100),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -6132,6 +6153,7 @@ create table zl_delare_makings
   name             varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   remark           varchar(100),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -6156,6 +6178,7 @@ create table zl_ex_reportstyle
   chinese_name     varchar(100),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   tdbackx          int,
   tdbacky          int,
   tdbackwidth      int,
@@ -6234,6 +6257,7 @@ create table zl_executioncategory
   executionname    varchar(100),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   executionmatter  varchar(500),
   note             varchar(500),
   primary key (id)
@@ -6258,6 +6282,7 @@ create table zl_exhibition
   name             varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   remark           varchar(100),
   status           varchar(1) comment '0-不可用 1-可用',
   primary key (id)
@@ -6283,6 +6308,7 @@ create table zl_feenames
   name             varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   kmid             int unsigned null,
   isamortize       tinyint comment '0-不摊销 1-金额摊销 2-件数摊销',
   isused           varchar(1) comment '0-不常用 1-常用',
@@ -6308,6 +6334,7 @@ create table zl_forbiddenword
   word             varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   remark           varchar(100),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -6331,6 +6358,7 @@ create table zl_imagetool
   name             varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   type             varchar(1) comment '0-修改尺寸
             1-修改尺寸并添加
             2-裁剪并对齐',
@@ -6382,6 +6410,7 @@ create table zl_invoice_header
   header           varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   remark           varchar(200),
   isdefault        varchar(1) comment '1-默认 0-非默认',
   primary key (id)
@@ -6407,6 +6436,7 @@ create table zl_material
   code             varchar(20),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6430,6 +6460,7 @@ create table zl_materialnote
   content          varchar(100),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6453,6 +6484,7 @@ create table zl_materialstatus
   name             varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6475,6 +6507,7 @@ create table zl_memberlevel
   memberlevel      varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   discount         decimal(16,9),
   levelbasicscore  bigint,
   integralrule     decimal(16,9) comment '实际成交价格x积分规则=获得积分',
@@ -6503,6 +6536,7 @@ create table zl_occasionsstyle
   occasionsstylename varchar(50),
   lang_code          varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   occasionsstylemode varchar(200),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -6526,6 +6560,7 @@ create table zl_pricesource
   name             varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   remark           varchar(500),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -6549,6 +6584,7 @@ create table zl_productdscrb
   name             varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   remark           varchar(100),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -6572,6 +6608,7 @@ create table zl_productinnards
   partsname        varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6595,6 +6632,7 @@ create table zl_productparts
   partsname        varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   packflag         varchar(1),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -6619,6 +6657,7 @@ create table zl_productprice
   salename         varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   isdefault        varchar(1) comment '0 - 默认
             1 - 不默认',
   curreancyid      int unsigned null,
@@ -6646,6 +6685,7 @@ create table zl_productstyle
   brandgroup       varchar(36),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   childbrand       varchar(36),
   productstyle     varchar(10),
   primary key (id)
@@ -6670,6 +6710,7 @@ create table zl_producttemplate
   templatename     varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   picture          longblob,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -6693,6 +6734,7 @@ create table zl_quotedprice
   s_id             varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   currency         varchar(50),
   quotedprice      decimal(10,0),
   quoteddate       datetime,
@@ -6719,6 +6761,7 @@ create table zl_reportset
   name             varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   remark           varchar(500),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -6743,6 +6786,7 @@ create table zl_reportset_detail
   code             varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   `index`          int,
   width            int,
   primary key (id)
@@ -6767,6 +6811,7 @@ create table zl_salesmethods
   salesmethodsname varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   salesmethodsmode varchar(200),
   brandtype        varchar(36),
   primary key (id)
@@ -6791,6 +6836,7 @@ create table zl_salesport
   protname         varchar(20),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   remark           varchar(500),
   storename        varchar(50),
   isonline         varchar(1) comment '0-否 1-是',
@@ -6822,6 +6868,7 @@ create table zl_salesport_mission
   salespotid       int unsigned null,
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   yearmonth        varchar(10) comment '格式为201801',
   salesum          decimal(10,2),
   profit           decimal(10,2),
@@ -6849,6 +6896,7 @@ create table zl_series
   name             varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   code             varchar(50),
   brandid          int unsigned null,
   primary key (id)
@@ -6874,6 +6922,7 @@ create table zl_series2
   name             varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   code             varchar(50),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -6898,6 +6947,7 @@ create table zl_shippingtype
   name             varchar(10),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   remark           varchar(50),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -6921,6 +6971,7 @@ create table zl_sizecontent
   topid            int unsigned null,
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   content          varchar(10),
   sortnum          int,
   remark           varchar(100),
@@ -6946,6 +6997,7 @@ create table zl_sizetop
   name             varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   code             varchar(50),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -6969,6 +7021,7 @@ create table zl_storemove
   productid        int unsigned null,
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   storeid          int unsigned null,
   moveman          varchar(50),
   movedate         datetime,
@@ -6996,6 +7049,7 @@ create table zl_style
   stylename        varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   stylemode        varchar(200),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -7019,6 +7073,7 @@ create table zl_supplier_type
   supplierid       int unsigned null,
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   type             varchar(1) comment '0-供货商 1-报关行 2-供应商 3-承运人 4-客户',
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -7042,6 +7097,7 @@ create table zl_supplierlevel
   levelname        varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   levelnote        varchar(100),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -7065,6 +7121,7 @@ create table zl_sys_selfcompany
   supplier_id      int unsigned null,
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -7087,6 +7144,7 @@ create table zl_template_descrb
   tempid           int unsigned null,
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   sizetopid        int unsigned null,
   sizeid           int unsigned null,
   baselenth        decimal(10,2),
@@ -7113,6 +7171,7 @@ create table zl_templatelist
   templatename     varchar(36),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   sizename         varchar(36),
   content          varchar(20),
   productid        int unsigned null,
@@ -7138,6 +7197,7 @@ create table zl_templatemanage
   templatename     varchar(20),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   tempid           int unsigned null,
   sortnum          int,
   primary key (id)
@@ -7162,6 +7222,7 @@ create table zl_trans_code
   name             varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   code             varchar(50),
   remark           varchar(500),
   primary key (id)
@@ -7186,6 +7247,7 @@ create table zl_ulnarinch
   name             varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -7208,6 +7270,7 @@ create table zl_unit
   unitname         varchar(20),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   unitgroupid      varchar(50),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -7231,6 +7294,7 @@ create table zl_unitgroup
   groupname        varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   crew             varchar(100),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -7256,6 +7320,7 @@ create table zl_warehouse
   storename        varchar(50),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   storeaddress     varchar(100),
   contact          varchar(20),
   toll             varchar(20),
@@ -7290,6 +7355,7 @@ create table zl_washinginstructions
   name             varchar(10),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   remark           varchar(50),
   image            longblob,
   primary key (id)
@@ -7314,6 +7380,7 @@ create table zl_winterproofing
   name             varchar(20),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   remark           varchar(100),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -7400,7 +7467,8 @@ create table `tb_company`
   `name`           varchar(191) not null comment '公司名称',
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
-  `companyid`     int unsigned null comment '国家id',
+  `languages` varchar(191) NULL,
+  `countryid`     int unsigned null comment '国家id',
   `remark`         text comment '备注说明',
   primary key (`id`)
 ) engine=innodb default charset=utf8mb4;
@@ -7421,6 +7489,7 @@ create table `role`
   `name`           varchar(100) not null default '' comment '角色名称',
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   `description`    varchar(100) not null default '' comment '角色描述',
   primary key (`id`),
   unique `role_name` (`name`)
@@ -7442,6 +7511,7 @@ create table `permission`
   `name`           varchar(100) not null default '' comment '权限名称',
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `languages` varchar(191) NULL,
   `description`    varchar(100) not null default '' comment '权限描述',
   primary key (`id`),
   unique `permission_name` (`name`)
@@ -7480,3 +7550,96 @@ create table `role_user`
   `userid`        bigint unsigned not null comment '用户id',
   primary key (`id`)
 ) engine=innodb default charset=utf8mb4;
+
+
+
+
+--
+-- 转存表中的数据 `permission`
+--
+
+INSERT INTO `permission` (`id`, `sys_create_stuff`, `sys_create_date`, `sys_modify_stuff`, `sys_modify_date`, `sys_delete_stuff`, `sys_delete_date`, `sys_delete_flag`, `pid`, `name`, `lang_code`, `relateid`, `description`) VALUES
+(1, 1, '2019-03-08 13:37:45', 1, '2019-03-08 13:37:45', NULL, NULL, 0, 0, 'userControl', NULL, NULL, '用户管理'),
+(2, 1, '2019-03-08 13:40:21', 1, '2019-03-08 13:40:21', NULL, NULL, 0, 0, 'databaseControl', NULL, NULL, '基础数据'),
+(3, 1, '2019-03-08 13:42:08', 1, '2019-03-08 13:42:08', NULL, NULL, 0, 0, 'productControl', NULL, NULL, '商品管理'),
+(4, 1, '2019-03-08 13:43:12', 1, '2019-03-08 13:43:12', NULL, NULL, 0, 0, 'customControl', NULL, NULL, '客户管理'),
+(5, 1, '2019-03-08 13:45:10', 1, '2019-03-08 13:45:10', NULL, NULL, 0, 0, 'supplierControl', NULL, NULL, '供应链管理'),
+(6, 1, '2019-03-08 13:45:34', 1, '2019-03-08 13:45:34', NULL, NULL, 0, 0, 'stockControl', NULL, NULL, '库存管理'),
+(7, 1, '2019-03-08 13:46:13', 1, '2019-03-08 13:46:13', NULL, NULL, 0, 0, 'salesControl', NULL, NULL, '销售管理'),
+(8, 1, '2019-03-08 13:46:40', 1, '2019-03-08 13:46:40', NULL, NULL, 0, 0, 'memberControl', NULL, NULL, '会员管理'),
+(9, 1, '2019-03-08 13:47:16', 1, '2019-03-08 13:47:16', NULL, NULL, 0, 0, 'costControl', NULL, NULL, '费用管理'),
+(10, 1, '2019-03-08 13:48:08', 1, '2019-03-08 13:48:08', NULL, NULL, 0, 0, 'financialControl', NULL, NULL, '财务管理'),
+(11, 1, '2019-03-08 13:48:42', 1, '2019-03-08 13:48:42', NULL, NULL, 0, 0, 'systemControl', NULL, NULL, '系统管理'),
+(12, 1, '2019-03-08 13:50:11', 1, '2019-03-08 13:50:11', NULL, NULL, 0, 1, 'user', NULL, NULL, '员工信息'),
+(13, 1, '2019-03-08 13:51:06', 1, '2019-03-08 13:51:06', NULL, NULL, 0, 1, 'role', NULL, NULL, '组信息'),
+(14, 1, '2019-03-08 13:51:24', 1, '2019-03-08 13:51:24', NULL, NULL, 0, 1, 'department', NULL, NULL, '部门信息'),
+(15, 1, '2019-03-08 13:52:10', 1, '2019-03-08 13:52:10', NULL, NULL, 0, 2, 'productRelate', NULL, NULL, '商品相关'),
+(16, 1, '2019-03-08 13:52:45', 1, '2019-03-08 13:52:45', NULL, NULL, 0, 2, 'priceRelate', NULL, NULL, '价格相关'),
+(17, 1, '2019-03-08 13:56:20', 1, '2019-03-08 13:56:20', NULL, NULL, 0, 2, 'otherRelate', NULL, NULL, '其他'),
+(18, 1, '2019-03-08 13:57:31', 1, '2019-03-08 13:57:31', NULL, NULL, 0, 3, 'product', NULL, NULL, '商品信息'),
+(19, 1, '2019-03-08 13:57:53', 1, '2019-03-08 13:57:53', NULL, NULL, 0, 3, 'picture', NULL, NULL, '图片管理'),
+(20, 1, '2019-03-08 14:04:10', 1, '2019-03-08 14:04:10', NULL, NULL, 0, 3, 'pictureupload', NULL, NULL, '图片上传'),
+(21, 1, '2019-03-08 14:06:34', 1, '2019-03-08 14:06:34', NULL, NULL, 0, 4, 'supplier', NULL, NULL, '关系单位信息'),
+(22, 1, '2019-03-08 14:12:25', 1, '2019-03-08 14:12:25', NULL, NULL, 0, 4, 'quotation', NULL, NULL, '供货商报价'),
+(23, 1, '2019-03-08 14:17:08', 1, '2019-03-08 14:17:08', NULL, NULL, 0, 4, 'supplierlevel', NULL, NULL, '供货商级别'),
+(24, 1, '2019-03-08 14:20:47', 1, '2019-03-08 14:20:47', NULL, NULL, 0, 5, 'orderRelate', NULL, NULL, '订单管理'),
+(25, 1, '2019-03-08 14:27:24', 1, '2019-03-08 14:27:24', NULL, NULL, 0, 5, 'confirmorder', NULL, NULL, '发货单管理'),
+(26, 1, '2019-03-08 14:34:21', 1, '2019-03-08 14:34:21', NULL, NULL, 0, 5, 'warehousingRelate', NULL, NULL, '到货入库'),
+(27, 1, '2019-03-08 14:35:59', 1, '2019-03-08 14:35:59', NULL, NULL, 0, 6, 'requisitionRelate', NULL, NULL, '调拨相关'),
+(28, 1, '2019-03-08 14:48:07', 1, '2019-03-08 14:48:07', NULL, NULL, 0, 6, 'checkRelate', NULL, NULL, '库存盘点'),
+(29, 1, '2019-03-08 15:12:48', 1, '2019-03-08 15:12:48', NULL, NULL, 0, 6, 'stocksnapshot', NULL, NULL, '库存余额查询'),
+(30, 1, '2019-03-08 15:13:20', 1, '2019-03-08 15:13:20', NULL, NULL, 0, 6, 'productstock', NULL, NULL, '库存查询'),
+(31, 1, '2019-03-08 15:14:05', 1, '2019-03-08 15:14:05', NULL, NULL, 0, 6, 'productstockSnapshot', NULL, NULL, '库存快照统计'),
+(32, 1, '2019-03-08 15:18:29', 1, '2019-03-08 15:18:29', NULL, NULL, 0, 7, 'sales', NULL, NULL, '商品零售批发'),
+(33, 1, '2019-03-08 15:28:36', 1, '2019-03-08 15:28:36', NULL, NULL, 0, 7, 'salesstock', NULL, NULL, '销售端口库存统计'),
+(34, 1, '2019-03-08 15:37:15', 1, '2019-03-08 15:37:15', NULL, NULL, 0, 7, 'sfRelate', NULL, NULL, '销售对账'),
+(35, 1, '2019-03-08 15:38:04', 1, '2019-03-08 15:38:04', NULL, NULL, 0, 7, 'sale/statistics', NULL, NULL, '销售统计'),
+(36, 1, '2019-03-08 15:39:08', 1, '2019-03-08 15:39:08', NULL, NULL, 0, 8, 'member', NULL, NULL, '会员管理'),
+(37, 1, '2019-03-08 15:39:37', 1, '2019-03-08 15:39:37', NULL, NULL, 0, 8, 'memberlevel', NULL, NULL, '会员级别'),
+(38, 1, '2019-03-08 16:04:26', 1, '2019-03-08 16:04:26', NULL, NULL, 0, 9, 'fee', NULL, NULL, '费用申请'),
+(39, 1, '2019-03-08 16:08:03', 1, '2019-03-08 16:08:03', NULL, NULL, 0, 9, 'fee/leader', NULL, NULL, '费用申请主管审批'),
+(40, 1, '2019-03-08 16:08:30', 1, '2019-03-08 16:08:30', NULL, NULL, 0, 9, 'fee/finance', NULL, NULL, '费用申请财务审批'),
+(41, 1, '2019-03-08 16:10:11', 1, '2019-03-08 16:10:11', NULL, NULL, 0, 9, 'fee/manager', NULL, NULL, '费用申请经理审批'),
+(42, 1, '2019-03-08 16:12:20', 1, '2019-03-08 16:12:20', NULL, NULL, 0, 10, 'sfsheet', NULL, NULL, '对账查询'),
+(43, 1, '2019-03-08 16:18:42', 1, '2019-03-08 16:18:42', NULL, NULL, 0, 11, 'help', NULL, NULL, '系统帮助'),
+(44, 1, '2019-03-08 16:20:49', 1, '2019-03-08 16:20:49', NULL, NULL, 0, 11, 'modifypassword', NULL, NULL, '修改密码'),
+(45, 1, '2019-03-08 16:21:09', 1, '2019-03-08 16:21:09', NULL, NULL, 0, 11, 'logout', NULL, NULL, '退出登录'),
+(46, 1, '2019-03-08 17:33:06', 1, '2019-03-08 17:33:06', NULL, NULL, 0, 15, 'brand', NULL, NULL, '品牌维护'),
+(47, 1, '2019-03-08 17:33:41', 1, '2019-03-08 17:33:41', NULL, NULL, 0, 15, 'brandgroup', NULL, NULL, '品类维护'),
+(48, 1, '2019-03-08 17:37:24', 1, '2019-03-08 17:37:24', NULL, NULL, 0, 15, 'ageseason', NULL, NULL, '款式年代'),
+(49, 1, '2019-03-08 17:40:43', 1, '2019-03-08 17:40:43', NULL, NULL, 0, 15, 'colortemplate', NULL, NULL, '颜色模板'),
+(50, 1, '2019-03-08 17:41:02', 1, '2019-03-08 17:41:02', NULL, NULL, 0, 15, 'sizetop', NULL, NULL, '商品尺码'),
+(51, 1, '2019-03-08 17:41:20', 1, '2019-03-08 17:41:20', NULL, NULL, 0, 15, 'material', NULL, NULL, '材质管理'),
+(52, 1, '2019-03-08 17:41:39', 1, '2019-03-08 17:41:39', NULL, NULL, 0, 15, 'ulnarinch', NULL, NULL, '商品尺寸'),
+(53, 1, '2019-03-08 17:41:58', 1, '2019-03-08 17:41:58', NULL, NULL, 0, 15, 'aliases', NULL, NULL, '商品别名'),
+(54, 1, '2019-03-08 17:42:16', 1, '2019-03-08 17:42:16', NULL, NULL, 0, 15, 'productinnards', NULL, NULL, '内部结构'),
+(55, 1, '2019-03-08 17:42:35', 1, '2019-03-08 17:42:35', NULL, NULL, 0, 15, 'productparts', NULL, NULL, '附带配件'),
+(56, 1, '2019-03-08 17:42:52', 1, '2019-03-08 17:42:52', NULL, NULL, 0, 15, 'occasionsstyle', NULL, NULL, '场合风格'),
+(57, 1, '2019-03-08 17:49:10', 1, '2019-03-08 17:49:10', NULL, NULL, 0, 15, 'closedway', NULL, NULL, '闭合方式'),
+(58, 1, '2019-03-08 17:50:10', 1, '2019-03-08 17:50:10', NULL, NULL, 0, 15, 'executioncategory', NULL, NULL, '执行标准'),
+(59, 1, '2019-03-08 17:50:26', 1, '2019-03-08 17:50:26', NULL, NULL, 0, 15, 'securitycategory', NULL, NULL, '安全类别'),
+(60, 1, '2019-03-08 17:50:56', 1, '2019-03-08 17:50:56', NULL, NULL, 0, 15, 'washinginstructions', NULL, NULL, '洗涤说明'),
+(61, 1, '2019-03-08 17:51:32', 1, '2019-03-08 17:51:32', NULL, NULL, 0, 15, 'winterproofing', NULL, NULL, '防寒指数'),
+(62, 1, '2019-03-08 17:55:31', 1, '2019-03-08 17:55:31', NULL, NULL, 0, 16, 'productprice', NULL, NULL, '商品价格管理'),
+(63, 1, '2019-03-08 17:55:52', 1, '2019-03-08 17:55:52', NULL, NULL, 0, 16, 'costformula', NULL, NULL, '成本计算管理'),
+(64, 1, '2019-03-08 17:56:56', 1, '2019-03-08 17:56:56', NULL, NULL, 0, 17, 'warehouse', NULL, NULL, '仓库管理'),
+(65, 1, '2019-03-08 17:57:20', 1, '2019-03-08 17:57:20', NULL, NULL, 0, 17, 'salesport', NULL, NULL, '销售端口管理'),
+(66, 1, '2019-03-08 17:57:40', 1, '2019-03-08 17:57:40', NULL, NULL, 0, 17, 'country', NULL, NULL, '国际及地区信息维护'),
+(67, 1, '2019-03-08 17:58:11', 1, '2019-03-08 17:58:11', NULL, NULL, 0, 17, 'feenames', NULL, NULL, '费用名称'),
+(68, 1, '2019-03-08 17:58:31', 1, '2019-03-08 17:58:31', NULL, NULL, 0, 17, 'shippingtype', NULL, NULL, '运输方式'),
+(69, 1, '2019-03-08 17:58:53', 1, '2019-03-08 17:58:53', NULL, NULL, 0, 17, 'salesmethods', NULL, NULL, '销售性质'),
+(70, 1, '2019-03-08 17:59:10', 1, '2019-03-08 17:59:10', NULL, NULL, 0, 17, 'businesstype', NULL, NULL, '业务类型'),
+(71, 1, '2019-03-08 17:59:26', 1, '2019-03-08 17:59:26', NULL, NULL, 0, 17, 'reportstyle', NULL, NULL, '快递单样式'),
+(72, 1, '2019-03-08 17:59:51', 1, '2019-03-08 17:59:51', NULL, NULL, 0, 17, 'imagetool', NULL, NULL, '图片工具'),
+(73, 1, '2019-03-08 18:07:56', 1, '2019-03-08 18:07:56', NULL, NULL, 0, 24, 'order', NULL, NULL, '订单管理'),
+(74, 1, '2019-03-08 18:11:11', 1, '2019-03-08 18:11:11', NULL, NULL, 0, 24, 'order/search', NULL, NULL, '订单状态查询'),
+(75, 1, '2019-03-08 18:11:32', 1, '2019-03-08 18:11:32', NULL, NULL, 0, 24, 'order/export', NULL, NULL, '订单导出'),
+(76, 1, '2019-03-08 18:30:33', 1, '2019-03-08 18:30:33', NULL, NULL, 0, 26, 'warehousing', NULL, NULL, '到货入库'),
+(78, 1, '2019-03-08 18:32:22', 1, '2019-03-08 18:32:22', NULL, NULL, 0, 26, 'warehousing/list', NULL, NULL, '入库单查询'),
+(79, 1, '2019-03-08 18:37:56', 1, '2019-03-08 18:37:56', NULL, NULL, 0, 27, 'requisition/apply', NULL, NULL, '调拨单查询/申请'),
+(80, 1, '2019-03-08 18:46:27', 1, '2019-03-08 18:46:27', NULL, NULL, 0, 27, 'requisition/turnout', NULL, NULL, '调拨出库确认'),
+(81, 1, '2019-03-08 18:46:34', 1, '2019-03-08 18:46:34', NULL, NULL, 0, 27, 'requisition/turnin', NULL, NULL, '调拨入库确认'),
+(82, 1, '2019-03-08 18:55:25', 1, '2019-03-08 18:55:25', NULL, NULL, 0, 28, 'check', NULL, NULL, '盘点单列表'),
+(83, 1, '2019-03-08 18:56:24', 1, '2019-03-08 18:56:24', NULL, NULL, 0, 28, 'check/detail', NULL, NULL, '库存变动查询'),
+(84, 1, '2019-03-08 19:01:59', 1, '2019-03-08 19:01:59', NULL, NULL, 0, 34, 'sf/sheet', NULL, NULL, '销售对账页面'),
+(85, 1, '2019-03-08 19:02:43', 1, '2019-03-08 19:02:43', NULL, NULL, 0, 34, 'sf/search', NULL, NULL, '对账查询页面');

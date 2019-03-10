@@ -8,14 +8,17 @@ use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Regex;
 
 /**
- * 公司表
+ * 权限表
  */
-class TbCompany extends BaseModel
+class Permission extends BaseModel
 {
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('tb_company');
+        $this->setSource('permission');
     }
 
     /**
@@ -26,7 +29,7 @@ class TbCompany extends BaseModel
     {
         $validator = new Validation();
 
-        // name-公司名称不能为空或者重复
+        // name-权限名称不能为空或者重复
         $validator->add('name', new PresenceOf([
             'message' => 'The name is required',
             'cancelOnFail' => true,
@@ -35,10 +38,10 @@ class TbCompany extends BaseModel
             'message' => 'The name field must be unique',
             'cancelOnFail' => true,
         ]));
-        // countryid-所属国家ID
-        $validator->add('countryid', new Regex(
+        // pid-父级别权限
+        $validator->add('pid', new Regex(
             [
-                "message" => "The countryid is invalid",
+                "message" => "The pid is invalid",
                 "pattern" => "/[0-9]+/",
                 "allowEmpty" => true,
                 'cancelOnFail' => true,
@@ -53,6 +56,11 @@ class TbCompany extends BaseModel
                 'cancelOnFail' => true,
             ]
         ));
+        // description-描述
+        $validator->add('description', new PresenceOf([
+            'message' => 'The description is required',
+            'cancelOnFail' => true,
+        ]));
         // lang_code-语言编码
         $validator->add('lang_code', new Regex(
             [
@@ -73,6 +81,7 @@ class TbCompany extends BaseModel
         ));
         // 过滤
         $validator->setFilters('name', 'trim');
+        $validator->setFilters('description', 'trim');
 
         return $this->validate($validator);
     }

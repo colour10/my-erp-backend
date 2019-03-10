@@ -8,14 +8,17 @@ use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Regex;
 
 /**
- * 公司表
+ * 角色表，也就是组信息表
  */
-class TbCompany extends BaseModel
+class Role extends BaseModel
 {
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('tb_company');
+        $this->setSource('role');
     }
 
     /**
@@ -26,7 +29,7 @@ class TbCompany extends BaseModel
     {
         $validator = new Validation();
 
-        // name-公司名称不能为空或者重复
+        // name-角色名称不能为空或者重复
         $validator->add('name', new PresenceOf([
             'message' => 'The name is required',
             'cancelOnFail' => true,
@@ -35,15 +38,6 @@ class TbCompany extends BaseModel
             'message' => 'The name field must be unique',
             'cancelOnFail' => true,
         ]));
-        // countryid-所属国家ID
-        $validator->add('countryid', new Regex(
-            [
-                "message" => "The countryid is invalid",
-                "pattern" => "/[0-9]+/",
-                "allowEmpty" => true,
-                'cancelOnFail' => true,
-            ]
-        ));
         // relateid-关联ID
         $validator->add('relateid', new Regex(
             [
