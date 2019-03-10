@@ -3,15 +3,15 @@ namespace Multiple\Home\Controllers;
 
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
-use Asa\Erp\ZlWinterproofing;
+use Asa\Erp\ZlPricesource;
 
 /**
- * 防寒指数表
+ * 价格来源
  */
-class WinterproofingController extends ZadminController {
+class PricesourceController extends ZadminController {
     public function initialize() {
 	    parent::initialize();
 
-	    $this->setModelName('Asa\\Erp\\ZlWinterproofing');
+	    $this->setModelName('Asa\\Erp\\ZlPricesource');
     }
 }

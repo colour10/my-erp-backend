@@ -1,0 +1,69 @@
+
+<div id="ell">
+<multiple-admin-page v-bind="props" ref="page"></multiple-admin-page>
+</div>
+
+<script>
+$(document).ready(function(){
+    var props = {
+        data: <?=json_encode($result)?>,
+        columns:[{
+            name:"name", 
+            label:"防寒指数", 
+            is_create:true, 
+            is_update:true, 
+            is_show:true, 
+            width:200, 
+            is_focus:true,
+            disable_change:true
+        },{
+            name:"remark", 
+            label:"备注", 
+            is_create:true, 
+            is_update:true, 
+            is_show:true, 
+            is_focus:true,
+            width:200
+        }],
+        buttons:{
+            "create":{
+                label:"创建"    
+            },
+            "save":{
+                label:"保存"    
+            },
+            "remove":{
+                label:"删除"    
+            },
+            "edit":{
+                label:"编辑"    
+            } 
+        },
+        labels:{
+            formTitleCreate:"添加信息",
+            formTitleUpdate:"编辑信息",
+            action:"操作",
+            yes:"是",
+            no:"否",
+            language:"语言"
+        },
+        options:{
+            dialogWidth:"35%"
+        },
+        default_language:'<?=$__default_language?>',
+        controller:"winterproofing"
+    }
+    
+    new Vue({
+        el:"#ell",
+        data() {
+            return {
+                props:props   
+            }
+        }
+    })
+})
+</script>
+<style>
+</style>
+

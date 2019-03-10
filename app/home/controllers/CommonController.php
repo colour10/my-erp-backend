@@ -35,4 +35,39 @@ class CommonController extends BaseController
         echo json_encode((array)$config["languages"]);
         $this->view->disable();
     }
+    
+    function uploadAction() {
+        $result = array(
+            "code" => 200,
+            "files" => array()
+        );
+        
+        $files = $result['files'];
+        if ($this->request->hasFiles()) {
+            $path = $this->config->upload_dir . $_GET["category"] ."/";
+            if(!is_dir($path)) {
+                mkdir($path);   
+            }
+            
+            // Print the real file names and sizes
+            foreach ($this->request->getUploadedFiles() as $file) {                
+                $filename = sprintf(
+                    "%s/%s.%s",
+                    $_GET["category"],
+                    md5(sprintf("%s_%s_%s", $_GET["category"], time(), rand(1,1000000))),
+                    strtolower($file->getExtension())
+                );
+                
+                // Move the file into the application
+                $file->moveTo($this->config->upload_dir . $filename);
+                $files[$file->getName()] = $filename;
+            }
+            
+            $result["files"] = $files;
+        }
+        
+        echo json_encode($result);
+        
+        $this->view->disable();
+    }
 }

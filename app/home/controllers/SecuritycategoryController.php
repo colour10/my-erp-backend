@@ -8,7 +8,7 @@ use Asa\Erp\ZlSecuritycategory;
 /**
  * 基础资料，安全类别表
  */
-class SecuritycategoryController extends AdminController {
+class SecuritycategoryController extends ZadminController {
     public function initialize() {
 	    parent::initialize();
 

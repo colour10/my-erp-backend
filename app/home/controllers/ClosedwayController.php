@@ -8,7 +8,7 @@ use Asa\Erp\ZlClosedway;
 /**
  * 闭合方式
  */
-class ClosedwayController extends AdminController {
+class ClosedwayController extends ZadminController {
     public function initialize() {
 	    parent::initialize();
 

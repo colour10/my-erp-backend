@@ -14,6 +14,9 @@ class BaseController extends Controller
         //����ѡ��
         $this->view->setVar("system_language", $this->language);
         $this->view->setVar("__sytem_time", time());
+        
+        $this->view->setVar("__default_language", $this->config->language);
+        $this->view->setVar("__config", $this->config);
     }
 
     /**

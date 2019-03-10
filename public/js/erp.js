@@ -131,5 +131,5 @@ var $ASA = (function(){
         }    
     }
     
-    return {submit:submit, setLanguage:setLanguage, remove:remove, copyTo:copyTo, clone:clone, empty:empty, deleteObject: deleteObject}    
+    return {submit:submit, setLanguage:setLanguage, remove:remove, copyTo:copyTo, clone:clone, empty:empty, deleteObject: deleteObject, post:$.post}    
 })()

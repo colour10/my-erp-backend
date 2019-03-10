@@ -4,7 +4,7 @@ namespace Multiple\Home\Controllers;
 use Phalcon\Mvc\Controller;
 use Asa\Erp\ZlWashinginstructions;
 
-class WashinginstructionsController extends AdminController
+class WashinginstructionsController extends ZadminController
 {
 
 	public function initialize()
