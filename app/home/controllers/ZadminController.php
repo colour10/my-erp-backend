@@ -77,7 +77,10 @@ class ZadminController extends AdminController {
 	    $this->view->disable();
 	}
 	
-	function doDelete() {
+	/*
+	 * 同时删除多国语言的各个版本
+	 */	
+	function deleteGroupAction() {
 	    $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
 	    $row = $findFirst->invokeArgs(null, array($this->getCondition()));
 

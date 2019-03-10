@@ -8,7 +8,7 @@ use Asa\Erp\ZlProductinnards;
 /**
  * 内部结构
  */
-class ProductinnardsController extends AdminController {    
+class ProductinnardsController extends ZadminController {    
     public function initialize() {
 	    parent::initialize();
 	    

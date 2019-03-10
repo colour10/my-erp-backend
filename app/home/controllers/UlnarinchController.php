@@ -8,7 +8,7 @@ use Asa\Erp\ZlUlnarinch;
 /**
  * 基础资料，商品尺寸表
  */
-class UlnarinchController extends AdminController {
+class UlnarinchController extends ZadminController {
     public function initialize() {
 	    parent::initialize();
 

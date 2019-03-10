@@ -1,7 +1,9 @@
+<script src="/js/asa.js"></script>
+
 <div id="ell" style="display:none">
 <el-row>
   <el-col :span="24">
-  <el-button type="primary" @click="showForm('create')"><?=$system_language["button-create"]?></el-button>
+  <el-button type="primary" @click="showFormToCreate()"><?=$system_language["button-create"]?></el-button>
   </el-col>
 </el-row>
 
@@ -12,35 +14,35 @@
       </el-table-column>
       <el-table-column prop="BrandEnglishName" label="<?=$system_language["yingwenmingcheng"]?>" width="100" align="center">
       </el-table-column>
-      
+
       <el-table-column prop="BrandName" label="<?=$system_language["pinpaimingcheng"]?>" width="80" align="center">
       </el-table-column>
-      
+
       <el-table-column prop="Code" label="<?=$system_language["pinpaibianhao"]?>" width="80" align="center">
       </el-table-column>
-      
+
       <el-table-column prop="IsAuthorized" label="<?=$system_language["shifoushouquanpinpai"]?>" width="130" align="center">
       </el-table-column>
-      
+
       <el-table-column prop="memo" label="<?=$system_language["memo"]?>" width="100" align="center">
       </el-table-column>
-      
+
       <el-table-column prop="Supplier" label="<?=$system_language["guishujituan"]?>" width="100" align="center">
       </el-table-column>
-      
+
       <el-table-column prop="CountryID" label="<?=$system_language["guishuguojia"]?>" width="100" align="center">
       </el-table-column>
-      
+
       <el-table-column prop="Description" label="<?=$system_language["miaoshu"]?>" width="100" align="center">
         描述
       </el-table-column>
-      
+
       <el-table-column prop="Officialwebsite" label="<?=$system_language["guanwangdizhi"]?>" width="100" align="center">
       </el-table-column>
-      
+
       <el-table-column prop="ChildBrand" label="<?=$system_language["pinpaifenlei"]?>" width="100" align="center">
       </el-table-column>
-      
+
       <el-table-column label="<?=$system_language["caozuo"]?>" width="150" align="center">
         <template v-slot="scope">
           <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -52,9 +54,9 @@
 </el-row>
 
 <el-dialog class="user-form" :title="labels[action_type][0]" :visible.sync="dialogVisible" :center="true" width="80%">
-  <el-tabs type="border-card" @tab-click="onTabClick">
-    <el-tab-pane label="<?=$system_language["jibenziliao"]?>"> 
-      <!--基本资料-->     
+  <el-tabs type="border-card" @tab-click="onTabClick" v-model="activeName">
+    <el-tab-pane label="<?=$system_language["jibenziliao"]?>" name="info">
+      <!--基本资料-->
       <el-row>
       <el-col :span="5">
         <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
@@ -62,7 +64,7 @@
       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
     </el-upload>
       </el-col>
-      
+
       <el-col :span="19">
         <el-form class="user-form" :model="form" label-width="100px"  :inline="true" style="width:700px;" size="small">
         <el-form-item label="<?=$system_language["yingwenmingcheng"]?>">
@@ -72,11 +74,11 @@
         <el-form-item label="<?=$system_language["zhongwenmingcheng"]?>">
           <el-input v-model="form.BrandName"></el-input>
         </el-form-item>
-        
+
         <el-form-item label="<?=$system_language["pinpaibianhao"]?>">
           <el-input v-model="form.Code"></el-input>
         </el-form-item>
-        
+
         <el-form-item label="<?=$system_language["guishuguojia"]?>">
           <el-select v-model="form.CountryID" placeholder="<?=$system_language["qingxuanze"]?>" style="width:150">
             <el-option v-for="item in country_list" :key="item.code" :label="item.name" :value="item.code"></el-option>
@@ -93,72 +95,109 @@
           <el-select v-model="form.Supplier" placeholder="<?=$system_language["qingxuanze"]?>" style="width:150">
             <el-option v-for="item in bu_list" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
-        </el-form-item>        
-        
+        </el-form-item>
+
         <el-form-item label="<?=$system_language["pinpaijieshao"]?>">
           <el-input type="textarea" v-model="form.Description"></el-input>
         </el-form-item>
-        
+
         <el-form-item label="<?=$system_language["memo"]?>">
           <el-input type="textarea" v-model="form.memo"></el-input>
         </el-form-item>
-        
+
         <div class="site">
         <el-form-item label="<?=$system_language["guanwangdizhi"]?>">
           <el-input v-model="form.Officialwebsite">
-            <el-button slot="append" icon="el-icon-search"></el-button>  
+            <el-button slot="append" icon="el-icon-search"></el-button>
           </el-input>
         </el-form-item>
         </div>
-        
+
         <el-form-item label="<?=$system_language["shifoushouquanpinpai"]?>">
           <el-checkbox v-model="form.IsAuthorized" true-label="1"><?=$system_language["shifoushouquanpinpai"]?></el-checkbox>
         </el-form-item>
       </el-form>
-      
+
       </el-col>
-      
+
       <div  style="text-align:center">
         <el-button type="primary" @click="saveBrankInfo">{{labels[action_type][1]}}</el-button>
       </div>
     </el-row>
-      
+
     </el-tab-pane>
-    
-    <el-tab-pane label="<?=$system_language["yanse"]?>" name="group-info">
+
+    <el-tab-pane label="<?=$system_language["yanse"]?>" name="group-info" :disabled="!form.id">
       <el-radio-group v-model="form.group">
         <el-radio v-for="item in group_list" :key="item.value" :label="item.value">{{item.label}}</el-radio>
       </el-radio-group>
     </el-tab-pane>
-  
-    <el-tab-pane label="<?=$system_language["pinlei"]?>">
+
+    <el-tab-pane label="<?=$system_language["pinlei"]?>" :disabled="!form.id">
       <el-checkbox-group v-model="form.sale_port">
         <el-checkbox v-for="item in sale_port_list" :key="item.value" :label="item.value">{{item.label}}</el-checkbox>
-      </el-checkbox-group>    
+      </el-checkbox-group>
     </el-tab-pane>
-  <el-tab-pane label="<?=$system_language["jiagebili"]?>">定时任务补偿</el-tab-pane>
-    <el-tab-pane label="<?=$system_language["bieming"]?>">
-      <el-checkbox-group v-model="form.cangku">
-        <el-checkbox v-for="item in cangku_list" :key="item.value" :label="item.value">{{item.label}}</el-checkbox>
-      </el-checkbox-group> 
+
+    <el-tab-pane label="<?=$system_language["jiagebili"]?>" :disabled="!form.id">定时任务补偿</el-tab-pane>
+
+    <!--别名-->
+    <el-tab-pane label="<?=$system_language["bieming"]?>" :disabled="!form.id">
+      <simple-admin-page v-bind="aliases" ref="aliases"></simple-admin-page>
     </el-tab-pane>
-    
-    <el-tab-pane label="<?=$system_language["xilie"]?>">
+
+    <el-tab-pane label="<?=$system_language["xilie"]?>" :disabled="!form.id">
       <el-checkbox-group v-model="form.jiagedan">
         <el-checkbox v-for="item in jiagedan_list" :key="item.value" :label="item.value">{{item.label}}</el-checkbox>
-      </el-checkbox-group> 
+      </el-checkbox-group>
     </el-tab-pane>
-    <el-tab-pane label="<?=$system_language["jiekoudaimaduizhao"]?>">定时任务补偿</el-tab-pane>
-    <el-tab-pane label="<?=$system_language["xiaoshouduankoudengji"]?>">定时任务补偿</el-tab-pane>
-    <el-tab-pane label="<?=$system_language["teshyanse"]?>">定时任务补偿</el-tab-pane>
-    <el-tab-pane label="<?=$system_language["gonghuoshangdengji"]?>">定时任务补偿</el-tab-pane>
-    <el-tab-pane label="<?=$system_language["zhekoubili"]?>">定时任务补偿</el-tab-pane>
+    <el-tab-pane label="<?=$system_language["jiekoudaimaduizhao"]?>" :disabled="!form.id">定时任务补偿</el-tab-pane>
+    <el-tab-pane label="<?=$system_language["xiaoshouduankoudengji"]?>" :disabled="!form.id">定时任务补偿</el-tab-pane>
+    <el-tab-pane label="<?=$system_language["teshyanse"]?>" :disabled="!form.id">定时任务补偿</el-tab-pane>
+    <el-tab-pane label="<?=$system_language["gonghuoshangdengji"]?>" :disabled="!form.id">定时任务补偿</el-tab-pane>
+    <el-tab-pane label="<?=$system_language["zhekoubili"]?>" :disabled="!form.id">定时任务补偿</el-tab-pane>
   </el-tabs>
 </el-dialog>
 </div>
 
 <script>
 $(document).ready(function(){
+    var base = {
+        brandid:"",
+        lang_code:""
+    }
+    var props = {
+        columns:[
+            {name:"name", label:"姓名", is_create:true, is_update:true, is_show:true, width:150},
+            {name:"code", label:"地址", is_create:true, is_update:true, is_show:true, width:150},
+            {name:"brandid", label:"品牌", is_create:false, is_update:false, is_show:false, is_hidden:true}
+        ],
+        buttons:{
+            "create":{
+                label:"创建"
+            },
+            "save":{
+                label:"保存"
+            },
+            "remove":{
+                label:"删除"
+            },
+            "edit":{
+                label:"编辑"
+            }
+        },
+        labels:{
+            formTitleCreate:"添加信息",
+            formTitleUpdate:"编辑信息",
+            action:"操作"
+        },
+        options:{
+            dialogWidth:"35%"
+        },
+        controller:"aliases",
+        base:base
+    }
+
     new Vue({
         el:"#ell",
         data() {
@@ -177,7 +216,7 @@ $(document).ready(function(){
                     ImageUrl:"",
                     Officialwebsite:"",
                     ChildBrand:"",//品牌分类
-                    
+
                     id:""
                 },
                 rowIndex:'',
@@ -190,43 +229,53 @@ $(document).ready(function(){
                 action_type:"create",
                 labels:{
                     create:['<?=$system_language["xinjianpinpai"]?>','<?=$system_language["button-save"]?>'],
-                    update:['<?=$system_language["yuangongxinxi"]?>','<?=$system_language["button-save"]?>']       
+                    update:['<?=$system_language["yuangongxinxi"]?>','<?=$system_language["button-save"]?>']
                 },
                 group_list:[{value:1,"label":"测试一"},{value:2,"label":"测试2"}],//分组信息
                 sale_port_list:[{value:1,"label":"销售端口测试一"},{value:2,"label":"销售端口测试2"},{value:3,"label":"销售端口测试3"}],//销售端口信息
                 cangku_list:[{value:1,"label":"仓库测试一"},{value:2,"label":"仓库测试2"},{value:3,"label":"仓库测试3"}],//仓库信息
                 jiagedan_list:[{value:1,"label":"价格单测试一"},{value:2,"label":"价格单测试2"},{value:3,"label":"价格单测试3"}],//价格单信息
+                aliases:props,
+                activeName:"info"//当前激活的tab
             }
         },
         methods: {
             saveBrankInfo(){
                 var self = this;
                 if(this.form.id=="") {
-                    $ASA.submit.call(this, "/brand/add", this.form, function(){                        
-                        self.tableData.push($ASA.clone(self.form) )   
+                    $ASA.submit.call(this, "/brand/add", this.form, function(){
+                        self.tableData.push($ASA.clone(self.form) )
                     })
                 }
                 else {
                     $ASA.submit.call(this, "/brand/edit", this.form, function(){
-                        //self.tableData[self.rowIndex].lang_code = self.form.lang_code 
+                        //self.tableData[self.rowIndex].lang_code = self.form.lang_code
                         $ASA.copyTo(self.form, self.tableData[self.rowIndex])
-                    }) 
+                    })
                 }
             },
             onTabClick(tab){
-                console.log(tab)
+                //console.log(tab)
             },
             handleAvatarSuccess(){},
             beforeAvatarUpload(){},
-            showForm(action) {
-                this.dialogVisible = true;
-                this.action_type = action;
+            showFormToCreate(action) {
+                var self = this;
+                $ASA.empty(self.form)
+                
+                self.dialogVisible = true;
+                self.action_type = "create";
+                self.activeName = "info"
             },
             handleEdit(rowIndex, row){
                $ASA.copyTo(row, this.form)
                
+               base.brandid = row.id;
+               base.lang_code = row.lang_code; 
+               console.log(base)              
+
                this.rowIndex = rowIndex;
-               
+
                this.action_type = 'update';
                this.dialogVisible = true;
             },
@@ -264,7 +313,7 @@ $(document).ready(function(){
             $("#ell").show()
             var self = this;
             $.post("/country/list", {}, function(res){
-                console.log(res)
+                //console.log(res)
                  self.country_list = res;
             },"json")
         }
@@ -275,17 +324,17 @@ $(document).ready(function(){
     .user-form .el-input__inner {
         width:200px;
     }
-    
+
     .user-form .site .el-input__inner {
         width:470px;
     }
-        
+
     .user-form .el-date-editor.el-input, .el-date-editor.el-input__inner {
         width:200px
     }
-    
+
     .el-textarea__inner {
-        width:515px    
+        width:515px
     }
 
   .avatar-uploader .el-upload {

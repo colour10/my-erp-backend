@@ -8,7 +8,7 @@ use Asa\Erp\ZlProductparts;
 /**
  * 附带配件
  */
-class ProductpartsController extends AdminController {    
+class ProductpartsController extends ZadminController {    
     public function initialize() {
 	    parent::initialize();
 	    

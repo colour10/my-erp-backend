@@ -8,7 +8,7 @@ use Asa\Erp\ZlMaterial;
 /**
  * 基础资料，材质表
  */
-class MaterialController extends AdminController {
+class MaterialController extends ZadminController {
     public function initialize() {
 	    parent::initialize();
 

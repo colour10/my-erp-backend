@@ -8,7 +8,9 @@ $(document).ready(function(){
     var props = {
         data: <?=json_encode($result)?>,
         columns:[
-            {name:"name", label:"尺码", is_create:true, is_update:true, is_show:true, width:200, is_focus:true}
+            {name:"partscode", label:"配件代码", is_create:true, is_update:true, is_show:true, width:200, disable_change:true, is_focus:true},
+            {name:"partsname", label:"配件名称", is_create:true, is_update:true, is_show:true, width:200, is_focus:true},
+            {name:"packflag", label:"是否包装", is_create:true, is_update:true, is_show:true, width:200, type:"switch", disable_change:true}
         ],
         buttons:{
             "create":{
@@ -28,13 +30,15 @@ $(document).ready(function(){
             formTitleCreate:"添加信息",
             formTitleUpdate:"编辑信息",
             action:"操作",
+            yes:"是",
+            no:"否",
             language:"语言"
         },
         options:{
             dialogWidth:"35%"
         },
         default_language:'zh-cn',
-        controller:"ulnarinch"
+        controller:"productparts"
     }
     
     new Vue({

@@ -62,6 +62,30 @@ class AdminController extends BaseController
             echo $e->getMessage();
         }
     }
+    
+    function getSearchCondition()
+    {
+        $model = $this->getModelObject();
+        $metaData = $model->getModelsMetaData();
+        $primaryKeys = $metaData->getPrimaryKeyAttributes($model);
+        $fieldTypes = $metaData->getDataTypes($model);
+        
+        //var_dump($fieldTypes);
+
+        $array = array("sys_delete_flag=0");
+
+        foreach ($fieldTypes as $key=>$value) {
+            if(isset($_REQUEST[$key]) && $_REQUEST[$key]!="" ) {
+                if ($fieldTypes[$key] == Column::TYPE_INTEGER || $fieldTypes[$key] == Column::TYPE_BIGINTEGER ) {
+                    $array[] = sprintf("%s=%d", $key, $this->request->get($key));
+                } else { //($fieldTypes[$key] == Column::TYPE_CHAR || $fieldTypes[$key] == Column::TYPE_VARCHAR) {
+                    $array[] = sprintf("%s='%s'", $key, addslashes($this->request->get($key)));
+                }
+            }
+        }
+
+        return implode(' and ', $array);
+    }
 
     function getCondition()
     {
@@ -73,9 +97,9 @@ class AdminController extends BaseController
         $array = array();
 
         foreach ($primaryKeys as $key) {
-            if ($fieldTypes[$key] == Column::TYPE_INTEGER || $fieldTypes[$key] == Column::TYPE_BIGINTEGER || $fieldTypes[$key] == Column::TYPE_MEDIUMINTEGER || $fieldTypes[$key] == Column::TYPE_SMALLINTEGER || $fieldTypes[$key] == Column::TYPE_TINYINTEGER) {
+            if ($fieldTypes[$key] == Column::TYPE_INTEGER || $fieldTypes[$key] == Column::TYPE_BIGINTEGER) {
                 $array[] = sprintf("%s=%d", $key, $this->request->get($key));
-            } else if ($fieldTypes[$key] == Column::TYPE_CHAR || $fieldTypes[$key] == Column::TYPE_VARCHAR || $fieldTypes[$key] == Column::TYPE_ENUM) {
+            } else {//if ($fieldTypes[$key] == Column::TYPE_CHAR || $fieldTypes[$key] == Column::TYPE_VARCHAR || $fieldTypes[$key] == Column::TYPE_ENUM) {
                 $array[] = sprintf("%s='%s'", $key, addslashes($this->request->get($key)));
             }
         }
@@ -87,8 +111,29 @@ class AdminController extends BaseController
     {
         $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
 	    $result = $findFirst->invokeArgs(null, array("sys_delete_flag=0"));
-
-	    $this->view->setVar("result", $result->toArray());
+        
+        if($this->request->isAjax()) {
+            echo json_encode($result->toArray());
+            $this->view->disable();
+        }
+        else {
+            $this->view->setVar("result", $result->toArray());
+        }        
+	}
+	
+	function pageAction() {
+	    $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
+	    $result = $findFirst->invokeArgs(null, array(
+	        $this->getSearchCondition()
+	    ));
+        
+        if($this->request->isAjax()) {
+            echo json_encode($result->toArray());
+            $this->view->disable();
+        }
+        else {
+            $this->view->setVar("result", $result->toArray());
+        }     
 	}
 
 	public function listAction() {
@@ -96,6 +141,7 @@ class AdminController extends BaseController
 	}
 
 	public function doList($columns=array()) {
+	    
 	    if($this->request->isAjax()) {
 	        $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
 	        
@@ -127,6 +173,7 @@ class AdminController extends BaseController
 	            echo json_encode($result->toArray());
 	        }
 	    }
+	    
 	    $this->view->disable();
 	}
 

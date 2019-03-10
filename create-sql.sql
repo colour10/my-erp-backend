@@ -6421,24 +6421,25 @@ alter table zl_invoice_header comment '客户 发票抬头';
 /*==============================================================*/
 /* table: zl_material                                           */
 /*==============================================================*/
-create table zl_material
-(
-  id               int unsigned not null auto_increment comment '主键id',
-  sys_create_stuff int unsigned not null,
-  sys_create_date  datetime not null,
-  sys_modify_stuff int unsigned not null,
-  sys_modify_date  datetime not null,
-  sys_delete_stuff int unsigned null,
-  sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+CREATE TABLE `zl_material` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `sys_create_stuff` int(10) unsigned NOT NULL,
+  `sys_create_date` datetime NOT NULL,
+  `sys_modify_stuff` int(10) unsigned NOT NULL,
+  `sys_modify_date` datetime NOT NULL,
+  `sys_delete_stuff` int(10) unsigned DEFAULT NULL,
+  `sys_delete_date` datetime DEFAULT NULL,
+  `sys_delete_flag` tinyint(4) NOT NULL COMMENT '0-未删除 1-已删除',
+  `name` varchar(20) DEFAULT NULL,
+  `code` varchar(20) DEFAULT NULL,
+  `lang_code` varchar(20) DEFAULT NULL COMMENT '语言编码',
+  `relateid` int(11) DEFAULT NULL COMMENT '对应主键id',
+  `languages` varchar(100) DEFAULT NULL,
+  `english_name` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-  materialname     varchar(20),
-  code             varchar(20),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
-  primary key (id)
-) engine=innodb default charset=utf8mb4;
+
 
 alter table zl_material comment '材质
 ';

@@ -8,7 +8,9 @@ $(document).ready(function(){
     var props = {
         data: <?=json_encode($result)?>,
         columns:[
-            {name:"name", label:"尺码", is_create:true, is_update:true, is_show:true, width:200, is_focus:true}
+            {name:"code", label:"材质代码", is_create:true, is_update:true, is_show:true, width:200, disable_change:true, is_focus:true},
+            {name:"name", label:"材质名称", is_create:true, is_update:true, is_show:true, width:200, is_focus:true},
+            {name:"english_name", label:"英文名称", is_create:true, is_update:true, is_show:true, width:200, disable_change:true}
         ],
         buttons:{
             "create":{
@@ -34,7 +36,7 @@ $(document).ready(function(){
             dialogWidth:"35%"
         },
         default_language:'zh-cn',
-        controller:"ulnarinch"
+        controller:"material"
     }
     
     new Vue({
