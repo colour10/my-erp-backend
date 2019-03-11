@@ -7496,8 +7496,8 @@ create table `tb_company`
 -- ) engine=innodb default charset=utf8mb4;
 
 #权限表
-drop table if exists `permission`;
-create table `permission`
+drop table if exists `tb_permission`;
+create table `tb_permission`
 (
   id               int unsigned not null auto_increment comment '主键id',
   sys_create_stuff int unsigned not null,
@@ -7519,8 +7519,8 @@ create table `permission`
 ) engine=innodb default charset=utf8mb4;
 
 #组权限多对多表
-drop table if exists `permission_group`;
-create table `permission_group`
+drop table if exists `tb_permission_group`;
+create table `tb_permission_group`
 (
   id               int unsigned not null auto_increment comment '主键id',
   sys_create_stuff int unsigned not null,
@@ -7536,8 +7536,8 @@ create table `permission_group`
 ) engine=innodb default charset=utf8mb4 collate =utf8mb4_unicode_ci;
 
 #模块权限关联表
-drop table if exists `permission_module`;
-create table `permission_module`
+drop table if exists `tb_permission_module`;
+create table `tb_permission_module`
 (
   id               int unsigned not null auto_increment comment '主键id',
   sys_create_stuff int unsigned not null,
@@ -7578,7 +7578,7 @@ create table `permission_module`
 -- 转存表中的数据 `permission`
 --
 
-INSERT INTO `permission` (`id`, `sys_create_stuff`, `sys_create_date`, `sys_modify_stuff`, `sys_modify_date`, `sys_delete_stuff`, `sys_delete_date`, `sys_delete_flag`, `pid`, `name`, `lang_code`, `relateid`, `description`) VALUES
+INSERT INTO `tb_permission` (`id`, `sys_create_stuff`, `sys_create_date`, `sys_modify_stuff`, `sys_modify_date`, `sys_delete_stuff`, `sys_delete_date`, `sys_delete_flag`, `pid`, `name`, `lang_code`, `relateid`, `description`) VALUES
 (1, 1, '2019-03-08 13:37:45', 1, '2019-03-08 13:37:45', NULL, NULL, 0, 0, 'userControl', NULL, NULL, '用户管理'),
 (2, 1, '2019-03-08 13:40:21', 1, '2019-03-08 13:40:21', NULL, NULL, 0, 0, 'databaseControl', NULL, NULL, '基础数据'),
 (3, 1, '2019-03-08 13:42:08', 1, '2019-03-08 13:42:08', NULL, NULL, 0, 0, 'productControl', NULL, NULL, '商品管理'),
