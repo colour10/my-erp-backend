@@ -7535,6 +7535,25 @@ create table `permission_group`
   primary key (`id`)
 ) engine=innodb default charset=utf8mb4 collate =utf8mb4_unicode_ci;
 
+#模块权限关联表
+drop table if exists `permission_module`;
+create table `permission_module`
+(
+  id               int unsigned not null auto_increment comment '主键id',
+  sys_create_stuff int unsigned not null,
+  sys_create_date  datetime not null,
+  sys_modify_stuff int unsigned not null,
+  sys_modify_date  datetime not null,
+  sys_delete_stuff int unsigned null,
+  sys_delete_date  datetime,
+  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+  `permissionid`  int unsigned not null comment '权限id',
+  `module`  varchar(100) null comment '模块名称',
+  `controller`  varchar(100) null comment '控制器名称',
+  `action`  varchar(100) null comment '方法名称',
+  primary key (`id`)
+) engine=innodb default charset=utf8mb4 collate =utf8mb4_unicode_ci;
+
 -- #组用户多对多表
 -- drop table if exists `group_user`;
 -- create table `group_user`
