@@ -5855,6 +5855,7 @@ create table zl_childproductgroup
   `relateid` int null comment '对应主键id',
   `languages` varchar(191) NULL,
   childcode         varchar(50),
+  englishname varchar(191) NULL,
   productgroupid    int unsigned null,
   producttemplateid int unsigned null,
   weight            decimal(16,9),
@@ -7534,7 +7535,6 @@ create table `tb_permission_group`
   `permissionid`  int unsigned not null comment '权限id',
   `companyid`  int unsigned null comment '公司id',
   primary key (`id`),
-  UNIQUE `tb_permission_group_delete_groupid_permissionid_companyid` (`sys_delete_flag`,`groupid`,`permissionid`,`companyid`)
 ) engine=innodb default charset=utf8mb4 collate =utf8mb4_unicode_ci;
 
 #模块权限关联表
