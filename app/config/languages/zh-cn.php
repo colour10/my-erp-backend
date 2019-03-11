@@ -235,7 +235,7 @@ return array(
     "mobanmingcheng" => "模板名称",
     "biaoti" => "标题",
     "xuhao" => "序号",
-    "shifoubaozhuang" => "是否包装",
+    "neirong" => "内容",
     "shifoubaozhuang" => "是否包装",
     "shifoubaozhuang" => "是否包装",
     "shifoubaozhuang" => "是否包装",

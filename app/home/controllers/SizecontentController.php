@@ -8,7 +8,7 @@ use Asa\Erp\ZlSizecontent;
 /**
  * 商品尺码明细信息表
  */
-class SizecontentController extends AdminController {
+class SizecontentController extends ZadminController {
     public function initialize() {
 	    parent::initialize();
 

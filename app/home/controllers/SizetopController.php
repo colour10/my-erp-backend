@@ -8,7 +8,7 @@ use Asa\Erp\ZlSizetop;
 /**
  * 商品尺码信息
  */
-class SizetopController extends AdminController {
+class SizetopController extends ZadminController {
     public function initialize() {
 	    parent::initialize();
 
