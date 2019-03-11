@@ -5934,6 +5934,8 @@ create table zl_colortemplate
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   color_name       varchar(20),
+  englishname varchar(191) NULL,
+  picture varchar(200) null,
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
   `languages` varchar(191) NULL,
@@ -6434,6 +6436,7 @@ create table zl_material
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   materialname     varchar(20),
+  englishname varchar(191) NULL,
   code             varchar(20),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
@@ -6712,7 +6715,7 @@ create table zl_producttemplate
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
   `languages` varchar(191) NULL,
-  picture          longblob,
+  picture          varchar(200) null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
