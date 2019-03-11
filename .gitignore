@@ -5,3 +5,4 @@ app/config/config.php
 app/cache
 app/home/controllers/TestController.php
 create-sql.sql.bak
+app/home/controllers/AdminController.php
