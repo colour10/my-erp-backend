@@ -72,7 +72,24 @@ class Util {
                     $tree = array_merge($tree, self::format_tree_single_array($result, $v['id'], $level+1));
                 }
             }
-            // 返回
-            return $tree;
+        // 返回
+        return $tree;
+    }
+
+    /**
+     * 字符串转为数组
+     * @param $str
+     * @return array
+     */
+    public static function char_to_array($str)
+    {
+        // 逻辑
+        // 如果有逗号，就分割
+        if (strpos($str,',') !== false) {
+            $arr = explode(',', $str);
+        } else {
+            $arr = [$str];
         }
+        return $arr;
+    }
 }
