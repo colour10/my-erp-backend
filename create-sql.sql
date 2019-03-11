@@ -7447,9 +7447,9 @@ alter table link_rule_to_operation
 --   add constraint fk_reference_link_userid foreign key (loginid)
 --     references tb_user (id);
 
-alter table tb_user
-  add constraint fk_reference_tb_user_to_group foreign key (groupid)
-    references tb_group (id);
+-- alter table tb_user
+--   add constraint fk_reference_tb_user_to_group foreign key (groupid)
+--     references tb_group (id);
 
 
 #公司表
