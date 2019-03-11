@@ -5,7 +5,7 @@ use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
 use Asa\Erp\TbUser;
 
-class UserController extends AdminController {    
+class UserController extends CadminController {    
     public function initialize() {
 	    parent::initialize();
 	    
@@ -25,5 +25,9 @@ class UserController extends AdminController {
             echo json_encode($result);
             $this->view->disable();
         }
+    }
+    
+    function deletegroupAction() {
+        $this->doEdit();
     }
 }

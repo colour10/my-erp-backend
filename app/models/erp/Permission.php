@@ -18,7 +18,7 @@ class Permission extends BaseModel
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('permission');
+        $this->setSource('tb_permission');
     }
 
     /**

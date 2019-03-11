@@ -36,6 +36,13 @@ class CommonController extends BaseController
         $this->view->disable();
     }
     
+    function systemlanguageAction()
+    {
+        $lang = $this->language;
+        echo sprintf("\$ASAL = %s", json_encode((array)$lang));
+        $this->view->disable();
+    }
+    
     function uploadAction() {
         $result = array(
             "code" => 200,

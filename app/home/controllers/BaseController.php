@@ -7,6 +7,7 @@ use Phalcon\Mvc\View;
 
 class BaseController extends Controller
 {
+    protected $default_language;
     public function initialize()
     {
         //parent::initialize();
@@ -15,6 +16,7 @@ class BaseController extends Controller
         $this->view->setVar("system_language", $this->language);
         $this->view->setVar("__sytem_time", time());
         
+        $this->default_language = $this->config->language;
         $this->view->setVar("__default_language", $this->config->language);
         $this->view->setVar("__config", $this->config);
     }

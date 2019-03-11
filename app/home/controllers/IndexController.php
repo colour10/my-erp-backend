@@ -97,6 +97,11 @@ class IndexController extends BaseController
     }
     
     function initAction() {
+        $this->session->user = array(
+            "id" => 1,
+            "username" => "admin",
+            "companyid" => 1
+        );
         $db = $this->db;
         $db->execute("truncate table tb_company");
         $db->execute("truncate table tb_user");
@@ -109,7 +114,17 @@ class IndexController extends BaseController
         $company->sys_modify_date = $datetime; 
         $company->sys_delete_flag = 0;  
         $company->name = "company". time();
-        $company->save();
+        if($company->save()==false) {
+            $messages = $company->getMessages();
+
+            foreach ($messages as $message) {
+                echo 'Message: ', $message->getMessage();
+                echo 'Field: ', $message->getField();
+                echo 'Type: ', $message->getType();
+               
+            }
+            exit;
+        }
         
         $user = new TbUser();
         $user->sys_create_stuff = 1; 
