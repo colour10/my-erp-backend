@@ -145,13 +145,14 @@ class AdminController extends BaseController
 	    if($this->request->isAjax()) {
 	        $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
 	        
-	        //是否支持多国语言
-	        if($this->is_language) {
-	            $where = sprintf("sys_delete_flag=0 and lang_code='%s'", addslashes($this->language["code"]));    
-	        }
-	        else {
-	            $where = "sys_delete_flag=0";
-	        }	        
+//	        //是否支持多国语言
+//	        if($this->is_language) {
+//	            $where = sprintf("sys_delete_flag=0 and lang_code='%s'", addslashes($this->language["code"]));    
+//	        }
+//	        else {
+//	            $where = "sys_delete_flag=0";
+//	        }	        
+	        $where = $this->getSearchCondition();
 	        
 	        $result = $findFirst->invokeArgs(null, array($where));
 
@@ -243,7 +244,9 @@ class AdminController extends BaseController
                         $result["messages"][] = $message->getMessage();
                     }
                 }
+                
                 echo json_encode($result);
+                
     	    }
     	    else {
     	        $result = array("code"=>200, "messages" => array("数据不存在"));

@@ -100,13 +100,8 @@ class CadminController extends AdminController {
 	    if($this->request->isAjax()) {
 	        $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
 	        
-	        //是否支持多国语言
-	        if($this->is_language) {
-	            $where = sprintf("sys_delete_flag=0 and lang_code='%s' and companyid=%d", addslashes($this->language["code"]), $this->companyid);    
-	        }
-	        else {
-	            $where = sprintf("sys_delete_flag=0 and companyid=%d", $this->companyid);
-	        }	        
+	        $_POST["companyid"] = $this->companyid;
+	        $where = $this->getSearchCondition();
 	        
 	        $result = $findFirst->invokeArgs(null, array($where));
 

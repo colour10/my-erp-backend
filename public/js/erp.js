@@ -100,6 +100,12 @@ var $ASA = (function(){
         return target;
     }
     
+    function arrayMerge(arr) {
+        for(var i=0;i<arr.length;i++) {
+            this.push(arr[i])   
+        }
+    }
+    
     function deleteObject(arr, obj) {
         for(var i=0;i<arr.length;i++) {
             if(arr[i]==obj) {
@@ -131,5 +137,5 @@ var $ASA = (function(){
         }    
     }
     
-    return {submit:submit, setLanguage:setLanguage, remove:remove, copyTo:copyTo, clone:clone, empty:empty, deleteObject: deleteObject, post:$.post}    
+    return {submit:submit, setLanguage:setLanguage, remove:remove, copyTo:copyTo, clone:clone, empty:empty, deleteObject: deleteObject, post:$.post, arrayMerge:arrayMerge}    
 })()
