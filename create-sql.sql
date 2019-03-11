@@ -7532,6 +7532,7 @@ create table `tb_permission_group`
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
   `groupid`        int unsigned not null comment '组id',
   `permissionid`  int unsigned not null comment '权限id',
+  `companyid`  int unsigned null comment '公司id',
   primary key (`id`)
 ) engine=innodb default charset=utf8mb4 collate =utf8mb4_unicode_ci;
 
@@ -7555,8 +7556,8 @@ create table `tb_permission_module`
 ) engine=innodb default charset=utf8mb4 collate =utf8mb4_unicode_ci;
 
 -- #组用户多对多表
--- drop table if exists `group_user`;
--- create table `group_user`
+-- drop table if exists `tb_group_user`;
+-- create table `tb_group_user`
 -- (
 --   id               int unsigned not null auto_increment comment '主键id',
 --   sys_create_stuff int unsigned not null,
@@ -7575,7 +7576,7 @@ create table `tb_permission_module`
 
 
 --
--- 转存表中的数据 `permission`
+-- 转存表中的数据 `tb_permission`
 --
 
 INSERT INTO `tb_permission` (`id`, `sys_create_stuff`, `sys_create_date`, `sys_modify_stuff`, `sys_modify_date`, `sys_delete_stuff`, `sys_delete_date`, `sys_delete_flag`, `pid`, `name`, `lang_code`, `relateid`, `description`) VALUES
