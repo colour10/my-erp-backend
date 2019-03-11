@@ -3236,7 +3236,7 @@ alter table link_user_to_reportset comment '连接表用户与报表样式';
 --   primary key (id)
 -- ) engine=innodb default charset=utf8mb4;
 --
--- alter table link_user_to_rule comment '用户-角色关联表';
+-- alter table link_user_to_rule comment '用户-组关联表';
 
 /*==============================================================*/
 /* table: link_user_to_salesport                                */
@@ -7474,26 +7474,26 @@ create table `tb_company`
 ) engine=innodb default charset=utf8mb4;
 
 
-#角色表
-drop table if exists `role`;
-create table `role`
-(
-  id               int unsigned not null auto_increment comment '主键id',
-  sys_create_stuff int unsigned not null,
-  sys_create_date  datetime     not null,
-  sys_modify_stuff int unsigned not null,
-  sys_modify_date  datetime     not null,
-  sys_delete_stuff int unsigned null,
-  sys_delete_date  datetime,
-  sys_delete_flag  tinyint      not null comment '0-未删除 1-已删除',
-  `name`           varchar(100) not null default '' comment '角色名称',
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
-  `description`    varchar(100) not null default '' comment '角色描述',
-  primary key (`id`),
-  unique `role_name` (`name`)
-) engine=innodb default charset=utf8mb4;
+-- #组表
+-- drop table if exists `group`;
+-- create table `group`
+-- (
+--   id               int unsigned not null auto_increment comment '主键id',
+--   sys_create_stuff int unsigned not null,
+--   sys_create_date  datetime     not null,
+--   sys_modify_stuff int unsigned not null,
+--   sys_modify_date  datetime     not null,
+--   sys_delete_stuff int unsigned null,
+--   sys_delete_date  datetime,
+--   sys_delete_flag  tinyint      not null comment '0-未删除 1-已删除',
+--   `name`           varchar(100) not null default '' comment '组名称',
+--   lang_code        varchar(20) null comment '语言编码',
+--   `relateid` int null comment '对应主键id',
+--   `languages` varchar(191) NULL,
+--   `description`    varchar(100) not null default '' comment '组描述',
+--   primary key (`id`),
+--   unique `group_name` (`name`)
+-- ) engine=innodb default charset=utf8mb4;
 
 #权限表
 drop table if exists `permission`;
@@ -7518,9 +7518,9 @@ create table `permission`
   unique `permission_name` (`name`)
 ) engine=innodb default charset=utf8mb4;
 
-#角色权限多对多表
-drop table if exists `permission_role`;
-create table `permission_role`
+#组权限多对多表
+drop table if exists `permission_group`;
+create table `permission_group`
 (
   id               int unsigned not null auto_increment comment '主键id',
   sys_create_stuff int unsigned not null,
@@ -7530,27 +7530,27 @@ create table `permission_role`
   sys_delete_stuff int unsigned null,
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
-  `roleid`        int unsigned not null comment '角色id',
+  `groupid`        int unsigned not null comment '组id',
   `permissionid`  int unsigned not null comment '权限id',
   primary key (`id`)
 ) engine=innodb default charset=utf8mb4 collate =utf8mb4_unicode_ci;
 
-#角色用户多对多表
-drop table if exists `role_user`;
-create table `role_user`
-(
-  id               int unsigned not null auto_increment comment '主键id',
-  sys_create_stuff int unsigned not null,
-  sys_create_date  datetime not null,
-  sys_modify_stuff int unsigned not null,
-  sys_modify_date  datetime not null,
-  sys_delete_stuff int unsigned null,
-  sys_delete_date  datetime,
-  sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
-  `roleid`        int unsigned not null comment '角色id',
-  `userid`        bigint unsigned not null comment '用户id',
-  primary key (`id`)
-) engine=innodb default charset=utf8mb4;
+-- #组用户多对多表
+-- drop table if exists `group_user`;
+-- create table `group_user`
+-- (
+--   id               int unsigned not null auto_increment comment '主键id',
+--   sys_create_stuff int unsigned not null,
+--   sys_create_date  datetime not null,
+--   sys_modify_stuff int unsigned not null,
+--   sys_modify_date  datetime not null,
+--   sys_delete_stuff int unsigned null,
+--   sys_delete_date  datetime,
+--   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
+--   `groupid`        int unsigned not null comment '组id',
+--   `userid`        bigint unsigned not null comment '用户id',
+--   primary key (`id`)
+-- ) engine=innodb default charset=utf8mb4;
 
 
 
@@ -7572,7 +7572,7 @@ INSERT INTO `permission` (`id`, `sys_create_stuff`, `sys_create_date`, `sys_modi
 (10, 1, '2019-03-08 13:48:08', 1, '2019-03-08 13:48:08', NULL, NULL, 0, 0, 'financialControl', NULL, NULL, '财务管理'),
 (11, 1, '2019-03-08 13:48:42', 1, '2019-03-08 13:48:42', NULL, NULL, 0, 0, 'systemControl', NULL, NULL, '系统管理'),
 (12, 1, '2019-03-08 13:50:11', 1, '2019-03-08 13:50:11', NULL, NULL, 0, 1, 'user', NULL, NULL, '员工信息'),
-(13, 1, '2019-03-08 13:51:06', 1, '2019-03-08 13:51:06', NULL, NULL, 0, 1, 'role', NULL, NULL, '组信息'),
+(13, 1, '2019-03-08 13:51:06', 1, '2019-03-08 13:51:06', NULL, NULL, 0, 1, 'group', NULL, NULL, '组信息'),
 (14, 1, '2019-03-08 13:51:24', 1, '2019-03-08 13:51:24', NULL, NULL, 0, 1, 'department', NULL, NULL, '部门信息'),
 (15, 1, '2019-03-08 13:52:10', 1, '2019-03-08 13:52:10', NULL, NULL, 0, 2, 'productRelate', NULL, NULL, '商品相关'),
 (16, 1, '2019-03-08 13:52:45', 1, '2019-03-08 13:52:45', NULL, NULL, 0, 2, 'priceRelate', NULL, NULL, '价格相关'),
