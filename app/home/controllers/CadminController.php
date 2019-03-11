@@ -22,7 +22,7 @@ class CadminController extends AdminController {
     function indexAction() {
         $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
 	    $result = $findFirst->invokeArgs(null, array(
-	        sprintf("sys_delete_flag=0 and lang_code='%s' and companyid=%d", addslashes($this->default_language), $this->companyid)
+	        sprintf("sys_delete_flag=0 and companyid=%d", $this->companyid)
 	    ));
 
 	    $this->view->setVar("result", $result->toArray());

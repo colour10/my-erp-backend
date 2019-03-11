@@ -1,26 +1,33 @@
 var $ASA = (function(){
-    var language = 'zh-cn';
+    var handelSubmitMessage = function(result, callback) {
+        var self = this
+        if(result.messages.length>0) {
+            const h = self.$createElement;
+            var message = h("ul", null, result.messages.map(function(v){
+                return h("li",null,v)    
+            }))
+            
+            self.$alert(message, getLabel("error_tip"), {
+                confirmButtonText: getLabel("ok")
+            });   
+        }    
+        else {
+            self.$message({
+                message: $ASAL.success,
+                type: 'success'
+            });            
+            
+            if(callback) {
+                callback(result)
+            }
+        }
+    }    
     
     var submit = function(path, form, callback) {
         var self = this;        
         
-        $.post(path, form, function(res){            
-            if(res.messages.length>0) {
-                const h = self.$createElement;
-                var message = h("ul", null, res.messages.map(function(v){
-                    return h("li",null,v)    
-                }))
-                
-                self.$alert(message, getLabel("error_tip"), {
-                    confirmButtonText: getLabel("ok")
-                });   
-            }    
-            else {
-                self.$message({
-                    message: getLabel("success"),
-                    type: 'success'
-                });
-                
+        $.post(path, form, function(res){
+            handelSubmitMessage.call(self, res, function(){
                 if(res.is_add=="1") {
                     form.id = res.id;
                 }
@@ -28,7 +35,7 @@ var $ASA = (function(){
                 if(callback) {
                     callback(res)
                 }
-            }
+            })
         },"json")
     }    
     
@@ -52,7 +59,7 @@ var $ASA = (function(){
                 }
                 else {                    
                     self.$message({
-                        message: getLabel("delete_success"),
+                        message: $ASAL.delete_success,
                         type: 'success'
                     });
                     
@@ -63,16 +70,9 @@ var $ASA = (function(){
         });        
     }
     
-    
-    var setLanguage = function(lang) {
-        if(languages[lang]) {
-            language = lang; 
-        }
-    }
-    
+        
     function getLabel(key) {
-        //console.log(languages)
-        return languages[language][key]
+        return $ASAL[key]
     }
     
     function copyTo(fromObj, target) {
@@ -115,27 +115,16 @@ var $ASA = (function(){
         }
         return arr
     }
-    
-    var languages = {
-        "zh-cn":{
-            success:"操作成功",
-            delete_success:"删除成功",
-            error_tip:"错误提示",
-            ok:"确定",
-            cancel:"取消",
-            tip:'提示',
-            delete_warning:"此操作将删除该记录, 是否继续?"
-        },
-        "en-us":{
-            success:"Operation Success.",
-            delete_success:"删除成功",
-            error_tip:"Errors",
-            ok:"OK",
-            cancel:"Cancel",
-            tip:'tip',
-            delete_warning:"此操作将删除该记录, 是否继续?"
-        }    
-    }
-    
-    return {submit:submit, setLanguage:setLanguage, remove:remove, copyTo:copyTo, clone:clone, empty:empty, deleteObject: deleteObject, post:$.post, arrayMerge:arrayMerge}    
+        
+    return {
+        handelSubmitMessage:handelSubmitMessage,
+        submit:submit, 
+        remove:remove, 
+        copyTo:copyTo, 
+        clone:clone, 
+        empty:empty, 
+        deleteObject:deleteObject, 
+        post:$.post,
+        arrayMerge:arrayMerge
+    }    
 })()

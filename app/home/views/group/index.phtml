@@ -136,15 +136,12 @@ $(document).ready(function(){
                     },"json")
                 },
                 onSavePermission(){
-                    console.log(); 
                     var self = this;
                     var keys = self.$refs.tree.getCheckedKeys()
                     $.post("/permissiongroup/setting", {groupid:self.form.id, keys:keys.join(",")}, function(res){
                         console.log(res)
-                        self.user_list = res;
+                        $ASA.handelSubmitMessage.call(self, res)
                     },"json") 
-                    
-                      
                 },
                 onSubmit() {
                     var self = this;
