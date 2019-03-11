@@ -1,29 +1,13 @@
 <div id="ell">
 <el-row>
   <el-col :span="24">
-  <el-button type="primary" @click="showForm('create')"><?=$system_language["button-create"]?></el-button>
+  <el-button type="primary" @click="showFormToCreate()"><?=$system_language["button-create"]?></el-button>
   </el-col>
 </el-row>
 
 <el-row :gutter="20">
   <el-col :span="24">
-    <el-table :data="tableData" stripe border style="width: 100%;">
-      <el-table-column prop="id" label="ID" align="center" width="180">
-      </el-table-column>
-
-      <el-table-column prop="name" label="姓名" align="center" width="180">
-      </el-table-column>
-
-      <el-table-column prop="age" label="年龄" width="180" align="center">
-      </el-table-column>
-
-      <el-table-column label="操作" width="150" align="center">
-        <template v-slot="scope">
-          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+    <simple-admin-tablelist ref="tablelist" v-bind="props" :onclickupdate="showFormToEdit"></simple-admin-tablelist>
   </el-col>
 </el-row>
 
@@ -32,11 +16,22 @@
     <el-tab-pane label="<?=$system_language["user-setting"]?>">
       <el-form :model="form" label-width="100px"  :inline="true" style="width:700px;" size="small">
         <el-form-item label="<?=$system_language["user-loginname"]?>">
-          <el-input v-model="form.name"></el-input>
+          <el-input v-model="form.login_name"></el-input>
         </el-form-item>
 
         <el-form-item label="<?=$system_language["password"]?>">
-          <el-input v-model="form.description"></el-input>
+          <el-input v-model="form.password"></el-input>
+        </el-form-item>
+        
+        <el-form-item label="<?=$system_language["user-realname"]?>">
+          <el-input v-model="form.real_name"></el-input>
+        </el-form-item>
+        
+        <el-form-item label="<?=$system_language["gender"]?>">
+          <el-radio-group v-model="form.sex" style="width:200px">
+            <el-radio :label="'1'"><?=$system_language["man"]?></el-radio>
+            <el-radio :label="'0'"><?=$system_language["woman"]?></el-radio>
+          </el-radio-group>
         </el-form-item>
 
         <el-form-item label="<?=$system_language["depart"]?>">
@@ -44,58 +39,37 @@
             <el-option v-for="item in departs" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
+        
+        <el-form-item label="<?=$system_language["zu"]?>">
+          <simple-select v-model="form.groupid" url="/group/list" :params="{}" oplabel="group_name" opvalue="id" style="width:150">
+          </simple-select>
+        </el-form-item>
 
-        <el-form-item label="<?=$system_language["bu"]?>">
-          <el-select v-model="form.bu" placeholder="<?=$system_language["qingxuanze"]?>" style="width:150">
-            <el-option v-for="item in bu_list" :key="item.value" :label="item.label" :value="item.value"></el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item label="<?=$system_language["country"]?>">
-          <el-select v-model="form.country" placeholder="<?=$system_language["qingxuanze"]?>" style="width:150">
-            <el-option v-for="item in country_list" :key="item.value" :label="item.label" :value="item.value"></el-option>
-          </el-select>
+          <simple-select v-model="form.countryid" url="/country/list" :params="{}" oplabel="name" opvalue="relateid" style="width:150">
+          </simple-select>
         </el-form-item>
-        <el-form-item label="<?=$system_language["gender"]?>">
-          <el-radio-group v-model="form.gender" style="width:200px">
-            <el-radio :label="1"><?=$system_language["man"]?></el-radio>
-            <el-radio :label="0"><?=$system_language["woman"]?></el-radio>
-          </el-radio-group>
+        
+        <el-form-item label="<?=$system_language["email"]?>">
+          <el-input v-model="form.e_mail"></el-input>
         </el-form-item>
+        
         <el-form-item label="<?=$system_language["user-join"]?>">
-          <el-date-picker v-model="form.joindate" type="date" placeholder="<?=$system_language["xuanzeriqi"]?>"></el-date-picker>
+          <el-date-picker v-model="form.date" type="date" value-format="yyyy-MM-dd" placeholder="<?=$system_language["xuanzeriqi"]?>"></el-date-picker>
         </el-form-item>
         <el-form-item label="<?=$system_language["user-left"]?>">
-          <el-date-picker v-model="form.leftdate" type="date" placeholder="<?=$system_language["xuanzeriqi"]?>"></el-date-picker>
+          <el-date-picker v-model="form.leave_date" type="date" value-format="yyyy-MM-dd" placeholder="<?=$system_language["xuanzeriqi"]?>"></el-date-picker>
         </el-form-item>
-
-        <el-form-item label="<?=$system_language["user-realname"]?>">
-          <el-input v-model="form.parent_name"></el-input>
-        </el-form-item>
-
-        <el-form-item label="<?=$system_language["user-linkman"]?>">
-          <el-input v-model="form.parent_name"></el-input>
-        </el-form-item>
-
+      
         <el-form-item label="<?=$system_language["telephone"]?>">
-          <el-input v-model="form.parent_name"></el-input>
+          <el-input v-model="form.phone"></el-input>
         </el-form-item>
         <el-form-item label="<?=$system_language["mobile"]?>">
-          <el-input v-model="form.parent_name"></el-input>
+          <el-input v-model="form.mobilephone"></el-input>
         </el-form-item>
 
-        <el-form-item label="<?=$system_language["email"]?>">
-          <el-input v-model="form.parent_name"></el-input>
-        </el-form-item>
-        <el-form-item label="<?=$system_language["email-password"]?>">
-          <el-input v-model="form.parent_name"></el-input>
-        </el-form-item>
+        
       </el-form>
-    </el-tab-pane>
-    
-    <el-tab-pane label="<?=$system_language["group-info"]?>" name="group-info">
-      <el-radio-group v-model="form.group">
-        <el-radio v-for="item in group_list" :label="item.value">{{item.label}}</el-radio>
-      </el-radio-group>
     </el-tab-pane>
   
     <el-tab-pane label="<?=$system_language["sale-port"]?>">
@@ -119,32 +93,67 @@
   </el-tabs>
   
   <span slot="footer" class="dialog-footer">
-    <el-button type="primary" @click="dialogVisible = false">{{labels[action_type][1]}}</el-button>
+    <el-button type="primary" @click="onSubmit">{{labels[action_type][1]}}</el-button>
   </span>
 </el-dialog>
 </div>
 
 <script>
 $(document).ready(function(){
+    var props = {
+        columns:[
+            {
+                name:"login_name", 
+                label:$ASAL.dengluming, 
+                is_create:true, 
+                is_update:true, 
+                is_show:true, 
+                is_focus:true,
+                width:200
+            },
+            {
+                name:"real_name", 
+                label:$ASAL.xingming, 
+                is_create:true, 
+                is_update:true, 
+                is_show:true, 
+                width:200, 
+                is_focus:true
+            }
+        ],
+        controller:"user"
+    }
+    
     new Vue({
         el:"#ell",
         data() {
             return {
-                tableData: <?=json_encode($result)?>,
                 dialogVisible:false,
                 form: {
-                    name: '',
-                    depart_id: '',
-                    bu:'',
-                    country:'',
-                    gender:"",
-                    joindate:"",
-                    leftdate:"",
-                    group:2,
+                    id:'',
+                    login_name: '',
+                    real_name: '',
+                    password:'',
+                    departmentid:'',
+                    companyid:"",
+                    groupid:"",
+                    storeid:"",
+                    sex:"",
+                    storeid:"",
+                    section:"",
+                    date:"",
+                    phone:"",
+                    mobilephone:"",
+                    e_mail:"",
+                    email_password:"",
+                    comment:"",
+                    countryid:"",
+                    address:"",
                     sale_port:[],
                     cangku:[],
                     jiagedan:[]
                 },
+                props:props,
                 departs:[],
                 country_list:[],
                 bu_list:[],
@@ -160,12 +169,44 @@ $(document).ready(function(){
             }
         },
         methods: {
+            onSubmit() {
+                var self = this;
+                if(self.form.id=="") {
+                    $ASA.submit.call(self, "/"+props.controller+"/add", self.form, function(){
+                        self.$refs.tablelist.appendRow($ASA.clone(self.form))
+                        //self.dialogVisible = false
+                    })
+                }
+                else {
+                    $ASA.submit.call(self, "/"+props.controller+"/edit", self.form, function(){
+                        $ASA.copyTo(self.form, self.row)
+                        //self.dialogVisible = false
+                    })
+                }
+            },
             onTabClick(tab){
                 console.log(tab)
             },
-            showForm(action) {
-                this.dialogVisible = true;
-                this.action_type = action;
+            showFormToEdit(rowIndex, row){
+                var self = this
+                self.rowIndex = rowIndex;
+                self.row = row;
+                $ASA.copyTo(row, this.form)
+    
+                this.formTitle = $ASAL.xiugaixinxi;
+                self.showDialog();
+            },
+            showDialog() {
+                var self = this;
+                 self.dialogVisible = true;
+            },
+            showFormToCreate() {
+                var self = this;
+                $ASA.empty(self.form)    
+    
+                self.formTitle = $ASAL.tianjiaxinxi;
+                self.activeName = "info"
+                self.showDialog();
             },
             handleEdit(rowIndex, row){
                window.location = "/user/edit?id="+row.id;

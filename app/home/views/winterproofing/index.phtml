@@ -9,7 +9,7 @@ $(document).ready(function(){
         data: <?=json_encode($result)?>,
         columns:[{
             name:"name", 
-            label:"防寒指数", 
+            label:"<?=$system_language['fanghanzhishu']?>", 
             is_create:true, 
             is_update:true, 
             is_show:true, 
@@ -18,35 +18,13 @@ $(document).ready(function(){
             disable_change:true
         },{
             name:"remark", 
-            label:"备注", 
+            label:"<?=$system_language['beizhu']?>", 
             is_create:true, 
             is_update:true, 
             is_show:true, 
             is_focus:true,
             width:200
         }],
-        buttons:{
-            "create":{
-                label:"创建"    
-            },
-            "save":{
-                label:"保存"    
-            },
-            "remove":{
-                label:"删除"    
-            },
-            "edit":{
-                label:"编辑"    
-            } 
-        },
-        labels:{
-            formTitleCreate:"添加信息",
-            formTitleUpdate:"编辑信息",
-            action:"操作",
-            yes:"是",
-            no:"否",
-            language:"语言"
-        },
         options:{
             dialogWidth:"35%"
         },

@@ -8,7 +8,7 @@ use Asa\Erp\TbGroup;
 /**
  * 分组表
  */
-class GroupController extends AdminController {
+class GroupController extends CadminController {
     public function initialize() {
 	    parent::initialize();
 

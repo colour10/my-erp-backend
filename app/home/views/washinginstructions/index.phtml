@@ -9,7 +9,7 @@ $(document).ready(function(){
         data: <?=json_encode($result)?>,
         columns:[{
             name:"name", 
-            label:"洗涤名称", 
+            label:"<?=$system_language['xidimingcheng']?>", 
             is_create:true, 
             is_update:true, 
             is_show:true, 
@@ -17,7 +17,7 @@ $(document).ready(function(){
             is_focus:true                
         },{
             name:"image", 
-            label:"图片", 
+            label:"<?=$system_language['tupian']?>", 
             is_create:true, 
             is_update:true, 
             is_show:true, 
@@ -31,36 +31,13 @@ $(document).ready(function(){
             image_height:60
         },{
             name:"remark", 
-            label:"备注", 
+            label:"<?=$system_language['beizhu']?>", 
             is_create:true, 
             is_update:true, 
             is_show:true, 
             width:200, 
             type:"textarea"
         }],
-        buttons:{
-            "create":{
-                label:"创建"    
-            },
-            "save":{
-                label:"保存"    
-            },
-            "remove":{
-                label:"删除"    
-            },
-            "edit":{
-                label:"编辑"    
-            } 
-        },
-        labels:{
-            formTitleCreate:"添加信息",
-            formTitleUpdate:"编辑信息",
-            action:"操作",
-            yes:"是",
-            no:"否",
-            language:"语言",
-            upload:'点击上传'
-        },
         options:{
             dialogWidth:"35%"
         },

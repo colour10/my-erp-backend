@@ -153,6 +153,7 @@ class AdminController extends BaseController
 //	            $where = "sys_delete_flag=0";
 //	        }	        
 	        $where = $this->getSearchCondition();
+	        //echo $where;exit;
 	        
 	        $result = $findFirst->invokeArgs(null, array($where));
 
@@ -196,7 +197,8 @@ class AdminController extends BaseController
 	        //更新数据库
 	        $row = $this->getModelObject();
 
-	        $fields = $this->getAttributes();
+	        $fields = $this->getAttributes(); 
+	        
 	        foreach($fields as $name) {
 	            if(isset($_POST[$name])) {
 	                $row->$name = $_POST[$name];

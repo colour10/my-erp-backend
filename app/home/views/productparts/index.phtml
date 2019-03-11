@@ -1,4 +1,3 @@
-<script src="/js/asa.js?33"></script>
 <div id="ell">
 <multiple-admin-page v-bind="props" ref="page"></multiple-admin-page>
 </div>
@@ -6,34 +5,11 @@
 <script>
 $(document).ready(function(){
     var props = {
-        data: <?=json_encode($result)?>,
         columns:[
-            {name:"partscode", label:"配件代码", is_create:true, is_update:true, is_show:true, width:200, disable_change:true, is_focus:true},
-            {name:"partsname", label:"配件名称", is_create:true, is_update:true, is_show:true, width:200, is_focus:true},
-            {name:"packflag", label:"是否包装", is_create:true, is_update:true, is_show:true, width:200, type:"switch", disable_change:true}
+            {name:"partscode", label:"<?=$system_language['peijiandaima']?>", is_create:true, is_update:true, is_show:true, width:200, disable_change:true, is_focus:true},
+            {name:"partsname", label:"<?=$system_language['peijianmingcheng']?>", is_create:true, is_update:true, is_show:true, width:200, is_focus:true},
+            {name:"packflag", label:"<?=$system_language['shifoubaozhuang']?>", is_create:true, is_update:true, is_show:true, width:200, type:"switch", disable_change:true}
         ],
-        buttons:{
-            "create":{
-                label:"创建"    
-            },
-            "save":{
-                label:"保存"    
-            },
-            "remove":{
-                label:"删除"    
-            },
-            "edit":{
-                label:"编辑"    
-            } 
-        },
-        labels:{
-            formTitleCreate:"添加信息",
-            formTitleUpdate:"编辑信息",
-            action:"操作",
-            yes:"是",
-            no:"否",
-            language:"语言"
-        },
         options:{
             dialogWidth:"35%"
         },

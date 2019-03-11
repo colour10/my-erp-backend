@@ -1,0 +1,73 @@
+<div id="ell">
+<multiple-admin-page v-bind="props" ref="page"></multiple-admin-page>
+</div>
+
+<div id="ell2">
+  <el-dialog class="user-form" :title="''" :visible.sync="dialogVisible" :center="true" width="80%">
+    <multiple-admin-page v-bind="props" ref="page2"></multiple-admin-page>
+  </el-dialog>
+</div>
+<script>
+$(document).ready(function(){
+    var props = {
+        columns:[            
+            {name:"brandgroupname", label:"<?=$system_language["pinleimingcheng"]?>", is_create:true, is_update:true, is_show:true, width:200, is_focus:true},
+            {name:"code", label:"<?=$system_language["pinleibianma"]?>", is_create:true, is_update:true, is_show:true, width:200, disable_change:true, is_focus:true}
+        ],
+        buttons:[
+            {name:"code", label:"<?=$system_language["chakanziji"]?>", width:200, disable_change:true, handler:function(rowIndex, row){
+                //console.log(rowIndex, row)   
+                props2.base.productgroupid = row.relateid;
+                options.dialogVisible = true; 
+            }}
+        ],
+        options:{
+            dialogWidth:"35%"
+        },
+        default_language:'<?=$system_language["code"]?>',
+        controller:"brandgroup"
+    }
+    
+    var props2 = {
+        columns:[            
+            {name:"childname", label:"<?=$system_language["zileimingcheng"]?>", is_create:true, is_update:true, is_show:true, width:200, is_focus:true},
+            {name:"childcode", label:"<?=$system_language["zileibianma"]?>", is_create:true, is_update:true, is_show:true, width:200, disable_change:true, is_focus:true},
+            {name:"englishname", label:"<?=$system_language["yingwenmingcheng"]?>", is_create:true, is_update:true, is_show:true, width:200, disable_change:true, is_focus:true},
+            {name:"producttemplateid", label:"<?=$system_language["chimamoban"]?>", is_create:true, is_update:true, is_show:true, width:200, disable_change:true, is_focus:true},
+            {name:"weight", label:"<?=$system_language["maozhong"]?>", is_create:true, is_update:true, is_show:true, width:200, disable_change:true, is_focus:true},
+        ],
+        options:{
+            dialogWidth:"35%"
+        },
+        default_language:'<?=$system_language["code"]?>',
+        controller:"childproductgroup",
+        base:{
+            productgroupid:""    
+        }
+    }
+    
+    var options = {
+        props:props2,
+        dialogVisible:false
+    }
+    
+    var brandgroup = new Vue({
+        el:"#ell",
+        data() {
+            return {
+                props:props   
+            }
+        }
+    })
+    
+    var childgroup = new Vue({
+        el:"#ell2",
+        data() {
+            return options
+        }
+    })
+})
+</script>
+<style>
+</style>
+

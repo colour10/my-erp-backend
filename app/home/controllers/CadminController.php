@@ -30,32 +30,18 @@ class CadminController extends AdminController {
     }
     
     function doAdd() {
+        //echo $this->companyid;exit;
+        if($this->companyid<=0) {
+            $this->error(array("数据错误"));
+            exit;    
+        }
+        
 	    if($this->request->isPost()) {
 	        //更新数据库
-	        $row = $this->getModelObject();
-
-	        $fields = $this->getAttributes();
-	        foreach($fields as $name) {
-	            if(isset($_POST[$name])) {
-	                $row->$name = $_POST[$name];
-	            }
+	        if(!isset($_POST["companyid"]) || $_POST["companyid"]=="") {
+	            $_POST["companyid"] =  $this->companyid;  
 	        }
-	        $row->companyid = $this->companyid;
-
-            $result = array("code"=>200, "messages" => array());
-	        if ($row->create() === false) {
-                $messages = $row->getMessages();
-
-                foreach ($messages as $message) {
-                    $result["messages"][] = $message->getMessage();
-                }
-            }
-            else {
-                $result['is_add'] = "1";
-                $result['id'] = $row->id;                
-            }
-            echo json_encode($result);
-            $this->view->disable();
+	        parent::doAdd();
 	    }
 	}
 	
@@ -96,33 +82,45 @@ class CadminController extends AdminController {
         return implode(' and ', $array);
     }
     
-    public function doList($columns=array()) {
-	    if($this->request->isAjax()) {
-	        $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
-	        
-	        $_POST["companyid"] = $this->companyid;
-	        $where = $this->getSearchCondition();
-	        
-	        $result = $findFirst->invokeArgs(null, array($where));
-
-	        if($this->list_key_column!="" && count($this->list_columns)>0) {
-	            $column_name = $this->list_key_column;
-	            $list = array();
-	            foreach($result as $row) {
-	                $line = array();
-
-	                foreach($this->list_columns as $name) {
-	                    $line[$name] = $row->$name;
-	                }
-	                $list[$row->$column_name] = $line;
-	            }
-
-	            echo json_encode($list);
-	        }
-	        else {
-	            echo json_encode($result->toArray());
-	        }
-	    }
-	    $this->view->disable();
-	}
+//    public function doList($columns=array()) {
+//	    if($this->request->isAjax()) {
+//	        $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
+//	        
+//	        $_POST["companyid"] = $this->companyid;
+//	        $_POST["companyid"] = $this->companyid;
+//	        $where = $this->getSearchCondition();
+//	        
+//	        $result = $findFirst->invokeArgs(null, array($where));
+//
+//	        if($this->list_key_column!="" && count($this->list_columns)>0) {
+//	            $column_name = $this->list_key_column;
+//	            $list = array();
+//	            foreach($result as $row) {
+//	                $line = array();
+//
+//	                foreach($this->list_columns as $name) {
+//	                    $line[$name] = $row->$name;
+//	                }
+//	                $list[$row->$column_name] = $line;
+//	            }
+//
+//	            echo json_encode($list);
+//	        }
+//	        else {
+//	            echo json_encode($result->toArray());
+//	        }
+//	    }
+//	    $this->view->disable();
+//	}
+	
+	function getSearchCondition() {
+        if($this->request->isPost()) {
+            if(!isset($_POST["land_code"])) {
+                $_REQUEST["companyid"] = $this->companyid;
+                $_POST["companyid"] = $this->companyid;
+                //print_r($_POST);
+            }
+	    }  
+	    return parent::getSearchCondition();
+    }
 }
