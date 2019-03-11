@@ -4795,7 +4795,7 @@ create table tb_user
   sys_delete_flag    tinyint  not null default '0' comment '0-未删除 1-已删除',
   sex                varchar(50),
   section            varchar(50),
-  date               date,
+  date               varchar(100) null,
   phone              varchar(50),
   mobilephone        varchar(50),
   e_mail             varchar(100),
@@ -4805,7 +4805,7 @@ create table tb_user
   departmentid2      int unsigned null,
   address            text,
   contactor          text,
-  leave_date         date,
+  leave_date         varchar(100) null,
   defaultprice       varchar(36),
   defaultwarehouse   varchar(36),
   defaultsellspot    varchar(36),
@@ -7533,7 +7533,8 @@ create table `tb_permission_group`
   `groupid`        int unsigned not null comment '组id',
   `permissionid`  int unsigned not null comment '权限id',
   `companyid`  int unsigned null comment '公司id',
-  primary key (`id`)
+  primary key (`id`),
+  UNIQUE `tb_permission_group_groupid_permissionid_companyid` (`groupid`,`permissionid`,`companyid`)
 ) engine=innodb default charset=utf8mb4 collate =utf8mb4_unicode_ci;
 
 #模块权限关联表
