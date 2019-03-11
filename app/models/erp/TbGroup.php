@@ -1,8 +1,11 @@
 <?php
+
 namespace Asa\Erp;
+
 use Phalcon\Validation;
-use Phalcon\Validation\Validator\Between;
 use Phalcon\Validation\Validator\Uniqueness;
+use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Validation\Validator\Regex;
 
 /**
  * 分组表
@@ -15,28 +18,30 @@ class TbGroup extends BaseModel
         $this->setSource('tb_group');
     }
 
-    public function validation() {
+    /**
+     * 验证器
+     * @return bool
+     */
+    public function validation()
+    {
         $validator = new Validation();
 
-//        $validator->add(
-//            "age",
-//            new Between(
-//                [
-//                    "minimum" => 18,
-//                    "maximum" => 60,
-//                    "message" => "年龄必须是18~60岁",
-//                ]
-//            )
-//        );
-//
-//        $validator->add(
-//            'name',
-//            new Uniqueness(
-//                [
-//                    'message' => '姓名不能重复',
-//                ]
-//            )
-//        );
+        // name-名称不能为空
+        $validator->add('group_name', new PresenceOf([
+            'message' => 'The group_name is required',
+            'cancelOnFail' => true,
+        ]));
+        // companyid-所属公司ID
+        $validator->add('companyid', new Regex(
+            [
+                "message" => "The companyid is invalid",
+                "pattern" => "/[0-9]+/",
+                "allowEmpty" => true,
+                'cancelOnFail' => true,
+            ]
+        ));
+        // 过滤
+        $validator->setFilters('group_name', 'trim');
 
         return $this->validate($validator);
     }
