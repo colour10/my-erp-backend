@@ -42,7 +42,7 @@ class Permission extends BaseModel
         $validator->add('pid', new Regex(
             [
                 "message" => "The pid is invalid",
-                "pattern" => "/[0-9]+/",
+                "pattern" => "/^[1-9]\d*$/",
                 "allowEmpty" => true,
                 'cancelOnFail' => true,
             ]
@@ -51,7 +51,7 @@ class Permission extends BaseModel
         $validator->add('relateid', new Regex(
             [
                 "message" => "The relateid is invalid",
-                "pattern" => "/[0-9]+/",
+                "pattern" => "/^[1-9]\d*$/",
                 "allowEmpty" => true,
                 'cancelOnFail' => true,
             ]

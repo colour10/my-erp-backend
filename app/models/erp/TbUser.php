@@ -50,35 +50,35 @@ class TbUser extends BaseModel
         // departmentid-部门ID，也就是事业部ID
         $validator->add('departmentid', new Regex([
             'message' => 'The departmentid is invalid',
-            "pattern" => "/[0-9]+/",
+            "pattern" => "/^[1-9]\d*$/",
             "allowEmpty" => true,
             'cancelOnFail' => true,
         ]));
         // groupid-组ID
         $validator->add('groupid', new Regex([
             'message' => 'The groupid is invalid',
-            "pattern" => "/[0-9]+/",
+            "pattern" => "/^[1-9]\d*$/",
             "allowEmpty" => true,
             'cancelOnFail' => true,
         ]));
         // companyid-公司ID
         $validator->add('companyid', new Regex([
             'message' => 'The companyid is invalid',
-            "pattern" => "/[0-9]+/",
+            "pattern" => "/^[1-9]\d*$/",
             "allowEmpty" => true,
             'cancelOnFail' => true,
         ]));
         // storeid-所属门店仓库ID
         $validator->add('storeid', new Regex([
             'message' => 'The storeid is invalid',
-            "pattern" => "/[0-9]+/",
+            "pattern" => "/^[1-9]\d*$/",
             "allowEmpty" => true,
             'cancelOnFail' => true,
         ]));
         // countryid-国家ID
         $validator->add('countryid', new Regex([
             'message' => 'The countryid is invalid',
-            "pattern" => "/[0-9]+/",
+            "pattern" => "/^[1-9]\d*$/",
             "allowEmpty" => true,
             'cancelOnFail' => true,
         ]));

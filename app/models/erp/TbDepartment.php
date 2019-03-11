@@ -35,27 +35,27 @@ class TbDepartment extends BaseModel
         // companyid-公司ID
         $validator->add('companyid', new Regex([
             'message' => 'The companyid is invalid',
-            "pattern" => "/[0-9]+/",
+            "pattern" => "/^[1-9]\d*$/",
             'cancelOnFail' => true,
         ]));
         // priceid-销售价格id
         $validator->add('priceid', new Regex([
             'message' => 'The priceid is invalid',
-            "pattern" => "/[0-9]+/",
+            "pattern" => "/^[1-9]\d*$/",
             "allowEmpty" => true,
             'cancelOnFail' => true,
         ]));
         // spotid-销售端口id
         $validator->add('spotid', new Regex([
             'message' => 'The spotid is invalid',
-            "pattern" => "/[0-9]+/",
+            "pattern" => "/^[1-9]\d*$/",
             "allowEmpty" => true,
             'cancelOnFail' => true,
         ]));
         // up_dp_id-上级部门id
         $validator->add('up_dp_id', new Regex([
             'message' => 'The up_dp_id is invalid',
-            "pattern" => "/[0-9]+/",
+            "pattern" => "/^[1-9]\d*$/",
             "allowEmpty" => true,
             'cancelOnFail' => true,
         ]));

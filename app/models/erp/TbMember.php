@@ -42,7 +42,7 @@ class TbMember extends BaseModel
         $validator->add('zipcode', new Regex(
             [
                 "message" => "The zipcode is invalid",
-                "pattern" => "/[0-9]+/",
+                "pattern" => "/^\d+$/",
                 "allowEmpty" => true,
                 'cancelOnFail' => true,
             ]
@@ -60,7 +60,7 @@ class TbMember extends BaseModel
         $validator->add('totalscore', new Regex(
             [
                 "message" => "The totalscore is invalid",
-                "pattern" => "/[0-9]+/",
+                "pattern" => "/^[0-9]+([.]{1}[0-9]+){0,1}$/",
                 "allowEmpty" => true,
                 'cancelOnFail' => true,
             ]
@@ -69,7 +69,7 @@ class TbMember extends BaseModel
         $validator->add('score', new Regex(
             [
                 "message" => "The score is invalid",
-                "pattern" => "/[0-9]+/",
+                "pattern" => "/^[0-9]+([.]{1}[0-9]+){0,1}$/",
                 "allowEmpty" => true,
                 'cancelOnFail' => true,
             ]
@@ -78,16 +78,52 @@ class TbMember extends BaseModel
         $validator->add('memberlevelid', new Regex(
             [
                 "message" => "The memberlevelid is invalid",
-                "pattern" => "/[0-9]+/",
+                "pattern" => "/^[1-9]\d*$/",
                 "allowEmpty" => true,
                 'cancelOnFail' => true,
             ]
         ));
-        // membertype-会员等级
+        // membertype-会员类型 0-个人会员 1-公司会员
         $validator->add('membertype', new Regex(
             [
                 "message" => "The membertype is invalid",
                 "pattern" => "/^(0|1)$/",
+                "allowEmpty" => true,
+                'cancelOnFail' => true,
+            ]
+        ));
+        // creatorid-建立人
+        $validator->add('creatorid', new Regex(
+            [
+                "message" => "The creatorid is invalid",
+                "pattern" => "/^[1-9]\d*$/",
+                "allowEmpty" => true,
+                'cancelOnFail' => true,
+            ]
+        ));
+        // sourceid-关联用户id
+        $validator->add('sourceid', new Regex(
+            [
+                "message" => "The sourceid is invalid",
+                "pattern" => "/^[1-9]\d*$/",
+                "allowEmpty" => true,
+                'cancelOnFail' => true,
+            ]
+        ));
+        // invitesum-推荐账户余额，可以输入整数或小数
+        $validator->add('invitesum', new Regex(
+            [
+                "message" => "The invitesum is invalid",
+                "pattern" => "/^[0-9]+([.]{1}[0-9]+){0,1}$/",
+                "allowEmpty" => true,
+                'cancelOnFail' => true,
+            ]
+        ));
+        // invitetotal-推荐账户余额，可以输入整数或小数
+        $validator->add('invitetotal', new Regex(
+            [
+                "message" => "The invitetotal is invalid",
+                "pattern" => "/^[0-9]+([.]{1}[0-9]+){0,1}$/",
                 "allowEmpty" => true,
                 'cancelOnFail' => true,
             ]

@@ -35,7 +35,7 @@ class TbGroup extends BaseModel
         $validator->add('companyid', new Regex(
             [
                 "message" => "The companyid is invalid",
-                "pattern" => "/[0-9]+/",
+                "pattern" => "/^[1-9]\d*$/",
                 "allowEmpty" => true,
                 'cancelOnFail' => true,
             ]
