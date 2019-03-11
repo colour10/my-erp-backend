@@ -8,9 +8,9 @@ use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Regex;
 
 /**
- * 权限表
+ * 权限模型关联表
  */
-class Permission extends BaseModel
+class TbPermissionModule extends BaseModel
 {
     /**
      * 初始化
@@ -18,7 +18,7 @@ class Permission extends BaseModel
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('tb_permission');
+        $this->setSource('tb_permission_module');
     }
 
     /**

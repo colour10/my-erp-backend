@@ -3,7 +3,7 @@ namespace Multiple\Home\Controllers;
 
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
-use Asa\Erp\Permission;
+use Asa\Erp\TbPermission;
 use Asa\Erp\Util;
 
 /**
@@ -13,7 +13,7 @@ class PermissionController extends AdminController {
     public function initialize() {
         parent::initialize();
 
-        $this->setModelName('Asa\\Erp\\Permission');
+        $this->setModelName('Asa\\Erp\\TbPermission');
     }
 
     /**
@@ -59,7 +59,7 @@ class PermissionController extends AdminController {
     public function treeAction()
     {
         // 逻辑
-        $permissions = Permission::find([
+        $permissions = TbPermission::find([
             'sys_delete_flag' => '0'
         ]);
         if(!$permissions) {
