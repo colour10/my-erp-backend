@@ -10,7 +10,7 @@ use Phalcon\Validation\Validator\Regex;
 /**
  * 权限模型关联表
  */
-class PermissionModule extends BaseModel
+class TbPermissionModule extends BaseModel
 {
     /**
      * 初始化
@@ -18,7 +18,7 @@ class PermissionModule extends BaseModel
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('permission_module');
+        $this->setSource('tb_permission_module');
     }
 
     /**
