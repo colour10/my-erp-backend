@@ -8,7 +8,7 @@ use Asa\Erp\ZlColortemplate;
 /**
  * 基础资料，ASA颜色模板表
  */
-class ColortemplateController extends AdminController {
+class ColortemplateController extends ZadminController {
     public function initialize() {
 	    parent::initialize();
 

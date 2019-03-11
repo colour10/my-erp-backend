@@ -1,0 +1,79 @@
+<div id="ell">
+<multiple-admin-page v-bind="props" ref="page"></multiple-admin-page>
+</div>
+
+<div id="ell2">
+  <el-dialog class="user-form" :title="''" :visible.sync="dialogVisible" :center="true" width="80%">
+    <multiple-admin-page v-bind="props" ref="page2"></multiple-admin-page>
+  </el-dialog>
+</div>
+<script>
+$(document).ready(function(){
+    var props = {
+        columns:[            
+            {name:"englishname", label:"<?=$system_language["yingwenmingcheng"]?>", is_create:true, is_update:true, is_show:true, width:150, is_focus:true, disable_change:true},
+            {name:"color_name", label:"<?=$system_language["mingcheng"]?>", is_create:true, is_update:true, is_show:true, width:150, is_focus:true},
+            {name:"code", label:"<?=$system_language["asabianhao"]?>", is_create:true, is_update:true, is_show:true, width:150, is_focus:true, disable_change:true},
+            {name:"colortype", label:"<?=$system_language["yansefenlei"]?>", is_create:true, is_update:true, is_show:true, width:150, is_focus:true},
+            {name:"picture", label:"<?=$system_language["yanseseban"]?>", is_create:true, is_update:true, is_show:true, width:150, disable_change:true, type:"upload",multiple:false, 
+            limit:1,
+            is_image:true,
+            image_width:60,
+            image_height:60},
+            {name:"color_note", label:"<?=$system_language["beizhu"]?>", is_create:true, is_update:true, is_show:true, width:150, is_focus:true}
+        ],
+        /*buttons:[
+            {name:"code", label:"<?=$system_language["chakanziji"]?>", width:200, disable_change:true, handler:function(rowIndex, row){
+                //console.log(rowIndex, row)   
+                props2.base.tempid = row.relateid;
+                options.dialogVisible = true; 
+            }}
+        ],*/
+        options:{
+            dialogWidth:"35%"
+        },
+        default_language:'<?=$system_language["code"]?>',
+        image_url_prex:'<?=$__config["file_prex"]?>',
+        controller:"colortemplate"
+    }
+    /*
+    var props2 = {
+        columns:[            
+            {name:"templatename", label:"<?=$system_language["biaoti"]?>", is_create:true, is_update:true, is_show:true, width:200, is_focus:true},
+            {name:"sortnum", label:"<?=$system_language["xuhao"]?>", is_create:true, is_update:true, is_show:true, width:200, disable_change:true, is_focus:true}
+        ],
+        options:{
+            dialogWidth:"35%"
+        },
+        default_language:'<?=$system_language["code"]?>',
+        controller:"templatemanage",
+        base:{
+            tempid:""    
+        }
+    }
+    
+    var options = {
+        props:props2,
+        dialogVisible:false
+    }*/
+    
+    var brandgroup = new Vue({
+        el:"#ell",
+        data() {
+            return {
+                props:props   
+            }
+        }
+    })
+    /*
+    var childgroup = new Vue({
+        el:"#ell2",
+        data() {
+            return options
+        }
+    })*/
+})
+</script>
+<style>
+</style>
+
