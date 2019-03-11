@@ -7511,6 +7511,7 @@ create table `permission`
   `name`           varchar(100) not null default '' comment '权限名称',
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
+  `is_only_superadmin` tinyint(1) not null default '0' comment '是否为专属超级管理员权限，0-不是 1-是',
   `languages` varchar(191) NULL,
   `description`    varchar(100) not null default '' comment '权限描述',
   primary key (`id`),
