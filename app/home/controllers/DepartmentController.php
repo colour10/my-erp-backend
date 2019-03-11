@@ -92,19 +92,11 @@ class DepartmentController extends CadminController {
      */
     public function getlist()
     {
-        // $auth = $this->auth;
-        //
-        // // 取出公司下面的所有部门
-        // $departments = TbDepartment::find([
-        //     sprintf("sys_delete_flag=0 and companyid=%d", $auth['companyid'])
-        // ]);
-
-
+        $auth = $this->auth;
 
         // 取出公司下面的所有部门
         $departments = TbDepartment::find([
-            'companyid' => '1',
-            'sys_delete_flag' => '0',
+            sprintf("sys_delete_flag=0 and companyid=%d", $auth['companyid'])
         ]);
 
         if(!$departments) {
