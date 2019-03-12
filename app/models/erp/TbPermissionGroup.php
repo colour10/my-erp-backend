@@ -1,42 +1,47 @@
 <?php
+
 namespace Asa\Erp;
+
 use Phalcon\Validation;
-use Phalcon\Validation\Validator\Between;
-use Phalcon\Validation\Validator\Uniqueness;
+use Phalcon\Validation\Validator\PresenceOf;
 
 /**
- * 组权限表
+ * 权限-组模型
  */
 class TbPermissionGroup extends BaseModel
 {
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
         $this->setSource('tb_permission_group');
     }
 
-    public function validation() {
+    /**
+     * 验证器
+     * @return bool
+     */
+    public function validation()
+    {
         $validator = new Validation();
 
-//        $validator->add(
-//            "age",
-//            new Between(
-//                [
-//                    "minimum" => 18,
-//                    "maximum" => 60,
-//                    "message" => "年龄必须是18~60岁",
-//                ]
-//            )
-//        );
-//
-//        $validator->add(
-//            'name',
-//            new Uniqueness(
-//                [
-//                    'message' => '姓名不能重复',
-//                ]
-//            )
-//        );
+        // groupid-组id不能为空
+        $validator->add('groupid', new PresenceOf([
+            'message' => 'The groupid is required',
+            'cancelOnFail' => true,
+        ]));
+        // permissionid-权限id不能为空
+        $validator->add('permissionid', new PresenceOf([
+            'message' => 'The permissionid is required',
+            'cancelOnFail' => true,
+        ]));
+        // companyid-公司id不能为空
+        $validator->add('companyid', new PresenceOf([
+            'message' => 'The permissionid is required',
+            'cancelOnFail' => true,
+        ]));
 
         return $this->validate($validator);
     }

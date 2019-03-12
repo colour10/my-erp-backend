@@ -4795,7 +4795,7 @@ create table tb_user
   sys_delete_flag    tinyint  not null default '0' comment '0-未删除 1-已删除',
   sex                varchar(50),
   section            varchar(50),
-  date               datetime,
+  date               varchar(100) null,
   phone              varchar(50),
   mobilephone        varchar(50),
   e_mail             varchar(100),
@@ -4805,7 +4805,7 @@ create table tb_user
   departmentid2      int unsigned null,
   address            text,
   contactor          text,
-  leave_date         datetime,
+  leave_date         varchar(100) null,
   defaultprice       varchar(36),
   defaultwarehouse   varchar(36),
   defaultsellspot    varchar(36),
@@ -5855,6 +5855,7 @@ create table zl_childproductgroup
   `relateid` int null comment '对应主键id',
   `languages` varchar(191) NULL,
   childcode         varchar(50),
+  englishname varchar(191) NULL,
   productgroupid    int unsigned null,
   producttemplateid int unsigned null,
   weight            decimal(16,9),
@@ -5933,6 +5934,8 @@ create table zl_colortemplate
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   color_name       varchar(20),
+  englishname varchar(191) NULL,
+  picture varchar(200) null,
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
   `languages` varchar(191) NULL,
@@ -6433,6 +6436,7 @@ create table zl_material
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   materialname     varchar(20),
+  englishname varchar(191) NULL,
   code             varchar(20),
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
@@ -6711,7 +6715,7 @@ create table zl_producttemplate
   lang_code        varchar(20) null comment '语言编码',
   `relateid` int null comment '对应主键id',
   `languages` varchar(191) NULL,
-  picture          longblob,
+  picture          varchar(200) null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -7533,7 +7537,7 @@ create table `tb_permission_group`
   `groupid`        int unsigned not null comment '组id',
   `permissionid`  int unsigned not null comment '权限id',
   `companyid`  int unsigned null comment '公司id',
-  primary key (`id`)
+  primary key (`id`),
 ) engine=innodb default charset=utf8mb4 collate =utf8mb4_unicode_ci;
 
 #模块权限关联表

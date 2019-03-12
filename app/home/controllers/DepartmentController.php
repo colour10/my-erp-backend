@@ -52,15 +52,8 @@ class DepartmentController extends CadminController {
      */
     public function departmentsAction()
     {
-        $auth = $this->auth;
-        
-        // 取出公司下面的所有部门
-        $departments = TbDepartment::find([
-            sprintf("sys_delete_flag=0 and companyid=%d", $auth['companyid'])
-        ]);
-        if(!$departments) {
-            return $this->error(['departments are not exist']);
-        }
+        // 取出部门列表
+        $departments = $this->getlist();
 
         // 交给下面的格式化为目录树处理并返回
         return json_encode(Util::format_tree($departments->toArray()));
@@ -79,5 +72,36 @@ class DepartmentController extends CadminController {
         //echo json_encode($result);exit;
         echo json_encode($result);
         $this->view->disable();
+    }
+
+    /**
+     * 公司内部部门一维数组
+     * @return false|string
+     */
+    public function singleAction()
+    {
+        // 取出部门列表
+        $departments = $this->getlist();
+
+        // 交给下面的格式化为目录树处理并返回
+        return json_encode(Util::format_tree_single_array($departments->toArray()));
+    }
+
+    /**
+     * 取出部门列表
+     */
+    public function getlist()
+    {
+        $auth = $this->auth;
+
+        // 取出公司下面的所有部门
+        $departments = TbDepartment::find([
+            sprintf("sys_delete_flag=0 and companyid=%d", $auth['companyid'])
+        ]);
+
+        if(!$departments) {
+            return $this->error(['departments are not exist']);
+        }
+        return $departments;
     }
 }
