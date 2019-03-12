@@ -9,47 +9,7 @@
 
 <el-row :gutter="20">
   <el-col :span="24">
-    <el-table :data="tableData" stripe border style="width: 100%;">
-      <el-table-column prop="ImageUrl" label="<?=$system_language["pinpaishangbiao"]?>" align="center" width="180">
-      </el-table-column>
-      <el-table-column prop="BrandEnglishName" label="<?=$system_language["yingwenmingcheng"]?>" width="100" align="center">
-      </el-table-column>
-
-      <el-table-column prop="BrandName" label="<?=$system_language["pinpaimingcheng"]?>" width="80" align="center">
-      </el-table-column>
-
-      <el-table-column prop="Code" label="<?=$system_language["pinpaibianhao"]?>" width="80" align="center">
-      </el-table-column>
-
-      <el-table-column prop="IsAuthorized" label="<?=$system_language["shifoushouquanpinpai"]?>" width="130" align="center">
-      </el-table-column>
-
-      <el-table-column prop="memo" label="<?=$system_language["memo"]?>" width="100" align="center">
-      </el-table-column>
-
-      <el-table-column prop="Supplier" label="<?=$system_language["guishujituan"]?>" width="100" align="center">
-      </el-table-column>
-
-      <el-table-column prop="CountryID" label="<?=$system_language["guishuguojia"]?>" width="100" align="center">
-      </el-table-column>
-
-      <el-table-column prop="Description" label="<?=$system_language["miaoshu"]?>" width="100" align="center">
-        描述
-      </el-table-column>
-
-      <el-table-column prop="Officialwebsite" label="<?=$system_language["guanwangdizhi"]?>" width="100" align="center">
-      </el-table-column>
-
-      <el-table-column prop="ChildBrand" label="<?=$system_language["pinpaifenlei"]?>" width="100" align="center">
-      </el-table-column>
-
-      <el-table-column label="<?=$system_language["caozuo"]?>" width="150" align="center">
-        <template v-slot="scope">
-          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+    <multiple-admin-tablelist ref="tablelist" v-bind="brand_props" :onclickupdate="showFormToEdit"></multiple-admin-tablelist>    
   </el-col>
 </el-row>
 
@@ -59,46 +19,44 @@
       <!--基本资料-->
       <el-row>
       <el-col :span="5">
-        <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-      <img v-if="form.imageUrl" :src="imageUrl" class="avatar">
-      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-    </el-upload>
+        <el-upload class="avatar-uploader" action="/common/upload?category=brand" :show-file-list="false" :on-success="getUploadSuccessCallback" :before-upload="beforeAvatarUpload"  :disabled="isFormDisabled('imageurl')">
+          <img v-if="form.imageurl" :src="image_url_prex+form.imageurl" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
       </el-col>
 
       <el-col :span="19">
         <el-form class="user-form" :model="form" label-width="100px"  :inline="true" style="width:700px;" size="small">
         <el-form-item label="<?=$system_language["yingwenmingcheng"]?>">
-          <el-input v-model="form.BrandEnglishName"></el-input>
+          <el-input v-model="form.brandenglishname" :disabled="isFormDisabled('brandenglishname')"></el-input>
         </el-form-item>
 
         <el-form-item label="<?=$system_language["zhongwenmingcheng"]?>">
-          <el-input v-model="form.BrandName"></el-input>
+          <el-input v-model="form.brandname"></el-input>
         </el-form-item>
 
         <el-form-item label="<?=$system_language["pinpaibianhao"]?>">
-          <el-input v-model="form.Code"></el-input>
+          <el-input v-model="form.code" :disabled="isFormDisabled('code')"></el-input>
         </el-form-item>
 
         <el-form-item label="<?=$system_language["guishuguojia"]?>">
-          <el-select v-model="form.CountryID" placeholder="<?=$system_language["qingxuanze"]?>" style="width:150">
-            <el-option v-for="item in country_list" :key="item.code" :label="item.name" :value="item.code"></el-option>
-          </el-select>
+          <simple-select v-model="form.countryid" url="/country/list" :params="{}" oplabel="name" opvalue="relateid" style="width:150" :disabled="isFormDisabled('countryid')">
+          </simple-select>
         </el-form-item>
 
         <el-form-item label="<?=$system_language["pinpaifenlei"]?>">
-          <el-select v-model="form.ChildBrand" placeholder="<?=$system_language["qingxuanze"]?>" style="width:150">
-            <el-option v-for="item in departs" :key="item.value" :label="item.label" :value="item.value"></el-option>
-          </el-select>
+          <simple-select v-model="form.brandgroupid" url="/brandgroup/list" :params="{}" oplabel="brandgroupname" opvalue="relateid" style="width:150" :disabled="isFormDisabled('brandgroupid')">
+          </simple-select>
         </el-form-item>
 
         <el-form-item label="<?=$system_language["guishujituan"]?>">
-          <el-select v-model="form.Supplier" placeholder="<?=$system_language["qingxuanze"]?>" style="width:150">
+          <el-select v-model="form.supplier" placeholder="<?=$system_language["qingxuanze"]?>" style="width:150" :disabled="isFormDisabled('supplier')">
             <el-option v-for="item in bu_list" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="<?=$system_language["pinpaijieshao"]?>">
-          <el-input type="textarea" v-model="form.Description"></el-input>
+          <el-input type="textarea" v-model="form.description"></el-input>
         </el-form-item>
 
         <el-form-item label="<?=$system_language["memo"]?>">
@@ -107,14 +65,19 @@
 
         <div class="site">
         <el-form-item label="<?=$system_language["guanwangdizhi"]?>">
-          <el-input v-model="form.Officialwebsite">
+          <el-input v-model="form.officialwebsite" :disabled="isFormDisabled('officialwebsite')">
             <el-button slot="append" icon="el-icon-search"></el-button>
           </el-input>
         </el-form-item>
         </div>
 
         <el-form-item label="<?=$system_language["shifoushouquanpinpai"]?>">
-          <el-checkbox v-model="form.IsAuthorized" true-label="1"><?=$system_language["shifoushouquanpinpai"]?></el-checkbox>
+          <el-checkbox v-model="form.isauthorized" true-label="1" :disabled="isFormDisabled('isauthorized')"><?=$system_language["shifoushouquanpinpai"]?></el-checkbox>
+        </el-form-item>
+        
+        <el-form-item label="<?=$system_language["yuyan"]?>">
+          <simple-select v-model="!form.relateid?default_language:form.lang_code" url="/common/language" :params="{}" oplabel="name" opvalue="code" style="width:150" disabled>
+          </simple-select>
         </el-form-item>
       </el-form>
 
@@ -143,7 +106,7 @@
 
     <!--别名-->
     <el-tab-pane label="<?=$system_language["bieming"]?>" :disabled="!form.id">
-      <simple-admin-page v-bind="aliases" ref="aliases"></simple-admin-page>
+      <multiple-admin-page v-bind="aliases" ref="aliases"></multiple-admin-page>
     </el-tab-pane>
 
     <el-tab-pane label="<?=$system_language["xilie"]?>" :disabled="!form.id">
@@ -166,36 +129,41 @@ $(document).ready(function(){
         brandid:"",
         lang_code:""
     }
-    var props = {
+    var aliases = {
         columns:[
-            {name:"name", label:"姓名", is_create:true, is_update:true, is_show:true, width:150},
-            {name:"code", label:"地址", is_create:true, is_update:true, is_show:true, width:150},
+            {name:"name", label:"<?=$system_language['biemingmingcheng']?>", is_create:true, is_update:true, is_show:true, width:150},
+            {name:"code", label:"<?=$system_language['biemingbianma']?>", is_create:true, is_update:true, is_show:true, width:150},
             {name:"brandid", label:"品牌", is_create:false, is_update:false, is_show:false, is_hidden:true}
         ],
-        buttons:{
-            "create":{
-                label:"创建"
-            },
-            "save":{
-                label:"保存"
-            },
-            "remove":{
-                label:"删除"
-            },
-            "edit":{
-                label:"编辑"
-            }
-        },
-        labels:{
-            formTitleCreate:"添加信息",
-            formTitleUpdate:"编辑信息",
-            action:"操作"
-        },
         options:{
             dialogWidth:"35%"
         },
         controller:"aliases",
         base:base
+    }
+    
+    var brand_props = {
+        columns:[
+            {name:"brandenglishname", label:"<?=$system_language["yingwenmingcheng"]?>", is_create:true, is_update:true, is_show:true, disable_change:true, width:150},
+            {name:"brandname", label:"<?=$system_language["pinpaimingcheng"]?>", is_create:true, is_update:true, is_show:true, width:150},
+            {name:"code", label:"<?=$system_language["pinpaibianhao"]?>", is_create:true, is_update:false, is_show:false, is_hidden:true, disable_change:true},
+            {name:"isauthorized", label:"<?=$system_language["shifoushouquanpinpai"]?>", is_create:true, is_update:true, is_show:true, width:150, type:"switch", disable_change:true},
+            
+            {name:"memo", label:"<?=$system_language["memo"]?>", is_create:true, is_update:true, is_show:true, width:150},
+            {name:"supplier", label:"<?=$system_language["guishujituan"]?>", is_create:true, is_update:true, is_show:true, disable_change:true, width:150},
+            {name:"countryid", label:"<?=$system_language["guishuguojia"]?>", is_create:true, is_update:true, is_show:true, disable_change:true, width:150},
+            {name:"officialwebsite", label:"<?=$system_language["guishuguojia"]?>", is_create:true, is_update:true, is_show:false, disable_change:true, width:150},
+            {name:"imageurl", label:"<?=$system_language["guishuguojia"]?>", is_create:true, is_update:true, is_show:false, disable_change:true, width:150},
+            {name:"childbrand", label:"<?=$system_language["pinpaifenlei"]?>", is_create:true, is_update:true, is_show:true, width:150},
+            {name:"description", label:"<?=$system_language["shifoushouquanpinpai"]?>", is_create:true, is_update:true, is_show:false, width:150},
+            {name:"brandgroupid", label:"<?=$system_language["shifoushouquanpinpai"]?>", is_create:true, is_update:true, is_show:false, disable_change:true, width:150}
+            
+        ],
+        options:{
+            dialogWidth:"35%"
+        },
+        controller:"brand"
+        
     }
 
     new Vue({
@@ -205,21 +173,22 @@ $(document).ready(function(){
                 tableData: [],
                 dialogVisible:false,
                 form: {
-                    Code:"",
-                    BrandName: '',
-                    BrandEnglishName: '',
-                    Description:'',
-                    CountryID:"",//归属国家
-                    Supplier:'',
+                    lang_code:"",
+                    relateid:"",                    
+                    code:"",
+                    brandname: '',
+                    brandenglishname: '',
+                    description:'',
+                    countryid:"",//归属国家
+                    supplier:'',
                     memo:"",
-                    IsAuthorized:"",
-                    ImageUrl:"",
-                    Officialwebsite:"",
-                    ChildBrand:"",//品牌分类
-
+                    isauthorized:"",
+                    imageurl:"",
+                    officialwebsite:"",
+                    childbrand:"",//品牌分类
                     id:""
                 },
-                rowIndex:'',
+                default_language:'<?=$system_language["code"]?>',
                 sale_port:[],
                 cangku:[],
                 jiagedan:[],
@@ -235,23 +204,53 @@ $(document).ready(function(){
                 sale_port_list:[{value:1,"label":"销售端口测试一"},{value:2,"label":"销售端口测试2"},{value:3,"label":"销售端口测试3"}],//销售端口信息
                 cangku_list:[{value:1,"label":"仓库测试一"},{value:2,"label":"仓库测试2"},{value:3,"label":"仓库测试3"}],//仓库信息
                 jiagedan_list:[{value:1,"label":"价格单测试一"},{value:2,"label":"价格单测试2"},{value:3,"label":"价格单测试3"}],//价格单信息
-                aliases:props,
-                activeName:"info"//当前激活的tab
+                aliases:aliases,
+                brand_props:brand_props,
+                activeName:"info",//当前激活的tab
+                rowIndex:"",
+                is_update_list:"",
+                image_url_prex:'<?=$__config["file_prex"]?>'
             }
         },
         methods: {
             saveBrankInfo(){
                 var self = this;
-                if(this.form.id=="") {
-                    $ASA.submit.call(this, "/brand/add", this.form, function(){
-                        self.tableData.push($ASA.clone(self.form) )
+                
+                if(self.form.id=="") {
+                    $ASA.submit.call(self, "/brand/add", self.form, function(){
+                        if(self.is_update_list) {
+                            self.$refs.tablelist.appendRow($ASA.clone(self.form))
+                        }
+                        else {
+                            self.$refs.tablelist.appendRow($ASA.clone(self.form), self.rowIndex)  
+                        }
                     })
                 }
                 else {
-                    $ASA.submit.call(this, "/brand/edit", this.form, function(){
-                        //self.tableData[self.rowIndex].lang_code = self.form.lang_code
-                        $ASA.copyTo(self.form, self.tableData[self.rowIndex])
+                    $ASA.submit.call(self, "/brand/edit", self.form, function(){
+                        
+                        if(self.is_update_list) {
+                            var row = self.$refs.tablelist.getRow(self.rowIndex)
+                            //console.log(self.$refs.tablelist.getRow(self.rowIndex)==self.row99)
+                            $ASA.copyTo(self.form, row)
+                            //console.log(self.form, self.row, self.rowIndex)
+                        }
                     })
+                }
+            },
+            getUploadSuccessCallback(response, file, fileList){      
+                var self = this;      
+                self.form.imageurl = response["files"][file.name]; 
+            },
+            isFormDisabled(columnName) {
+                var form = this.form;
+                var column = $ASA.findByKey(brand_props.columns,"name", columnName)
+                //console.log(columnName, form, column)
+                if(column) {
+                    return (form.id==''&&!column.is_create) || (form.id!=''&&!column.is_update) || ((form.id!='' || form.lang_code!=this.default_language)&&column.disable_change)
+                }
+                else {
+                    return false   
                 }
             },
             onTabClick(tab){
@@ -263,50 +262,27 @@ $(document).ready(function(){
                 var self = this;
                 $ASA.empty(self.form)
                 
+                self.form.lang_code = self.default_language;
                 self.dialogVisible = true;
                 self.action_type = "create";
                 self.activeName = "info"
             },
-            handleEdit(rowIndex, row){
-               $ASA.copyTo(row, this.form)
+            showFormToEdit(rowIndex, row, lang_code, is_update, is_update_list){
+                var self = this;                
+                self.rowIndex = rowIndex;
+                self.is_update_list = is_update_list;
+                $ASA.copyTo(row, this.form)
+                if(!is_update) {
+                    self.form.id = ""   
+                }
+                
                
-               base.brandid = row.id;
-               base.lang_code = row.lang_code; 
-               console.log(base)              
+                base.brandid = row.relateid;
+                base.lang_code = row.lang_code; 
 
-               this.rowIndex = rowIndex;
-
-               this.action_type = 'update';
-               this.dialogVisible = true;
-            },
-            handleDelete(rowIndex, row) {
-                var self = this;
-
-                self.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    $.get("/user/delete?id="+row.id, function(res){
-                        if(res.messages.length>0) {
-                            const h = self.$createElement;
-                            var message = h("ul", null, res.messages.map(function(v){
-                                return h("li",null,v)
-                            }))
-
-                            self.$alert(message, '错误提示', {
-                                confirmButtonText: '确定'
-                            });
-                        }
-                        else {
-                            self.$delete(self.tableData,rowIndex)
-                            self.$message({
-                                message: '删除成功',
-                                type: 'success'
-                            });
-                        }
-                    },"json")
-                });
+                this.action_type = 'update';
+                console.log(555)
+                this.dialogVisible = true;
             }
         },
         mounted:function () {
@@ -316,6 +292,11 @@ $(document).ready(function(){
                 //console.log(res)
                  self.country_list = res;
             },"json")
+        },
+        watch:{
+            row:function(newValue, oldValue) {
+                console.log("watch", newValue, oldValue)   
+            }    
         }
     })
 })

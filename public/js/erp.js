@@ -77,9 +77,9 @@ var $ASA = (function(){
     
     function copyTo(fromObj, target) {
         Object.keys(target).forEach(function(key){
-            if(fromObj[key] ) {
-                target[key] =  fromObj[key]    
-            } 
+            if(typeof(fromObj[key])!="undefined") {
+                target[key] =  fromObj[key] 
+            }
         });
     }
     
@@ -115,6 +115,14 @@ var $ASA = (function(){
         }
         return arr
     }
+    
+    function findByKey(arr, keyName, keyValue) {
+        for(var i=0;i<arr.length; i++) {
+            if(arr[i][keyName]==keyValue) {
+                return arr[i]   
+            }   
+        }
+    }
         
     return {
         handelSubmitMessage:handelSubmitMessage,
@@ -125,6 +133,7 @@ var $ASA = (function(){
         empty:empty, 
         deleteObject:deleteObject, 
         post:$.post,
-        arrayMerge:arrayMerge
+        arrayMerge:arrayMerge,
+        findByKey:findByKey
     }    
 })()
