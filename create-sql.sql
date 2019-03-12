@@ -7552,7 +7552,7 @@ create table `tb_permission_module`
   sys_delete_stuff int unsigned null,
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
-  `permissionid`  int unsigned not null comment '权限id',
+  `permissionid`  int unsigned null comment '权限id',
   `module`  varchar(100) null comment '模块名称',
   `controller`  varchar(100) null comment '控制器名称',
   `action`  varchar(100) null comment '方法名称',
