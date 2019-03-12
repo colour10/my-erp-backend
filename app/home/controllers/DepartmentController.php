@@ -17,17 +17,6 @@ class DepartmentController extends CadminController {
     }
     
     function indexAction() {
-        $result = array();
-        
-        $result[] = array(
-            "label" => "爱莎",
-            "description" => "",
-            "id" => 1,
-            "children" => array($this->createNode("销售部",2,"销售部说明"), $this->createNode("技术部",3,"技术部备注"))
-        );
-        //print_r($result);
-        //echo json_encode($result);exit;
-        $this->view->setVar("depart_tree",json_encode($result));
     }
     
     /*
@@ -57,22 +46,7 @@ class DepartmentController extends CadminController {
 
         // 交给下面的格式化为目录树处理并返回
         return json_encode(Util::format_tree($departments->toArray()));
-    }
-    
-    function treeAction() {
-        $result = array();
-        
-        $result[] = array(
-            "label" => "爱莎",
-            "description" => "",
-            "id" => 1,
-            "children" => array($this->createNode("销售部",2,"销售部说明"), $this->createNode("技术部",3,"技术部备注"))
-        );
-        //print_r($result);
-        //echo json_encode($result);exit;
-        echo json_encode($result);
-        $this->view->disable();
-    }
+    }    
 
     /**
      * 公司内部部门一维数组
@@ -92,11 +66,9 @@ class DepartmentController extends CadminController {
      */
     public function getlist()
     {
-        $auth = $this->auth;
-
         // 取出公司下面的所有部门
         $departments = TbDepartment::find([
-            sprintf("sys_delete_flag=0 and companyid=%d", $auth['companyid'])
+            sprintf("sys_delete_flag=0 and companyid=%d", $this->companyid)
         ]);
 
         if(!$departments) {

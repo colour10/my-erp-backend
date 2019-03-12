@@ -56,7 +56,7 @@ class Util {
     {
         // 初始化变量
         $tree = [];
-        $str_repeat = ' ';
+        $str_repeat = '　 ';
         // 开始循环
         foreach ($result as $k => $v) {
             // 找到父级是0的

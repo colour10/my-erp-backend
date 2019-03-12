@@ -109,7 +109,7 @@ class AdminController extends BaseController
 
     public function indexAction()
     {
-        $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
+        /*$findFirst = new \ReflectionMethod($this->getModelName(), 'find');
 	    $result = $findFirst->invokeArgs(null, array("sys_delete_flag=0"));
         
         if($this->request->isAjax()) {
@@ -118,7 +118,7 @@ class AdminController extends BaseController
         }
         else {
             $this->view->setVar("result", $result->toArray());
-        }        
+        }*/
 	}
 	
 	function pageAction() {

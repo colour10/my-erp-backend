@@ -11,5 +11,7 @@ class BrandgroupController extends ZadminController
     {
         parent::initialize();
         $this->setModelName('Asa\\Erp\\ZlBrandgroup');
+        
+        $this->setTitle("品类维护");
     }
 }

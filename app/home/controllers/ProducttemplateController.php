@@ -13,5 +13,7 @@ class ProducttemplateController extends ZadminController {
 	    parent::initialize();
 
 	    $this->setModelName('Asa\\Erp\\ZlProducttemplate');
+
+        $this->setTitle("商品尺码描述");
     }
 }

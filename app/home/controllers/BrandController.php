@@ -10,5 +10,7 @@ class BrandController extends AdminController {
 	    parent::initialize();
 	    
 	    $this->setModelName('Asa\Erp\ZlBrand');
+	    
+	    $this->setTitle("品牌管理");
     }
 }

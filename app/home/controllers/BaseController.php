@@ -20,6 +20,10 @@ class BaseController extends Controller
         $this->view->setVar("__default_language", $this->config->language);
         $this->view->setVar("__config", $this->config);
     }
+    
+    function setTitle($title) {
+        $this->view->setVar("__title", $title);      
+    }
 
     /**
      * 返回正确的json信息

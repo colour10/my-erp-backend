@@ -6,7 +6,9 @@
 $(document).ready(function(){
     var props = {
         columns:[
-            {name:"sessionmark", label:"季", is_create:true, is_update:true, is_show:false, width:200, type:'select', data_source:{"SS":"SS","FW":"FW","XX":"XX"}},
+            {name:"sessionmark", label:"季", is_create:true, is_update:true, is_show:false, width:200, type:'select', data_source:{
+                hashtable:{"SS":"SS","FW":"FW","XX":"XX"}
+            }},
             {
                 name:"sessionname", 
                 label:"名称", 

@@ -30,4 +30,17 @@ class UserController extends CadminController {
     function deletegroupAction() {
         $this->doEdit();
     }
+    
+    public function beforeExecuteRoute($dispatcher)
+    {
+        // 这个方法会在每一个能找到的action前执行
+        $action = $dispatcher->getActionName();
+        if ($action === "edit" || $action=='add') {
+            
+            if(isset($_POST["password"]) && !preg_match("#^[0-9a-z]{32}$#", $_POST["password"])) {
+                //echo $_POST["password"];exit;
+                $_POST["password"] = md5($_POST["password"]);
+            }
+        }
+    }
 }

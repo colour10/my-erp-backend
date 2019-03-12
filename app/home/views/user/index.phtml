@@ -35,9 +35,9 @@
         </el-form-item>
 
         <el-form-item label="<?=$system_language["depart"]?>">
-          <el-select v-model="form.depart_id" placeholder="<?=$system_language["qingxuanze"]?>" style="width:150">
-            <el-option v-for="item in departs" :key="item.value" :label="item.label" :value="item.value"></el-option>
-          </el-select>
+
+          <simple-select v-model="form.departmentid" url="/department/single" :params="{}" oplabel="label" opvalue="id" style="width:150">
+          </simple-select>
         </el-form-item>
         
         <el-form-item label="<?=$system_language["zu"]?>">

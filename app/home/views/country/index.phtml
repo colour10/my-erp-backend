@@ -1,212 +1,39 @@
-
 <div id="ell">
-<el-row>
-  <el-col :span="24">
-  <el-button type="primary" @click="showForm('create')"><?=$system_language["button-create"]?></el-button>
-  </el-col>
-</el-row>
+<multiple-admin-page v-bind="props" ref="page"></multiple-admin-page>
 
-
-
-<el-row :gutter="20">
-  <el-col :span="24">
-    <el-table :data="tableData" stripe border style="width: 100%;">
-      <el-table-column prop="id" label="ID" align="center" width="180">
-      </el-table-column>
-
-      <el-table-column prop="code" label="<?=$system_language["guojiadaima"]?>" align="center" width="180">
-      </el-table-column>
-
-      <el-table-column prop="name" label="<?=$system_language["guojiamingcheng"]?>" width="180" align="center">
-      </el-table-column>
-      
-      <el-table-column prop="LocalCurrency" label="<?=$system_language["bizhong"]?>" width="180" align="center">
-        <template v-slot="scope">
-          {{currency[scope.row.LocalCurrency]}}
-        </template>
-      </el-table-column>
-      
-      <el-table-column prop="lang_code" label="<?=$system_language["yuzhong"]?>" width="180" align="center">
-        <template v-slot="scope">
-         <span v-for="(item, key) in languages" :key="item.code" :value="item.code">
-           <el-button type="primary" circle v-if="scope.row.languages.indexOf(item.code)>=0" @click="handleEdit(scope.$index, scope.row, item.code, 'update')">{{item.shortName}}</el-button>   
-           <el-button type="info" circle v-if="scope.row.languages.indexOf(item.code)<0" @click="handleEdit(scope.$index, scope.row, item.code, 'create')">{{item.shortName}}</el-button> 
-         </span>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="<?=$system_language["caozuo"]?>" width="150" align="center">
-        <template v-slot="scope">
-          <!--<el-button size="mini" @click="handleEdit(scope.$index, scope.row)"><?=$system_language["bianji"]?></el-button>-->
-          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)"><?=$system_language["shanchu"]?></el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    
-  </el-col>
-</el-row>
-
-
-
-<el-dialog class="user-form" :title="langName" :visible.sync="dialogVisible" :center="true" width="40%">
-    <el-tabs type="border-card" @tab-click="onTabClick">
-    <el-tab-pane label="<?=$system_language["jibenziliao"]?>"> 
-      <el-form ref="form" :model="form" label-width="80px">
-  <el-form-item label="<?=$system_language["guojiadaima"]?>">
-    <el-input v-model="form.code"></el-input>
-  </el-form-item>
-  
-  <el-form-item label="<?=$system_language["guojiamingcheng"]?>">
-    <el-input v-model="form.name"></el-input>
-  </el-form-item>
-      
-  <el-form-item label="<?=$system_language["bizhong"]?>">
-    <el-select v-model="form.LocalCurrency" placeholder="<?=$system_language["qingxuanze"]?>">
-      <el-option v-for="(item, key) in currency" :label="item" :value="key">
-        <span style="float: left">{{ key }}</span>
-        <span style="float: right; color: #8492a6; font-size: 13px">{{ item }}</span>  
-      </el-option>
-    </el-select>
-  </el-form-item>
-  
-  <el-form-item label="<?=$system_language["yuzhong"]?>">
-    <el-select v-model="!form.relateid?default_language:form.lang_code" placeholder="<?=$system_language["qingxuanze"]?>" disabled>
-      <el-option v-for="(item, key) in languages" :key="item.code" :label="item.name" :value="item.code">
-      </el-option>
-    </el-select>
-  </el-form-item>
-  
-  <el-form-item>
-    <el-button type="primary" @click="onSubmit">{{labels[action_type][1]}}</el-button>
-  </el-form-item>
-</el-form>
-    </el-tab-pane>
-    <el-tab-pane label="<?=$system_language["dianshangduizhaobiao"]?>">定时任务补偿</el-tab-pane>
-  </el-tabs>  
-</el-dialog>
 </div>
 
 <script>
 $(document).ready(function(){
-    $.post("/common/language", {}, function(languages){        
-         new Vue({
+    $.post("/common/currency", {}, function(res){
+        console.log(res.currency)
+        var props = {
+            columns:[
+                {name:"code", label:"<?=$system_language['guojiadaima']?>", is_create:true, is_update:true, is_show:true, width:200, disable_change:true, is_focus:true},
+                {name:"name", label:"<?=$system_language['guojiamingcheng']?>", is_create:true, is_update:true, is_show:true, width:200, is_focus:true},
+                {name:"localcurrency", label:"<?=$system_language['bizhong']?>", is_create:true, is_update:true, is_show:true, width:200, disable_change:true, type:'select', data_source:{
+                    hashtable:res.currency
+                }}
+            ],
+            options:{
+                dialogWidth:"35%"
+            },
+            default_language:'zh-cn',
+            controller:"country",
+            currency:res.currency
+        }
+        
+        new Vue({
             el:"#ell",
             data() {
                 return {
-                    tableData: <?=json_encode($result)?>,
-                    dialogVisible:false,
-                    form: {
-                        name: '',
-                        code: '',
-                        LocalCurrency:'',
-                        lang_code:'',
-                        id:'',
-                        relateid:"",
-                        languages:''
-                    },
-                    currency:[],
-                    action_type:"create",
-                    labels:{
-                        create:['<?=$system_language["xinjianxinxi"]?>','<?=$system_language["button-save"]?>'],
-                        update:['<?=$system_language["xiugaixinxi"]?>','<?=$system_language["button-save"]?>']       
-                    },
-                    languages:languages,
-                    rowIndex:"",
-                    default_language:'<?=$default_language?>'
+                    props:props   
                 }
-            },
-            methods: {
-                onSubmit() {
-                    var self = this;
-                    if(this.form.id=="") {
-                        $ASA.submit.call(this, "/country/add", this.form, function(){
-                            if(self.form.relateid) { 
-                                self.tableData[self.rowIndex].languages += ','+self.form.lang_code;  
-                            }
-                            else {
-                                self.form.languages = self.form.lang_code;
-                                self.form.relateid = self.form.id
-                                self.tableData.push($ASA.clone(self.form))  
-                            } 
-                        })
-                    }
-                    else {
-                        $ASA.submit.call(this, "/country/edit", this.form, function(){
-                            //self.tableData[self.rowIndex].lang_code = self.form.lang_code 
-                            if(self.form.lang_code==self.default_language) {
-                                $ASA.copyTo(self.form, self.tableData[self.rowIndex])
-                            }
-                        }) 
-                    }
-                },
-                onTabClick(tab){
-                    console.log(tab)
-                },
-                showForm(action) {
-                    $ASA.empty(this.form)
-                    this.form.lang_code = this.default_language;
-                    this.dialogVisible = true;
-                    this.action_type = action;
-                },
-                handleEdit(rowIndex, row, lang_code, action){
-                    var self = this
-                    self.rowIndex = rowIndex;                   
-                    self.action_type = action;
-                    //console.log(rowIndex, row, lang_code, action, this.default_language)
-                    if(row.lang_code==lang_code) {
-                        //更新本条记录
-                        $ASA.copyTo(row, this.form)
-                        this.dialogVisible = true;
-                    }
-                    else {                        
-                        if(action=='create') {
-                            $ASA.empty(self.form)
-                            self.form.relateid = row.relateid;
-                            self.form.lang_code = lang_code 
-                            self.dialogVisible = true;
-                        }
-                        else {
-                            //console.log(lang_code)
-                            //加载这条数据
-                            $.post("/country/load", {lang_code:lang_code, relateid:row.relateid}, function(res){
-                                $ASA.copyTo(res, self.form)            
-                                
-                                self.dialogVisible = true;                                
-                            }, "json")                            
-                        }
-                    }
-                },
-                handleDelete(rowIndex, row) {
-                    var self = this
-                    $ASA.remove.call(this, "/country/delete?id="+row.id, function() {
-                        self.$delete(self.tableData,rowIndex)   
-                    })
-                },
-                loadCurrency:function(language) {
-                    var self = this;
-                    $.post("/common/currency", {language:language}, function(res){
-                        console.log(res.currency)
-                         self.form.lang_code = res.language;
-                         self.currency = res.currency;
-                    },"json")
-                }
-            },
-            computed:{
-                langName(code) {
-                    return this.labels[this.action_type][0] 
-                }    
-            },
-            mounted:function(){
-                this.loadCurrency();
             }
         })
-    },"json")
-                
-                
-    
+    },"json");
 })
 </script>
 <style>
-    
-    </style>
+</style>
 
