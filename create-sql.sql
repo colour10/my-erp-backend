@@ -7556,7 +7556,8 @@ create table `tb_permission_module`
   `module`  varchar(100) null comment '模块名称',
   `controller`  varchar(100) null comment '控制器名称',
   `action`  varchar(100) null comment '方法名称',
-  primary key (`id`)
+  primary key (`id`),
+  UNIQUE `tb_permission_module_permissionid_module_controller_action` (`permissionid`,`module`,`controller`,`action`)
 ) engine=innodb default charset=utf8mb4 collate =utf8mb4_unicode_ci;
 
 -- #组用户多对多表
