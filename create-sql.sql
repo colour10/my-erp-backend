@@ -5751,6 +5751,8 @@ create table zl_brand
   `relateid` int null comment '对应主键id',
   `languages` varchar(191) NULL,
   countryid        int unsigned null,
+  brandgroupid      int unsigned null,
+  imageurl        varchar(100) null,
   childbrand       varchar(36),
   description      varchar(1000),
   imagestream      longblob,
