@@ -38,7 +38,12 @@ class CommonController extends BaseController
     
     function systemlanguageAction()
     {
+        $config = $this->config;
         $lang = $this->language;
+        
+        $lang["_image_url_prex"] = $config->file_prex;
+        $lang["_languages"] = $config->languages;
+        
         echo sprintf("\$ASAL = %s", json_encode((array)$lang));
         $this->view->disable();
     }

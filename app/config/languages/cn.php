@@ -2,7 +2,7 @@
 
 return array(
     "system_name" => "ERP管理系统",
-    "code" => "zh-cn",
+    "lang" => "cn",
     "language" => "简体中文",
     "menu-1" => "用户管理",
     "menu-1-1" => "员工信息",
