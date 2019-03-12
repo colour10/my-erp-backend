@@ -4,6 +4,8 @@ use Phalcon\Mvc\Model\Message as Message;
 use Asa\Erp\Behavior\AsaBehabior;
 
 class BaseModel extends \Phalcon\Mvc\Model {
+    protected $validate_language;
+    
     public function initialize() {
         $this->addBehavior(new AsaBehabior());        
     }
@@ -30,5 +32,23 @@ class BaseModel extends \Phalcon\Mvc\Model {
     
     function getLanguage() {
         return $this->getDI()->get("language");
+    }
+    
+    function setValidateLanguage($language) {
+        $this->validate_language = $language;  
+    }
+    
+    function getLanguageColumns() {
+        return array();   
+    }
+    
+    function getColumnName($name) {
+        $language_columns = $this->getLanguageColumns();
+        if(in_array($name, $language_columns)) {
+            return sprintf("%s_%s", addslashes($name), $this->validate_language);  
+        }   
+        else {
+            return $name;   
+        }
     }
 }

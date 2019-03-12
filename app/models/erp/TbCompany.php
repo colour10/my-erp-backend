@@ -17,6 +17,10 @@ class TbCompany extends BaseModel
         parent::initialize();
         $this->setSource('tb_company');
     }
+    
+    function getLanguageColumns() {
+        return array("name");
+    }
 
     /**
      * 验证器
@@ -25,13 +29,14 @@ class TbCompany extends BaseModel
     public function validation()
     {
         $validator = new Validation();
-
+        
+        $name = $this->getColumnName("name");        
         // name-公司名称不能为空或者重复
-        $validator->add('name', new PresenceOf([
+        $validator->add($name, new PresenceOf([
             'message' => 'The name is required',
             'cancelOnFail' => true,
         ]));
-        $validator->add('name', new Uniqueness([
+        $validator->add($name, new Uniqueness([
             'message' => 'The name field must be unique',
             'cancelOnFail' => true,
         ]));
@@ -53,26 +58,9 @@ class TbCompany extends BaseModel
                 'cancelOnFail' => true,
             ]
         ));
-        // lang_code-语言编码
-        $validator->add('lang_code', new Regex(
-            [
-                "message" => "The lang_code is invalid",
-                "pattern" => "/[a-zA-Z\-_0-9]+/",
-                "allowEmpty" => true,
-                'cancelOnFail' => true,
-            ]
-        ));
-        // languages-语言列表
-        $validator->add('languages', new Regex(
-            [
-                "message" => "The languages is invalid",
-                "pattern" => "/[a-zA-Z0-9\-\_\,]+/",
-                "allowEmpty" => true,
-                'cancelOnFail' => true,
-            ]
-        ));
+        
         // 过滤
-        $validator->setFilters('name', 'trim');
+        $validator->setFilters($name, 'trim');
 
         return $this->validate($validator);
     }

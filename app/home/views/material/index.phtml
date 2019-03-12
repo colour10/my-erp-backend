@@ -6,13 +6,10 @@
 $(document).ready(function(){
     var props = {
         columns:[
-            {name:"code", label:"<?=$system_language['caizhidaima']?>", is_create:true, is_update:true, is_show:true, width:200, is_focus:true},
-            {name:"name", label:"<?=$system_language['caizhimingcheng']?>", is_create:true, is_update:true, is_show:true, width:200, is_multiple:true, is_focus:true},
-            {name:"englishname", label:"<?=$system_language['yingwenmingcheng']?>", is_create:true, is_update:true, is_show:true, width:200, disable_change:true}
+            {name:"code", label:"<?=$system_language['caizhidaima']?>", is_focus:true},
+            {name:"name", label:"<?=$system_language['caizhimingcheng']?>", is_multiple:true, is_focus:true},
+            {name:"englishname", label:"<?=$system_language['yingwenmingcheng']?>"}
         ],
-        options:{
-            dialogWidth:"35%"
-        },
         controller:"material",
         key_column:"name"
     }
@@ -27,6 +24,3 @@ $(document).ready(function(){
     })
 })
 </script>
-<style>
-</style>
-

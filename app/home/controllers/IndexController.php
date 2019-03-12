@@ -108,12 +108,13 @@ class IndexController extends BaseController
         $db->execute("truncate table tb_department");
         $datetime = date('Y-m-d H:i:s');
         $company = new TbCompany();
+        $company->setValidateLanguage("cn");
         $company->sys_create_stuff = 1; 
         $company->sys_modify_stuff = 1; 
         $company->sys_create_date = $datetime; 
         $company->sys_modify_date = $datetime; 
         $company->sys_delete_flag = 0;  
-        $company->name = "company". time();
+        $company->name_cn = "company". time();
         if($company->save()==false) {
             $messages = $company->getMessages();
 
@@ -143,8 +144,8 @@ class IndexController extends BaseController
         $depart->sys_create_date = $datetime; 
         $depart->sys_modify_date = $datetime; 
         $depart->sys_delete_flag = 0;  
-        $depart->name = $company->name;
-        $depart->remark = $company->name;
+        $depart->name = $company->name_cn;
+        $depart->remark = $company->name_cn;
         $depart->companyid = $company->id;
         $depart->save();
         
