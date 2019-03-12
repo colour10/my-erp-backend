@@ -599,10 +599,10 @@ create table ac_invoice_fee_detail
   number            int,
   feesum            decimal(16,9),
   feecurrencyid     int unsigned not null,
-  invoicecurrencyid varchar(36),
+  invoicecurrencyid int unsigned null,
   invoicesum        decimal(16,9),
   remark            varchar(100),
-  sfcompany         varchar(36),
+  companyid         int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -701,9 +701,9 @@ create table ac_pzhb
   pzh              varchar(50),
   zy               varchar(1000),
   lrrid            int unsigned null,
-  shr              varchar(36),
+  shr              int unsigned null,
   shrq             datetime,
-  jzr              varchar(36),
+  jzr              int unsigned null,
   jzrq             datetime,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -784,10 +784,10 @@ create table ac_sf_sheet
 
   sheetno          varchar(50),
   sorf             varchar(1),
-  sfcompany        varchar(36),
+  companyid        int unsigned null,
   currencyid       int unsigned null,
   sum              decimal(16,9),
-  creator          varchar(36),
+  creator          int unsigned null,
   date             datetime,
   remark           text,
   externalno       varchar(50),
@@ -868,13 +868,13 @@ create table dd_arrivalnotice
   corderid         int unsigned null,
   orderno          varchar(50),
   makedate         datetime,
-  makestaff        varchar(36),
+  makestaff        int unsigned null,
   supplierid       int unsigned not null,
   currencyid       int unsigned null,
   total            decimal(16,9),
   isstatus         varchar(1),
   remark           varchar(200),
-  auditstaff       varchar(36),
+  auditstaff       int unsigned null,
   auditdate        datetime,
   auditstatus      varchar(1),
   exchangerate     decimal(16,9),
@@ -930,16 +930,16 @@ create table dd_confirmorder
 
   orderno            varchar(50),
   makedate           datetime,
-  makestaff          varchar(36),
+  makestaff          int unsigned null,
   supplierid         int unsigned not null,
   currencyid         int unsigned null,
   total              decimal(16,9),
   isstatus           varchar(1) comment '0-在途未入库，1-已入库，2-已备货未发出',
   remark             varchar(200),
   brandid            int unsigned null,
-  season             varchar(36),
+  season             int unsigned null,
   seasontype         varchar(1) comment '0-pre ,1-main ,2-fashion show',
-  auditstaff         varchar(36),
+  auditstaff         int unsigned null,
   auditdate          datetime,
   auditstatus        varchar(1),
   exchangerate       decimal(16,9),
@@ -951,7 +951,7 @@ create table dd_confirmorder
   hblno              varchar(50),
   dispatchport       varchar(50),
   deliveryport       varchar(50),
-  transcompany       varchar(36),
+  transcompany       int unsigned null,
   isexamination      varchar(1),
   examinationresult  varchar(50),
   clearancedate      datetime,
@@ -975,7 +975,7 @@ create table dd_confirmorder
   apickingdate       datetime,
   aarrivaldate       datetime,
   invoiceno          varchar(50),
-  dd_company         varchar(36) not null,
+  dd_company         int unsigned not null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -1091,7 +1091,7 @@ create table dd_fee
   unitprice        decimal(10,2),
   amount           decimal(10,2),
   sum              decimal(10,2),
-  sfcompany        varchar(36),
+  companyid        int unsigned null,
   sorf             varchar(1) comment 's-收 f-付',
   applyflag        varchar(1) comment '0-未申请 1-已申请',
   applyid          int unsigned null,
@@ -1122,17 +1122,17 @@ create table dd_order
 
   bussinesstypeid  int unsigned null,
   makedate         datetime,
-  makestaff        varchar(36),
+  makestaff        int unsigned null,
   supplierid       int unsigned not null,
   finalsupplierid  int unsigned null,
   bookingid        int unsigned null,
   agentid          int unsigned null,
-  purchasedept     varchar(36),
+  purchasedept     int unsigned null,
   brandid          int unsigned not null,
   orderno          varchar(50),
   total            decimal(16,9),
   currencyid       int unsigned null,
-  auditstaff       varchar(36),
+  auditstaff       int unsigned null,
   auditdate        datetime,
   ordercode        varchar(50),
   worldordercode   varchar(50),
@@ -1142,7 +1142,7 @@ create table dd_order
   remark           varchar(200),
   contactor        varchar(200),
   ourcontactor     varchar(200),
-  season           varchar(36),
+  season           int unsigned null,
   seasontype       varchar(1) comment '0-pre ,1-main ,2-fashion show',
   invoiceno        varchar(50),
   ddtype           varchar(1) comment '0-客户订单，1-品牌订单',
@@ -1767,7 +1767,7 @@ create table link_brand_to_discount
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   brandid          int unsigned null,
-  decade           varchar(36),
+  decade           int unsigned null,
   groupid          int unsigned null,
   brandgroupid     int unsigned null,
   discount         decimal(10,2),
@@ -1802,7 +1802,7 @@ create table link_brand_to_priced
   isrounded        varchar(1) comment '0- 0-20 取0 ,21-70 取50,71-99 取100
             1-0-1取0，1-6取5，6-9取10
             2.不取整',
-  decade           varchar(36),
+  decade           int unsigned null,
   currencyid       int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -1825,7 +1825,7 @@ create table link_brandgroup_to_supplier
 
   supplierid       int unsigned null,
   brandgroupid     int unsigned null,
-  decade           varchar(36),
+  decade           int unsigned null,
   markup           decimal(10,2),
   currencyid       int unsigned null,
   sum              decimal(10,2),
@@ -1849,7 +1849,7 @@ create table link_cdetail_to_ddetail
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   cdetailid        int unsigned null,
-  ddetailid        varchar(36),
+  ddetailid        int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -1869,8 +1869,8 @@ create table link_childbrand_to_execution
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  childbrandid     varchar(36),
-  executionid      varchar(36),
+  childbrandid     int unsigned null,
+  executionid      int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -1890,8 +1890,8 @@ create table link_childbrand_to_innards
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  childbrandid     varchar(36),
-  innardsid        varchar(36),
+  childbrandid     int unsigned null,
+  innardsid        int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -1911,8 +1911,8 @@ create table link_childbrand_to_material
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  childbrandid     varchar(36),
-  materialid       varchar(36),
+  childbrandid     int unsigned null,
+  materialid       int unsigned null,
   hgcode           varchar(50),
   taxrate          decimal(16,9),
   sex              varchar(1) comment '0-女式 1-男士(中性也算男士)',
@@ -1936,8 +1936,8 @@ create table link_childbrand_to_outinnards
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  childbrandid     varchar(36),
-  outinnardsid     varchar(36),
+  childbrandid     int unsigned null,
+  outinnardsid     int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -1957,8 +1957,8 @@ create table link_childbrand_to_safety
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  childbrandid     varchar(36),
-  safetyid         varchar(36),
+  childbrandid     int unsigned null,
+  safetyid         int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -2001,8 +2001,8 @@ create table link_contacts_to_supplier
   sys_delete_date   datetime,
   sys_delete_flag   tinyint  not null comment '0-未删除 1-已删除',
 
-  supplierid        varchar(36),
-  companycontactsid varchar(36),
+  supplierid        int unsigned null,
+  companycontactsid int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -2022,8 +2022,8 @@ create table link_ctn_to_cdetail
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  corderdetailid   varchar(36),
-  ctnid            varchar(36),
+  corderdetailid   int unsigned null,
+  ctnid            int unsigned null,
   sum              int,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -2044,7 +2044,7 @@ create table link_data_to_file
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  dataid           varchar(36) comment '上传附件的相关数据id，例如：订单id等',
+  dataid           int unsigned null comment '上传附件的相关数据id，例如：订单id等',
   picturename      varchar(500),
   picturepath      varchar(500) comment '带文件名，取文件完整路径=ftp+/+路径',
   servername       varchar(100),
@@ -2103,7 +2103,7 @@ create table link_detail_to_detail
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  pdetailid        varchar(36),
+  pdetailid        int unsigned null,
   cdetailid        int unsigned null,
   sum              int,
   primary key (id)
@@ -2125,8 +2125,8 @@ create table link_distribute_to_cdetail
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  corderdetailid   varchar(36),
-  dstributeid      varchar(36),
+  corderdetailid   int unsigned null,
+  dstributeid      int unsigned null,
   sum              int,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -2140,7 +2140,7 @@ create table link_group_to_navigation
 (
   id               int unsigned not null auto_increment comment '主键id',
   groupid          int unsigned null,
-  navigationid     varchar(36),
+  navigationid     int unsigned null,
   sys_create_stuff int unsigned not null,
   sys_create_date  datetime not null,
   sys_modify_stuff int unsigned not null,
@@ -2168,7 +2168,7 @@ create table link_invoice_to_order
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  invoiceid        varchar(36),
+  invoiceid        int unsigned null,
   orderid          int unsigned null,
   ordersum         decimal(19,6),
   primary key (id)
@@ -2190,7 +2190,7 @@ create table link_invoice_to_requisition
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  invoiceid        varchar(36),
+  invoiceid        int unsigned null,
   requisitionid    int unsigned null,
   type             varchar(1) comment '0-按金额 1-按件数',
   primary key (id)
@@ -2212,7 +2212,7 @@ create table link_invoice_to_warehousing
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  invoiceid        varchar(36),
+  invoiceid        int unsigned null,
   warehousingid    int unsigned null,
   type             varchar(1) comment '0-按金额 1-按件数',
   primary key (id)
@@ -2256,7 +2256,7 @@ create table link_prep_to_productstock
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   productstockid   int unsigned null,
-  prepid           varchar(36),
+  prepid           int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -2298,7 +2298,7 @@ create table link_product_to_materislstatus
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   productid        int unsigned null,
-  materislstatusid varchar(36),
+  materislstatusid int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -2319,7 +2319,7 @@ create table link_product_to_salesnature
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   productid        int unsigned null,
-  salesnatureid    varchar(36),
+  salesnatureid    int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -2340,7 +2340,7 @@ create table link_product_to_closedway
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   productid        int unsigned null,
-  closedwayid      varchar(36),
+  closedwayid      int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -2382,7 +2382,7 @@ create table link_product_to_dscrb
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   productid        int unsigned null,
-  dscrbid          varchar(36),
+  dscrbid          int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -2411,7 +2411,7 @@ create table link_product_to_marketprice
   applystatus      varchar(1) comment '0-已申请
             1-审批通过
             2-驳回',
-  priceresourceid  varchar(36),
+  priceresourceid  int unsigned null,
   applydate        datetime,
   replydate        datetime,
   priceid          int unsigned null,
@@ -2435,9 +2435,9 @@ create table link_product_to_material
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   productid        int unsigned null,
-  materialid       varchar(36),
+  materialid       int unsigned null,
   percentage       varchar(50),
-  note             varchar(36),
+  note             int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -2458,9 +2458,9 @@ create table link_product_to_material2
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   productid        int unsigned null,
-  materialid       varchar(36),
+  materialid       int unsigned null,
   percentage       varchar(50),
-  note             varchar(36),
+  note             int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -2481,7 +2481,7 @@ create table link_product_to_occasions
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   productid        int unsigned null,
-  occasionsid      varchar(36),
+  occasionsid      int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -2502,7 +2502,7 @@ create table link_product_to_origin
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   productid        int unsigned null,
-  originid         varchar(36),
+  originid         int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -2523,7 +2523,7 @@ create table link_product_to_outproductinnards
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   productid        int unsigned null,
-  innardsid        varchar(36),
+  innardsid        int unsigned null,
   sum              int,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -2545,7 +2545,7 @@ create table link_product_to_picture
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   productid        int unsigned null,
-  pictureid        varchar(36),
+  pictureid        int unsigned null,
   picturetype      varchar(500),
   sizetype         int,
   primary key (id)
@@ -2675,7 +2675,7 @@ create table link_product_to_productinnards
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   productid        int unsigned null,
-  innardsid        varchar(36),
+  innardsid        int unsigned null,
   sum              int,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -2697,7 +2697,7 @@ create table link_product_to_productparts
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   productid        int unsigned null,
-  partsid          varchar(36),
+  partsid          int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -2771,7 +2771,7 @@ create table link_product_to_size
   productid        int unsigned null,
   sizeid           int unsigned null,
   jdcode           varchar(50),
-  spotid           varchar(36) comment '空就是京东',
+  spotid           int unsigned null comment '空就是京东',
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -2813,10 +2813,10 @@ create table link_pzh_to_invoice
   sys_delete_flag   tinyint  not null comment '0-未删除 1-已删除',
 
   invoiceid         int unsigned null,
-  pzhid             varchar(36),
-  invoicecurrencyid varchar(36),
+  pzhid             int unsigned null,
+  invoicecurrencyid int unsigned null,
   invoicesum        decimal(16,9),
-  pzhcurrencyid     varchar(36),
+  pzhcurrencyid     int unsigned null,
   pzhsum            decimal(16,9),
   exchangerate      decimal(16,9),
   primary key (id)
@@ -2839,10 +2839,10 @@ create table link_pzh_to_invoicefee
   sys_delete_flag   tinyint  not null comment '0-未删除 1-已删除',
 
   invoiceid         int unsigned null,
-  pzhid             varchar(36),
-  invoicecurrencyid varchar(36),
+  pzhid             int unsigned null,
+  invoicecurrencyid int unsigned null,
   invoicesum        decimal(16,9),
-  pzhcurrencyid     varchar(36),
+  pzhcurrencyid     int unsigned null,
   pzhsum            decimal(16,9),
   exchangerate      decimal(16,9),
   primary key (id)
@@ -2866,9 +2866,9 @@ create table link_pzh_to_order
 
   orderid          int unsigned null,
   pzhid            int unsigned null,
-  ordercurrencyid  varchar(36),
+  ordercurrencyid  int unsigned null,
   ordersum         decimal(16,9),
-  pzhcurrencyid    varchar(36),
+  pzhcurrencyid    int unsigned null,
   pzhsum           decimal(16,9),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -2891,9 +2891,9 @@ create table link_pzh_to_sales
 
   salesid          int unsigned null,
   pzhid            int unsigned null,
-  salescurrencyid  varchar(36),
+  salescurrencyid  int unsigned null,
   salessum         decimal(16,9),
-  pzhcurrencyid    varchar(36),
+  pzhcurrencyid    int unsigned null,
   pzhsum           decimal(16,9),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -2916,9 +2916,9 @@ create table link_pzh_to_sales_trans
 
   salesid          int unsigned null,
   pzhid            int unsigned null,
-  salescurrencyid  varchar(36),
+  salescurrencyid  int unsigned null,
   salessum         decimal(16,9),
-  pzhcurrencyid    varchar(36),
+  pzhcurrencyid    int unsigned null,
   pzhsum           decimal(16,9),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -2965,7 +2965,7 @@ create table link_return_to_productstock
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   productstockid   int unsigned null,
-  dealprice        varchar(36),
+  dealprice        decimal(10,2),
   getpoints        int,
   memberid         int unsigned null,
   returnid         int unsigned null,
@@ -3021,7 +3021,7 @@ create table link_sales_to_productstock
   expressno        varchar(50),
   expressfee       decimal(16,9),
   expressstatus    varchar(1) comment '0-未发货 1-已发货 2-缺货',
-  expressuser      varchar(36),
+  expressuser      int unsigned null,
   isbj             varchar(1),
   currencyid       int unsigned null,
   sum              decimal(16,9),
@@ -3143,7 +3143,7 @@ create table link_supplier_to_brand
             b
             c
             d',
-  decade           varchar(36),
+  decade           int unsigned null,
   markup           decimal(10,2),
   currencyid       int unsigned null,
   sum              decimal(10,2),
@@ -3385,7 +3385,7 @@ create table tb_check
 
   checkno          varchar(10),
   warehouseid      int unsigned null,
-  checker          varchar(36),
+  checker          int unsigned null,
   check_flag       tinyint comment '0-生成预盘单
             1-生成实盘单
             2-生成差异单
@@ -3440,7 +3440,7 @@ create table tb_contactlist
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   corderid         int unsigned null,
-  addname          varchar(36),
+  addname          int unsigned null,
   creationdate     datetime,
   shipper          varchar(50),
   receivingparty   varchar(50),
@@ -3591,7 +3591,7 @@ create table tb_distribute
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   distributeno     varchar(50),
-  owner            varchar(36),
+  owner            int unsigned null,
   out_id           int unsigned null,
   in_id            int unsigned null,
   op_id            int unsigned null,
@@ -3671,8 +3671,8 @@ create table tb_fee
 
   applyno            varchar(50),
   applydate          datetime,
-  applystaff         varchar(36),
-  staff              varchar(36),
+  applystaff         int unsigned null,
+  staff              int unsigned null,
   departmemtid       int unsigned null,
   departmemtid2      int unsigned null,
   leadercheckstatus  varchar(1) comment '0-未审核 1-审核通过 2-驳回',
@@ -3787,7 +3787,7 @@ create table tb_inve_actual
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   form_num         varchar(30),
-  checker          varchar(36),
+  checker          int unsigned null,
   check_flag       tinyint,
   check_date       datetime,
   form_memo        varchar(500),
@@ -3837,7 +3837,7 @@ create table tb_inve_prep
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   form_num         varchar(30),
-  checker          varchar(36),
+  checker          int unsigned null,
   check_flag       tinyint,
   check_date       datetime,
   form_memo        varchar(500),
@@ -3937,7 +3937,7 @@ create table tb_member
   password         varchar(10),
   invitesum        bigint,
   invitetotal      bigint,
-  invoteuser       varchar(36),
+  invoteuser       int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -4238,23 +4238,23 @@ create table tb_product
   wordprice            decimal(16,9),
   wordpricecurrencyid  int unsigned null,
   gender               varchar(10) comment '0-女式 1-男士 2-中性',
-  brand                varchar(36),
-  brandtype            varchar(36),
-  childbrand           varchar(36),
-  brandcolor           varchar(36),
-  brandcolor2          varchar(36),
-  picture              varchar(36),
-  closeway             varchar(36),
-  decade               varchar(36),
-  productsize          varchar(36),
-  origin               varchar(36),
-  security             varchar(36),
-  execution            varchar(36),
-  material             varchar(36),
-  productparst         varchar(36),
-  occasion             varchar(36),
-  producttemplate      varchar(36),
-  materialstatus       varchar(36),
+  brand                int unsigned null,
+  brandtype            int unsigned null,
+  childbrand           int unsigned null,
+  brandcolor           int unsigned null,
+  brandcolor2          int unsigned null,
+  picture              int unsigned null,
+  closeway             int unsigned null,
+  decade               int unsigned null,
+  productsize          int unsigned null,
+  origin               int unsigned null,
+  security             int unsigned null,
+  execution            int unsigned null,
+  material             int unsigned null,
+  productparst         int unsigned null,
+  occasion             int unsigned null,
+  producttemplate      int unsigned null,
+  materialstatus       int unsigned null,
   spring               tinyint,
   summer               tinyint,
   autumn               tinyint,
@@ -4271,16 +4271,16 @@ create table tb_product
   ulnarinch            varchar(50),
   vat                  decimal(16,9),
   tariff               decimal(16,9),
-  basecurrency         varchar(36),
+  basecurrency         int unsigned null,
   baseprice            decimal(16,9),
   entrymonth           varchar(5),
   factoryprice         decimal(16,9),
-  factorypricecurrency varchar(36),
+  factorypricecurrency int unsigned null,
   realprice            decimal(16,9),
-  retailpricecurrency  varchar(36),
+  retailpricecurrency  int unsigned null,
   dutyparagraph        varchar(50),
   orderprice           decimal(16,9),
-  orderpricecurrency   varchar(36),
+  orderpricecurrency   int unsigned null,
   retailprice          decimal(16,9) comment '可以填写的成本，入库时同步修改',
   groupid              int unsigned null comment '同款不同色',
   iskj                 varchar(1) comment '0-否 1-是',
@@ -4288,13 +4288,13 @@ create table tb_product
   hbzs                 varchar(1) comment '0-薄1-适中2-厚',
   rrzs                 varchar(1) comment '0-柔软1-适中2-偏硬',
   tlzs                 varchar(1) comment '0-无弹1-适中2-弹力',
-  salemethodid         varchar(36),
+  salemethodid         int unsigned null,
   nationalprice        decimal(16,9),
   taxrate              decimal(16,9),
   isjh                 varchar(1) comment '0-否1-是',
   inlenth              varchar(50),
   jdname               varchar(200),
-  winterproofing       varchar(36),
+  winterproofing       int unsigned null,
   isfj                 varchar(1) comment '0-否 1-法检',
   discount             decimal(10,2),
   primary key (id)
@@ -4318,11 +4318,11 @@ create table tb_product_price
 
   productid            int unsigned null,
   decadeid             int unsigned null,
-  retailpricecurrency  varchar(36),
+  retailpricecurrency  int unsigned null,
   realprice            decimal(16,9),
-  factorypricecurrency varchar(36),
+  factorypricecurrency int unsigned null,
   factoryprice         decimal(16,9),
-  basecurrency         varchar(36),
+  basecurrency         int unsigned null,
   baseprice            decimal(16,9),
   nationalprice        decimal(16,9),
   primary key (id)
@@ -4347,7 +4347,7 @@ create table tb_productstock
   productid        int unsigned null,
   sizeid           int unsigned null,
   storagetime      datetime,
-  storagestaff     varchar(36),
+  storagestaff     int unsigned null,
   stockid          int unsigned null,
   productno        bigint,
   selltime         datetime,
@@ -4362,7 +4362,7 @@ create table tb_productstock
   qualitystatus    int comment '0-合格品
             1-残次品
             2-库存差异',
-  sellstaff        varchar(36),
+  sellstaff        int unsigned null,
   is_print         varchar(1) comment '0-未打印
             1-条形码打印
             2-二维码打印',
@@ -4370,7 +4370,7 @@ create table tb_productstock
   currencyid       int unsigned null,
   remark           varchar(500),
   cpdate           datetime,
-  cp_op            varchar(36),
+  cp_op            int unsigned null,
   intime           datetime,
   property         varchar(1) comment '0-自采 1-代销',
   kpflag           varchar(1) comment '0-未开票 1-已开票',
@@ -4412,7 +4412,7 @@ create table tb_productstock_snapshot
   qualitystatus    int comment '0-合格品
             1-残次品
             2-库存差异',
-  sellstaff        varchar(36),
+  sellstaff        int unsigned null,
   corderid         int unsigned null,
   currencyid       int unsigned null,
   remark           varchar(500),
@@ -4442,11 +4442,11 @@ create table tb_requisition
 
   feecurrencyid     int unsigned null,
   fee               decimal(16,9),
-  apply_staff       varchar(36),
+  apply_staff       int unsigned null,
   apply_date        datetime    not null,
-  turnin_staff      varchar(36),
+  turnin_staff      int unsigned null,
   turnin_date       datetime,
-  turnout_staff     varchar(36) not null,
+  turnout_staff     int unsigned  not null,
   turnout_date      datetime,
   out_id            int unsigned not null,
   in_id             int unsigned not null,
@@ -4540,7 +4540,7 @@ create table tb_requisition_express
   expressno        varchar(50),
   expressfee       decimal(16,9),
   remark           text,
-  creator          varchar(36),
+  creator          int unsigned null,
   departmentid     int unsigned null,
   type             varchar(1) comment '0-个人，1-部门，2-事业部，3-公司',
   primary key (id)
@@ -4719,9 +4719,9 @@ create table tb_supplier
   email             varchar(500),
   quotedprice       varchar(20),
   developdate       datetime,
-  nationality       varchar(36),
+  nationality       int unsigned null,
   nature            varchar(100),
-  supplierlevel     varchar(36),
+  supplierlevel     int unsigned null,
   companyzipcode    varchar(100),
   maincontacts      varchar(50),
   microblog         varchar(100),
@@ -4763,7 +4763,7 @@ create table tb_supplier_orderdate
 
   supplierid       int unsigned null,
   brandid          int unsigned null,
-  decade           varchar(36),
+  decade           int unsigned null,
   type             varchar(1) comment '0-pre ,1-main ,2-fashion show',
   showdate         datetime,
   closedate        datetime,
@@ -4806,9 +4806,9 @@ create table tb_user
   address            text,
   contactor          text,
   leave_date         varchar(100) null,
-  defaultprice       varchar(36),
-  defaultwarehouse   varchar(36),
-  defaultsellspot    varchar(36),
+  defaultprice       int unsigned null,
+  defaultwarehouse   int unsigned null,
+  defaultsellspot    int unsigned null,
   idno               varchar(20),
   education          varchar(50),
   collegemajor       varchar(50),
@@ -4844,7 +4844,7 @@ create table tb_verificationcode
 
   verificationcode varchar(50),
   source           varchar(100) comment '注册，绑定，支付',
-  sourceid         varchar(36) comment '前端发起动态密码验证，生成一次性guid，验证使用',
+  sourceid         int unsigned null comment '前端发起动态密码验证，生成一次性guid，验证使用',
   phoneno          varchar(20) comment '手机号',
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -4868,7 +4868,7 @@ create table tb_warehousing
   arrivalid        int unsigned null,
   entrydate        datetime not null,
   warehouse_id     int unsigned not null,
-  season           varchar(36),
+  season           int unsigned null,
   seasontype       varchar(1) comment '0-pre ,1-main ,2-fashion show',
   op_id            int unsigned not null,
   remark           varchar(500),
@@ -4933,7 +4933,7 @@ create table tb_warehousing_fee
   feeid            int unsigned null,
   currencyid       int unsigned null,
   feeprice         decimal(10,2),
-  payment          varchar(36),
+  payment          int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -5044,7 +5044,7 @@ create table xs_afterservice
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   memberid         int unsigned null,
-  salesstaff       varchar(36),
+  salesstaff       int unsigned null,
   salesdate        datetime,
   sellspotid       int unsigned null,
   saleno           varchar(50),
@@ -5076,9 +5076,9 @@ create table xs_afterservice_detail
   describtion      varchar(500),
   dealtype         varchar(1) comment '0-修理1-保养2-调换3-退货',
   fixdate          datetime,
-  fixstuff         varchar(36),
+  fixstuff         int unsigned null,
   backdate         datetime,
-  backstuff        varchar(36),
+  backstuff       int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -5100,7 +5100,7 @@ create table xs_pre_sales
 
   memberid         int unsigned null,
   pricelistid      int unsigned null,
-  salesstaff       varchar(36),
+  salesstaff       int unsigned null,
   salesdate        datetime,
   sellspotid       int unsigned null,
   companyid        int unsigned null,
@@ -5185,7 +5185,7 @@ create table xs_pricelist
   begindate        datetime,
   enddate          datetime,
   name             varchar(20),
-  salesport        varchar(36),
+  salesport        int unsigned null,
   remark           varchar(500),
   priceid          int unsigned null,
   primary key (id)
@@ -5233,7 +5233,7 @@ create table xs_return
   actualprice      decimal(16,9),
   sellspotid       int unsigned null,
   memberid         int unsigned null,
-  returnstaff      varchar(36),
+  returnstaff      int unsigned null,
   returndate       datetime,
   returnno         varchar(50),
   primary key (id)
@@ -5279,7 +5279,7 @@ create table xs_sales
   actualprice      decimal(16,9),
   memberid         int unsigned null,
   pricelistid      int unsigned null,
-  salesstaff       varchar(36),
+  salesstaff       int unsigned null,
   salesdate        datetime,
   salesmode        varchar(2) comment '0-现金
             1-刷卡
@@ -5297,17 +5297,17 @@ create table xs_sales
   expressno        varchar(50),
   expresspaidtype  varchar(1) comment '0-预付 1-到付 2-第三方付费 3-储值卡 4-转账 5-协议结算',
   expressfee       decimal(16,9),
-  expressfeepayid  varchar(36),
+  expressfeepayid  int unsigned null,
   status           varchar(1) comment '0-预售 1-已售 2-作废',
   expresscomoany   varchar(1) comment '0-顺丰 1-德邦 2-京东 3-其他 4-圆通',
-  address          varchar(36),
+  address          int unsigned null,
   islocal          varchar(1) comment '0-跨境电商 1-线下店铺 2-爱莎商城 3-分公司间调拨销售 4-代销 ',
   externalno       varchar(50),
   ischeck          varchar(1),
   sheetid          int unsigned null,
   type             varchar(1) comment '0-普通 1-扫码 ',
   pickingtype      varchar(1) comment '0-自提 1-快递 2-门店直发',
-  sender           varchar(36),
+  sender           int unsigned null,
   supplierid       int unsigned null,
   isjf             varchar(1) comment '0-未使用积分抵扣，1-使用积分抵扣',
   dksum            decimal(16,9),
@@ -5336,7 +5336,7 @@ create table xs_sales_card
 
   actualprice      decimal(16,9),
   memberid         int unsigned null,
-  salesstaff       varchar(36),
+  salesstaff       int unsigned null,
   salesdate        datetime,
   sellspotid       int unsigned null,
   companyid        int unsigned null,
@@ -5722,7 +5722,7 @@ create table zl_bankinformation
   bankaccount      varchar(50),
   remittedaccount  varchar(50),
   supplierid       int unsigned null,
-  currency         varchar(36),
+  currency         int unsigned null,
   account          varchar(50),
   isused           varchar(1) comment '0-常用，1-禁用',
   remark           varchar(200),
@@ -5753,11 +5753,11 @@ create table zl_brand
   countryid        int unsigned null,
   brandgroupid      int unsigned null,
   imageurl        varchar(100) null,
-  childbrand       varchar(36),
+  childbrand       int unsigned null,
   description      varchar(1000),
   imagestream      longblob,
   memo             text,
-  supplier         varchar(36),
+  supplier         int unsigned null,
   officialwebsite  varchar(500),
   isauthorized     tinyint,
   primary key (id)
@@ -5862,8 +5862,8 @@ create table zl_childproductgroup
   producttemplateid int unsigned null,
   weight            decimal(16,9),
   isfj              varchar(1) comment '0-否 1-法检',
-  cname4male        varchar(36),
-  cname4female      varchar(36),
+  cname4male        int unsigned null,
+  cname4female      int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6039,7 +6039,7 @@ create table zl_country
   sys_delete_date  datetime,
   sys_delete_flag  tinyint      not null comment '0-未删除 1-已删除',
 
-  localcurrency    varchar(36),
+  localcurrency    int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6049,6 +6049,7 @@ alter table zl_country comment '国家表';
 /*==============================================================*/
 /* table: zl_language                                            */
 /*==============================================================*/
+drop table if exists `zl_language`;
 create table zl_language
 (
   id               int unsigned not null auto_increment comment '主键id',
@@ -6237,8 +6238,8 @@ create table zl_exchangerate
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   exchangeratedate varchar(50),
-  exportcurrency   varchar(36) comment '汇出币种',
-  importcurrency   varchar(36) comment '汇入币种',
+  exportcurrency   int unsigned null comment '汇出币种',
+  importcurrency   int unsigned null comment '汇入币种',
   exchangerate     decimal(10,5),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -6437,17 +6438,20 @@ create table zl_material
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  materialname     varchar(20),
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   englishname varchar(191) NULL,
   code             varchar(20),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
-alter table zl_material comment '材质
-';
+alter table zl_material comment '材质';
 
 /*==============================================================*/
 /* table: zl_materialnote                                       */
@@ -6463,10 +6467,16 @@ create table zl_materialnote
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  content          varchar(100),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   content          varchar(100),
+
+  content_cn     varchar(100) null comment '中文名称',
+  content_en     varchar(100) null comment '英文名称',
+  content_hk     varchar(100) null comment '粤语名称',
+  content_fr     varchar(100) null comment '法语名称',
+  content_it     varchar(100) null comment '意大利语名称',
+  content_sp     varchar(100) null comment '西班牙语名称',
+  content_de     varchar(100) null comment '德语名称',
+
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6487,10 +6497,15 @@ create table zl_materialstatus
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   code             varchar(20),
-  name             varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6510,10 +6525,16 @@ create table zl_memberlevel
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  memberlevel      varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   memberlevel      varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   discount         decimal(16,9),
   levelbasicscore  bigint,
   integralrule     decimal(16,9) comment '实际成交价格x积分规则=获得积分',
@@ -6539,10 +6560,17 @@ create table zl_occasionsstyle
   sys_delete_date    datetime,
   sys_delete_flag    tinyint  not null comment '0-未删除 1-已删除',
 
-  occasionsstylename varchar(50),
-  lang_code          varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   occasionsstylename varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+
   occasionsstylemode varchar(200),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -6563,11 +6591,15 @@ create table zl_pricesource
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  name             varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
-  remark           varchar(500),
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+  memo           varchar(500),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6587,11 +6619,15 @@ create table zl_productdscrb
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  name             varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
-  remark           varchar(100),
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+  memo           varchar(100),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6611,10 +6647,14 @@ create table zl_productinnards
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  partsname        varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6635,10 +6675,16 @@ create table zl_productparts
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   partscode        varchar(50),
-  partsname        varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   partsname        varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   packflag         varchar(1),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -6660,10 +6706,16 @@ create table zl_productprice
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  salename         varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   salename         varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   isdefault        varchar(1) comment '0 - 默认
             1 - 不默认',
   curreancyid      int unsigned null,
@@ -6688,11 +6740,10 @@ create table zl_productstyle
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  brandgroup       varchar(36),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
-  childbrand       varchar(36),
+  brandgroup       int unsigned null,
+
+  childbrand       int unsigned null,
+
   productstyle     varchar(10),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -6713,10 +6764,16 @@ create table zl_producttemplate
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  templatename     varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   templatename     varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   picture          varchar(200) null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -6738,10 +6795,16 @@ create table zl_quotedprice
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   s_id             varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
-  currency         varchar(50),
+--   currency         varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   quotedprice      decimal(10,0),
   quoteddate       datetime,
   primary key (id)
@@ -6764,11 +6827,16 @@ create table zl_reportset
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   code             varchar(50),
-  name             varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
-  remark           varchar(500),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+  memo           varchar(500),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6789,10 +6857,16 @@ create table zl_reportset_detail
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   setid            int unsigned null,
-  code             varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   code             varchar(50),
+
+  code_cn     varchar(100) null comment '中文名称',
+  code_en     varchar(100) null comment '英文名称',
+  code_hk     varchar(100) null comment '粤语名称',
+  code_fr     varchar(100) null comment '法语名称',
+  code_it     varchar(100) null comment '意大利语名称',
+  code_sp     varchar(100) null comment '西班牙语名称',
+  code_de     varchar(100) null comment '德语名称',
+
   `index`          int,
   width            int,
   primary key (id)
@@ -6814,12 +6888,18 @@ create table zl_salesmethods
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  salesmethodsname varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   salesmethodsname varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   salesmethodsmode varchar(200),
-  brandtype        varchar(36),
+  brandtype        int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6839,14 +6919,38 @@ create table zl_salesport
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  protname         varchar(20),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
-  remark           varchar(500),
-  storename        varchar(50),
+--   protname         varchar(20),
+
+  protname_cn     varchar(100) null comment '中文名称',
+  protname_en     varchar(100) null comment '英文名称',
+  protname_hk     varchar(100) null comment '粤语名称',
+  protname_fr     varchar(100) null comment '法语名称',
+  protname_it     varchar(100) null comment '意大利语名称',
+  protname_sp     varchar(100) null comment '西班牙语名称',
+  protname_de     varchar(100) null comment '德语名称',
+
+  memo           varchar(500),
+--   storename        varchar(50),
+
+  storename_cn     varchar(1000) null comment '中文名称',
+  storename_en     varchar(1000) null comment '英文名称',
+  storename_hk     varchar(1000) null comment '粤语名称',
+  storename_fr     varchar(1000) null comment '法语名称',
+  storename_it     varchar(1000) null comment '意大利语名称',
+  storename_sp     varchar(1000) null comment '西班牙语名称',
+  storename_de     varchar(1000) null comment '德语名称',
+
   isonline         varchar(1) comment '0-否 1-是',
-  address          char(1),
+--   address          char(1),
+
+  address_cn     varchar(100) null comment '中文地址',
+  address_en     varchar(100) null comment '英文地址',
+  address_hk     varchar(100) null comment '粤语地址',
+  address_fr     varchar(100) null comment '法语地址',
+  address_it     varchar(100) null comment '意大利语地址',
+  address_sp     varchar(100) null comment '西班牙语地址',
+  address_de     varchar(100) null comment '德语地址',
+
   tel              varchar(50),
   isused           varchar(1),
   iskd             varchar(1) comment '0-否 1-是',
@@ -6872,14 +6976,11 @@ create table zl_salesport_mission
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   salespotid       int unsigned null,
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
   yearmonth        varchar(10) comment '格式为201801',
   salesum          decimal(10,2),
   profit           decimal(10,2),
   rate             decimal(10,2),
-  remark           varchar(500),
+  memo           varchar(500),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6899,11 +7000,25 @@ create table zl_series
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  name             varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
-  code             varchar(50),
+--   name             varchar(50),
+--   code             varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+  code_cn     varchar(100) null comment '中文代码名称',
+  code_en     varchar(100) null comment '英文代码名称',
+  code_hk     varchar(100) null comment '粤语代码名称',
+  code_fr     varchar(100) null comment '法语代码名称',
+  code_it     varchar(100) null comment '意大利语代码名称',
+  code_sp     varchar(100) null comment '西班牙语代码名称',
+  code_de     varchar(100) null comment '德语代码名称',
+
   brandid          int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -6925,11 +7040,25 @@ create table zl_series2
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   seriesid         int unsigned null,
-  name             varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
-  code             varchar(50),
+--   name             varchar(50),
+--   code             varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+  code_cn     varchar(100) null comment '中文代码名称',
+  code_en     varchar(100) null comment '英文代码名称',
+  code_hk     varchar(100) null comment '粤语代码名称',
+  code_fr     varchar(100) null comment '法语代码名称',
+  code_it     varchar(100) null comment '意大利语代码名称',
+  code_sp     varchar(100) null comment '西班牙语代码名称',
+  code_de     varchar(100) null comment '德语代码名称',
+
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6950,11 +7079,17 @@ create table zl_shippingtype
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   code             varchar(10),
-  name             varchar(10),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
-  remark           varchar(50),
+--   name             varchar(10),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+  memo           varchar(50),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6975,12 +7110,18 @@ create table zl_sizecontent
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   topid            int unsigned null,
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
-  content          varchar(10),
+--   content          varchar(10),
+
+  content_cn     varchar(100) null comment '中文代码名称',
+  content_en     varchar(100) null comment '英文代码名称',
+  content_hk     varchar(100) null comment '粤语代码名称',
+  content_fr     varchar(100) null comment '法语代码名称',
+  content_it     varchar(100) null comment '意大利语代码名称',
+  content_sp     varchar(100) null comment '西班牙语代码名称',
+  content_de     varchar(100) null comment '德语代码名称',
+
   sortnum          int,
-  remark           varchar(100),
+  memo           varchar(100),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -7000,10 +7141,16 @@ create table zl_sizetop
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  name             varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   name             varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   code             varchar(50),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -7025,11 +7172,17 @@ create table zl_storemove
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   productid        int unsigned null,
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
   storeid          int unsigned null,
-  moveman          varchar(50),
+--   moveman          varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   movedate         datetime,
   movestate        varchar(50),
   note             varchar(1000),
@@ -7052,10 +7205,16 @@ create table zl_style
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  stylename        varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   stylename        varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   stylemode        varchar(200),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -7077,9 +7236,6 @@ create table zl_supplier_type
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   supplierid       int unsigned null,
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
   type             varchar(1) comment '0-供货商 1-报关行 2-供应商 3-承运人 4-客户',
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -7100,11 +7256,25 @@ create table zl_supplierlevel
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  levelname        varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
-  levelnote        varchar(100),
+--   levelname        varchar(50),
+--   levelnote        varchar(100),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+  memo_cn     varchar(1000) null comment '中文备注',
+  memo_en     varchar(1000) null comment '英文备注',
+  memo_hk     varchar(1000) null comment '粤语备注',
+  memo_fr     varchar(1000) null comment '法语备注',
+  memo_it     varchar(1000) null comment '意大利语备注',
+  memo_sp     varchar(1000) null comment '西班牙语备注',
+  memo_de     varchar(1000) null comment '德语备注',
+
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -7125,9 +7295,6 @@ create table zl_sys_selfcompany
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   supplier_id      int unsigned null,
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -7148,9 +7315,6 @@ create table zl_template_descrb
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   tempid           int unsigned null,
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
   sizetopid        int unsigned null,
   sizeid           int unsigned null,
   baselenth        decimal(10,2),
@@ -7174,12 +7338,18 @@ create table zl_templatelist
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  templatename     varchar(36),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
-  sizename         varchar(36),
-  content          varchar(20),
+  templateid     int unsigned null,
+  sizeid         int unsigned null,
+--   content          varchar(20),
+
+  content_cn     varchar(1000) null comment '中文备注',
+  content_en     varchar(1000) null comment '英文备注',
+  content_hk     varchar(1000) null comment '粤语备注',
+  content_fr     varchar(1000) null comment '法语备注',
+  content_it     varchar(1000) null comment '意大利语备注',
+  content_sp     varchar(1000) null comment '西班牙语备注',
+  content_de     varchar(1000) null comment '德语备注',
+
   productid        int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -7200,10 +7370,16 @@ create table zl_templatemanage
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  templatename     varchar(20),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   templatename     varchar(20),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   tempid           int unsigned null,
   sortnum          int,
   primary key (id)
@@ -7225,12 +7401,18 @@ create table zl_trans_code
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  name             varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   name             varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   code             varchar(50),
-  remark           varchar(500),
+  memo           varchar(500),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -7250,10 +7432,16 @@ create table zl_ulnarinch
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  name             varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   name             varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -7273,10 +7461,16 @@ create table zl_unit
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  unitname         varchar(20),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   unitname         varchar(20),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   unitgroupid      varchar(50),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -7297,11 +7491,26 @@ create table zl_unitgroup
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  groupname        varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
-  crew             varchar(100),
+--   groupname        varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+--   memo             varchar(100),
+
+  memo_cn     varchar(100) null comment '中文备注',
+  memo_en     varchar(100) null comment '英文备注',
+  memo_hk     varchar(100) null comment '粤语备注',
+  memo_fr     varchar(100) null comment '法语备注',
+  memo_it     varchar(100) null comment '意大利语备注',
+  memo_sp     varchar(100) null comment '西班牙语备注',
+  memo_de     varchar(100) null comment '德语备注',
+
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -7321,14 +7530,44 @@ create table zl_warehouse
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  country          varchar(36),
-  city             varchar(20),
-  storename        varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
-  storeaddress     varchar(100),
-  contact          varchar(20),
+  countryid          int null comment '国家ID',
+--   city             varchar(20),
+--   storename        varchar(50),
+--   storeaddress     varchar(100),
+--   contact          varchar(20),
+
+  city_cn     varchar(100) null comment '中文城市名称',
+  city_en     varchar(100) null comment '英文城市名称',
+  city_hk     varchar(100) null comment '粤语城市名称',
+  city_fr     varchar(100) null comment '法语城市名称',
+  city_it     varchar(100) null comment '意大利语城市名称',
+  city_sp     varchar(100) null comment '西班牙语城市名称',
+  city_de     varchar(100) null comment '德语城市名称',
+
+  storename_cn     varchar(100) null comment '中文仓库名称',
+  storename_en     varchar(100) null comment '英文仓库名称',
+  storename_hk     varchar(100) null comment '粤语仓库名称',
+  storename_fr     varchar(100) null comment '法语仓库名称',
+  storename_it     varchar(100) null comment '意大利语仓库名称',
+  storename_sp     varchar(100) null comment '西班牙语仓库名称',
+  storename_de     varchar(100) null comment '德语仓库名称',
+
+  storeaddress_cn     varchar(100) null comment '中文仓库地址',
+  storeaddress_en     varchar(100) null comment '英文仓库地址',
+  storeaddress_hk     varchar(100) null comment '粤语仓库地址',
+  storeaddress_fr     varchar(100) null comment '法语仓库地址',
+  storeaddress_it     varchar(100) null comment '意大利语仓库地址',
+  storeaddress_sp     varchar(100) null comment '西班牙语仓库地址',
+  storeaddress_de     varchar(100) null comment '德语仓库地址',
+
+  contact_cn     varchar(100) null comment '中文联系人',
+  contact_en     varchar(100) null comment '英文联系人',
+  contact_hk     varchar(100) null comment '粤语联系人',
+  contact_fr     varchar(100) null comment '法语联系人',
+  contact_it     varchar(100) null comment '意大利语联系人',
+  contact_sp     varchar(100) null comment '西班牙语联系人',
+  contact_de     varchar(100) null comment '德语联系人',
+
   toll             varchar(20),
   fax              varchar(20),
   mobile           varchar(20),
@@ -7358,12 +7597,18 @@ create table zl_washinginstructions
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  name             varchar(10),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
-  remark           varchar(50),
-  image            longblob,
+--   name             varchar(10),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+  memo           varchar(50),
+  image            varchar(200) null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -7383,11 +7628,17 @@ create table zl_winterproofing
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  name             varchar(20),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
-  remark           varchar(100),
+--   name             varchar(20),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+  memo           varchar(100),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -7411,8 +7662,8 @@ create table zl_yearexchange
   money            decimal(16,9) comment 'import:export',
   begintime        datetime,
   endtime          datetime,
-  import           varchar(36),
-  export           varchar(36),
+  import           int unsigned null,
+  export           int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -7470,12 +7721,18 @@ create table `tb_company`
   sys_delete_stuff int unsigned null,
   sys_delete_date  datetime,
   sys_delete_flag  tinyint      not null comment '0-未删除 1-已删除',
-  `name`           varchar(191) not null comment '公司名称',
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   `name`           varchar(191) not null comment '公司名称',
+
+  name_cn     varchar(1000) null comment '中文名称',
+  name_en     varchar(1000) null comment '英文名称',
+  name_hk     varchar(1000) null comment '粤语名称',
+  name_fr     varchar(1000) null comment '法语名称',
+  name_it     varchar(1000) null comment '意大利语名称',
+  name_sp     varchar(1000) null comment '西班牙语名称',
+  name_de     varchar(1000) null comment '德语名称',
+
   `countryid`     int unsigned null comment '国家id',
-  `remark`         text comment '备注说明',
+  `memo`         text comment '备注说明',
   primary key (`id`)
 ) engine=innodb default charset=utf8mb4;
 
@@ -7514,12 +7771,18 @@ create table `tb_permission`
   sys_delete_date  datetime,
   sys_delete_flag  tinyint      not null comment '0-未删除 1-已删除',
   `pid`            int unsigned not null default '0' comment '所属权限id，默认0为顶级权限',
+
   `name`           varchar(100) not null default '' comment '权限名称',
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
+
+  memo_cn     varchar(100) null comment '中文描述',
+  memo_en     varchar(100) null comment '英文描述',
+  memo_hk     varchar(100) null comment '粤语描述',
+  memo_fr     varchar(100) null comment '法语描述',
+  memo_it     varchar(100) null comment '意大利语描述',
+  memo_sp     varchar(100) null comment '西班牙语描述',
+  memo_de     varchar(100) null comment '德语描述',
+
   `is_only_superadmin` tinyint(1) not null default '0' comment '是否为专属超级管理员权限，0-不是 1-是',
-  `languages` varchar(191) NULL,
-  `description`    varchar(100) not null default '' comment '权限描述',
   primary key (`id`),
   unique `permission_name` (`name`)
 ) engine=innodb default charset=utf8mb4;
@@ -7539,7 +7802,7 @@ create table `tb_permission_group`
   `groupid`        int unsigned not null comment '组id',
   `permissionid`  int unsigned not null comment '权限id',
   `companyid`  int unsigned null comment '公司id',
-  primary key (`id`),
+  primary key (`id`)
 ) engine=innodb default charset=utf8mb4 collate =utf8mb4_unicode_ci;
 
 #模块权限关联表
@@ -7580,94 +7843,92 @@ create table `tb_permission_module`
 -- ) engine=innodb default charset=utf8mb4;
 
 
-
-
 --
 -- 转存表中的数据 `tb_permission`
 --
 
-INSERT INTO `tb_permission` (`id`, `sys_create_stuff`, `sys_create_date`, `sys_modify_stuff`, `sys_modify_date`, `sys_delete_stuff`, `sys_delete_date`, `sys_delete_flag`, `pid`, `name`, `lang_code`, `relateid`, `description`) VALUES
-(1, 1, '2019-03-08 13:37:45', 1, '2019-03-08 13:37:45', NULL, NULL, 0, 0, 'userControl', NULL, NULL, '用户管理'),
-(2, 1, '2019-03-08 13:40:21', 1, '2019-03-08 13:40:21', NULL, NULL, 0, 0, 'databaseControl', NULL, NULL, '基础数据'),
-(3, 1, '2019-03-08 13:42:08', 1, '2019-03-08 13:42:08', NULL, NULL, 0, 0, 'productControl', NULL, NULL, '商品管理'),
-(4, 1, '2019-03-08 13:43:12', 1, '2019-03-08 13:43:12', NULL, NULL, 0, 0, 'customControl', NULL, NULL, '客户管理'),
-(5, 1, '2019-03-08 13:45:10', 1, '2019-03-08 13:45:10', NULL, NULL, 0, 0, 'supplierControl', NULL, NULL, '供应链管理'),
-(6, 1, '2019-03-08 13:45:34', 1, '2019-03-08 13:45:34', NULL, NULL, 0, 0, 'stockControl', NULL, NULL, '库存管理'),
-(7, 1, '2019-03-08 13:46:13', 1, '2019-03-08 13:46:13', NULL, NULL, 0, 0, 'salesControl', NULL, NULL, '销售管理'),
-(8, 1, '2019-03-08 13:46:40', 1, '2019-03-08 13:46:40', NULL, NULL, 0, 0, 'memberControl', NULL, NULL, '会员管理'),
-(9, 1, '2019-03-08 13:47:16', 1, '2019-03-08 13:47:16', NULL, NULL, 0, 0, 'costControl', NULL, NULL, '费用管理'),
-(10, 1, '2019-03-08 13:48:08', 1, '2019-03-08 13:48:08', NULL, NULL, 0, 0, 'financialControl', NULL, NULL, '财务管理'),
-(11, 1, '2019-03-08 13:48:42', 1, '2019-03-08 13:48:42', NULL, NULL, 0, 0, 'systemControl', NULL, NULL, '系统管理'),
-(12, 1, '2019-03-08 13:50:11', 1, '2019-03-08 13:50:11', NULL, NULL, 0, 1, 'user', NULL, NULL, '员工信息'),
-(13, 1, '2019-03-08 13:51:06', 1, '2019-03-08 13:51:06', NULL, NULL, 0, 1, 'group', NULL, NULL, '组信息'),
-(14, 1, '2019-03-08 13:51:24', 1, '2019-03-08 13:51:24', NULL, NULL, 0, 1, 'department', NULL, NULL, '部门信息'),
-(15, 1, '2019-03-08 13:52:10', 1, '2019-03-08 13:52:10', NULL, NULL, 0, 2, 'productRelate', NULL, NULL, '商品相关'),
-(16, 1, '2019-03-08 13:52:45', 1, '2019-03-08 13:52:45', NULL, NULL, 0, 2, 'priceRelate', NULL, NULL, '价格相关'),
-(17, 1, '2019-03-08 13:56:20', 1, '2019-03-08 13:56:20', NULL, NULL, 0, 2, 'otherRelate', NULL, NULL, '其他'),
-(18, 1, '2019-03-08 13:57:31', 1, '2019-03-08 13:57:31', NULL, NULL, 0, 3, 'product', NULL, NULL, '商品信息'),
-(19, 1, '2019-03-08 13:57:53', 1, '2019-03-08 13:57:53', NULL, NULL, 0, 3, 'picture', NULL, NULL, '图片管理'),
-(20, 1, '2019-03-08 14:04:10', 1, '2019-03-08 14:04:10', NULL, NULL, 0, 3, 'pictureupload', NULL, NULL, '图片上传'),
-(21, 1, '2019-03-08 14:06:34', 1, '2019-03-08 14:06:34', NULL, NULL, 0, 4, 'supplier', NULL, NULL, '关系单位信息'),
-(22, 1, '2019-03-08 14:12:25', 1, '2019-03-08 14:12:25', NULL, NULL, 0, 4, 'quotation', NULL, NULL, '供货商报价'),
-(23, 1, '2019-03-08 14:17:08', 1, '2019-03-08 14:17:08', NULL, NULL, 0, 4, 'supplierlevel', NULL, NULL, '供货商级别'),
-(24, 1, '2019-03-08 14:20:47', 1, '2019-03-08 14:20:47', NULL, NULL, 0, 5, 'orderRelate', NULL, NULL, '订单管理'),
-(25, 1, '2019-03-08 14:27:24', 1, '2019-03-08 14:27:24', NULL, NULL, 0, 5, 'confirmorder', NULL, NULL, '发货单管理'),
-(26, 1, '2019-03-08 14:34:21', 1, '2019-03-08 14:34:21', NULL, NULL, 0, 5, 'warehousingRelate', NULL, NULL, '到货入库'),
-(27, 1, '2019-03-08 14:35:59', 1, '2019-03-08 14:35:59', NULL, NULL, 0, 6, 'requisitionRelate', NULL, NULL, '调拨相关'),
-(28, 1, '2019-03-08 14:48:07', 1, '2019-03-08 14:48:07', NULL, NULL, 0, 6, 'checkRelate', NULL, NULL, '库存盘点'),
-(29, 1, '2019-03-08 15:12:48', 1, '2019-03-08 15:12:48', NULL, NULL, 0, 6, 'stocksnapshot', NULL, NULL, '库存余额查询'),
-(30, 1, '2019-03-08 15:13:20', 1, '2019-03-08 15:13:20', NULL, NULL, 0, 6, 'productstock', NULL, NULL, '库存查询'),
-(31, 1, '2019-03-08 15:14:05', 1, '2019-03-08 15:14:05', NULL, NULL, 0, 6, 'productstockSnapshot', NULL, NULL, '库存快照统计'),
-(32, 1, '2019-03-08 15:18:29', 1, '2019-03-08 15:18:29', NULL, NULL, 0, 7, 'sales', NULL, NULL, '商品零售批发'),
-(33, 1, '2019-03-08 15:28:36', 1, '2019-03-08 15:28:36', NULL, NULL, 0, 7, 'salesstock', NULL, NULL, '销售端口库存统计'),
-(34, 1, '2019-03-08 15:37:15', 1, '2019-03-08 15:37:15', NULL, NULL, 0, 7, 'sfRelate', NULL, NULL, '销售对账'),
-(35, 1, '2019-03-08 15:38:04', 1, '2019-03-08 15:38:04', NULL, NULL, 0, 7, 'sale/statistics', NULL, NULL, '销售统计'),
-(36, 1, '2019-03-08 15:39:08', 1, '2019-03-08 15:39:08', NULL, NULL, 0, 8, 'member', NULL, NULL, '会员管理'),
-(37, 1, '2019-03-08 15:39:37', 1, '2019-03-08 15:39:37', NULL, NULL, 0, 8, 'memberlevel', NULL, NULL, '会员级别'),
-(38, 1, '2019-03-08 16:04:26', 1, '2019-03-08 16:04:26', NULL, NULL, 0, 9, 'fee', NULL, NULL, '费用申请'),
-(39, 1, '2019-03-08 16:08:03', 1, '2019-03-08 16:08:03', NULL, NULL, 0, 9, 'fee/leader', NULL, NULL, '费用申请主管审批'),
-(40, 1, '2019-03-08 16:08:30', 1, '2019-03-08 16:08:30', NULL, NULL, 0, 9, 'fee/finance', NULL, NULL, '费用申请财务审批'),
-(41, 1, '2019-03-08 16:10:11', 1, '2019-03-08 16:10:11', NULL, NULL, 0, 9, 'fee/manager', NULL, NULL, '费用申请经理审批'),
-(42, 1, '2019-03-08 16:12:20', 1, '2019-03-08 16:12:20', NULL, NULL, 0, 10, 'sfsheet', NULL, NULL, '对账查询'),
-(43, 1, '2019-03-08 16:18:42', 1, '2019-03-08 16:18:42', NULL, NULL, 0, 11, 'help', NULL, NULL, '系统帮助'),
-(44, 1, '2019-03-08 16:20:49', 1, '2019-03-08 16:20:49', NULL, NULL, 0, 11, 'modifypassword', NULL, NULL, '修改密码'),
-(45, 1, '2019-03-08 16:21:09', 1, '2019-03-08 16:21:09', NULL, NULL, 0, 11, 'logout', NULL, NULL, '退出登录'),
-(46, 1, '2019-03-08 17:33:06', 1, '2019-03-08 17:33:06', NULL, NULL, 0, 15, 'brand', NULL, NULL, '品牌维护'),
-(47, 1, '2019-03-08 17:33:41', 1, '2019-03-08 17:33:41', NULL, NULL, 0, 15, 'brandgroup', NULL, NULL, '品类维护'),
-(48, 1, '2019-03-08 17:37:24', 1, '2019-03-08 17:37:24', NULL, NULL, 0, 15, 'ageseason', NULL, NULL, '款式年代'),
-(49, 1, '2019-03-08 17:40:43', 1, '2019-03-08 17:40:43', NULL, NULL, 0, 15, 'colortemplate', NULL, NULL, '颜色模板'),
-(50, 1, '2019-03-08 17:41:02', 1, '2019-03-08 17:41:02', NULL, NULL, 0, 15, 'sizetop', NULL, NULL, '商品尺码'),
-(51, 1, '2019-03-08 17:41:20', 1, '2019-03-08 17:41:20', NULL, NULL, 0, 15, 'material', NULL, NULL, '材质管理'),
-(52, 1, '2019-03-08 17:41:39', 1, '2019-03-08 17:41:39', NULL, NULL, 0, 15, 'ulnarinch', NULL, NULL, '商品尺寸'),
-(53, 1, '2019-03-08 17:41:58', 1, '2019-03-08 17:41:58', NULL, NULL, 0, 15, 'aliases', NULL, NULL, '商品别名'),
-(54, 1, '2019-03-08 17:42:16', 1, '2019-03-08 17:42:16', NULL, NULL, 0, 15, 'productinnards', NULL, NULL, '内部结构'),
-(55, 1, '2019-03-08 17:42:35', 1, '2019-03-08 17:42:35', NULL, NULL, 0, 15, 'productparts', NULL, NULL, '附带配件'),
-(56, 1, '2019-03-08 17:42:52', 1, '2019-03-08 17:42:52', NULL, NULL, 0, 15, 'occasionsstyle', NULL, NULL, '场合风格'),
-(57, 1, '2019-03-08 17:49:10', 1, '2019-03-08 17:49:10', NULL, NULL, 0, 15, 'closedway', NULL, NULL, '闭合方式'),
-(58, 1, '2019-03-08 17:50:10', 1, '2019-03-08 17:50:10', NULL, NULL, 0, 15, 'executioncategory', NULL, NULL, '执行标准'),
-(59, 1, '2019-03-08 17:50:26', 1, '2019-03-08 17:50:26', NULL, NULL, 0, 15, 'securitycategory', NULL, NULL, '安全类别'),
-(60, 1, '2019-03-08 17:50:56', 1, '2019-03-08 17:50:56', NULL, NULL, 0, 15, 'washinginstructions', NULL, NULL, '洗涤说明'),
-(61, 1, '2019-03-08 17:51:32', 1, '2019-03-08 17:51:32', NULL, NULL, 0, 15, 'winterproofing', NULL, NULL, '防寒指数'),
-(62, 1, '2019-03-08 17:55:31', 1, '2019-03-08 17:55:31', NULL, NULL, 0, 16, 'productprice', NULL, NULL, '商品价格管理'),
-(63, 1, '2019-03-08 17:55:52', 1, '2019-03-08 17:55:52', NULL, NULL, 0, 16, 'costformula', NULL, NULL, '成本计算管理'),
-(64, 1, '2019-03-08 17:56:56', 1, '2019-03-08 17:56:56', NULL, NULL, 0, 17, 'warehouse', NULL, NULL, '仓库管理'),
-(65, 1, '2019-03-08 17:57:20', 1, '2019-03-08 17:57:20', NULL, NULL, 0, 17, 'salesport', NULL, NULL, '销售端口管理'),
-(66, 1, '2019-03-08 17:57:40', 1, '2019-03-08 17:57:40', NULL, NULL, 0, 17, 'country', NULL, NULL, '国际及地区信息维护'),
-(67, 1, '2019-03-08 17:58:11', 1, '2019-03-08 17:58:11', NULL, NULL, 0, 17, 'feenames', NULL, NULL, '费用名称'),
-(68, 1, '2019-03-08 17:58:31', 1, '2019-03-08 17:58:31', NULL, NULL, 0, 17, 'shippingtype', NULL, NULL, '运输方式'),
-(69, 1, '2019-03-08 17:58:53', 1, '2019-03-08 17:58:53', NULL, NULL, 0, 17, 'salesmethods', NULL, NULL, '销售性质'),
-(70, 1, '2019-03-08 17:59:10', 1, '2019-03-08 17:59:10', NULL, NULL, 0, 17, 'businesstype', NULL, NULL, '业务类型'),
-(71, 1, '2019-03-08 17:59:26', 1, '2019-03-08 17:59:26', NULL, NULL, 0, 17, 'reportstyle', NULL, NULL, '快递单样式'),
-(72, 1, '2019-03-08 17:59:51', 1, '2019-03-08 17:59:51', NULL, NULL, 0, 17, 'imagetool', NULL, NULL, '图片工具'),
-(73, 1, '2019-03-08 18:07:56', 1, '2019-03-08 18:07:56', NULL, NULL, 0, 24, 'order', NULL, NULL, '订单管理'),
-(74, 1, '2019-03-08 18:11:11', 1, '2019-03-08 18:11:11', NULL, NULL, 0, 24, 'order/search', NULL, NULL, '订单状态查询'),
-(75, 1, '2019-03-08 18:11:32', 1, '2019-03-08 18:11:32', NULL, NULL, 0, 24, 'order/export', NULL, NULL, '订单导出'),
-(76, 1, '2019-03-08 18:30:33', 1, '2019-03-08 18:30:33', NULL, NULL, 0, 26, 'warehousing', NULL, NULL, '到货入库'),
-(78, 1, '2019-03-08 18:32:22', 1, '2019-03-08 18:32:22', NULL, NULL, 0, 26, 'warehousing/list', NULL, NULL, '入库单查询'),
-(79, 1, '2019-03-08 18:37:56', 1, '2019-03-08 18:37:56', NULL, NULL, 0, 27, 'requisition/apply', NULL, NULL, '调拨单查询/申请'),
-(80, 1, '2019-03-08 18:46:27', 1, '2019-03-08 18:46:27', NULL, NULL, 0, 27, 'requisition/turnout', NULL, NULL, '调拨出库确认'),
-(81, 1, '2019-03-08 18:46:34', 1, '2019-03-08 18:46:34', NULL, NULL, 0, 27, 'requisition/turnin', NULL, NULL, '调拨入库确认'),
-(82, 1, '2019-03-08 18:55:25', 1, '2019-03-08 18:55:25', NULL, NULL, 0, 28, 'check', NULL, NULL, '盘点单列表'),
-(83, 1, '2019-03-08 18:56:24', 1, '2019-03-08 18:56:24', NULL, NULL, 0, 28, 'check/detail', NULL, NULL, '库存变动查询'),
-(84, 1, '2019-03-08 19:01:59', 1, '2019-03-08 19:01:59', NULL, NULL, 0, 34, 'sf/sheet', NULL, NULL, '销售对账页面'),
-(85, 1, '2019-03-08 19:02:43', 1, '2019-03-08 19:02:43', NULL, NULL, 0, 34, 'sf/search', NULL, NULL, '对账查询页面');
+INSERT INTO `tb_permission` (`id`, `sys_create_stuff`, `sys_create_date`, `sys_modify_stuff`, `sys_modify_date`, `sys_delete_stuff`, `sys_delete_date`, `sys_delete_flag`, `pid`, `name`, `memo_cn`) VALUES
+(1, 1, '2019-03-08 13:37:45', 1, '2019-03-08 13:37:45', NULL, NULL, 0, 0, 'userControl',  '用户管理'),
+(2, 1, '2019-03-08 13:40:21', 1, '2019-03-08 13:40:21', NULL, NULL, 0, 0, 'databaseControl', '基础数据'),
+(3, 1, '2019-03-08 13:42:08', 1, '2019-03-08 13:42:08', NULL, NULL, 0, 0, 'productControl', '商品管理'),
+(4, 1, '2019-03-08 13:43:12', 1, '2019-03-08 13:43:12', NULL, NULL, 0, 0, 'customControl',  '客户管理'),
+(5, 1, '2019-03-08 13:45:10', 1, '2019-03-08 13:45:10', NULL, NULL, 0, 0, 'supplierControl', '供应链管理'),
+(6, 1, '2019-03-08 13:45:34', 1, '2019-03-08 13:45:34', NULL, NULL, 0, 0, 'stockControl',  '库存管理'),
+(7, 1, '2019-03-08 13:46:13', 1, '2019-03-08 13:46:13', NULL, NULL, 0, 0, 'salesControl',  '销售管理'),
+(8, 1, '2019-03-08 13:46:40', 1, '2019-03-08 13:46:40', NULL, NULL, 0, 0, 'memberControl', '会员管理'),
+(9, 1, '2019-03-08 13:47:16', 1, '2019-03-08 13:47:16', NULL, NULL, 0, 0, 'costControl', '费用管理'),
+(10, 1, '2019-03-08 13:48:08', 1, '2019-03-08 13:48:08', NULL, NULL, 0, 0, 'financialControl',  '财务管理'),
+(11, 1, '2019-03-08 13:48:42', 1, '2019-03-08 13:48:42', NULL, NULL, 0, 0, 'systemControl',  '系统管理'),
+(12, 1, '2019-03-08 13:50:11', 1, '2019-03-08 13:50:11', NULL, NULL, 0, 1, 'user',  '员工信息'),
+(13, 1, '2019-03-08 13:51:06', 1, '2019-03-08 13:51:06', NULL, NULL, 0, 1, 'group', '组信息'),
+(14, 1, '2019-03-08 13:51:24', 1, '2019-03-08 13:51:24', NULL, NULL, 0, 1, 'department',  '部门信息'),
+(15, 1, '2019-03-08 13:52:10', 1, '2019-03-08 13:52:10', NULL, NULL, 0, 2, 'productRelate', '商品相关'),
+(16, 1, '2019-03-08 13:52:45', 1, '2019-03-08 13:52:45', NULL, NULL, 0, 2, 'priceRelate',  '价格相关'),
+(17, 1, '2019-03-08 13:56:20', 1, '2019-03-08 13:56:20', NULL, NULL, 0, 2, 'otherRelate', '其他'),
+(18, 1, '2019-03-08 13:57:31', 1, '2019-03-08 13:57:31', NULL, NULL, 0, 3, 'product',  '商品信息'),
+(19, 1, '2019-03-08 13:57:53', 1, '2019-03-08 13:57:53', NULL, NULL, 0, 3, 'picture',  '图片管理'),
+(20, 1, '2019-03-08 14:04:10', 1, '2019-03-08 14:04:10', NULL, NULL, 0, 3, 'pictureupload', '图片上传'),
+(21, 1, '2019-03-08 14:06:34', 1, '2019-03-08 14:06:34', NULL, NULL, 0, 4, 'supplier', '关系单位信息'),
+(22, 1, '2019-03-08 14:12:25', 1, '2019-03-08 14:12:25', NULL, NULL, 0, 4, 'quotation', '供货商报价'),
+(23, 1, '2019-03-08 14:17:08', 1, '2019-03-08 14:17:08', NULL, NULL, 0, 4, 'supplierlevel', '供货商级别'),
+(24, 1, '2019-03-08 14:20:47', 1, '2019-03-08 14:20:47', NULL, NULL, 0, 5, 'orderRelate', '订单管理'),
+(25, 1, '2019-03-08 14:27:24', 1, '2019-03-08 14:27:24', NULL, NULL, 0, 5, 'confirmorder',  '发货单管理'),
+(26, 1, '2019-03-08 14:34:21', 1, '2019-03-08 14:34:21', NULL, NULL, 0, 5, 'warehousingRelate', '到货入库'),
+(27, 1, '2019-03-08 14:35:59', 1, '2019-03-08 14:35:59', NULL, NULL, 0, 6, 'requisitionRelate',  '调拨相关'),
+(28, 1, '2019-03-08 14:48:07', 1, '2019-03-08 14:48:07', NULL, NULL, 0, 6, 'checkRelate',  '库存盘点'),
+(29, 1, '2019-03-08 15:12:48', 1, '2019-03-08 15:12:48', NULL, NULL, 0, 6, 'stocksnapshot', '库存余额查询'),
+(30, 1, '2019-03-08 15:13:20', 1, '2019-03-08 15:13:20', NULL, NULL, 0, 6, 'productstock',  '库存查询'),
+(31, 1, '2019-03-08 15:14:05', 1, '2019-03-08 15:14:05', NULL, NULL, 0, 6, 'productstockSnapshot', '库存快照统计'),
+(32, 1, '2019-03-08 15:18:29', 1, '2019-03-08 15:18:29', NULL, NULL, 0, 7, 'sales', '商品零售批发'),
+(33, 1, '2019-03-08 15:28:36', 1, '2019-03-08 15:28:36', NULL, NULL, 0, 7, 'salesstock', '销售端口库存统计'),
+(34, 1, '2019-03-08 15:37:15', 1, '2019-03-08 15:37:15', NULL, NULL, 0, 7, 'sfRelate',  '销售对账'),
+(35, 1, '2019-03-08 15:38:04', 1, '2019-03-08 15:38:04', NULL, NULL, 0, 7, 'sale/statistics', '销售统计'),
+(36, 1, '2019-03-08 15:39:08', 1, '2019-03-08 15:39:08', NULL, NULL, 0, 8, 'member',  '会员管理'),
+(37, 1, '2019-03-08 15:39:37', 1, '2019-03-08 15:39:37', NULL, NULL, 0, 8, 'memberlevel',  '会员级别'),
+(38, 1, '2019-03-08 16:04:26', 1, '2019-03-08 16:04:26', NULL, NULL, 0, 9, 'fee',  '费用申请'),
+(39, 1, '2019-03-08 16:08:03', 1, '2019-03-08 16:08:03', NULL, NULL, 0, 9, 'fee/leader', '费用申请主管审批'),
+(40, 1, '2019-03-08 16:08:30', 1, '2019-03-08 16:08:30', NULL, NULL, 0, 9, 'fee/finance',  '费用申请财务审批'),
+(41, 1, '2019-03-08 16:10:11', 1, '2019-03-08 16:10:11', NULL, NULL, 0, 9, 'fee/manager',  '费用申请经理审批'),
+(42, 1, '2019-03-08 16:12:20', 1, '2019-03-08 16:12:20', NULL, NULL, 0, 10, 'sfsheet',  '对账查询'),
+(43, 1, '2019-03-08 16:18:42', 1, '2019-03-08 16:18:42', NULL, NULL, 0, 11, 'help', '系统帮助'),
+(44, 1, '2019-03-08 16:20:49', 1, '2019-03-08 16:20:49', NULL, NULL, 0, 11, 'modifypassword',  '修改密码'),
+(45, 1, '2019-03-08 16:21:09', 1, '2019-03-08 16:21:09', NULL, NULL, 0, 11, 'logout',  '退出登录'),
+(46, 1, '2019-03-08 17:33:06', 1, '2019-03-08 17:33:06', NULL, NULL, 0, 15, 'brand', '品牌维护'),
+(47, 1, '2019-03-08 17:33:41', 1, '2019-03-08 17:33:41', NULL, NULL, 0, 15, 'brandgroup', '品类维护'),
+(48, 1, '2019-03-08 17:37:24', 1, '2019-03-08 17:37:24', NULL, NULL, 0, 15, 'ageseason', '款式年代'),
+(49, 1, '2019-03-08 17:40:43', 1, '2019-03-08 17:40:43', NULL, NULL, 0, 15, 'colortemplate',  '颜色模板'),
+(50, 1, '2019-03-08 17:41:02', 1, '2019-03-08 17:41:02', NULL, NULL, 0, 15, 'sizetop', '商品尺码'),
+(51, 1, '2019-03-08 17:41:20', 1, '2019-03-08 17:41:20', NULL, NULL, 0, 15, 'material',  '材质管理'),
+(52, 1, '2019-03-08 17:41:39', 1, '2019-03-08 17:41:39', NULL, NULL, 0, 15, 'ulnarinch',  '商品尺寸'),
+(53, 1, '2019-03-08 17:41:58', 1, '2019-03-08 17:41:58', NULL, NULL, 0, 15, 'aliases', '商品别名'),
+(54, 1, '2019-03-08 17:42:16', 1, '2019-03-08 17:42:16', NULL, NULL, 0, 15, 'productinnards',  '内部结构'),
+(55, 1, '2019-03-08 17:42:35', 1, '2019-03-08 17:42:35', NULL, NULL, 0, 15, 'productparts', '附带配件'),
+(56, 1, '2019-03-08 17:42:52', 1, '2019-03-08 17:42:52', NULL, NULL, 0, 15, 'occasionsstyle', '场合风格'),
+(57, 1, '2019-03-08 17:49:10', 1, '2019-03-08 17:49:10', NULL, NULL, 0, 15, 'closedway', '闭合方式'),
+(58, 1, '2019-03-08 17:50:10', 1, '2019-03-08 17:50:10', NULL, NULL, 0, 15, 'executioncategory',  '执行标准'),
+(59, 1, '2019-03-08 17:50:26', 1, '2019-03-08 17:50:26', NULL, NULL, 0, 15, 'securitycategory', '安全类别'),
+(60, 1, '2019-03-08 17:50:56', 1, '2019-03-08 17:50:56', NULL, NULL, 0, 15, 'washinginstructions',  '洗涤说明'),
+(61, 1, '2019-03-08 17:51:32', 1, '2019-03-08 17:51:32', NULL, NULL, 0, 15, 'winterproofing',  '防寒指数'),
+(62, 1, '2019-03-08 17:55:31', 1, '2019-03-08 17:55:31', NULL, NULL, 0, 16, 'productprice',  '商品价格管理'),
+(63, 1, '2019-03-08 17:55:52', 1, '2019-03-08 17:55:52', NULL, NULL, 0, 16, 'costformula',  '成本计算管理'),
+(64, 1, '2019-03-08 17:56:56', 1, '2019-03-08 17:56:56', NULL, NULL, 0, 17, 'warehouse',  '仓库管理'),
+(65, 1, '2019-03-08 17:57:20', 1, '2019-03-08 17:57:20', NULL, NULL, 0, 17, 'salesport', '销售端口管理'),
+(66, 1, '2019-03-08 17:57:40', 1, '2019-03-08 17:57:40', NULL, NULL, 0, 17, 'country', '国际及地区信息维护'),
+(67, 1, '2019-03-08 17:58:11', 1, '2019-03-08 17:58:11', NULL, NULL, 0, 17, 'feenames', '费用名称'),
+(68, 1, '2019-03-08 17:58:31', 1, '2019-03-08 17:58:31', NULL, NULL, 0, 17, 'shippingtype',  '运输方式'),
+(69, 1, '2019-03-08 17:58:53', 1, '2019-03-08 17:58:53', NULL, NULL, 0, 17, 'salesmethods', '销售性质'),
+(70, 1, '2019-03-08 17:59:10', 1, '2019-03-08 17:59:10', NULL, NULL, 0, 17, 'businesstype',  '业务类型'),
+(71, 1, '2019-03-08 17:59:26', 1, '2019-03-08 17:59:26', NULL, NULL, 0, 17, 'reportstyle', '快递单样式'),
+(72, 1, '2019-03-08 17:59:51', 1, '2019-03-08 17:59:51', NULL, NULL, 0, 17, 'imagetool', '图片工具'),
+(73, 1, '2019-03-08 18:07:56', 1, '2019-03-08 18:07:56', NULL, NULL, 0, 24, 'order', '订单管理'),
+(74, 1, '2019-03-08 18:11:11', 1, '2019-03-08 18:11:11', NULL, NULL, 0, 24, 'order/search', '订单状态查询'),
+(75, 1, '2019-03-08 18:11:32', 1, '2019-03-08 18:11:32', NULL, NULL, 0, 24, 'order/export',  '订单导出'),
+(76, 1, '2019-03-08 18:30:33', 1, '2019-03-08 18:30:33', NULL, NULL, 0, 26, 'warehousing',  '到货入库'),
+(78, 1, '2019-03-08 18:32:22', 1, '2019-03-08 18:32:22', NULL, NULL, 0, 26, 'warehousing/list',  '入库单查询'),
+(79, 1, '2019-03-08 18:37:56', 1, '2019-03-08 18:37:56', NULL, NULL, 0, 27, 'requisition/apply',  '调拨单查询/申请'),
+(80, 1, '2019-03-08 18:46:27', 1, '2019-03-08 18:46:27', NULL, NULL, 0, 27, 'requisition/turnout',  '调拨出库确认'),
+(81, 1, '2019-03-08 18:46:34', 1, '2019-03-08 18:46:34', NULL, NULL, 0, 27, 'requisition/turnin',  '调拨入库确认'),
+(82, 1, '2019-03-08 18:55:25', 1, '2019-03-08 18:55:25', NULL, NULL, 0, 28, 'check', '盘点单列表'),
+(83, 1, '2019-03-08 18:56:24', 1, '2019-03-08 18:56:24', NULL, NULL, 0, 28, 'check/detail',  '库存变动查询'),
+(84, 1, '2019-03-08 19:01:59', 1, '2019-03-08 19:01:59', NULL, NULL, 0, 34, 'sf/sheet', '销售对账页面'),
+(85, 1, '2019-03-08 19:02:43', 1, '2019-03-08 19:02:43', NULL, NULL, 0, 34, 'sf/search',  '对账查询页面');

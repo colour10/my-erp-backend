@@ -6,3 +6,6 @@ app/cache
 app/home/controllers/TestController.php
 app/home/controllers/AdminController.php
 create-sql.sql.bak
+app/models/erp/Parts.php
+app/models/erp/Robots.php
+app/models/erp/RobotsParts.php
