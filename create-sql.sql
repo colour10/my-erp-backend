@@ -5486,10 +5486,17 @@ create table zl_ac_cashflow_statement
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  subject_name     varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   subject_name     varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+
   subject_type     int comment '0-正，1-负',
   orderno          int,
   parentid         int unsigned null,
@@ -5512,10 +5519,15 @@ create table zl_ac_cashflow_subject
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  name             varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   name             varchar(50),
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   sorf             varchar(1) comment '0-正，1-负',
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -5529,10 +5541,17 @@ create table zl_ac_km
 (
   id               int unsigned not null auto_increment comment '主键id',
   code             char(1)    not null,
-  chinese_name     char(1)    not null,
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   chinese_name     char(1)    not null,
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+
   km_type_id       int unsigned not null,
   up_km_id         int unsigned null,
   is_havexj        varchar(1) not null comment '0-没有,1-有',
@@ -5557,10 +5576,16 @@ create table zl_ac_km_type
 (
   id               int unsigned not null auto_increment comment '主键id',
   code             varchar(1) not null,
-  chinese_memo     char(1)    not null,
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   chinese_memo     char(1)    not null,
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   sys_create_stuff int unsigned not null,
   sys_create_date  datetime   not null,
   sys_modify_stuff int unsigned not null,
@@ -5603,10 +5628,17 @@ create table zl_ac_pzh_type
   id               int unsigned not null auto_increment comment '主键id',
   ztid             int unsigned not null,
   code             varchar(4) not null,
-  chinese_memo     char(1)    not null,
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   chinese_memo     char(1)    not null,
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+
   sys_create_stuff int unsigned not null,
   sys_create_date  datetime   not null,
   sys_modify_stuff int unsigned not null,
@@ -5626,10 +5658,17 @@ alter table zl_ac_pzh_type comment '现金、银行、转账';
 create table zl_ac_ztb
 (
   id               int unsigned not null auto_increment comment '主键id',
-  zt_name          varchar(100) not null,
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   zt_name          varchar(100) not null,
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+
   km_code_rule     varchar(50)  not null,
   star_date        datetime     not null,
   end_date         datetime comment '只有结束了才有值',
@@ -5665,10 +5704,17 @@ create table zl_ageseason
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   sessionmark      varchar(10),
-  sessionname      varchar(10),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   sessionname      varchar(10),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -5688,10 +5734,16 @@ create table zl_aliases
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  name             varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   name             varchar(50),
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+
   code             varchar(50),
   brandid          int unsigned null,
   primary key (id)
@@ -5713,10 +5765,17 @@ create table zl_bankinformation
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  bankname         varchar(100),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   bankname         varchar(100),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+
   bankname2        varchar(100),
   bankaddress      varchar(100),
   bankaccount      varchar(50),
@@ -5746,10 +5805,16 @@ create table zl_brand
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   code             varchar(50),
-  brandname        varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   brandname        varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   countryid        int unsigned null,
   brandgroupid      int unsigned null,
   imageurl        varchar(100) null,
@@ -5780,10 +5845,17 @@ create table zl_brandgroup
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   code             varchar(50),
-  brandgroupname   varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   brandgroupname   varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -5804,12 +5876,19 @@ create table zl_brandremark
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   brandid          int unsigned null,
-  name             varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
-  remark           varchar(100),
-  pic              longblob,
+--   name             varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+
+  memo           varchar(100),
+  pic              varchar(200) null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -5829,10 +5908,17 @@ create table zl_businesstype
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  name             varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   name             varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -5852,12 +5938,17 @@ create table zl_childproductgroup
   sys_delete_date   datetime,
   sys_delete_flag   tinyint  not null comment '0-未删除 1-已删除',
 
-  childname         varchar(50),
-  lang_code         varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   childname         varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   childcode         varchar(50),
-  englishname varchar(191) NULL,
   productgroupid    int unsigned null,
   producttemplateid int unsigned null,
   weight            decimal(16,9),
@@ -5883,10 +5974,16 @@ create table zl_closedway
   sys_delete_date   datetime,
   sys_delete_flag   tinyint  not null comment '0-未删除 1-已删除',
 
-  closedwayname     varchar(50),
-  lang_code         varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   closedwayname     varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   closedwaynamenote varchar(100),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -5908,10 +6005,16 @@ create table zl_color
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   code             varchar(10),
-  colorname        varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   colorname        varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   colormatter      varchar(100),
   asacolorid       int unsigned null,
   brandid          int unsigned null,
@@ -5935,12 +6038,18 @@ create table zl_colortemplate
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  color_name       varchar(20),
-  englishname varchar(191) NULL,
+--   color_name       varchar(20),
+--   englishname varchar(191) NULL,
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   picture varchar(200) null,
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
   code             varchar(4),
   color_note       varchar(200),
   colortype        varchar(50),
@@ -5963,10 +6072,16 @@ create table zl_companycontacts
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  name             varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   name             varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   gender           varchar(10),
   department       varchar(20),
   position         varchar(20),
@@ -6011,10 +6126,17 @@ create table zl_costformula
   coefficient_1    decimal(10,2),
   symbol_2         char(10),
   coefficient_2    decimal(10,2),
-  formulaname      varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   formulaname      varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6027,10 +6149,16 @@ create table zl_country
 (
   id               int unsigned not null auto_increment comment '主键id',
   code             varchar(20)  not null,
-  name             varchar(100) not null,
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   name             varchar(100) not null,
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   sys_create_stuff int unsigned not null,
   sys_create_date  datetime     not null,
   sys_modify_stuff int unsigned not null,
@@ -6085,10 +6213,16 @@ create table zl_currency
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  currencyname     varchar(20),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   currencyname     varchar(20),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   currencycode     varchar(10),
   currencymark     bool,
   userflag         varchar(1),
@@ -6111,10 +6245,17 @@ create table zl_customs_name
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  name             varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   name             varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+
   remark           varchar(100),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -6156,11 +6297,17 @@ create table zl_delare_makings
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  name             varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
-  remark           varchar(100),
+--   name             varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+  memo           varchar(100),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6181,10 +6328,16 @@ create table zl_ex_reportstyle
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   code             varchar(20),
-  chinese_name     varchar(100),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   chinese_name     varchar(100),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
   tdbackx          int,
   tdbacky          int,
   tdbackwidth      int,
@@ -6260,10 +6413,17 @@ create table zl_executioncategory
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  executionname    varchar(100),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   executionname    varchar(100),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+
   executionmatter  varchar(500),
   note             varchar(500),
   primary key (id)
@@ -6285,11 +6445,18 @@ create table zl_exhibition
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  name             varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
-  remark           varchar(100),
+--   name             varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+
+  memo           varchar(100),
   status           varchar(1) comment '0-不可用 1-可用',
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -6311,10 +6478,16 @@ create table zl_feenames
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   code             varchar(20),
-  name             varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   name             varchar(50),
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+
   kmid             int unsigned null,
   isamortize       tinyint comment '0-不摊销 1-金额摊销 2-件数摊销',
   isused           varchar(1) comment '0-不常用 1-常用',
@@ -6337,11 +6510,17 @@ create table zl_forbiddenword
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  word             varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
-  remark           varchar(100),
+--   word             varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+  memo           varchar(100),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6361,10 +6540,16 @@ create table zl_imagetool
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  name             varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
+--   name             varchar(50),
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+
   type             varchar(1) comment '0-修改尺寸
             1-修改尺寸并添加
             2-裁剪并对齐',
@@ -6414,10 +6599,7 @@ create table zl_invoice_header
 
   supplierid       int unsigned null,
   header           varchar(50),
-  lang_code        varchar(20) null comment '语言编码',
-  `relateid` int null comment '对应主键id',
-  `languages` varchar(191) NULL,
-  remark           varchar(200),
+  memo           varchar(200),
   isdefault        varchar(1) comment '1-默认 0-非默认',
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -6446,7 +6628,7 @@ create table zl_material
   name_sp     varchar(100) null comment '西班牙语名称',
   name_de     varchar(100) null comment '德语名称',
 
-  englishname varchar(191) NULL,
+--   englishname varchar(191) NULL,
   code             varchar(20),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
