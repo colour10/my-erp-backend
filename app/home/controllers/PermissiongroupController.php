@@ -40,18 +40,11 @@ class PermissiongroupController extends CadminController {
             // 首先清除原来的权限分配记录(查询条件为：公司id：$auth->company,groupid:$groupid,sys_delete_flag:0)
             $user = $this->session->get('user');
             $companyid = $user['companyid'];
-            $userid = $user['id'];
             $result = TbPermissionGroup::find("groupid=$groupid and companyid=$companyid and sys_delete_flag=0");
 
             foreach ($result as $record) {
-                // 如果存在，就删除，即把0修改为1
-                // 同时加入删除相关字段信息
-                $data = [
-                    'sys_delete_flag' => '1',
-                    'sys_delete_stuff' => $userid,
-                    'sys_delete_date' => date('Y-m-d H:i:s'),
-                ];
-                if (!$record->save($data)) {
+                // 如果存在，就删除
+                if (!$record->delete()) {
                     return $this->error(['Permission delete failed']);
                 }
             }
