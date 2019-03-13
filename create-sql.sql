@@ -386,7 +386,7 @@ drop table if exists zl_brand;
 
 drop table if exists zl_brandgroup;
 
-drop table if exists zl_brandremark;
+drop table if exists zl_brandmemo;
 
 drop table if exists zl_businesstype;
 
@@ -539,7 +539,7 @@ create table ac_invoice
   invoicesum       decimal(16,9),
   exchangrate      decimal(16,9),
   invoiceno        varchar(20),
-  remark           varchar(100),
+  memo           varchar(100),
   checkstatus      varchar(1) comment '0-未审核，1-已审核',
   checkid          int unsigned null,
   glstatus         varchar(1),
@@ -571,7 +571,7 @@ create table ac_invoice_fee
   currencyid       int unsigned null,
   exchangrate      decimal(16,9),
   invoiceno        varchar(20),
-  remark           char(1),
+  memo           text,
   checkstatus      varchar(1) comment '0-未审核，1-已审核',
   checkid          int unsigned null,
   glstatus         varchar(1),
@@ -601,7 +601,7 @@ create table ac_invoice_fee_detail
   feecurrencyid     int unsigned not null,
   invoicecurrencyid int unsigned null,
   invoicesum        decimal(16,9),
-  remark            varchar(100),
+  memo            varchar(100),
   companyid         int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -633,7 +633,7 @@ create table ac_invoice_prepay
   invoicesum       decimal(16,9),
   exchangrate      decimal(16,9),
   invoiceno        varchar(20),
-  remark           varchar(100),
+  memo           varchar(100),
   checkstatus      varchar(1) comment '0-未审核，1-已审核',
   checkid          int unsigned null,
   primary key (id)
@@ -789,14 +789,14 @@ create table ac_sf_sheet
   sum              decimal(16,9),
   creator          int unsigned null,
   date             datetime,
-  remark           text,
+  memo           text,
   externalno       varchar(50),
   header           text,
   originalsum      decimal(16,9),
   adjustsum        decimal(16,9),
   iskp             varchar(1),
   kpid             int unsigned null,
-  refundremark     text,
+  refundmemo     text,
   isrefund         varchar(1),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -845,7 +845,7 @@ create table ac_sf_sheet_refund
   currencyid       int unsigned null,
   refundsum        decimal(10,2),
   invoiceno        varchar(100),
-  remark           varchar(1000),
+  memo           varchar(1000),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -873,7 +873,7 @@ create table dd_arrivalnotice
   currencyid       int unsigned null,
   total            decimal(16,9),
   isstatus         varchar(1),
-  remark           varchar(200),
+  memo           varchar(200),
   auditstaff       int unsigned null,
   auditdate        datetime,
   auditstatus      varchar(1),
@@ -935,7 +935,7 @@ create table dd_confirmorder
   currencyid         int unsigned null,
   total              decimal(16,9),
   isstatus           varchar(1) comment '0-在途未入库，1-已入库，2-已备货未发出',
-  remark             varchar(200),
+  memo             varchar(200),
   brandid            int unsigned null,
   season             int unsigned null,
   seasontype         varchar(1) comment '0-pre ,1-main ,2-fashion show',
@@ -1002,7 +1002,7 @@ create table dd_corder_ctn
   height           decimal(16,9),
   weight           decimal(16,9),
   cbm              decimal(16,9),
-  remark           varchar(500),
+  memo           varchar(500),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -1139,7 +1139,7 @@ create table dd_order
   auditstatus      varchar(1),
   isstatus         varchar(1) comment '0-未完结 1-已完结',
   form             varchar(2) comment 'f-女款，m-男款,fm男款/女款',
-  remark           varchar(200),
+  memo           varchar(200),
   contactor        varchar(200),
   ourcontactor     varchar(200),
   season           int unsigned null,
@@ -1234,7 +1234,7 @@ create table dd_quotation
   form             varchar(1) comment 'f-女款，m-男款',
   year_season      varchar(10),
   rate             decimal(16,9),
-  remark           varchar(1000),
+  memo           varchar(1000),
   filename         varchar(100),
   s_filename       varchar(100) comment '在服务器上的文件名',
   primary key (id)
@@ -1259,14 +1259,14 @@ create table dd_quotation_detail
   quotationid      int unsigned null,
   productid        int unsigned null,
   ordernumber      int,
-  pic1             longblob,
-  pic2             longblob,
-  pic3             longblob,
-  pic4             longblob,
+  pic1             varchar(200),
+  pic2             varchar(200),
+  pic3             varchar(200),
+  pic4             varchar(200),
   price            decimal(16,9),
   item             varchar(100),
   sizeid           int unsigned null,
-  remark           varchar(1000),
+  memo           varchar(1000),
   savesize         varchar(50),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -3169,7 +3169,7 @@ create table link_user_to_labourcontactor
   userid           int unsigned null,
   datefrom         datetime,
   datato           datetime,
-  remark           text,
+  memo           text,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -3463,7 +3463,7 @@ create table tb_contactlist
   arrivaltime      datetime,
   billno           varchar(50),
   singletype       varchar(1) comment '0-dhl 1-空运',
-  remarks          text,
+  memos          text,
   flightno         varchar(50),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -3485,7 +3485,7 @@ create table tb_declaration
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   no               varchar(50),
-  remark           varchar(1000),
+  memo           varchar(1000),
   date             datetime,
   corderid         int unsigned null,
   pricerate        decimal(16,9),
@@ -3540,7 +3540,7 @@ create table tb_department
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   name             varchar(100),
-  remark           varchar(1000),
+  memo           varchar(1000),
   companyid    int unsigned not null comment '公司id',
   priceid          int unsigned null comment '此价格id可以是基础价格id，也可以是销售端口id',
   spotid           int unsigned null,
@@ -3596,7 +3596,7 @@ create table tb_distribute
   in_id            int unsigned null,
   op_id            int unsigned null,
   op_date          datetime,
-  remark           text,
+  memo           text,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -3640,7 +3640,7 @@ create table tb_express
   expresscompany   varchar(1) comment '0-顺丰 1-德邦 2-京东 3-其他 4-圆通',
   expressno        varchar(50),
   expressfee       decimal(16,9),
-  remark           text,
+  memo           text,
   creator          int unsigned not null,
   departmentid     int unsigned null,
   type             varchar(1) comment '0-个人，1-部门，2-事业部，3-公司',
@@ -3681,7 +3681,7 @@ create table tb_fee
   financecheckstatus varchar(1) comment '0-未审核 1-审核通过 2-驳回',
   financeid          int unsigned null,
   financecheckdate   datetime,
-  remark             varchar(500),
+  memo             varchar(500),
   pzhstatus          varchar(1),
   pzhid              int unsigned null,
   managercheckstatus varchar(1) comment '0-未审核 1-审核通过 2-驳回',
@@ -3717,7 +3717,7 @@ create table tb_fee_detail
   rate             decimal(16,9),
   feecurrencyid    int unsigned null,
   feesum           decimal(16,9),
-  remark           varchar(500),
+  memo           varchar(500),
   invoiceno        varchar(500),
   paydate          datetime,
   sorf             varchar(1),
@@ -3890,7 +3890,7 @@ create table tb_kp
   sum              decimal(16,9),
   sfcompanyid      int unsigned null,
   header           text,
-  remark           text,
+  memo           text,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -4069,7 +4069,7 @@ create table tb_member_contactor
   qq               varchar(50),
   wechat           varchar(50),
   microblog        varchar(50),
-  remark           varchar(50),
+  memo           varchar(50),
   is_default       varchar(1) comment '0-否 1-是',
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -4163,7 +4163,7 @@ create table tb_member_preordination
   memberid         int unsigned null,
   productid        int unsigned null,
   sizeid           int unsigned null,
-  remark           text,
+  memo           text,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -4184,7 +4184,7 @@ create table tb_picture
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   picturename      varchar(20),
-  picturestream    longblob,
+  picturestream    varchar(200),
   picturetype      char(10),
   picturegroup     varchar(50),
   primary key (id)
@@ -4368,7 +4368,7 @@ create table tb_productstock
             2-二维码打印',
   corderid         int unsigned null,
   currencyid       int unsigned null,
-  remark           varchar(500),
+  memo           varchar(500),
   cpdate           datetime,
   cp_op            int unsigned null,
   intime           datetime,
@@ -4415,7 +4415,7 @@ create table tb_productstock_snapshot
   sellstaff        int unsigned null,
   corderid         int unsigned null,
   currencyid       int unsigned null,
-  remark           varchar(500),
+  memo           varchar(500),
   cpdate           datetime,
   intime           datetime,
   property         varchar(1) comment '0-自采 1-代销',
@@ -4450,7 +4450,7 @@ create table tb_requisition
   turnout_date      datetime,
   out_id            int unsigned not null,
   in_id             int unsigned not null,
-  remark            varchar(500),
+  memo            varchar(500),
   allocationconfirm varchar(1) comment 'null-主调拨单才会是这个
             4-出库未完成
             0-入库未完成
@@ -4488,7 +4488,7 @@ create table tb_requisition_detail
 
   requisition_id   int unsigned not null,
   stock_id         int unsigned null,
-  remark           varchar(500),
+  memo           varchar(500),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -4512,7 +4512,7 @@ create table tb_requisition_detail_group
   product_id       int unsigned null,
   size_id          int unsigned null,
   count            int,
-  remark           varchar(100),
+  memo           varchar(100),
   ctnno            varchar(50),
   outcount         int,
   incount          int,
@@ -4539,7 +4539,7 @@ create table tb_requisition_express
   expresscompany   varchar(1) comment '0-顺丰 1-德邦 2-京东 3-其他 4-圆通',
   expressno        varchar(50),
   expressfee       decimal(16,9),
-  remark           text,
+  memo           text,
   creator          int unsigned null,
   departmentid     int unsigned null,
   type             varchar(1) comment '0-个人，1-部门，2-事业部，3-公司',
@@ -4636,7 +4636,7 @@ create table tb_special_requisition
             1-已生效
             ',
   check_date       datetime,
-  remark           varchar(1000),
+  memo           varchar(1000),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -4662,7 +4662,7 @@ create table tb_special_requisition_detail
   count            int,
   warehouseid      int unsigned null,
   type             varchar(1) comment '0-出库 1-入库',
-  remark           varchar(500),
+  memo           varchar(500),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -4767,7 +4767,7 @@ create table tb_supplier_orderdate
   type             varchar(1) comment '0-pre ,1-main ,2-fashion show',
   showdate         datetime,
   closedate        datetime,
-  remark           text,
+  memo           text,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -4871,7 +4871,7 @@ create table tb_warehousing
   season           int unsigned null,
   seasontype       varchar(1) comment '0-pre ,1-main ,2-fashion show',
   op_id            int unsigned not null,
-  remark           varchar(500),
+  memo           varchar(500),
   ischecked        varchar(2),
   isamortized      varchar(2),
   entrycode        varchar(100),
@@ -4904,7 +4904,7 @@ create table tb_warehousing_detail
   size_id          int unsigned not null,
   amount           int           not null,
   cost             decimal(16,9) not null,
-  remark           varchar(500),
+  memo           varchar(500),
   cjj              decimal(16,9),
   yj               decimal(16,9),
   sellprice        decimal(16,9),
@@ -5161,7 +5161,7 @@ create table xs_pre_salesdetails
   dealprice        decimal(16,9),
   price            decimal(16,9),
   rate             decimal(16,9),
-  remark           varchar(500),
+  memo           varchar(500),
   totalsellprice   decimal(16,9),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -5186,7 +5186,7 @@ create table xs_pricelist
   enddate          datetime,
   name             varchar(20),
   salesport        int unsigned null,
-  remark           varchar(500),
+  memo           varchar(500),
   priceid          int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -5366,7 +5366,7 @@ create table xs_sales_cardetails
   dealprice        decimal(16,9),
   price            decimal(16,9),
   rate             decimal(16,9),
-  remark           varchar(500),
+  memo           varchar(500),
   totalsellprice   decimal(16,9),
   stockid          int unsigned null,
   primary key (id)
@@ -5409,7 +5409,7 @@ create table xs_sales_pay
   isreturn         varchar(1),
   sheetid          int unsigned null,
   sum              decimal(16,9),
-  remark           varchar(500),
+  memo           varchar(500),
   currencyid       int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -5459,12 +5459,12 @@ create table xs_salesdetails
   dealprice         decimal(16,9),
   price             decimal(16,9),
   rate              decimal(16,9),
-  remark            varchar(500),
+  memo            varchar(500),
   returnid          int unsigned null,
   totalsellprice    decimal(16,9),
   saleno            varchar(50),
   stockid           int unsigned null,
-  priceremark       varchar(500),
+  pricememo       varchar(500),
   exchangerate      decimal(16,9),
   totalsellpricebwb decimal(16,9),
   primary key (id)
@@ -5784,7 +5784,7 @@ create table zl_bankinformation
   currency         int unsigned null,
   account          varchar(50),
   isused           varchar(1) comment '0-常用，1-禁用',
-  remark           varchar(200),
+  memo           varchar(200),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -5820,7 +5820,7 @@ create table zl_brand
   imageurl        varchar(100) null,
   childbrand       int unsigned null,
   description      varchar(1000),
-  imagestream      longblob,
+  imagestream      varchar(200),
   memo             text,
   supplier         int unsigned null,
   officialwebsite  varchar(500),
@@ -5862,9 +5862,9 @@ create table zl_brandgroup
 alter table zl_brandgroup comment '品类表';
 
 /*==============================================================*/
-/* table: zl_brandremark                                        */
+/* table: zl_brandmemo                                        */
 /*==============================================================*/
-create table zl_brandremark
+create table zl_brandmemo
 (
   id               int unsigned not null auto_increment comment '主键id',
   sys_create_stuff int unsigned not null,
@@ -5892,7 +5892,7 @@ create table zl_brandremark
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
-alter table zl_brandremark comment '品牌颜色材质备注';
+alter table zl_brandmemo comment '品牌颜色材质备注';
 
 /*==============================================================*/
 /* table: zl_businesstype                                       */
@@ -5984,11 +5984,68 @@ create table zl_closedway
   name_sp     varchar(100) null comment '西班牙语名称',
   name_de     varchar(100) null comment '德语名称',
 
-  closedwaynamenote varchar(100),
+  memo_cn text comment '中文备注',
+  memo_en text comment '英文备注',
+  memo_hk text comment '粤语备注',
+  memo_fr text comment '法语备注',
+  memo_it text comment '意大利语备注',
+  memo_sp text comment '西班牙语备注',
+  memo_de text comment '德语备注',
+
+--   closedwaynamenote varchar(100),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
 alter table zl_closedway comment '闭合方式';
+
+/*==============================================================*/
+/* table: zl_securitycategory                                           */
+/*==============================================================*/
+drop table if exists `zl_securitycategory`
+create table zl_securitycategory
+(
+  id                int unsigned not null auto_increment comment '主键id',
+  sys_create_stuff  int unsigned not null,
+  sys_create_date   datetime not null,
+  sys_modify_stuff  int unsigned not null,
+  sys_modify_date   datetime not null,
+  sys_delete_stuff  int unsigned null,
+  sys_delete_date   datetime,
+  sys_delete_flag   tinyint  not null comment '0-未删除 1-已删除',
+
+  --   closedwayname     varchar(50),
+
+  name_cn     varchar(100) null comment '中文名称',
+  name_en     varchar(100) null comment '英文名称',
+  name_hk     varchar(100) null comment '粤语名称',
+  name_fr     varchar(100) null comment '法语名称',
+  name_it     varchar(100) null comment '意大利语名称',
+  name_sp     varchar(100) null comment '西班牙语名称',
+  name_de     varchar(100) null comment '德语名称',
+
+
+  item_cn     varchar(200) null comment '中文事项',
+  item_en     varchar(200) null comment '英文事项',
+  item_hk     varchar(200) null comment '粤语事项',
+  item_fr     varchar(200) null comment '法语事项',
+  item_it     varchar(200) null comment '意大利语事项',
+  item_sp     varchar(200) null comment '西班牙语事项',
+  item_de     varchar(200) null comment '德语事项',
+
+
+  memo_cn text comment '中文备注',
+  memo_en text comment '英文备注',
+  memo_hk text comment '粤语备注',
+  memo_fr text comment '法语备注',
+  memo_it text comment '意大利语备注',
+  memo_sp text comment '西班牙语备注',
+  memo_de text comment '德语备注',
+
+  --   closedwaynamenote varchar(100),
+  primary key (id)
+) engine=innodb default charset=utf8mb4;
+
+alter table zl_securitycategory comment '安全类别维护表';
 
 /*==============================================================*/
 /* table: zl_color                                              */
@@ -6018,7 +6075,7 @@ create table zl_color
   colormatter      varchar(100),
   asacolorid       int unsigned null,
   brandid          int unsigned null,
-  imagestream      longblob,
+  imagestream      varchar(200),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6167,7 +6224,7 @@ create table zl_country
   sys_delete_date  datetime,
   sys_delete_flag  tinyint      not null comment '0-未删除 1-已删除',
 
-  localcurrency    int unsigned null,
+  localcurrency    varchar(20),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6256,7 +6313,7 @@ create table zl_customs_name
   name_de     varchar(100) null comment '德语名称',
 
 
-  remark           varchar(100),
+  memo           varchar(100),
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6425,7 +6482,16 @@ create table zl_executioncategory
 
 
   executionmatter  varchar(500),
-  note             varchar(500),
+--   note             varchar(500),
+
+  memo_cn text comment '中文备注',
+  memo_en text comment '英文备注',
+  memo_hk text comment '粤语备注',
+  memo_fr text comment '法语备注',
+  memo_it text comment '意大利语备注',
+  memo_sp text comment '西班牙语备注',
+  memo_de text comment '德语备注',
+
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6456,7 +6522,16 @@ create table zl_exhibition
   name_de     varchar(100) null comment '德语名称',
 
 
-  memo           varchar(100),
+--   memo           varchar(100),
+
+  memo_cn text comment '中文备注',
+  memo_en text comment '英文备注',
+  memo_hk text comment '粤语备注',
+  memo_fr text comment '法语备注',
+  memo_it text comment '意大利语备注',
+  memo_sp text comment '西班牙语备注',
+  memo_de text comment '德语备注',
+
   status           varchar(1) comment '0-不可用 1-可用',
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -6520,7 +6595,16 @@ create table zl_forbiddenword
   name_sp     varchar(100) null comment '西班牙语名称',
   name_de     varchar(100) null comment '德语名称',
 
-  memo           varchar(100),
+--   memo           varchar(100),
+
+  memo_cn text comment '中文备注',
+  memo_en text comment '英文备注',
+  memo_hk text comment '粤语备注',
+  memo_fr text comment '法语备注',
+  memo_it text comment '意大利语备注',
+  memo_sp text comment '西班牙语备注',
+  memo_de text comment '德语备注',
+
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6577,7 +6661,16 @@ create table zl_invite_rule
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
   bonus            bigint,
-  remark           text,
+--   memo           text,
+
+  memo_cn text comment '中文备注',
+  memo_en text comment '英文备注',
+  memo_hk text comment '粤语备注',
+  memo_fr text comment '法语备注',
+  memo_it text comment '意大利语备注',
+  memo_sp text comment '西班牙语备注',
+  memo_de text comment '德语备注',
+
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6599,7 +6692,16 @@ create table zl_invoice_header
 
   supplierid       int unsigned null,
   header           varchar(50),
-  memo           varchar(200),
+--   memo           varchar(200),
+
+  memo_cn text comment '中文备注',
+  memo_en text comment '英文备注',
+  memo_hk text comment '粤语备注',
+  memo_fr text comment '法语备注',
+  memo_it text comment '意大利语备注',
+  memo_sp text comment '西班牙语备注',
+  memo_de text comment '德语备注',
+
   isdefault        varchar(1) comment '1-默认 0-非默认',
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -6781,7 +6883,16 @@ create table zl_pricesource
   name_sp     varchar(100) null comment '西班牙语名称',
   name_de     varchar(100) null comment '德语名称',
 
-  memo           varchar(500),
+--   memo           varchar(500),
+
+  memo_cn text comment '中文备注',
+  memo_en text comment '英文备注',
+  memo_hk text comment '粤语备注',
+  memo_fr text comment '法语备注',
+  memo_it text comment '意大利语备注',
+  memo_sp text comment '西班牙语备注',
+  memo_de text comment '德语备注',
+
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -6809,7 +6920,16 @@ create table zl_productdscrb
   name_sp     varchar(100) null comment '西班牙语名称',
   name_de     varchar(100) null comment '德语名称',
 
-  memo           varchar(100),
+--   memo           varchar(100),
+
+  memo_cn text comment '中文备注',
+  memo_en text comment '英文备注',
+  memo_hk text comment '粤语备注',
+  memo_fr text comment '法语备注',
+  memo_it text comment '意大利语备注',
+  memo_sp text comment '西班牙语备注',
+  memo_de text comment '德语备注',
+
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -7018,7 +7138,16 @@ create table zl_reportset
   name_sp     varchar(100) null comment '西班牙语名称',
   name_de     varchar(100) null comment '德语名称',
 
-  memo           varchar(500),
+--   memo           varchar(500),
+
+  memo_cn text comment '中文备注',
+  memo_en text comment '英文备注',
+  memo_hk text comment '粤语备注',
+  memo_fr text comment '法语备注',
+  memo_it text comment '意大利语备注',
+  memo_sp text comment '西班牙语备注',
+  memo_de text comment '德语备注',
+
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -7111,7 +7240,16 @@ create table zl_salesport
   protname_sp     varchar(100) null comment '西班牙语名称',
   protname_de     varchar(100) null comment '德语名称',
 
-  memo           varchar(500),
+--   memo           varchar(500),
+
+  memo_cn text comment '中文备注',
+  memo_en text comment '英文备注',
+  memo_hk text comment '粤语备注',
+  memo_fr text comment '法语备注',
+  memo_it text comment '意大利语备注',
+  memo_sp text comment '西班牙语备注',
+  memo_de text comment '德语备注',
+
 --   storename        varchar(50),
 
   storename_cn     varchar(1000) null comment '中文名称',
@@ -7136,7 +7274,7 @@ create table zl_salesport
   tel              varchar(50),
   isused           varchar(1),
   iskd             varchar(1) comment '0-否 1-是',
-  postremark       text,
+  postmemo       text,
   cusid            int unsigned null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -7162,7 +7300,16 @@ create table zl_salesport_mission
   salesum          decimal(10,2),
   profit           decimal(10,2),
   rate             decimal(10,2),
-  memo           varchar(500),
+--   memo           varchar(500),
+
+  memo_cn text comment '中文备注',
+  memo_en text comment '英文备注',
+  memo_hk text comment '粤语备注',
+  memo_fr text comment '法语备注',
+  memo_it text comment '意大利语备注',
+  memo_sp text comment '西班牙语备注',
+  memo_de text comment '德语备注',
+
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -7271,7 +7418,16 @@ create table zl_shippingtype
   name_sp     varchar(100) null comment '西班牙语名称',
   name_de     varchar(100) null comment '德语名称',
 
-  memo           varchar(50),
+--   memo           varchar(50),
+
+  memo_cn text comment '中文备注',
+  memo_en text comment '英文备注',
+  memo_hk text comment '粤语备注',
+  memo_fr text comment '法语备注',
+  memo_it text comment '意大利语备注',
+  memo_sp text comment '西班牙语备注',
+  memo_de text comment '德语备注',
+
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -7303,7 +7459,16 @@ create table zl_sizecontent
   content_de     varchar(100) null comment '德语代码名称',
 
   sortnum          int,
-  memo           varchar(100),
+--   memo           varchar(100),
+
+  memo_cn text comment '中文备注',
+  memo_en text comment '英文备注',
+  memo_hk text comment '粤语备注',
+  memo_fr text comment '法语备注',
+  memo_it text comment '意大利语备注',
+  memo_sp text comment '西班牙语备注',
+  memo_de text comment '德语备注',
+
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -7367,7 +7532,17 @@ create table zl_storemove
 
   movedate         datetime,
   movestate        varchar(50),
-  note             varchar(1000),
+--   memo             varchar(1000),
+
+
+  memo_cn text comment '中文备注',
+  memo_en text comment '英文备注',
+  memo_hk text comment '粤语备注',
+  memo_fr text comment '法语备注',
+  memo_it text comment '意大利语备注',
+  memo_sp text comment '西班牙语备注',
+  memo_de text comment '德语备注',
+
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -7594,7 +7769,16 @@ create table zl_trans_code
   name_de     varchar(100) null comment '德语名称',
 
   code             varchar(50),
-  memo           varchar(500),
+--   memo           varchar(500),
+
+  memo_cn text comment '中文备注',
+  memo_en text comment '英文备注',
+  memo_hk text comment '粤语备注',
+  memo_fr text comment '法语备注',
+  memo_it text comment '意大利语备注',
+  memo_sp text comment '西班牙语备注',
+  memo_de text comment '德语备注',
+
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -7685,13 +7869,13 @@ create table zl_unitgroup
 
 --   memo             varchar(100),
 
-  memo_cn     varchar(100) null comment '中文备注',
-  memo_en     varchar(100) null comment '英文备注',
-  memo_hk     varchar(100) null comment '粤语备注',
-  memo_fr     varchar(100) null comment '法语备注',
-  memo_it     varchar(100) null comment '意大利语备注',
-  memo_sp     varchar(100) null comment '西班牙语备注',
-  memo_de     varchar(100) null comment '德语备注',
+  memo_cn text comment '中文备注',
+  memo_en text comment '英文备注',
+  memo_hk text comment '粤语备注',
+  memo_fr text comment '法语备注',
+  memo_it text comment '意大利语备注',
+  memo_sp text comment '西班牙语备注',
+  memo_de text comment '德语备注',
 
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -7789,7 +7973,17 @@ create table zl_washinginstructions
   name_sp     varchar(100) null comment '西班牙语名称',
   name_de     varchar(100) null comment '德语名称',
 
-  memo           varchar(50),
+--   memo           varchar(50),
+
+
+  memo_cn text comment '中文备注',
+  memo_en text comment '英文备注',
+  memo_hk text comment '粤语备注',
+  memo_fr text comment '法语备注',
+  memo_it text comment '意大利语备注',
+  memo_sp text comment '西班牙语备注',
+  memo_de text comment '德语备注',
+
   image            varchar(200) null,
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
@@ -7820,7 +8014,17 @@ create table zl_winterproofing
   name_sp     varchar(100) null comment '西班牙语名称',
   name_de     varchar(100) null comment '德语名称',
 
-  memo           varchar(100),
+--   memo           varchar(100),
+
+  memo_cn text comment '中文备注',
+  memo_en text comment '英文备注',
+  memo_hk text comment '粤语备注',
+  memo_fr text comment '法语备注',
+  memo_it text comment '意大利语备注',
+  memo_sp text comment '西班牙语备注',
+  memo_de text comment '德语备注',
+
+
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
 
@@ -7956,13 +8160,13 @@ create table `tb_permission`
 
   `name`           varchar(100) not null default '' comment '权限名称',
 
-  memo_cn     varchar(100) null comment '中文描述',
-  memo_en     varchar(100) null comment '英文描述',
-  memo_hk     varchar(100) null comment '粤语描述',
-  memo_fr     varchar(100) null comment '法语描述',
-  memo_it     varchar(100) null comment '意大利语描述',
-  memo_sp     varchar(100) null comment '西班牙语描述',
-  memo_de     varchar(100) null comment '德语描述',
+  memo_cn text comment '中文描述',
+  memo_en text comment '英文描述',
+  memo_hk text comment '粤语描述',
+  memo_fr text comment '法语描述',
+  memo_it text comment '意大利语描述',
+  memo_sp text comment '西班牙语描述',
+  memo_de text comment '德语描述',
 
   `is_only_superadmin` tinyint(1) not null default '0' comment '是否为专属超级管理员权限，0-不是 1-是',
   primary key (`id`),
