@@ -1,19 +1,16 @@
 <div id="ell">
-<multiple-admin-page v-bind="props" ref="page"></multiple-admin-page>
+  <multiple-admin-page v-bind="props" ref="page"></multiple-admin-page>
 </div>
 
 <script>
 $(document).ready(function(){
     var props = {
         columns:[
-            {name:"closedwayname", label:"<?=$system_language['bihefangshimingcheng']?>", is_create:true, is_update:true, is_show:true, width:200, is_focus:true},
-            {name:"closedwaynamenote", label:"<?=$system_language['bihefangshishuoming']?>", is_create:true, is_update:true, is_show:true, width:200, type:"textarea"}
+            {name:"name", label:"<?=$system_language['bihefangshimingcheng']?>", is_multiple:true, is_focus:true},
+            {name:"memo", label:"<?=$system_language['bihefangshishuoming']?>", is_multiple:true, type:"textarea"}
         ],
-        options:{
-            dialogWidth:"35%"
-        },
-        default_language:'zh-cn',
-        controller:"closedway"
+        controller:"closedway",
+        key_column:"name"
     }
     
     new Vue({

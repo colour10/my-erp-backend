@@ -1,20 +1,17 @@
 <div id="ell">
-<multiple-admin-page v-bind="props" ref="page"></multiple-admin-page>
+  <multiple-admin-page v-bind="props" ref="page"></multiple-admin-page>
 </div>
 
 <script>
 $(document).ready(function(){
     var props = {
         columns:[
-            {name:"executionname", label:"<?=$system_language['mingcheng']?>", is_create:true, is_update:true, is_show:true, width:200, is_focus:true},
-            {name:"executionmatter", label:"<?=$system_language['shixiang']?>", is_create:true, is_update:true, is_show:true, width:200, type:"textarea"},
-            {name:"note", label:"<?=$system_language['beizhu']?>", is_create:true, is_update:true, is_show:true, width:200, type:"textarea"}
+            {name:"name", label:"<?=$system_language['mingcheng']?>", is_multiple:true, is_focus:true},
+            {name:"executionmatter", label:"<?=$system_language['shixiang']?>", type:"textarea"},
+            {name:"memo", label:"<?=$system_language['beizhu']?>", is_multiple:true, type:"textarea"}
         ],
-        options:{
-            dialogWidth:"35%"
-        },
-        default_language:'<?=$__default_language?>',
-        controller:"executioncategory"
+        controller:"executioncategory",
+        key_column:"name"
     }
     
     new Vue({
@@ -27,6 +24,3 @@ $(document).ready(function(){
     })
 })
 </script>
-<style>
-</style>
-
