@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： localhost
--- 生成日期： 2019-03-13 16:44:00
+-- 生成日期： 2019-03-13 17:04:52
 -- 服务器版本： 5.7.19-log
 -- PHP 版本： 7.2.14
 
@@ -3025,6 +3025,14 @@ CREATE TABLE `tb_group` (
                           `sys_delete_date` datetime DEFAULT NULL,
                           `sys_delete_flag` tinyint(1) DEFAULT '0' COMMENT '0-未删除 1-已删除'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='组信息';
+
+--
+-- 转存表中的数据 `tb_group`
+--
+
+INSERT INTO `tb_group` (`id`, `group_name`, `group_memo`, `companyid`, `sys_create_stuff`, `sys_create_date`, `sys_modify_stuff`, `sys_modify_date`, `sys_delete_stuff`, `sys_delete_date`, `sys_delete_flag`) VALUES
+(1, '超级管理员', '超级管理员，拥有所有的权限，大BOSS', NULL, 1, '2019-03-12 00:00:00', 1, '2019-03-07 14:43:27', NULL, NULL, 0),
+(2, '公司内部管理员', '拥有所在公司内部的所有操作权限，但是有些系统权限不能操作，必须指定一个公司。', 1, 1, '2019-03-12 00:00:00', 1, '2019-03-07 14:43:27', NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -9218,7 +9226,7 @@ ALTER TABLE `tb_fee_detail`
 -- 使用表AUTO_INCREMENT `tb_group`
 --
 ALTER TABLE `tb_group`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键id';
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键id', AUTO_INCREMENT=3;
 
 --
 -- 使用表AUTO_INCREMENT `tb_inve_actual`
