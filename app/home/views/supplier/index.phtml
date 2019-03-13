@@ -1,256 +1,101 @@
 <div id="ell">
-<el-row>
-  <el-col :span="24">
-  <el-button type="primary" @click="showFormToCreate()"><?=$system_language["button-create"]?></el-button>
-  </el-col>
-</el-row>
-
-<el-row :gutter="20">
-  <el-col :span="24">
-    <simple-admin-tablelist ref="tablelist" v-bind="props" :onclickupdate="showFormToEdit"></simple-admin-tablelist>
-  </el-col>
-</el-row>
-
-<el-dialog class="user-form" :title="labels[action_type][0]" :visible.sync="dialogVisible" :center="true" width="80%">
-  <el-tabs type="border-card" @tab-click="onTabClick">
-    <el-tab-pane label="<?=$system_language["user-setting"]?>">
-      <el-form :model="form" label-width="100px"  :inline="true" style="width:700px;" size="small">
-        <el-form-item label="<?=$system_language["user-loginname"]?>">
-          <el-input v-model="form.suppliercode"></el-input>
-        </el-form-item>
-
-        <el-form-item label="<?=$system_language["password"]?>">
-          <el-input v-model="form.password"></el-input>
-        </el-form-item>
-        
-        <el-form-item label="<?=$system_language["user-realname"]?>">
-          <el-input v-model="form.real_name"></el-input>
-        </el-form-item>
-        
-        <el-form-item label="<?=$system_language["gender"]?>">
-          <el-radio-group v-model="form.sex" style="width:200px">
-            <el-radio :label="'1'"><?=$system_language["man"]?></el-radio>
-            <el-radio :label="'0'"><?=$system_language["woman"]?></el-radio>
-          </el-radio-group>
-        </el-form-item>
-
-        <el-form-item label="<?=$system_language["depart"]?>">
-
-          <simple-select v-model="form.departmentid" url="/department/single" :params="{}" oplabel="label" opvalue="id" style="width:150">
-          </simple-select>
-        </el-form-item>
-        
-        <el-form-item label="<?=$system_language["zu"]?>">
-          <simple-select v-model="form.groupid" url="/group/list" :params="{}" oplabel="group_name" opvalue="id" style="width:150">
-          </simple-select>
-        </el-form-item>
-
-        <el-form-item label="<?=$system_language["country"]?>">
-          <simple-select v-model="form.countryid" url="/country/list" :params="{}" oplabel="name" opvalue="relateid" style="width:150">
-          </simple-select>
-        </el-form-item>
-        
-        <el-form-item label="<?=$system_language["email"]?>">
-          <el-input v-model="form.e_mail"></el-input>
-        </el-form-item>
-        
-        <el-form-item label="<?=$system_language["user-join"]?>">
-          <el-date-picker v-model="form.date" type="date" value-format="yyyy-MM-dd" placeholder="<?=$system_language["xuanzeriqi"]?>"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="<?=$system_language["user-left"]?>">
-          <el-date-picker v-model="form.leave_date" type="date" value-format="yyyy-MM-dd" placeholder="<?=$system_language["xuanzeriqi"]?>"></el-date-picker>
-        </el-form-item>
-      
-        <el-form-item label="<?=$system_language["telephone"]?>">
-          <el-input v-model="form.phone"></el-input>
-        </el-form-item>
-        <el-form-item label="<?=$system_language["mobile"]?>">
-          <el-input v-model="form.mobilephone"></el-input>
-        </el-form-item>
-
-        
-      </el-form>
-    </el-tab-pane>
-  
-    <el-tab-pane label="<?=$system_language["sale-port"]?>">
-      <el-checkbox-group v-model="form.sale_port">
-        <el-checkbox v-for="item in sale_port_list" :label="item.value">{{item.label}}</el-checkbox>
-      </el-checkbox-group>    
-    </el-tab-pane>
-  <el-tab-pane label="<?=$system_language["jiesuandanwei"]?>">定时任务补偿</el-tab-pane>
-    <el-tab-pane label="<?=$system_language["cangku"]?>">
-      <el-checkbox-group v-model="form.cangku">
-        <el-checkbox v-for="item in cangku_list" :label="item.value">{{item.label}}</el-checkbox>
-      </el-checkbox-group> 
-    </el-tab-pane>
-    
-    <el-tab-pane label="<?=$system_language["jiagedan"]?>">
-      <el-checkbox-group v-model="form.jiagedan">
-        <el-checkbox v-for="item in jiagedan_list" :label="item.value">{{item.label}}</el-checkbox>
-      </el-checkbox-group> 
-    </el-tab-pane>
-  <el-tab-pane label="<?=$system_language["gerenshezhi"]?>">定时任务补偿</el-tab-pane>
-  </el-tabs>
-  
-  <span slot="footer" class="dialog-footer">
-    <el-button type="primary" @click="onSubmit">{{labels[action_type][1]}}</el-button>
-  </span>
-</el-dialog>
+  <simple-admin-page v-bind="props" ref="page"></simple-admin-page>
 </div>
 
+<div id="ell2">
+  <el-dialog class="user-form" :title="title" :visible.sync="dialogVisible" :center="true" width="80%">
+    <multiple-admin-page v-bind="props" ref="page2"></multiple-admin-page>
+  </el-dialog>
+</div>
 <script>
 $(document).ready(function(){
     var props = {
         columns:[
-            {
-                name:"suppliercode", 
-                label:'<?=$system_language["gonghuoshangbianma"]?>', 
-                is_create:true, 
-                is_update:true, 
-                is_show:true, 
-                is_focus:true,
-                width:200
-            },
-            {
-                name:'<?=$system_language["guojiachengshi"]?>', 
-                label:$ASAL.xingming, 
-                is_create:true, 
-                is_update:true, 
-                is_show:true, 
-                width:200, 
-                is_focus:true
-            }
+            {name:"suppliercode", label:"<?=$system_language['gonghuoshangbianma']?>"},
+            {name:"countrycity", label:"<?=$system_language['guojiachengshi']?>", class:"width2"},
+            {name:"suppliername", label:"<?=$system_language['gonghuoshangmingcheng']?>", class:"width1"},
+            {name:"address", label:"<?=$system_language['dizhi']?>", class:"width1", is_hide:true},
+            {name:"englishname", label:"<?=$system_language['yingwenmingcheng']?>", class:"width1", is_hide:true},
+            {name:"english_address", label:"<?=$system_language['gonghuoshangbianma']?>", class:"width1", is_hide:true},
+            {name:"website", label:"<?=$system_language['wangzhi']?>", class:"width2", is_hide:true},
+            {name:"fax", label:"<?=$system_language['chuanzhen']?>", class:"width2", is_hide:true},
+            {name:"legal", label:"<?=$system_language['faren']?>", class:"width2", is_hide:true},
+            {name:"registeredcapital", label:"<?=$system_language['zhuceziben']?>", class:"width2", is_hide:true},
+            {name:"businesslicense", label:"<?=$system_language['yingyezhizhaohao']?>", class:"width2", is_hide:true},
+            {name:"heading", label:"<?=$system_language['shuihao']?>", class:"width2", is_hide:true},
+            {name:"registered", label:"<?=$system_language['zhuceshijian']?>", class:"width2", is_hide:true},
+            {name:"endtime", label:"<?=$system_language['zhongzhishijian']?>", class:"width2", is_hide:true},
+            {name:"type", label:"<?=$system_language['leixing']?>"},
+            {name:"phone", label:"<?=$system_language['dianhua']?>"},
+            {name:"memo", label:"<?=$system_language['beizhu']?>", class:"width1", is_hide:true, type:"textarea"}
         ],
+        buttons:[
+            {name:"code", label:"<?=$system_language["lianxiren"]?>", width:200, handler:function(rowIndex, row){
+                //console.log(rowIndex, row)   
+                options.props.base.productgroupid = row.relateid;
+                options.dialogVisible = true; 
+                //options.title = row.brandgroupname
+            }}
+        ],
+        options:{
+            dialogWidth:'700px',
+            formSize:'small',
+            inline:true
+        },
         controller:"supplier"
+    }
+        
+    var options = {
+        props:{
+            columns:[            
+                {name:"name", label:"<?=$system_language["zileimingcheng"]?>", is_multiple:true, is_focus:true},
+                {name:"childcode", label:"<?=$system_language["zileibianma"]?>"},
+                {name:"producttemplateid", label:"<?=$system_language["chimamoban"]?>", type:'select', data_source:{url:"/sizetop/list", oplabel:'name', opvalue:'id'}},
+                {name:"weight", label:"<?=$system_language["maozhong"]?>"},
+            ],
+            controller:"childproductgroup",
+            key_column:"name",
+            base:{
+                productgroupid:""    
+            }
+        },
+        dialogVisible:false,
+        title:""
     }
     
     new Vue({
         el:"#ell",
         data() {
             return {
-                dialogVisible:false,
-                form: {
-                    id:'',
-                    login_name: '',
-                    real_name: '',
-                    password:'',
-                    departmentid:'',
-                    companyid:"",
-                    groupid:"",
-                    storeid:"",
-                    sex:"",
-                    storeid:"",
-                    section:"",
-                    date:"",
-                    phone:"",
-                    mobilephone:"",
-                    e_mail:"",
-                    email_password:"",
-                    comment:"",
-                    countryid:"",
-                    address:"",
-                    sale_port:[],
-                    cangku:[],
-                    jiagedan:[]
-                },
                 props:props,
-                departs:[],
-                country_list:[],
-                bu_list:[],
-                action_type:"create",
-                labels:{
-                    create:['<?=$system_language["xinjianyonghu"]?>','<?=$system_language["button-save"]?>'],
-                    update:['<?=$system_language["yuangongxinxi"]?>','<?=$system_language["button-save"]?>']       
-                },
-                group_list:[{value:1,"label":"测试一"},{value:2,"label":"测试2"}],//分组信息
-                sale_port_list:[{value:1,"label":"销售端口测试一"},{value:2,"label":"销售端口测试2"},{value:3,"label":"销售端口测试3"}],//销售端口信息
-                cangku_list:[{value:1,"label":"仓库测试一"},{value:2,"label":"仓库测试2"},{value:3,"label":"仓库测试3"}],//仓库信息
-                jiagedan_list:[{value:1,"label":"价格单测试一"},{value:2,"label":"价格单测试2"},{value:3,"label":"价格单测试3"}],//价格单信息
+                props2:options.props
             }
-        },
-        methods: {
-            onSubmit() {
-                var self = this;
-                if(self.form.id=="") {
-                    $ASA.submit.call(self, "/"+props.controller+"/add", self.form, function(){
-                        self.$refs.tablelist.appendRow($ASA.clone(self.form))
-                        //self.dialogVisible = false
-                    })
-                }
-                else {
-                    $ASA.submit.call(self, "/"+props.controller+"/edit", self.form, function(){
-                        $ASA.copyTo(self.form, self.row)
-                        //self.dialogVisible = false
-                    })
-                }
-            },
-            onTabClick(tab){
-                console.log(tab)
-            },
-            showFormToEdit(rowIndex, row){
-                var self = this
-                self.rowIndex = rowIndex;
-                self.row = row;
-                $ASA.copyTo(row, this.form)
+        }
+    })
     
-                this.formTitle = $ASAL.xiugaixinxi;
-                self.showDialog();
-            },
-            showDialog() {
-                var self = this;
-                 self.dialogVisible = true;
-            },
-            showFormToCreate() {
-                var self = this;
-                $ASA.empty(self.form)    
-    
-                self.formTitle = $ASAL.tianjiaxinxi;
-                self.activeName = "info"
-                self.showDialog();
-            },
-            handleEdit(rowIndex, row){
-               window.location = "/user/edit?id="+row.id;
-            },
-            handleDelete(rowIndex, row) {
-                var self = this;
-
-                self.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    $.get("/user/delete?id="+row.id, function(res){
-                        if(res.messages.length>0) {
-                            const h = self.$createElement;
-                            var message = h("ul", null, res.messages.map(function(v){
-                                return h("li",null,v)
-                            }))
-
-                            self.$alert(message, '错误提示', {
-                                confirmButtonText: '确定'
-                            });
-                        }
-                        else {
-                            self.$delete(self.tableData,rowIndex)
-                            self.$message({
-                                message: '删除成功',
-                                type: 'success'
-                            });
-                        }
-                    },"json")
-                });
-            }
+    var childgroup = new Vue({
+        el:"#ell2",
+        data() {
+            return options
         }
     })
 })
 </script>
 
 <style>
-    .user-form .el-input__inner {
+    .user-form .width2 .el-input__inner {
         width:200px;
     }
+    
+    .user-form .width1 .el-input__inner {
+        width:510px;
+    }
+    
+    .user-form .width1 .el-textarea__inner {
+        width:510px;
+    }
+    
     .user-form .el-date-editor.el-input, .el-date-editor.el-input__inner {
         width:200px
     }
 </style>
-

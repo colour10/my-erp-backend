@@ -142,7 +142,7 @@ class AdminController extends BaseController
 
 	public function doList($columns=array()) {
 	    
-	    if($this->request->isAjax()) {
+	    if($this->request->isPost()) {
 	        $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
 	        
 //	        //是否支持多国语言
@@ -156,27 +156,40 @@ class AdminController extends BaseController
 	        //echo $where;exit;
 	        
 	        $result = $findFirst->invokeArgs(null, array($where));
-
-	        if($this->list_key_column!="" && count($this->list_columns)>0) {
-	            $column_name = $this->list_key_column;
-	            $list = array();
-	            foreach($result as $row) {
-	                $line = array();
-
-	                foreach($this->list_columns as $name) {
-	                    $line[$name] = $row->$name;
+	        
+            
+            $list = array();
+            foreach($result as $row) { 
+                $arr = $this->beforeOutputListLoop($row);
+                if(is_array($arr)) {
+                    $line = array_merge($row->toArray(), $arr);
+                }
+                else {
+                    $line = $result->toArray();
+                }
+                
+                
+                if($this->list_key_column!="" && count($this->list_columns)>0) {
+                    $column_name = $this->list_key_column;
+                    $output_line = array();
+                    //print_r($line);
+                    foreach($this->list_columns as $name) {
+	                    $output_line[$name] = $line[$name];
 	                }
-	                $list[$row->$column_name] = $line;
-	            }
-
-	            echo json_encode($list);
-	        }
-	        else {
-	            echo json_encode($result->toArray());
-	        }
+	                $list[$line[$column_name]] = $output_line;
+                }
+                else {
+                    $list[] = $line;   
+                }
+            }           
+            echo json_encode($list);	            
 	    }
 	    
 	    $this->view->disable();
+	}
+	
+	function beforeOutputListLoop($row) {
+	    
 	}
 
 	function editAction() {

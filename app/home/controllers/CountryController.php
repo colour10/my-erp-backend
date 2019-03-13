@@ -13,7 +13,7 @@ class CountryController extends ZadminController {
 	    parent::initialize();
 
 	    $this->setModelName('Asa\\Erp\\ZlCountry');
-	    $this->configList("code", ["name","relateid"]);
+	    //$this->configList("code", ["name","relateid"]);
 	    $this->setLanguageFlag(true);
 	    
 	    $this->setTitle("国家及地区信息维护");

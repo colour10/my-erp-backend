@@ -11,12 +11,11 @@
 $(document).ready(function(){
     var props = {
         columns:[            
-            {name:"englishname", label:"<?=$system_language["yingwenmingcheng"]?>",is_focus:true},
-            {name:"color_name", label:"<?=$system_language["mingcheng"]?>"},
+            {name:"name", label:"<?=$system_language["mingcheng"]?>",is_multiple:true,is_focus:true},
+            //{name:"color_name", label:"<?=$system_language["mingcheng"]?>"},
             {name:"code", label:"<?=$system_language["asabianhao"]?>"},
-            {name:"colortype", label:"<?=$system_language["yansefenlei"]?>"},
-            {name:"picture", label:"<?=$system_language["yanseseban"]?>", type:"upload",multiple:false,limit:1,is_image:true, image_width:60,image_height:60},
-            {name:"color_note", label:"<?=$system_language["beizhu"]?>"}
+            //{name:"colortype", label:"<?=$system_language["yansefenlei"]?>"},
+            {name:"picture", label:"<?=$system_language["yanseseban"]?>", type:"upload",multiple:false,limit:1,is_image:true, image_width:60,image_height:60}
         ],
         controller:"colortemplate",
         key_column:"name"

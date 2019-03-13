@@ -13,5 +13,12 @@ class AgeseasonController extends AdminController {
 	    parent::initialize();
 
 	    $this->setModelName('Asa\\Erp\\ZlAgeseason');
+	    //$this->configList("fullname", [ "name","sessionmark" ]);
     }
+    
+    function beforeOutputListLoop($row) {
+	    return array(
+	        "fullname" => sprintf("%s%s", $row->sessionmark, $row->name)   
+	    );
+	}
 }
