@@ -6001,7 +6001,7 @@ alter table zl_closedway comment '闭合方式';
 /*==============================================================*/
 /* table: zl_securitycategory                                           */
 /*==============================================================*/
-drop table if exists `zl_securitycategory`
+drop table if exists `zl_securitycategory`;
 create table zl_securitycategory
 (
   id                int unsigned not null auto_increment comment '主键id',
