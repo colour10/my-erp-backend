@@ -69,6 +69,7 @@ class TbGroup extends BaseModel
                 foreach ($permissiongroup->permissionmodule as $permissionmodule) {
                     if ($permissionmodule->sys_delete_flag == '0') {
                         $permissions[] = [
+                            'permissionid' => $permissionmodule->permissionid,
                             'module' => $permissionmodule->module,
                             'controller' => $permissionmodule->controller,
                             'action' => $permissionmodule->action,

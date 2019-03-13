@@ -79,7 +79,8 @@ class GroupController extends AdminController {
                 }
             }
             // 返回最终分配好的权限目录树
-            return $this->success();
+            $group = TbGroup::findFirstById($groupid);
+            return $group->permissions();
         }
     }
 }
