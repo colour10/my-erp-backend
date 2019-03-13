@@ -33,7 +33,7 @@ class GroupController extends AdminController {
             }
             $groupid = $this->request->get('groupid');
             $keys = $this->request->get('keys');
-            // 验证合法性
+            // 验证keys合法性
             $pattern = '/^[1-9]+(,\d)*$/';
             if (!preg_match($pattern, $keys)) {
                 return $this->error(['keys is invalid']);
