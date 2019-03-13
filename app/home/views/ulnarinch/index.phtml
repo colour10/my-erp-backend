@@ -6,13 +6,10 @@
 $(document).ready(function(){
     var props = {
         columns:[
-            {name:"name", label:"<?=$system_language['chima']?>", is_create:true, is_update:true, is_show:true, width:200, is_focus:true}
+            {name:"name", label:"<?=$system_language['chima']?>", is_multiple:true, is_focus:true}
         ],
-        options:{
-            dialogWidth:"35%"
-        },
-        default_language:'zh-cn',
-        controller:"ulnarinch"
+        controller:"ulnarinch",
+        key_column:"name"
     }
     
     new Vue({

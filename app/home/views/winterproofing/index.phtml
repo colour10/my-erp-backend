@@ -1,35 +1,16 @@
-
 <div id="ell">
-<multiple-admin-page v-bind="props" ref="page"></multiple-admin-page>
+  <multiple-admin-page v-bind="props" ref="page"></multiple-admin-page>
 </div>
 
 <script>
 $(document).ready(function(){
     var props = {
-        data: <?=json_encode($result)?>,
-        columns:[{
-            name:"name", 
-            label:"<?=$system_language['fanghanzhishu']?>", 
-            is_create:true, 
-            is_update:true, 
-            is_show:true, 
-            width:200, 
-            is_focus:true,
-            disable_change:true
-        },{
-            name:"remark", 
-            label:"<?=$system_language['beizhu']?>", 
-            is_create:true, 
-            is_update:true, 
-            is_show:true, 
-            is_focus:true,
-            width:200
-        }],
-        options:{
-            dialogWidth:"35%"
-        },
-        default_language:'<?=$__default_language?>',
-        controller:"winterproofing"
+        columns:[
+            {name:"name",label:"<?=$system_language['fanghanzhishu']?>", is_multiple:true, is_focus:true},
+            {name:"memo", label:"<?=$system_language['beizhu']?>", type:"textarea"}
+        ],
+        controller:"winterproofing",
+        key_column:"name"
     }
     
     new Vue({

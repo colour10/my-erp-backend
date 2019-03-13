@@ -6,13 +6,10 @@
 $(document).ready(function(){
     var props = {
         columns:[
-            {name:"content", label:"<?=$system_language['caizhibeizhu']?>", is_create:true, is_update:true, is_show:true, width:200, is_focus:true}
+            {name:"content", label:"<?=$system_language['caizhibeizhu']?>", is_multiple:true, is_focus:true}
         ],
-        options:{
-            dialogWidth:"35%"
-        },
-        default_language:'zh-cn',
-        controller:"materialnote"
+        controller:"materialnote",
+        key_column:"content"
     }
     
     new Vue({

@@ -6,13 +6,10 @@
 $(document).ready(function(){
     var props = {
         columns:[
-            {name:"partsname", label:"<?=$system_language['jiegoumingcheng']?>", is_create:true, is_update:true, is_show:true, width:200, is_focus:true}
+            {name:"name", label:"<?=$system_language['jiegoumingcheng']?>", is_multiple:true, is_focus:true}
         ],
-        options:{
-            dialogWidth:"35%"
-        },
-        default_language:'zh-cn',
-        controller:"productinnards"
+        controller:"productinnards",
+        key_column:"name"
     }
     
     new Vue({

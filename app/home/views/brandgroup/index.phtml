@@ -1,5 +1,5 @@
 <div id="ell">
-<multiple-admin-page v-bind="props" ref="page"></multiple-admin-page>
+  <multiple-admin-page v-bind="props" ref="page"></multiple-admin-page>
 </div>
 
 <div id="ell2">
@@ -11,37 +11,30 @@
 $(document).ready(function(){
     var props = {
         columns:[            
-            {name:"brandgroupname", label:"<?=$system_language["pinleimingcheng"]?>", is_create:true, is_update:true, is_show:true, width:200, is_focus:true},
-            {name:"code", label:"<?=$system_language["pinleibianma"]?>", is_create:true, is_update:true, is_show:true, width:200, disable_change:true, is_focus:true}
+            {name:"name", label:"<?=$system_language["pinleimingcheng"]?>", is_multiple:true, is_focus:true},
+            {name:"code", label:"<?=$system_language["pinleibianma"]?>"}
         ],
         buttons:[
             {name:"code", label:"<?=$system_language["chakanziji"]?>", width:200, disable_change:true, handler:function(rowIndex, row){
                 //console.log(rowIndex, row)   
                 props2.base.productgroupid = row.relateid;
                 options.dialogVisible = true; 
-                options.title = row.brandgroupname
+                //options.title = row.brandgroupname
             }}
         ],
-        options:{
-            dialogWidth:"35%"
-        },
-        default_language:'<?=$system_language["code"]?>',
-        controller:"brandgroup"
+        controller:"brandgroup",
+        key_column:"name"
     }
     
     var props2 = {
         columns:[            
-            {name:"childname", label:"<?=$system_language["zileimingcheng"]?>", is_create:true, is_update:true, is_show:true, width:200, is_focus:true},
-            {name:"childcode", label:"<?=$system_language["zileibianma"]?>", is_create:true, is_update:true, is_show:true, width:200, disable_change:true, is_focus:true},
-            {name:"englishname", label:"<?=$system_language["yingwenmingcheng"]?>", is_create:true, is_update:true, is_show:true, width:200, disable_change:true, is_focus:true},
-            {name:"producttemplateid", label:"<?=$system_language["chimamoban"]?>", is_create:true, is_update:true, is_show:true, width:200, disable_change:true, is_focus:true},
-            {name:"weight", label:"<?=$system_language["maozhong"]?>", is_create:true, is_update:true, is_show:true, width:200, disable_change:true, is_focus:true},
+            {name:"name", label:"<?=$system_language["zileimingcheng"]?>", is_multiple:true, is_focus:true},
+            {name:"childcode", label:"<?=$system_language["zileibianma"]?>"},
+            {name:"producttemplateid", label:"<?=$system_language["chimamoban"]?>", type:'select', data_source:{url:"/sizetop/list", oplabel:'name', opvalue:'id'}},
+            {name:"weight", label:"<?=$system_language["maozhong"]?>"},
         ],
-        options:{
-            dialogWidth:"35%"
-        },
-        default_language:'<?=$system_language["code"]?>',
         controller:"childproductgroup",
+        key_column:"name",
         base:{
             productgroupid:""    
         }

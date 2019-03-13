@@ -1,49 +1,17 @@
-
 <div id="ell">
-<multiple-admin-page v-bind="props" ref="page"></multiple-admin-page>
+  <multiple-admin-page v-bind="props" ref="page"></multiple-admin-page>
 </div>
 
 <script>
 $(document).ready(function(){
     var props = {
-        data: <?=json_encode($result)?>,
-        columns:[{
-            name:"name", 
-            label:"<?=$system_language['xidimingcheng']?>", 
-            is_create:true, 
-            is_update:true, 
-            is_show:true, 
-            width:200, 
-            is_focus:true                
-        },{
-            name:"image", 
-            label:"<?=$system_language['tupian']?>", 
-            is_create:true, 
-            is_update:true, 
-            is_show:true, 
-            width:200, 
-            disable_change:true,
-            type:"upload", 
-            multiple:false, 
-            limit:1,
-            is_image:true,
-            image_width:60,
-            image_height:60
-        },{
-            name:"remark", 
-            label:"<?=$system_language['beizhu']?>", 
-            is_create:true, 
-            is_update:true, 
-            is_show:true, 
-            width:200, 
-            type:"textarea"
-        }],
-        options:{
-            dialogWidth:"35%"
-        },
-        default_language:'<?=$__default_language?>',
-        image_url_prex:'<?=$__config["file_prex"]?>',
-        controller:"washinginstructions"
+        columns:[
+            {name:"name",label:"<?=$system_language['xidimingcheng']?>", is_multiple:true, is_focus:true},
+            {name:"image", label:"<?=$system_language['tupian']?>", type:"upload", multiple:false, limit:1,is_image:true,image_width:60, image_height:60},
+            {name:"memo", label:"<?=$system_language['beizhu']?>", type:"textarea"}
+        ],
+        controller:"washinginstructions",
+        key_column:"name"
     }
     
     new Vue({

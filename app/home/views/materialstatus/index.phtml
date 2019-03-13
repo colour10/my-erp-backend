@@ -5,16 +5,12 @@
 <script>
 $(document).ready(function(){
     var props = {
-        columns:[
-            {name:"code", label:"<?=$system_language['bianhao']?>", is_create:true, is_update:true, is_show:true, width:200, disable_change:true, is_focus:true},
-            {name:"name", label:"<?=$system_language['zhongwenmingcheng']?>", is_create:true, is_update:true, is_show:true, width:200, is_focus:true},
-            {name:"englishname", label:"<?=$system_language['yingwenmingcheng']?>", is_create:true, is_update:true, is_show:true, width:200, disable_change:true}
+        columns:[            
+            {name:"name", label:"<?=$system_language['zhongwenmingcheng']?>", is_multiple:true, is_focus:true},
+            {name:"code", label:"<?=$system_language['bianhao']?>"}
         ],
-        options:{
-            dialogWidth:"35%"
-        },
-        default_language:'zh-cn',
-        controller:"materialstatus"
+        controller:"materialstatus",
+        key_column:"name"
     }
     
     new Vue({

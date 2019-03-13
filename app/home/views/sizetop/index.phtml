@@ -1,5 +1,5 @@
 <div id="ell">
-<multiple-admin-page v-bind="props" ref="page"></multiple-admin-page>
+  <multiple-admin-page v-bind="props" ref="page"></multiple-admin-page>
 </div>
 
 <div id="ell2">
@@ -11,35 +11,27 @@
 $(document).ready(function(){
     var props = {
         columns:[            
-            {name:"name", label:"<?=$system_language["mingcheng"]?>", is_create:true, is_update:true, is_show:true, width:200, is_focus:true},
-            {name:"code", label:"<?=$system_language["bianhao"]?>", is_create:true, is_update:true, is_show:true, width:200, disable_change:true}
+            {name:"name", label:"<?=$system_language["mingcheng"]?>", is_multiple:true, is_focus:true},
+            {name:"code", label:"<?=$system_language["bianhao"]?>"}
         ],
         buttons:[
             {name:"code", label:"<?=$system_language["chakanziji"]?>", width:200, disable_change:true, handler:function(rowIndex, row){
                 //console.log(rowIndex, row)   
-                props2.base.topid = row.relateid;
+                props2.base.topid = row.id;
                 options.dialogVisible = true; 
             }}
         ],
-        options:{
-            dialogWidth:"35%"
-        },
-        default_language:'<?=$system_language["code"]?>',
-        image_url_prex:'<?=$__config["file_prex"]?>',
-        controller:"sizetop"
+        controller:"sizetop",
+        key_column:"name"
     }
     
     var props2 = {
         columns:[            
-            {name:"content", label:"<?=$system_language["neirong"]?>", is_create:true, is_update:true, is_show:true, width:200, is_focus:true},
-            {name:"sortnum", label:"<?=$system_language["xuhao"]?>", is_create:true, is_update:true, is_show:true, width:200, disable_change:true, is_focus:true},
-            {name:"remark", label:"<?=$system_language["beizhu"]?>", is_create:true, is_update:true, is_show:true, width:200, is_focus:true}
+            {name:"content", label:"<?=$system_language["neirong"]?>", is_multiple:true, is_focus:true},
+            {name:"sortnum", label:"<?=$system_language["xuhao"]?>"},
         ],
-        options:{
-            dialogWidth:"35%"
-        },
-        default_language:'<?=$system_language["code"]?>',
         controller:"sizecontent",
+        key_column:"content",
         base:{
             topid:""    
         }
@@ -67,6 +59,3 @@ $(document).ready(function(){
     })
 })
 </script>
-<style>
-</style>
-

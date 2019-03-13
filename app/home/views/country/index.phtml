@@ -9,18 +9,12 @@ $(document).ready(function(){
         console.log(res.currency)
         var props = {
             columns:[
-                {name:"code", label:"<?=$system_language['guojiadaima']?>", is_create:true, is_update:true, is_show:true, width:200, disable_change:true, is_focus:true},
-                {name:"name", label:"<?=$system_language['guojiamingcheng']?>", is_create:true, is_update:true, is_show:true, width:200, is_focus:true},
-                {name:"localcurrency", label:"<?=$system_language['bizhong']?>", is_create:true, is_update:true, is_show:true, width:200, disable_change:true, type:'select', data_source:{
-                    hashtable:res.currency
-                }}
+                {name:"name", label:"<?=$system_language['guojiamingcheng']?>", is_multiple:true, is_focus:true},
+                {name:"code", label:"<?=$system_language['guojiadaima']?>"},                
+                {name:"localcurrency", label:"<?=$system_language['bizhong']?>", type:'select', data_source:{hashtable:res.currency}}
             ],
-            options:{
-                dialogWidth:"35%"
-            },
-            default_language:'zh-cn',
             controller:"country",
-            currency:res.currency
+            key_column:"name"
         }
         
         new Vue({

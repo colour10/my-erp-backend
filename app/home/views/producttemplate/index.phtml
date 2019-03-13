@@ -11,39 +11,28 @@
 $(document).ready(function(){
     var props = {
         columns:[            
-            {name:"templatename", label:"<?=$system_language["mobanmingcheng"]?>", is_create:true, is_update:true, is_show:true, width:200, is_focus:true},
-            {name:"picture", label:"<?=$system_language["tupian"]?>", is_create:true, is_update:true, is_show:true, width:200, disable_change:true, type:"upload",multiple:false, 
-            limit:1,
-            is_image:true,
-            image_width:60,
-            image_height:60}
+            {name:"name", label:"<?=$system_language["mobanmingcheng"]?>", is_multiple:true, is_focus:true},
+            {name:"picture", label:"<?=$system_language["tupian"]?>", type:"upload", multiple:false, limit:1,is_image:true,image_width:60,image_height:60}
         ],
         buttons:[
             {name:"code", label:"<?=$system_language["chakanziji"]?>", width:200, disable_change:true, handler:function(rowIndex, row){
                 //console.log(rowIndex, row)   
-                props2.base.tempid = row.relateid;
+                props2.base.tempid = row.id;
                 options.dialogVisible = true; 
                 options.title = row.templatename
             }}
         ],
-        options:{
-            dialogWidth:"35%"
-        },
-        default_language:'<?=$system_language["code"]?>',
-        image_url_prex:'<?=$__config["file_prex"]?>',
-        controller:"producttemplate"
+        controller:"producttemplate",
+        key_column:"name"
     }
     
     var props2 = {
         columns:[            
-            {name:"templatename", label:"<?=$system_language["biaoti"]?>", is_create:true, is_update:true, is_show:true, width:200, is_focus:true},
-            {name:"sortnum", label:"<?=$system_language["xuhao"]?>", is_create:true, is_update:true, is_show:true, width:200, disable_change:true, is_focus:true}
+            {name:"name", label:"<?=$system_language["biaoti"]?>", is_multiple:true, is_focus:true},
+            {name:"sortnum", label:"<?=$system_language["xuhao"]?>"}
         ],
-        options:{
-            dialogWidth:"35%"
-        },
-        default_language:'<?=$system_language["code"]?>',
         controller:"templatemanage",
+        key_column:"name",
         base:{
             tempid:""    
         }

@@ -6,14 +6,11 @@
 $(document).ready(function(){
     var props = {
         columns:[
-            {name:"occasionsstylename", label:"<?=$system_language['changhemingcheng']?>", is_create:true, is_update:true, is_show:true, width:200, is_focus:true},
-            {name:"occasionsstylemode", label:"<?=$system_language['changheshuoming']?>", is_create:true, is_update:true, is_show:true, width:200, type:"textarea"}
+            {name:"name", label:"<?=$system_language['changhemingcheng']?>", is_multiple:true, is_focus:true},
+            {name:"occasionsstylemode", label:"<?=$system_language['changheshuoming']?>", type:"textarea"}
         ],
-        options:{
-            dialogWidth:"35%"
-        },
-        default_language:'zh-cn',
-        controller:"occasionsstyle"
+        controller:"occasionsstyle",
+        key_column:"name"
     }
     
     new Vue({

@@ -1,47 +1,19 @@
-<script src="/js/asa.js"></script>
 <div id="ell">
-<multiple-admin-page v-bind="props" ref="page"></multiple-admin-page>
+  <multiple-admin-page v-bind="props" ref="page"></multiple-admin-page>
 </div>
 
 <script>
 $(document).ready(function(){
     var props = {
-        data: <?=json_encode($result)?>,
         columns:[
             {name:"name", label:"姓名", is_create:true, is_update:true, is_show:true, width:400},
             {name:"code", label:"地址", is_create:true, is_update:true, is_show:true, width:400},
-            {name:"languages", label:"品牌", is_create:false, is_update:false, is_show:false, is_hidden:true},
-            {name:"relateid", label:"品牌", is_create:false, is_update:false, is_show:false, is_hidden:true},
-            {name:"lang_code", label:"品牌", is_create:false, is_update:false, is_show:false, is_hidden:true},
             {name:"brandid", label:"品牌", is_create:false, is_update:false, is_show:false, is_hidden:true}
         ],
-        buttons:{
-            "create":{
-                label:"创建"    
-            },
-            "save":{
-                label:"保存"    
-            },
-            "remove":{
-                label:"删除"    
-            },
-            "edit":{
-                label:"编辑"    
-            } 
-        },
-        labels:{
-            formTitleCreate:"添加信息",
-            formTitleUpdate:"编辑信息",
-            action:"操作"    
-        },
-        options:{
-            dialogWidth:"35%"
-        },
         controller:"aliases",
         languages:{"zh-cn":{"code":"zh-cn","name":"\u7b80\u4f53\u4e2d\u6587","shortName":"\u7b80"},"zh-hk":{"code":"zh-hk","name":"\u7e41\u4f53\u4e2d\u6587","shortName":"\u7e41"},"en-us":{"code":"en-us","name":"\u82f1\u6587","shortName":"\u82f1"}},
         'controller':'aliases',
-
-        default_language:'zh-cn'
+        key_column:"name"
     }
     
     new Vue({
@@ -56,6 +28,3 @@ $(document).ready(function(){
     })
 })
 </script>
-<style>
-</style>
-
