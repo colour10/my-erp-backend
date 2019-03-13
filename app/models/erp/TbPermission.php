@@ -19,6 +19,16 @@ class TbPermission extends BaseModel
     {
         parent::initialize();
         $this->setSource('tb_permission');
+
+        // 权限-权限组关联表，一对多
+        $this->hasMany("id", "\Asa\Erp\TbPermissionGroup", "permissionid", [
+            'alias' => 'permissiongroup',
+        ]);
+
+        // 权限-权限模型关联表，一对多
+        $this->hasMany("id", "\Asa\Erp\TbPermissionModule", "permissionid", [
+            'alias' => 'permissionmodule',
+        ]);
     }
 
     /**

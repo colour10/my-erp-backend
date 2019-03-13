@@ -6,6 +6,7 @@ use Phalcon\Validation;
 use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Regex;
+use Asa\Erp\Util;
 
 /**
  * 分组表
@@ -16,6 +17,11 @@ class TbGroup extends BaseModel
     {
         parent::initialize();
         $this->setSource('tb_group');
+
+        // 组-权限组关联表，一对多
+        $this->hasMany("id", "\Asa\Erp\TbPermissionGroup", "groupid", [
+            'alias' => 'permissiongroup',
+        ]);
     }
 
     /**
@@ -45,4 +51,35 @@ class TbGroup extends BaseModel
 
         return $this->validate($validator);
     }
+
+
+    /**
+     * 获取当前用户组下面的所有权限
+     * @return false|string
+     */
+    public function permissions()
+    {
+        // 逻辑
+        // 初始化一个空数组，用于存放变量
+        $permissions = [];
+
+        // 循环得到权限
+        foreach ($this->permissiongroup as $permissiongroup) {
+            if ($permissiongroup->sys_delete_flag == '0') {
+                foreach ($permissiongroup->permissionmodule as $permissionmodule) {
+                    if ($permissionmodule->sys_delete_flag == '0') {
+                        $permissions[] = [
+                            'module' => $permissionmodule->module,
+                            'controller' => $permissionmodule->controller,
+                            'action' => $permissionmodule->action,
+                        ];
+                    }
+                }
+            }
+        }
+
+        // 返回最终的权限树
+        return json_encode($permissions);
+    }
+
 }
