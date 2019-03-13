@@ -5703,8 +5703,9 @@ create table zl_ageseason
   sys_delete_date  datetime,
   sys_delete_flag  tinyint  not null comment '0-未删除 1-已删除',
 
-  sessionmark      varchar(200),
-  sessionname      varchar(100),
+  name      varchar(100),
+  memo      varchar(200),
+
 
   primary key (id)
 ) engine=innodb default charset=utf8mb4;
