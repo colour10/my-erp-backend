@@ -19,9 +19,14 @@ class TbPermissionModule extends BaseModel
         $this->setSource('tb_permission_module');
 
         // 与权限表关联，一对多反向
-        $this->belongsTo("permissionid", "\Asa\Erp\TbPermission", "id", [
-            'alias' => 'permission',
-        ]);
+        $this->belongsTo(
+            "permissionid",
+            "\Asa\Erp\TbPermission",
+            "id",
+            [
+                'alias' => 'permission',
+            ]
+        );
     }
 
     /**

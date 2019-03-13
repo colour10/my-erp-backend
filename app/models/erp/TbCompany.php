@@ -16,6 +16,16 @@ class TbCompany extends BaseModel
     {
         parent::initialize();
         $this->setSource('tb_company');
+
+        // 公司-国家，一对多反向
+        $this->belongsTo(
+            'countryid',
+            '\Asa\Erp\ZlCountry',
+            'id',
+            [
+                'alias' => 'country',
+            ]
+        );
     }
 
     /**

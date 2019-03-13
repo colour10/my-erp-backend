@@ -21,14 +21,24 @@ class TbPermission extends BaseModel
         $this->setSource('tb_permission');
 
         // 权限-权限组关联表，一对多
-        $this->hasMany("id", "\Asa\Erp\TbPermissionGroup", "permissionid", [
-            'alias' => 'permissiongroup',
-        ]);
+        $this->hasMany(
+            "id",
+            "\Asa\Erp\TbPermissionGroup",
+            "permissionid",
+            [
+                'alias' => 'groups',
+            ]
+        );
 
         // 权限-权限模型关联表，一对多
-        $this->hasMany("id", "\Asa\Erp\TbPermissionModule", "permissionid", [
-            'alias' => 'permissionmodule',
-        ]);
+        $this->hasMany(
+            "id",
+            "\Asa\Erp\TbPermissionModule",
+            "permissionid",
+            [
+                'alias' => 'modules',
+            ]
+        );
     }
 
     /**

@@ -18,10 +18,25 @@ class TbGroup extends BaseModel
         parent::initialize();
         $this->setSource('tb_group');
 
-        // 组-权限组关联表，一对多
-        $this->hasMany("id", "\Asa\Erp\TbPermissionGroup", "groupid", [
-            'alias' => 'permissiongroup',
-        ]);
+        // 组-权限组关联，一对多
+        $this->hasMany(
+            "id",
+            "\Asa\Erp\TbPermissionGroup",
+            "groupid",
+            [
+                'alias' => 'permissions',
+            ]
+        );
+
+        // 组-用户关联，一对多
+        $this->hasMany(
+            'id',
+            '\Asa\Erp\TbUser',
+            'groupid',
+            [
+                'alias' => 'users',
+            ]
+        );
     }
 
     /**
@@ -64,15 +79,15 @@ class TbGroup extends BaseModel
         $permissions = [];
 
         // 循环得到权限
-        foreach ($this->permissiongroup as $permissiongroup) {
-            if ($permissiongroup->sys_delete_flag == '0') {
-                foreach ($permissiongroup->permissionmodule as $permissionmodule) {
-                    if ($permissionmodule->sys_delete_flag == '0') {
+        foreach ($this->permissions as $permission) {
+            if ($permission->sys_delete_flag == '0') {
+                foreach ($permission->modules as $module) {
+                    if ($module->sys_delete_flag == '0') {
                         $permissions[] = [
-                            'permissionid' => $permissionmodule->permissionid,
-                            'module' => $permissionmodule->module,
-                            'controller' => $permissionmodule->controller,
-                            'action' => $permissionmodule->action,
+                            'permissionid' => $module->permissionid,
+                            'module' => $module->module,
+                            'controller' => $module->controller,
+                            'action' => $module->action,
                         ];
                     }
                 }

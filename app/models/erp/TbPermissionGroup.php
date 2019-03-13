@@ -20,19 +20,34 @@ class TbPermissionGroup extends BaseModel
 
         // 表关联
         // 与组表关联，一对多反向
-        $this->belongsTo("groupid", "\Asa\Erp\TbGroup", "id", [
-            'alias' => 'group',
-        ]);
+        $this->belongsTo(
+            "groupid",
+            "\Asa\Erp\TbGroup",
+            "id",
+            [
+                'alias' => 'group',
+            ]
+        );
 
         // 与权限表关联，一对多反向
-        $this->belongsTo("permissionid", "\Asa\Erp\TbPermission", "id", [
-            'alias' => 'permission',
-        ]);
+        $this->belongsTo(
+            "permissionid",
+            "\Asa\Erp\TbPermission",
+            "id",
+            [
+                'alias' => 'permission',
+            ]
+        );
 
         // 与权限模型关联，一对多
-        $this->hasMany('permissionid', '\Asa\Erp\TbPermissionModule', 'permissionid', [
-            'alias' => 'permissionmodule',
-        ]);
+        $this->hasMany(
+            'permissionid',
+            '\Asa\Erp\TbPermissionModule',
+            'permissionid',
+            [
+                'alias' => 'modules',
+            ]
+        );
     }
 
     /**
