@@ -4697,55 +4697,51 @@ create table tb_stock
 
 alter table tb_stock comment '账面库存表';
 
-/*==============================================================*/
-/* table: tb_supplier                                           */
-/*==============================================================*/
-create table tb_supplier
-(
-  id                int unsigned not null auto_increment comment '主键id',
-  sys_create_stuff  int unsigned not null,
-  sys_create_date   datetime not null,
-  sys_modify_stuff  int unsigned not null,
-  sys_modify_date   datetime not null,
-  sys_delete_stuff  int unsigned null,
-  sys_delete_date   datetime,
-  sys_delete_flag   tinyint  not null comment '0-未删除 1-已删除',
+-- 供货商表
+CREATE TABLE `tb_supplier` (
+                             `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+                             `sys_create_stuff` int(10) unsigned NOT NULL,
+                             `sys_create_date` datetime NOT NULL,
+                             `sys_modify_stuff` int(10) unsigned NOT NULL,
+                             `sys_modify_date` datetime NOT NULL,
+                             `sys_delete_stuff` int(10) unsigned DEFAULT NULL,
+                             `sys_delete_date` datetime DEFAULT NULL,
+                             `sys_delete_flag` tinyint(4) NOT NULL COMMENT '0-未删除 1-已删除',
+                             `suppliername` varchar(50) DEFAULT NULL,
+                             `englishname` varchar(50) DEFAULT NULL,
+                             `address` varchar(100) DEFAULT NULL,
+                             `phone` varchar(30) DEFAULT NULL,
+                             `zipcode` varchar(500) DEFAULT NULL,
+                             `email` varchar(500) DEFAULT NULL,
+                             `quotedprice` varchar(20) DEFAULT NULL,
+                             `developdate` datetime DEFAULT NULL,
+                             `nationality` int(10) unsigned DEFAULT NULL,
+                             `nature` varchar(100) DEFAULT NULL,
+                             `supplierlevel` int(10) unsigned DEFAULT NULL,
+                             `companyzipcode` varchar(100) DEFAULT NULL,
+                             `maincontacts` varchar(50) DEFAULT NULL,
+                             `microblog` varchar(100) DEFAULT NULL,
+                             `countrycity` varchar(50) DEFAULT NULL,
+                             `suppliercode` varchar(50) DEFAULT NULL,
+                             `fax` varchar(50) DEFAULT NULL,
+                             `calculation` varchar(50) DEFAULT NULL,
+                             `legal` varchar(50) DEFAULT NULL,
+                             `heading` varchar(50) DEFAULT NULL,
+                             `businesslicense` varchar(50) DEFAULT NULL,
+                             `headingnumber` varchar(50) DEFAULT NULL,
+                             `registered` varchar(10) DEFAULT NULL,
+                             `registeredcapital` decimal(15,0) DEFAULT NULL,
+                             `endtime` varchar(10) DEFAULT NULL,
+                             `type` varchar(1) DEFAULT NULL COMMENT '0-供货商 1-报关行 2-供应商 3-承运人 4-客户 5-品牌商',
+                             `contractfrom` datetime DEFAULT NULL,
+                             `contractto` datetime DEFAULT NULL,
+                             `contractrate` decimal(16,9) DEFAULT NULL,
+                             `contractremind` int(11) DEFAULT NULL,
+                             `settlecompanyid` int(10) unsigned DEFAULT NULL,
+                             `memo` text,
+                             PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='任何表都应该包含的列';
 
-  suppliername      varchar(50),
-  englishname       varchar(50),
-  address           varchar(100),
-  phone             bigint,
-  zipcode           varchar(500),
-  email             varchar(500),
-  quotedprice       varchar(20),
-  developdate       datetime,
-  nationality       int unsigned null,
-  nature            varchar(100),
-  supplierlevel     int unsigned null,
-  companyzipcode    varchar(100),
-  maincontacts      varchar(50),
-  microblog         varchar(100),
-  countrycity       varchar(50),
-  suppliercode      varchar(50),
-  fax               varchar(50),
-  calculation       varchar(50),
-  legal             varchar(50),
-  heading           varchar(50),
-  businesslicense   varchar(50),
-  headingnumber     varchar(50),
-  registered        datetime,
-  registeredcapital decimal(15),
-  endtime           datetime,
-  type              varchar(1) comment '0-供货商 1-报关行 2-供应商 3-承运人 4-客户 5-品牌商',
-  contractfrom      datetime,
-  contractto        datetime,
-  contractrate      decimal(16,9),
-  contractremind    int,
-  settlecompanyid   int unsigned null,
-  primary key (id)
-) engine=innodb default charset=utf8mb4;
-
-alter table tb_supplier comment '任何表都应该包含的列';
 
 /*==============================================================*/
 /* table: tb_supplier_orderdate                                 */
