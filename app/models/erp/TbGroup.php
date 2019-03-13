@@ -69,21 +69,21 @@ class TbGroup extends BaseModel
 
 
     /**
-     * 获取当前用户组下面的所有权限
+     * 获取当前用户组下面的所有模块权限
      * @return false|string
      */
-    public function permissions()
+    public function modules()
     {
         // 逻辑
         // 初始化一个空数组，用于存放变量
-        $permissions = [];
+        $current_modules = [];
 
         // 循环得到权限
         foreach ($this->permissions as $permission) {
             if ($permission->sys_delete_flag == '0') {
                 foreach ($permission->modules as $module) {
                     if ($module->sys_delete_flag == '0') {
-                        $permissions[] = [
+                        $current_modules[] = [
                             'permissionid' => $module->permissionid,
                             'module' => $module->module,
                             'controller' => $module->controller,
@@ -95,7 +95,7 @@ class TbGroup extends BaseModel
         }
 
         // 返回最终的权限树
-        return json_encode($permissions);
+        return json_encode($current_modules);
     }
 
 }
