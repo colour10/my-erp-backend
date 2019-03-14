@@ -36,18 +36,15 @@
 
         <el-form-item label="<?=$system_language["depart"]?>">
 
-          <simple-select v-model="form.departmentid" source="department.single">
-          </simple-select>
+          <simple-select v-model="form.departmentid" source="department.single"></simple-select>
         </el-form-item>
         
         <el-form-item label="<?=$system_language["zu"]?>">
-          <simple-select v-model="form.groupid" source="group" style="width:150">
-          </simple-select>
+          <simple-select v-model="form.groupid" source="group" style="width:150"></simple-select>
         </el-form-item>
 
         <el-form-item label="<?=$system_language["country"]?>">
-          <simple-select v-model="form.countryid" source="country" :lang="lang">
-          </simple-select>
+          <simple-select v-model="form.countryid" source="country" :lang="lang"></simple-select>
         </el-form-item>
         
         <el-form-item label="<?=$system_language["email"]?>">
@@ -66,8 +63,6 @@
         </el-form-item>
         <el-form-item label="<?=$system_language["mobile"]?>">
           <el-input v-model="form.mobilephone"></el-input>
-          <select-currency v-model="form.mobilephone">
-                    </select-currency>
         </el-form-item>
 
         

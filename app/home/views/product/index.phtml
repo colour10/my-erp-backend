@@ -153,12 +153,12 @@
             </el-col>
             <el-col :span="8">
                 <el-form-item label="<?=$system_language["xingbie"]?>">
-                  <select-dialog v-model="form.series_id2" source="aliases" style="width:150" :lang="lang">
+                  <select-dialog v-model="form.gender" source="gender" style="width:150" :lang="lang">
                   </select-dialog>
                 </el-form-item>
 
                 <el-form-item label="<?=$system_language["jijie"]?>">
-                  <select-dialog v-model="form.series_id2" source="aliases" style="width:150" :lang="lang">
+                  <select-dialog v-model="form.season" source="season" style="width:150" :lang="lang">
                   </select-dialog>
                 </el-form-item>
               
@@ -191,11 +191,11 @@
             </el-form-item>
             
             <el-form-item label="<?=$system_language["jiandangshijian"]?>">
-              <el-input v-model="form.password"></el-input>
+              <el-input v-model="form.sys_create_date" disabled></el-input>
             </el-form-item>
             
             <el-form-item label="<?=$system_language["jiandangren"]?>">
-              <el-input v-model="form.password"></el-input>
+              <el-input v-model="form.password" disabled></el-input>
             </el-form-item>
     
             
@@ -322,7 +322,13 @@ $(document).ready(function(){
                     winterproofing:"",
                     isfj:"",
                     discount:"",
-                    ulnarinch_memo:""
+                    ulnarinch_memo:"",
+                    wordprice:"",
+                    wordpricecurrency:"",
+                    sys_create_stuff:"",
+                    sys_create_date:"",
+                    gender:"",
+                    season:""
                 },
                 props:props,
                 departs:[],
@@ -363,6 +369,10 @@ $(document).ready(function(){
                 self.rowIndex = rowIndex;
                 self.row = row;
                 $ASA.copyTo(row, this.form)
+                self.form.factoryprice = $ASA.round(self.form.factoryprice,2)
+                self.form.realprice = $ASA.round(self.form.realprice,2)
+                self.form.wordprice = $ASA.round(self.form.wordprice,2)
+                self.form.nationalprice = $ASA.round(self.form.nationalprice,2)
     
                 this.formTitle = $ASAL.xiugaixinxi;
                 self.showDialog();
@@ -450,8 +460,6 @@ $(document).ready(function(){
     .user-form .el-checkbox__label {
         padding-left:4px;    
     }
-    
-    
     
 </style>
 

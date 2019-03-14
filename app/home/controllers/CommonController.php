@@ -41,7 +41,9 @@ class CommonController extends BaseController
         $lang["_image_url_prex"] = $config->file_prex;
         $lang["_languages"] = $config->languages;
         
-        echo sprintf("\$ASAL = %s", json_encode((array)$lang));
+        //$lang["gender"] = $config->gender;
+        
+        echo sprintf("\$ASAL = %s", json_encode((array)$lang), JSON_OBJECT_AS_ARRAY );
         $this->view->disable();
     }
     

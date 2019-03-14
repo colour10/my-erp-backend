@@ -124,6 +124,25 @@ var $ASA = (function(){
             }   
         }
     }
+    
+    function round(num, length) {
+        if(num>0) {
+            var l = Math.pow(10,length)
+            return Math.round(num*l)/l   
+        }
+        else {
+            return '';   
+        }
+    }
+    
+    function filterNumber(num) {
+        if(num>0) {
+            return num   
+        }
+        else {
+            return ''   
+        }
+    }
         
     return {
         handelSubmitMessage:handelSubmitMessage,
@@ -136,6 +155,8 @@ var $ASA = (function(){
         post:$.post,
         get:$.get,
         arrayMerge:arrayMerge,
-        findByKey:findByKey
+        findByKey:findByKey,
+        round:round,
+        filterNumber:filterNumber
     }    
 })()

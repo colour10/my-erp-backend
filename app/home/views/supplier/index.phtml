@@ -50,7 +50,7 @@ $(document).ready(function(){
             columns:[            
                 {name:"name", label:"<?=$system_language["zileimingcheng"]?>", is_multiple:true, is_focus:true},
                 {name:"childcode", label:"<?=$system_language["zileibianma"]?>"},
-                {name:"producttemplateid", label:"<?=$system_language["chimamoban"]?>", type:'select', data_source:{url:"/sizetop/list", oplabel:'name', opvalue:'id'}},
+                {name:"producttemplateid", label:"<?=$system_language["chimamoban"]?>", type:'select', source:"sizetop"},
                 {name:"weight", label:"<?=$system_language["maozhong"]?>"},
             ],
             controller:"childproductgroup",
