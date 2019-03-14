@@ -19,13 +19,10 @@ class CommonController extends BaseController
 
     function currencyAction()
     {
+        header('Access-Control-Allow-Origin:*');
         $lang = $this->language;
 
-        $result = array(
-            "language" => $lang['code'],
-            "currency" => (array)$lang["currency"]
-        );
-        echo json_encode($result);
+        echo json_encode((array)$lang["currency"]);
         $this->view->disable();
     }
 

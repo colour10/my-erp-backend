@@ -42,53 +42,53 @@
             <el-col :span="8">
               
                 <el-form-item label="<?=$system_language["pinpai"]?>">
-                  <simple-select v-model="form.brand" :data_source="{url:'/brand/list',oplabel:'name', opvalue:'id'}" style="width:150" :lang="lang">
+                  <simple-select v-model="form.brand" source="brand" :lang="lang">
                   </simple-select>
                 </el-form-item>
                 
                 <el-form-item label="<?=$system_language["pinlei"]?>">
-                  <simple-select v-model="form.brandtype" :data_source="{url:'/brandgroup/list',oplabel:'name', opvalue:'id'}" style="width:150" :lang="lang">
+                  <simple-select v-model="form.brandtype" source="brandgroup" :lang="lang">
                   </simple-select>
                 </el-form-item>
                 
                 <el-form-item label="<?=$system_language["zipinlei"]?>">
-                  <simple-select v-model="form.childbrand" :data_source="{url:'/childproductgroup/list',oplabel:'name', opvalue:'id'}" style="width:150" :lang="lang">
+                  <simple-select v-model="form.childbrand" source="childproductgroup" :lang="lang">
                   </simple-select>
                 </el-form-item>
                 
                 <el-form-item label="<?=$system_language["chandi"]?>">
-                  <select-dialog v-model="form.origin" :data_source="{url:'/country/list',oplabel:'name', opvalue:'id'}" style="width:150" :lang="lang">
+                  <select-dialog v-model="form.origin" source="country" :lang="lang">
                   </select-dialog>
                 </el-form-item>
         
                 <el-form-item label="<?=$system_language["pinpaiseban"]?>">
-                  <select-dialog v-model="form.brandcolor" :data_source="{url:'/colortemplate/list',oplabel:'name', opvalue:'id'}" style="width:150" :lang="lang">
+                  <select-dialog v-model="form.brandcolor" source="colortemplate" :lang="lang">
                   </select-dialog>
                 </el-form-item>
                 
                 <el-form-item label="<?=$system_language["caizhizhuangtai"]?>">
-                  <select-dialog v-model="form.materialstatus" :data_source="{url:'/materialstatus/list',oplabel:'name', opvalue:'id'}" style="width:150" :lang="lang">
+                  <select-dialog v-model="form.materialstatus" source="materialstatus" :lang="lang">
                   </select-dialog>
                 </el-form-item>
                 
                 <el-form-item label="<?=$system_language["changhefengge"]?>">
-                  <select-dialog v-model="form.occasion" :data_source="{url:'/occasionsstyle/list',oplabel:'name', opvalue:'id'}" style="width:150" :lang="lang">
+                  <select-dialog v-model="form.occasion" source="occasionsstyle" style="width:150" :lang="lang">
                   </select-dialog>
                 </el-form-item>
         
                 
                 <el-form-item label="<?=$system_language["shangpinchicun"]?>">
-                  <simple-select v-model="form.ulnarinch" :data_source="{url:'/ulnarinch/list',oplabel:'name', opvalue:'id'}" style="width:150" :lang="lang">
+                  <simple-select v-model="form.ulnarinch" source="ulnarinch" style="width:150" :lang="lang">
                   </simple-select>
                 </el-form-item>
                 
                 <el-form-item label="<?=$system_language["shangpinmiaoshu"]?>">
-                  <select-dialog v-model="form.occasion" :data_source="{url:'/occasionsstyle/list',oplabel:'name', opvalue:'id'}" style="width:150" :lang="lang">
+                  <select-dialog v-model="form.occasion" source="occasionsstyle" style="width:150" :lang="lang">
                   </select-dialog>
                 </el-form-item>
                 
                 <el-form-item label="<?=$system_language["bihefangshi"]?>">
-                  <select-dialog v-model="form.closeway" :data_source="{url:'/occasionsstyle/list',oplabel:'name', opvalue:'id'}" style="width:150" :lang="lang">
+                  <select-dialog v-model="form.closeway" source="occasionsstyle" style="width:150" :lang="lang">
                   </select-dialog>
                 </el-form-item>
               
@@ -97,27 +97,27 @@
             
             <el-col :span="8">
                 <el-form-item label="<?=$system_language["niandai"]?>">
-                  <select-dialog v-model="form.ageseason" :data_source="{url:'/ageseason/list',oplabel:'fullname', opvalue:'id'}" style="width:150" :lang="lang">
+                  <select-dialog v-model="form.ageseason" source="ageseason" style="width:150" :lang="lang">
                   </select-dialog>
                 </el-form-item>
                 
                 <el-form-item label="<?=$system_language["shangpinbieming"]?>">
-                  <select-dialog v-model="form.aliases" :data_source="{url:'/aliases/list',oplabel:'name', opvalue:'id'}" style="width:150" :lang="lang">
+                  <select-dialog v-model="form.aliases" source="aliases" style="width:150" :lang="lang">
                   </select-dialog>
                 </el-form-item>   
                 
                 <el-form-item label="<?=$system_language["shangpinxilie"]?>">
-                  <select-dialog v-model="form.series_id" :data_source="{url:'/aliases/list',oplabel:'name', opvalue:'id'}" style="width:150" :lang="lang">
+                  <select-dialog v-model="form.series_id" source="aliases" style="width:150" :lang="lang">
                   </select-dialog>
                 </el-form-item>
                 
                 <el-form-item label="<?=$system_language["shangpinzixilie"]?>">
-                  <select-dialog v-model="form.series_id2" :data_source="{url:'/aliases/list',oplabel:'name', opvalue:'id'}" style="width:150" :lang="lang">
+                  <select-dialog v-model="form.series_id2" source="aliases" style="width:150" :lang="lang">
                   </select-dialog>
                 </el-form-item>
                 
                 <el-form-item label="<?=$system_language["fanghanzhishu"]?>">
-                  <simple-select v-model="form.winterproofing" :data_source="{url:'/winterproofing/list',oplabel:'name', opvalue:'id'}" style="width:150" :lang="lang">
+                  <simple-select v-model="form.winterproofing" source="winterproofing" style="width:150" :lang="lang">
                   </simple-select>
                 </el-form-item>
                 
@@ -153,32 +153,32 @@
             </el-col>
             <el-col :span="8">
                 <el-form-item label="<?=$system_language["xingbie"]?>">
-                  <select-dialog v-model="form.series_id2" :data_source="{url:'/aliases/list',oplabel:'name', opvalue:'id'}" style="width:150" :lang="lang">
+                  <select-dialog v-model="form.series_id2" source="aliases" style="width:150" :lang="lang">
                   </select-dialog>
                 </el-form-item>
 
                 <el-form-item label="<?=$system_language["jijie"]?>">
-                  <select-dialog v-model="form.series_id2" :data_source="{url:'/aliases/list',oplabel:'name', opvalue:'id'}" style="width:150" :lang="lang">
+                  <select-dialog v-model="form.series_id2" source="aliases" style="width:150" :lang="lang">
                   </select-dialog>
                 </el-form-item>
               
                 <el-form-item label="<?=$system_language["chima"]?>">
-                  <simple-select v-model="form.ulnarinch" :data_source="{url:'/sizetop/list',oplabel:'name', opvalue:'id'}" :lang="lang">
+                  <simple-select v-model="form.ulnarinch" source="sizetop" :lang="lang">
                   </simple-select>
                 </el-form-item>
                 
                 <el-form-item label="<?=$system_language["chimaguige"]?>">
-                  <simple-select v-model="form.ulnarinch" :data_source="{url:'/sizetop/list',oplabel:'name', opvalue:'id'}" :lang="lang">
+                  <simple-select v-model="form.ulnarinch" source="sizetop" :lang="lang">
                   </simple-select>
                 </el-form-item>
                 
              <el-form-item label="<?=$system_language["zhixingbiaozhun"]?>">
-              <simple-select v-model="form.ulnarinch" :data_source="{url:'/sizetop/list',oplabel:'name', opvalue:'id'}" :lang="lang">
+              <simple-select v-model="form.ulnarinch" source="sizetop" :lang="lang">
               </simple-select>
             </el-form-item>
             
             <el-form-item label="<?=$system_language["anquanleibie"]?>">
-              <simple-select v-model="form.ulnarinch" :data_source="{url:'/sizetop/list',oplabel:'name', opvalue:'id'}" :lang="lang">
+              <simple-select v-model="form.ulnarinch" source="sizetop" :lang="lang">
               </simple-select>
             </el-form-item>
             
@@ -262,12 +262,15 @@ $(document).ready(function(){
             return {
                 dialogVisible:false,
                 lang:$ASAL.lang,
-                data_source:{url:'/brand/list',oplabel:'label', opvalue:'id'},
                 form: {
                     id:'',
                     decade:"",
+                    brand:'',
+                    brandtype:"",
+                    childbrand:"",
                     productsize:"",
                     origin:"",
+                    brandcolor:"",
                     security:"",
                     execution:"",
                     material:"",

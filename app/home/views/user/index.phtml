@@ -36,17 +36,17 @@
 
         <el-form-item label="<?=$system_language["depart"]?>">
 
-          <simple-select v-model="form.departmentid" url="/department/single" :params="{}" oplabel="label" opvalue="id" style="width:150">
+          <simple-select v-model="form.departmentid" source="department.single">
           </simple-select>
         </el-form-item>
         
         <el-form-item label="<?=$system_language["zu"]?>">
-          <simple-select v-model="form.groupid" url="/group/list" :params="{}" oplabel="group_name" opvalue="id" style="width:150">
+          <simple-select v-model="form.groupid" source="group" style="width:150">
           </simple-select>
         </el-form-item>
 
         <el-form-item label="<?=$system_language["country"]?>">
-          <simple-select v-model="form.countryid" url="/country/list" :params="{}" oplabel="name" opvalue="relateid" style="width:150">
+          <simple-select v-model="form.countryid" source="country" :lang="lang">
           </simple-select>
         </el-form-item>
         
@@ -66,6 +66,8 @@
         </el-form-item>
         <el-form-item label="<?=$system_language["mobile"]?>">
           <el-input v-model="form.mobilephone"></el-input>
+          <select-currency v-model="form.mobilephone">
+                    </select-currency>
         </el-form-item>
 
         
@@ -129,6 +131,7 @@ $(document).ready(function(){
         data() {
             return {
                 dialogVisible:false,
+                lang:$ASAL.lang,
                 form: {
                     id:'',
                     login_name: '',

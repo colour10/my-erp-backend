@@ -322,11 +322,11 @@ return array(
     ),
     
     "currency" => [
-        "CAD" => "加元",
-        "EUR" => "欧元",
-        "HKD" => "港币",
-        "JPY" => "日元",
-        "RMB" => "人民币",
-        "USD" => "美元",
+        ["code" =>"CAD", "name"=> "加元"],
+        ["code" =>"EUR", "name"=> "欧元"],
+        ["code" =>"HKD", "name"=> "港币"],
+        ["code" =>"JPY", "name"=> "日元"],
+        ["code" =>"RMB", "name"=> "人民币"],
+        ["code" =>"USD", "name"=> "美元"]
     ]
 );

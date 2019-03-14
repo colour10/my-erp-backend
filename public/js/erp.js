@@ -1,4 +1,5 @@
 var $ASA = (function(){
+    
     var handelSubmitMessage = function(result, callback) {
         var self = this
         if(result.messages.length>0) {
@@ -133,6 +134,7 @@ var $ASA = (function(){
         empty:empty, 
         deleteObject:deleteObject, 
         post:$.post,
+        get:$.get,
         arrayMerge:arrayMerge,
         findByKey:findByKey
     }    

@@ -142,7 +142,7 @@ class AdminController extends BaseController
 
 	public function doList($columns=array()) {
 	    
-	    if($this->request->isPost()) {
+	    if($this->request->isAjax()) {
 	        $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
 	        
 //	        //是否支持多国语言
@@ -151,7 +151,7 @@ class AdminController extends BaseController
 //	        }
 //	        else {
 //	            $where = "sys_delete_flag=0";
-//	        }	        
+//	        }
 	        $where = $this->getSearchCondition();
 	        //echo $where;exit;
 	        
@@ -165,7 +165,7 @@ class AdminController extends BaseController
                     $line = array_merge($row->toArray(), $arr);
                 }
                 else {
-                    $line = $result->toArray();
+                    $line = $row->toArray();
                 }
                 
                 
