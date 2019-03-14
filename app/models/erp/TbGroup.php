@@ -7,6 +7,7 @@ use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Regex;
 use Asa\Erp\Util;
+use Phalcon\Mvc\Model\Relation;
 
 /**
  * 分组表
@@ -25,6 +26,11 @@ class TbGroup extends BaseModel
             "groupid",
             [
                 'alias' => 'permissions',
+                'foreignKey' => [
+                    // 关联字段禁止自动删除
+                    'action' => Relation::ACTION_RESTRICT,
+                    "message"    => "The group cannot be deleted because other permissions are using it"
+                ],
             ]
         );
 
@@ -35,6 +41,11 @@ class TbGroup extends BaseModel
             'groupid',
             [
                 'alias' => 'users',
+                'foreignKey' => [
+                    // 关联字段禁止自动删除
+                    'action' => Relation::ACTION_RESTRICT,
+                    "message"    => "The group cannot be deleted because other users are using it"
+                ],
             ]
         );
     }

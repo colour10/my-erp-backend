@@ -6,6 +6,7 @@ use Phalcon\Validation;
 use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Regex;
+use Phalcon\Mvc\Model\Relation;
 
 /**
  * 权限表
@@ -27,6 +28,11 @@ class TbPermission extends BaseModel
             "permissionid",
             [
                 'alias' => 'groups',
+                'foreignKey' => [
+                    // 关联字段禁止自动删除
+                    'action' => Relation::ACTION_RESTRICT,
+                    "message"    => "The permission cannot be deleted because other groups are using it"
+                ],
             ]
         );
 
@@ -37,6 +43,11 @@ class TbPermission extends BaseModel
             "permissionid",
             [
                 'alias' => 'modules',
+                'foreignKey' => [
+                    // 关联字段禁止自动删除
+                    'action' => Relation::ACTION_RESTRICT,
+                    "message"    => "The permission cannot be deleted because other modules are using it"
+                ],
             ]
         );
     }
@@ -67,42 +78,9 @@ class TbPermission extends BaseModel
                 'cancelOnFail' => true,
             ]
         ));
-        // relateid-关联ID
-        $validator->add('relateid', new Regex(
-            [
-                "message" => "The relateid is invalid",
-                "pattern" => "/^[1-9]\d*$/",
-                "allowEmpty" => true,
-                'cancelOnFail' => true,
-            ]
-        ));
-        // description-描述
-        $validator->add('description', new PresenceOf([
-            'message' => 'The description is required',
-            'cancelOnFail' => true,
-        ]));
-        // lang_code-语言编码
-        $validator->add('lang_code', new Regex(
-            [
-                "message" => "The lang_code is invalid",
-                "pattern" => "/[a-zA-Z\-_0-9]+/",
-                "allowEmpty" => true,
-                'cancelOnFail' => true,
-            ]
-        ));
-        // languages-语言列表
-        $validator->add('languages', new Regex(
-            [
-                "message" => "The languages is invalid",
-                "pattern" => "/[a-zA-Z0-9\-\_\,]+/",
-                "allowEmpty" => true,
-                'cancelOnFail' => true,
-            ]
-        ));
         // 过滤
         $validator->setFilters('name', 'trim');
-        $validator->setFilters('description', 'trim');
-
+        // 最终返回
         return $this->validate($validator);
     }
 }

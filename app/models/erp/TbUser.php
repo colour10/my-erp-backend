@@ -7,6 +7,7 @@ use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Regex;
 use Phalcon\Validation\Validator\Email;
+use Phalcon\Mvc\Model\Relation;
 
 /**
  * 用户表
@@ -25,6 +26,11 @@ class TbUser extends BaseModel
             'id',
             [
                 'alias' => 'department',
+                'foreignKey' => [
+                    // 关联字段禁止自动删除
+                    'action' => Relation::ACTION_RESTRICT,
+                    "message"    => "The departmentid does not exist on the TbDepartment model"
+                ],
             ]
         );
 
@@ -35,6 +41,11 @@ class TbUser extends BaseModel
             'id',
             [
                 'alias' => 'group',
+                'foreignKey' => [
+                    // 关联字段禁止自动删除
+                    'action' => Relation::ACTION_RESTRICT,
+                    "message"    => "The groupid does not exist on the TbGroup model"
+                ],
             ]
         );
     }

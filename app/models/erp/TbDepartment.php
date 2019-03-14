@@ -7,6 +7,7 @@ use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Regex;
 use Phalcon\Validation\Validator\Email;
+use Phalcon\Mvc\Model\Relation;
 
 /**
  * 部门表
@@ -25,6 +26,11 @@ class TbDepartment extends BaseModel
             'id',
             [
                 'alias' => 'company',
+                'foreignKey' => [
+                    // 关联字段禁止自动删除
+                    'action' => Relation::ACTION_RESTRICT,
+                    "message"    => "The companyid does not exist on the company model"
+                ],
             ]
         );
     }
