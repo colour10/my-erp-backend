@@ -72,9 +72,12 @@ class PermissionController extends AdminController {
         foreach ($permissions_array as $k => $permission) {
             $permissions_array[$k]['up_dp_id'] = $permission['pid'];
             $permissions_array[$k]['remark'] = $permission['memo_cn'];
+            $permissions_array[$k]['memo'] = $permission['memo_cn'];
             // 保持label为中文，需要传递中文说明
             $permissions_array[$k]['name'] = $permission['memo_cn'];
         }
+
+        // return json_encode($permissions_array);
 
         // 交给下面的格式化为目录树处理并返回
         return json_encode(Util::format_tree($permissions_array));
