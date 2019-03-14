@@ -315,24 +315,24 @@ return array(
     "yingyezhizhaohao" => "营业执照号",
 
     // 新增
-    'group' => '组',
-    'groupid' => '组编号',
-    'permission' => '权限',
-    'permissionid' => '权限编号',
-    'permission-name' => '权限名称',
-    'permission-pid' => '上级权限',
-    'permission-module' => '权限-模型关联表',
-    'companyid' => '公司编号',
+    'group' => 'group',
+    'groupid' => 'group id',
+    'permission' => 'permission',
+    'permissionid' => 'permission id',
+    'permission-name' => 'permission name',
+    'permission-pid' => 'permission pid',
+    'permission-module' => 'permission module table',
+    'companyid' => 'company id',
 
 
     
     "model-delete-message" => "请先登录",
     "template" => array(
-        "uniqueness" => "%s不能重复",
-        'required' => '请填写%s',
-        'invalid' => '%s不合法',
-        'hasmany-foreign-message' => '当前模型不能被删除，因为有%s模块正在使用它',
-        'belongsto-foreign-message' => '当前模型不能被删除，因为有%s模块正在使用它',
+        "uniqueness" => "The %s field must be unique",
+        'required' => 'The %s is required',
+        'invalid' => 'The %s is invalid',
+        'hasmany-foreign-message' => 'The module cannot be deleted because other %s are using it',
+        'belongsto-foreign-message' => 'The module does not exist on the %s model',
     ),
     
     "currency" => [

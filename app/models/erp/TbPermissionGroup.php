@@ -30,7 +30,7 @@ class TbPermissionGroup extends BaseModel
                 'foreignKey' => [
                     // 关联字段禁止自动删除
                     'action' => Relation::ACTION_RESTRICT,
-                    "message"    => "The groupid does not exist on the group model"
+                    "message"    => $this->getValidateMessage('belongsto-foreign-message', 'group'),
                 ],
             ]
         );
@@ -45,7 +45,7 @@ class TbPermissionGroup extends BaseModel
                 'foreignKey' => [
                     // 关联字段禁止自动删除
                     'action' => Relation::ACTION_RESTRICT,
-                    "message"    => "The permissionid does not exist on the permission model"
+                    "message"    => $this->getValidateMessage('belongsto-foreign-message', 'permission'),
                 ],
             ]
         );
@@ -60,7 +60,7 @@ class TbPermissionGroup extends BaseModel
                 'foreignKey' => [
                     // 关联字段禁止自动删除
                     'action' => Relation::ACTION_RESTRICT,
-                    "message"    => "The permissiongroup cannot be deleted because other modules are using it"
+                    "message"    => $this->getValidateMessage('hasmany-foreign-message', 'permission-module'),
                 ],
             ]
         );
@@ -76,20 +76,33 @@ class TbPermissionGroup extends BaseModel
 
         // groupid-组id不能为空
         $validator->add('groupid', new PresenceOf([
-            'message' => 'The groupid is required',
+            'message' => $this->getValidateMessage('required', 'groupid'),
             'cancelOnFail' => true,
         ]));
         // permissionid-权限id不能为空
         $validator->add('permissionid', new PresenceOf([
-            'message' => 'The permissionid is required',
+            'message' => $this->getValidateMessage('required', 'permissionid'),
             'cancelOnFail' => true,
         ]));
         // companyid-公司id不能为空
         $validator->add('companyid', new PresenceOf([
-            'message' => 'The permissionid is required',
+            'message' => $this->getValidateMessage('required', 'companyid'),
             'cancelOnFail' => true,
         ]));
 
         return $this->validate($validator);
+    }
+
+    // 重写方法
+    public function getValidateMessage($template, $name)
+    {
+        // 定义变量
+        // 取出当前语言版本
+        $language = $this->getDI()->get('language');
+        // 拼接变量
+        $template_name = $language->template[$template];
+        $human_name = $language->$name;
+        // 返回最终的友好提示信息
+        return sprintf($template_name, $human_name);
     }
 }

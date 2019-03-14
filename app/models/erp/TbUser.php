@@ -60,7 +60,7 @@ class TbUser extends BaseModel
 
         // login_name-用户名不能为空或者重复
         $validator->add('login_name', new PresenceOf([
-            'message' => 'The login_name is required',
+            'message' => $this->getValidateMessage('required', 'user-loginname'),
             'cancelOnFail' => true,
         ]));
         $validator->add('login_name', new Uniqueness([
@@ -124,5 +124,18 @@ class TbUser extends BaseModel
         $validator->setFilters('login_name', 'trim');
 
         return $this->validate($validator);
+    }
+
+    // 重写方法
+    public function getValidateMessage($template, $name)
+    {
+        // 定义变量
+        // 取出当前语言版本
+        $language = $this->getDI()->get('language');
+        // 拼接变量
+        $template_name = $language->template[$template];
+        $human_name = $language->$name;
+        // 返回最终的友好提示信息
+        return sprintf($template_name, $human_name);
     }
 }

@@ -62,17 +62,17 @@ class TbPermission extends BaseModel
 
         // name-权限名称不能为空或者重复
         $validator->add('name', new PresenceOf([
-            'message' => 'The name is required',
+            'message' => $this->getValidateMessage('required', 'permission-name'),
             'cancelOnFail' => true,
         ]));
         $validator->add('name', new Uniqueness([
-            'message' => 'The name field must be unique',
+            'message' => $this->getValidateMessage('uniqueness', 'permission-name'),
             'cancelOnFail' => true,
         ]));
         // pid-父级别权限
         $validator->add('pid', new Regex(
             [
-                "message" => "The pid is invalid",
+                "message" => $this->getValidateMessage('invalid', 'permission-pid'),
                 "pattern" => "/^[1-9]\d*$/",
                 "allowEmpty" => true,
                 'cancelOnFail' => true,
@@ -82,5 +82,18 @@ class TbPermission extends BaseModel
         $validator->setFilters('name', 'trim');
         // 最终返回
         return $this->validate($validator);
+    }
+
+    // 重写验证提示方法
+    public function getValidateMessage($template, $name)
+    {
+        // 定义变量
+        // 取出当前语言版本
+        $language = $this->getDI()->get('language');
+        // 拼接变量
+        $template_name = $language->template[$template];
+        $human_name = $language->$name;
+        // 返回最终的友好提示信息
+        return sprintf($template_name, $human_name);
     }
 }

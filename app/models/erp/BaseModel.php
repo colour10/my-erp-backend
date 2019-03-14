@@ -88,6 +88,7 @@ class BaseModel extends \Phalcon\Mvc\Model {
     }
 
     /**
+     * 多语言版本配置读取函数
      * @param $template languages下面语言文件template字段的名称
      * @param $name 待验证字段的编号，显示为当前语言的友好性提示
      */
