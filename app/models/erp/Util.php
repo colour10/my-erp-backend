@@ -25,7 +25,7 @@ class Util {
                     $tree[] = [
                         'id' => $v['id'],
                         'label' => $v['name'],
-                        'remark' => $v['remark'],
+                        'memo' => $v['memo'],
                         'level' => $level,
                         'children' =>[]
                     ];
@@ -33,7 +33,7 @@ class Util {
                     $tree[] = [
                         'id' => $v['id'],
                         'label' => $v['name'],
-                        'remark' => $v['remark'],
+                        'memo' => $v['memo'],
                         'level' => $level,
                         // 新增children
                         'children' => $children,
@@ -65,7 +65,7 @@ class Util {
                     $tree[] = [
                         'id' => $v['id'],
                         'label' => str_repeat($str_repeat, $level).$v['name'],
-                        'remark' => $v['remark'],
+                        'memo' => $v['memo'],
                         'level' => $level,
                     ];
                     // 继续寻找
@@ -91,5 +91,21 @@ class Util {
             $arr = [$str];
         }
         return $arr;
+    }
+
+    /**
+     * 判断id类字段是否合法
+     * @param $id
+     * @return bool
+     */
+    public static function checkid($id)
+    {
+        // 判断id类字段是否合法
+        $pattern = '/^[1-9]+\d*$/';
+        if (preg_match($pattern, $id)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

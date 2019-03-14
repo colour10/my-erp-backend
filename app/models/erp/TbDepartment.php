@@ -17,6 +17,16 @@ class TbDepartment extends BaseModel
     {
         parent::initialize();
         $this->setSource('tb_department');
+
+        // 部门-公司表，一对多反向
+        $this->belongsTo(
+            'companyid',
+            '\Asa\Erp\TbCompany',
+            'id',
+            [
+                'alias' => 'company',
+            ]
+        );
     }
 
     /**

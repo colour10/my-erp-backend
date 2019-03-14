@@ -4,7 +4,9 @@ erp.prj
 app/config/config.php
 app/cache
 app/home/controllers/TestController.php
-app/home/controllers/AdminController.php
+app/home/controllers/TestadminController.php
+app/home/controllers/AgeController.php
+app/home/controllers/DepartController.php
 create-sql.sql.bak
 app/models/erp/Parts.php
 app/models/erp/Robots.php

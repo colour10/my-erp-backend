@@ -17,6 +17,26 @@ class TbUser extends BaseModel
     {
         parent::initialize();
         $this->setSource('tb_user');
+
+        // 用户表-部门表，一对多反向
+        $this->belongsTo(
+            'departmentid',
+            '\Asa\Erp\TbDepartment',
+            'id',
+            [
+                'alias' => 'department',
+            ]
+        );
+
+        // 用户表-组表，一对多反向
+        $this->belongsTo(
+            'groupid',
+            '\Asa\Erp\TbGroup',
+            'id',
+            [
+                'alias' => 'group',
+            ]
+        );
     }
 
     /**
@@ -47,14 +67,14 @@ class TbUser extends BaseModel
             "allowEmpty" => true,
             'cancelOnFail' => true,
         ]));
-        // departmentid-部门ID，也就是事业部ID
+        // departmentid-部门ID，用于公司内部组织结构
         $validator->add('departmentid', new Regex([
             'message' => 'The departmentid is invalid',
             "pattern" => "/^[1-9]\d*$/",
             "allowEmpty" => true,
             'cancelOnFail' => true,
         ]));
-        // groupid-组ID
+        // groupid-组ID，用于操作权限
         $validator->add('groupid', new Regex([
             'message' => 'The groupid is invalid',
             "pattern" => "/^[1-9]\d*$/",
