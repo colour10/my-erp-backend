@@ -7298,7 +7298,9 @@ CREATE TABLE `zl_brand` (
                           `supplier` int(10) unsigned DEFAULT NULL,
                           `officialwebsite` varchar(500) DEFAULT NULL,
                           `isauthorized` tinyint(4) DEFAULT NULL,
-                          PRIMARY KEY (`id`)
+                          PRIMARY KEY (`id`),
+                          KEY (`countryid`),
+                          KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='品牌表';
 
 
