@@ -523,7 +523,7 @@ drop table if exists zl_unit;
 
 drop table if exists zl_unitgroup;
 
-drop table if exists zl_warehouse;
+drop table if exists tb_warehouse;
 
 drop table if exists zl_washinginstructions;
 
@@ -7230,10 +7230,10 @@ CREATE TABLE `zl_unitgroup` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `zl_warehouse`
+-- 表的结构 `tb_warehouse`
 --
 
-CREATE TABLE `zl_warehouse` (
+CREATE TABLE `tb_warehouse` (
                               `id` int(10) UNSIGNED NOT NULL COMMENT '主键id',
                               `sys_create_stuff` int(10) UNSIGNED NOT NULL,
                               `sys_create_date` datetime NOT NULL,
@@ -8900,9 +8900,9 @@ ALTER TABLE `zl_unitgroup`
   ADD PRIMARY KEY (`id`);
 
 --
--- 表的索引 `zl_warehouse`
+-- 表的索引 `tb_warehouse`
 --
-ALTER TABLE `zl_warehouse`
+ALTER TABLE `tb_warehouse`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -10458,9 +10458,9 @@ ALTER TABLE `zl_unitgroup`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键id';
 
 --
--- 使用表AUTO_INCREMENT `zl_warehouse`
+-- 使用表AUTO_INCREMENT `tb_warehouse`
 --
-ALTER TABLE `zl_warehouse`
+ALTER TABLE `tb_warehouse`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键id';
 
 --
