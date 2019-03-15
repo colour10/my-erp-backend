@@ -1113,47 +1113,47 @@ CREATE TABLE `dd_fee` (
 --
 
 CREATE TABLE `dd_order` (
-                          `id` int(10) UNSIGNED NOT NULL COMMENT '主键id',
-                          `sys_create_stuff` int(10) UNSIGNED NOT NULL,
+                          `id` int(10) unsigned NOT NULL COMMENT '主键id',
+                          `sys_create_stuff` int(10) unsigned NOT NULL,
                           `sys_create_date` datetime NOT NULL,
-                          `sys_modify_stuff` int(10) UNSIGNED NOT NULL,
+                          `sys_modify_stuff` int(10) unsigned NOT NULL,
                           `sys_modify_date` datetime NOT NULL,
-                          `sys_delete_stuff` int(10) UNSIGNED DEFAULT NULL,
+                          `sys_delete_stuff` int(10) unsigned DEFAULT NULL,
                           `sys_delete_date` datetime DEFAULT NULL,
-                          `sys_delete_flag` tinyint(1) DEFAULT '0' COMMENT '0-未删除 1-已删除',
-                          `bussinesstypeid` int(10) UNSIGNED DEFAULT NULL,
-                          `makedate` datetime DEFAULT NULL,
-                          `makestaff` int(10) UNSIGNED DEFAULT NULL,
-                          `supplierid` int(10) UNSIGNED NOT NULL,
-                          `finalsupplierid` int(10) UNSIGNED DEFAULT NULL,
-                          `bookingid` int(10) UNSIGNED DEFAULT NULL,
-                          `agentid` int(10) UNSIGNED DEFAULT NULL,
-                          `purchasedept` int(10) UNSIGNED DEFAULT NULL,
-                          `brandid` int(10) UNSIGNED NOT NULL,
-                          `orderno` varchar(50) DEFAULT NULL,
+                          `sys_delete_flag` tinyint(4) NOT NULL COMMENT '0-未删除 1-已删除',
+                          `bussinesstypeid` int(10) unsigned DEFAULT NULL,
+                          `makedate` varchar(10) DEFAULT NULL COMMENT '订单日期',
+                          `makestaff` int(10) unsigned DEFAULT NULL COMMENT '制单人',
+                          `supplierid` int(10) unsigned NOT NULL COMMENT '供货商',
+                          `finalsupplierid` int(10) unsigned DEFAULT NULL COMMENT '发货单位',
+                          `bookingid` int(10) unsigned DEFAULT NULL COMMENT '订货单位',
+                          `agentid` int(10) unsigned DEFAULT NULL,
+                          `purchasedept` int(10) unsigned DEFAULT NULL,
+                          `brandid` int(10) unsigned NOT NULL,
+                          `orderno` varchar(50) DEFAULT NULL COMMENT '订单编号',
                           `total` decimal(16,9) DEFAULT NULL,
-                          `currencyid` int(10) UNSIGNED DEFAULT NULL,
-                          `companyid` int(10) UNSIGNED NOT NULL COMMENT '公司ID',
-                          `auditstaff` int(10) UNSIGNED DEFAULT NULL,
+                          `currency` varchar(10) DEFAULT NULL COMMENT '总金额货币',
+                          `auditstaff` int(10) unsigned DEFAULT NULL COMMENT '审核人',
                           `auditdate` datetime DEFAULT NULL,
-                          `ordercode` varchar(50) DEFAULT NULL,
-                          `worldordercode` varchar(50) DEFAULT NULL,
+                          `ordercode` varchar(50) DEFAULT NULL COMMENT '订单号',
+                          `worldordercode` varchar(50) DEFAULT NULL COMMENT '海外订单号',
                           `auditstatus` varchar(1) DEFAULT NULL,
                           `isstatus` varchar(1) DEFAULT NULL COMMENT '0-未完结 1-已完结',
-                          `form` varchar(2) DEFAULT NULL COMMENT 'f-女款，m-男款,fm男款/女款',
+                          `formtype` varchar(2) DEFAULT NULL COMMENT '1-女款，2-男款,3-男款/女款',
                           `memo` varchar(200) DEFAULT NULL,
-                          `contactor` varchar(200) DEFAULT NULL,
-                          `ourcontactor` varchar(200) DEFAULT NULL,
-                          `season` int(10) UNSIGNED DEFAULT NULL,
-                          `seasontype` varchar(1) DEFAULT NULL COMMENT '0-pre ,1-main ,2-fashion show',
-                          `invoiceno` varchar(50) DEFAULT NULL,
+                          `contactor` varchar(200) DEFAULT NULL COMMENT '订货单位联系人',
+                          `ourcontactor` varchar(200) DEFAULT NULL COMMENT '我方联系人',
+                          `ageseason` int(10) unsigned DEFAULT NULL COMMENT '年代季节',
+                          `seasontype` tinyint(1) DEFAULT NULL COMMENT '0-pre ,1-main ,2-fashion show',
+                          `invoiceno` varchar(50) DEFAULT NULL COMMENT '订单发票号',
                           `ddtype` varchar(1) DEFAULT NULL COMMENT '0-客户订单，1-品牌订单',
-                          `morderid` int(10) UNSIGNED DEFAULT NULL,
-                          `exchangerate` decimal(16,9) DEFAULT NULL,
-                          `bussinesstype` varchar(1) DEFAULT NULL COMMENT '0-期货 1-现货',
-                          `zkl` decimal(16,9) DEFAULT NULL,
+                          `morderid` int(10) unsigned DEFAULT NULL,
+                          `exchangerate` decimal(16,9) DEFAULT NULL COMMENT '汇率',
+                          `bussinesstype` varchar(1) DEFAULT NULL COMMENT '订单类型：0-期货 1-现货',
+                          `discount` decimal(16,9) DEFAULT NULL COMMENT '折扣',
                           `tsl` decimal(16,9) DEFAULT NULL,
-                          `property` varchar(1) DEFAULT NULL COMMENT '0-自采 1-代销'
+                          `property` varchar(1) DEFAULT NULL COMMENT '0-自采 1-代销',
+                          `companyid` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单主表';
 
 -- --------------------------------------------------------
@@ -4116,7 +4116,7 @@ CREATE TABLE `tb_pre_requisition` (
 --
 
 CREATE TABLE `tb_product` (
-                            `id` int(10) UNSIGNED NOT NULL COMMENT '主键id',
+                            `id` int(10) unsigned NOT NULL COMMENT '主键id',
                             `sys_create_stuff` int(10) unsigned NOT NULL,
                             `sys_create_date` datetime NOT NULL,
                             `sys_modify_stuff` int(10) unsigned NOT NULL,
@@ -4190,7 +4190,8 @@ CREATE TABLE `tb_product` (
                             `winterproofing` int(10) DEFAULT NULL,
                             `isfj` varchar(1) DEFAULT NULL COMMENT '0-否 1-法检',
                             `discount` decimal(10,2) DEFAULT NULL,
-                            `ulnarinch_memo` varchar(100) DEFAULT NULL COMMENT '尺寸备注'
+                            `ulnarinch_memo` varchar(100) DEFAULT NULL COMMENT '尺寸备注',
+                            `sizetopid` int(11) DEFAULT NULL COMMENT '尺码模板'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品表';
 
 
