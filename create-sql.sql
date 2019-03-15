@@ -7243,6 +7243,7 @@ CREATE TABLE `tb_warehouse` (
                               `sys_delete_date` datetime DEFAULT NULL,
                               `sys_delete_flag` tinyint(1) DEFAULT '0' COMMENT '0-未删除 1-已删除',
                               `countryid` int(11) DEFAULT NULL COMMENT '国家ID',
+                              `companyid` int(11) DEFAULT NULL COMMENT '公司ID',
                               `city` varchar(100) DEFAULT NULL COMMENT '城市名称',
                               `name` varchar(100) DEFAULT NULL COMMENT '仓库名称',
                               `address` varchar(100) DEFAULT NULL COMMENT '仓库地址',
