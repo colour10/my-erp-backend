@@ -335,6 +335,7 @@ return array(
     'spotid' => '销售端口编号',
     'up_dp_id' => '上级部门编号',
     'group_name' => '组名称',
+    'code' => '编码',
 
 
     
