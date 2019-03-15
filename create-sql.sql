@@ -1133,6 +1133,7 @@ CREATE TABLE `dd_order` (
                           `orderno` varchar(50) DEFAULT NULL,
                           `total` decimal(16,9) DEFAULT NULL,
                           `currencyid` int(10) UNSIGNED DEFAULT NULL,
+                          `companyid` int(10) UNSIGNED NOT NULL COMMENT '公司ID',
                           `auditstaff` int(10) UNSIGNED DEFAULT NULL,
                           `auditdate` datetime DEFAULT NULL,
                           `ordercode` varchar(50) DEFAULT NULL,
@@ -1190,6 +1191,7 @@ CREATE TABLE `dd_orderdetails` (
                                  `sys_delete_date` datetime DEFAULT NULL,
                                  `sys_delete_flag` tinyint(1) DEFAULT '0' COMMENT '0-未删除 1-已删除',
                                  `orderid` int(10) UNSIGNED DEFAULT NULL,
+                                 `companyid` int(10) UNSIGNED NOT NULL COMMENT '公司ID',
                                  `sizeid` int(10) UNSIGNED DEFAULT NULL,
                                  `number` int(11) DEFAULT NULL,
                                  `productid` int(10) UNSIGNED DEFAULT NULL,
@@ -7479,7 +7481,8 @@ ALTER TABLE `dd_fee`
 -- 表的索引 `dd_order`
 --
 ALTER TABLE `dd_order`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY (`companyid`);
 
 --
 -- 表的索引 `dd_ordercode`
@@ -7491,7 +7494,8 @@ ALTER TABLE `dd_ordercode`
 -- 表的索引 `dd_orderdetails`
 --
 ALTER TABLE `dd_orderdetails`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY (`companyid`);
 
 --
 -- 表的索引 `dd_quotation`
