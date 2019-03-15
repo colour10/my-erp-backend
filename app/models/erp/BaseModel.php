@@ -89,11 +89,9 @@ class BaseModel extends \Phalcon\Mvc\Model {
 
     /**
      * 多语言版本配置读取函数
-     * @param $template languages下面语言文件template字段的名称
+     * @param $template languages下面语言文件字段的名称，如template模块下面的uniqueness
      * @param $name 待验证字段的编号，显示为当前语言的友好性提示
      */
-    function getValidateMessage($template, $name) {
-
-    }
+    function getValidateMessage($template, $name) {}
 
 }

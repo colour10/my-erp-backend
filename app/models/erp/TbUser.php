@@ -126,7 +126,12 @@ class TbUser extends BaseModel
         return $this->validate($validator);
     }
 
-    // 重写方法
+    /**
+     * 重写多语言版本配置读取函数
+     * @param languages下面语言文件字段的名称 如template模块下面的uniqueness
+     * @param 待验证字段的编号，显示为当前语言的友好性提示 $name
+     * @return string|void
+     */
     public function getValidateMessage($template, $name)
     {
         // 定义变量
