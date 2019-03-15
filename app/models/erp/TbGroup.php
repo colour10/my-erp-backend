@@ -29,7 +29,7 @@ class TbGroup extends BaseModel
                 'foreignKey' => [
                     // 关联字段禁止自动删除
                     'action' => Relation::ACTION_RESTRICT,
-                    "message"    => "The group cannot be deleted because other permissions are using it"
+                    "message"    => $this->getValidateMessage('hasmany-foreign-message', 'group'),
                 ],
             ]
         );
@@ -44,7 +44,7 @@ class TbGroup extends BaseModel
                 'foreignKey' => [
                     // 关联字段禁止自动删除
                     'action' => Relation::ACTION_RESTRICT,
-                    "message"    => "The group cannot be deleted because other users are using it"
+                    "message"    => $this->getValidateMessage('hasmany-foreign-message', 'user'),
                 ],
             ]
         );
@@ -60,13 +60,13 @@ class TbGroup extends BaseModel
 
         // name-名称不能为空
         $validator->add('group_name', new PresenceOf([
-            'message' => 'The group_name is required',
+            'message' => $this->getValidateMessage('required', 'group_name'),
             'cancelOnFail' => true,
         ]));
         // companyid-所属公司ID
         $validator->add('companyid', new Regex(
             [
-                "message" => "The companyid is invalid",
+                'message' => $this->getValidateMessage('invalid', 'companyid'),
                 "pattern" => "/^[1-9]\d*$/",
                 "allowEmpty" => true,
                 'cancelOnFail' => true,
@@ -109,4 +109,22 @@ class TbGroup extends BaseModel
         return json_encode($current_modules);
     }
 
+
+    /**
+     * 重写多语言版本配置读取函数
+     * @param languages下面语言文件字段的名称 如template模块下面的uniqueness
+     * @param 待验证字段的编号，显示为当前语言的友好性提示 $name
+     * @return string
+     */
+    public function getValidateMessage($template, $name)
+    {
+        // 定义变量
+        // 取出当前语言版本
+        $language = $this->getDI()->get('language');
+        // 拼接变量
+        $template_name = $language->template[$template];
+        $human_name = $language->$name;
+        // 返回最终的友好提示信息
+        return sprintf($template_name, $human_name);
+    }
 }
