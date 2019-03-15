@@ -8031,7 +8031,8 @@ ALTER TABLE `tb_check_detail`
 -- 表的索引 `tb_company`
 --
 ALTER TABLE `tb_company`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY (`countryid`);
 
 --
 -- 表的索引 `tb_contactlist`
@@ -8055,7 +8056,9 @@ ALTER TABLE `tb_declaration_detail`
 -- 表的索引 `tb_department`
 --
 ALTER TABLE `tb_department`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY (`companyid`),
+  ADD KEY (`up_dp_id`);
 
 --
 -- 表的索引 `tb_discount_card`
@@ -8200,7 +8203,8 @@ ALTER TABLE `tb_member_preordination`
 --
 ALTER TABLE `tb_permission`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `permission_name` (`name`);
+  ADD UNIQUE KEY `permission_name` (`name`),
+  ADD KEY (`pid`);
 
 --
 -- 表的索引 `tb_permission_group`
@@ -8213,6 +8217,7 @@ ALTER TABLE `tb_permission_group`
 --
 ALTER TABLE `tb_permission_module`
   ADD PRIMARY KEY (`id`),
+  ADD KEY (`permissionid`),
   ADD UNIQUE KEY `tb_permission_module_permissionid_module_controller_action` (`permissionid`,`module`,`controller`,`action`);
 
 --
