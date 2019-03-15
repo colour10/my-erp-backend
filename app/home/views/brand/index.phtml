@@ -3,33 +3,31 @@
   <multiple-admin-page v-bind="props" ref="page"></multiple-admin-page>
 </div>
 
+<div id="el-tab">
+  <asa-brandtab :visible.sync="base.visible" :brandid="base.brandid"></asa-brandtab>
+</div>
 <script>
 $(document).ready(function(){
     var base = {
         brandid:"",
-        lang_code:""
-    }
-    var aliases = {
-        columns:[
-            {name:"name", label:"<?=$system_language['biemingmingcheng']?>", is_create:true, is_update:true, is_show:true, width:150},
-            {name:"code", label:"<?=$system_language['biemingbianma']?>", is_create:true, is_update:true, is_show:true, width:150},
-            {name:"brandid", label:"品牌", is_create:false, is_update:false, is_show:false, is_hidden:true}
-        ],
-        options:{
-            dialogWidth:"35%"
-        },
-        controller:"aliases",
-        base:base
+        visible:false
     }
         
     var props = {
         columns:[
+            {name:"id", label:"LOGO", is_edit_hide:true, is_image:true},
             {name:"name", label:"<?=$system_language["pinpaimingcheng"]?>", is_multiple:true, is_focus:true},
             {name:"code", label:"<?=$system_language["pinpaibianhao"]?>"},
             {name:"countryid", label:"<?=$system_language["guishuguojia"]?>", type:"select", source:"country"},
             {name:"brandgroupid", label:"<?=$system_language["pinpaifenlei"]?>", type:"select", source:"brandgroup"},
-            {name:"memo", label:"<?=$system_language["memo"]?>", type:"textarea"},
-            {name:"officialwebsite", label:"<?=$system_language["guanwangdizhi"]?>"}            
+            {name:"memo", label:"<?=$system_language["memo"]?>", type:"textarea", is_hide:true},
+            {name:"officialwebsite", label:"<?=$system_language["guanwangdizhi"]?>", is_hide:true}
+        ],
+        buttons:[
+            {name:"code", label:"<?=$system_language["guanlianxinxi"]?>", width:200, handler:function(rowIndex, row){
+                base.brandid = row.id;
+                base.visible = true;                
+            }}
         ],
         options:{
             dialogWidth:'30%',
@@ -46,6 +44,15 @@ $(document).ready(function(){
         data() {
             return {
                 props:props  
+            }
+        }
+    })
+    
+    new Vue({
+        el:"#el-tab",
+        data() {
+            return {
+                base:base
             }
         }
     })

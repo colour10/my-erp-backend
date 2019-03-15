@@ -8,7 +8,7 @@ use Asa\Erp\ZlSeries2;
 /**
  * 子系列，品牌相关
  */
-class Series2Controller extends AdminController {    
+class Series2Controller extends ZadminController {    
     public function initialize() {
 	    parent::initialize();
 	    

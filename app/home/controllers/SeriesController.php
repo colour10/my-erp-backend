@@ -8,7 +8,7 @@ use Asa\Erp\ZlSeries;
 /**
  * 品牌系列，品牌相关数据
  */
-class SeriesController extends AdminController {
+class SeriesController extends ZadminController {
     public function initialize() {
 	    parent::initialize();
 

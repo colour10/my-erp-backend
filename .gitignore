@@ -11,3 +11,5 @@ create-sql.sql.bak
 app/models/erp/Parts.php
 app/models/erp/Robots.php
 app/models/erp/RobotsParts.php
+public/upload/
+public/js/async.min.js
