@@ -7886,7 +7886,7 @@ ALTER TABLE `tb_supplier_orderdate`
   ADD PRIMARY KEY (`id`);
 
 --
--- 表的索引 `tb_user`，重新添加
+-- 表的索引 `tb_user`
 --
 ALTER TABLE `tb_user`
   ADD PRIMARY KEY (`id`),
