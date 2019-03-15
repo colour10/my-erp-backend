@@ -4,6 +4,7 @@ namespace Asa\Erp;
 
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Regex;
+use Phalcon\Mvc\Model\Relation;
 
 /**
  * 权限模型关联表
@@ -25,6 +26,11 @@ class TbPermissionModule extends BaseModel
             "id",
             [
                 'alias' => 'permission',
+                'foreignKey' => [
+                    // 关联字段禁止自动删除
+                    'action' => Relation::ACTION_RESTRICT,
+                    "message"    => "The permissionid does not exist on the permission model"
+                ],
             ]
         );
     }

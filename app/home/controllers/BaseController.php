@@ -43,4 +43,28 @@ class BaseController extends Controller
     {
         return json_encode(['code' => '200', 'messages' => $messages]);
     }
+
+
+    /**
+     * 多语言版本配置读取函数
+     * @param $field_name 验证字段的提示名称，比如cn.php中上面的自定义变量名system_name
+     * @param $module_name 模块名称，比如cn.php中的template
+     * @param $module_rule 模块验证规则，比如cn.php中的template模块下面的uniqueness
+     * @return string
+     */
+    public function getValidateMessage($field_name, $module_name='', $module_rule='')
+    {
+        // 逻辑
+        // 定义变量
+        // 取出当前语言版本
+        $language = $this->getDI()->get('language');
+        // 拼接变量
+        // 判断是否需要取出模块部分来展示
+        $human_name = $language->$field_name;
+        if (!$module_name && !$module_rule) {
+            return $human_name;
+        }
+        // 否则就展示模块和信息组合后的结果
+        return sprintf($language->$module_name[$module_rule], $human_name);
+    }
 }

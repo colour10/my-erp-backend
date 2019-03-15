@@ -6,6 +6,7 @@ use Phalcon\Validation;
 use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Regex;
+use Phalcon\Mvc\Model\Relation;
 
 /**
  * 公司表
@@ -24,6 +25,26 @@ class TbCompany extends BaseModel
             'id',
             [
                 'alias' => 'country',
+                'foreignKey' => [
+                    // 关联字段禁止自动删除
+                    'action' => Relation::ACTION_RESTRICT,
+                    "message"    => "The countryid does not exist on the country model"
+                ],
+            ]
+        );
+
+        // 公司-部门，一对多
+        $this->hasMany(
+            "id",
+            "\Asa\Erp\TbDepartment",
+            "companyid",
+            [
+                'alias' => 'departments',
+                'foreignKey' => [
+                    // 关联字段禁止自动删除
+                    'action' => Relation::ACTION_RESTRICT,
+                    "message"    => "The company cannot be deleted because other departments are using it"
+                ],
             ]
         );
     }
@@ -40,7 +61,7 @@ class TbCompany extends BaseModel
     {
         $validator = new Validation();
         
-        $name = $this->getColumnName("name");        
+        $name = $this->getColumnName("name");
         // name-公司名称不能为空或者重复
         $validator->add($name, new PresenceOf([
             'message' => 'The name is required',
@@ -54,15 +75,6 @@ class TbCompany extends BaseModel
         $validator->add('countryid', new Regex(
             [
                 "message" => "The countryid is invalid",
-                "pattern" => "/^[1-9]\d*$/",
-                "allowEmpty" => true,
-                'cancelOnFail' => true,
-            ]
-        ));
-        // relateid-关联ID
-        $validator->add('relateid', new Regex(
-            [
-                "message" => "The relateid is invalid",
                 "pattern" => "/^[1-9]\d*$/",
                 "allowEmpty" => true,
                 'cancelOnFail' => true,

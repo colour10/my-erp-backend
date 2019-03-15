@@ -295,14 +295,14 @@ return array(
     "guigexinghao" => "规格型号",
     "shangpinmingcheng" => "商品名称",
     "shangpinhuohao" => "商品货号",
-    "shangpintupian" => "商品图片",
-    "zhutu" => "主图",
-    "futu" => "副图",
-    "guanlianxinxi" => "关联信息",
-    "xiliebianma" => "系列编码",
-    "xiliemingcheng" => "系列名称",
-    "zixilie" => "子系列",
-    "bianma" => "编码",
+    "yingyezhizhaohao" => "营业执照号",
+    "yingyezhizhaohao" => "营业执照号",
+    "yingyezhizhaohao" => "营业执照号",
+    "yingyezhizhaohao" => "营业执照号",
+    "yingyezhizhaohao" => "营业执照号",
+    "yingyezhizhaohao" => "营业执照号",
+    "yingyezhizhaohao" => "营业执照号",
+    "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
@@ -315,35 +315,35 @@ return array(
     "yingyezhizhaohao" => "营业执照号",
 
     // 新增
-    'group' => '组',
-    'groupid' => '组编号',
-    'permission' => '权限',
-    'permissionid' => '权限编号',
-    'permission-name' => '权限名称',
-    'permission-pid' => '上级权限',
-    'permission-module' => '权限-模型关联表',
-    'companyid' => '公司编号',
-    'countryid' => '国家编号',
-    'storeid' => '仓库编号',
-    'user' => '用户',
-    'department' => '部门',
-    'departmentid' => '部门编号',
-    "department-list" => "部门列表",
-    'user-status' => '用户个人状态',
+    'group' => 'group',
+    'groupid' => 'group id',
+    'permission' => 'permission',
+    'permissionid' => 'permission id',
+    'permission-name' => 'permission name',
+    'permission-pid' => 'permission pid',
+    'permission-module' => 'permission module table',
+    'companyid' => 'company id',
+    'countryid' => 'country id',
+    'storeid' => 'store id',
+    'user' => 'user',
+    'department' => 'department',
+    'departmentid' => 'department id',
+    "department-list" => "department list",
+    'user-status' => 'user status',
 
 
     
-    "model-delete-message" => "请先登录",
+    "model-delete-message" => "Please login first",
     "template" => array(
-        "uniqueness" => "%s不能重复",
-        'required' => '请填写%s',
-        'invalid' => '%s不合法',
-        'hasmany-foreign-message' => '当前模型不能被删除，因为有%s模块正在使用它',
-        'belongsto-foreign-message' => '当前模型不能被删除，因为有%s模块正在使用它',
-        'notexist' => '%s不存在',
+        "uniqueness" => "The %s field must be unique",
+        'required' => 'The %s is required',
+        'invalid' => 'The %s is invalid',
+        'hasmany-foreign-message' => 'The module cannot be deleted because other %s are using it',
+        'belongsto-foreign-message' => 'The module does not exist on the %s model',
+        'notexist' => 'The %s does not exist',
     ),
     
-    "list_currency" => [
+    "currency" => [
         "CAD" => "加元",
         "EUR" => "欧元",
         "HKD" => "港币",
@@ -352,7 +352,7 @@ return array(
         "USD" => "美元"
     ],
     
-    "list_gender" => array(
+    "gender" => array(
         "1" => "男性",
         "2" => "女性",
         "3" => "中性",
@@ -360,7 +360,7 @@ return array(
         "5" => "女童"
     ),
     
-    "list_season" => array(
+    "season" => array(
         "1" => "春季",
         "2" => "夏季",
         "3" => "秋季",

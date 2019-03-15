@@ -7,6 +7,535 @@
 -- 服务器版本： 5.7.19-log
 -- PHP 版本： 7.2.14
 
+
+
+-- 加入drop
+
+drop table if exists ac_invoice;
+
+drop table if exists ac_invoice_fee;
+
+drop table if exists ac_invoice_fee_detail;
+
+drop table if exists ac_invoice_prepay;
+
+drop table if exists ac_kmyue_wb;
+
+drop table if exists ac_pzhb;
+
+drop table if exists ac_pzhh;
+
+drop table if exists ac_pzhmxb;
+
+drop table if exists ac_sf_sheet;
+
+drop table if exists ac_sf_sheet_code;
+
+drop table if exists ac_sf_sheet_refund;
+
+drop table if exists dd_arrivalnotice;
+
+drop table if exists dd_arrivalnotice_detail;
+
+drop table if exists dd_confirmorder;
+
+drop table if exists dd_corder_ctn;
+
+drop table if exists dd_corder_temp;
+
+drop table if exists dd_corderdetails;
+
+drop table if exists dd_fee;
+
+drop table if exists dd_order;
+
+drop table if exists dd_ordercode;
+
+drop table if exists dd_orderdetails;
+
+drop table if exists dd_quotation;
+
+drop table if exists dd_quotation_detail;
+
+drop table if exists if_cfashion;
+
+drop table if exists if_exception;
+
+drop table if exists if_imgorder;
+
+drop table if exists if_jingdong;
+
+drop table if exists if_meilihui;
+
+drop table if exists if_meixi;
+
+drop table if exists if_ofashion;
+
+drop table if exists if_shangpin;
+
+drop table if exists if_shangpin_direct;
+
+drop table if exists if_siku;
+
+drop table if exists if_sxdzb;
+
+drop table if exists if_zhenpin;
+
+drop table if exists if_zouxiu;
+
+drop table if exists link_actual_to_productstock;
+
+drop table if exists link_barcode_to_size;
+
+drop table if exists link_brand_to_brandgroup;
+
+drop table if exists link_brand_to_discount;
+
+drop table if exists link_brand_to_priced;
+
+drop table if exists link_brandgroup_to_supplier;
+
+drop table if exists link_cdetail_to_ddetail;
+
+drop table if exists link_childbrand_to_execution;
+
+drop table if exists link_childbrand_to_innards;
+
+drop table if exists link_childbrand_to_material;
+
+drop table if exists link_childbrand_to_outinnards;
+
+drop table if exists link_childbrand_to_safety;
+
+drop table if exists link_color_to_brand;
+
+drop table if exists link_contacts_to_supplier;
+
+drop table if exists link_ctn_to_cdetail;
+
+drop table if exists link_data_to_file;
+
+drop table if exists link_department_to_salesport;
+
+drop table if exists link_detail_to_detail;
+
+drop table if exists link_distribute_to_cdetail;
+
+drop table if exists link_group_to_navigation;
+
+drop table if exists link_invoice_to_order;
+
+drop table if exists link_invoice_to_requisition;
+
+drop table if exists link_invoice_to_warehousing;
+
+drop table if exists link_kp_to_store;
+
+drop table if exists link_prep_to_productstock;
+
+drop table if exists link_pricelist_to_salesport;
+
+drop table if exists link_product_to_materislstatus;
+
+drop table if exists link_product_to_salesnature;
+
+drop table if exists link_product_to_closedway;
+
+drop table if exists link_product_to_decade;
+
+drop table if exists link_product_to_dscrb;
+
+drop table if exists link_product_to_marketprice;
+
+drop table if exists link_product_to_material;
+
+drop table if exists link_product_to_material2;
+
+drop table if exists link_product_to_occasions;
+
+drop table if exists link_product_to_origin;
+
+drop table if exists link_product_to_outproductinnards;
+
+drop table if exists link_product_to_picture;
+
+drop table if exists link_product_to_picture_ftp;
+
+drop table if exists link_product_to_price;
+
+drop table if exists link_product_to_price2;
+
+drop table if exists link_product_to_price_history;
+
+drop table if exists link_product_to_productinnards;
+
+drop table if exists link_product_to_productparts;
+
+drop table if exists link_product_to_salesport;
+
+drop table if exists link_product_to_salesport_history;
+
+drop table if exists link_product_to_size;
+
+drop table if exists link_product_to_washinginstructions;
+
+drop table if exists link_pzh_to_invoice;
+
+drop table if exists link_pzh_to_invoicefee;
+
+drop table if exists link_pzh_to_order;
+
+drop table if exists link_pzh_to_sales;
+
+drop table if exists link_pzh_to_sales_trans;
+
+drop table if exists link_pzh_to_warehousing_fee;
+
+drop table if exists link_return_to_productstock;
+
+drop table if exists link_rule_to_operation;
+
+drop table if exists link_sales_to_productstock;
+
+drop table if exists link_salespot_to_childbrand;
+
+drop table if exists link_sellspot_to_brand;
+
+drop table if exists link_special_to_productstock;
+
+drop table if exists link_spot_warehouse;
+
+drop table if exists link_supplier_to_brand;
+
+drop table if exists link_user_to_labourcontactor;
+
+drop table if exists link_user_to_price;
+
+drop table if exists link_user_to_reportset;
+
+drop table if exists link_user_to_rule;
+
+drop table if exists link_user_to_salesport;
+
+drop table if exists link_user_to_supplier;
+
+drop table if exists link_user_to_warehouse;
+
+drop table if exists sys_config;
+
+drop table if exists sys_selfcompany;
+
+drop table if exists tb_card;
+
+drop table if exists tb_check;
+
+drop table if exists tb_check_detail;
+
+drop table if exists tb_contactlist;
+
+drop table if exists tb_declaration;
+
+drop table if exists tb_declaration_detail;
+
+drop table if exists tb_department;
+
+drop table if exists tb_discount_card;
+
+drop table if exists tb_distribute;
+
+drop table if exists tb_distributecode;
+
+drop table if exists tb_express;
+
+drop table if exists tb_company;
+
+drop table if exists tb_fee;
+
+drop table if exists tb_fee_detail;
+
+drop table if exists tb_feecode;
+
+drop table if exists tb_group;
+
+drop table if exists tb_inve_actual;
+
+drop table if exists tb_inve_actual_dtl;
+
+drop table if exists tb_inve_prep;
+
+drop table if exists tb_inve_prep_dtl;
+
+drop table if exists tb_kp;
+
+drop table if exists tb_member;
+
+drop table if exists tb_member_address;
+
+drop table if exists tb_member_bank;
+
+drop table if exists tb_member_card;
+
+drop table if exists tb_member_card_history;
+
+drop table if exists tb_member_contactor;
+
+drop table if exists tb_member_header;
+
+drop table if exists tb_member_preference;
+
+drop table if exists tb_member_preference_size;
+
+drop table if exists tb_member_preordination;
+
+drop table if exists tb_picture;
+
+drop table if exists tb_pre_requisition;
+
+drop table if exists tb_permission;
+
+drop table if exists tb_permission_group;
+
+drop table if exists tb_permission_module;
+
+drop table if exists tb_product;
+
+drop table if exists tb_product_price;
+
+drop table if exists tb_productstock;
+
+drop table if exists tb_productstock_snapshot;
+
+drop table if exists tb_requisition;
+
+drop table if exists tb_requisition_detail;
+
+drop table if exists tb_requisition_detail_group;
+
+drop table if exists tb_requisition_express;
+
+drop table if exists tb_requisitioncode;
+
+drop table if exists tb_rule;
+
+drop table if exists tb_savings_card;
+
+drop table if exists tb_special_requisition;
+
+drop table if exists tb_special_requisition_detail;
+
+drop table if exists tb_stock;
+
+drop table if exists tb_supplier;
+
+drop table if exists tb_supplier_orderdate;
+
+drop table if exists tb_user;
+
+drop table if exists tb_verificationcode;
+
+drop table if exists tb_warehousing;
+
+drop table if exists tb_warehousing_detail;
+
+drop table if exists tb_warehousing_fee;
+
+drop table if exists trans_brand_code;
+
+drop table if exists trans_color_code;
+
+drop table if exists trans_group_code;
+
+drop table if exists trans_size_code;
+
+drop table if exists xs_afterservice;
+
+drop table if exists xs_afterservice_detail;
+
+drop table if exists xs_pre_sales;
+
+drop table if exists xs_pre_salescode;
+
+drop table if exists xs_pre_salesdetails;
+
+drop table if exists xs_pricelist;
+
+drop table if exists xs_pricelistdetails;
+
+drop table if exists xs_return;
+
+drop table if exists xs_returncode;
+
+drop table if exists xs_sales;
+
+drop table if exists xs_sales_card;
+
+drop table if exists xs_sales_cardetails;
+
+drop table if exists xs_sales_pay;
+
+drop table if exists xs_salescode;
+
+drop table if exists xs_salesdetails;
+
+drop table if exists zl_ac_cashflow_statement;
+
+drop table if exists zl_ac_cashflow_subject;
+
+drop table if exists zl_ac_km;
+
+drop table if exists zl_ac_km_type;
+
+drop table if exists zl_ac_pzh_rule;
+
+drop table if exists zl_ac_pzh_type;
+
+drop table if exists zl_ac_ztb;
+
+drop table if exists zl_ageseason;
+
+drop table if exists zl_aliases;
+
+drop table if exists zl_bankinformation;
+
+drop table if exists zl_brand;
+
+drop table if exists zl_brandgroup;
+
+drop table if exists zl_brandmemo;
+
+drop table if exists zl_brandremark;
+
+drop table if exists zl_businesstype;
+
+drop table if exists zl_childproductgroup;
+
+drop table if exists zl_closedway;
+
+drop table if exists zl_color;
+
+drop table if exists zl_colortemplate;
+
+drop table if exists zl_companycontacts;
+
+drop table if exists zl_costformula;
+
+drop table if exists zl_country;
+
+drop table if exists zl_currency;
+
+drop table if exists zl_customs_name;
+
+drop table if exists zl_decade;
+
+drop table if exists zl_delare_makings;
+
+drop table if exists zl_ex_reportstyle;
+
+drop table if exists zl_ex_reportstyle_detail;
+
+drop table if exists zl_exchangerate;
+
+drop table if exists zl_executioncategory;
+
+drop table if exists zl_exhibition;
+
+drop table if exists zl_feenames;
+
+drop table if exists zl_forbiddenword;
+
+drop table if exists zl_imagetool;
+
+drop table if exists zl_invite_rule;
+
+drop table if exists zl_invoice_header;
+
+drop table if exists zl_language;
+
+drop table if exists zl_material;
+
+drop table if exists zl_materialnote;
+
+drop table if exists zl_materialstatus;
+
+drop table if exists zl_memberlevel;
+
+drop table if exists zl_occasionsstyle;
+
+drop table if exists zl_pricesource;
+
+drop table if exists zl_productdscrb;
+
+drop table if exists zl_productinnards;
+
+drop table if exists zl_productparts;
+
+drop table if exists zl_productprice;
+
+drop table if exists zl_productstyle;
+
+drop table if exists zl_producttemplate;
+
+drop table if exists zl_quotedprice;
+
+drop table if exists zl_reportset;
+
+drop table if exists zl_reportset_detail;
+
+drop table if exists zl_salesmethods;
+
+drop table if exists zl_salesport;
+
+drop table if exists zl_salesport_mission;
+
+drop table if exists zl_series;
+
+drop table if exists zl_series2;
+
+drop table if exists zl_securitycategory;
+
+drop table if exists zl_shippingtype;
+
+drop table if exists zl_sizecontent;
+
+drop table if exists zl_sizetop;
+
+drop table if exists zl_storemove;
+
+drop table if exists zl_style;
+
+drop table if exists zl_supplier_type;
+
+drop table if exists zl_supplierlevel;
+
+drop table if exists zl_sys_selfcompany;
+
+drop table if exists zl_template_descrb;
+
+drop table if exists zl_templatelist;
+
+drop table if exists zl_templatemanage;
+
+drop table if exists zl_trans_code;
+
+drop table if exists zl_ulnarinch;
+
+drop table if exists zl_unit;
+
+drop table if exists zl_unitgroup;
+
+drop table if exists zl_warehouse;
+
+drop table if exists zl_washinginstructions;
+
+drop table if exists zl_winterproofing;
+
+drop table if exists zl_yearexchange;
+
+drop table if exists 模版;
+
+
+-- 初始化
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
@@ -2684,12 +3213,6 @@ CREATE TABLE `tb_company` (
                             `memo` text COMMENT '备注说明'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- 转存表中的数据 `tb_company`
---
-
-INSERT INTO `tb_company` (`id`, `sys_create_stuff`, `sys_create_date`, `sys_modify_stuff`, `sys_modify_date`, `sys_delete_stuff`, `sys_delete_date`, `sys_delete_flag`, `name_cn`, `name_en`, `name_hk`, `name_fr`, `name_it`, `name_sp`, `name_de`, `countryid`, `memo`) VALUES
-(1, 1, '2019-03-12 00:00:00', 1, '2019-03-07 14:43:27', NULL, NULL, 0, '爱莎尚品', 'ASA', NULL, NULL, NULL, NULL, NULL, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -2809,17 +3332,6 @@ CREATE TABLE `tb_department` (
                                `checkingflag` varchar(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='部门表';
 
---
--- 转存表中的数据 `tb_department`
---
-
-INSERT INTO `tb_department` (`id`, `sys_create_stuff`, `sys_create_date`, `sys_modify_stuff`, `sys_modify_date`, `sys_delete_stuff`, `sys_delete_date`, `sys_delete_flag`, `name`, `memo`, `companyid`, `priceid`, `spotid`, `up_dp_id`, `checkingflag`) VALUES
-(1, 1, '2019-03-08 17:09:16', 1, '2019-03-08 17:09:16', NULL, NULL, 0, '销售部', '销售部。。。', 1, NULL, NULL, 0, NULL),
-(2, 1, '2019-03-08 17:09:31', 1, '2019-03-08 17:09:31', NULL, NULL, 0, '采购部', '采购部。。。', 1, NULL, NULL, 0, NULL),
-(3, 1, '2019-03-08 17:09:40', 1, '2019-03-08 17:09:40', NULL, NULL, 0, '市场部', '市场部。。。', 1, NULL, NULL, 0, NULL),
-(4, 1, '2019-03-08 17:10:27', 1, '2019-03-08 17:10:27', NULL, NULL, 0, '市场1部', '市场1部。。。', 1, NULL, NULL, 3, NULL),
-(5, 1, '2019-03-08 17:11:03', 1, '2019-03-08 17:11:03', NULL, NULL, 0, '市场1部1组', '市场1部1组。。。', 1, NULL, NULL, 4, NULL),
-(6, 1, '2019-03-08 17:11:24', 1, '2019-03-08 17:11:24', NULL, NULL, 0, '市场2部', '市场1部。。。', 1, NULL, NULL, 3, NULL);
 
 -- --------------------------------------------------------
 
@@ -3026,13 +3538,6 @@ CREATE TABLE `tb_group` (
                           `sys_delete_flag` tinyint(1) DEFAULT '0' COMMENT '0-未删除 1-已删除'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='组信息';
 
---
--- 转存表中的数据 `tb_group`
---
-
-INSERT INTO `tb_group` (`id`, `group_name`, `group_memo`, `companyid`, `sys_create_stuff`, `sys_create_date`, `sys_modify_stuff`, `sys_modify_date`, `sys_delete_stuff`, `sys_delete_date`, `sys_delete_flag`) VALUES
-(1, '超级管理员', '超级管理员，拥有所有的权限，大BOSS', NULL, 1, '2019-03-12 00:00:00', 1, '2019-03-07 14:43:27', NULL, NULL, 0),
-(2, '公司内部管理员', '拥有所在公司内部的所有操作权限，但是有些系统权限不能操作，必须指定一个公司。', 1, 1, '2019-03-12 00:00:00', 1, '2019-03-07 14:43:27', NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -3537,17 +4042,6 @@ CREATE TABLE `tb_permission_group` (
                                      `companyid` int(10) UNSIGNED DEFAULT NULL COMMENT '公司id'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- 转存表中的数据 `tb_permission_group`
---
-
-INSERT INTO `tb_permission_group` (`id`, `sys_create_stuff`, `sys_create_date`, `sys_modify_stuff`, `sys_modify_date`, `sys_delete_stuff`, `sys_delete_date`, `sys_delete_flag`, `groupid`, `permissionid`, `companyid`) VALUES
-(1, 1, '2019-03-11 16:02:32', 1, '2019-03-11 16:02:32', NULL, NULL, 0, 1, 1, 1),
-(3, 1, '2019-03-11 16:02:40', 1, '2019-03-11 16:02:40', NULL, NULL, 0, 1, 2, 1),
-(5, 1, '2019-03-11 16:02:46', 1, '2019-03-11 16:02:46', NULL, NULL, 0, 1, 3, 1),
-(6, 1, '2019-03-11 16:02:52', 1, '2019-03-11 16:02:52', NULL, NULL, 0, 1, 4, 1),
-(7, 1, '2019-03-11 16:09:10', 1, '2019-03-11 16:09:10', NULL, NULL, 0, 1, 5, 1),
-(9, 1, '2019-03-11 16:11:37', 1, '2019-03-11 16:11:37', NULL, NULL, 0, 1, 6, 1);
 
 -- --------------------------------------------------------
 
@@ -3570,17 +4064,6 @@ CREATE TABLE `tb_permission_module` (
                                       `action` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '方法名称'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- 转存表中的数据 `tb_permission_module`
---
-
-INSERT INTO `tb_permission_module` (`id`, `sys_create_stuff`, `sys_create_date`, `sys_modify_stuff`, `sys_modify_date`, `sys_delete_stuff`, `sys_delete_date`, `sys_delete_flag`, `permissionid`, `module`, `controller`, `action`) VALUES
-(1, 1, '2019-03-13 11:28:12', 1, '2019-03-13 11:28:12', NULL, NULL, 0, 1, 'home', 'index', 'login'),
-(2, 1, '2019-03-13 11:28:18', 1, '2019-03-13 11:28:18', NULL, NULL, 0, 1, 'home', 'index', 'logout'),
-(3, 1, '2019-03-13 11:28:49', 1, '2019-03-13 11:28:49', NULL, NULL, 0, 2, 'home', 'user', 'add'),
-(4, 1, '2019-03-13 11:29:55', 1, '2019-03-13 11:29:55', NULL, NULL, 0, 2, 'home', 'user', 'edit'),
-(5, 1, '2019-03-13 14:05:37', 1, '2019-03-13 14:05:37', NULL, NULL, 0, 3, 'home', 'product', 'add'),
-(6, 1, '2019-03-13 14:05:41', 1, '2019-03-13 14:05:41', NULL, NULL, 0, 3, 'home', 'product', 'edit');
 
 -- --------------------------------------------------------
 
@@ -3631,7 +4114,7 @@ CREATE TABLE `tb_pre_requisition` (
 --
 
 CREATE TABLE `tb_product` (
-                            `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+                            `id` int(10) UNSIGNED NOT NULL COMMENT '主键id',
                             `sys_create_stuff` int(10) unsigned NOT NULL,
                             `sys_create_date` datetime NOT NULL,
                             `sys_modify_stuff` int(10) unsigned NOT NULL,
@@ -3648,17 +4131,17 @@ CREATE TABLE `tb_product` (
                             `wordprice` decimal(16,9) DEFAULT NULL COMMENT '国际零售价',
                             `wordpricecurrency` varchar(10) DEFAULT NULL COMMENT '国际零售价币种',
                             `gender` varchar(100) DEFAULT NULL COMMENT '0-女式 1-男士 2-中性',
-                            `brand` int(10) unsigned DEFAULT NULL,
-                            `brandtype` int(10) unsigned DEFAULT NULL,
+                            `brandid` int(10) unsigned DEFAULT NULL COMMENT '品牌',
+                            `brandgroupid` int(10) unsigned DEFAULT NULL COMMENT '品类',
                             `childbrand` int(10) unsigned DEFAULT NULL,
                             `brandcolor` varchar(100) DEFAULT NULL COMMENT '品牌色板',
                             `brandcolor2` int(10) unsigned DEFAULT NULL,
                             `picture2` varchar(100) DEFAULT NULL COMMENT '副图',
                             `picture` varchar(100) DEFAULT NULL COMMENT '主图',
                             `closeway` int(10) unsigned DEFAULT NULL,
-                            `ageseason` int(10) unsigned DEFAULT NULL COMMENT '年代',
+                            `ageseason` varchar(200) DEFAULT NULL COMMENT '年代',
                             `productsize` int(10) unsigned DEFAULT NULL,
-                            `origin` varchar(100) DEFAULT NULL,
+                            `countries` varchar(100) DEFAULT NULL COMMENT '产地',
                             `security` int(10) unsigned DEFAULT NULL,
                             `execution` int(10) unsigned DEFAULT NULL,
                             `material` int(10) unsigned DEFAULT NULL,
@@ -3705,9 +4188,9 @@ CREATE TABLE `tb_product` (
                             `winterproofing` int(10) DEFAULT NULL,
                             `isfj` varchar(1) DEFAULT NULL COMMENT '0-否 1-法检',
                             `discount` decimal(10,2) DEFAULT NULL,
-                            `ulnarinch_memo` varchar(100) DEFAULT NULL COMMENT '尺寸备注',
-                            PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='商品表'
+                            `ulnarinch_memo` varchar(100) DEFAULT NULL COMMENT '尺寸备注'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品表';
+
 
 
 -- --------------------------------------------------------
@@ -4183,12 +4666,6 @@ CREATE TABLE `tb_user` (
                          `openid` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
 
---
--- 转存表中的数据 `tb_user`
---
-
-INSERT INTO `tb_user` (`id`, `login_name`, `password`, `real_name`, `departmentid`, `companyid`, `groupid`, `storeid`, `sys_create_stuff`, `sys_create_date`, `sys_modify_stuff`, `sys_modify_date`, `sys_delete_stuff`, `sys_delete_date`, `sys_delete_flag`, `sex`, `section`, `date`, `phone`, `mobilephone`, `e_mail`, `email_password`, `comment`, `countryid`, `departmentid2`, `address`, `contactor`, `leave_date`, `defaultprice`, `defaultwarehouse`, `defaultsellspot`, `idno`, `education`, `collegemajor`, `degree`, `graduatedcollege`, `stateofmarriage`, `censusregistration`, `status`, `reason`, `contactorphone`, `costdisplay`, `wechat`, `openid`) VALUES
-(1, 'admin', 'e10adc3949ba59abbe56e057f20f883e', NULL, 1, 1, 1, NULL, 1, '2019-03-12 00:00:00', 1, '2019-03-07 14:43:27', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -5353,13 +5830,6 @@ CREATE TABLE `zl_country` (
                             `localcurrency` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='国家表';
 
---
--- 转存表中的数据 `zl_country`
---
-
-INSERT INTO `zl_country` (`id`, `code`, `name_cn`, `name_en`, `name_hk`, `name_fr`, `name_it`, `name_sp`, `name_de`, `sys_create_stuff`, `sys_create_date`, `sys_modify_stuff`, `sys_modify_date`, `sys_delete_stuff`, `sys_delete_date`, `sys_delete_flag`, `localcurrency`) VALUES
-(1, '001', ' 中国', 'China', NULL, NULL, NULL, NULL, NULL, 1, '2019-03-12 00:00:00', 1, '2019-03-07 14:43:27', NULL, NULL, 0, NULL),
-(2, '002', '英国', 'England', NULL, NULL, NULL, NULL, NULL, 1, '2019-03-04 00:00:00', 1, '2019-03-11 00:00:00', NULL, NULL, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -6322,13 +6792,7 @@ CREATE TABLE `zl_series` (
                            `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
                            `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
                            `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
-                           `code_cn` varchar(100) DEFAULT NULL COMMENT '中文代码名称',
-                           `code_en` varchar(100) DEFAULT NULL COMMENT '英文代码名称',
-                           `code_hk` varchar(100) DEFAULT NULL COMMENT '粤语代码名称',
-                           `code_fr` varchar(100) DEFAULT NULL COMMENT '法语代码名称',
-                           `code_it` varchar(100) DEFAULT NULL COMMENT '意大利语代码名称',
-                           `code_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语代码名称',
-                           `code_de` varchar(100) DEFAULT NULL COMMENT '德语代码名称',
+                           `code` varchar(100) DEFAULT NULL COMMENT '代码名称',
                            `brandid` int(10) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='任何表都应该包含的列';
 
@@ -6355,13 +6819,7 @@ CREATE TABLE `zl_series2` (
                             `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
                             `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
                             `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
-                            `code_cn` varchar(100) DEFAULT NULL COMMENT '中文代码名称',
-                            `code_en` varchar(100) DEFAULT NULL COMMENT '英文代码名称',
-                            `code_hk` varchar(100) DEFAULT NULL COMMENT '粤语代码名称',
-                            `code_fr` varchar(100) DEFAULT NULL COMMENT '法语代码名称',
-                            `code_it` varchar(100) DEFAULT NULL COMMENT '意大利语代码名称',
-                            `code_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语代码名称',
-                            `code_de` varchar(100) DEFAULT NULL COMMENT '德语代码名称'
+                            `code` varchar(100) DEFAULT NULL COMMENT '代码名称'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='子系列';
 
 -- --------------------------------------------------------
@@ -7889,6 +8347,8 @@ ALTER TABLE `tb_supplier_orderdate`
 --
 ALTER TABLE `tb_user`
   ADD PRIMARY KEY (`id`),
+  ADD KEY (`departmentid`),
+  ADD KEY (`groupid`),
   ADD UNIQUE KEY `tb_user_login_name` (`login_name`);
 
 --
