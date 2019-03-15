@@ -323,6 +323,7 @@ return array(
     'permission-pid' => '上级权限',
     'permission-module' => '权限-模型关联表',
     'companyid' => '公司编号',
+    'user' => '用户',
 
 
     
@@ -333,6 +334,7 @@ return array(
         'invalid' => '%s不合法',
         'hasmany-foreign-message' => '当前模型不能被删除，因为有%s模块正在使用它',
         'belongsto-foreign-message' => '当前模型不能被删除，因为有%s模块正在使用它',
+        'notexist' => '%s不存在',
     ),
     
     "currency" => [

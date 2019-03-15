@@ -323,16 +323,18 @@ return array(
     'permission-pid' => 'permission pid',
     'permission-module' => 'permission module table',
     'companyid' => 'company id',
+    'user' => 'user',
 
 
     
-    "model-delete-message" => "请先登录",
+    "model-delete-message" => "Please login first",
     "template" => array(
         "uniqueness" => "The %s field must be unique",
         'required' => 'The %s is required',
         'invalid' => 'The %s is invalid',
         'hasmany-foreign-message' => 'The module cannot be deleted because other %s are using it',
         'belongsto-foreign-message' => 'The module does not exist on the %s model',
+        'notexist' => 'The %s does not exist',
     ),
     
     "currency" => [
