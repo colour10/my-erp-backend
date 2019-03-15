@@ -39,7 +39,7 @@ class CommonController extends BaseController
         $lang = $this->language;
         
         $lang["_image_url_prex"] = $config->file_prex;
-        $lang["_languages"] = $config->languages;
+        $lang["list_languages"] = $config->languages;
         
         //$lang["gender"] = $config->gender;
         

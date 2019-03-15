@@ -27,7 +27,7 @@
           <el-col :span="14">
           <el-form ref="form" :model="form" label-width="80px">
   <el-form-item label="<?=$system_language["shangpinmingcheng"]?>">
-    <el-input v-model="form.name"></el-input>
+    <el-input v-model="form.productname"></el-input>
   </el-form-item>
   <el-form-item label="<?=$system_language["shangpinhuohao"]?>">
     <el-input v-model="form.name"></el-input>
@@ -42,12 +42,12 @@
             <el-col :span="8">
               
                 <el-form-item label="<?=$system_language["pinpai"]?>">
-                  <simple-select v-model="form.brand" source="brand" :lang="lang">
+                  <simple-select v-model="form.brandid" source="brand" :lang="lang">
                   </simple-select>
                 </el-form-item>
                 
                 <el-form-item label="<?=$system_language["pinlei"]?>">
-                  <simple-select v-model="form.brandtype" source="brandgroup" :lang="lang">
+                  <simple-select v-model="form.brandgroupid" source="brandgroup" :lang="lang">
                   </simple-select>
                 </el-form-item>
                 
@@ -57,8 +57,7 @@
                 </el-form-item>
                 
                 <el-form-item label="<?=$system_language["chandi"]?>">
-                  <select-dialog v-model="form.origin" source="country" :lang="lang">
-                  </select-dialog>
+                  <select-dialog v-model="form.countries" source="country" :lang="lang"></select-dialog>
                 </el-form-item>
         
                 <el-form-item label="<?=$system_language["pinpaiseban"]?>">
@@ -204,24 +203,9 @@
       </el-form>
     </el-tab-pane>
   
-    <el-tab-pane label="<?=$system_language["sale-port"]?>">
-      <el-checkbox-group v-model="form.sale_port">
-        <el-checkbox v-for="item in sale_port_list" :label="item.value">{{item.label}}</el-checkbox>
-      </el-checkbox-group>    
+    <el-tab-pane label="<?=$system_language["shangpintupian"]?>">
+      <sp-album :productid="form.id"></sp-album>
     </el-tab-pane>
-  <el-tab-pane label="<?=$system_language["jiesuandanwei"]?>">定时任务补偿</el-tab-pane>
-    <el-tab-pane label="<?=$system_language["cangku"]?>">
-      <el-checkbox-group v-model="form.cangku">
-        <el-checkbox v-for="item in cangku_list" :label="item.value">{{item.label}}</el-checkbox>
-      </el-checkbox-group> 
-    </el-tab-pane>
-    
-    <el-tab-pane label="<?=$system_language["jiagedan"]?>">
-      <el-checkbox-group v-model="form.jiagedan">
-        <el-checkbox v-for="item in jiagedan_list" :label="item.value">{{item.label}}</el-checkbox>
-      </el-checkbox-group> 
-    </el-tab-pane>
-  <el-tab-pane label="<?=$system_language["gerenshezhi"]?>">定时任务补偿</el-tab-pane>
   </el-tabs>
   
   <span slot="footer" class="dialog-footer">
@@ -234,24 +218,12 @@
 $(document).ready(function(){
     var props = {
         columns:[
-            {
-                name:"login_name", 
-                label:$ASAL.dengluming, 
-                is_create:true, 
-                is_update:true, 
-                is_show:true, 
-                is_focus:true,
-                width:200
-            },
-            {
-                name:"real_name", 
-                label:$ASAL.xingming, 
-                is_create:true, 
-                is_update:true, 
-                is_show:true, 
-                width:200, 
-                is_focus:true
-            }
+            {name:"picture", label:$ASAL.zhutu, is_image:true, image_width:80, image_height:80},
+            {name:"picture2", label:$ASAL.futu, is_image:true, image_width:80, image_height:80},
+            {name:"productname", label:$ASAL.shangpinmingcheng},
+            {name:"brandgroupid", label:$ASAL.shangpinmingcheng, type:"select", source:"brandgroup"},
+            {name:"brandid", label:$ASAL.shangpinmingcheng, type:"select", source:"brand"},
+            {name:"countries", label:$ASAL.chandi, type:"select-dialog", source:"country"}
         ],
         controller:"product"
     }
@@ -264,12 +236,13 @@ $(document).ready(function(){
                 lang:$ASAL.lang,
                 form: {
                     id:'',
+                    productname:"",
                     decade:"",
-                    brand:'',
-                    brandtype:"",
+                    brandid:'',
+                    brandgroupid:"",
                     childbrand:"",
                     productsize:"",
-                    origin:"",
+                    countries:"",
                     brandcolor:"",
                     security:"",
                     execution:"",
@@ -328,7 +301,8 @@ $(document).ready(function(){
                     sys_create_stuff:"",
                     sys_create_date:"",
                     gender:"",
-                    season:""
+                    season:"",
+                    ageseason:""
                 },
                 props:props,
                 departs:[],

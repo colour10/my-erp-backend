@@ -295,9 +295,9 @@ return array(
     "guigexinghao" => "规格型号",
     "shangpinmingcheng" => "商品名称",
     "shangpinhuohao" => "商品货号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
+    "shangpintupian" => "商品图片",
+    "zhutu" => "主图",
+    "futu" => "副图",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
@@ -321,7 +321,7 @@ return array(
         "uniqueness" => "%s不能重复"
     ),
     
-    "currency" => [
+    "list_currency" => [
         "CAD" => "加元",
         "EUR" => "欧元",
         "HKD" => "港币",
@@ -330,7 +330,7 @@ return array(
         "USD" => "美元"
     ],
     
-    "gender" => array(
+    "list_gender" => array(
         "1" => "男性",
         "2" => "女性",
         "3" => "中性",
@@ -338,7 +338,7 @@ return array(
         "5" => "女童"
     ),
     
-    "season" => array(
+    "list_season" => array(
         "1" => "春季",
         "2" => "夏季",
         "3" => "秋季",

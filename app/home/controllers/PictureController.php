@@ -8,7 +8,7 @@ use Asa\Erp\TbPicture;
 /**
  * 图片表
  */
-class PictureController extends AdminController {
+class PictureController extends CadminController {
     public function initialize() {
 	    parent::initialize();
 

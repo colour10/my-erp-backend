@@ -12,7 +12,7 @@ $(document).ready(function(){
     var props = {
         columns:[
             {name:"suppliercode", label:"<?=$system_language['gonghuoshangbianma']?>"},
-            {name:"countrycity", label:"<?=$system_language['guojiachengshi']?>", class:"width2"},
+            {name:"countrycity", label:"<?=$system_language['guojiachengshi']?>", class:"width2", type:"select", source:"country"},
             {name:"suppliername", label:"<?=$system_language['gonghuoshangmingcheng']?>", class:"width1"},
             {name:"address", label:"<?=$system_language['dizhi']?>", class:"width1", is_hide:true},
             {name:"englishname", label:"<?=$system_language['yingwenmingcheng']?>", class:"width1", is_hide:true},
@@ -81,21 +81,3 @@ $(document).ready(function(){
     })
 })
 </script>
-
-<style>
-    .user-form .width2 .el-input__inner {
-        width:200px;
-    }
-    
-    .user-form .width1 .el-input__inner {
-        width:510px;
-    }
-    
-    .user-form .width1 .el-textarea__inner {
-        width:510px;
-    }
-    
-    .user-form .el-date-editor.el-input, .el-date-editor.el-input__inner {
-        width:200px
-    }
-</style>
