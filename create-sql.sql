@@ -8539,7 +8539,8 @@ ALTER TABLE `zl_bankinformation`
 -- 表的索引 `zl_brand`
 --
 ALTER TABLE `zl_brand`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY (`countryid`);
 
 --
 -- 表的索引 `zl_brandgroup`
