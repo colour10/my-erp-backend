@@ -29,9 +29,9 @@ class TbPermission extends BaseModel
             [
                 'alias' => 'groups',
                 'foreignKey' => [
-                    // 关联字段禁止自动删除
+                    // 关联字段存在性验证
                     'action' => Relation::ACTION_RESTRICT,
-                    "message"    => "The permission cannot be deleted because other groups are using it"
+                    "message"    => $this->getValidateMessage('hasmany-foreign-message', 'group'),
                 ],
             ]
         );
@@ -44,9 +44,9 @@ class TbPermission extends BaseModel
             [
                 'alias' => 'modules',
                 'foreignKey' => [
-                    // 关联字段禁止自动删除
+                    // 关联字段存在性验证
                     'action' => Relation::ACTION_RESTRICT,
-                    "message"    => "The permission cannot be deleted because other modules are using it"
+                    "message"    => $this->getValidateMessage('hasmany-foreign-message', 'permission-module'),
                 ],
             ]
         );
@@ -84,7 +84,12 @@ class TbPermission extends BaseModel
         return $this->validate($validator);
     }
 
-    // 重写验证提示方法
+    /**
+     * 重写多语言版本配置读取函数
+     * @param languages下面语言文件字段的名称 如template模块下面的uniqueness
+     * @param 待验证字段的编号，显示为当前语言的友好性提示 $name
+     * @return string
+     */
     public function getValidateMessage($template, $name)
     {
         // 定义变量
