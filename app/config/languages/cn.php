@@ -324,6 +324,8 @@ return array(
     'permission-module' => '权限-模型关联表',
     'companyid' => '公司编号',
     'user' => '用户',
+    'department' => '部门',
+    "department-list" => "部门列表",
 
 
     

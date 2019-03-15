@@ -324,6 +324,7 @@ return array(
     'permission-module' => 'permission module table',
     'companyid' => 'company id',
     'user' => 'user',
+    "department-list" => "department list",
 
 
     
