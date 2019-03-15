@@ -315,6 +315,7 @@ return array(
     "yingyezhizhaohao" => "营业执照号",
 
     // 新增
+    'name' => '名称',
     'group' => '组',
     'groupid' => '组编号',
     'permission' => '权限',
@@ -330,6 +331,10 @@ return array(
     'departmentid' => '部门编号',
     "department-list" => "部门列表",
     'user-status' => '用户个人状态',
+    'priceid' => '销售价格编号',
+    'spotid' => '销售端口编号',
+    'up_dp_id' => '上级部门编号',
+    'group_name' => '组名称',
 
 
     
