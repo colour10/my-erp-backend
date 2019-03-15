@@ -44,6 +44,12 @@ class DepartmentController extends CadminController {
         // 取出部门列表
         $departments = $this->getlist();
 
+        // 判断结果是json还是对象
+        // 如果是json，那就是string类型，直接返回错误信息，返回就把对象交给后续的步骤
+        if (gettype($departments) == 'string') {
+            return $departments;
+        }
+
         // 交给下面的格式化为目录树处理并返回
         return json_encode(Util::format_tree($departments->toArray()));
     }    
@@ -56,6 +62,11 @@ class DepartmentController extends CadminController {
     {
         // 取出部门列表
         $departments = $this->getlist();
+        // 判断结果是json还是对象
+        // 如果是json，那就是string类型，直接返回错误信息，返回就把对象交给后续的步骤
+        if (gettype($departments) == 'string') {
+            return $departments;
+        }
 
         // 交给下面的格式化为目录树处理并返回
         return json_encode(Util::format_tree_single_array($departments->toArray()));
@@ -71,8 +82,9 @@ class DepartmentController extends CadminController {
             sprintf("sys_delete_flag=0 and companyid=%d", $this->companyid)
         ]);
 
-        if(!$departments) {
-            return $this->error(['departments are not exist']);
+        if(!$departments->toArray()) {
+            $msg = $this->getValidateMessage('department-list', 'template', 'notexist');
+            return $this->error([$msg]);
         }
         return $departments;
     }
