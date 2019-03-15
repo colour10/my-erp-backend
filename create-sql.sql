@@ -7,6 +7,535 @@
 -- 服务器版本： 5.7.19-log
 -- PHP 版本： 7.2.14
 
+
+
+-- 加入drop
+
+drop table if exists ac_invoice;
+
+drop table if exists ac_invoice_fee;
+
+drop table if exists ac_invoice_fee_detail;
+
+drop table if exists ac_invoice_prepay;
+
+drop table if exists ac_kmyue_wb;
+
+drop table if exists ac_pzhb;
+
+drop table if exists ac_pzhh;
+
+drop table if exists ac_pzhmxb;
+
+drop table if exists ac_sf_sheet;
+
+drop table if exists ac_sf_sheet_code;
+
+drop table if exists ac_sf_sheet_refund;
+
+drop table if exists dd_arrivalnotice;
+
+drop table if exists dd_arrivalnotice_detail;
+
+drop table if exists dd_confirmorder;
+
+drop table if exists dd_corder_ctn;
+
+drop table if exists dd_corder_temp;
+
+drop table if exists dd_corderdetails;
+
+drop table if exists dd_fee;
+
+drop table if exists dd_order;
+
+drop table if exists dd_ordercode;
+
+drop table if exists dd_orderdetails;
+
+drop table if exists dd_quotation;
+
+drop table if exists dd_quotation_detail;
+
+drop table if exists if_cfashion;
+
+drop table if exists if_exception;
+
+drop table if exists if_imgorder;
+
+drop table if exists if_jingdong;
+
+drop table if exists if_meilihui;
+
+drop table if exists if_meixi;
+
+drop table if exists if_ofashion;
+
+drop table if exists if_shangpin;
+
+drop table if exists if_shangpin_direct;
+
+drop table if exists if_siku;
+
+drop table if exists if_sxdzb;
+
+drop table if exists if_zhenpin;
+
+drop table if exists if_zouxiu;
+
+drop table if exists link_actual_to_productstock;
+
+drop table if exists link_barcode_to_size;
+
+drop table if exists link_brand_to_brandgroup;
+
+drop table if exists link_brand_to_discount;
+
+drop table if exists link_brand_to_priced;
+
+drop table if exists link_brandgroup_to_supplier;
+
+drop table if exists link_cdetail_to_ddetail;
+
+drop table if exists link_childbrand_to_execution;
+
+drop table if exists link_childbrand_to_innards;
+
+drop table if exists link_childbrand_to_material;
+
+drop table if exists link_childbrand_to_outinnards;
+
+drop table if exists link_childbrand_to_safety;
+
+drop table if exists link_color_to_brand;
+
+drop table if exists link_contacts_to_supplier;
+
+drop table if exists link_ctn_to_cdetail;
+
+drop table if exists link_data_to_file;
+
+drop table if exists link_department_to_salesport;
+
+drop table if exists link_detail_to_detail;
+
+drop table if exists link_distribute_to_cdetail;
+
+drop table if exists link_group_to_navigation;
+
+drop table if exists link_invoice_to_order;
+
+drop table if exists link_invoice_to_requisition;
+
+drop table if exists link_invoice_to_warehousing;
+
+drop table if exists link_kp_to_store;
+
+drop table if exists link_prep_to_productstock;
+
+drop table if exists link_pricelist_to_salesport;
+
+drop table if exists link_product_to_materislstatus;
+
+drop table if exists link_product_to_salesnature;
+
+drop table if exists link_product_to_closedway;
+
+drop table if exists link_product_to_decade;
+
+drop table if exists link_product_to_dscrb;
+
+drop table if exists link_product_to_marketprice;
+
+drop table if exists link_product_to_material;
+
+drop table if exists link_product_to_material2;
+
+drop table if exists link_product_to_occasions;
+
+drop table if exists link_product_to_origin;
+
+drop table if exists link_product_to_outproductinnards;
+
+drop table if exists link_product_to_picture;
+
+drop table if exists link_product_to_picture_ftp;
+
+drop table if exists link_product_to_price;
+
+drop table if exists link_product_to_price2;
+
+drop table if exists link_product_to_price_history;
+
+drop table if exists link_product_to_productinnards;
+
+drop table if exists link_product_to_productparts;
+
+drop table if exists link_product_to_salesport;
+
+drop table if exists link_product_to_salesport_history;
+
+drop table if exists link_product_to_size;
+
+drop table if exists link_product_to_washinginstructions;
+
+drop table if exists link_pzh_to_invoice;
+
+drop table if exists link_pzh_to_invoicefee;
+
+drop table if exists link_pzh_to_order;
+
+drop table if exists link_pzh_to_sales;
+
+drop table if exists link_pzh_to_sales_trans;
+
+drop table if exists link_pzh_to_warehousing_fee;
+
+drop table if exists link_return_to_productstock;
+
+drop table if exists link_rule_to_operation;
+
+drop table if exists link_sales_to_productstock;
+
+drop table if exists link_salespot_to_childbrand;
+
+drop table if exists link_sellspot_to_brand;
+
+drop table if exists link_special_to_productstock;
+
+drop table if exists link_spot_warehouse;
+
+drop table if exists link_supplier_to_brand;
+
+drop table if exists link_user_to_labourcontactor;
+
+drop table if exists link_user_to_price;
+
+drop table if exists link_user_to_reportset;
+
+drop table if exists link_user_to_rule;
+
+drop table if exists link_user_to_salesport;
+
+drop table if exists link_user_to_supplier;
+
+drop table if exists link_user_to_warehouse;
+
+drop table if exists sys_config;
+
+drop table if exists sys_selfcompany;
+
+drop table if exists tb_card;
+
+drop table if exists tb_check;
+
+drop table if exists tb_check_detail;
+
+drop table if exists tb_contactlist;
+
+drop table if exists tb_declaration;
+
+drop table if exists tb_declaration_detail;
+
+drop table if exists tb_department;
+
+drop table if exists tb_discount_card;
+
+drop table if exists tb_distribute;
+
+drop table if exists tb_distributecode;
+
+drop table if exists tb_express;
+
+drop table if exists tb_company;
+
+drop table if exists tb_fee;
+
+drop table if exists tb_fee_detail;
+
+drop table if exists tb_feecode;
+
+drop table if exists tb_group;
+
+drop table if exists tb_inve_actual;
+
+drop table if exists tb_inve_actual_dtl;
+
+drop table if exists tb_inve_prep;
+
+drop table if exists tb_inve_prep_dtl;
+
+drop table if exists tb_kp;
+
+drop table if exists tb_member;
+
+drop table if exists tb_member_address;
+
+drop table if exists tb_member_bank;
+
+drop table if exists tb_member_card;
+
+drop table if exists tb_member_card_history;
+
+drop table if exists tb_member_contactor;
+
+drop table if exists tb_member_header;
+
+drop table if exists tb_member_preference;
+
+drop table if exists tb_member_preference_size;
+
+drop table if exists tb_member_preordination;
+
+drop table if exists tb_picture;
+
+drop table if exists tb_pre_requisition;
+
+drop table if exists tb_permission;
+
+drop table if exists tb_permission_group;
+
+drop table if exists tb_permission_module;
+
+drop table if exists tb_product;
+
+drop table if exists tb_product_price;
+
+drop table if exists tb_productstock;
+
+drop table if exists tb_productstock_snapshot;
+
+drop table if exists tb_requisition;
+
+drop table if exists tb_requisition_detail;
+
+drop table if exists tb_requisition_detail_group;
+
+drop table if exists tb_requisition_express;
+
+drop table if exists tb_requisitioncode;
+
+drop table if exists tb_rule;
+
+drop table if exists tb_savings_card;
+
+drop table if exists tb_special_requisition;
+
+drop table if exists tb_special_requisition_detail;
+
+drop table if exists tb_stock;
+
+drop table if exists tb_supplier;
+
+drop table if exists tb_supplier_orderdate;
+
+drop table if exists tb_user;
+
+drop table if exists tb_verificationcode;
+
+drop table if exists tb_warehousing;
+
+drop table if exists tb_warehousing_detail;
+
+drop table if exists tb_warehousing_fee;
+
+drop table if exists trans_brand_code;
+
+drop table if exists trans_color_code;
+
+drop table if exists trans_group_code;
+
+drop table if exists trans_size_code;
+
+drop table if exists xs_afterservice;
+
+drop table if exists xs_afterservice_detail;
+
+drop table if exists xs_pre_sales;
+
+drop table if exists xs_pre_salescode;
+
+drop table if exists xs_pre_salesdetails;
+
+drop table if exists xs_pricelist;
+
+drop table if exists xs_pricelistdetails;
+
+drop table if exists xs_return;
+
+drop table if exists xs_returncode;
+
+drop table if exists xs_sales;
+
+drop table if exists xs_sales_card;
+
+drop table if exists xs_sales_cardetails;
+
+drop table if exists xs_sales_pay;
+
+drop table if exists xs_salescode;
+
+drop table if exists xs_salesdetails;
+
+drop table if exists zl_ac_cashflow_statement;
+
+drop table if exists zl_ac_cashflow_subject;
+
+drop table if exists zl_ac_km;
+
+drop table if exists zl_ac_km_type;
+
+drop table if exists zl_ac_pzh_rule;
+
+drop table if exists zl_ac_pzh_type;
+
+drop table if exists zl_ac_ztb;
+
+drop table if exists zl_ageseason;
+
+drop table if exists zl_aliases;
+
+drop table if exists zl_bankinformation;
+
+drop table if exists zl_brand;
+
+drop table if exists zl_brandgroup;
+
+drop table if exists zl_brandmemo;
+
+drop table if exists zl_brandremark;
+
+drop table if exists zl_businesstype;
+
+drop table if exists zl_childproductgroup;
+
+drop table if exists zl_closedway;
+
+drop table if exists zl_color;
+
+drop table if exists zl_colortemplate;
+
+drop table if exists zl_companycontacts;
+
+drop table if exists zl_costformula;
+
+drop table if exists zl_country;
+
+drop table if exists zl_currency;
+
+drop table if exists zl_customs_name;
+
+drop table if exists zl_decade;
+
+drop table if exists zl_delare_makings;
+
+drop table if exists zl_ex_reportstyle;
+
+drop table if exists zl_ex_reportstyle_detail;
+
+drop table if exists zl_exchangerate;
+
+drop table if exists zl_executioncategory;
+
+drop table if exists zl_exhibition;
+
+drop table if exists zl_feenames;
+
+drop table if exists zl_forbiddenword;
+
+drop table if exists zl_imagetool;
+
+drop table if exists zl_invite_rule;
+
+drop table if exists zl_invoice_header;
+
+drop table if exists zl_language;
+
+drop table if exists zl_material;
+
+drop table if exists zl_materialnote;
+
+drop table if exists zl_materialstatus;
+
+drop table if exists zl_memberlevel;
+
+drop table if exists zl_occasionsstyle;
+
+drop table if exists zl_pricesource;
+
+drop table if exists zl_productdscrb;
+
+drop table if exists zl_productinnards;
+
+drop table if exists zl_productparts;
+
+drop table if exists zl_productprice;
+
+drop table if exists zl_productstyle;
+
+drop table if exists zl_producttemplate;
+
+drop table if exists zl_quotedprice;
+
+drop table if exists zl_reportset;
+
+drop table if exists zl_reportset_detail;
+
+drop table if exists zl_salesmethods;
+
+drop table if exists zl_salesport;
+
+drop table if exists zl_salesport_mission;
+
+drop table if exists zl_series;
+
+drop table if exists zl_series2;
+
+drop table if exists zl_securitycategory;
+
+drop table if exists zl_shippingtype;
+
+drop table if exists zl_sizecontent;
+
+drop table if exists zl_sizetop;
+
+drop table if exists zl_storemove;
+
+drop table if exists zl_style;
+
+drop table if exists zl_supplier_type;
+
+drop table if exists zl_supplierlevel;
+
+drop table if exists zl_sys_selfcompany;
+
+drop table if exists zl_template_descrb;
+
+drop table if exists zl_templatelist;
+
+drop table if exists zl_templatemanage;
+
+drop table if exists zl_trans_code;
+
+drop table if exists zl_ulnarinch;
+
+drop table if exists zl_unit;
+
+drop table if exists zl_unitgroup;
+
+drop table if exists zl_warehouse;
+
+drop table if exists zl_washinginstructions;
+
+drop table if exists zl_winterproofing;
+
+drop table if exists zl_yearexchange;
+
+drop table if exists 模版;
+
+
+-- 初始化
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
@@ -3585,7 +4114,7 @@ CREATE TABLE `tb_pre_requisition` (
 --
 
 CREATE TABLE `tb_product` (
-                            `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+                            `id` int(10) UNSIGNED NOT NULL COMMENT '主键id',
                             `sys_create_stuff` int(10) unsigned NOT NULL,
                             `sys_create_date` datetime NOT NULL,
                             `sys_modify_stuff` int(10) unsigned NOT NULL,
@@ -3659,9 +4188,8 @@ CREATE TABLE `tb_product` (
                             `winterproofing` int(10) DEFAULT NULL,
                             `isfj` varchar(1) DEFAULT NULL COMMENT '0-否 1-法检',
                             `discount` decimal(10,2) DEFAULT NULL,
-                            `ulnarinch_memo` varchar(100) DEFAULT NULL COMMENT '尺寸备注',
-                            PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='商品表';
+                            `ulnarinch_memo` varchar(100) DEFAULT NULL COMMENT '尺寸备注'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品表';
 
 
 
