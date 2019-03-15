@@ -7890,6 +7890,8 @@ ALTER TABLE `tb_supplier_orderdate`
 --
 ALTER TABLE `tb_user`
   ADD PRIMARY KEY (`id`),
+  ADD KEY (`departmentid`),
+  ADD KEY (`groupid`),
   ADD UNIQUE KEY `tb_user_login_name` (`login_name`);
 
 --
