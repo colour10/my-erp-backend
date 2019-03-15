@@ -3648,17 +3648,17 @@ CREATE TABLE `tb_product` (
                             `wordprice` decimal(16,9) DEFAULT NULL COMMENT '国际零售价',
                             `wordpricecurrency` varchar(10) DEFAULT NULL COMMENT '国际零售价币种',
                             `gender` varchar(100) DEFAULT NULL COMMENT '0-女式 1-男士 2-中性',
-                            `brand` int(10) unsigned DEFAULT NULL,
-                            `brandtype` int(10) unsigned DEFAULT NULL,
+                            `brandid` int(10) unsigned DEFAULT NULL COMMENT '品牌',
+                            `brandgroupid` int(10) unsigned DEFAULT NULL COMMENT '品类',
                             `childbrand` int(10) unsigned DEFAULT NULL,
                             `brandcolor` varchar(100) DEFAULT NULL COMMENT '品牌色板',
                             `brandcolor2` int(10) unsigned DEFAULT NULL,
                             `picture2` varchar(100) DEFAULT NULL COMMENT '副图',
                             `picture` varchar(100) DEFAULT NULL COMMENT '主图',
                             `closeway` int(10) unsigned DEFAULT NULL,
-                            `ageseason` int(10) unsigned DEFAULT NULL COMMENT '年代',
+                            `ageseason` varchar(200) DEFAULT NULL COMMENT '年代',
                             `productsize` int(10) unsigned DEFAULT NULL,
-                            `origin` varchar(100) DEFAULT NULL,
+                            `countries` varchar(100) DEFAULT NULL COMMENT '产地',
                             `security` int(10) unsigned DEFAULT NULL,
                             `execution` int(10) unsigned DEFAULT NULL,
                             `material` int(10) unsigned DEFAULT NULL,
@@ -3707,7 +3707,8 @@ CREATE TABLE `tb_product` (
                             `discount` decimal(10,2) DEFAULT NULL,
                             `ulnarinch_memo` varchar(100) DEFAULT NULL COMMENT '尺寸备注',
                             PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='商品表'
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='商品表';
+
 
 
 -- --------------------------------------------------------
