@@ -323,8 +323,13 @@ return array(
     'permission-pid' => 'permission pid',
     'permission-module' => 'permission module table',
     'companyid' => 'company id',
+    'countryid' => 'country id',
+    'storeid' => 'store id',
     'user' => 'user',
+    'department' => 'department',
+    'departmentid' => 'department id',
     "department-list" => "department list",
+    'user-status' => 'user status',
 
 
     

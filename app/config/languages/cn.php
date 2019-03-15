@@ -323,9 +323,13 @@ return array(
     'permission-pid' => '上级权限',
     'permission-module' => '权限-模型关联表',
     'companyid' => '公司编号',
+    'countryid' => '国家编号',
+    'storeid' => '仓库编号',
     'user' => '用户',
     'department' => '部门',
+    'departmentid' => '部门编号',
     "department-list" => "部门列表",
+    'user-status' => '用户个人状态',
 
 
     
