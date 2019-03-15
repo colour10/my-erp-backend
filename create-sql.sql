@@ -6792,13 +6792,7 @@ CREATE TABLE `zl_series` (
                            `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
                            `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
                            `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
-                           `code_cn` varchar(100) DEFAULT NULL COMMENT '中文代码名称',
-                           `code_en` varchar(100) DEFAULT NULL COMMENT '英文代码名称',
-                           `code_hk` varchar(100) DEFAULT NULL COMMENT '粤语代码名称',
-                           `code_fr` varchar(100) DEFAULT NULL COMMENT '法语代码名称',
-                           `code_it` varchar(100) DEFAULT NULL COMMENT '意大利语代码名称',
-                           `code_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语代码名称',
-                           `code_de` varchar(100) DEFAULT NULL COMMENT '德语代码名称',
+                           `code` varchar(100) DEFAULT NULL COMMENT '代码名称',
                            `brandid` int(10) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='任何表都应该包含的列';
 
@@ -6825,13 +6819,7 @@ CREATE TABLE `zl_series2` (
                             `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
                             `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
                             `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
-                            `code_cn` varchar(100) DEFAULT NULL COMMENT '中文代码名称',
-                            `code_en` varchar(100) DEFAULT NULL COMMENT '英文代码名称',
-                            `code_hk` varchar(100) DEFAULT NULL COMMENT '粤语代码名称',
-                            `code_fr` varchar(100) DEFAULT NULL COMMENT '法语代码名称',
-                            `code_it` varchar(100) DEFAULT NULL COMMENT '意大利语代码名称',
-                            `code_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语代码名称',
-                            `code_de` varchar(100) DEFAULT NULL COMMENT '德语代码名称'
+                            `code` varchar(100) DEFAULT NULL COMMENT '代码名称'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='子系列';
 
 -- --------------------------------------------------------
