@@ -78,7 +78,7 @@ var $ASA = (function(){
     
     function copyTo(fromObj, target) {
         Object.keys(target).forEach(function(key){
-            if(typeof(fromObj[key])!="undefined") {
+            if(typeof(target[key])!="undefined") {
                 target[key] =  fromObj[key] 
             }
         });

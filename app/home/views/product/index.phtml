@@ -33,6 +33,7 @@
                 <el-input v-model="form.wordcode_1" style="width:100px;"></el-input>
                 <el-input v-model="form.wordcode_2" style="width:100px;"></el-input>
                 <el-input v-model="form.wordcode_3" style="width:100px;"></el-input>
+                <el-input v-model="form.wordcode_4" style="width:100px;"></el-input>
               </el-form-item>
 
               <el-form-item label="<?=$system_language["huohao"]?>">
@@ -191,11 +192,11 @@
             </el-form-item>
 
             <el-form-item label="<?=$system_language["jiandangshijian"]?>">
-              <el-input v-model="form.sys_create_date" disabled></el-input>
+              <el-input v-model="datetime" disabled></el-input>
             </el-form-item>
 
             <el-form-item label="<?=$system_language["jiandangren"]?>">
-              <el-input v-model="form.password" disabled></el-input>
+              <el-input v-model="adduser" disabled></el-input>
             </el-form-item>
 
 
@@ -301,8 +302,6 @@ $(document).ready(function(){
                     ulnarinch_memo:"",
                     wordprice:"",
                     wordpricecurrency:"",
-                    sys_create_stuff:"",
-                    sys_create_date:"",
                     gender:"",
                     season:"",
                     ageseason:"",
@@ -310,21 +309,17 @@ $(document).ready(function(){
                     wordcode_1:"",
                     wordcode_2:"",
                     wordcode_3:"",
+                    wordcode_4:"",
                     productno:""
                 },
                 props:props,
-                departs:[],
-                country_list:[],
-                bu_list:[],
                 action_type:"create",
                 labels:{
                     create:['<?=$system_language["xinjianyonghu"]?>','<?=$system_language["button-save"]?>'],
                     update:['<?=$system_language["yuangongxinxi"]?>','<?=$system_language["button-save"]?>']
                 },
-                group_list:[{value:1,"label":"测试一"},{value:2,"label":"测试2"}],//分组信息
-                sale_port_list:[{value:1,"label":"销售端口测试一"},{value:2,"label":"销售端口测试2"},{value:3,"label":"销售端口测试3"}],//销售端口信息
-                cangku_list:[{value:1,"label":"仓库测试一"},{value:2,"label":"仓库测试2"},{value:3,"label":"仓库测试3"}],//仓库信息
-                jiagedan_list:[{value:1,"label":"价格单测试一"},{value:2,"label":"价格单测试2"},{value:3,"label":"价格单测试3"}],//价格单信息
+                datetime:$ASAL._date,
+                adduser:$ASAL._currentUsername
             }
         },
         methods: {

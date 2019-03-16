@@ -33,4 +33,14 @@ class ProductController extends CadminController {
         
         $this->view->disable();     
     }
+    
+    public function beforeExecuteRoute($dispatcher)
+    {
+        // 这个方法会在每一个能找到的action前执行
+        $action = $dispatcher->getActionName();
+        if ($action=='add') {
+
+            $_POST["adduserid"] = $this->currentUser;
+        }
+    }
 }
