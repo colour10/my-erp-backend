@@ -338,6 +338,8 @@ return array(
     'code' => '编码',
     'brand-group' => '品类',
     'child-product-group' => '子品类',
+    'ageseason-name' => '年代数字',
+    'ageseason-mark' => '年代英文标识',
 
 
     
