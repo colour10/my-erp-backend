@@ -25,10 +25,10 @@ class TbCompany extends BaseModel
             'id',
             [
                 'alias' => 'country',
-                'foreignKey' => [
-                    // 关联字段禁止自动删除
+                "foreignKey" => [
+                    // 关联字段存在性验证
                     'action' => Relation::ACTION_RESTRICT,
-                    "message"    => "The countryid does not exist on the country model"
+                    "message" => $this->getValidateMessage('notexist', 'country'),
                 ],
             ]
         );
@@ -41,16 +41,23 @@ class TbCompany extends BaseModel
             [
                 'alias' => 'departments',
                 'foreignKey' => [
-                    // 关联字段禁止自动删除
+                    // 关联字段存在性验证
                     'action' => Relation::ACTION_RESTRICT,
-                    "message"    => "The company cannot be deleted because other departments are using it"
+                    "message"    => $this->getValidateMessage('hasmany-foreign-message', 'department'),
                 ],
             ]
         );
+
+        // 设置当前语言
+        $this->setValidateLanguage($this->getLanguage()['lang']);
     }
-    
+
+    /**
+     * 设置多语言字段
+     * @return array
+     */
     function getLanguageColumns() {
-        return array("name");
+        return ['name'];
     }
 
     /**
@@ -64,17 +71,17 @@ class TbCompany extends BaseModel
         $name = $this->getColumnName("name");
         // name-公司名称不能为空或者重复
         $validator->add($name, new PresenceOf([
-            'message' => 'The name is required',
+            'message' => $this->getValidateMessage('required', 'name'),
             'cancelOnFail' => true,
         ]));
         $validator->add($name, new Uniqueness([
-            'message' => 'The name field must be unique',
+            'message' => $this->getValidateMessage('uniqueness', 'name'),
             'cancelOnFail' => true,
         ]));
         // countryid-所属国家ID
         $validator->add('countryid', new Regex(
             [
-                "message" => "The countryid is invalid",
+                'message' => $this->getValidateMessage('invalid', 'countryid'),
                 "pattern" => "/^[1-9]\d*$/",
                 "allowEmpty" => true,
                 'cancelOnFail' => true,
@@ -86,4 +93,23 @@ class TbCompany extends BaseModel
 
         return $this->validate($validator);
     }
+
+    /**
+     * 重写多语言版本配置读取函数
+     * @param languages下面语言文件字段的名称 如template模块下面的uniqueness
+     * @param 待验证字段的编号，显示为当前语言的友好性提示 $name
+     * @return string
+     */
+    public function getValidateMessage($template, $name)
+    {
+        // 定义变量
+        // 取出当前语言版本
+        $language = $this->getDI()->get('language');
+        // 拼接变量
+        $template_name = $language->template[$template];
+        $human_name = $language->$name;
+        // 返回最终的友好提示信息
+        return sprintf($template_name, $human_name);
+    }
+
 }

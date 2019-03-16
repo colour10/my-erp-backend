@@ -50,6 +50,17 @@ class TbPermission extends BaseModel
                 ],
             ]
         );
+
+        // 设置当前语言
+        $this->setValidateLanguage($this->getLanguage()['lang']);
+    }
+
+    /**
+     * 设置多语言字段
+     * @return array
+     */
+    function getLanguageColumns() {
+        return ['memo'];
     }
 
     /**
@@ -69,6 +80,19 @@ class TbPermission extends BaseModel
             'message' => $this->getValidateMessage('uniqueness', 'permission-name'),
             'cancelOnFail' => true,
         ]));
+
+        // 验证权限多语言字段-描述
+        $memo = $this->getColumnName("memo");
+        // name-公司名称不能为空或者重复
+        $validator->add($memo, new PresenceOf([
+            'message' => $this->getValidateMessage('required', 'description'),
+            'cancelOnFail' => true,
+        ]));
+        $validator->add($memo, new Uniqueness([
+            'message' => $this->getValidateMessage('uniqueness', 'description'),
+            'cancelOnFail' => true,
+        ]));
+
         // pid-父级别权限
         $validator->add('pid', new Regex(
             [
