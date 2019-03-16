@@ -303,10 +303,37 @@ return array(
     "xiliemingcheng" => "系列名称",
     "zixilie" => "子系列",
     "bianma" => "编码",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
+    "cangkumingcheng" => "仓库名称",
+    "guojiadiqu" => "国家地区",
+    "shifoukeyong" => "是否可用",
+    "qitalianxifangshi" => "其他联系方式",
+    "yidongdianhua" => "移动电话",
+    "youbian" => "邮编",
+    "chengshi" => "城市",
+    "dingdanbianhao" => "订单编号",
+    "yewuleixing" => "业务类型",
+    "gonghuoshang" => "供货商",
+    "fahuodanwei" => "发货单位",
+    "niandaileixing" => "年代类型",
+    "nannvkuan" => "男/女款",
+    "dingdanriqi" => "订单日期",
+    "zongjine" => "总金额",
+    "huilv" => "汇率",
+    "zhekou" => "折扣",
+    "dingdanhao" => "订单号",
+    "haiwaidingdanhao" => "海外订单号",
+    "fapiaohao" => "发票号",
+    "zhidanren" => "制单人",
+    "shenheren" => "审核人",
+    "shuxing" => "属性",
+    "wofanglianxiren" => "我方联系人",
+    "dinghuokehu" => "订货客户",
+    "dinghuokehulianxiren" => "订货联系人",
+    "baocundingdan" => "保存订单",
+    "xuanzeshangpin" => "选择商品",
+    "zongshu" => "总数",
+    "zidonghuoqu" => "系统自动生成",
+    "dinggoushuliang" => "订购数量",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
@@ -344,12 +371,12 @@ return array(
     ),
     
     "list_currency" => [
-        "CAD" => "加元",
-        "EUR" => "欧元",
-        "HKD" => "港币",
-        "JPY" => "日元",
-        "RMB" => "人民币",
-        "USD" => "美元"
+        "1" => array("id"=>"1", "code"=>"CAD", "name"=>"加元"),
+        "2" => array("id"=>"2", "code"=>"EUR", "name"=>"欧元"),
+        "3" => array("id"=>"3", "code"=>"HKD", "name"=>"港币"),
+        "4" => array("id"=>"4", "code"=>"JPY", "name"=>"日元"),
+        "5" => array("id"=>"5", "code"=>"RMB", "name"=>"人民币"),
+        "6" => array("id"=>"6", "code"=>"USD", "name"=>"美元")
     ],
     
     "list_gender" => array(
@@ -366,5 +393,21 @@ return array(
         "3" => "秋季",
         "4" => "冬季",
         "5" => "四季",
+    ),
+    
+    "list_businesstype" => array(
+        "1" => "期货",
+        "2" => "现货"
+    ),
+    
+    "list_formtype" => array(
+        "1" => "男款",
+        "2" => "女款",
+        "3" => "男/女款"
+    ),
+    
+    "list_orderproperty" => array(
+        "1" => "自采",
+        "2" => "代销"
     ),
 );

@@ -1,0 +1,61 @@
+<div id="ell">
+  <!--<el-row>
+      <el-col :span="24">
+        <el-button type="primary" @click="showFormToCreate()">{{labels.xinjian}}</el-button>
+      </el-col>
+    </el-row>
+
+    <el-row :gutter="20">
+      <el-col :span="24">
+        <simple-admin-tablelist ref="tablelist" v-bind="props" :onclickupdate="showFormToEdit"></simple-admin-tablelist>
+      </el-col>
+    </el-row>
+  -->
+
+  <asa-order-dialog :visible.sync="visibleDialog"></asa-order-dialog>
+  
+  
+  <el-button type="primary" @click="showIt()">新建订单</el-button>
+</div>
+
+<script>
+$(document).ready(function(){
+    var props = {
+        columns:[
+            {name:"orderno", label:"<?=$system_language['dingdanbianhao']?>"},
+            {name:"countryid", label:"<?=$system_language['guojiadiqu']?>", is_hide:true, type:'select', source:"country"},
+            {name:"city", label:"<?=$system_language['chengshi']?>"},
+            {name:"address", label:"<?=$system_language['dizhi']?>"},
+            {name:"zipcode", label:"<?=$system_language['youbian']?>"}, 
+            
+            {name:"contact", label:"<?=$system_language['lianxiren']?>"}, 
+            {name:"mobile", label:"<?=$system_language['yidongdianhua']?>"},
+            {name:"fax", label:"<?=$system_language['chuanzhen']?>"},
+            {name:"code", label:"<?=$system_language['bianhao']?>"},
+            {name:"othercontact", label:"<?=$system_language['qitalianxifangshi']?>"},
+            {name:"is_real", label:"<?=$system_language['shifoukeyong']?>", type:"switch"}
+        ],
+        controller:"order"
+    }
+            
+    new Vue({
+        el:"#ell",
+        data() {
+            return {
+                props:props,
+                visibleDialog:false,
+                pro:false
+                
+            }
+        },
+        methods:{
+            showIt() {
+                this.visibleDialog = true;   
+            }
+        }
+    })
+})
+</script>
+<style>
+</style>
+

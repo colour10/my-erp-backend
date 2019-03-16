@@ -1,0 +1,34 @@
+<div id="ell">
+  <simple-admin-page v-bind="props" ref="page"></simple-admin-page>
+</div>
+
+<script>
+$(document).ready(function(){
+    var props = {
+        columns:[
+            {name:"name", label:"<?=$system_language['cangkumingcheng']?>"},
+            {name:"countryid", label:"<?=$system_language['guojiadiqu']?>", is_hide:true, type:'select', source:"country"},
+            {name:"city", label:"<?=$system_language['chengshi']?>"},
+            {name:"address", label:"<?=$system_language['dizhi']?>"},
+            {name:"zipcode", label:"<?=$system_language['youbian']?>"}, 
+            
+            {name:"contact", label:"<?=$system_language['lianxiren']?>"}, 
+            {name:"mobile", label:"<?=$system_language['yidongdianhua']?>"},
+            {name:"fax", label:"<?=$system_language['chuanzhen']?>"},
+            {name:"code", label:"<?=$system_language['bianhao']?>"},
+            {name:"othercontact", label:"<?=$system_language['qitalianxifangshi']?>"},
+            {name:"is_real", label:"<?=$system_language['shifoukeyong']?>", type:"switch"}
+        ],
+        controller:"warehouse"
+    }
+        
+    new Vue({
+        el:"#ell",
+        data() {
+            return {
+                props:props   
+            }
+        }
+    })
+})
+</script>

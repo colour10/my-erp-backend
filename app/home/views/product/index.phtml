@@ -162,7 +162,7 @@
                 </el-form-item>
               
                 <el-form-item label="<?=$system_language["chima"]?>">
-                  <simple-select v-model="form.ulnarinch" source="sizetop" :lang="lang">
+                  <simple-select v-model="form.sizetopid" source="sizetop" :lang="lang">
                   </simple-select>
                 </el-form-item>
                 
@@ -302,7 +302,8 @@ $(document).ready(function(){
                     sys_create_date:"",
                     gender:"",
                     season:"",
-                    ageseason:""
+                    ageseason:"",
+                    sizetopid:""
                 },
                 props:props,
                 departs:[],
