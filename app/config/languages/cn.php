@@ -336,6 +336,8 @@ return array(
     'up_dp_id' => '上级部门编号',
     'group_name' => '组名称',
     'code' => '编码',
+    'brand-group' => '品类',
+    'child-product-group' => '子品类',
 
 
     
