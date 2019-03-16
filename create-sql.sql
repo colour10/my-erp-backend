@@ -7166,8 +7166,8 @@ CREATE TABLE `zl_ageseason` (
                               `sys_delete_stuff` int(10) unsigned DEFAULT NULL,
                               `sys_delete_date` datetime DEFAULT NULL,
                               `sys_delete_flag` tinyint(1) DEFAULT '0' COMMENT '0-未删除 1-已删除',
-                              `name` varchar(100) DEFAULT NULL,
-                              `memo` varchar(200) DEFAULT NULL,
+                              `name` varchar(100) DEFAULT NULL COMMENT '年代数字',
+                              `memo` varchar(200) DEFAULT NULL COMMENT '年代英文标识',
                               PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='年代季节';
 
