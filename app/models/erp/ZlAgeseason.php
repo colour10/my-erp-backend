@@ -5,6 +5,7 @@ namespace Asa\Erp;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Regex;
 use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Validation\Validator\Uniqueness;
 
 /**
  * 年代季节
@@ -42,6 +43,12 @@ class ZlAgeseason extends BaseModel
         // mark-年代英文标识不能为空
         $validator->add('mark', new PresenceOf([
             'message' => $this->getValidateMessage('required', 'ageseason-mark'),
+            'cancelOnFail' => true,
+        ]));
+
+        // 年代、标识唯一性索引
+        $validator->add(['name', 'mark'], new Uniqueness([
+            'message' => $this->getValidateMessage('uniqueness', 'ageseason-name-mark'),
             'cancelOnFail' => true,
         ]));
 
