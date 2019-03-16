@@ -19,8 +19,8 @@ INSERT INTO `zl_country` (`id`, `code`, `name_cn`, `name_en`, `name_hk`, `name_f
 -- 转存表中的数据 `tb_company`
 --
 
-INSERT INTO `tb_company` (`id`, `sys_create_stuff`, `sys_create_date`, `sys_modify_stuff`, `sys_modify_date`, `sys_delete_stuff`, `sys_delete_date`, `sys_delete_flag`, `name_cn`, `name_en`, `name_hk`, `name_fr`, `name_it`, `name_sp`, `name_de`, `countryid`, `memo`) VALUES
-(1, 1, '2019-03-12 00:00:00', 1, '2019-03-07 14:43:27', NULL, NULL, 0, '爱莎尚品', 'ASA', NULL, NULL, NULL, NULL, NULL, 1, NULL);
+INSERT INTO `tb_company` (`id`, `sys_create_stuff`, `sys_create_date`, `sys_modify_stuff`, `sys_modify_date`, `sys_delete_stuff`, `sys_delete_date`, `sys_delete_flag`, `name_cn`, `name_en`, `name_hk`, `name_fr`, `name_it`, `name_sp`, `name_de`, `countryid`, `memo`, `randid`) VALUES
+(1, 1, '2019-03-12 00:00:00', 1, '2019-03-07 14:43:27', NULL, NULL, 0, '爱莎尚品', 'ASA', NULL, NULL, NULL, NULL, NULL, 1, NULL, 11111111);
 
 
 

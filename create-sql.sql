@@ -867,7 +867,7 @@ CREATE TABLE `dd_order` (
                           `status` int(11) DEFAULT NULL COMMENT '订单状态：1=保存；2=送审；3=审核完成',
                           PRIMARY KEY (`id`),
                           KEY `companyid` (`companyid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单主表'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单主表';
 
 
 --
@@ -4020,9 +4020,11 @@ CREATE TABLE `tb_company` (
                             `name_sp` varchar(1000) DEFAULT NULL COMMENT '西班牙语名称',
                             `name_de` varchar(1000) DEFAULT NULL COMMENT '德语名称',
                             `countryid` int(10) unsigned DEFAULT NULL COMMENT '国家id',
+                            `randid` int(10) unsigned NOT NULL COMMENT '特殊公司ID，不能重复',
                             `memo` text COMMENT '备注说明',
                             PRIMARY KEY (`id`),
-                            KEY `countryid` (`countryid`)
+                            KEY `countryid` (`countryid`),
+                            UNIQUE `randid` (`randid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 
@@ -5240,7 +5242,7 @@ CREATE TABLE `tb_product` (
                             `sys_delete_stuff` int(10) unsigned DEFAULT NULL,
                             `sys_delete_date` datetime DEFAULT NULL,
                             `sys_delete_flag` tinyint(4) NOT NULL COMMENT '0-未删除 1-已删除',
-                            `asacode` varchar(100) DEFAULT NULL,
+                            `productno` varchar(100) DEFAULT NULL COMMENT '货号',
                             `productname` varchar(50) DEFAULT NULL,
                             `wordcode_1` varchar(50) DEFAULT NULL,
                             `wordcode_2` varchar(50) DEFAULT NULL,
@@ -5307,6 +5309,9 @@ CREATE TABLE `tb_product` (
                             `isfj` varchar(1) DEFAULT NULL COMMENT '0-否 1-法检',
                             `discount` decimal(10,2) DEFAULT NULL,
                             `ulnarinch_memo` varchar(100) DEFAULT NULL COMMENT '尺寸备注',
+                            `sizetopid` int(11) DEFAULT NULL COMMENT '尺码模板',
+                            `companyid` int(11) DEFAULT NULL,
+                            `adduserid` int(11) DEFAULT NULL COMMENT '建档人',
                             PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品表';
 
