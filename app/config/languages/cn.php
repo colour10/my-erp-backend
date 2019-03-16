@@ -368,6 +368,8 @@ return array(
     'ageseason-name' => '年代数字',
     'ageseason-mark' => '年代英文标识',
     'ageseason-name-mark' => '年代数字、英文标识',
+    'randid' => '随机标识',
+    'company' => '公司',
 
 
     
