@@ -177,12 +177,8 @@ class OrderController extends CadminController
         foreach ($this->orderParams['list'] as $k => $item) {
             if (isset($item)) {
                 $_POST = $item;
-                // 数量重写
-                $_POST['number'] = $item['num'];
                 // 加入订单
                 $_POST['orderid'] = $this->orderid;
-                // 清除num
-                unset($_POST['num']);
             }
 
             // 使用模型更新
@@ -221,7 +217,7 @@ class OrderController extends CadminController
                     'id' => $orderdetail->id,
                     'productid' => $orderdetail->productid,
                     'sizecontentid' => $orderdetail->sizecontentid,
-                    'num' => $orderdetail->number,
+                    'number' => $orderdetail->number,
                     'productname' => $orderdetail->product->productname,
                     'sizecontentname' => $orderdetail->sizecontent->{$this->zlcontent_field_name},
                 ];
