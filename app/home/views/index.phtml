@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <!-- 引入组件库 -->
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/ramda/0.25.0/ramda.min.js"></script>
     <script src="/js/jquery.min.js"></script>
     <script src="/common/systemlanguage?<?=$__sytem_time?>"></script>
     <script src="/js/erp.js?<?=$__sytem_time?>"></script>
@@ -167,7 +168,7 @@
               
               <el-submenu index="7">
                 <template #title><?=$system_language["menu-7"]?></template>
-                <el-menu-item index="7-1"><?=$system_language["menu-7-1"]?></el-menu-item>
+                <el-menu-item index="7-1" data-href="/sales"><?=$system_language["menu-7-1"]?></el-menu-item>
                 <el-menu-item index="7-2"><?=$system_language["menu-7-2"]?></el-menu-item>
                 <el-menu-item index="7-3"><?=$system_language["menu-7-3"]?></el-menu-item>
                 <el-submenu index="7-4">

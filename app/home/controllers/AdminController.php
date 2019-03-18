@@ -213,7 +213,7 @@ class AdminController extends BaseController
 	        $fields = $this->getAttributes(); 
 	        
 	        foreach($fields as $name) {
-	            if(isset($_POST[$name])) {
+	            if(isset($_POST[$name]) && !preg_match("#^sys_#", $name)) {
 	                $row->$name = $_POST[$name];
 	            }
 	        }
@@ -227,6 +227,8 @@ class AdminController extends BaseController
                 }
             } else {
                 $result['is_add'] = "1";
+                $result['sys_create_stuff'] = $row->sys_create_stuff;
+                $result['sys_create_date'] = $row->sys_create_date;
                 $result['id'] = $row->id;
                 //$message['idd'] = "999";
             }
@@ -246,7 +248,7 @@ class AdminController extends BaseController
             if ($row != false) {
                 $fields = $this->getAttributes();
                 foreach ($fields as $name) {
-                    if (isset($_POST[$name])) {
+                    if (isset($_POST[$name]) && !preg_match("#^sys_#", $name)) {
                         $row->$name = $_POST[$name];
                     }
                 }

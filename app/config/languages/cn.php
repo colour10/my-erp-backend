@@ -336,22 +336,21 @@ return array(
     "dinggoushuliang" => "订购数量",
     "guojima" => "国际码",
     "huohao" => "货号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
+    "huiyuan" => "会员",
+    "xiaoshouren" => "销售人",
+    "waitudingdanhao" => "外部订单号",
+    "xiaoshoudangku" => "销售仓库",
+    "xiaoshouriqi" => "销售日期",
+    "duizhangdanhao" => "对账单号",
+    "zhidanriqi" => "制单日期",
+    "tihuofangshi" => "提货方式",
+    "kuaidifukuanfang" => "快递付款",
+    "kuaididanhao" => "快递单号",
+    "kuaidifeiyong" => "快递费用",
+    "shouhuodizhi" => "收货地址",
+    "tijiao" => "提交",
+    "yushou" => "预售",
+    "fujian" => "附件",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
@@ -446,5 +445,19 @@ return array(
     "list_orderproperty" => array(
         "1" => "自采",
         "2" => "代销"
+    ),
+
+    //提货方式
+    "list_pickingtype" => array(
+        "1" => "自提",
+        "2" => "快递",
+        "3" => "店铺直发"
+    ),
+
+    //快递付款类型
+    "list_expresspaidtype" => array(
+        "1" => "预付",
+        "2" => "到付",
+        "3" => "第三方付费"
     ),
 );

@@ -13,37 +13,15 @@
     </el-row>
   -->
 
-  <asa-order-dialog :visible.sync="visibleDialog"></asa-order-dialog>
+  <asa-sales-dialog :visible.sync="visibleDialog"></asa-sales-dialog>
   
-  
+  <sp-display-input source="user" value="1,4"></sp-display-input>
   <el-button type="primary" @click="showIt()">新建订单</el-button>
 </div>
 
 <script>
-$(document).ready(function(){
+$(document).ready(function(){    
     
-    //const sliceFrom = R.invoker(1, 'slice');
-    //console.log(sliceFrom(6, 'abcdefghijklm')); //=> 'ghijklm'
-    //const sliceFrom6 = R.invoker(1, 'slice')(6);
-    //console.log(sliceFrom6(7, 'abcdefghijklm')); //=> 'gh'
-    var obj = {
-        name:"changwei",
-        sayHello:function(time) {
-            console.log("Hello " + this.name + ' ' + time)
-            return 1
-        }
-    }
-
-    obj.sayHello(new Date())
-
-    R.invoker(1,"sayHello")("Non ",obj)
-
-    console.log(R.equals(1, R.invoker(0,"getLabel")))
-
-    var invoker = R.invoker(0,"sayHello")
-    var equals = R.equals(1, invoker(R.__))
-    console.log(equals)
-
     var props = {
         columns:[
             {name:"orderno", label:"<?=$system_language['dingdanbianhao']?>"},
