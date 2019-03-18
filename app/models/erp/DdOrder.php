@@ -1,8 +1,11 @@
 <?php
+
 namespace Asa\Erp;
+
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Between;
 use Phalcon\Validation\Validator\Uniqueness;
+use Phalcon\Mvc\Model\Relation;
 
 /**
  * 订单主表
@@ -13,6 +16,24 @@ class DdOrder extends BaseModel
     {
         parent::initialize();
         $this->setSource('dd_order');
+
+        // 动态更新
+        $this->useDynamicUpdate(true);
+
+        // 订单-订单详情，一对多
+        $this->hasMany(
+            "id",
+            "\Asa\Erp\DdOrderdetails",
+            "orderid",
+            [
+                'alias' => 'orderdetails',
+                'foreignKey' => [
+                    // 关联字段存在性验证
+                    'action' => Relation::ACTION_RESTRICT,
+                    "message"    => $this->getValidateMessage('hasmany-foreign-message', 'orderdetail'),
+                ],
+            ]
+        );
     }
 
     public function validation() {
