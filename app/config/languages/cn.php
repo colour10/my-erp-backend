@@ -376,6 +376,10 @@ return array(
     'sizecontent' => '尺码',
     'sizecontent-content' => '尺码名称',
     'sizecontent-memo' => '尺码简介',
+    'sizetop' => '尺码组',
+
+
+
 
 
     

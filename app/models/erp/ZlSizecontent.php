@@ -3,7 +3,6 @@
 namespace Asa\Erp;
 
 use Phalcon\Validation;
-use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Mvc\Model\Relation;
 
@@ -16,6 +15,21 @@ class ZlSizecontent extends BaseModel
     {
         parent::initialize();
         $this->setSource('zl_sizecontent');
+
+        // 尺码详情-尺码组-尺码详情，一对多反向
+        $this->belongsTo(
+            'topid',
+            '\Asa\Erp\ZlSizetop',
+            'id',
+            [
+                'alias' => 'sizetop',
+                "foreignKey" => [
+                    // 关联字段存在性验证
+                    'action' => Relation::ACTION_RESTRICT,
+                    "message" => $this->getValidateMessage('notexist', 'sizetop'),
+                ],
+            ]
+        );
 
         // 设置当前语言
         $this->setValidateLanguage($this->getLanguage()['lang']);
@@ -38,13 +52,9 @@ class ZlSizecontent extends BaseModel
         $validator = new Validation();
 
         $content = $this->getColumnName("content");
-        // $content-尺寸代码名称不能为空或者重复
+        // $content-尺寸代码名称不能为空
         $validator->add($content, new PresenceOf([
             'message' => $this->getValidateMessage('required', 'sizecontent-content'),
-            'cancelOnFail' => true,
-        ]));
-        $validator->add($content, new Uniqueness([
-            'message' => $this->getValidateMessage('uniqueness', 'sizecontent-content'),
             'cancelOnFail' => true,
         ]));
 
@@ -52,10 +62,6 @@ class ZlSizecontent extends BaseModel
         // $memo-尺寸描述
         $validator->add($memo, new PresenceOf([
             'message' => $this->getValidateMessage('required', 'sizecontent-memo'),
-            'cancelOnFail' => true,
-        ]));
-        $validator->add($memo, new Uniqueness([
-            'message' => $this->getValidateMessage('uniqueness', 'sizecontent-memo'),
             'cancelOnFail' => true,
         ]));
 

@@ -5,6 +5,7 @@ namespace Asa\Erp;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Mvc\Model\Relation;
 
 /**
  * 商品尺码信息
@@ -15,6 +16,24 @@ class ZlSizetop extends BaseModel
     {
         parent::initialize();
         $this->setSource('zl_sizetop');
+
+        // 尺码组-尺码详情，一对多
+        $this->hasMany(
+            "id",
+            "\Asa\Erp\ZlSizecontent",
+            "topid",
+            [
+                'alias' => 'Sizecontents',
+                'foreignKey' => [
+                    // 关联字段存在性验证
+                    'action' => Relation::ACTION_RESTRICT,
+                    "message"    => $this->getValidateMessage('hasmany-foreign-message', 'sizecontent'),
+                ],
+            ]
+        );
+
+        // 设置当前语言
+        $this->setValidateLanguage($this->getLanguage()['lang']);
     }
 
     /**
@@ -34,7 +53,7 @@ class ZlSizetop extends BaseModel
         $validator = new Validation();
 
         $name = $this->getColumnName("name");
-        // name-公司名称不能为空或者重复
+        // name-尺码组名称不能为空或者重复
         $validator->add($name, new PresenceOf([
             'message' => $this->getValidateMessage('required', 'name'),
             'cancelOnFail' => true,
@@ -43,18 +62,20 @@ class ZlSizetop extends BaseModel
             'message' => $this->getValidateMessage('uniqueness', 'name'),
             'cancelOnFail' => true,
         ]));
-        // countryid-所属国家ID
-        $validator->add('countryid', new Regex(
-            [
-                'message' => $this->getValidateMessage('invalid', 'countryid'),
-                "pattern" => "/^[1-9]\d*$/",
-                "allowEmpty" => true,
-                'cancelOnFail' => true,
-            ]
-        ));
+
+        // code-尺码组代码不能为空或者重复
+        $validator->add('code', new PresenceOf([
+            'message' => $this->getValidateMessage('required', 'code'),
+            'cancelOnFail' => true,
+        ]));
+        $validator->add('code', new Uniqueness([
+            'message' => $this->getValidateMessage('uniqueness', 'code'),
+            'cancelOnFail' => true,
+        ]));
 
         // 过滤
         $validator->setFilters($name, 'trim');
+        $validator->setFilters('code', 'trim');
 
         return $this->validate($validator);
     }
