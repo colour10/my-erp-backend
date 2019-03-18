@@ -17,6 +17,9 @@ class DdOrder extends BaseModel
         parent::initialize();
         $this->setSource('dd_order');
 
+        // 动态更新
+        $this->useDynamicUpdate(true);
+
         // 订单-订单详情，一对多
         $this->hasMany(
             "id",

@@ -17,7 +17,37 @@ class DdOrderdetails extends BaseModel
         parent::initialize();
         $this->setSource('dd_orderdetails');
 
-        // 订单详情-订单主表，一对多反向
+        // 订单详情-商品主表，一对多反向
+        $this->belongsTo(
+            'productid',
+            '\Asa\Erp\TbProduct',
+            'id',
+            [
+                'alias' => 'product',
+                "foreignKey" => [
+                    // 关联字段存在性验证
+                    'action' => Relation::ACTION_RESTRICT,
+                    "message" => $this->getValidateMessage('notexist', 'product'),
+                ],
+            ]
+        );
+
+        // 订单详情-商品尺码表，一对多反向
+        $this->belongsTo(
+            'sizecontentid',
+            '\Asa\Erp\ZlSizecontent',
+            'id',
+            [
+                'alias' => 'sizecontent',
+                "foreignKey" => [
+                    // 关联字段存在性验证
+                    'action' => Relation::ACTION_RESTRICT,
+                    "message" => $this->getValidateMessage('notexist', 'sizecontent'),
+                ],
+            ]
+        );
+
+        // 订单详情-商品主表，一对多反向
         $this->belongsTo(
             'orderid',
             '\Asa\Erp\DdOrder',

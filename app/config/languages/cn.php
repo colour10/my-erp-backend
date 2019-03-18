@@ -372,6 +372,10 @@ return array(
     'company' => '公司',
     'order' => '订单',
     'orderdetail' => '订单详情',
+    'product' => '商品',
+    'sizecontent' => '尺码',
+    'sizecontent-content' => '尺码名称',
+    'sizecontent-memo' => '尺码简介',
 
 
     
