@@ -404,6 +404,7 @@ return array(
     'bussinesstype' => '订单类型',
     'group-keys' => '组赋值参数',
     'order-params' => '订单参数',
+    // 通用型，以后有需要再改
     'hasmany-foreign-message' => '正在使用，不能删除',
     'belongsto-foreign-message' => '记录不存在',
 

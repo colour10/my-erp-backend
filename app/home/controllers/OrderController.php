@@ -4,6 +4,7 @@ namespace Multiple\Home\Controllers;
 
 use Asa\Erp\DdOrderdetails;
 use Asa\Erp\TbCompany;
+use Asa\Erp\Util;
 use Asa\Erp\ZlSizecontent;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
@@ -46,7 +47,8 @@ class OrderController extends CadminController
         // 判断是否有params参数提交过来
         $params = $this->request->get('params');
         if (!$params) {
-            return $this->error(['params is required']);
+            $msg = $this->getValidateMessage('order-params', 'template', 'required');
+            return $this->error([$msg]);
         }
         // 转换成数组
         $arr = json_decode($params, true);
@@ -66,7 +68,8 @@ class OrderController extends CadminController
             // 查找订单号是否存在
             $order = DdOrder::findFirstById($this->orderid);
             if (!$order) {
-                return $this->error(['order does not exist']);
+                $msg = $this->getValidateMessage('order', 'template', 'notexist');
+                return $this->error([$msg]);
             }
 
             // 采用事务处理
@@ -83,7 +86,8 @@ class OrderController extends CadminController
             // 判断是否成功
             if (!$order->save($_POST)) {
                 $this->db->rollback();
-                return $this->error(['order save failed']);
+                $msg = $this->getValidateMessage('order', 'db', 'save-failed');
+                return $this->error([$msg]);
             }
 
             // 开始更新订单详情表
@@ -91,7 +95,8 @@ class OrderController extends CadminController
             foreach ($order->orderdetails as $orderdetail) {
                 if (!$orderdetail->delete()) {
                     $this->db->rollback();
-                    return $this->error(['order delete failed']);
+                    $msg = $this->getValidateMessage('order', 'db', 'delete-failed');
+                    return $this->error([$msg]);
                 }
             }
 
@@ -145,7 +150,8 @@ class OrderController extends CadminController
     {
         // 必须传递一个订单id
         if (!$this->request->get('id')) {
-            return $this->error(['order id is required']);
+            $msg = $this->getValidateMessage('order', 'template', 'required');
+            return $this->error([$msg]);
         }
         $this->orderid = $this->request->get('id');
         // 取出单个模型及下级订单详情逻辑
@@ -172,7 +178,9 @@ class OrderController extends CadminController
             }
             // 生成订单号
             $company_rand = TbCompany::findFirstById($this->companyid)->randid;
-            $orderno = 'D' . $company_rand . date('YmdHis') . mt_rand(10000000, 99999999);
+            // 开始处理随机数，保存成6位数字
+            $company_rand = Util::cover_position($company_rand, 6);
+            $orderno = 'D' . $company_rand . date('YmdHis') . mt_rand(1000, 9999);
             if (!isset($_POST["orderno"]) || $_POST["orderno"] == "") {
                 $_POST["orderno"] = $orderno;
             }
@@ -204,7 +212,8 @@ class OrderController extends CadminController
             ];
             if (!$orderDetail->save($data)) {
                 $this->db->rollback();
-                return $this->error(['orderdetail insert failed']);
+                $msg = $this->getValidateMessage('orderdetail', 'db', 'add-failed');
+                return $this->error([$msg]);
             }
         }
     }
@@ -221,7 +230,8 @@ class OrderController extends CadminController
         $order = DdOrder::findFirstById($orderid);
         // 判断订单是否存在
         if (!$order) {
-            echo $this->error(['order does not exist']);
+            $msg = $this->getValidateMessage('orderdetail', 'template', 'notexist');
+            echo $this->error([$msg]);
             exit;
         }
         // 清除原来的list节点和form节点
@@ -255,14 +265,16 @@ class OrderController extends CadminController
     {
         // 必须传递一个订单id
         if (!$this->request->get('id')) {
-            return $this->error(['order id is required']);
+            $msg = $this->getValidateMessage('order', 'template', 'required');
+            return $this->error([$msg]);
         }
         $this->orderid = $this->request->get('id');
         // 根据orderid查询出当前订单以及订单详情的所有信息
         $order = DdOrder::findFirstById($this->orderid);
         // 判断订单是否存在
         if (!$order) {
-            return $this->error(['order does not exist']);
+            $msg = $this->getValidateMessage('order', 'template', 'notexist');
+            return $this->error([$msg]);
         }
         // 继续执行其他方法
         parent::deleteAction();

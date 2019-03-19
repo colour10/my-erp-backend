@@ -52,7 +52,7 @@ class GroupController extends CadminController {
             foreach ($result as $record) {
                 // 如果存在，就删除
                 if (!$record->delete()) {
-                    $msg = $this->getValidateMessage('permission', 'db', 'delete');
+                    $msg = $this->getValidateMessage('permission', 'db', 'delete-failed');
                     return $this->error([$msg]);
                 }
             }
@@ -70,7 +70,7 @@ class GroupController extends CadminController {
                         'sys_delete_date' => NULL,
                     ];
                     if (!$result->save($data)) {
-                        $msg = $this->getValidateMessage('permission-save-fail-message');
+                        $msg = $this->getValidateMessage('permission', 'db', 'save-failed');
                         return $this->error([$msg]);
                     }
                 } else {
@@ -83,7 +83,7 @@ class GroupController extends CadminController {
                         'sys_delete_flag' => '0',
                     ];
                     if (!$TbPermissionGroup->save($data)) {
-                        $msg = $this->getValidateMessage('permission-insert-fail-message');
+                        $msg = $this->getValidateMessage('permission', 'db', 'add-failed');
                         return $this->error([$msg]);
                     }
                 }

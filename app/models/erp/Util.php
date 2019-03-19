@@ -108,4 +108,26 @@ class Util {
             return false;
         }
     }
+
+
+    /**
+     * 字符串位数补全
+     * @param $str 字符串
+     * @param $length 处理后的位数，默认是6位
+     * @return bool|string
+     */
+    public static function cover_position($str, $length=6)
+    {
+        // 逻辑
+        $len = strlen($str);
+        if ($len > $length) {
+            $str = substr($str, 0, 6);
+        } else if ($len < $length) {
+            // 如果小于$length，就进行补位
+            $diff = $length - $len;
+            $str = str_repeat('0', $diff) . $str;
+        }
+        // 返回
+        return $str;
+    }
 }

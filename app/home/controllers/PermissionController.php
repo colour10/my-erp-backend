@@ -7,7 +7,7 @@ use Asa\Erp\TbPermission;
 use Asa\Erp\Util;
 
 /**
- * 权限表
+ * 权限表，这个控制器在页面不体现出来，所以只录入就可以了
  */
 class PermissionController extends AdminController {
     public function initialize() {
