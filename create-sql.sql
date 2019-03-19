@@ -4694,11 +4694,11 @@ CREATE TABLE `tb_member` (
                            `sys_modify_date` datetime NOT NULL,
                            `sys_delete_stuff` int(10) unsigned DEFAULT NULL,
                            `sys_delete_date` datetime DEFAULT NULL,
-                           `sys_delete_flag` tinyint(1) DEFAULT '0' COMMENT '0-未删除 1-已删除',
-                           `name` varchar(50) DEFAULT NULL,
+                           `sys_delete_flag` tinyint(4) NOT NULL COMMENT '0-未删除 1-已删除',
+                           `name` varchar(50) DEFAULT NULL COMMENT '会员名',
                            `code` varchar(20) DEFAULT NULL,
-                           `form` varchar(1) DEFAULT NULL COMMENT 'f-female m-male',
-                           `birth` date DEFAULT NULL,
+                           `gender` tinyint(1) DEFAULT NULL COMMENT '0-female 1-male',
+                           `birthday` varchar(10) DEFAULT NULL COMMENT '生日',
                            `phoneno` varchar(50) DEFAULT NULL,
                            `email` varchar(50) DEFAULT NULL,
                            `address` varchar(50) DEFAULT NULL,
@@ -4723,8 +4723,11 @@ CREATE TABLE `tb_member` (
                            `invitesum` bigint(20) DEFAULT NULL,
                            `invitetotal` bigint(20) DEFAULT NULL,
                            `invoteuser` int(10) unsigned DEFAULT NULL,
-                           PRIMARY KEY (`id`)
+                           `companyid` int(11) DEFAULT NULL COMMENT '公司ID',
+                           PRIMARY KEY (`id`),
+                           KEY `sys_delete_flag` (`sys_delete_flag`,`companyid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='会员表';
+
 
 
 --
