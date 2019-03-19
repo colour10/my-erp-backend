@@ -96,8 +96,12 @@ class OrderController extends CadminController
             // 判断是否成功
             if (!$order->save($_POST)) {
                 $this->db->rollback();
-                $msg = $this->getValidateMessage('order', 'db', 'save-failed');
-                return $this->error([$msg]);
+                // 验证类错误给出提示
+                $messages = $order->getMessages();
+                foreach ($messages as $message) {
+                    $result[] = $message->getMessage();
+                }
+                return $this->error($result);
             }
 
             // 开始更新订单详情表
@@ -129,8 +133,8 @@ class OrderController extends CadminController
             // 转成数组
             $order_arr = json_decode($order, true);
 
-            // 判断是否更新成功
-            if (array_key_exists('messages', $order_arr) && count($order_arr['messages']) > 0) {
+            // 判断是否更新成功，加入是否为数组的判断
+            if (is_array($order_arr) && array_key_exists('messages', $order_arr) && count($order_arr['messages']) > 0) {
                 $this->db->rollback();
                 // 取出错误记录，因为在模型验证的时候，基本上都是出现错误就停止继续运行，所以只取出一条记录即可。
                 return $this->error([$order_arr['messages'][0]]);
