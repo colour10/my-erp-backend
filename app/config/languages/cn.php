@@ -444,6 +444,10 @@ return array(
     'sale' => '销售单',
     'saleid' => '销售单编号',
     'saledetail' => '销售单详情',
+    'memberid' => '会员编号',
+    'salesstaff' => '销售者编号',
+    'sellspotid' => '销售端口编号',
+    'salesdetail' => '销售单详情',
     // 通用型，以后有需要再改
     'hasmany-foreign-message' => '正在使用，不能删除',
     'belongsto-foreign-message' => '记录不存在',
