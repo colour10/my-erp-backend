@@ -33,7 +33,7 @@ class ZlBrandgroup extends BaseModel
         );
 
         // 设置当前语言
-        $this->setValidateLanguage($this->getLanguage()['lang']);
+        //$this->setValidateLanguage($this->getLanguage()['lang']);
     }
 
     /**
@@ -53,6 +53,7 @@ class ZlBrandgroup extends BaseModel
         $validator = new Validation();
 
         $name = $this->getColumnName("name");
+        //echo $name;
         // name-品类名称不能为空或者重复
         $validator->add($name, new PresenceOf([
             'message' => $this->getValidateMessage('required', 'name'),

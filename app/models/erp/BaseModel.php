@@ -12,7 +12,7 @@ class BaseModel extends \Phalcon\Mvc\Model {
     // 0表示未删除
     const FG_NOT_DELETED = '0';
 
-    protected $validate_language;
+    private $validate_language;
     
     public function initialize() {
         $this->addBehavior(new AsaBehabior());
@@ -71,6 +71,7 @@ class BaseModel extends \Phalcon\Mvc\Model {
     
     function setValidateLanguage($language) {
         $this->validate_language = $language;  
+        //echo $this->validate_language."===";
     }
     
     function getLanguageColumns() {
@@ -79,6 +80,9 @@ class BaseModel extends \Phalcon\Mvc\Model {
     
     function getColumnName($name) {
         $language_columns = $this->getLanguageColumns();
+
+        //var_dump( $this->validate_language);
+
         if(in_array($name, $language_columns)) {
             return sprintf("%s_%s", addslashes($name), $this->validate_language);
         }   
