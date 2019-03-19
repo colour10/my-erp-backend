@@ -400,6 +400,7 @@ return array(
     'sizecontent-content' => '尺码名称',
     'sizecontent-memo' => '尺码简介',
     'sizetop' => '尺码组',
+    'bussinesstype' => '订单类型',
 
 
 
