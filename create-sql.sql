@@ -839,7 +839,7 @@ CREATE TABLE `dd_order` (
                           `bookingid` int(10) unsigned DEFAULT NULL COMMENT '订货单位',
                           `agentid` int(10) unsigned DEFAULT NULL,
                           `purchasedept` int(10) unsigned DEFAULT NULL,
-                          `brandid` int(10) unsigned DEFAULT NULL,
+                          `brandid` int(10) unsigned DEFAULT NULL COMMENT '品牌编号',
                           `orderno` varchar(50) DEFAULT NULL COMMENT '订单编号',
                           `total` decimal(16,9) DEFAULT NULL,
                           `currency` varchar(10) DEFAULT NULL COMMENT '总金额货币',
