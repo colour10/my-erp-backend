@@ -4,6 +4,7 @@ namespace Multiple\Home\Controllers;
 
 use Asa\Erp\DdOrderdetails;
 use Asa\Erp\TbCompany;
+use Asa\Erp\Util;
 use Asa\Erp\ZlSizecontent;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
@@ -178,6 +179,7 @@ class OrderController extends CadminController
             // 生成订单号
             $company_rand = TbCompany::findFirstById($this->companyid)->randid;
             // 开始处理随机数，保存成6位数字
+            $company_rand = Util::cover_position($company_rand, 6);
             $orderno = 'D' . $company_rand . date('YmdHis') . mt_rand(1000, 9999);
             if (!isset($_POST["orderno"]) || $_POST["orderno"] == "") {
                 $_POST["orderno"] = $orderno;
