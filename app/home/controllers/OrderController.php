@@ -138,10 +138,10 @@ class OrderController extends CadminController
     public function loadorderAction()
     {
         // 必须传递一个订单id
-        if (!$this->request->get('orderid')) {
+        if (!$this->request->get('id')) {
             return $this->error(['orderid is required']);
         }
-        $this->orderid = $this->request->get('orderid');
+        $this->orderid = $this->request->get('id');
         // 取出单个模型及下级订单详情逻辑
         $this->getOrder($this->orderid);
     }
@@ -155,9 +155,9 @@ class OrderController extends CadminController
             // 更新数据库
             // 生成订单号
             $company_rand = TbCompany::findFirstById($this->companyid)->randid;
-            $orderid = 'D' . $company_rand . date('YmdHis') . mt_rand(10000000, 99999999);
-            if (!isset($_POST["orderid"]) || $_POST["orderid"] == "") {
-                $_POST["orderid"] = $orderid;
+            $orderno = 'D' . $company_rand . date('YmdHis') . mt_rand(10000000, 99999999);
+            if (!isset($_POST["orderno"]) || $_POST["orderno"] == "") {
+                $_POST["orderno"] = $orderno;
             }
             // 开始解析参数，转化成直接post请求
             foreach ($this->orderParams['form'] as $k => $item) {
@@ -165,6 +165,7 @@ class OrderController extends CadminController
                     $_POST[$k] = $item;
                 }
             }
+
             // 继续执行父类其他方法
             parent::doAdd();
         }
@@ -198,14 +199,20 @@ class OrderController extends CadminController
         }
     }
 
+
     /**
      * 根据订单id查询出每个订单下面的模型和具体订单详情
-     * @param $orderid 订单号
+     * @param $orderid
+     * @return false|string
      */
     public function getOrder($orderid)
     {
         // 根据orderid查询出当前订单以及订单详情的所有信息
         $order = DdOrder::findFirstById($orderid);
+        // 判断订单是否存在
+        if (!$order) {
+            return $this->error(['order does not exist']);
+        }
         // 清除原来的list节点和form节点
         unset($this->orderParams['form']);
         unset($this->orderParams['list']);
