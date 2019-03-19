@@ -353,7 +353,7 @@ return array(
     "fujian" => "附件",
     "shuliang" => "数量",
     "tijiaoshenhe" => "提交审核",
-    "yingyezhizhaohao" => "营业执照号",
+    "order_submit_confirm" => "订单是否确定提交审核？",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
