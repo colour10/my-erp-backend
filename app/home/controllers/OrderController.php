@@ -231,6 +231,7 @@ class OrderController extends CadminController
         $this->orderParams['form'] = $order->toArray();
         // 循环添加数据
         foreach ($order->orderdetails as $k => $orderdetail) {
+            // 过滤已经删除的数据
             if ($orderdetail->sys_delete_flag == '0') {
                 $this->orderParams['list'][] = [
                     'id' => $orderdetail->id,
@@ -264,6 +265,7 @@ class OrderController extends CadminController
         if (!$order) {
             return $this->error(['order does not exist']);
         }
+        // 继续执行其他方法
         parent::deleteAction();
     }
 }
