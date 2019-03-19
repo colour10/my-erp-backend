@@ -377,13 +377,13 @@ return array(
     "zhongliang" => "重量",
     "tiji" => "体积",
     "jifeizhongliang" => "计费重量",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
+    "kongyunshang" => "空运商",
+    "haiwaifapiaohao" => "海外发票号",
+    "daokushijian" => "到库时间",
+    "hetongmaifang" => "合同买方",
+    "hetongmaifang2" => "合同卖方",
+    "yunshufangshi" => "运输方式",
+    "zhifufangshi" => "支付方式",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
@@ -526,5 +526,17 @@ return array(
         "1" => "预付",
         "2" => "到付",
         "3" => "第三方付费"
+    ),
+
+    //运输方式
+    "list_transporttype" => array(
+        "1" => "BY AIR",
+        "2" => "快递"
+    ),
+
+    //支付方式
+    "list_paytype" => array(
+        "1" => "T/T",
+        "2" => "L/C"
     ),
 );
