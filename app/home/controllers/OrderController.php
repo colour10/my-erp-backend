@@ -23,6 +23,8 @@ class OrderController extends CadminController
     protected $zlcontent_field_name;
     // 当前用户
     protected $userid;
+    // 权限提示msg
+    protected $permission_msg;
 
     public function initialize()
     {
@@ -37,6 +39,9 @@ class OrderController extends CadminController
 
         // 当前用户
         $this->userid = $this->auth['id'];
+
+        // 权限提示
+        $this->permission_msg = $this->getValidateMessage('order-gurd-alert-message');
     }
 
     /**
@@ -70,6 +75,11 @@ class OrderController extends CadminController
             if (!$order) {
                 $msg = $this->getValidateMessage('order', 'template', 'notexist');
                 return $this->error([$msg]);
+            }
+
+            // 判断当前订单是否属于当前用户所在公司
+            if (!$this->check_if_self_company_order($order->companyid)) {
+                return $this->error([$this->permission_msg]);
             }
 
             // 采用事务处理
@@ -269,6 +279,7 @@ class OrderController extends CadminController
             return $this->error([$msg]);
         }
         $this->orderid = $this->request->get('id');
+
         // 根据orderid查询出当前订单以及订单详情的所有信息
         $order = DdOrder::findFirstById($this->orderid);
         // 判断订单是否存在
@@ -276,7 +287,28 @@ class OrderController extends CadminController
             $msg = $this->getValidateMessage('order', 'template', 'notexist');
             return $this->error([$msg]);
         }
+
+        // 判断当前订单是否属于当前用户所在公司
+        if (!$this->check_if_self_company_order($order->companyid)) {
+            return $this->error([$this->permission_msg]);
+        }
+
         // 继续执行其他方法
         parent::deleteAction();
+    }
+
+    /**
+     * 判断当前订单是否属于当前用户所在公司
+     * @param $companyid
+     * @return bool
+     */
+    public function check_if_self_company_order($companyid)
+    {
+        // 逻辑
+        if ($this->companyid != $companyid) {
+            return false;
+        }
+        // 否则返回真
+        return true;
     }
 }
