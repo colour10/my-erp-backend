@@ -3,15 +3,15 @@ namespace Multiple\Home\Controllers;
 
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
-use Asa\Erp\TbMember;
+use Asa\Erp\DdConfirmorder;
 
 /**
- * 会员相关，会员表
+ * 发货单主表
  */
-class MemberController extends CadminController {
+class ConfirmorderController extends CadminController {
     public function initialize() {
 	    parent::initialize();
 
-	    $this->setModelName('Asa\\Erp\\TbMember');
+	    $this->setModelName('Asa\\Erp\\DdConfirmorder');
     }
 }
