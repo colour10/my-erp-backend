@@ -354,6 +354,29 @@ return array(
     "shuliang" => "数量",
     "tijiaoshenhe" => "提交审核",
     "order_submit_confirm" => "订单是否确定提交审核？",
+    "huiyuanming" => "会员名",
+    "weixin" => "微信",
+    "weibo" => "微博",
+    "qq" => "QQ",
+    "shengri" => "生日",
+    "shouji" => "手机",
+    "gonghuodanwei" => "供货单位",
+    "daohuocangku" => "到货仓库",
+    "fahuodanhao" => "发货单号",
+    "niandaijijie" => "年代季节",
+    "fukuanshijian" => "付款时间",
+    "daidiandanwei" => "代垫单位",
+    "anpaitihuoshijian" => "安排提货时间",
+    "hangbanhao" => "航班号",
+    "hangbanriqi" => "航班日期",
+    "zhudanhao" => "主单号",
+    "zidanhao" => "子单号",
+    "fahuogang" => "发货港",
+    "daohuogang" => "到货港",
+    "xiangshu" => "箱数",
+    "zhongliang" => "重量",
+    "tiji" => "体积",
+    "jifeizhongliang" => "计费重量",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
@@ -363,6 +386,17 @@ return array(
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
+    "yingyezhizhaohao" => "营业执照号",
+    "yingyezhizhaohao" => "营业执照号",
+    "yingyezhizhaohao" => "营业执照号",
+    "yingyezhizhaohao" => "营业执照号",
+    "yingyezhizhaohao" => "营业执照号",
+    "yingyezhizhaohao" => "营业执照号",
+    "yingyezhizhaohao" => "营业执照号",
+    "yingyezhizhaohao" => "营业执照号",
+    "yingyezhizhaohao" => "营业执照号",
+    "yingyezhizhaohao" => "营业执照号",
+
 
     // 新增
     'name' => '名称',
@@ -447,6 +481,11 @@ return array(
         "3" => "中性",
         "4" => "男童",
         "5" => "女童"
+    ),
+
+    "list_gender2" => array(
+        "1" => "男",
+        "0" => "女"
     ),
     
     "list_season" => array(
