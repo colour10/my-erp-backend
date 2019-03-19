@@ -1,8 +1,8 @@
 
 <div id="ell">
-  <!--<el-row>
+  <el-row>
       <el-col :span="24">
-        <el-button type="primary" @click="showFormToCreate()">{{labels.xinjian}}</el-button>
+        <el-button type="primary" @click="showFormToCreate()"><?=$system_language['xinjian']?></el-button>
       </el-col>
     </el-row>
 
@@ -11,53 +11,27 @@
         <simple-admin-tablelist ref="tablelist" v-bind="props" :onclickupdate="showFormToEdit"></simple-admin-tablelist>
       </el-col>
     </el-row>
-  -->
+  
 
-  <asa-order-dialog :visible.sync="visibleDialog"></asa-order-dialog>
-  
-  
-  <el-button type="primary" @click="showIt()">新建订单</el-button>
+  <asa-order-dialog :visible.sync="visibleDialog" :data="info" @change="onChange"></asa-order-dialog>
 </div>
 
 <script>
 $(document).ready(function(){
-    
-    //const sliceFrom = R.invoker(1, 'slice');
-    //console.log(sliceFrom(6, 'abcdefghijklm')); //=> 'ghijklm'
-    //const sliceFrom6 = R.invoker(1, 'slice')(6);
-    //console.log(sliceFrom6(7, 'abcdefghijklm')); //=> 'gh'
-    var obj = {
-        name:"changwei",
-        sayHello:function(time) {
-            console.log("Hello " + this.name + ' ' + time)
-            return 1
-        }
-    }
-
-    obj.sayHello(new Date())
-
-    R.invoker(1,"sayHello")("Non ",obj)
-
-    console.log(R.equals(1, R.invoker(0,"getLabel")))
-
-    var invoker = R.invoker(0,"sayHello")
-    var equals = R.equals(1, invoker(R.__))
-    console.log(equals)
-
     var props = {
         columns:[
             {name:"orderno", label:"<?=$system_language['dingdanbianhao']?>"},
-            {name:"countryid", label:"<?=$system_language['guojiadiqu']?>", is_hide:true, type:'select', source:"country"},
-            {name:"city", label:"<?=$system_language['chengshi']?>"},
-            {name:"address", label:"<?=$system_language['dizhi']?>"},
-            {name:"zipcode", label:"<?=$system_language['youbian']?>"}, 
+            {name:"bussinesstype", label:"<?=$system_language['yewuleixing']?>", type:'select', source:"bussinesstype"},
+            //{name:"city", label:"<?=$system_language['chengshi']?>"},
+            //{name:"address", label:"<?=$system_language['dizhi']?>"},
+            //{name:"zipcode", label:"<?=$system_language['youbian']?>"}, 
             
-            {name:"contact", label:"<?=$system_language['lianxiren']?>"}, 
-            {name:"mobile", label:"<?=$system_language['yidongdianhua']?>"},
-            {name:"fax", label:"<?=$system_language['chuanzhen']?>"},
-            {name:"code", label:"<?=$system_language['bianhao']?>"},
-            {name:"othercontact", label:"<?=$system_language['qitalianxifangshi']?>"},
-            {name:"is_real", label:"<?=$system_language['shifoukeyong']?>", type:"switch"}
+            //{name:"contact", label:"<?=$system_language['lianxiren']?>"}, 
+            //{name:"mobile", label:"<?=$system_language['yidongdianhua']?>"},
+           // {name:"fax", label:"<?=$system_language['chuanzhen']?>"},
+            //{name:"code", label:"<?=$system_language['bianhao']?>"},
+            //{name:"othercontact", label:"<?=$system_language['qitalianxifangshi']?>"},
+            //{name:"is_real", label:"<?=$system_language['shifoukeyong']?>", type:"switch"}
         ],
         controller:"order"
     }
@@ -68,13 +42,37 @@ $(document).ready(function(){
             return {
                 props:props,
                 visibleDialog:false,
-                pro:false
+                pro:false,
+                info:{},
+                rowIndex:-1
                 
             }
         },
         methods:{
-            showIt() {
+            showForm() {
                 this.visibleDialog = true;   
+            },
+            showFormToCreate() {
+                this.info = {}
+                this.rowIndex = ""
+                this.showForm()
+            },
+            showFormToEdit(rowIndex, row) {
+                this.info = row;
+                this.rowIndex = rowIndex
+                console.log(row)
+                this.showForm()
+            },
+            onChange(form) {
+                let self = this
+                if(self.rowIndex<0) {
+                    self.$refs.tablelist.appendRow($ASA.clone(form))
+                }
+                else {
+                    var row = self.$refs.tablelist.getRow(self.rowIndex)
+                    $ASA.copyTo(form, row)
+                }
+                self.rowIndex = -1
             }
         }
     })

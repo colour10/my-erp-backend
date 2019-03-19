@@ -46,8 +46,7 @@ class OrderController extends CadminController
         // 判断是否有params参数提交过来
         $params = $this->request->get('params');
         if (!$params) {
-            $msg = $this->getValidateMessage('order-params', 'template', 'required');
-            return $this->error([$msg]);
+            return $this->error(['params is required']);
         }
         // 转换成数组
         $arr = json_decode($params, true);
@@ -67,8 +66,7 @@ class OrderController extends CadminController
             // 查找订单号是否存在
             $order = DdOrder::findFirstById($this->orderid);
             if (!$order) {
-                $msg = $this->getValidateMessage('order', 'template', 'notexist');
-                return $this->error([$msg]);
+                return $this->error(['order does not exist']);
             }
 
             // 采用事务处理
@@ -85,8 +83,7 @@ class OrderController extends CadminController
             // 判断是否成功
             if (!$order->save($_POST)) {
                 $this->db->rollback();
-                $msg = $this->getValidateMessage('order', 'db', 'save-failed');
-                return $this->error([$msg]);
+                return $this->error(['order save failed']);
             }
 
             // 开始更新订单详情表
@@ -94,8 +91,7 @@ class OrderController extends CadminController
             foreach ($order->orderdetails as $orderdetail) {
                 if (!$orderdetail->delete()) {
                     $this->db->rollback();
-                    $msg = $this->getValidateMessage('order', 'db', 'delete-failed');
-                    return $this->error([$msg]);
+                    return $this->error(['order delete failed']);
                 }
             }
 
@@ -149,8 +145,7 @@ class OrderController extends CadminController
     {
         // 必须传递一个订单id
         if (!$this->request->get('id')) {
-            $msg = $this->getValidateMessage('order', 'template', 'required');
-            return $this->error([$msg]);
+            return $this->error(['order id is required']);
         }
         $this->orderid = $this->request->get('id');
         // 取出单个模型及下级订单详情逻辑
@@ -209,8 +204,7 @@ class OrderController extends CadminController
             ];
             if (!$orderDetail->save($data)) {
                 $this->db->rollback();
-                $msg = $this->getValidateMessage('orderdetail', 'db', 'add-failed');
-                return $this->error([$msg]);
+                return $this->error(['orderdetail insert failed']);
             }
         }
     }
@@ -227,8 +221,7 @@ class OrderController extends CadminController
         $order = DdOrder::findFirstById($orderid);
         // 判断订单是否存在
         if (!$order) {
-            $msg = $this->getValidateMessage('orderdetail', 'template', 'notexist');
-            echo $this->error([$msg]);
+            echo $this->error(['order does not exist']);
             exit;
         }
         // 清除原来的list节点和form节点
@@ -245,7 +238,7 @@ class OrderController extends CadminController
                     'productid' => $orderdetail->productid,
                     'sizecontentid' => $orderdetail->sizecontentid,
                     'number' => $orderdetail->number,
-                    'product' => $orderdetail->product->toArray(),
+                    'product' => $orderdetail->product->toArray()
                 ];
             }
         }
@@ -262,16 +255,14 @@ class OrderController extends CadminController
     {
         // 必须传递一个订单id
         if (!$this->request->get('id')) {
-            $msg = $this->getValidateMessage('order', 'template', 'required');
-            return $this->error([$msg]);
+            return $this->error(['order id is required']);
         }
         $this->orderid = $this->request->get('id');
         // 根据orderid查询出当前订单以及订单详情的所有信息
         $order = DdOrder::findFirstById($this->orderid);
         // 判断订单是否存在
         if (!$order) {
-            $msg = $this->getValidateMessage('order', 'template', 'notexist');
-            return $this->error([$msg]);
+            return $this->error(['order does not exist']);
         }
         // 继续执行其他方法
         parent::deleteAction();
