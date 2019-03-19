@@ -13,18 +13,26 @@
     </el-row>
   
 
-  <asa-order-dialog :visible.sync="visibleDialog" :data="info"></asa-order-dialog>
-  
-  
-  <el-button type="primary" @click="showIt()">新建订单</el-button>
+  <asa-order-dialog :visible.sync="visibleDialog" :data="info" @change="onChange"></asa-order-dialog>
 </div>
 
 <script>
 $(document).ready(function(){
+var log = function(name) {
+
+    return function() {
+        var arr = Array.prototype.slice.call(arguments)
+        arr.unshift("<"+name+">")
+        console.log.apply(console, arr);
+    }
+}
+
+var mylog = log("changwei")
+mylog(1,2,3)
     var props = {
         columns:[
             {name:"orderno", label:"<?=$system_language['dingdanbianhao']?>"},
-            {name:"countryid", label:"<?=$system_language['guojiadiqu']?>", is_hide:true, type:'select', source:"country"},
+            {name:"bussinesstype", label:"<?=$system_language['yewuleixing']?>", type:'select', source:"bussinesstype"},
             //{name:"city", label:"<?=$system_language['chengshi']?>"},
             //{name:"address", label:"<?=$system_language['dizhi']?>"},
             //{name:"zipcode", label:"<?=$system_language['youbian']?>"}, 
@@ -46,18 +54,35 @@ $(document).ready(function(){
                 props:props,
                 visibleDialog:false,
                 pro:false,
-                info:{}
+                info:{},
+                rowIndex:""
                 
             }
         },
         methods:{
-            showIt() {
+            showForm() {
                 this.visibleDialog = true;   
+            },
+            showFormToCreate() {
+                this.info = {}
+                this.rowIndex = ""
+                this.showForm()
             },
             showFormToEdit(rowIndex, row) {
                 this.info = row;
+                this.rowIndex = rowIndex
                 console.log(row)
-                this.showIt()
+                this.showForm()
+            },
+            onChange(form) {
+                let self = this
+                if(!self.rowIndex) {
+                    self.$refs.tablelist.appendRow($ASA.clone(form))
+                }
+                else {
+                    var row = self.$refs.tablelist.getRow(self.rowIndex)
+                    $ASA.copyTo(form, row)
+                }
             }
         }
     })

@@ -80,7 +80,7 @@ var $ASA = (function(){
         Object.keys(target).forEach(function(key){
             if(typeof(fromObj[key])!="undefined") {
                 target[key] =  fromObj[key] 
-                console.log("copy property",key, target[key])
+                //console.log("copy property",key, target[key])
             }
         });
     }
@@ -95,7 +95,6 @@ var $ASA = (function(){
     }
     
     function empty(target) {
-        var obj = {}
         Object.keys(target).forEach(function(key){
             target[key] =  ""  
         });

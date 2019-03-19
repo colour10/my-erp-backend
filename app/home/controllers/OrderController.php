@@ -228,8 +228,7 @@ class OrderController extends CadminController
                     'productid' => $orderdetail->productid,
                     'sizecontentid' => $orderdetail->sizecontentid,
                     'number' => $orderdetail->number,
-                    'productname' => $orderdetail->product->productname,
-                    'sizecontentname' => $orderdetail->sizecontent->{$this->zlcontent_field_name},
+                    'product' => $orderdetail->product->toArray()                    
                 ];
             }
         }
