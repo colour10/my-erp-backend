@@ -440,6 +440,10 @@ return array(
     'order-params' => '订单参数',
     'makestaff' => '制单人',
     'order-gurd-alert-message' => '您只能操作自己公司的订单',
+    'supplierid' => '供货商编号',
+    'sale' => '销售单',
+    'saleid' => '销售单编号',
+    'saledetail' => '销售单详情',
     // 通用型，以后有需要再改
     'hasmany-foreign-message' => '正在使用，不能删除',
     'belongsto-foreign-message' => '记录不存在',
