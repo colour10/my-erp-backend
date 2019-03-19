@@ -121,6 +121,7 @@ class UserController extends CadminController {
         $session_user = $this->session->get('user');
         if (!$session_user) {
             $msg = $this->getValidateMessage('model-delete-message');
+            $msg = $this->getValidateMessage('model-delete-message');
             return $this->error([$msg]);
         }
         // 查找当前登录用户的模型
