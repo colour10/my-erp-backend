@@ -30,7 +30,7 @@ class DdOrder extends BaseModel
                 'alias' => 'orderdetails',
                 'foreignKey' => [
                     // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
+                    'action' => Relation::ACTION_CASCADE,
                     "message"    => $this->getValidateMessage('hasmany-foreign-message', 'orderdetail'),
                 ],
             ]
