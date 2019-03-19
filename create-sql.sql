@@ -839,9 +839,8 @@ CREATE TABLE `dd_order` (
                           `bookingid` int(10) unsigned DEFAULT NULL COMMENT '订货单位',
                           `agentid` int(10) unsigned DEFAULT NULL,
                           `purchasedept` int(10) unsigned DEFAULT NULL,
-                          `brandid` int(10) unsigned DEFAULT NULL COMMENT '品牌编号',
                           `orderno` varchar(50) DEFAULT NULL COMMENT '订单编号',
-                          `total` decimal(16,9) DEFAULT NULL,
+                          `total` decimal(16,9) DEFAULT NULL COMMENT '总金额',
                           `currency` varchar(10) DEFAULT NULL COMMENT '总金额货币',
                           `auditstaff` int(10) unsigned DEFAULT NULL COMMENT '审核人',
                           `auditdate` datetime DEFAULT NULL,
@@ -867,7 +866,7 @@ CREATE TABLE `dd_order` (
                           `status` int(11) DEFAULT NULL COMMENT '订单状态：1=保存；2=送审；3=审核完成',
                           PRIMARY KEY (`id`),
                           KEY `companyid` (`companyid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单主表';
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COMMENT='订单主表';
 
 
 --
