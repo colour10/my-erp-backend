@@ -139,7 +139,7 @@ class OrderController extends CadminController
     {
         // 必须传递一个订单id
         if (!$this->request->get('id')) {
-            return $this->error(['orderid is required']);
+            return $this->error(['order id is required']);
         }
         $this->orderid = $this->request->get('id');
         // 取出单个模型及下级订单详情逻辑
@@ -211,7 +211,8 @@ class OrderController extends CadminController
         $order = DdOrder::findFirstById($orderid);
         // 判断订单是否存在
         if (!$order) {
-            return $this->error(['order does not exist']);
+            echo $this->error(['order does not exist']);
+            exit;
         }
         // 清除原来的list节点和form节点
         unset($this->orderParams['form']);
