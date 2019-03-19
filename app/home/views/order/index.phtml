@@ -18,17 +18,6 @@
 
 <script>
 $(document).ready(function(){
-var log = function(name) {
-
-    return function() {
-        var arr = Array.prototype.slice.call(arguments)
-        arr.unshift("<"+name+">")
-        console.log.apply(console, arr);
-    }
-}
-
-var mylog = log("changwei")
-mylog(1,2,3)
     var props = {
         columns:[
             {name:"orderno", label:"<?=$system_language['dingdanbianhao']?>"},
@@ -55,7 +44,7 @@ mylog(1,2,3)
                 visibleDialog:false,
                 pro:false,
                 info:{},
-                rowIndex:""
+                rowIndex:-1
                 
             }
         },
@@ -76,13 +65,14 @@ mylog(1,2,3)
             },
             onChange(form) {
                 let self = this
-                if(!self.rowIndex) {
+                if(self.rowIndex<0) {
                     self.$refs.tablelist.appendRow($ASA.clone(form))
                 }
                 else {
                     var row = self.$refs.tablelist.getRow(self.rowIndex)
                     $ASA.copyTo(form, row)
                 }
+                self.rowIndex = -1
             }
         }
     })
