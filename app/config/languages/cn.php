@@ -352,7 +352,7 @@ return array(
     "yushou" => "预售",
     "fujian" => "附件",
     "shuliang" => "数量",
-    "yingyezhizhaohao" => "营业执照号",
+    "tijiaoshenhe" => "提交审核",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",

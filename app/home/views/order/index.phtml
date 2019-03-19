@@ -8,7 +8,7 @@
 
     <el-row :gutter="20">
       <el-col :span="24">
-        <simple-admin-tablelist ref="tablelist" v-bind="props" :onclickupdate="showFormToEdit"></simple-admin-tablelist>
+        <simple-admin-tablelist ref="tablelist" v-bind="props" :onclickupdate="showFormToEdit" :isdelete="isEditable"></simple-admin-tablelist>
       </el-col>
     </el-row>
   
@@ -20,7 +20,7 @@
 $(document).ready(function(){
     var props = {
         columns:[
-            {name:"orderno", label:"<?=$system_language['dingdanbianhao']?>"},
+            {name:"orderno", label:"<?=$system_language['dingdanbianhao']?>",width:300},
             {name:"bussinesstype", label:"<?=$system_language['yewuleixing']?>", type:'select', source:"bussinesstype"},
             //{name:"city", label:"<?=$system_language['chengshi']?>"},
             //{name:"address", label:"<?=$system_language['dizhi']?>"},
@@ -54,7 +54,7 @@ $(document).ready(function(){
             },
             showFormToCreate() {
                 this.info = {}
-                this.rowIndex = ""
+                this.rowIndex = -1
                 this.showForm()
             },
             showFormToEdit(rowIndex, row) {
@@ -73,6 +73,10 @@ $(document).ready(function(){
                     $ASA.copyTo(form, row)
                 }
                 self.rowIndex = -1
+            },
+            isEditable(row) {
+                var status = row.status;
+                return status=='1'||status=='' || !status
             }
         }
     })
