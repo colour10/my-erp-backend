@@ -20,6 +20,8 @@ class OrderController extends CadminController
     protected $orderid;
     // 字段名称
     protected $zlcontent_field_name;
+    // 当前用户
+    protected $userid;
 
     public function initialize()
     {
@@ -31,6 +33,9 @@ class OrderController extends CadminController
         // 拿到当前尺码字段名称
         $zlcontent = new ZlSizecontent();
         $this->zlcontent_field_name = $zlcontent->getColumnName('content');
+
+        // 当前用户
+        $this->userid = $this->auth['id'];
     }
 
     /**
@@ -154,19 +159,23 @@ class OrderController extends CadminController
     {
         if ($this->request->isPost()) {
             // 更新数据库
-            // 生成订单号
-            $company_rand = TbCompany::findFirstById($this->companyid)->randid;
-            $orderno = 'D' . $company_rand . date('YmdHis') . mt_rand(10000000, 99999999);
-            if (!isset($_POST["orderno"]) || $_POST["orderno"] == "") {
-                $_POST["orderno"] = $orderno;
-            }
             // 开始解析参数，转化成直接post请求
             foreach ($this->orderParams['form'] as $k => $item) {
                 if (isset($item)) {
                     $_POST[$k] = $item;
                 }
             }
-
+            // 部分数据重写
+            // 添加制单人
+            if (!isset($_POST["makestaff"]) || $_POST["makestaff"] == "") {
+                $_POST["makestaff"] = $this->userid;
+            }
+            // 生成订单号
+            $company_rand = TbCompany::findFirstById($this->companyid)->randid;
+            $orderno = 'D' . $company_rand . date('YmdHis') . mt_rand(10000000, 99999999);
+            if (!isset($_POST["orderno"]) || $_POST["orderno"] == "") {
+                $_POST["orderno"] = $orderno;
+            }
             // 继续执行父类其他方法
             parent::doAdd();
         }
@@ -222,6 +231,7 @@ class OrderController extends CadminController
         $this->orderParams['form'] = $order->toArray();
         // 循环添加数据
         foreach ($order->orderdetails as $k => $orderdetail) {
+            // 过滤已经删除的数据
             if ($orderdetail->sys_delete_flag == '0') {
                 $this->orderParams['list'][] = [
                     'id' => $orderdetail->id,
@@ -254,6 +264,7 @@ class OrderController extends CadminController
         if (!$order) {
             return $this->error(['order does not exist']);
         }
+        // 继续执行其他方法
         parent::deleteAction();
     }
 }
