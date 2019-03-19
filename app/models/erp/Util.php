@@ -121,7 +121,7 @@ class Util {
         // 逻辑
         $len = strlen($str);
         if ($len > $length) {
-            $str = substr($str, 0, 6);
+            $str = substr($str, 0, $length);
         } else if ($len < $length) {
             // 如果小于$length，就进行补位
             $diff = $length - $len;

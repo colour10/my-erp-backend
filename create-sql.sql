@@ -839,9 +839,8 @@ CREATE TABLE `dd_order` (
                           `bookingid` int(10) unsigned DEFAULT NULL COMMENT '订货单位',
                           `agentid` int(10) unsigned DEFAULT NULL,
                           `purchasedept` int(10) unsigned DEFAULT NULL,
-                          `brandid` int(10) unsigned DEFAULT NULL COMMENT '品牌编号',
                           `orderno` varchar(50) DEFAULT NULL COMMENT '订单编号',
-                          `total` decimal(16,9) DEFAULT NULL,
+                          `total` decimal(16,9) DEFAULT NULL COMMENT '总金额',
                           `currency` varchar(10) DEFAULT NULL COMMENT '总金额货币',
                           `auditstaff` int(10) unsigned DEFAULT NULL COMMENT '审核人',
                           `auditdate` datetime DEFAULT NULL,
@@ -867,7 +866,7 @@ CREATE TABLE `dd_order` (
                           `status` int(11) DEFAULT NULL COMMENT '订单状态：1=保存；2=送审；3=审核完成',
                           PRIMARY KEY (`id`),
                           KEY `companyid` (`companyid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单主表';
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COMMENT='订单主表';
 
 
 --
@@ -4695,11 +4694,11 @@ CREATE TABLE `tb_member` (
                            `sys_modify_date` datetime NOT NULL,
                            `sys_delete_stuff` int(10) unsigned DEFAULT NULL,
                            `sys_delete_date` datetime DEFAULT NULL,
-                           `sys_delete_flag` tinyint(1) DEFAULT '0' COMMENT '0-未删除 1-已删除',
-                           `name` varchar(50) DEFAULT NULL,
+                           `sys_delete_flag` tinyint(4) NOT NULL COMMENT '0-未删除 1-已删除',
+                           `name` varchar(50) DEFAULT NULL COMMENT '会员名',
                            `code` varchar(20) DEFAULT NULL,
-                           `form` varchar(1) DEFAULT NULL COMMENT 'f-female m-male',
-                           `birth` date DEFAULT NULL,
+                           `gender` tinyint(1) DEFAULT NULL COMMENT '0-female 1-male',
+                           `birthday` varchar(10) DEFAULT NULL COMMENT '生日',
                            `phoneno` varchar(50) DEFAULT NULL,
                            `email` varchar(50) DEFAULT NULL,
                            `address` varchar(50) DEFAULT NULL,
@@ -4724,8 +4723,11 @@ CREATE TABLE `tb_member` (
                            `invitesum` bigint(20) DEFAULT NULL,
                            `invitetotal` bigint(20) DEFAULT NULL,
                            `invoteuser` int(10) unsigned DEFAULT NULL,
-                           PRIMARY KEY (`id`)
+                           `companyid` int(11) DEFAULT NULL COMMENT '公司ID',
+                           PRIMARY KEY (`id`),
+                           KEY `sys_delete_flag` (`sys_delete_flag`,`companyid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='会员表';
+
 
 
 --
@@ -5381,6 +5383,7 @@ CREATE TABLE `tb_productstock` (
                                  `sys_delete_flag` tinyint(4) NOT NULL COMMENT '0-未删除 1-已删除',
                                  `productid` int(10) unsigned DEFAULT NULL,
                                  `sizecontentid` int(10) unsigned DEFAULT NULL,
+                                 `number` int(11) DEFAULT NULL COMMENT '库存数量',
                                  `storagetime` datetime DEFAULT NULL,
                                  `storagestaff` int(10) unsigned DEFAULT NULL,
                                  `warehouseid` int(10) unsigned DEFAULT NULL COMMENT '仓库id',

@@ -19,10 +19,12 @@ class OrderController extends CadminController
     protected $orderParams;
     // 订单id
     protected $orderid;
-    // 字段名称
-    protected $zlcontent_field_name;
+    // // 字段名称，sizecontent已不再需要，注释掉
+    // protected $zlcontent_field_name;
     // 当前用户
     protected $userid;
+    // 权限提示msg
+    protected $permission_msg;
 
     public function initialize()
     {
@@ -30,13 +32,16 @@ class OrderController extends CadminController
 
         $this->setModelName('Asa\\Erp\\DdOrder');
 
-        // 确定字段名称
-        // 拿到当前尺码字段名称
-        $zlcontent = new ZlSizecontent();
-        $this->zlcontent_field_name = $zlcontent->getColumnName('content');
+        // // 确定字段名称，sizecontent已不再需要，注释掉
+        // // 拿到当前尺码字段名称
+        // $zlcontent = new ZlSizecontent();
+        // $this->zlcontent_field_name = $zlcontent->getColumnName('content');
 
         // 当前用户
         $this->userid = $this->auth['id'];
+
+        // 权限提示
+        $this->permission_msg = $this->getValidateMessage('order-gurd-alert-message');
     }
 
     /**
@@ -72,6 +77,11 @@ class OrderController extends CadminController
                 return $this->error([$msg]);
             }
 
+            // 判断当前订单是否属于当前用户所在公司
+            if (!$this->check_if_self_company_order($order->companyid)) {
+                return $this->error([$this->permission_msg]);
+            }
+
             // 采用事务处理
             $this->db->begin();
 
@@ -86,8 +96,12 @@ class OrderController extends CadminController
             // 判断是否成功
             if (!$order->save($_POST)) {
                 $this->db->rollback();
-                $msg = $this->getValidateMessage('order', 'db', 'save-failed');
-                return $this->error([$msg]);
+                // 验证类错误给出提示
+                $messages = $order->getMessages();
+                foreach ($messages as $message) {
+                    $result[] = $message->getMessage();
+                }
+                return $this->error($result);
             }
 
             // 开始更新订单详情表
@@ -119,8 +133,8 @@ class OrderController extends CadminController
             // 转成数组
             $order_arr = json_decode($order, true);
 
-            // 判断是否更新成功
-            if (array_key_exists('messages', $order_arr) && count($order_arr['messages']) > 0) {
+            // 判断是否更新成功，加入是否为数组的判断
+            if (is_array($order_arr) && array_key_exists('messages', $order_arr) && count($order_arr['messages']) > 0) {
                 $this->db->rollback();
                 // 取出错误记录，因为在模型验证的时候，基本上都是出现错误就停止继续运行，所以只取出一条记录即可。
                 return $this->error([$order_arr['messages'][0]]);
@@ -269,6 +283,7 @@ class OrderController extends CadminController
             return $this->error([$msg]);
         }
         $this->orderid = $this->request->get('id');
+
         // 根据orderid查询出当前订单以及订单详情的所有信息
         $order = DdOrder::findFirstById($this->orderid);
         // 判断订单是否存在
@@ -276,7 +291,28 @@ class OrderController extends CadminController
             $msg = $this->getValidateMessage('order', 'template', 'notexist');
             return $this->error([$msg]);
         }
+
+        // 判断当前订单是否属于当前用户所在公司
+        if (!$this->check_if_self_company_order($order->companyid)) {
+            return $this->error([$this->permission_msg]);
+        }
+
         // 继续执行其他方法
         parent::deleteAction();
+    }
+
+    /**
+     * 判断当前订单是否属于当前用户所在公司
+     * @param $companyid
+     * @return bool
+     */
+    public function check_if_self_company_order($companyid)
+    {
+        // 逻辑
+        if ($this->companyid != $companyid) {
+            return false;
+        }
+        // 否则返回真
+        return true;
     }
 }
