@@ -177,7 +177,8 @@ class OrderController extends CadminController
             }
             // 生成订单号
             $company_rand = TbCompany::findFirstById($this->companyid)->randid;
-            $orderno = 'D' . $company_rand . date('YmdHis') . mt_rand(100000, 999999);
+            // 开始处理随机数，保存成6位数字
+            $orderno = 'D' . $company_rand . date('YmdHis') . mt_rand(1000, 9999);
             if (!isset($_POST["orderno"]) || $_POST["orderno"] == "") {
                 $_POST["orderno"] = $orderno;
             }
