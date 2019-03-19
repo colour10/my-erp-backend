@@ -351,7 +351,7 @@ return array(
     "tijiao" => "提交",
     "yushou" => "预售",
     "fujian" => "附件",
-    "yingyezhizhaohao" => "营业执照号",
+    "shuliang" => "数量",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
@@ -441,7 +441,7 @@ return array(
         "5" => "四季",
     ),
     
-    "list_businesstype" => array(
+    "list_bussinesstype" => array(
         "1" => "期货",
         "2" => "现货"
     ),
