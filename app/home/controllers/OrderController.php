@@ -47,10 +47,11 @@ class OrderController extends CadminController
         $arr = json_decode($params, true);
         $this->orderParams = $arr;
 
-        // 判断订单是否有数据
-        if (count($this->orderParams['list']) == '0') {
-            return $this->error(['order list is empty']);
-        }
+        // // 判断订单是否有数据
+        // // 订单数据可以为空，暂时注释
+        // if (count($this->orderParams['list']) == '0') {
+        //     return $this->error(['order list is empty']);
+        // }
 
         // 判断是否有订单号，分别进行
         $this->orderid = $this->orderParams['form']['id'];
@@ -235,5 +236,25 @@ class OrderController extends CadminController
         // 最终成功返回，原来的数据还要保留，再加上订单详情之中每个商品的名称也要放进去
         echo json_encode(['code' => '200', 'messages' => [], 'data' => $this->orderParams]);
         $this->view->disable();
+    }
+
+    /**
+     * 订单删除
+     * @return false|string
+     */
+    public function deleteAction()
+    {
+        // 必须传递一个订单id
+        if (!$this->request->get('id')) {
+            return $this->error(['order id is required']);
+        }
+        $this->orderid = $this->request->get('id');
+        // 根据orderid查询出当前订单以及订单详情的所有信息
+        $order = DdOrder::findFirstById($this->orderid);
+        // 判断订单是否存在
+        if (!$order) {
+            return $this->error(['order does not exist']);
+        }
+        parent::deleteAction();
     }
 }
