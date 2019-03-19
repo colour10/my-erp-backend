@@ -19,8 +19,8 @@ class OrderController extends CadminController
     protected $orderParams;
     // 订单id
     protected $orderid;
-    // 字段名称
-    protected $zlcontent_field_name;
+    // // 字段名称，sizecontent已不再需要，注释掉
+    // protected $zlcontent_field_name;
     // 当前用户
     protected $userid;
     // 权限提示msg
@@ -32,10 +32,10 @@ class OrderController extends CadminController
 
         $this->setModelName('Asa\\Erp\\DdOrder');
 
-        // 确定字段名称
-        // 拿到当前尺码字段名称
-        $zlcontent = new ZlSizecontent();
-        $this->zlcontent_field_name = $zlcontent->getColumnName('content');
+        // // 确定字段名称，sizecontent已不再需要，注释掉
+        // // 拿到当前尺码字段名称
+        // $zlcontent = new ZlSizecontent();
+        // $this->zlcontent_field_name = $zlcontent->getColumnName('content');
 
         // 当前用户
         $this->userid = $this->auth['id'];
