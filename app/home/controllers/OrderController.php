@@ -238,7 +238,7 @@ class OrderController extends CadminController
                     'productid' => $orderdetail->productid,
                     'sizecontentid' => $orderdetail->sizecontentid,
                     'number' => $orderdetail->number,
-                    'product' => $orderdetail->product->toArray()                    
+                    'product' => $orderdetail->product->toArray()
                 ];
             }
         }

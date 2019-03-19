@@ -404,7 +404,8 @@ return array(
     'bussinesstype' => '订单类型',
     'group-keys' => '组赋值参数',
     'order-params' => '订单参数',
-
+    'hasmany-foreign-message' => '正在使用，不能删除',
+    'belongsto-foreign-message' => '记录不存在',
 
 
     
@@ -413,8 +414,8 @@ return array(
         "uniqueness" => "%s不能重复",
         'required' => '请填写%s',
         'invalid' => '%s不合法',
-        'hasmany-foreign-message' => '当前模型不能被删除，因为有%s模块正在使用它',
-        'belongsto-foreign-message' => '当前模型不能被删除，因为有%s模块正在使用它',
+        'hasmany-foreign-message' => '正在使用，不能删除，因为有%s正在使用它',
+        'belongsto-foreign-message' => '%s上不存在',
         'notexist' => '%s不存在',
     ),
 
