@@ -225,7 +225,7 @@ class OrderController extends CadminController
             }
         }
         // 最终成功返回，原来的数据还要保留，再加上订单详情之中每个商品的名称也要放进去
-        echo json_encode($this->orderParams);
+        echo json_encode(['code' => '200', 'messages' => [], 'data' => $this->orderParams]);
         $this->view->disable();
     }
 }
