@@ -7,6 +7,7 @@ use Phalcon\Validation\Validator\Between;
 use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Mvc\Model\Relation;
 use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Validation\Validator\Regex;
 
 /**
  * 订单主表
@@ -30,6 +31,23 @@ class DdOrder extends BaseModel
                 'alias' => 'orderdetails',
                 'foreignKey' => [
                     // 关联字段存在性验证
+                    // ACTION_CASCADE代表有关联则自动删除
+                    'action' => Relation::ACTION_CASCADE,
+                    "message"    => $this->getValidateMessage('hasmany-foreign-message', 'orderdetail'),
+                ],
+            ]
+        );
+
+        // 订单-订单详情，一对多
+        $this->hasMany(
+            "id",
+            "\Asa\Erp\DdOrderdetails",
+            "orderid",
+            [
+                'alias' => 'orderdetails',
+                'foreignKey' => [
+                    // 关联字段存在性验证
+                    // ACTION_CASCADE代表有关联则自动删除
                     'action' => Relation::ACTION_CASCADE,
                     "message"    => $this->getValidateMessage('hasmany-foreign-message', 'orderdetail'),
                 ],
@@ -44,6 +62,37 @@ class DdOrder extends BaseModel
     public function validation()
     {
         $validator = new Validation();
+
+        // 验证
+        // bussinesstype-订单类型
+        $validator->add('bussinesstype', new Regex(
+            [
+                'message' => $this->getValidateMessage('invalid', 'bussinesstype'),
+                "pattern" => "/(0|1){1}/",
+                "allowEmpty" => true,
+                'cancelOnFail' => true,
+            ]
+        ));
+
+        // makestaff-制单人
+        $validator->add('makestaff', new Regex(
+            [
+                'message' => $this->getValidateMessage('invalid', 'makestaff'),
+                "pattern" => "/^[1-9]+\d*$/",
+                "allowEmpty" => true,
+                'cancelOnFail' => true,
+            ]
+        ));
+
+        // supplierid-供货人
+        $validator->add('supplierid', new Regex(
+            [
+                'message' => $this->getValidateMessage('invalid', 'supplierid'),
+                "pattern" => "/^[1-9]+\d*$/",
+                "allowEmpty" => true,
+                'cancelOnFail' => true,
+            ]
+        ));
 
         return $this->validate($validator);
     }
