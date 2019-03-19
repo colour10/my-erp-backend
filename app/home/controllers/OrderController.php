@@ -109,9 +109,10 @@ class OrderController extends CadminController
             $order_arr = json_decode($order, true);
 
             // 判断是否更新成功
-            if (array_key_exists('message', $order_arr) && count($order_arr['messages']) > 0) {
+            if (array_key_exists('messages', $order_arr) && count($order_arr['messages']) > 0) {
                 $this->db->rollback();
-                return $this->error(['order save failed']);
+                // 取出错误记录，因为在模型验证的时候，基本上都是出现错误就停止继续运行，所以只取出一条记录即可。
+                return $this->error([$order_arr['messages'][0]]);
             }
 
             // 取出订单id
@@ -205,7 +206,7 @@ class OrderController extends CadminController
     {
         // 根据orderid查询出当前订单以及订单详情的所有信息
         $order = DdOrder::findFirstById($orderid);
-        // 清除原来的list节点
+        // 清除原来的list节点和form节点
         unset($this->orderParams['form']);
         unset($this->orderParams['list']);
         // 添加form节点
