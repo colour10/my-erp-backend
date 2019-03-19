@@ -132,7 +132,7 @@ class OrderController extends CadminController
 
 
     /**
-     * 读取订单信息，必须传一个orderid参数
+     * 读取订单信息，必须传一个id参数，代表订单编号
      * @return false|string
      */
     public function loadorderAction()
