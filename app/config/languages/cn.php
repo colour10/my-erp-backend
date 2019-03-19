@@ -394,6 +394,7 @@ return array(
     'randid' => '随机标识',
     'company' => '公司',
     'order' => '订单',
+    'orderid' => '订单编号',
     'orderdetail' => '订单详情',
     'product' => '商品',
     'sizecontent' => '尺码',
@@ -401,8 +402,8 @@ return array(
     'sizecontent-memo' => '尺码简介',
     'sizetop' => '尺码组',
     'bussinesstype' => '订单类型',
-
-
+    'group-keys' => '组赋值参数',
+    'order-params' => '订单参数',
 
 
 
@@ -415,6 +416,18 @@ return array(
         'hasmany-foreign-message' => '当前模型不能被删除，因为有%s模块正在使用它',
         'belongsto-foreign-message' => '当前模型不能被删除，因为有%s模块正在使用它',
         'notexist' => '%s不存在',
+    ),
+
+    // 新增权限类操作
+    "db" => array(
+        "add-failed" => "%s添加失败",
+        "save-failed" => "%s保存失败",
+        "edit-failed" => "%s编辑失败",
+        "delete-failed" => "%s删除失败",
+        "add-success" => "%s添加成功",
+        "save-success" => "%s保存成功",
+        "edit-success" => "%s编辑成功",
+        "delete-success" => "%s删除成功",
     ),
     
     "list_currency" => [
