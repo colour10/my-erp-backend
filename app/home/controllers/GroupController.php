@@ -28,15 +28,17 @@ class GroupController extends CadminController {
         if($this->request->isPost()) {
             // 提取参数
             // 判断groupid不能为空
-            if (!$this->request->get('groupid')) {
-                return $this->error(['groupid is required']);
+            if (!$this->request->get('id')) {
+                $msg = $this->getValidateMessage('groupid', 'template', 'required');
+                return $this->error([$msg]);
             }
-            $groupid = $this->request->get('groupid');
+            $groupid = $this->request->get('id');
             $keys = $this->request->get('keys');
             // 验证keys合法性
             $pattern = '/^[1-9]+(,\d)*$/';
             if (!preg_match($pattern, $keys)) {
-                return $this->error(['keys is invalid']);
+                $msg = $this->getValidateMessage('group-keys', 'template', 'invalid');
+                return $this->error([$msg]);
             }
             // 转为数组
             $keys_arr = Util::char_to_array($keys);
@@ -50,7 +52,8 @@ class GroupController extends CadminController {
             foreach ($result as $record) {
                 // 如果存在，就删除
                 if (!$record->delete()) {
-                    return $this->error(['Permission delete failed']);
+                    $msg = $this->getValidateMessage('permission', 'db', 'delete');
+                    return $this->error([$msg]);
                 }
             }
 
@@ -67,7 +70,8 @@ class GroupController extends CadminController {
                         'sys_delete_date' => NULL,
                     ];
                     if (!$result->save($data)) {
-                        return $this->error(['Permission save failed']);
+                        $msg = $this->getValidateMessage('permission-save-fail-message');
+                        return $this->error([$msg]);
                     }
                 } else {
                     // 开始新建权限，一定要在里面新建模型，保证插入的准确性
@@ -79,7 +83,8 @@ class GroupController extends CadminController {
                         'sys_delete_flag' => '0',
                     ];
                     if (!$TbPermissionGroup->save($data)) {
-                        return $this->error(['Permission insert failed']);
+                        $msg = $this->getValidateMessage('permission-insert-fail-message');
+                        return $this->error([$msg]);
                     }
                 }
             }
