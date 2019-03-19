@@ -5381,6 +5381,7 @@ CREATE TABLE `tb_productstock` (
                                  `sys_delete_flag` tinyint(4) NOT NULL COMMENT '0-未删除 1-已删除',
                                  `productid` int(10) unsigned DEFAULT NULL,
                                  `sizecontentid` int(10) unsigned DEFAULT NULL,
+                                 `number` int(11) DEFAULT NULL COMMENT '库存数量',
                                  `storagetime` datetime DEFAULT NULL,
                                  `storagestaff` int(10) unsigned DEFAULT NULL,
                                  `warehouseid` int(10) unsigned DEFAULT NULL COMMENT '仓库id',
