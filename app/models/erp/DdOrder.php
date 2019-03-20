@@ -3,11 +3,9 @@
 namespace Asa\Erp;
 
 use Phalcon\Validation;
-use Phalcon\Validation\Validator\Between;
 use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Mvc\Model\Relation;
 use Phalcon\Validation\Validator\PresenceOf;
-use Phalcon\Validation\Validator\Regex;
 
 /**
  * 订单主表
@@ -57,43 +55,14 @@ class DdOrder extends BaseModel
 
     /**
      * 验证器
+     * 因为采用特殊的json参数传值，所以不同于一般的验证
      * @return bool
      */
     public function validation()
     {
         $validator = new Validation();
 
-        // 验证
-        // bussinesstype-订单类型
-        $validator->add('bussinesstype', new Regex(
-            [
-                'message' => $this->getValidateMessage('invalid', 'bussinesstype'),
-                "pattern" => "/(0|1){1}/",
-                "allowEmpty" => true,
-                'cancelOnFail' => true,
-            ]
-        ));
-
-        // makestaff-制单人
-        $validator->add('makestaff', new Regex(
-            [
-                'message' => $this->getValidateMessage('invalid', 'makestaff'),
-                "pattern" => "/^[1-9]+\d*$/",
-                "allowEmpty" => true,
-                'cancelOnFail' => true,
-            ]
-        ));
-
-        // supplierid-供货人
-        $validator->add('supplierid', new Regex(
-            [
-                'message' => $this->getValidateMessage('invalid', 'supplierid'),
-                "pattern" => "/^[1-9]+\d*$/",
-                "allowEmpty" => true,
-                'cancelOnFail' => true,
-            ]
-        ));
-
+        // 返回
         return $this->validate($validator);
     }
 
