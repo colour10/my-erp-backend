@@ -854,7 +854,7 @@ CREATE TABLE `dd_order` (
                           `contactor` varchar(200) DEFAULT NULL COMMENT '订货单位联系人',
                           `ourcontactor` varchar(200) DEFAULT NULL COMMENT '我方联系人',
                           `ageseason` int(10) unsigned DEFAULT NULL COMMENT '年代季节',
-                          `seasontype` tinyint(1) DEFAULT NULL COMMENT '0-pre ,1-main ,2-fashion show',
+                          `seasontype` tinyint(1) DEFAULT NULL COMMENT '年代类型：0-pre ,1-main ,2-fashion show',
                           `invoiceno` varchar(50) DEFAULT NULL COMMENT '订单发票号',
                           `ddtype` varchar(1) DEFAULT NULL COMMENT '0-客户订单，1-品牌订单',
                           `morderid` int(10) unsigned DEFAULT NULL COMMENT '主订单ID',
