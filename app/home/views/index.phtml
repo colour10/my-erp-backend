@@ -98,7 +98,8 @@ $(document).ready(function(){
                 {path:'/supplier', component:$ASA.getComponentSimple("supplier")}
             ]
         },
-        {path: '/login/:action', component: "asapage-login"}
+        {path: '/login/:action', component: "asapage-login"},
+        {path: '/login', redirect: { path: '/login/login' }}
     ]
 
     const router = new VueRouter({
@@ -112,7 +113,12 @@ $(document).ready(function(){
       getters: {
           is_login(state) {
               var auth = state.auth
-              return auth['id'] && auth['id']>0
+              if( auth['id'] && auth['id']>0) {
+                  return true;
+              }
+              else {
+                  return false;
+              }
           }
       },
       mutations:{
