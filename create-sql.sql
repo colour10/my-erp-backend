@@ -4483,8 +4483,8 @@ DROP TABLE IF EXISTS `tb_group`;
 
 CREATE TABLE `tb_group` (
                           `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-                          `group_name` varchar(50) DEFAULT NULL,
-                          `group_memo` varchar(500) DEFAULT NULL,
+                          `name` varchar(50) DEFAULT NULL COMMENT '名称',
+                          `memo` varchar(500) DEFAULT NULL COMMENT '备注',
                           `companyid` int(10) unsigned DEFAULT NULL,
                           `sys_create_stuff` int(10) unsigned NOT NULL,
                           `sys_create_date` datetime NOT NULL,
