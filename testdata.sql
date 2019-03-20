@@ -73,3 +73,43 @@ INSERT INTO `tb_permission_module` (`id`, `sys_create_stuff`, `sys_create_date`,
 (6, 1, '2019-03-13 14:05:41', 1, '2019-03-13 14:05:41', NULL, NULL, 0, 3, 'home', 'product', 'edit');
 
 
+--
+-- 转存表中的数据 `tb_product`
+--
+
+
+INSERT INTO `tb_product` (`id`, `sys_create_stuff`, `sys_create_date`, `sys_modify_stuff`, `sys_modify_date`, `sys_delete_stuff`, `sys_delete_date`, `sys_delete_flag`, `productno`, `productname`, `wordcode_1`, `wordcode_2`, `wordcode_3`, `wordcode_4`, `wordprice`, `wordpricecurrency`, `gender`, `brandid`, `brandgroupid`, `childbrand`, `brandcolor`, `brandcolor2`, `picture2`, `picture`, `closeway`, `ageseason`, `productsize`, `countries`, `security`, `execution`, `material`, `productparst`, `occasion`, `producttemplate`, `materialstatus`, `season`, `oldasacode`, `officialwebsite`, `oldbarcode`, `laststoragedate`, `aliases_1`, `aliases_2`, `aliases`, `series_id`, `series2_id`, `ulnarinch`, `vat`, `tariff`, `basecurrency`, `baseprice`, `entrymonth`, `factoryprice`, `factorypricecurrency`, `realprice`, `retailpricecurrency`, `dutyparagraph`, `orderprice`, `orderpricecurrency`, `retailprice`, `groupid`, `iskj`, `bxzs`, `hbzs`, `rrzs`, `tlzs`, `salemethodid`, `nationalprice`, `taxrate`, `isjh`, `inlenth`, `jdname`, `winterproofing`, `isfj`, `discount`, `ulnarinch_memo`, `sizetopid`, `companyid`, `adduserid`) VALUES
+(1, 1, '2019-03-20 10:19:55', 1, '2019-03-20 10:19:55', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1),
+(2, 1, '2019-03-20 10:20:02', 1, '2019-03-20 10:20:02', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1),
+(3, 1, '2019-03-20 10:20:06', 1, '2019-03-20 10:20:06', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1),
+(4, 1, '2019-03-20 10:20:09', 1, '2019-03-20 10:20:09', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1),
+(5, 1, '2019-03-20 10:20:14', 1, '2019-03-20 10:20:14', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1),
+(6, 1, '2019-03-20 10:20:18', 1, '2019-03-20 10:20:18', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1),
+(7, 1, '2019-03-20 10:20:21', 1, '2019-03-20 10:20:21', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1),
+(8, 1, '2019-03-20 10:20:28', 1, '2019-03-20 10:20:28', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1),
+(9, 1, '2019-03-20 10:20:31', 1, '2019-03-20 10:20:31', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1),
+(10, 1, '2019-03-20 10:20:37', 1, '2019-03-20 10:20:37', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1);
+
+
+--
+-- 转存表中的数据 `zl_sizetop`
+--
+
+INSERT INTO `zl_sizetop` (`id`, `sys_create_stuff`, `sys_create_date`, `sys_modify_stuff`, `sys_modify_date`, `sys_delete_stuff`, `sys_delete_date`, `sys_delete_flag`, `name_cn`, `name_en`, `name_hk`, `name_fr`, `name_it`, `name_sp`, `name_de`, `code`) VALUES
+(1, 1, '2019-03-20 11:30:27', 1, '2019-03-20 11:30:27', NULL, NULL, 0, '男鞋38-45', NULL, NULL, NULL, NULL, NULL, NULL, 'man-38-45'),
+(2, 1, '2019-03-20 11:30:40', 1, '2019-03-20 11:30:40', NULL, NULL, 0, '女鞋38-45', NULL, NULL, NULL, NULL, NULL, NULL, 'woman-38-45');
+
+
+--
+-- 转存表中的数据 `zl_sizecontent`
+--
+
+INSERT INTO `zl_sizecontent` (`id`, `sys_create_stuff`, `sys_create_date`, `sys_modify_stuff`, `sys_modify_date`, `sys_delete_stuff`, `sys_delete_date`, `sys_delete_flag`, `topid`, `content_cn`, `content_en`, `content_hk`, `content_fr`, `content_it`, `content_sp`, `content_de`, `sortnum`, `memo_cn`, `memo_en`, `memo_hk`, `memo_fr`, `memo_it`, `memo_sp`, `memo_de`) VALUES
+(1, 1, '2019-03-20 11:34:15', 1, '2019-03-20 11:34:15', NULL, NULL, 0, 1, '38', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '38号码男鞋', NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 1, '2019-03-20 11:35:43', 1, '2019-03-20 11:35:43', NULL, NULL, 0, 1, '38', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '39号码男鞋', NULL, NULL, NULL, NULL, NULL, NULL),
+(3, 1, '2019-03-20 11:36:36', 1, '2019-03-20 11:36:36', NULL, NULL, 0, 1, '40', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '40号码男鞋', NULL, NULL, NULL, NULL, NULL, NULL),
+(4, 1, '2019-03-20 11:36:50', 1, '2019-03-20 11:36:50', NULL, NULL, 0, 1, '41', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '41号码男鞋', NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 1, '2019-03-20 11:37:08', 1, '2019-03-20 11:37:08', NULL, NULL, 0, 2, '38', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '38号码女鞋', NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 1, '2019-03-20 11:37:16', 1, '2019-03-20 11:37:16', NULL, NULL, 0, 2, '39', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '39号码女鞋', NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 1, '2019-03-20 11:37:28', 1, '2019-03-20 11:37:28', NULL, NULL, 0, 2, '40', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '40号码女鞋', NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 1, '2019-03-20 11:37:36', 1, '2019-03-20 11:37:36', NULL, NULL, 0, 2, '41', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '41号码女鞋', NULL, NULL, NULL, NULL, NULL, NULL);
