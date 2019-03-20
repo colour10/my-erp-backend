@@ -763,12 +763,12 @@ CREATE TABLE `dd_confirmorderdetails` (
 
 
 --
--- Dumping data for table `dd_corderdetails`
+-- Dumping data for table `dd_confirmorderdetails`
 --
 
-LOCK TABLES `dd_corderdetails` WRITE;
-/*!40000 ALTER TABLE `dd_corderdetails` DISABLE KEYS */;
-/*!40000 ALTER TABLE `dd_corderdetails` ENABLE KEYS */;
+LOCK TABLES `dd_confirmorderdetails` WRITE;
+/*!40000 ALTER TABLE `dd_confirmorderdetails` DISABLE KEYS */;
+/*!40000 ALTER TABLE `dd_confirmorderdetails` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
