@@ -600,7 +600,7 @@ CREATE TABLE `dd_confirmorder` (
                                  `memo` varchar(200) DEFAULT NULL COMMENT '备注',
                                  `brandid` int(10) unsigned DEFAULT NULL COMMENT '品牌ID（暂时未使用）',
                                  `ageseasonid` int(10) unsigned DEFAULT NULL COMMENT '年份季节id',
-                                 `seasontype` varchar(1) DEFAULT NULL COMMENT '0-pre ,1-main ,2-fashion show',
+                                 `seasontype` varchar(1) DEFAULT NULL COMMENT '年代类型：0-pre, 1-main, 2-fashion show',
                                  `auditstaff` int(10) unsigned DEFAULT NULL COMMENT '审核人',
                                  `auditdate` datetime DEFAULT NULL COMMENT '审核日期',
                                  `auditstatus` varchar(1) DEFAULT NULL COMMENT '审核状态',
