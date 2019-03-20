@@ -5405,7 +5405,7 @@ CREATE TABLE `tb_productstock` (
                                  `intime` datetime DEFAULT NULL,
                                  `property` varchar(1) DEFAULT NULL COMMENT '0-自采 1-代销',
                                  `kpflag` varchar(1) DEFAULT NULL COMMENT '0-未开票 1-已开票',
-                                 `decadeid` int(10) unsigned NOT NULL,
+                                 `decadeid` int(10) DEFAULT NULL COMMENT '到货年代',
                                  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='库存';
 
