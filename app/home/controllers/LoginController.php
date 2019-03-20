@@ -27,14 +27,16 @@ class LoginController extends Controller
                     'companyid' => $user->companyid
                 ));
                 //Forward to the 'invoices' controller if the user is valid
-                header("location:/");
+                //header("location:/");
+                echo json_encode(['code' => '200', 'auth' =>$this->session->get('user'), 'messages' => []]);
+                //echo json_encode()
+                $this->view->disable();
             }
             else {
-                return $this->dispatcher->forward(array(
-                    'controller' => 'login',
-                    'action' => 'index'
-                ));
+                echo json_encode(['code' => '200', 'messages' => ["登录失败。用户名或密码错误。"]]);
             }
+
+            $this->view->disable();
         }
     }
 

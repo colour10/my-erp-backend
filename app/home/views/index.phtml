@@ -8,6 +8,7 @@
     <title><?=isset($__title)?$__title:"ERP"?> - ASA</title>
     <script src="https://unpkg.com/vue@2.6.9/dist/vue.js"></script>
     <script src="https://unpkg.com/vuex@3.1.0/dist/vuex.js"></script>
+    <script src="https://unpkg.com/vue-router@2.0.0/dist/vue-router.js"></script>
     
 
     <!-- 引入样式 -->
@@ -19,6 +20,7 @@
     <script src="/common/systemlanguage?<?=$__sytem_time?>"></script>
     <script src="/js/erp.js?<?=$__sytem_time?>"></script>
     <script src="/js/asa.js?<?=$__sytem_time?>"></script>
+    <script src="/js/props.js?<?=$__sytem_time?>"></script>
   </head>
 
   <style>
@@ -54,216 +56,83 @@
   
   #ell{margin:5px;}
 </style>
-  <body>
+<body>
 
-  <div id="app">
-    <section class="el-container is-vertical" style="height: auto; border: 1px solid rgb(238, 238, 238);">
-        <header class="el-header" style="height: 60px; text-align: left; font-size: 24px;"><?=$system_language['system_name']?></header>
-        <div id="top-menu" style="display:none  ">
-            <el-menu class="el-menu-demo" mode="horizontal" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b" @select="onSelect">
-              <el-submenu index="1">
-                <template #title><?=$system_language['menu-1']?></template>
-                <el-menu-item index="1-1" data-href="/user"><?=$system_language["menu-1-1"]?></el-menu-item>
-                <el-menu-item index="1-2" data-href="/group"><?=$system_language["menu-1-2"]?></el-menu-item>
-                <!--<el-menu-item index="1-3"><?=$system_language["menu-1-3"]?></el-menu-item>-->
-                <el-menu-item index="1-4" data-href="/department"><?=$system_language["menu-1-4"]?></el-menu-item>
-              </el-submenu>
-              <el-submenu index="2">
-                <template #title><?=$system_language["menu-2"]?></template>
-                <el-submenu index="2-1">
-                  <template #title><?=$system_language["menu-2-1"]?></template>
-                  <el-menu-item index="2-1-1" data-href="/brand"><?=$system_language["menu-2-1-1"]?></el-menu-item>
-                  <el-menu-item index="2-1-2" data-href="/brandgroup"><?=$system_language["menu-2-1-2"]?></el-menu-item>
-                  <el-menu-item index="2-1-3" data-href="/ageseason"><?=$system_language["menu-2-1-3"]?></el-menu-item>
-                  <el-menu-item index="2-1-4" data-href="/colortemplate"><?=$system_language["menu-2-1-4"]?></el-menu-item>
-                  <el-menu-item index="2-1-5" data-href="/sizetop"><?=$system_language["menu-2-1-5"]?></el-menu-item>
-                  <el-menu-item index="2-1-19" data-href="/producttemplate"><?=$system_language["menu-2-1-19"]?></el-menu-item>
-                  <el-menu-item index="2-1-6" data-href="/material"><?=$system_language["menu-2-1-6"]?></el-menu-item>
-                  <el-menu-item index="2-1-17" data-href="/materialstatus"><?=$system_language["menu-2-1-17"]?></el-menu-item>
-                  <el-menu-item index="2-1-18" data-href="/materialnote"><?=$system_language["menu-2-1-18"]?></el-menu-item>
-                  
-                  <el-menu-item index="2-1-7" data-href="/ulnarinch"><?=$system_language["menu-2-1-7"]?></el-menu-item>
-                  <!--<el-menu-item index="2-1-8" data-href="/aliases"><?=$system_language["menu-2-1-8"]?></el-menu-item>-->
-                  <el-menu-item index="2-1-9" data-href="/productinnards"><?=$system_language["menu-2-1-9"]?></el-menu-item>
-                  <el-menu-item index="2-1-10" data-href="/productparts"><?=$system_language["menu-2-1-10"]?></el-menu-item>
-                  <el-menu-item index="2-1-11" data-href="/occasionsstyle"><?=$system_language["menu-2-1-11"]?></el-menu-item>
-                  <el-menu-item index="2-1-12" data-href="/closedway"><?=$system_language["menu-2-1-12"]?></el-menu-item>
-                  <el-menu-item index="2-1-13" data-href="/executioncategory"><?=$system_language["menu-2-1-13"]?></el-menu-item>
-                  <el-menu-item index="2-1-14" data-href="/securitycategory"><?=$system_language["menu-2-1-14"]?></el-menu-item>
-                  <el-menu-item index="2-1-15" data-href="/washinginstructions"><?=$system_language["menu-2-1-15"]?></el-menu-item>
-                  <el-menu-item index="2-1-16" data-href="/winterproofing"><?=$system_language["menu-2-1-16"]?></el-menu-item>
-                </el-submenu>
-                
-                <el-submenu index="2-2">
-                  <template #title><?=$system_language["menu-2-2"]?></template>
-                  <el-menu-item index="2-2-1" data-href="/productprice"><?=$system_language["menu-2-2-1"]?></el-menu-item>
-                  <el-menu-item index="2-2-2" data-href="/costformula"><?=$system_language["menu-2-2-2"]?></el-menu-item>
-                </el-submenu>
-                
-                <el-submenu index="2-3">
-                  <template #title><?=$system_language["menu-2-3"]?></template>
-                  <el-menu-item index="2-3-1" data-href="/warehouse" data-href="/warehouse"><?=$system_language["menu-2-3-1"]?></el-menu-item>
-                  <el-menu-item index="2-3-2" data-href="/salesport"><?=$system_language["menu-2-3-2"]?></el-menu-item>
-                  <el-menu-item index="2-3-3" data-href="/country"><?=$system_language["menu-2-3-3"]?></el-menu-item>
-                  <el-menu-item index="2-3-4" data-href="/feenames"><?=$system_language["menu-2-3-4"]?></el-menu-item>
-                  <el-menu-item index="2-3-5" data-href="/shippingtype"><?=$system_language["menu-2-3-5"]?></el-menu-item>
-                  <el-menu-item index="2-3-6" data-href="/salesmethods"><?=$system_language["menu-2-3-6"]?></el-menu-item>
-                  <el-menu-item index="2-3-7" data-href="/businesstype"><?=$system_language["menu-2-3-7"]?></el-menu-item>
-                  <!--<el-menu-item index="2-3-9" data-href="/reportstyle"><?=$system_language["menu-2-3-9"]?></el-menu-item>-->
-                  <el-menu-item index="2-3-10" data-href="/imagetool"><?=$system_language["menu-2-3-10"]?></el-menu-item>
-                  <!--<el-menu-item index="2-3-11" data-href="/pricesource"><?=$system_language["menu-2-3-11"]?></el-menu-item>
-                  <el-menu-item index="2-3-12"><?=$system_language["menu-2-3-12"]?></el-menu-item>
-                  <el-menu-item index="2-3-13"><?=$system_language["menu-2-3-13"]?></el-menu-item>-->
-                </el-submenu>                
-              </el-submenu>
-              
-              <el-submenu index="3">
-                <template #title><?=$system_language["menu-3"]?></template>
-                <el-menu-item index="3-1" data-href="/product"><?=$system_language["menu-3-1"]?></el-menu-item>
-                <el-menu-item index="3-2" data-href="/picture"><?=$system_language["menu-3-2"]?></el-menu-item>
-                <el-menu-item index="3-3"><?=$system_language["menu-3-3"]?></el-menu-item>
-              </el-submenu>
-              
-              <el-submenu index="4">
-                <template #title><?=$system_language["menu-4"]?></template>
-                <el-menu-item index="4-1" data-href="/supplier"><?=$system_language["menu-4-1"]?></el-menu-item>
-                <el-menu-item index="4-2"><?=$system_language["menu-4-2"]?></el-menu-item>
-                <el-menu-item index="4-3"><?=$system_language["menu-4-3"]?></el-menu-item>
-              </el-submenu>
-              
-              <el-submenu index="5">
-                <template #title><?=$system_language["menu-5"]?></template>
-                <el-submenu index="5-1">
-                  <template #title><?=$system_language["menu-5-1"]?></template>
-                  <el-menu-item index="5-1-1" data-href="/order"><?=$system_language["menu-5-1-1"]?></el-menu-item>
-                  <el-menu-item index="5-1-2"><?=$system_language["menu-5-1-2"]?></el-menu-item>
-                  <el-menu-item index="5-1-3"><?=$system_language["menu-5-1-3"]?></el-menu-item>
-                </el-submenu>
-                <el-menu-item index="5-2" data-href="/confirmorder"><?=$system_language["menu-5-2"]?></el-menu-item>
-                
-                <el-submenu index="5-3">
-                  <template #title><?=$system_language["menu-5-3"]?></template>
-                  <el-menu-item index="5-3-1" data-href="/warehousing"><?=$system_language["menu-5-3-1"]?></el-menu-item>
-                  <el-menu-item index="5-3-2" data-href="/warehousing"><?=$system_language["menu-5-3-2"]?></el-menu-item>
-                </el-submenu>
-              </el-submenu>
-              
-              <el-submenu index="6">
-                <template #title><?=$system_language["menu-6"]?></template>
-                <el-submenu index="6-1">
-                  <template #title><?=$system_language["menu-6-1"]?></template>
-                  <el-menu-item index="6-1-1" data-href="/requisition"><?=$system_language["menu-6-1-1"]?></el-menu-item>
-                  <el-menu-item index="6-1-2" data-href="/requisition"><?=$system_language["menu-6-1-2"]?></el-menu-item>
-                  <el-menu-item index="6-1-3" data-href="/requisition"><?=$system_language["menu-6-1-3"]?></el-menu-item>
-                </el-submenu>
-                <el-submenu index="6-2">
-                  <template #title><?=$system_language["menu-6-2"]?></template>
-                  <el-menu-item index="6-2-1"><?=$system_language["menu-6-2-1"]?></el-menu-item>
-                  <el-menu-item index="6-2-2"><?=$system_language["menu-6-2-2"]?></el-menu-item>
-                </el-submenu>
-                <el-menu-item index="6-3"><?=$system_language["menu-6-3"]?></el-menu-item>
-                <el-menu-item index="6-4" data-href="/productstock"><?=$system_language["menu-6-4"]?></el-menu-item>
-                <el-menu-item index="6-5" data-href="/productstockSnapshot"><?=$system_language["menu-6-5"]?></el-menu-item>
-              </el-submenu>
-              
-              <el-submenu index="7">
-                <template #title><?=$system_language["menu-7"]?></template>
-                <el-menu-item index="7-1" data-href="/sales"><?=$system_language["menu-7-1"]?></el-menu-item>
-                <el-menu-item index="7-2"><?=$system_language["menu-7-2"]?></el-menu-item>
-                <el-menu-item index="7-3"><?=$system_language["menu-7-3"]?></el-menu-item>
-                <el-submenu index="7-4">
-                  <template #title><?=$system_language["menu-7-4"]?></template>
-                  <el-menu-item index="7-4-1"><?=$system_language["menu-7-4-1"]?></el-menu-item>
-                  <el-menu-item index="7-4-2"><?=$system_language["menu-7-4-2"]?></el-menu-item>
-                </el-submenu>
-                <el-menu-item index="7-5"><?=$system_language["menu-7-5"]?></el-menu-item>
-              </el-submenu>
-              
-              <el-submenu index="8">
-                <template #title><?=$system_language["menu-8"]?></template>
-                <el-menu-item index="8-1" data-href="/member"><?=$system_language["menu-8-1"]?></el-menu-item>
-                <el-menu-item index="8-2" data-href="/memberlevel"><?=$system_language["menu-8-2"]?></el-menu-item>
-              </el-submenu>
-              
-              <el-submenu index="9">
-                <template #title><?=$system_language["menu-9"]?></template>
-                <el-menu-item index="9-1"><?=$system_language["menu-9-1"]?></el-menu-item>
-                <el-menu-item index="9-2"><?=$system_language["menu-9-2"]?></el-menu-item>
-                <el-menu-item index="9-3"><?=$system_language["menu-9-3"]?></el-menu-item>
-                <el-menu-item index="9-3"><?=$system_language["menu-9-3"]?></el-menu-item>
-              </el-submenu>
-              
-              <el-submenu index="10">
-                <template #title><?=$system_language["menu-10"]?></template>
-                <el-menu-item index="10-1"><?=$system_language["menu-10-1"]?></el-menu-item>
-              </el-submenu>              
-              
-              <el-submenu index="11">
-                <template #title><?=$system_language["menu-11"]?></template>
-                <el-menu-item index="11-1"><?=$system_language["menu-11-1"]?></el-menu-item>
-                <el-menu-item index="11-2" data-href="/user/modifypassword"><?=$system_language["menu-11-2"]?></el-menu-item>
-                <el-menu-item index="11-3" data-href="/login/logout"><?=$system_language["menu-11-3"]?></el-menu-item>   
-                <el-menu-item index="11-4" data-href="/">首页生成器</el-menu-item>                
-              </el-submenu>
-            </el-menu>
-        </div>
-        <section class="el-container">
-            <?php echo $this->getContent(); ?>
-        </section>
-        
-        <div id="footer">
-        <el-footer class="el-footer"></el-footer>
-        </div>
-    </section>
+  <div id="app">    
+    <router-view></router-view>
   </div>
-<style>
-  .el-header {
-    background-color: #B3C0D1;
-    color: #333;
-    line-height: 60px;
-  }
-  
-  .el-footer{
-    clear: both;
-    display: block;
-    text-align: center;    
-    margin: 0px auto;
-    bottom: 100px;
-  }
 
-  .el-aside {
-    color: #333;
-  }  
-  
-</style>
 <script>
 $(document).ready(function(){
-    new Vue({
-        el:"#top-menu",
-        data() {
-            return {
+    const routes = [
+        {
+            path: '/', component: "asapage-home",
+            children:[
+                {path: '/order', component: "asapage-order"},
+                {path: '/sales', component: "asapage-sales"},
+                {path: '/user', component: "asapage-user"},
+                {path: '/group', component: "asapage-group"},
+                {path: '/department', component: "asapage-department"},
+                {path: '/brand', component: "asapage-brand"},
+                {path: '/brandgroup', component: "asapage-brandgroup"},
+                {path: '/sizetop', component: "asapage-sizetop"},
+                {path: '/product', component: "asapage-product"},                
+                {path:'/ageseason', component:$ASA.getComponentSimple("ageseason")},
+                {path:'/ulnarinch', component:$ASA.getComponent("ulnarinch")},
+                {path:'/winterproofing', component:$ASA.getComponent("winterproofing")},
+                {path:'/washinginstructions', component:$ASA.getComponent("washinginstructions")},
+                {path:'/securitycategory', component:$ASA.getComponent("securitycategory")},
+                {path:'/executioncategory', component:$ASA.getComponent("executioncategory")},
+                {path:'/closedway', component:$ASA.getComponent("closedway")},
+                {path:'/occasionsstyle', component:$ASA.getComponent("occasionsstyle")},
+                {path:'/productparts', component:$ASA.getComponent("productparts")},
+                {path:'/productinnards', component:$ASA.getComponent("productinnards")},
+                {path:'/warehouse', component:$ASA.getComponentSimple("warehouse")},
+                {path:'/country', component:$ASA.getComponent("country")},
+                {path:'/materialnote', component:$ASA.getComponent("materialnote")},
+                {path:'/materialstatus', component:$ASA.getComponent("materialstatus")},
+                {path:'/material', component:$ASA.getComponent("material")},
+                {path:'/producttemplate', component:"asapage-producttemplate"},
+                {path:'/member', component:$ASA.getComponentSimple("member")},
+                {path:'/colortemplate', component:$ASA.getComponent("colortemplate")},
+                {path:'/supplier', component:$ASA.getComponentSimple("supplier")}
+            ]
+        },
+        {path: '/login/:action', component: "asapage-login"}
+    ]
 
-            }
-        },
-        methods:{
-            onSelect(index, indexPath, el) {
-                //console.log(index, indexPath, el.$attrs['data-href'])
-                window.location = el.$attrs['data-href']
-            }    
-        },
-        mounted:function () {
-            $("#top-menu").show()
-        }
+    const router = new VueRouter({
+        routes // (缩写) 相当于 routes: routes
     })
+
+    const store = new Vuex.Store({
+      state: {
+          auth:{}
+      },
+      getters: {
+          is_login(state) {
+              var auth = state.auth
+              return auth['id'] && auth['id']>0
+          }
+      },
+      mutations:{
+          login(state,payload) {
+              state.auth = payload.auth;
+          },
+          logout(state,payload) {
+              state.auth = {}
+          }
+      }
+    })
+
+    const app = new Vue({
+        router,
+        store,
+        mounted:function(){
+          //console.log(this.$options.components)
+        }
+    }).$mount('#app')
     
-    new Vue({
-        el:"#footer",
-        data() {
-            return {
-
-            }
-        }
-    })
 })
 </script>
   </body>
