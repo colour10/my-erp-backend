@@ -931,7 +931,7 @@ CREATE TABLE `dd_orderdetails` (
                                  `number` int(11) DEFAULT NULL COMMENT '件数（数量）',
                                  `productid` int(10) unsigned DEFAULT NULL COMMENT '商品ID',
                                  `price` decimal(16,9) DEFAULT NULL COMMENT '单价',
-                                 `actualnumber` int(11) DEFAULT NULL COMMENT '实际发货数量',
+                                 `actualnumber` int(11) NULL DEFAULT '0' COMMENT '实际发货数量',
                                  `isstatus` varchar(1) DEFAULT NULL COMMENT '完成标记（未使用，全部是0）：0-未完成\n            1-完成',
                                  `cost` decimal(16,9) DEFAULT NULL COMMENT '成本',
                                  `cbtype` varchar(1) DEFAULT NULL COMMENT '计算成本类型',
