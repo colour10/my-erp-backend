@@ -624,9 +624,9 @@ CREATE TABLE `dd_confirmorder` (
                                  `weight` decimal(16,9) DEFAULT NULL COMMENT '重量',
                                  `volume` decimal(16,9) DEFAULT NULL COMMENT '体积',
                                  `issjyh` varchar(1) DEFAULT NULL COMMENT '是否商检验货',
-                                 `sellerid` int(10) unsigned NOT NULL COMMENT 'SellerID',
+                                 `sellerid` int(10) unsigned DEFAULT NULL COMMENT '卖家编号',
                                  `sjyhresult` varchar(50) DEFAULT NULL COMMENT '商检验货结果',
-                                 `buyerid` int(10) unsigned NOT NULL COMMENT '',
+                                 `buyerid` int(10) unsigned DEFAULT NULL COMMENT '买家编号',
                                  `transporttype` varchar(1) DEFAULT NULL COMMENT '运输方式：0-by air 1-快递 2-中转',
                                  `paytype` varchar(1) DEFAULT NULL COMMENT '支付方式：0- t/t',
                                  `property` varchar(1) DEFAULT NULL COMMENT '入库属性：0-自采 1-代销',
@@ -637,7 +637,7 @@ CREATE TABLE `dd_confirmorder` (
                                  `apickingdate` datetime DEFAULT NULL COMMENT '安排提货时间',
                                  `aarrivaldate` datetime DEFAULT NULL COMMENT '到库时间',
                                  `invoiceno` varchar(50) DEFAULT NULL COMMENT '国外发票号',
-                                 `dd_company` int(10) unsigned NOT NULL COMMENT '代垫单位',
+                                 `dd_company` int(10) unsigned DEFAULT NULL COMMENT '代垫单位',
                                  `companyid` int(11) DEFAULT NULL COMMENT '公司id',
                                  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='发货单';

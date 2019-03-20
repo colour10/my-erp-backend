@@ -165,3 +165,23 @@ INSERT INTO `zl_ageseason` (`id`, `sys_create_stuff`, `sys_create_date`, `sys_mo
 (44, 1, '2019-03-20 18:05:00', 1, '2019-03-20 18:05:00', NULL, NULL, 0, '2021', 'FW'),
 (45, 1, '2019-03-20 18:05:06', 1, '2019-03-20 18:05:06', NULL, NULL, 0, '2022', 'SS'),
 (46, 1, '2019-03-20 18:05:09', 1, '2019-03-20 18:05:09', NULL, NULL, 0, '2022', 'FW');
+
+
+--
+-- 转存表中的数据 `dd_order`
+--
+
+INSERT INTO `dd_order` (`id`, `sys_create_stuff`, `sys_create_date`, `sys_modify_stuff`, `sys_modify_date`, `sys_delete_stuff`, `sys_delete_date`, `sys_delete_flag`, `bussinesstypeid`, `makedate`, `makestaff`, `supplierid`, `finalsupplierid`, `bookingid`, `agentid`, `purchasedept`, `orderno`, `total`, `currency`, `auditstaff`, `auditdate`, `ordercode`, `worldordercode`, `auditstatus`, `isstatus`, `formtype`, `memo`, `contactor`, `ourcontactor`, `ageseason`, `seasontype`, `invoiceno`, `ddtype`, `morderid`, `exchangerate`, `bussinesstype`, `discount`, `tsl`, `property`, `companyid`, `status`) VALUES
+(1, 1, '2019-03-20 19:46:06', 1, '2019-03-20 19:46:06', NULL, NULL, 0, NULL, '', 1, 1, NULL, 0, NULL, NULL, 'D111111201903201946061334', NULL, NULL, 0, NULL, '', '', NULL, NULL, '', '', '', '', 1, 1, '', NULL, NULL, '0.000000000', '1', '0.000000000', NULL, '', 1, NULL);
+
+
+--
+-- 转存表中的数据 `dd_orderdetails`
+--
+
+INSERT INTO `dd_orderdetails` (`id`, `sys_create_stuff`, `sys_create_date`, `sys_modify_stuff`, `sys_modify_date`, `sys_delete_stuff`, `sys_delete_date`, `sys_delete_flag`, `orderid`, `sizecontentid`, `number`, `productid`, `price`, `actualnumber`, `isstatus`, `cost`, `cbtype`, `zkl`, `tsbl`, `cjj`, `yj`, `sortnum`, `zje`, `add_flag`, `thattimestock`, `companyid`) VALUES
+(1, 1, '2019-03-20 19:46:06', 1, '2019-03-20 19:46:06', NULL, NULL, 0, 1, 5, 1, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+(2, 1, '2019-03-20 19:46:06', 1, '2019-03-20 19:46:06', NULL, NULL, 0, 1, 4, 2, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+(3, 1, '2019-03-20 19:46:06', 1, '2019-03-20 19:46:06', NULL, NULL, 0, 1, 3, 1, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+(4, 1, '2019-03-20 19:46:06', 1, '2019-03-20 19:46:06', NULL, NULL, 0, 1, 2, 2, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+(5, 1, '2019-03-20 19:46:06', 1, '2019-03-20 19:46:06', NULL, NULL, 0, 1, 1, 6, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
