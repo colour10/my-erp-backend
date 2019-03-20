@@ -448,6 +448,9 @@ return array(
     'salesstaff' => '销售者编号',
     'sellspotid' => '销售端口编号',
     'salesdetail' => '销售单详情',
+    'productid' => '商品编号',
+    'sizecontentid' => '尺码编号',
+    'number' => '数量',
     // 通用型，以后有需要再改
     'hasmany-foreign-message' => '正在使用，不能删除',
     'belongsto-foreign-message' => '记录不存在',
