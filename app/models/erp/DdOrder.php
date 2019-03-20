@@ -6,6 +6,7 @@ use Phalcon\Validation;
 use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Mvc\Model\Relation;
 use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Validation\Validator\Regex;
 
 /**
  * 订单主表
@@ -51,6 +52,21 @@ class DdOrder extends BaseModel
                 ],
             ]
         );
+
+        // 订单-年代季节，一对多反向
+        $this->belongsTo(
+            'ageseason',
+            '\Asa\Erp\ZlAgeseason',
+            'id',
+            [
+                'alias' => 'ageseason',
+                "foreignKey" => [
+                    // 关联字段存在性验证
+                    'action' => Relation::ACTION_RESTRICT,
+                    "message" => $this->getValidateMessage('notexist', 'ageseason'),
+                ],
+            ]
+        );
     }
 
     /**
@@ -61,6 +77,34 @@ class DdOrder extends BaseModel
     public function validation()
     {
         $validator = new Validation();
+
+        // 开始验证
+        // 必填字段为：年代id-ageseason；供货商id-supplierid
+        // 年代id-ageseason不能为空
+        $validator->add('ageseason', new PresenceOf([
+            'message' => $this->getValidateMessage('required', 'ageseason'),
+            'cancelOnFail' => true,
+        ]));
+
+        // 年代id-ageseason必须是正整数
+        $validator->add('ageseason', new Regex([
+            'message' => $this->getValidateMessage('invalid', 'ageseason'),
+            "pattern" => "/^[0-9]+$/",
+            'cancelOnFail' => true,
+        ]));
+
+        // 供货商id-supplierid不能为空
+        $validator->add('supplierid', new PresenceOf([
+            'message' => $this->getValidateMessage('required', 'supplierid'),
+            'cancelOnFail' => true,
+        ]));
+
+        // 供货商id-supplierid必须是正整数
+        $validator->add('supplierid', new Regex([
+            'message' => $this->getValidateMessage('invalid', 'supplierid'),
+            "pattern" => "/^[0-9]+$/",
+            'cancelOnFail' => true,
+        ]));
 
         // 返回
         return $this->validate($validator);

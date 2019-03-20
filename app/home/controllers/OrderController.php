@@ -59,6 +59,9 @@ class OrderController extends CadminController
         $arr = json_decode($params, true);
         $this->orderParams = $arr;
 
+        // 订单主表中，开始验证必填字段
+        // 年代id、供货商id为必填项
+
         // // 判断订单是否有数据
         // // 订单数据可以为空，暂时注释
         // if (count($this->orderParams['list']) == '0') {
