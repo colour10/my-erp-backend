@@ -185,3 +185,13 @@ INSERT INTO `dd_orderdetails` (`id`, `sys_create_stuff`, `sys_create_date`, `sys
 (3, 1, '2019-03-20 19:46:06', 1, '2019-03-20 19:46:06', NULL, NULL, 0, 1, 3, 1, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
 (4, 1, '2019-03-20 19:46:06', 1, '2019-03-20 19:46:06', NULL, NULL, 0, 1, 2, 2, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
 (5, 1, '2019-03-20 19:46:06', 1, '2019-03-20 19:46:06', NULL, NULL, 0, 1, 1, 6, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+
+
+--
+-- 转存表中的数据 `tb_supplier`
+--
+
+INSERT INTO `tb_supplier` (`id`, `sys_create_stuff`, `sys_create_date`, `sys_modify_stuff`, `sys_modify_date`, `sys_delete_stuff`, `sys_delete_date`, `sys_delete_flag`, `name`, `englishname`, `address`, `phone`, `zipcode`, `email`, `quotedprice`, `developdate`, `nationality`, `nature`, `supplierlevel`, `companyzipcode`, `maincontacts`, `microblog`, `countrycity`, `code`, `fax`, `calculation`, `legal`, `heading`, `businesslicense`, `headingnumber`, `registered`, `registeredcapital`, `endtime`, `type`, `contractfrom`, `contractto`, `contractrate`, `contractremind`, `settlecompanyid`, `memo`) VALUES
+(2, 1, '2019-03-21 17:13:34', 1, '2019-03-21 17:13:34', NULL, NULL, 0, '爱莎商品', 'ASA', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '001', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+

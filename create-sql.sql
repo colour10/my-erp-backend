@@ -593,7 +593,7 @@ CREATE TABLE `dd_confirmorder` (
                                  `orderno` varchar(50) DEFAULT NULL COMMENT '发货单号',
                                  `makedate` datetime DEFAULT NULL COMMENT '制单日期',
                                  `makestaff` int(10) unsigned DEFAULT NULL COMMENT '制单人',
-                                 `supplierid` int(10) unsigned NOT NULL COMMENT '供货商id',
+                                 `supplierid` int(10) unsigned DEFAULT NULL COMMENT '供货商id',
                                  `currency` int(10) unsigned DEFAULT NULL COMMENT '货币类型',
                                  `total` decimal(16,9) DEFAULT NULL COMMENT '总金额',
                                  `isstatus` varchar(1) DEFAULT NULL COMMENT '0-在途未入库，1-已入库，2-已备货未发出',
@@ -743,21 +743,21 @@ CREATE TABLE `dd_confirmorderdetails` (
                                         `sys_delete_stuff` int(10) unsigned DEFAULT NULL,
                                         `sys_delete_date` datetime DEFAULT NULL,
                                         `sys_delete_flag` tinyint(1) NULL DEFAULT '0' COMMENT '0-未删除 1-已删除',
-                                        `corderid` int(10) unsigned DEFAULT NULL COMMENT '发货单id',
-                                        `detailid` int(10) unsigned DEFAULT NULL COMMENT '订单明细id',
+                                        `confirmorderid` int(10) unsigned DEFAULT NULL COMMENT '发货单id',
+                                        `orderdetailsid` int(10) unsigned DEFAULT NULL COMMENT '订单明细id',
                                         `productid` int(10) unsigned DEFAULT NULL COMMENT '商品id',
                                         `sizecontentid` int(10) unsigned DEFAULT NULL COMMENT '尺码id',
-                                        `number` int(11) DEFAULT NULL,
-                                        `currency` int(10) unsigned DEFAULT NULL,
-                                        `price` decimal(16,9) DEFAULT NULL,
-                                        `cost` decimal(16,9) DEFAULT NULL,
-                                        `actualnumber` int(11) DEFAULT NULL,
-                                        `isstatus` varchar(1) DEFAULT NULL COMMENT '0-未完成\n            1-完成',
-                                        `containerno` varchar(500) DEFAULT NULL,
-                                        `cjj` decimal(16,9) DEFAULT NULL,
-                                        `yj` decimal(16,9) DEFAULT NULL,
-                                        `size` varchar(50) DEFAULT NULL,
-                                        `weight` varchar(50) DEFAULT NULL,
+                                        `number` int(11) DEFAULT NULL COMMENT '件数（数量）',
+                                        `currency` int(10) unsigned DEFAULT NULL COMMENT '币种',
+                                        `price` decimal(16,9) DEFAULT NULL COMMENT '单价',
+                                        `cost` decimal(16,9) DEFAULT NULL COMMENT '成本',
+                                        `actualnumber` int(11) DEFAULT NULL COMMENT '实际到货数量',
+                                        `isstatus` varchar(1) DEFAULT NULL COMMENT '完成标记：0-未完成\n            1-完成',
+                                        `containerno` varchar(500) DEFAULT NULL COMMENT '箱号',
+                                        `cjj` decimal(16,9) DEFAULT NULL COMMENT '成交价格',
+                                        `yj` decimal(16,9) DEFAULT NULL COMMENT '佣金',
+                                        `size` varchar(50) DEFAULT NULL COMMENT '尺寸',
+                                        `weight` varchar(50) DEFAULT NULL COMMENT '重量',
                                         PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='发货单明细';
 
@@ -5863,7 +5863,7 @@ CREATE TABLE `tb_supplier` (
                              `maincontacts` varchar(50) DEFAULT NULL COMMENT '主联系人',
                              `microblog` varchar(100) DEFAULT NULL COMMENT '微博',
                              `countrycity` varchar(50) DEFAULT NULL COMMENT '国家城市',
-                             `suppliercode` varchar(50) DEFAULT NULL COMMENT '供货商编号',
+                             `code` varchar(50) DEFAULT NULL COMMENT '供货商编号',
                              `fax` varchar(50) DEFAULT NULL COMMENT '传真',
                              `calculation` varchar(50) DEFAULT NULL COMMENT '结算方式',
                              `legal` varchar(50) DEFAULT NULL COMMENT '法人',
@@ -5881,7 +5881,7 @@ CREATE TABLE `tb_supplier` (
                              `settlecompanyid` int(10) unsigned DEFAULT NULL COMMENT '结算单位',
                              `memo` text COMMENT '供货商简介 ',
                              PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='任何表都应该包含的列';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='供货商表';
 
 
 --
@@ -6874,7 +6874,6 @@ CREATE TABLE `xs_salesdetails` (
                                  `memo` varchar(500) DEFAULT NULL COMMENT '备注',
                                  `returnid` int(10) unsigned DEFAULT NULL COMMENT '退货明细ID',
                                  `totalsellprice` decimal(16,9) DEFAULT NULL COMMENT '合计金额',
-                                 `saleno` varchar(50) DEFAULT NULL COMMENT '退货原单号',
                                  `stockid` int(10) unsigned DEFAULT NULL COMMENT '库存ID',
                                  `pricememo` varchar(500) DEFAULT NULL COMMENT '价格备注',
                                  `exchangerate` decimal(16,9) DEFAULT NULL COMMENT '汇率',

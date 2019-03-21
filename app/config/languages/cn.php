@@ -472,6 +472,7 @@ return array(
     'order-params' => '订单参数',
     'makestaff' => '制单人',
     'order-gurd-alert-message' => '您只能操作自己公司的订单',
+    'confirmorder-gurd-alert-message' => '您只能操作自己公司的发货单',
     'supplierid' => '供货商编号',
     'sale' => '销售单',
     'saleid' => '销售单编号',
@@ -487,6 +488,10 @@ return array(
     'productstock-productid-sizecontentid-warehouseid' => '商品、尺码、库存记录已存在',
     'ageseason' => '年代季节',
     'confirmorder-params' => '发货单参数',
+    'confirmorderdetail' => '发货单明细',
+    'confirmorder' => '发货单',
+    'orderdetail-over-max-number' => '发货量超过了订单数量',
+    'supplier' => '供货商',
     // 通用型，以后有需要再改
     'hasmany-foreign-message' => '正在使用，不能删除',
     'belongsto-foreign-message' => '记录不存在',
