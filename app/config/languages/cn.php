@@ -451,6 +451,10 @@ return array(
     'productid' => '商品编号',
     'sizecontentid' => '尺码编号',
     'number' => '数量',
+    'warehouse' => '仓库',
+    'productstock-productid-sizecontentid-warehouseid' => '商品、尺码、库存记录已存在',
+    'ageseason' => '年代季节',
+    'confirmorder-params' => '发货单参数',
     // 通用型，以后有需要再改
     'hasmany-foreign-message' => '正在使用，不能删除',
     'belongsto-foreign-message' => '记录不存在',

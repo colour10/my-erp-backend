@@ -59,6 +59,9 @@ class OrderController extends CadminController
         $arr = json_decode($params, true);
         $this->orderParams = $arr;
 
+        // 订单主表中，开始验证必填字段
+        // 年代id、供货商id为必填项
+
         // // 判断订单是否有数据
         // // 订单数据可以为空，暂时注释
         // if (count($this->orderParams['list']) == '0') {
@@ -388,7 +391,7 @@ class OrderController extends CadminController
             }
         }
         // 最终成功返回，原来的数据还要保留，再加上订单详情之中每个商品的名称也要放进去
-        echo json_encode(['code' => '200', 'messages' => [], 'data' => $this->orderParams]);
+        echo $this->success($this->orderParams);
         $this->view->disable();
     }
 
