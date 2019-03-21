@@ -381,13 +381,9 @@ class OrderController extends CadminController
         foreach ($order->orderdetails as $k => $orderdetail) {
             // 过滤已经删除的数据
             if ($orderdetail->sys_delete_flag == '0') {
-                $this->orderParams['list'][] = [
-                    'id' => $orderdetail->id,
-                    'productid' => $orderdetail->productid,
-                    'sizecontentid' => $orderdetail->sizecontentid,
-                    'number' => $orderdetail->number,
-                    'product' => $orderdetail->product->toArray()
-                ];
+                $orderdetail_array = $orderdetail->toArray();
+                $orderdetail_array['product'] = $orderdetail->product->toArray();
+                $this->orderParams['list'][] = $orderdetail_array;
             }
         }
         // 最终成功返回，原来的数据还要保留，再加上订单详情之中每个商品的名称也要放进去
