@@ -593,7 +593,7 @@ CREATE TABLE `dd_confirmorder` (
                                  `orderno` varchar(50) DEFAULT NULL COMMENT '发货单号',
                                  `makedate` datetime DEFAULT NULL COMMENT '制单日期',
                                  `makestaff` int(10) unsigned DEFAULT NULL COMMENT '制单人',
-                                 `supplierid` int(10) unsigned NOT NULL COMMENT '供货商id',
+                                 `supplierid` int(10) unsigned DEFAULT NULL COMMENT '供货商id',
                                  `currency` int(10) unsigned DEFAULT NULL COMMENT '货币类型',
                                  `total` decimal(16,9) DEFAULT NULL COMMENT '总金额',
                                  `isstatus` varchar(1) DEFAULT NULL COMMENT '0-在途未入库，1-已入库，2-已备货未发出',
