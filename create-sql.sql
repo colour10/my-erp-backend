@@ -744,7 +744,7 @@ CREATE TABLE `dd_confirmorderdetails` (
                                         `sys_delete_date` datetime DEFAULT NULL,
                                         `sys_delete_flag` tinyint(1) NULL DEFAULT '0' COMMENT '0-未删除 1-已删除',
                                         `confirmorderid` int(10) unsigned DEFAULT NULL COMMENT '发货单id',
-                                        `orderdetailid` int(10) unsigned DEFAULT NULL COMMENT '订单明细id',
+                                        `orderdetailsid` int(10) unsigned DEFAULT NULL COMMENT '订单明细id',
                                         `productid` int(10) unsigned DEFAULT NULL COMMENT '商品id',
                                         `sizecontentid` int(10) unsigned DEFAULT NULL COMMENT '尺码id',
                                         `number` int(11) DEFAULT NULL COMMENT '件数（数量）',
