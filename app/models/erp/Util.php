@@ -109,11 +109,10 @@ class Util {
         }
     }
 
-
     /**
      * 字符串位数补全
      * @param $str 字符串
-     * @param $length 处理后的位数，默认是6位
+     * @param int $length 处理后的位数，默认是6位
      * @return bool|string
      */
     public static function cover_position($str, $length=6)
