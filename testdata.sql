@@ -195,3 +195,15 @@ INSERT INTO `tb_supplier` (`id`, `sys_create_stuff`, `sys_create_date`, `sys_mod
 (2, 1, '2019-03-21 17:13:34', 1, '2019-03-21 17:13:34', NULL, NULL, 0, '爱莎商品', 'ASA', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '001', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 
+
+--
+-- 转存表中的数据 `tb_warehouse`
+--
+
+INSERT INTO `tb_warehouse` (`id`, `sys_create_stuff`, `sys_create_date`, `sys_modify_stuff`, `sys_modify_date`, `sys_delete_stuff`, `sys_delete_date`, `sys_delete_flag`, `countryid`, `companyid`, `city`, `name`, `address`, `contact`, `toll`, `fax`, `mobile`, `othercontact`, `code`, `defaultstore`, `zipcode`, `is_real`, `maxstock`, `maxsku`) VALUES
+(1, 1, '2019-03-21 18:23:47', 1, '2019-03-21 18:23:47', NULL, NULL, 0, NULL, 1, NULL, '天津仓库', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 1, '2019-03-21 18:24:37', 1, '2019-03-21 18:24:37', NULL, NULL, 0, NULL, 1, NULL, '哈尔滨仓库', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(3, 1, '2019-03-21 18:24:45', 1, '2019-03-21 18:24:45', NULL, NULL, 0, NULL, 1, NULL, '香港仓库', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(4, 1, '2019-03-21 18:24:52', 1, '2019-03-21 18:24:52', NULL, NULL, 0, NULL, 1, NULL, '意大利仓库', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+
