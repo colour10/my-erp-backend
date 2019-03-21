@@ -1,4 +1,5 @@
 <?php
+
 namespace Multiple\Home\Controllers;
 
 use Phalcon\Mvc\Controller;
@@ -10,8 +11,40 @@ use Asa\Erp\TbProductstock;
  */
 class ProductstockController extends AdminController {
     public function initialize() {
-	    parent::initialize();
+        parent::initialize();
 
-	    $this->setModelName('Asa\\Erp\\TbProductstock');
+        $this->setModelName('Asa\\Erp\\TbProductstock');
+    }
+
+    /**
+     * 实际可用库存
+     */
+    public function availableAction()
+    {
+
+    }
+
+    /**
+     * 预售库存
+     */
+    public function presaleAction()
+    {
+
+    }
+
+    /**
+     * 调拨锁定库存
+     */
+    public function requisitionAction()
+    {
+
+    }
+
+    /**
+     * 在途库存
+     */
+    public function intransitAction()
+    {
+
     }
 }
