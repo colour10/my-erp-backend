@@ -25,23 +25,28 @@ class BaseController extends Controller
         $this->view->setVar("__title", $title);      
     }
 
+
     /**
      * 返回正确的json信息
+     * @param string $code 状态码，默认是200
+     * @param array $data 如果有数据返回，那么就填充数据
      * @return false|string
      */
-    public function success()
+    public function success($data = [], $code = '200')
     {
-        return json_encode(['code' => '200', 'messages' => []]);
+        return json_encode(['code' => $code, 'messages' => [], 'data' => $data]);
     }
+
 
     /**
      * 返回错误的json信息
-     * @param array $messages
+     * @param string $code 状态码，默认是200
+     * @param array $messages 如果有错误信息，这里必须填充
      * @return false|string
      */
-    public function error($messages = [])
+    public function error($messages = [], $code = '200')
     {
-        return json_encode(['code' => '200', 'messages' => $messages]);
+        return json_encode(['code' => $code, 'messages' => $messages]);
     }
 
 
