@@ -1,10 +1,7 @@
 <?php
-
 namespace Asa\Erp;
-
 use Phalcon\Validation;
 use Phalcon\Mvc\Model\Relation;
-
 /**
  * 发货单主表
  */
@@ -14,7 +11,6 @@ class DdConfirmorder extends BaseModel
     {
         parent::initialize();
         $this->setSource('dd_confirmorder');
-
         // 订单-订单详情，一对多
         $this->hasMany(
             "id",
