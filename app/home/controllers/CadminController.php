@@ -48,11 +48,11 @@ class CadminController extends AdminController {
 	function loadAction() {
 	    $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
 	    $row = $findFirst->invokeArgs(null, array(
-	        sprintf("sys_delete_flag=0 and companyid=%d", $this->companyid)
+	        sprintf("sys_delete_flag=0 and companyid=%d and id=%d", $this->companyid, $_POST["id"])
 	    ));
 
 	    if($row!=false) {   
-	        echo json_encode($row->toArray());   
+	        echo $this->reportJson(200,[],["data" => $row->toArray()]);   
 	    }
 	    else {
 	        echo '{}';   

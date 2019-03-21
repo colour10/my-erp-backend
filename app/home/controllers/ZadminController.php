@@ -78,7 +78,7 @@ class ZadminController extends AdminController {
 	    ));
 
 	    if($row!=false) {   
-	        echo json_encode($row->toArray());   
+            echo $this->reportJson(200,[],["data" => $row->toArray()]); 
 	    }
 	    else {
 	        echo '{}';   
