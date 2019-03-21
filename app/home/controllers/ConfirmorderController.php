@@ -4,6 +4,7 @@ namespace Multiple\Home\Controllers;
 
 use Asa\Erp\DdConfirmorderdetails;
 use Asa\Erp\DdOrderdetails;
+use Asa\Erp\TbProduct;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
 use Asa\Erp\DdConfirmorder;
@@ -25,6 +26,8 @@ class ConfirmorderController extends CadminController {
     protected $userid;
     // 权限提示msg
     protected $permission_msg;
+    // 商品列表
+    protected $productlist;
 
     /**
      * 初始化
@@ -39,6 +42,9 @@ class ConfirmorderController extends CadminController {
 
         // 权限提示
         $this->permission_msg = $this->getValidateMessage('confirmorder-gurd-alert-message');
+
+        // 商品列表
+        $this->productlist = [];
     }
 
 
@@ -101,13 +107,21 @@ class ConfirmorderController extends CadminController {
                     // 增加一个允许最大发货数量allownumber字段，其实就是$orderdetail->number - $orderdetail->actualnumber的值，只是为了前台调用更加方便而已
                     $orderdetail_arr = $orderdetail->toArray();
                     $orderdetail_arr['allownumber'] = $orderdetail->number - $orderdetail->actualnumber;
+                    // 可能记录有很多重复的商品数据，这时候先只取出productid，再去重
+                    $this->productlist[] = $orderdetail->product->id;
                     $orderdetails[] = $orderdetail_arr;
                 }
             }
         }
 
-        // 返回数据
+        // 组装
         $this->confirmorderParams['list'] = $orderdetails;
+        $this->confirmorderParams['productlist'] = array_values(array_unique($this->productlist));
+        // 最后再取出product模型
+        foreach ($this->confirmorderParams['productlist'] as $k => $productid) {
+            $this->confirmorderParams['productlist'][$k] = TbProduct::findFirstById($productid)->toArray();
+        }
+        // 返回数据
         return $this->success($this->confirmorderParams);
     }
 
@@ -454,9 +468,16 @@ class ConfirmorderController extends CadminController {
             // 过滤已经删除的数据
             if ($confirmorderdetail->sys_delete_flag == '0') {
                 $orderdetail_array = $confirmorderdetail->toArray();
-                $orderdetail_array['product'] = $confirmorderdetail->product->toArray();
+                // 可能记录有很多重复的商品数据，这时候先只取出productid，再去重
+                $this->productlist[] = $confirmorderdetail->product->id;
                 $this->confirmorderParams['list'][] = $orderdetail_array;
             }
+        }
+        // 组装
+        $this->confirmorderParams['productlist'] = array_values(array_unique($this->productlist));
+        // 最后再取出product模型
+        foreach ($this->confirmorderParams['productlist'] as $k => $productid) {
+            $this->confirmorderParams['productlist'][$k] = TbProduct::findFirstById($productid)->toArray();
         }
         // 最终成功返回，原来的数据还要保留，再加上发货单详情之中每个商品的名称也要放进去
         echo $this->success($this->confirmorderParams);
