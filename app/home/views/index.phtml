@@ -127,6 +127,10 @@
         margin-bottom: 5px;
     }
 
+    .order-form .font12 label{
+        font-size:12px;
+    }
+
     .order-form .el-checkbox {
         margin-right:12px;
     }
@@ -181,6 +185,15 @@
     display: block;
   }
 
+  .el-table .warning-row {
+    background: oldlace;
+  }
+
+  .el-table .el-table__body .success-row {
+    color: red !important;
+    background: rgba(103,194,58,.2) !important;
+  }
+
 </style>
 <body>
 
@@ -195,6 +208,7 @@ $(document).ready(function(){
             path: '/', component: "asapage-home",
             children:[
                 {path: '/order', component: "asapage-order"},
+                {path: '/confirmorder', component: "asapage-confirmorder"},
                 {path: '/sales', component: "asapage-sales"},
                 {path: '/user', component: "asapage-user"},
                 {path: '/group', component: "asapage-group"},
@@ -202,7 +216,8 @@ $(document).ready(function(){
                 {path: '/brand', component: "asapage-brand"},
                 {path: '/brandgroup', component: "asapage-brandgroup"},
                 {path: '/sizetop', component: "asapage-sizetop"},
-                {path: '/product', component: "asapage-product"},                
+                {path: '/product', component: "asapage-product"},      
+                {path: '/user/modifypassword', component: "asapage-usermodifypassword"},                
                 {path:'/ageseason', component:$ASA.getComponentSimple("ageseason")},
                 {path:'/ulnarinch', component:$ASA.getComponent("ulnarinch")},
                 {path:'/winterproofing', component:$ASA.getComponent("winterproofing")},

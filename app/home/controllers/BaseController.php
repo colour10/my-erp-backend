@@ -31,7 +31,7 @@ class BaseController extends Controller
      */
     public function success()
     {
-        return json_encode(['code' => '200', 'messages' => []]);
+        return $this->reportJson();
     }
 
     /**
@@ -41,7 +41,23 @@ class BaseController extends Controller
      */
     public function error($messages = [])
     {
-        return json_encode(['code' => '200', 'messages' => $messages]);
+        return $this->reportJson(200,$messages);//json_encode(['code' => '200', 'messages' => $messages]);
+    }
+
+
+    /**
+     * 返回输出的json信息
+     * @return false|string
+     */
+    public function reportJson($code=200, $messages=[], $data="")
+    {
+        $result = array(
+            "code" => $code,
+            "messages" => $messages
+        );
+
+        $result = array_merge($data, $result);
+        return json_encode($result);
     }
 
 
