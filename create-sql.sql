@@ -5863,7 +5863,7 @@ CREATE TABLE `tb_supplier` (
                              `maincontacts` varchar(50) DEFAULT NULL COMMENT '主联系人',
                              `microblog` varchar(100) DEFAULT NULL COMMENT '微博',
                              `countrycity` varchar(50) DEFAULT NULL COMMENT '国家城市',
-                             `suppliercode` varchar(50) DEFAULT NULL COMMENT '供货商编号',
+                             `code` varchar(50) DEFAULT NULL COMMENT '供货商编号',
                              `fax` varchar(50) DEFAULT NULL COMMENT '传真',
                              `calculation` varchar(50) DEFAULT NULL COMMENT '结算方式',
                              `legal` varchar(50) DEFAULT NULL COMMENT '法人',
@@ -5881,7 +5881,7 @@ CREATE TABLE `tb_supplier` (
                              `settlecompanyid` int(10) unsigned DEFAULT NULL COMMENT '结算单位',
                              `memo` text COMMENT '供货商简介 ',
                              PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='任何表都应该包含的列';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='供货商表';
 
 
 --
