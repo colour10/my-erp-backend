@@ -37,7 +37,7 @@ var $ASA = (function(){
                     form.id = res.id;
                 }
                 
-                if(callback) {
+                if(typeof(callback)=='function') {
                     callback(res)
                 }
             }, failcallback)
