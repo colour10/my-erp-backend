@@ -6874,7 +6874,6 @@ CREATE TABLE `xs_salesdetails` (
                                  `memo` varchar(500) DEFAULT NULL COMMENT '备注',
                                  `returnid` int(10) unsigned DEFAULT NULL COMMENT '退货明细ID',
                                  `totalsellprice` decimal(16,9) DEFAULT NULL COMMENT '合计金额',
-                                 `saleno` varchar(50) DEFAULT NULL COMMENT '退货原单号',
                                  `stockid` int(10) unsigned DEFAULT NULL COMMENT '库存ID',
                                  `pricememo` varchar(500) DEFAULT NULL COMMENT '价格备注',
                                  `exchangerate` decimal(16,9) DEFAULT NULL COMMENT '汇率',
