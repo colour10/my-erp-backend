@@ -458,6 +458,7 @@ return array(
     'confirmorder-params' => '发货单参数',
     'confirmorderdetail' => '发货单明细',
     'confirmorder' => '发货单',
+    'orderdetail-over-max-number' => '发货量超过了订单数量',
     // 通用型，以后有需要再改
     'hasmany-foreign-message' => '正在使用，不能删除',
     'belongsto-foreign-message' => '记录不存在',
