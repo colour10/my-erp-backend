@@ -51,6 +51,25 @@ class BaseController extends Controller
 
 
     /**
+     * 返回输出的json信息
+     * @return false|string
+     */
+    public function reportJson($code=200, $messages=[], $data=[])
+    {
+        $result = array(
+            "code" => $code,
+            "messages" => $messages
+        );
+
+        if(is_array($data)) {
+            $result = array_merge($data, $result);
+        }
+
+        return json_encode($result);
+    }
+
+
+    /**
      * 多语言版本配置读取函数
      * @param $field_name 验证字段的提示名称，比如cn.php中上面的自定义变量名system_name
      * @param $module_name 模块名称，比如cn.php中的template

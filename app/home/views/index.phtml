@@ -55,6 +55,145 @@
   }
   
   #ell{margin:5px;}
+
+
+    .user-form .width2 .el-input__inner {
+        width:200px;
+    }
+
+    .user-form  .width2 .el-input-group {
+        width:200px;
+    }
+    
+    .user-form .width1 .el-input__inner {
+        width:510px;
+    }
+    
+    .user-form .width1 .el-textarea__inner {
+        width:510px;
+    }
+    
+    .user-form .width2 .el-date-editor.el-input, .el-date-editor.el-input__inner {
+        width:150px
+    }
+
+    .user-form .width2 .el-input-group .el-input__inner {
+        width:155px;
+    }
+    .user-form .width2 .el-input-group--prepend .el-input__inner {
+        width:99px;
+    }
+
+    .user-form /width2 .el-form-item__content {
+        width:200px;
+    }
+
+    .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item {
+        margin-bottom: 5px;
+    }
+
+    .user-form .el-checkbox {
+        margin-right:12px;
+    }
+
+    .user-form .el-checkbox__label {
+        padding-left:4px;
+    }
+
+    .order-form .el-input__inner {
+        width:200px;
+    }
+
+    .order-form .el-input-group {
+        width:200px;
+    }
+
+    .order-form .el-input-group .el-input__inner {
+        width:155px;
+    }
+    .order-form .el-input-group--prepend .el-input__inner {
+        width:99px;
+    }
+
+    .order-form .el-form-item__content {
+        width:200px;
+    }
+
+    .order-form .el-date-editor.el-input, .el-date-editor.el-input__inner {
+        width:150px
+    }
+
+    .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item {
+        margin-bottom: 5px;
+    }
+
+    .order-form .font12 label{
+        font-size:12px;
+    }
+
+    .order-form .el-checkbox {
+        margin-right:12px;
+    }
+
+    .order-form .el-checkbox__label {
+        padding-left:4px;
+    }
+
+    .login-container {
+    /*box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);*/
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    background-clip: padding-box;
+    margin: 180px auto;
+    width: 350px;
+    padding: 35px 35px 15px 35px;
+    background: #fff;
+    border: 1px solid #eaeaea;
+    box-shadow: 0 0 25px #cac6c6;
+    .title {
+      margin: 0px auto 40px auto;
+      text-align: center;
+      color: #505458;
+    }
+    .remember {
+      margin: 0px 0px 35px 0px;
+    }
+  }
+
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 148px;
+    height: 148px;
+    line-height: 148px;
+    text-align: center;
+  }
+  .avatar {
+    width: 148px;
+    height: 148px;
+    display: block;
+  }
+
+  .el-table .warning-row {
+    background: oldlace;
+  }
+
+  .el-table .el-table__body .success-row {
+    color: red !important;
+    background: rgba(103,194,58,.2) !important;
+  }
+
 </style>
 <body>
 
@@ -69,6 +208,7 @@ $(document).ready(function(){
             path: '/', component: "asapage-home",
             children:[
                 {path: '/order', component: "asapage-order"},
+                {path: '/confirmorder', component: "asapage-confirmorder"},
                 {path: '/sales', component: "asapage-sales"},
                 {path: '/user', component: "asapage-user"},
                 {path: '/group', component: "asapage-group"},
@@ -76,7 +216,8 @@ $(document).ready(function(){
                 {path: '/brand', component: "asapage-brand"},
                 {path: '/brandgroup', component: "asapage-brandgroup"},
                 {path: '/sizetop', component: "asapage-sizetop"},
-                {path: '/product', component: "asapage-product"},                
+                {path: '/product', component: "asapage-product"},      
+                {path: '/user/modifypassword', component: "asapage-usermodifypassword"},                
                 {path:'/ageseason', component:$ASA.getComponentSimple("ageseason")},
                 {path:'/ulnarinch', component:$ASA.getComponent("ulnarinch")},
                 {path:'/winterproofing', component:$ASA.getComponent("winterproofing")},
@@ -98,7 +239,8 @@ $(document).ready(function(){
                 {path:'/supplier', component:$ASA.getComponentSimple("supplier")}
             ]
         },
-        {path: '/login/:action', component: "asapage-login"}
+        {path: '/login/:action', component: "asapage-login"},
+        {path: '/login', redirect: { path: '/login/login' }}
     ]
 
     const router = new VueRouter({
@@ -112,7 +254,12 @@ $(document).ready(function(){
       getters: {
           is_login(state) {
               var auth = state.auth
-              return auth['id'] && auth['id']>0
+              if( auth['id'] && auth['id']>0) {
+                  return true;
+              }
+              else {
+                  return false;
+              }
           }
       },
       mutations:{

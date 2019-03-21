@@ -128,7 +128,9 @@ class AdminController extends BaseController
 	    ));
         
         if($this->request->isAjax()) {
-            echo json_encode($result->toArray());
+            //echo json_encode($result->toArray());
+
+            echo $this->reportJson(200,[], array("data"=>$result->toArray()));
             $this->view->disable();
         }
         else {
@@ -182,7 +184,7 @@ class AdminController extends BaseController
                     $list[] = $line;   
                 }
             }           
-            echo json_encode($list);	            
+            echo $this->reportJson(200,[], array("data"=>$list));           
 	    }
 	    
 	    $this->view->disable();

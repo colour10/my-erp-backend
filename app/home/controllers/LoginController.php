@@ -45,4 +45,16 @@ class LoginController extends Controller
 
         header("location:/login");
     }
+
+    function checkloginAction() {
+
+        $auth = $this->session->get('user');
+        if($auth && $auth["id"]>0) {
+            echo json_encode(['code' => '200', 'auth' =>$auth, 'messages' => []]);
+        }
+        else {
+            echo json_encode(['code' => '200', 'messages' => []]); 
+        }
+        $this->view->disable();
+    }
 }

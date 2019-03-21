@@ -1,6 +1,6 @@
 var $ASA = (function(){
     
-    var handelSubmitMessage = function(result, callback) {
+    var handelSubmitMessage = function(result, callback, failcallback) {
         var self = this
         if(result.messages.length>0) {
             const h = self.$createElement;
@@ -11,6 +11,10 @@ var $ASA = (function(){
             self.$alert(message, getLabel("error_tip"), {
                 confirmButtonText: getLabel("ok")
             });   
+
+            if(failcallback) {
+                failcallback()
+            }
         }    
         else {
             self.$message({
@@ -24,7 +28,7 @@ var $ASA = (function(){
         }
     }    
     
-    var submit = function(path, form, callback) {
+    var submit = function(path, form, callback, failcallback) {
         var self = this;        
         
         $.post(path, form, function(res){
@@ -36,7 +40,7 @@ var $ASA = (function(){
                 if(callback) {
                     callback(res)
                 }
-            })
+            }, failcallback)
         },"json")
     }    
     
