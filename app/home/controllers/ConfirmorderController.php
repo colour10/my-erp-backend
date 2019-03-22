@@ -486,10 +486,12 @@ class ConfirmorderController extends CadminController {
         foreach ($confirmorder->confirmorderdetails as $k => $confirmorderdetail) {
             // 过滤已经删除的数据
             if ($confirmorderdetail->sys_delete_flag == '0') {
-                $orderdetail_array = $confirmorderdetail->toArray();
+                $confirmorderdetail_array = $confirmorderdetail->toArray();
+                // 添加该商品的orderdetail信息
+                $confirmorderdetail_array['orderdetails'] = $confirmorderdetail->orderdetails->toArray();
                 // 可能记录有很多重复的商品数据，这时候先只取出productid，再去重
                 $this->productlist[] = $confirmorderdetail->product->id;
-                $this->confirmorderParams['list'][] = $orderdetail_array;
+                $this->confirmorderParams['list'][] = $confirmorderdetail_array;
             }
         }
         // 组装
