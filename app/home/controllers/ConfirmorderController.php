@@ -54,22 +54,22 @@ class ConfirmorderController extends CadminController {
      */
     public function searchAction()
     {
-        // 判断是否有params参数提交过来
-        $params = $this->request->get('params');
-        // 如果参数不为空，那么就开始解析
-        if (!$params) {
-            $msg = $this->getValidateMessage('confirmorder-params', 'template', 'required');
-            return $this->error([$msg]);
-        }
-        // 转换成数组
-        $arr = json_decode($params, true);
-        $this->confirmorderParams = $arr;
-        $formdata = $this->confirmorderParams['form'];
+        // // 判断是否有params参数提交过来
+        // $params = $this->request->get('params');
+        // // 如果参数不为空，那么就开始解析
+        // if (!$params) {
+        //     $msg = $this->getValidateMessage('confirmorder-params', 'template', 'required');
+        //     return $this->error([$msg]);
+        // }
+        // // 转换成数组
+        // $arr = json_decode($params, true);
+        // $this->confirmorderParams = $arr;
+        // $formdata = $this->confirmorderParams['form'];
 
-        // // 获取查询条件，如果直接通过post传值，在地址栏接收的话，用这个逻辑
-        // $formdata = $this->request->get();
-        // // 清除冗余的_url字段
-        // unset($formdata['_url']);
+        // 获取查询条件，如果直接通过post传值，在地址栏接收的话，用这个逻辑
+        $formdata = $this->request->get();
+        // 清除冗余的_url字段
+        unset($formdata['_url']);
 
         // 开始判断
         // 初始化一个值用来保存查询的条件
