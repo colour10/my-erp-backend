@@ -490,6 +490,7 @@ return array(
     'confirmorder-params' => '发货单参数',
     'confirmorderdetail' => '发货单明细',
     'confirmorder' => '发货单',
+    'confirmorderid' => '发货单编号 ',
     'orderdetail-over-max-number' => '发货量超过了订单数量',
     'supplier' => '供货商',
     // 通用型，以后有需要再改
