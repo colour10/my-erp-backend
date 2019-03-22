@@ -6594,12 +6594,12 @@ CREATE TABLE `xs_return` (
                            `sys_delete_stuff` int(10) unsigned DEFAULT NULL,
                            `sys_delete_date` datetime DEFAULT NULL,
                            `sys_delete_flag` tinyint(1) NULL DEFAULT '0' COMMENT '0-未删除 1-已删除',
-                           `actualprice` decimal(16,9) DEFAULT NULL,
-                           `sellspotid` int(10) unsigned DEFAULT NULL,
-                           `memberid` int(10) unsigned DEFAULT NULL,
-                           `returnstaff` int(10) unsigned DEFAULT NULL,
-                           `returndate` datetime DEFAULT NULL,
-                           `returnno` varchar(50) DEFAULT NULL,
+                           `actualprice` decimal(16,9) DEFAULT NULL COMMENT '成交价格',
+                           `sellspotid` int(10) unsigned DEFAULT NULL COMMENT '销售端口ID',
+                           `memberid` int(10) unsigned DEFAULT NULL COMMENT '会员ID',
+                           `staff` int(10) unsigned DEFAULT NULL COMMENT '退货经手人',
+                           `date` datetime DEFAULT NULL COMMENT '退货日期',
+                           `no` varchar(50) DEFAULT NULL COMMENT '退货单号',
                            PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='退货单';
 
@@ -6629,8 +6629,8 @@ CREATE TABLE `xs_returncode` (
                                `sys_delete_stuff` int(10) unsigned DEFAULT NULL,
                                `sys_delete_date` datetime DEFAULT NULL,
                                `sys_delete_flag` tinyint(1) NULL DEFAULT '0' COMMENT '0-未删除 1-已删除',
-                               `year` varchar(5) DEFAULT NULL,
-                               `code` varchar(10) DEFAULT NULL,
+                               `year` varchar(5) DEFAULT NULL COMMENT '年份',
+                               `code` varchar(10) DEFAULT NULL COMMENT '号码',
                                PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='退货单号表';
 
@@ -6723,15 +6723,15 @@ CREATE TABLE `xs_sales_card` (
                                `sys_delete_stuff` int(10) unsigned DEFAULT NULL,
                                `sys_delete_date` datetime DEFAULT NULL,
                                `sys_delete_flag` tinyint(1) NULL DEFAULT '0' COMMENT '0-未删除 1-已删除',
-                               `actualprice` decimal(16,9) DEFAULT NULL,
-                               `memberid` int(10) unsigned DEFAULT NULL,
-                               `salesstaff` int(10) unsigned DEFAULT NULL,
-                               `salesdate` datetime DEFAULT NULL,
-                               `sellspotid` int(10) unsigned DEFAULT NULL,
-                               `companyid` int(10) unsigned DEFAULT NULL,
-                               `saleno` varchar(50) DEFAULT NULL,
-                               `ischeck` varchar(1) DEFAULT NULL,
-                               `sheetid` int(10) unsigned DEFAULT NULL,
+                               `actualprice` decimal(16,9) DEFAULT NULL COMMENT '实际成交价格',
+                               `memberid` int(10) unsigned DEFAULT NULL COMMENT '会员ID',
+                               `salesstaff` int(10) unsigned DEFAULT NULL COMMENT '销售人员',
+                               `salesdate` datetime DEFAULT NULL COMMENT '销售时间',
+                               `sellspotid` int(10) unsigned DEFAULT NULL COMMENT '销售端口ID',
+                               `companyid` int(10) unsigned DEFAULT NULL COMMENT '公司ID',
+                               `saleno` varchar(50) DEFAULT NULL COMMENT '销售单号',
+                               `ischeck` varchar(1) DEFAULT NULL COMMENT '对账标记',
+                               `sheetid` int(10) unsigned DEFAULT NULL COMMENT '对账单ID',
                                PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='销售储值卡主表';
 
