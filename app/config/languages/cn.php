@@ -341,7 +341,7 @@ return array(
     "huiyuan" => "会员",
     "xiaoshouren" => "销售人",
     "waitudingdanhao" => "外部订单号",
-    "xiaoshoudangku" => "销售仓库",
+    "xiaoshoucangku" => "销售仓库",
     "xiaoshouriqi" => "销售日期",
     "duizhangdanhao" => "对账单号",
     "zhidanriqi" => "制单日期",
@@ -396,8 +396,8 @@ return array(
     "chaxun" => "查询",
     "querensuoxuan" => "确认所选",
     "zuofei" => "作废",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
+    "xiaoshoudanhao" => "销售单号",
+    "zhuangtai" => "状态",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
@@ -551,8 +551,8 @@ return array(
     ),
     
     "list_bussinesstype" => array(
-        "1" => "期货",
-        "2" => "现货"
+        "1" => array("id"=>"1", "style"=>"color:red", "name"=>"期货"),
+        "2" => array("id"=>"2", "style"=>"", "name"=>"现货"),
     ),
     
     "list_formtype" => array(

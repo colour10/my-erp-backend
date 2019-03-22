@@ -43,7 +43,8 @@ class LoginController extends Controller
     function logoutAction() {
         $this->session->destroy();
 
-        header("location:/login");
+        echo json_encode(['code' => '200', 'messages' => []]); 
+        $this->view->disable();
     }
 
     function checkloginAction() {
