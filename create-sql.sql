@@ -833,7 +833,7 @@ CREATE TABLE `dd_order` (
                           `sys_delete_date` datetime DEFAULT NULL,
                           `sys_delete_flag` tinyint(1) NULL DEFAULT '0' COMMENT '0-未删除 1-已删除',
                           `bussinesstypeid` int(10) unsigned DEFAULT NULL COMMENT '业务类型（暂时未使用）',
-                          `makedate` varchar(10) DEFAULT NULL COMMENT '制单日期',
+                          `makedate` datetime DEFAULT NULL COMMENT '制单日期',
                           `makestaff` int(10) unsigned DEFAULT NULL COMMENT '制单人',
                           `supplierid` int(10) unsigned DEFAULT NULL COMMENT '供货商',
                           `finalsupplierid` int(10) unsigned DEFAULT NULL COMMENT '发货单位',
