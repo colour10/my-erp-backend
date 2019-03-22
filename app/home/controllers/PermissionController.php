@@ -17,42 +17,6 @@ class PermissionController extends AdminController {
     }
 
     /**
-     * 增加模型，方便录入测试
-     * 因为postman录入有bug，所以重写了此方法
-     * @return false|string|void
-     */
-    public function addAction()
-    {
-        if($this->request->isPost()) {
-            //更新数据库
-            $row = $this->getModelObject();
-            $fields = $this->getAttributes();
-            foreach($fields as $name) {
-                // postman录入只能用原生的request获取
-                if($this->request->get($name)) {
-                    $row->$name = $this->request->get($name);
-                }
-            }
-
-            $result = array("code"=>200, "messages" => array());
-            if ($row->create() === false) {
-                $messages = $row->getMessages();
-
-                foreach ($messages as $message) {
-                    $result["messages"][] = $message->getMessage();
-                }
-            } else {
-                $result['is_add'] = "1";
-                $result['id'] = $row->id;
-            }
-
-            echo json_encode($result);
-            $this->view->disable();
-        }
-    }
-
-
-    /**
      * 获取权限目录树
      * @return false|string
      */

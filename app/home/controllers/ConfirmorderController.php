@@ -397,9 +397,12 @@ class ConfirmorderController extends CadminController {
                 }
             }
             // 部分数据重写
-            // 添加制单人
+            // 添加制单人及制单日期
             if (!isset($_POST["makestaff"]) || $_POST["makestaff"] == "") {
                 $_POST["makestaff"] = $this->userid;
+            }
+            if (!isset($_POST["makedate"]) || $_POST["makedate"] == "") {
+                $_POST["makedate"] = date('Y-m-d H:i:s');
             }
             // 时间类型如果为空，设置为null
             if (!isset($_POST["flightdate"]) || $_POST["flightdate"] == "") {
@@ -418,9 +421,9 @@ class ConfirmorderController extends CadminController {
             $company_rand = TbCompany::findFirstById($this->companyid)->randid;
             // 开始处理随机数，保存成6位数字
             $company_rand = Util::cover_position($company_rand, 6);
-            $mblno = 'C' . $company_rand . date('YmdHis') . mt_rand(1000, 9999);
+            $orderno = 'C' . $company_rand . date('YmdHis') . mt_rand(1000, 9999);
             if (!isset($_POST["mblno"]) || $_POST["mblno"] == "") {
-                $_POST["mblno"] = $mblno;
+                $_POST["orderno"] = $orderno;
             }
 
             // 继续执行父类其他方法
