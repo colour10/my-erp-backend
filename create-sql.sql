@@ -6663,7 +6663,7 @@ CREATE TABLE `xs_sales` (
                           `actualprice` decimal(16,9) DEFAULT NULL COMMENT '',
                           `memberid` int(10) unsigned DEFAULT NULL COMMENT '会员ID',
                           `pricelistid` int(10) unsigned DEFAULT NULL COMMENT '',
-                          `makedate` varchar(10) DEFAULT NULL COMMENT '制单日期',
+                          `makedate` datetime DEFAULT NULL COMMENT '制单日期',
                           `makestaff` int(10) unsigned DEFAULT NULL COMMENT '制单人',
                           `salesstaff` int(10) unsigned DEFAULT NULL COMMENT '销售人员ID',
                           `salesdate` varchar(10) DEFAULT NULL COMMENT '销售日期',
