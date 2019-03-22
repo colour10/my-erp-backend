@@ -581,6 +581,7 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `dd_confirmorder`;
 
 
+
 CREATE TABLE `dd_confirmorder` (
                                  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
                                  `sys_create_stuff` int(10) unsigned NOT NULL,
@@ -589,21 +590,21 @@ CREATE TABLE `dd_confirmorder` (
                                  `sys_modify_date` datetime NOT NULL,
                                  `sys_delete_stuff` int(10) unsigned DEFAULT NULL,
                                  `sys_delete_date` datetime DEFAULT NULL,
-                                 `sys_delete_flag` tinyint(1) NULL DEFAULT '0' COMMENT '0-未删除 1-已删除',
+                                 `sys_delete_flag` tinyint(4) NOT NULL COMMENT '0-未删除 1-已删除',
                                  `orderno` varchar(50) DEFAULT NULL COMMENT '发货单号',
                                  `makedate` datetime DEFAULT NULL COMMENT '制单日期',
                                  `makestaff` int(10) unsigned DEFAULT NULL COMMENT '制单人',
                                  `supplierid` int(10) unsigned DEFAULT NULL COMMENT '供货商id',
                                  `currency` int(10) unsigned DEFAULT NULL COMMENT '货币类型',
                                  `total` decimal(16,9) DEFAULT NULL COMMENT '总金额',
-                                 `isstatus` varchar(1) DEFAULT NULL COMMENT '0-在途未入库，1-已入库，2-已备货未发出',
+                                 `isstatus` tinyint(1) DEFAULT NULL COMMENT '0-在途未入库，1-已入库，2-已备货未发出',
                                  `memo` varchar(200) DEFAULT NULL COMMENT '备注',
                                  `brandid` int(10) unsigned DEFAULT NULL COMMENT '品牌ID（暂时未使用）',
                                  `ageseasonid` int(10) unsigned DEFAULT NULL COMMENT '年份季节id',
-                                 `seasontype` varchar(1) DEFAULT NULL COMMENT '年代类型：0-pre, 1-main, 2-fashion show',
+                                 `seasontype` tinyint(1) DEFAULT NULL COMMENT '0-pre ,1-main ,2-fashion show',
                                  `auditstaff` int(10) unsigned DEFAULT NULL COMMENT '审核人',
                                  `auditdate` datetime DEFAULT NULL COMMENT '审核日期',
-                                 `auditstatus` varchar(1) DEFAULT NULL COMMENT '审核状态',
+                                 `auditstatus` tinyint(1) DEFAULT NULL COMMENT '审核状态:0-未提交审核；1-待审核；2-审核完成,3-作废',
                                  `exchangerate` decimal(16,9) DEFAULT NULL COMMENT '汇率',
                                  `finalsupplierid` int(10) unsigned DEFAULT NULL COMMENT '供货单位id',
                                  `flightno` varchar(50) DEFAULT NULL COMMENT '航班号',
@@ -616,21 +617,21 @@ CREATE TABLE `dd_confirmorder` (
                                  `transcompany` int(10) unsigned DEFAULT NULL COMMENT '空运商',
                                  `isexamination` varchar(1) DEFAULT NULL COMMENT '是否海关验货',
                                  `examinationresult` varchar(50) DEFAULT NULL COMMENT '验货结果',
-                                 `clearancedate` datetime DEFAULT NULL COMMENT '放行时间',
+                                 `clearancedate` datetime DEFAULT NULL COMMENT '	放行时间',
                                  `pickingdate` datetime DEFAULT NULL COMMENT '预计提货时间',
                                  `motortransportpool` varchar(50) DEFAULT NULL COMMENT '车队',
                                  `warehouseid` int(10) unsigned DEFAULT NULL COMMENT '预计到货仓库',
-                                 `box_number` decimal(16,9) DEFAULT NULL COMMENT '箱数',
+                                 `box_number` int(11) DEFAULT NULL COMMENT '箱数',
                                  `weight` decimal(16,9) DEFAULT NULL COMMENT '重量',
                                  `volume` decimal(16,9) DEFAULT NULL COMMENT '体积',
                                  `issjyh` varchar(1) DEFAULT NULL COMMENT '是否商检验货',
                                  `sellerid` int(10) unsigned DEFAULT NULL COMMENT '卖家编号',
                                  `sjyhresult` varchar(50) DEFAULT NULL COMMENT '商检验货结果',
                                  `buyerid` int(10) unsigned DEFAULT NULL COMMENT '买家编号',
-                                 `transporttype` varchar(1) DEFAULT NULL COMMENT '运输方式：0-by air 1-快递 2-中转',
-                                 `paytype` varchar(1) DEFAULT NULL COMMENT '支付方式：0- t/t',
-                                 `property` varchar(1) DEFAULT NULL COMMENT '入库属性：0-自采 1-代销',
-                                 `payoutpercentage` varchar(10) DEFAULT NULL COMMENT '付款比例',
+                                 `transporttype` tinyint(1) DEFAULT NULL COMMENT '0-by air 1-快递 2-中转',
+                                 `paytype` tinyint(1) DEFAULT NULL COMMENT '0- t/t',
+                                 `property` tinyint(1) DEFAULT NULL COMMENT '0-自采 1-代销',
+                                 `payoutpercentage` varchar(10) DEFAULT NULL COMMENT '属性',
                                  `pickingaddress` text COMMENT '国外提货地址',
                                  `chargedweight` decimal(16,9) DEFAULT NULL COMMENT '计费重量',
                                  `paydate` datetime DEFAULT NULL COMMENT '付款时间',
@@ -640,7 +641,8 @@ CREATE TABLE `dd_confirmorder` (
                                  `dd_company` int(10) unsigned DEFAULT NULL COMMENT '代垫单位',
                                  `companyid` int(11) DEFAULT NULL COMMENT '公司id',
                                  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='发货单';
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8mb4 COMMENT='发货单';
+
 
 
 --
@@ -5266,8 +5268,8 @@ CREATE TABLE `tb_product` (
                             `ageseason` varchar(200) DEFAULT NULL COMMENT '年代',
                             `productsize` int(10) unsigned DEFAULT NULL COMMENT '尺码',
                             `countries` varchar(100) DEFAULT NULL COMMENT '产地',
-                            `security` int(10) unsigned DEFAULT NULL COMMENT '安全类别',
-                            `execution` int(10) unsigned DEFAULT NULL COMMENT '执行标准',
+                            `securitycategory` int(10) unsigned DEFAULT NULL COMMENT '安全类别',
+                            `executioncategory` int(10) unsigned DEFAULT NULL COMMENT '执行标准',
                             `material` int(10) unsigned DEFAULT NULL COMMENT '材质',
                             `productparst` int(10) unsigned DEFAULT NULL COMMENT '附带配件（暂时没用）',
                             `occasion` varchar(200) DEFAULT NULL COMMENT '场合风格',
@@ -6917,9 +6919,9 @@ CREATE TABLE `zl_ac_cashflow_statement` (
                                           `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
                                           `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
                                           `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
-                                          `subject_type` int(11) DEFAULT NULL COMMENT '0-正，1-负',
-                                          `orderno` int(11) DEFAULT NULL,
-                                          `parentid` int(10) unsigned DEFAULT NULL,
+                                          `subject_type` int(11) DEFAULT NULL COMMENT '科目类型：0-正，1-负',
+                                          `orderno` int(11) DEFAULT NULL COMMENT '编号',
+                                          `parentid` int(10) unsigned DEFAULT NULL COMMENT '上级ID',
                                           PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='现金流量表格式';
 
