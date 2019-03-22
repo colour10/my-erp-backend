@@ -288,9 +288,12 @@ class OrderController extends CadminController
                 }
             }
             // 部分数据重写
-            // 添加制单人
+            // 添加制单人及制单日期
             if (!isset($_POST["makestaff"]) || $_POST["makestaff"] == "") {
                 $_POST["makestaff"] = $this->userid;
+            }
+            if (!isset($_POST["makedate"]) || $_POST["makedate"] == "") {
+                $_POST["makedate"] = date('Y-m-d H:i:s');
             }
             // 生成订单号
             $company_rand = TbCompany::findFirstById($this->companyid)->randid;
