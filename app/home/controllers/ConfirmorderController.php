@@ -391,7 +391,7 @@ class ConfirmorderController extends CadminController {
     {
         // 必须传递一个订单id
         if (!$this->request->get('id')) {
-            $msg = $this->getValidateMessage('confirmorder', 'template', 'required');
+            $msg = $this->getValidateMessage('confirmorderid', 'template', 'required');
             return $this->error([$msg]);
         }
         $this->confirmorderid = $this->request->get('id');
