@@ -384,6 +384,22 @@ class ConfirmorderController extends CadminController {
     }
 
     /**
+     * 读取发货单信息，必须传一个id参数，代表发货单编号
+     * @return false|string
+     */
+    public function loadorderAction()
+    {
+        // 必须传递一个订单id
+        if (!$this->request->get('id')) {
+            $msg = $this->getValidateMessage('confirmorder', 'template', 'required');
+            return $this->error([$msg]);
+        }
+        $this->confirmorderid = $this->request->get('id');
+        // 取出单个模型及发货单详情逻辑
+        $this->getConfirmorder($this->confirmorderid);
+    }
+
+    /**
      * 重写，添加发货单号以及其他必要的参数
      */
     public function doAdd()
