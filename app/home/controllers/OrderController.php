@@ -7,41 +7,29 @@ use Asa\Erp\TbCompany;
 use Asa\Erp\Util;
 use Asa\Erp\ZlSizecontent;
 use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\View;
 use Asa\Erp\DdOrder;
 
 /**
  * 订单主表
  */
-class OrderController extends CadminController
+class OrderController extends BaseController
 {
-    // 订单参数
-    protected $orderParams;
-    // 订单id
-    protected $orderid;
-    // // 字段名称，sizecontent已不再需要，注释掉
-    // protected $zlcontent_field_name;
-    // 当前用户
-    protected $userid;
-    // 权限提示msg
     protected $permission_msg;
 
     public function initialize()
     {
         parent::initialize();
 
-        $this->setModelName('Asa\\Erp\\DdOrder');
-
-        // // 确定字段名称，sizecontent已不再需要，注释掉
-        // // 拿到当前尺码字段名称
-        // $zlcontent = new ZlSizecontent();
-        // $this->zlcontent_field_name = $zlcontent->getColumnName('content');
-
-        // 当前用户
-        $this->userid = $this->auth['id'];
-
         // 权限提示
         $this->permission_msg = $this->getValidateMessage('order-gurd-alert-message');
+    }
+
+    public function indexAction() {
+        $result = DdOrder::find(
+            sprintf("companyid=%d", $this->companyid)
+        );
+
+        echo $this->success($result->toArray());
     }
 
     /**
@@ -76,16 +64,13 @@ class OrderController extends CadminController
         // 判断逻辑
         if ($orderid) {
             // 有订单号就修改
-            // 查找订单号是否存在
-            $order = DdOrder::findFirstById($orderid);
-            if (!$order) {
-                $msg = $this->getValidateMessage('order', 'template', 'notexist');
-                return $this->error([$msg]);
-            }
-
-            // 判断当前订单是否属于当前用户所在公司
-            if (!$this->check_if_self_company_order($order->companyid)) {
-                return $this->error([$this->permission_msg]);
+            // 查找订单号是否存在或者非法
+            // 只有status=1的订单才可以修改
+            $order = DdOrder::findFirst(
+                sprintf("id=%d and companyid=%d", $orderid, $this->companyid)
+            );
+            if(!$order || $order->status!=1) {
+                exit;
             }
 
             // 开始更新
@@ -98,11 +83,7 @@ class OrderController extends CadminController
             if (!$order->save()) {
                 $this->db->rollback();
                 // 验证类错误给出提示
-                $messages = $order->getMessages();
-                foreach ($messages as $message) {
-                    $result[] = $message->getMessage();
-                }
-                return $this->error($result);
+                return $this->error($order);
             }
         }
         else {
@@ -113,7 +94,7 @@ class OrderController extends CadminController
             }
 
             // 添加制单人及制单日期
-            $order->makestaff = $this->userid;
+            $order->makestaff = $this->currentUser;
             $order->makedate = date('Y-m-d H:i:s');
             $order->companyid = $this->companyid;
 
@@ -128,6 +109,8 @@ class OrderController extends CadminController
             if($order->create() === false) {
                 //返回失败信息
                 $this->db->rollback();
+
+                return $this->error($order);
             }
         }
           
@@ -214,23 +197,8 @@ class OrderController extends CadminController
 
         // 判断订单是否存在
         if ($order!=false && $order->status!=1) {
-            $this->doTableSave([$order,"delete"]);
+            $this->doTableAction($order,"delete");
         }
-    }
-
-    /**
-     * 判断当前订单是否属于当前用户所在公司
-     * @param $companyid
-     * @return bool
-     */
-    public function check_if_self_company_order($companyid)
-    {
-        // 逻辑
-        if ($this->companyid != $companyid) {
-            return false;
-        }
-        // 否则返回真
-        return true;
     }
 
     /**
@@ -245,7 +213,7 @@ class OrderController extends CadminController
         if($order!=false && $order->companyid==$this->companyid) {
             $order->status = $_POST['status']=="3" ? 3: 1;
 
-            $this->doTableSave([$order,"update"]);
+            $this->doTableAction($order,"update");
         }
     }
 
@@ -261,7 +229,7 @@ class OrderController extends CadminController
         if($order!=false && $order->companyid==$this->companyid) {
             $order->status = 2;
 
-            $this->doTableSave([$order,"update"]);             
+            $this->doTableAction($order,"update");             
         }
     }
 
@@ -277,21 +245,27 @@ class OrderController extends CadminController
         if($order!=false && $order->companyid==$this->companyid) {
             $order->isstatus = 1;
 
-            $this->doTableSave([$order,"update"]);            
+            $this->doTableAction($order,"update");            
         }
     }
 
-    private function doTableSave($callback) {
-        if (call_user_func($callback) === false) {
-            $messages = $order->getMessages();
-            $array = [];
-            foreach ($messages as $message) {
-                $array[] = $message->getMessage();
-            }
-            echo $this->error($array);
-        }
-        else {
-            echo $this->success();
+    /**
+     * 订单修改,订单提交审核之后，只能修改部分字段信息
+     * @return [type] [description]
+     */
+    public function modifyAction() {
+        $orderid = (int)$_POST['id'];
+
+        // 根据orderid查询出当前订单以及订单详情的所有信息
+        $order = DdOrder::findFirstById($orderid);
+        if($order!=false && $order->companyid==$this->companyid) {
+            //定义可以修改的字段名
+            $columns = array();
+
+            //如果需求需要，可以在这里比较修改前后的数据变化，并留痕
+            //如果不需要，直接按照定义的字段范围更新数据
+
+            $this->doTableAction($order,"update");            
         }
     }
 }

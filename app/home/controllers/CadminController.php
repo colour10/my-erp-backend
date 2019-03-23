@@ -9,14 +9,8 @@ use Phalcon\Db\Column;
  * 各个公司私有数据的表的基类
  */
 class CadminController extends AdminController { 
-    protected $companyid;  
     public function initialize() {
 	    parent::initialize();
-	    
-	    $auth = $this->auth;
-	    if($auth) {
-	        $this->companyid = (int)$auth["companyid"];
-	    }
     }
     
     function indexAction() {
