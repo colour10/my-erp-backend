@@ -24,7 +24,7 @@ class OrderController extends BaseController
         $this->permission_msg = $this->getValidateMessage('order-gurd-alert-message');
     }
 
-    public function indexAction() {
+    public function pageAction() {
         $result = DdOrder::find(
             sprintf("companyid=%d", $this->companyid)
         );

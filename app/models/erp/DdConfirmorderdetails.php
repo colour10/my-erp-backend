@@ -5,7 +5,7 @@ use Phalcon\Mvc\Model\Relation;
 /**
  * 发货单明细表
  */
-class DdConfirmorderdetails extends BaseModel
+class DdConfirmorderdetails extends BaseCommonModel
 {
     public function initialize()
     {
