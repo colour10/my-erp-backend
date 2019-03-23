@@ -398,17 +398,16 @@ return array(
     "zuofei" => "作废",
     "xiaoshoudanhao" => "销售单号",
     "zhuangtai" => "状态",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
+    "ruku" => "入库",
+    "shenhetongguo" => "审核通过",
+    "tuihui" => "退回",
+    "shengchengrukudan" => "生成入库单",
+    "quxiaoshenhe" => "取消审核",
+    "rukuriqi" => "入库日期",
+    "daohuoshuliang" => "到货数量",
+    "shuliangxiangfu" => "数量相符",
+    "tishi" => "提示",
+    "order-add-warning" => "商品条目已经添加过了。",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
@@ -599,4 +598,20 @@ return array(
         "1" => "已售",
         "2" => "作废"
     ),
+
+    //订单状态
+    "list_confirmstatusstatus" => array(
+        "0" => "保存",
+        "1" => "待审核",
+        "2" => "审核",
+        "3" => "作废"
+    ),
+
+    //订单状态
+    "list_ordertatus" => array(
+        "1" => "保存",
+        "2" => "待审核",
+        "3" => "审核",
+        "4" => "作废"
+    )
 );
