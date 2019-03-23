@@ -438,4 +438,66 @@ class OrderController extends CadminController
         // 否则返回真
         return true;
     }
+
+    /**
+     * 订单审核
+     * @return [type] [description]
+     */
+    public function confirmAction() {
+        $orderid = (int)$_POST['id'];
+
+        // 根据orderid查询出当前订单以及订单详情的所有信息
+        $order = DdOrder::findFirstById($orderid);
+        if($order!=false && $order->companyid==$this->companyid) {
+            $order->status = $_POST['status']=="3" ? 3: 1;
+
+            if ($order->save() === false) {
+                $messages = $order->getMessages();
+                $array = [];
+                foreach ($messages as $message) {
+                    $array[] = $message->getMessage();
+                }
+                echo $this->error($array);
+            }
+            else {
+                echo $this->success();
+            }
+            //print_r($order->toArray());
+
+            
+        }
+
+        $this->view->disable();
+    }
+
+    /**
+     * 订单取消审核，如果订单上的明细已经生成入库单，则不能取消审核
+     * @return [type] [description]
+     */
+    public function cancelAction() {
+        $orderid = (int)$_POST['id'];
+
+        // 根据orderid查询出当前订单以及订单详情的所有信息
+        $order = DdOrder::findFirstById($orderid);
+        if($order!=false && $order->companyid==$this->companyid) {
+            $order->status = 2;
+
+            if ($order->save() === false) {
+                $messages = $order->getMessages();
+                $array = [];
+                foreach ($messages as $message) {
+                    $array[] = $message->getMessage();
+                }
+                echo $this->error($array);
+            }
+            else {
+                echo $this->success();
+            }
+            //print_r($order->toArray());
+
+            
+        }
+
+        $this->view->disable();
+    }
 }
