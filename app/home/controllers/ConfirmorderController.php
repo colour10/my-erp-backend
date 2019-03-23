@@ -502,7 +502,6 @@ class ConfirmorderController extends CadminController {
         }
         // 最终成功返回，原来的数据还要保留，再加上发货单详情之中每个商品的名称也要放进去
         echo $this->success($this->confirmorderParams);
-        $this->view->disable();
     }
 
 }

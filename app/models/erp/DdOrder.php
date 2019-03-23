@@ -128,21 +128,59 @@ class DdOrder extends BaseCommonModel
         return sprintf($template_name, $human_name);
     }
 
+    /**
+     * 添加一条明细数据
+     * @param [type] $form 表单数据
+     */
     public function addDetail($form) {
         $row = new DdOrderdetails();
-        return $row->create($form);
+        if($row->create($form)) {
+            return $row;
+        }
+        else {
+            return false;
+        }
     }
 
+    /**
+     * 更新明细数据
+     * @param  [type] $form 表单数据
+     * @return [type]       [description]
+     */
     public function updateDetail($form) {
         $row = DdOrderdetails::findFirst(
             sprintf("id=%d", $form['id'])
         );
 
         if($row!=false && $row->companyid == $form['companyid']) {
-            return $row->update($form);
+            if($row->update($form)) {
+                return $row;
+            }
+            else {
+                return false;
+            }
         }
         else {
             return false;
         }
+    }
+
+    /**
+     * 
+     */
+    function getOrderDetail() {        
+        $data = [
+            'form' => $this->toArray(),
+            'list'=>[]
+        ];
+
+        // 循环添加数据
+        foreach ($this->orderdetails as $k => $orderdetail) {
+            $orderdetail_array = $orderdetail->toArray();
+            $orderdetail_array['product'] = $orderdetail->product->toArray();
+            $data['list'][] = $orderdetail_array;
+        }
+
+        return $data;
     }
 }

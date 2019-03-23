@@ -13,17 +13,9 @@ class UserController extends CadminController {
     }
 
     function modifypasswordAction() {
-        // Disable several levels
-        $this->view->disableLevel(
-            array(
-                View::LEVEL_LAYOUT => true
-            )
-        );
-
         if($this->request->isPost()) {
             $result = array("code"=>200, "messages" => array());
             echo json_encode($result);
-            $this->view->disable();
         }
     }
 

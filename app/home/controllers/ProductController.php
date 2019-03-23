@@ -29,9 +29,7 @@ class ProductController extends CadminController {
             );    
             
             echo json_encode($result->toArray());
-        }
-        
-        $this->view->disable();     
+        }        
     }
     
     public function beforeExecuteRoute($dispatcher)

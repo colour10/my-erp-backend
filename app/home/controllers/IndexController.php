@@ -4,13 +4,23 @@ use Phalcon\Mvc\Controller;
 use Asa\Erp\TbDepartment;
 use Asa\Erp\TbUser;
 use Asa\Erp\TbCompany;
+use Phalcon\Mvc\View;
 
 class IndexController extends BaseController
 {
 
 	public function indexAction()
 	{
-	    
+	    $view = new View();
+        $view->setViewsDir(APP_PATH .'/app/home/views/');
+        $view->setVar("system_language", $this->language);
+        $view->setVar("__sytem_time", time());
+        
+        $default_language = $this->config->language;
+        $view->setVar("__default_language", $this->config->language);
+        $view->setVar("__config", $this->config);
+        $view->render("index","index",[]);
+        exit;
 	}
     
     function saveAction() {
@@ -33,7 +43,6 @@ class IndexController extends BaseController
             }
             
             echo json_encode($result);
-            $this->view->disable();
         }           
     }
     

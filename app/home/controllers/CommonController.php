@@ -23,14 +23,12 @@ class CommonController extends BaseController
         $lang = $this->language;
 
         echo json_encode((array)$lang["currency"]);
-        $this->view->disable();
     }
 
     function languageAction()
     {
         $config = $this->config;
         echo json_encode((array)$config["languages"]);
-        $this->view->disable();
     }
     
     function systemlanguageAction()
@@ -51,7 +49,6 @@ class CommonController extends BaseController
         //var_dump($auth);
         
         echo sprintf("\$ASAL = %s", json_encode((array)$lang), JSON_OBJECT_AS_ARRAY );
-        $this->view->disable();
     }
     
     function uploadAction() {
@@ -84,8 +81,6 @@ class CommonController extends BaseController
             $result["files"] = $files;
         }
         
-        echo json_encode($result);
-        
-        $this->view->disable();
+        echo json_encode($result);        
     }
 }

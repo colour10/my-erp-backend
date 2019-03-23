@@ -426,7 +426,6 @@ return array(
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
 
 
     // 新增

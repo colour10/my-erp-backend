@@ -10,21 +10,8 @@ class BaseController extends Controller
     protected $default_language;
     public function initialize()
     {
-        //parent::initialize();
-
-        //����ѡ��
-        $this->view->setVar("system_language", $this->language);
-        $this->view->setVar("__sytem_time", time());
-        
-        $this->default_language = $this->config->language;
-        $this->view->setVar("__default_language", $this->config->language);
-        $this->view->setVar("__config", $this->config);
     }
     
-    function setTitle($title) {
-        $this->view->setVar("__title", $title);      
-    }
-
 
     /**
      * 返回正确的json信息

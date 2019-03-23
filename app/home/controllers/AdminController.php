@@ -121,11 +121,7 @@ class AdminController extends BaseController
             //echo json_encode($result->toArray());
 
             echo $this->reportJson(200,[], array("data"=>$result->toArray()));
-            $this->view->disable();
         }
-        else {
-            $this->view->setVar("result", $result->toArray());
-        }     
 	}
 
 	public function listAction() {
@@ -170,7 +166,6 @@ class AdminController extends BaseController
             echo $this->reportJson(200,[], array("data"=>$list));           
 	    }
 	    
-	    $this->view->disable();
 	}
 	
 	function beforeOutputListLoop($row) {
@@ -218,7 +213,6 @@ class AdminController extends BaseController
                 //$message['idd'] = "999";
             }
             echo json_encode($result);
-            $this->view->disable();
         }
 
     }
@@ -256,16 +250,6 @@ class AdminController extends BaseController
                 echo json_encode($result);
                 exit;
     	    }
-    	    $this->view->disable();
-	    }
-	    else {
-	        //从数据库中查找数据，给到模板
-	        $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
-	        $info = $findFirst->invokeArgs(null, array($this->getCondition()));
-
-	        if($info!=false) {
-	            $this->view->setVar("info", $info);
-	        }
 	    }
 	}
 
@@ -284,6 +268,5 @@ class AdminController extends BaseController
             }
         }
         echo json_encode($result);
-        $this->view->disable();
     }
 }

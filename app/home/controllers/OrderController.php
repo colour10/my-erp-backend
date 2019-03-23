@@ -137,6 +137,7 @@ class OrderController extends CadminController
         // $this->addOrderDetail();
         // 然后新增订单详情
         // 封装的过程中如果操作失败会回滚，所以放弃了封装，直接放在这里显示
+        $detail_id_array = [];
         foreach ($submitData['list'] as $k => $item) {
             // 使用模型更新
             $data = [
@@ -154,18 +155,32 @@ class OrderController extends CadminController
                 $detailRet = $order->addDetail($data);
             }
 
-            if (!$detailRet) {
+            if ($detailRet===false) {
                 $this->db->rollback();
                 $msg = $this->getValidateMessage('orderdetail', 'db', 'add-failed');
                 return $this->error([$msg]);
             }
+
+            $detail_id_array[] = $detailRet->id;            
         }
+
+        //清除不存在的详情id
+        if(count(detail_id_array)>0) {
+            $details = DdOrderdetails::find(
+                sprintf("orderid=%d and id not in(%s)", $order->id, implode(",", $detail_id_array))
+            );
+
+            foreach($details as $detail) {
+                $detail->delete();
+            }
+        }
+        
 
         // 提交事务
         $this->db->commit();
 
-        // 取出单个模型及下级订单详情逻辑
-        $this->getOrder($order->id);
+        // 最终成功返回，原来的数据还要保留，再加上订单详情之中每个商品的名称也要放进去
+        echo $this->success($order->getOrderDetail());
     }
 
 
@@ -175,14 +190,15 @@ class OrderController extends CadminController
      */
     public function loadorderAction()
     {
-        // 必须传递一个订单id
-        if (!$this->request->get('id')) {
-            $msg = $this->getValidateMessage('order', 'template', 'required');
-            return $this->error([$msg]);
+        // 根据orderid查询出当前订单以及订单详情的所有信息
+        $order = DdOrder::findFirst(
+            sprintf("id=%d and companyid=%d", $_POST["id"], $this->companyid)
+        );
+
+        // 判断订单是否存在
+        if ($order!=false && $order->status!=1) {
+            echo $this->success($order->getOrderDetail());
         }
-        $this->orderid = $this->request->get('id');
-        // 取出单个模型及下级订单详情逻辑
-        $this->getOrder($this->orderid);
     }
 
     // /**
@@ -238,65 +254,20 @@ class OrderController extends CadminController
 
 
     /**
-     * 根据订单id查询出每个订单下面的模型和具体订单详情
-     * @param $orderid
-     * @return false|string
-     */
-    public function getOrder($orderid)
-    {
-        // 根据orderid查询出当前订单以及订单详情的所有信息
-        $order = DdOrder::findFirstById($orderid);
-        // 判断订单是否存在
-        if (!$order) {
-            $msg = $this->getValidateMessage('orderdetail', 'template', 'notexist');
-            echo $this->error([$msg]);
-            exit;
-        }
-        
-        $data = [
-            'form' => $order->toArray(),
-            'list'=>[]
-        ];
-
-        // 循环添加数据
-        foreach ($order->orderdetails as $k => $orderdetail) {
-            $orderdetail_array = $orderdetail->toArray();
-            $orderdetail_array['product'] = $orderdetail->product->toArray();
-            $data['list'][] = $orderdetail_array;
-        }
-        // 最终成功返回，原来的数据还要保留，再加上订单详情之中每个商品的名称也要放进去
-        echo $this->success($data);
-        $this->view->disable();
-    }
-
-    /**
      * 订单删除
      * @return false|string
      */
     public function deleteAction()
     {
-        // 必须传递一个订单id
-        if (!$this->request->get('id')) {
-            $msg = $this->getValidateMessage('order', 'template', 'required');
-            return $this->error([$msg]);
-        }
-        $this->orderid = $this->request->get('id');
-
         // 根据orderid查询出当前订单以及订单详情的所有信息
-        $order = DdOrder::findFirstById($this->orderid);
+        $order = DdOrder::findFirst(
+            sprintf("id=%d and companyid=%d", $_GET["id"], $this->companyid)
+        );
+
         // 判断订单是否存在
-        if (!$order) {
-            $msg = $this->getValidateMessage('order', 'template', 'notexist');
-            return $this->error([$msg]);
+        if ($order!=false && $order->status!=1) {
+            $this->doTableSave([$order,"delete"]);
         }
-
-        // 判断当前订单是否属于当前用户所在公司
-        if (!$this->check_if_self_company_order($order->companyid)) {
-            return $this->error([$this->permission_msg]);
-        }
-
-        // 继续执行其他方法
-        parent::deleteAction();
     }
 
     /**
@@ -326,10 +297,8 @@ class OrderController extends CadminController
         if($order!=false && $order->companyid==$this->companyid) {
             $order->status = $_POST['status']=="3" ? 3: 1;
 
-            $this->doTableSave($order);
+            $this->doTableSave([$order,"update"]);
         }
-
-        $this->view->disable();
     }
 
     /**
@@ -344,10 +313,8 @@ class OrderController extends CadminController
         if($order!=false && $order->companyid==$this->companyid) {
             $order->status = 2;
 
-            $this->doTableSave($order);             
+            $this->doTableSave([$order,"update"]);             
         }
-
-        $this->view->disable();
     }
 
     /**
@@ -362,14 +329,12 @@ class OrderController extends CadminController
         if($order!=false && $order->companyid==$this->companyid) {
             $order->isstatus = 1;
 
-            $this->doTableSave($order);            
+            $this->doTableSave([$order,"update"]);            
         }
-
-        $this->view->disable();
     }
 
-    private function doTableSave($model) {
-        if ($order->save() === false) {
+    private function doTableSave($callback) {
+        if (call_user_func($callback) === false) {
             $messages = $order->getMessages();
             $array = [];
             foreach ($messages as $message) {
@@ -380,6 +345,5 @@ class OrderController extends CadminController
         else {
             echo $this->success();
         }
-        $this->view->disable();
     }
 }
