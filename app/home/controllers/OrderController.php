@@ -56,25 +56,28 @@ class OrderController extends CadminController
             return $this->error([$msg]);
         }
         // 转换成数组
-        $arr = json_decode($params, true);
-        $this->orderParams = $arr;
+        $submitData = json_decode($params, true);
 
         // 订单主表中，开始验证必填字段
         // 年代id、供货商id为必填项
 
         // // 判断订单是否有数据
         // // 订单数据可以为空，暂时注释
-        // if (count($this->orderParams['list']) == '0') {
+        // if (count($submitData['list']) == '0') {
         //     return $this->error(['order list is empty']);
         // }
 
         // 判断是否有订单号，分别进行
-        $this->orderid = $this->orderParams['form']['id'];
+        $orderid = $submitData['form']['id'];
+
+        // 采用事务处理
+        $this->db->begin();
+
         // 判断逻辑
-        if ($this->orderid) {
+        if ($orderid) {
             // 有订单号就修改
             // 查找订单号是否存在
-            $order = DdOrder::findFirstById($this->orderid);
+            $order = DdOrder::findFirstById($orderid);
             if (!$order) {
                 $msg = $this->getValidateMessage('order', 'template', 'notexist');
                 return $this->error([$msg]);
@@ -85,19 +88,14 @@ class OrderController extends CadminController
                 return $this->error([$this->permission_msg]);
             }
 
-            // 采用事务处理
-            $this->db->begin();
-
             // 开始更新
-            foreach ($this->orderParams['form'] as $k => $item) {
+            foreach ($submitData['form'] as $k => $item) {
                 // 把里面的参数转成post参数传递过去
-                if (isset($item)) {
-                    $_POST[$k] = $item;
-                }
+                $order->$k = $item;
             }
 
             // 判断是否成功
-            if (!$order->save($_POST)) {
+            if (!$order->save()) {
                 $this->db->rollback();
                 // 验证类错误给出提示
                 $messages = $order->getMessages();
@@ -106,155 +104,68 @@ class OrderController extends CadminController
                 }
                 return $this->error($result);
             }
-
-            // 开始更新订单详情表
-            // 首先删除原纪录
-            foreach ($order->orderdetails as $orderdetail) {
-                if (!$orderdetail->delete()) {
-                    $this->db->rollback();
-                    $msg = $this->getValidateMessage('order', 'db', 'delete-failed');
-                    return $this->error([$msg]);
-                }
-            }
-
-            // 开始写入订单详情表
-            // 需要引入订单详情表模型
-            // $this->addOrderDetail();
-            // 然后新增订单详情
-            // 封装的过程中如果操作失败会回滚，所以放弃了封装，直接放在这里显示
-            foreach ($this->orderParams['list'] as $k => $item) {
-                if (isset($item)) {
-                    $_POST = $item;
-                    // 加入订单
-                    $_POST['orderid'] = $this->orderid;
-                }
-
-                // 判断接收的参数是否正常
-                // 首先是键名是否存在
-                if (
-                    !array_key_exists('productid', $_POST) ||
-                    !array_key_exists('sizecontentid', $_POST) ||
-                    !array_key_exists('number', $_POST) ||
-                    !array_key_exists('orderid', $_POST)
-                ) {
-                    $this->db->rollback();
-                    $msg = $this->getValidateMessage('orderdetail', 'db', 'add-failed');
-                    return $this->error([$msg]);
-                }
-
-                // 其次是键值是否正常
-                if (
-                    !$_POST['productid'] ||
-                    !$_POST['sizecontentid'] ||
-                    !$_POST['number'] ||
-                    !$_POST['orderid']
-                ) {
-                    $this->db->rollback();
-                    $msg = $this->getValidateMessage('orderdetail', 'db', 'add-failed');
-                    return $this->error([$msg]);
-                }
-
-                // 使用模型更新
-                $orderDetail = new DdOrderdetails();
-                $data = [
-                    'productid' => $_POST['productid'],
-                    'sizecontentid' => $_POST['sizecontentid'],
-                    'number' => $_POST['number'],
-                    'companyid' => $this->companyid,
-                    'orderid' => $_POST['orderid'],
-                ];
-                if (!$orderDetail->save($data)) {
-                    $this->db->rollback();
-                    $msg = $this->getValidateMessage('orderdetail', 'db', 'add-failed');
-                    return $this->error([$msg]);
-                }
-            }
-
-            // 提交事务
-            $this->db->commit();
-
-        } else {
+        }
+        else {
             // 没有订单号就新增
-            // 采用事务处理
-            $this->db->begin();
-            // 把执行结果放在缓冲区，然后取出来
-            ob_start();
-            $this->doAdd();
-            $order = ob_get_contents();
-            ob_end_clean();
+            $order = new DdOrder();
+            foreach ($submitData['form'] as $k => $item) {
+                $order->$k = $item;
+            }
 
-            // 转成数组
-            $order_arr = json_decode($order, true);
+            // 添加制单人及制单日期
+            $order->makestaff = $this->userid;
+            $order->makedate = date('Y-m-d H:i:s');
+            $order->companyid = $this->companyid;
 
-            // 判断是否更新成功，加入是否为数组的判断
-            if (is_array($order_arr) && array_key_exists('messages', $order_arr) && count($order_arr['messages']) > 0) {
+            // 生成订单号
+            $order->orderno = sprintf(
+                "D%s%s%s", 
+                substr("000000".$this->companyid, -6),
+                date('YmdHis'),
+                mt_rand(1000, 9999)
+            );
+
+            if($order->create() === false) {
+                //返回失败信息
                 $this->db->rollback();
-                // 取出错误记录，因为在模型验证的时候，基本上都是出现错误就停止继续运行，所以只取出一条记录即可。
-                return $this->error([$order_arr['messages'][0]]);
+            }
+        }
+          
+
+        // 开始写入订单详情表
+        // 需要引入订单详情表模型
+        // $this->addOrderDetail();
+        // 然后新增订单详情
+        // 封装的过程中如果操作失败会回滚，所以放弃了封装，直接放在这里显示
+        foreach ($submitData['list'] as $k => $item) {
+            // 使用模型更新
+            $data = [
+                'productid' => $item['productid'],
+                'sizecontentid' => $item['sizecontentid'],
+                'number' => $item['number'],
+                'companyid' => $this->companyid,
+                'orderid' => $order->id
+            ];
+            if(isset($item['id']) && $item['id']!='') {
+                $data['id'] = $item['id'];
+                $detailRet = $order->updateDetail($data);
+            }
+            else {
+                $detailRet = $order->addDetail($data);
             }
 
-            // 取出订单id
-            $this->orderid = $order_arr['id'];
-
-            // 开始写入订单详情表
-            // 需要引入订单详情表模型
-            // $this->addOrderDetail();
-            // 然后新增订单详情
-            // 封装的过程中如果操作失败会回滚，所以放弃了封装，直接放在这里显示
-            foreach ($this->orderParams['list'] as $k => $item) {
-                if (isset($item)) {
-                    $_POST = $item;
-                    // 加入订单
-                    $_POST['orderid'] = $this->orderid;
-                }
-
-                // 判断接收的参数是否正常
-                // 首先是键名是否存在
-                if (
-                    !array_key_exists('productid', $_POST) ||
-                    !array_key_exists('sizecontentid', $_POST) ||
-                    !array_key_exists('number', $_POST) ||
-                    !array_key_exists('orderid', $_POST)
-                ) {
-                    $this->db->rollback();
-                    $msg = $this->getValidateMessage('orderdetail', 'db', 'add-failed');
-                    return $this->error([$msg]);
-                }
-
-                // 其次是键值是否正常
-                if (
-                    !$_POST['productid'] ||
-                    !$_POST['sizecontentid'] ||
-                    !$_POST['number'] ||
-                    !$_POST['orderid']
-                ) {
-                    $this->db->rollback();
-                    $msg = $this->getValidateMessage('orderdetail', 'db', 'add-failed');
-                    return $this->error([$msg]);
-                }
-
-                // 使用模型更新
-                $orderDetail = new DdOrderdetails();
-                $data = [
-                    'productid' => $_POST['productid'],
-                    'sizecontentid' => $_POST['sizecontentid'],
-                    'number' => $_POST['number'],
-                    'companyid' => $this->companyid,
-                    'orderid' => $_POST['orderid'],
-                ];
-                if (!$orderDetail->save($data)) {
-                    $this->db->rollback();
-                    $msg = $this->getValidateMessage('orderdetail', 'db', 'add-failed');
-                    return $this->error([$msg]);
-                }
+            if (!$detailRet) {
+                $this->db->rollback();
+                $msg = $this->getValidateMessage('orderdetail', 'db', 'add-failed');
+                return $this->error([$msg]);
             }
-
-            // 提交事务
-            $this->db->commit();
         }
 
+        // 提交事务
+        $this->db->commit();
+
         // 取出单个模型及下级订单详情逻辑
-        $this->getOrder($this->orderid);
+        $this->getOrder($order->id);
     }
 
 
@@ -272,40 +183,6 @@ class OrderController extends CadminController
         $this->orderid = $this->request->get('id');
         // 取出单个模型及下级订单详情逻辑
         $this->getOrder($this->orderid);
-    }
-
-    /**
-     * 重写，添加订单号以及其他必要的参数
-     */
-    public function doAdd()
-    {
-        if ($this->request->isPost()) {
-            // 更新数据库
-            // 开始解析参数，转化成直接post请求
-            foreach ($this->orderParams['form'] as $k => $item) {
-                if (isset($item)) {
-                    $_POST[$k] = $item;
-                }
-            }
-            // 部分数据重写
-            // 添加制单人及制单日期
-            if (!isset($_POST["makestaff"]) || $_POST["makestaff"] == "") {
-                $_POST["makestaff"] = $this->userid;
-            }
-            if (!isset($_POST["makedate"]) || $_POST["makedate"] == "") {
-                $_POST["makedate"] = date('Y-m-d H:i:s');
-            }
-            // 生成订单号
-            $company_rand = TbCompany::findFirstById($this->companyid)->randid;
-            // 开始处理随机数，保存成6位数字
-            $company_rand = Util::cover_position($company_rand, 6);
-            $orderno = 'D' . $company_rand . date('YmdHis') . mt_rand(1000, 9999);
-            if (!isset($_POST["orderno"]) || $_POST["orderno"] == "") {
-                $_POST["orderno"] = $orderno;
-            }
-            // 继续执行父类其他方法
-            parent::doAdd();
-        }
     }
 
     // /**
@@ -375,22 +252,20 @@ class OrderController extends CadminController
             echo $this->error([$msg]);
             exit;
         }
-        // 清除原来的list节点和form节点
-        unset($this->orderParams['form']);
-        unset($this->orderParams['list']);
-        // 添加form节点
-        $this->orderParams['form'] = $order->toArray();
+        
+        $data = [
+            'form' => $order->toArray(),
+            'list'=>[]
+        ];
+
         // 循环添加数据
         foreach ($order->orderdetails as $k => $orderdetail) {
-            // 过滤已经删除的数据
-            if ($orderdetail->sys_delete_flag == '0') {
-                $orderdetail_array = $orderdetail->toArray();
-                $orderdetail_array['product'] = $orderdetail->product->toArray();
-                $this->orderParams['list'][] = $orderdetail_array;
-            }
+            $orderdetail_array = $orderdetail->toArray();
+            $orderdetail_array['product'] = $orderdetail->product->toArray();
+            $data['list'][] = $orderdetail_array;
         }
         // 最终成功返回，原来的数据还要保留，再加上订单详情之中每个商品的名称也要放进去
-        echo $this->success($this->orderParams);
+        echo $this->success($data);
         $this->view->disable();
     }
 
@@ -451,20 +326,7 @@ class OrderController extends CadminController
         if($order!=false && $order->companyid==$this->companyid) {
             $order->status = $_POST['status']=="3" ? 3: 1;
 
-            if ($order->save() === false) {
-                $messages = $order->getMessages();
-                $array = [];
-                foreach ($messages as $message) {
-                    $array[] = $message->getMessage();
-                }
-                echo $this->error($array);
-            }
-            else {
-                echo $this->success();
-            }
-            //print_r($order->toArray());
-
-            
+            $this->doTableSave($order);
         }
 
         $this->view->disable();
@@ -482,22 +344,42 @@ class OrderController extends CadminController
         if($order!=false && $order->companyid==$this->companyid) {
             $order->status = 2;
 
-            if ($order->save() === false) {
-                $messages = $order->getMessages();
-                $array = [];
-                foreach ($messages as $message) {
-                    $array[] = $message->getMessage();
-                }
-                echo $this->error($array);
-            }
-            else {
-                echo $this->success();
-            }
-            //print_r($order->toArray());
-
-            
+            $this->doTableSave($order);             
         }
 
+        $this->view->disable();
+    }
+
+    /**
+     * 订单完结
+     * @return [type] [description]
+     */
+    public function finishAction() {
+        $orderid = (int)$_POST['id'];
+
+        // 根据orderid查询出当前订单以及订单详情的所有信息
+        $order = DdOrder::findFirstById($orderid);
+        if($order!=false && $order->companyid==$this->companyid) {
+            $order->isstatus = 1;
+
+            $this->doTableSave($order);            
+        }
+
+        $this->view->disable();
+    }
+
+    private function doTableSave($model) {
+        if ($order->save() === false) {
+            $messages = $order->getMessages();
+            $array = [];
+            foreach ($messages as $message) {
+                $array[] = $message->getMessage();
+            }
+            echo $this->error($array);
+        }
+        else {
+            echo $this->success();
+        }
         $this->view->disable();
     }
 }
