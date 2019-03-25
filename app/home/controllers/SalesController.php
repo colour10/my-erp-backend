@@ -368,18 +368,14 @@ class SalesController extends CadminController
         foreach ($sale->salesdetails as $k => $salesdetail) {
             // 过滤已经删除的数据
             if ($salesdetail->sys_delete_flag == '0') {
-                $this->saleParams['list'][] = [
-                    'id' => $salesdetail->id,
-                    'productid' => $salesdetail->productid,
-                    'sizecontentid' => $salesdetail->sizecontentid,
-                    'number' => $salesdetail->number,
-                    'product' => $salesdetail->product->toArray(),
-                ];
+                $product = $salesdetail->product->toArray();
+                $salesdetail = $salesdetail->toArray();
+                $salesdetail["product"] = $product;
+                $this->saleParams['list'][] = $salesdetail;
             }
         }
         // 最终成功返回，原来的数据还要保留，再加上销售单详情之中每个商品的名称也要放进去
         echo $this->success($this->saleParams);
-        $this->view->disable();
     }
 
     /**

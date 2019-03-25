@@ -44,6 +44,14 @@ class BaseModel extends \Phalcon\Mvc\Model {
         );
         $this->useDynamicUpdate(true);
     }
+
+    /**
+     * 获取查询时候的必须条件，为了保证和软删除表的一致性
+     * @return [type] [description]
+     */
+    function getSearchBaseCondition() {
+        return ["sys_delete_flag=0"];
+    }
     
     // function delete() {
     //     $current = $this->getDI()->get("currentUser");

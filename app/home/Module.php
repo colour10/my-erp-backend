@@ -61,7 +61,7 @@ class Module implements ModuleDefinitionInterface
 
                 $view->setViewsDir("../app/home/views/");
                 //echo realpath("../app/home/views/");
-
+                $view->disable();
                 return $view;
             }
         );

@@ -192,6 +192,8 @@ return array(
     "zuneirenyuan" => "组内人员",
     "quanxian" => "权限",
     "delete_warning" => "此操作将删除该记录, 是否继续?",
+    "zuofei_warning" => "此操作将订单作废, 是否继续?",
+    "tijiao_warning" => "此操作将提交订单, 是否继续?",
     "tip" => "提示",
     "tianjiaxinxi" => "添加信息",
     "xingming" => "姓名",
@@ -339,7 +341,7 @@ return array(
     "huiyuan" => "会员",
     "xiaoshouren" => "销售人",
     "waitudingdanhao" => "外部订单号",
-    "xiaoshoudangku" => "销售仓库",
+    "xiaoshoucangku" => "销售仓库",
     "xiaoshouriqi" => "销售日期",
     "duizhangdanhao" => "对账单号",
     "zhidanriqi" => "制单日期",
@@ -391,6 +393,34 @@ return array(
     "mima" => "密码",
     "yonghuming" => "用户名",
     "dengluchenggong" => "登录成功",
+    "chaxun" => "查询",
+    "querensuoxuan" => "确认所选",
+    "zuofei" => "作废",
+    "xiaoshoudanhao" => "销售单号",
+    "zhuangtai" => "状态",
+    "ruku" => "入库",
+    "shenhetongguo" => "审核通过",
+    "tuihui" => "退回",
+    "shengchengrukudan" => "生成入库单",
+    "quxiaoshenhe" => "取消审核",
+    "rukuriqi" => "入库日期",
+    "daohuoshuliang" => "到货数量",
+    "shuliangxiangfu" => "数量相符",
+    "tishi" => "提示",
+    "order-add-warning" => "商品条目已经添加过了。",
+    "confirm-order" => "是否确认审核订单？",
+    "confirm-order-cancel" => "是否确认取消订单的审核状态",
+    "dingdanwajie" => "订单完结",
+    "yingyezhizhaohao" => "营业执照号",
+    "yingyezhizhaohao" => "营业执照号",
+    "yingyezhizhaohao" => "营业执照号",
+    "yingyezhizhaohao" => "营业执照号",
+    "yingyezhizhaohao" => "营业执照号",
+    "yingyezhizhaohao" => "营业执照号",
+    "yingyezhizhaohao" => "营业执照号",
+    "yingyezhizhaohao" => "营业执照号",
+    "yingyezhizhaohao" => "营业执照号",
+    "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
@@ -521,8 +551,8 @@ return array(
     ),
     
     "list_bussinesstype" => array(
-        "1" => "期货",
-        "2" => "现货"
+        "1" => array("id"=>"1", "style"=>"color:red", "name"=>"期货"),
+        "2" => array("id"=>"2", "style"=>"", "name"=>"现货"),
     ),
     
     "list_formtype" => array(
@@ -561,4 +591,27 @@ return array(
         "1" => "T/T",
         "2" => "L/C"
     ),
+
+    //订单状态
+    "list_salestatus" => array(
+        "0" => "预售",
+        "1" => "已售",
+        "2" => "作废"
+    ),
+
+    //订单状态
+    "list_confirmstatusstatus" => array(
+        "0" => "保存",
+        "1" => "待审核",
+        "2" => "审核",
+        "3" => "作废"
+    ),
+
+    //订单状态
+    "list_ordertatus" => array(
+        "1" => "保存",
+        "2" => "待审核",
+        "3" => "审核",
+        "4" => "作废"
+    )
 );

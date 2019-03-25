@@ -72,7 +72,7 @@ class AdminController extends BaseController
         
         //var_dump($fieldTypes);
 
-        $array = array("sys_delete_flag=0");
+        $array = $model->getSearchBaseCondition();
 
         foreach ($fieldTypes as $key=>$value) {
             if(isset($_REQUEST[$key]) && $_REQUEST[$key]!="" ) {
@@ -109,16 +109,6 @@ class AdminController extends BaseController
 
     public function indexAction()
     {
-        /*$findFirst = new \ReflectionMethod($this->getModelName(), 'find');
-	    $result = $findFirst->invokeArgs(null, array("sys_delete_flag=0"));
-        
-        if($this->request->isAjax()) {
-            echo json_encode($result->toArray());
-            $this->view->disable();
-        }
-        else {
-            $this->view->setVar("result", $result->toArray());
-        }*/
 	}
 	
 	function pageAction() {
@@ -131,11 +121,7 @@ class AdminController extends BaseController
             //echo json_encode($result->toArray());
 
             echo $this->reportJson(200,[], array("data"=>$result->toArray()));
-            $this->view->disable();
         }
-        else {
-            $this->view->setVar("result", $result->toArray());
-        }     
 	}
 
 	public function listAction() {
@@ -147,13 +133,6 @@ class AdminController extends BaseController
 	    if($this->request->isAjax()) {
 	        $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
 	        
-//	        //是否支持多国语言
-//	        if($this->is_language) {
-//	            $where = sprintf("sys_delete_flag=0 and lang_code='%s'", addslashes($this->language["code"]));    
-//	        }
-//	        else {
-//	            $where = "sys_delete_flag=0";
-//	        }
 	        $where = $this->getSearchCondition();
 	        //echo $where;exit;
 	        
@@ -187,7 +166,6 @@ class AdminController extends BaseController
             echo $this->reportJson(200,[], array("data"=>$list));           
 	    }
 	    
-	    $this->view->disable();
 	}
 	
 	function beforeOutputListLoop($row) {
@@ -235,7 +213,6 @@ class AdminController extends BaseController
                 //$message['idd'] = "999";
             }
             echo json_encode($result);
-            $this->view->disable();
         }
 
     }
@@ -273,16 +250,6 @@ class AdminController extends BaseController
                 echo json_encode($result);
                 exit;
     	    }
-    	    $this->view->disable();
-	    }
-	    else {
-	        //从数据库中查找数据，给到模板
-	        $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
-	        $info = $findFirst->invokeArgs(null, array($this->getCondition()));
-
-	        if($info!=false) {
-	            $this->view->setVar("info", $info);
-	        }
 	    }
 	}
 
@@ -301,6 +268,5 @@ class AdminController extends BaseController
             }
         }
         echo json_encode($result);
-        $this->view->disable();
     }
 }

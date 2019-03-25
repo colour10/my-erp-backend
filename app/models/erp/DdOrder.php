@@ -11,7 +11,7 @@ use Phalcon\Validation\Validator\Regex;
 /**
  * 订单主表
  */
-class DdOrder extends BaseModel
+class DdOrder extends BaseCommonModel
 {
     public function initialize()
     {
@@ -126,5 +126,61 @@ class DdOrder extends BaseModel
         $human_name = $language->$name;
         // 返回最终的友好提示信息
         return sprintf($template_name, $human_name);
+    }
+
+    /**
+     * 添加一条明细数据
+     * @param [type] $form 表单数据
+     */
+    public function addDetail($form) {
+        $row = new DdOrderdetails();
+        if($row->create($form)) {
+            return $row;
+        }
+        else {
+            return false;
+        }
+    }
+
+    /**
+     * 更新明细数据
+     * @param  [type] $form 表单数据
+     * @return [type]       [description]
+     */
+    public function updateDetail($form) {
+        $row = DdOrderdetails::findFirst(
+            sprintf("id=%d", $form['id'])
+        );
+
+        if($row!=false && $row->companyid == $form['companyid']) {
+            if($row->update($form)) {
+                return $row;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+    }
+
+    /**
+     * 
+     */
+    function getOrderDetail() {        
+        $data = [
+            'form' => $this->toArray(),
+            'list'=>[]
+        ];
+
+        // 循环添加数据
+        foreach ($this->orderdetails as $k => $orderdetail) {
+            $orderdetail_array = $orderdetail->toArray();
+            $orderdetail_array['product'] = $orderdetail->product->toArray();
+            $data['list'][] = $orderdetail_array;
+        }
+
+        return $data;
     }
 }

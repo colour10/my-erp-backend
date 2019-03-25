@@ -15,13 +15,6 @@ class ZadminController extends AdminController {
     }
     
     function indexAction() {
-        $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
-	    $result = $findFirst->invokeArgs(null, array(
-	        "sys_delete_flag=0"
-	    ));
-
-	    $this->view->setVar("result", $result->toArray());
-	    $this->view->setVar("default_language", $this->default_language);
     }
 
     function getModelObject() {
@@ -66,8 +59,7 @@ class ZadminController extends AdminController {
                 $result['is_add'] = "1";
                 $result['id'] = $row->id;
             }
-            echo json_encode($result);
-            $this->view->disable();
+            echo json_encode($result);            
 	    }
 	}
 	
@@ -83,7 +75,6 @@ class ZadminController extends AdminController {
 	    else {
 	        echo '{}';   
 	    }
-	    $this->view->disable();
 	}	
 
     function doEdit()
@@ -122,16 +113,6 @@ class ZadminController extends AdminController {
 
                 echo json_encode($result);
                 exit;
-            }
-            $this->view->disable();
-        }
-        else {
-            //从数据库中查找数据，给到模板
-            $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
-            $info = $findFirst->invokeArgs(null, array($this->getCondition()));
-
-            if($info!=false) {
-                $this->view->setVar("info", $info);
             }
         }
     }

@@ -4,27 +4,20 @@ namespace Multiple\Home\Controllers;
 
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
+use Phalcon\Mvc\Model;
 
 class BaseController extends Controller
 {
     protected $default_language;
+    protected $companyid;
+
     public function initialize()
     {
-        //parent::initialize();
-
-        //����ѡ��
-        $this->view->setVar("system_language", $this->language);
-        $this->view->setVar("__sytem_time", time());
-        
-        $this->default_language = $this->config->language;
-        $this->view->setVar("__default_language", $this->config->language);
-        $this->view->setVar("__config", $this->config);
+        $auth = $this->auth;
+        if($auth) {
+            $this->companyid = (int)$auth["companyid"];
+        }
     }
-    
-    function setTitle($title) {
-        $this->view->setVar("__title", $title);      
-    }
-
 
     /**
      * 返回正确的json信息
@@ -46,7 +39,17 @@ class BaseController extends Controller
      */
     public function error($messages = [], $code = '200')
     {
-        return json_encode(['code' => $code, 'messages' => $messages]);
+        if($messages instanceof Model===true) {
+            $array = [];
+            foreach ($messages->getMessages() as $message) {
+                $array[] = $message->getMessage();
+            }
+        }
+        else {
+            $array = $messages;
+        }
+
+        return json_encode(['code' => $code, 'messages' => $array]);
     }
 
 
@@ -90,5 +93,19 @@ class BaseController extends Controller
         }
         // 否则就展示模块和信息组合后的结果
         return sprintf($language->$module_name[$module_rule], $human_name);
+    }
+
+    /**
+     * 对单个模型的单个记录的修改、更新或者删除，并返回标准json输出
+     * @param  [type] $callback 需要调用的方法
+     * @return [type]           [description]
+     */
+    function doTableAction($model, $action) {
+        if (call_user_func([$model, $action]) === false) {
+            echo $this->error($model);
+        }
+        else {
+            echo $this->success();
+        }
     }
 }

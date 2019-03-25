@@ -83,14 +83,6 @@ try {
         return $connection;
     };
 
-    // Setting up the view component
-    $di['view'] = function () {
-        $view = new View();
-        $view->setViewsDir('../app/views/');
-        return $view;
-    };
-
-
     $di->set(
         "router",
         function () {

@@ -9,24 +9,11 @@ use Phalcon\Db\Column;
  * 各个公司私有数据的表的基类
  */
 class CadminController extends AdminController { 
-    protected $companyid;  
     public function initialize() {
 	    parent::initialize();
-	    
-	    $auth = $this->auth;
-	    if($auth) {
-	        $this->companyid = (int)$auth["companyid"];
-	    }
     }
     
     function indexAction() {
-        $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
-	    $result = $findFirst->invokeArgs(null, array(
-	        sprintf("sys_delete_flag=0 and companyid=%d", $this->companyid)
-	    ));
-
-	    $this->view->setVar("result", $result->toArray());
-	    $this->view->setVar("default_language", $this->default_language);
     }
     
     function doAdd() {
@@ -57,7 +44,6 @@ class CadminController extends AdminController {
 	    else {
 	        echo '{}';   
 	    }
-	    $this->view->disable();
 	}
 	
 	function getCondition()
@@ -81,38 +67,7 @@ class CadminController extends AdminController {
 
         return implode(' and ', $array);
     }
-    
-//    public function doList($columns=array()) {
-//	    if($this->request->isAjax()) {
-//	        $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
-//	        
-//	        $_POST["companyid"] = $this->companyid;
-//	        $_POST["companyid"] = $this->companyid;
-//	        $where = $this->getSearchCondition();
-//	        
-//	        $result = $findFirst->invokeArgs(null, array($where));
-//
-//	        if($this->list_key_column!="" && count($this->list_columns)>0) {
-//	            $column_name = $this->list_key_column;
-//	            $list = array();
-//	            foreach($result as $row) {
-//	                $line = array();
-//
-//	                foreach($this->list_columns as $name) {
-//	                    $line[$name] = $row->$name;
-//	                }
-//	                $list[$row->$column_name] = $line;
-//	            }
-//
-//	            echo json_encode($list);
-//	        }
-//	        else {
-//	            echo json_encode($result->toArray());
-//	        }
-//	    }
-//	    $this->view->disable();
-//	}
-	
+    	
 	function getSearchCondition() {
         if($this->request->isPost()) {
             if(!isset($_POST["land_code"])) {
