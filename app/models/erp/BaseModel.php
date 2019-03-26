@@ -106,4 +106,15 @@ class BaseModel extends \Phalcon\Mvc\Model {
      */
     function getValidateMessage($template, $name) {}
 
+    public static function findByIdString($idstring) {
+        if(preg_match("#^\d+(,\d+)*$#", $idstring)) {
+            return self::find(
+                sprintf("id in (%s) and sys_delete_flag=0", $idstring)
+            );
+        }
+        else {
+            return [];
+        }
+    }
+
 }

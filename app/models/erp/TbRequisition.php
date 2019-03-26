@@ -13,6 +13,15 @@ class TbRequisition extends BaseCommonModel
     {
         parent::initialize();
         $this->setSource('tb_requisition');
+
+        $this->hasMany(
+            "id",
+            "\Asa\Erp\TbRequisitionDetail",
+            "requisitionid",
+            [
+                'alias' => 'requisitionDetail'
+            ]
+        );
     }
 
     public function validation() {
@@ -39,5 +48,18 @@ class TbRequisition extends BaseCommonModel
 //        );
 
         return $this->validate($validator);
+    }
+
+    function addDetal($data) {
+        $row = new TbRequisitionDetail();
+        //print_r($form);
+        if($row->create($data)) {
+            //print_r($form);
+            return true;
+        }
+        else {
+           
+            return $row;
+        }
     }
 }

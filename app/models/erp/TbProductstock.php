@@ -11,7 +11,7 @@ use Phalcon\Mvc\Model\Relation;
 /**
  * 库存表
  */
-class TbProductstock extends BaseModel
+class TbProductstock extends BaseCommonModel
 {
     public function initialize()
     {
