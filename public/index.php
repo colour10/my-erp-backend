@@ -100,7 +100,7 @@ try {
             $router->add(
                 "/:controller",
                 [
-                    "module" => "home",
+                    "module" => "shop",
                     "controller" => 1,
                     "action" => "index"
                 ]
@@ -109,7 +109,7 @@ try {
             $router->add(
                 "/:controller/:action",
                 [
-                    "module" => "home",
+                    "module" => "shop",
                     "controller" => 1,
                     "action" => 2,
                 ]
