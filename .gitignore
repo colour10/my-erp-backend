@@ -13,3 +13,6 @@ app/models/erp/Robots.php
 app/models/erp/RobotsParts.php
 public/upload/
 public/js/async.min.js
+vendor/
+composer.json
+composer.lock
