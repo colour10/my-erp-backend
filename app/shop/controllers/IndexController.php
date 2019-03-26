@@ -9,4 +9,9 @@ class IndexController extends AdminController
     {
 
     }
+
+    public function addAction()
+    {
+
+    }
 }
