@@ -48,9 +48,8 @@ class Module implements ModuleDefinitionInterface
             "view",
             function () {
                 $view = new View();
-
-                $view->setViewsDir("../app/shop/views/");
-
+                // 定义视图层目录
+                $view->setViewsDir('../app/shop/views/');
                 return $view;
             }
         );
