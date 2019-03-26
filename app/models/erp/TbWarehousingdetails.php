@@ -7,12 +7,12 @@ use Phalcon\Validation\Validator\Uniqueness;
 /**
  * 入库单明细表
  */
-class TbWarehousingDetail extends BaseModel
+class TbWarehousingdetails extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('tb_warehousing_detail');
+        $this->setSource('tb_warehousingdetails');
     }
 
     public function validation() {

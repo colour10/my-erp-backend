@@ -10,6 +10,12 @@ return array(
         'log_path' => APP_PATH . '/app/cache/logs/',
         //缓存路径
         'cache_path' => APP_PATH . '/app/cache/data/',
+
+         //主域名，ERP系统访问的域名
+        'main_host' => 'erp.localhost.com',
+
+        //Shop系统域名
+        'shop_host' => 'shop.localhost.com'
     ),
     
     //数据库表配置

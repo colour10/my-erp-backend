@@ -226,6 +226,7 @@ $(document).ready(function(){
             children:[
                 {path: '/order', component: "asapage-order"},
                 {path: '/confirmorder', component: "asapage-confirmorder"},
+                {path:'/warehousing', component:'asapage-warehousing'},
                 {path: '/sales', component: "asapage-sales"},
                 {path: '/user', component: "asapage-user"},
                 {path: '/group', component: "asapage-group"},
@@ -233,7 +234,8 @@ $(document).ready(function(){
                 {path: '/brand', component: "asapage-brand"},
                 {path: '/brandgroup', component: "asapage-brandgroup"},
                 {path: '/sizetop', component: "asapage-sizetop"},
-                {path: '/product', component: "asapage-product"},      
+                {path: '/product', component: "asapage-product"},   
+                {path: '/requisition', component: "asapage-requisition"},     
                 {path: '/user/modifypassword', component: "asapage-usermodifypassword"},                
                 {path:'/ageseason', component:$ASA.getComponentSimple("ageseason")},
                 {path:'/ulnarinch', component:$ASA.getComponent("ulnarinch")},
@@ -253,8 +255,7 @@ $(document).ready(function(){
                 {path:'/producttemplate', component:"asapage-producttemplate"},
                 {path:'/member', component:$ASA.getComponentSimple("member")},
                 {path:'/colortemplate', component:$ASA.getComponent("colortemplate")},
-                {path:'/supplier', component:$ASA.getComponentSimple("supplier")},
-                 {path:'/warehousing', component:$ASA.getComponentSimple("supplier")}
+                {path:'/supplier', component:$ASA.getComponentSimple("supplier")}
             ]
         },
         {path: '/login/:action', component: "asapage-login"},

@@ -27,7 +27,6 @@ try {
     );
     $loader->registerDirs(
         array(
-            '../app/controllers/',
             '../app/models/',
             '../app/plugins/',
         )
@@ -45,35 +44,7 @@ try {
         $session = new Session();
         $session->start();
         return $session;
-    });
-
-    $di->setShared('language', function () use ($config, $di) {
-        $language = $config->language;
-        //$system_language = new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
-        return new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
-    });
-
-    $di->setShared('currentUser', function () use ($config, $di) {
-        $session = $di->get('session');
-        if ($session->has("user")) {
-            // Retrieve its value
-            $user = $session->get("user");
-            return $user["id"];
-        } else {
-            return "";
-        }
-    });
-    
-    $di->setShared('auth', function () use ($config, $di) {
-        $session = $di->get('session');
-        if ($session->has("user")) {
-            // Retrieve its value
-            $user = $session->get("user");
-            return $user;
-        } else {
-            return false;
-        }
-    });
+    });    
 
     // Set the database service
     $di['db'] = function () use ($config) {
@@ -83,13 +54,12 @@ try {
         return $connection;
     };
 
-    $di->set(
-        "router",
-        function () {
+    $di->set( "router", function () use ($config, $di){
             $router = new Router();
 
             $router->setDefaultModule("home");
 
+            //ERP系统路由规则
             $router->add(
                 "/",
                 [
@@ -97,7 +67,7 @@ try {
                     "controller" => "index",
                     "action" => "index"
                 ]
-            );
+            )->setHostName($config->app->main_host);
 
             $router->add(
                 "/:controller",
@@ -106,7 +76,7 @@ try {
                     "controller" => 1,
                     "action" => "index"
                 ]
-            );
+            )->setHostName($config->app->main_host);
 
             $router->add(
                 "/:controller/:action",
@@ -115,34 +85,35 @@ try {
                     "controller" => 1,
                     "action" => 2,
                 ]
-            );
+            )->setHostName($config->app->main_host);
 
+            //店铺域名路由规则
             $router->add(
-                "/:module/:controller/:action",
+                "/",
                 [
-                    "module" => 1,
-                    "controller" => 2,
-                    "action" => 3,
+                    "module" => "shop",
+                    "controller" => "index",
+                    "action" => "index"
                 ]
-            );
+            )->setHostName($config->app->shop_host);
 
             $router->add(
-                "/admin/:controller/?",
+                "/:controller",
                 [
-                    "module" => "admin",
+                    "module" => "home",
                     "controller" => 1,
-                    "action" => "index",
+                    "action" => "index"
                 ]
-            );
+            )->setHostName($config->app->shop_host);
 
             $router->add(
-                "/admin/:controller/:action\??",
+                "/:controller/:action",
                 [
-                    "module" => "admin",
+                    "module" => "home",
                     "controller" => 1,
                     "action" => 2,
                 ]
-            );
+            )->setHostName($config->app->shop_host);
 
             return $router;
         }
@@ -161,6 +132,10 @@ try {
             "admin" => [
                 "className" => "Multiple\\Admin\\Module",
                 "path" => "../app/admin/Module.php",
+            ],
+            "shop" => [
+                "className" => "Multiple\\Shop\\Module",
+                "path" => "../app/shop/Module.php",
             ]
         ]
     );

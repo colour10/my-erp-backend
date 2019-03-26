@@ -53,6 +53,35 @@ class Module implements ModuleDefinitionInterface
             return $dispatcher;
         });
 
+        $config = $di->get("config");
+        $di->setShared('language', function () use ($config, $di) {
+            $language = $config->language;
+            //$system_language = new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
+            return new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
+        });
+
+        $di->setShared('currentUser', function () use ($config, $di) {
+            $session = $di->get('session');
+            if ($session->has("user")) {
+                // Retrieve its value
+                $user = $session->get("user");
+                return $user["id"];
+            } else {
+                return "";
+            }
+        });
+        
+        $di->setShared('auth', function () use ($config, $di) {
+            $session = $di->get('session');
+            if ($session->has("user")) {
+                // Retrieve its value
+                $user = $session->get("user");
+                return $user;
+            } else {
+                return false;
+            }
+        });
+
         // Registering the view component
         $di->set(
             "view",

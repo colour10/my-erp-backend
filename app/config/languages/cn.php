@@ -411,13 +411,13 @@ return array(
     "confirm-order" => "是否确认审核订单？",
     "confirm-order-cancel" => "是否确认取消订单的审核状态",
     "dingdanwajie" => "订单完结",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
+    "fahuoshuliang" => "发货数量",
+    "rukudanhao" => "入库单号",
+    "diaochuku" => "调出库",
+    "diaoruku" => "调入库",
+    "shenqingren" => "申请人",
+    "diaobocaozuo" => "调拨操作",
+    "shenqing" => "申请",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
@@ -600,18 +600,17 @@ return array(
     ),
 
     //订单状态
-    "list_confirmstatusstatus" => array(
-        "0" => "保存",
-        "1" => "待审核",
-        "2" => "审核",
-        "3" => "作废"
-    ),
-
-    //订单状态
     "list_ordertatus" => array(
         "1" => "保存",
         "2" => "待审核",
         "3" => "审核",
         "4" => "作废"
+    ),
+
+    //订单状态
+    "list_requisitiontype" => array(
+        "1" => "统一调出",
+        "2" => "统一调入",
+        "3" => "一对一调拨"
     )
 );

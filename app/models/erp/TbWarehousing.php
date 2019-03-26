@@ -7,12 +7,30 @@ use Phalcon\Validation\Validator\Uniqueness;
 /**
  * 入库单主表
  */
-class TbWarehousing extends BaseModel
+class TbWarehousing extends BaseCommonModel
 {
     public function initialize()
     {
         parent::initialize();
         $this->setSource('tb_warehousing');
+
+        $this->hasOne(
+            'confirmorderid',
+            '\Asa\Erp\DdConfirmorder',
+            'id',
+            [
+                'alias' => 'confirmorder'
+            ]
+        );
+
+        $this->hasMany(
+            "id",
+            "\Asa\Erp\TbWarehousingdetails",
+            "warehousingid",
+            [
+                'alias' => 'warehousingdetails'
+            ]
+        );
     }
 
     public function validation() {

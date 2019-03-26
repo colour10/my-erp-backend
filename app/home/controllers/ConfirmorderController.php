@@ -128,6 +128,7 @@ class ConfirmorderController extends BaseController {
                 sprintf("id=%d and companyid=%d", $orderid, $this->companyid)
             );
             if(!$order || $order->status!=1) {
+                $this->debug("状态错误");
                 exit;
             }
 
@@ -135,6 +136,10 @@ class ConfirmorderController extends BaseController {
             foreach ($submitData['form'] as $k => $item) {
                 // 把里面的参数转成post参数传递过去
                 $order->$k = $item;
+            }
+
+            if($order->status!=1 && $order->status!=2) {
+                 $order->status = 1;
             }
 
             // 判断是否成功
@@ -158,6 +163,7 @@ class ConfirmorderController extends BaseController {
             $order->makestaff = $this->currentUser;
             $order->makedate = date('Y-m-d H:i:s');
             $order->companyid = $this->companyid;
+            $order->status = 1;
 
             // 生成主单号
             $order->orderno = sprintf(
@@ -236,6 +242,38 @@ class ConfirmorderController extends BaseController {
         // 判断订单是否存在
         if ($order!=false) {
             echo $this->success($order->getOrderDetail());
+        }
+    }
+
+     /**
+     * 发货单审核
+     * @return [type] [description]
+     */
+    public function confirmAction() {
+        $orderid = (int)$_POST['id'];
+
+        // 根据orderid查询出当前发货单
+        $order = DdConfirmorder::findFirstById($orderid);
+        if($order!=false && $order->companyid==$this->companyid) {
+            $order->status = $_POST['status']=="3" ? 3: 1;
+
+            $this->doTableAction($order,"update");
+        }
+    }
+
+    /**
+     * 发货单取消审核，如果发货单已经生成过入库单，则不允许删除
+     * @return [type] [description]
+     */
+    public function cancelAction() {
+        $orderid = (int)$_POST['id'];
+
+        // 根据orderid查询出当前订单以及订单详情的所有信息
+        $order = DdConfirmorder::findFirstById($orderid);
+        if($order!=false && $order->companyid==$this->companyid) {
+            $order->status = 2;
+
+            $this->doTableAction($order,"update");             
         }
     }
 }

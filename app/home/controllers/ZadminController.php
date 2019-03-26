@@ -70,7 +70,7 @@ class ZadminController extends AdminController {
 	    ));
 
 	    if($row!=false) {   
-            echo $this->reportJson(200,[],["data" => $row->toArray()]); 
+            echo $this->reportJson(["data" => $row->toArray()]); 
 	    }
 	    else {
 	        echo '{}';   

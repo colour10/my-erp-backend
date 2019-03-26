@@ -69,7 +69,7 @@ class DepartmentController extends CadminController {
         }
 
         // 交给下面的格式化为目录树处理并返回
-        return $this->reportJson(200, [], ["data" => Util::format_tree_single_array($departments->toArray())]);
+        return $this->reportJson(["data" => Util::format_tree_single_array($departments->toArray())]);
     }
 
     /**

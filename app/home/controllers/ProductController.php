@@ -41,4 +41,27 @@ class ProductController extends CadminController {
             $_POST["adduserid"] = $this->currentUser;
         }
     }
+
+    function loadnameAction() {
+        $array = explode(",", $_POST['ids']);
+        foreach($array as &$row) {
+            $row = (int)$row;
+        }
+
+        $products = TbProduct::find(
+            sprintf("id in (%s)", implode(',', $array))
+        );
+
+        $columns = explode(",", $_POST['columns']);
+        $output = [];
+        foreach($products as $row) {
+            $line = [];
+            foreach ($columns as $value) {
+                $line[$value] = $row->$value;
+            }
+            $output[$row->id] = $line;
+        }
+
+        echo json_encode($output);
+    }
 }

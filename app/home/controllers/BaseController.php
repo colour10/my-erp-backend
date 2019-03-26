@@ -57,7 +57,7 @@ class BaseController extends Controller
      * 返回输出的json信息
      * @return false|string
      */
-    public function reportJson($code=200, $messages=[], $data=[])
+    public function reportJson($data=[],$code=200, $messages=[])
     {
         $result = array(
             "code" => $code,
@@ -107,5 +107,9 @@ class BaseController extends Controller
         else {
             echo $this->success();
         }
+    }
+
+    function debug($message, $flag="") {
+        print_r($message);
     }
 }
