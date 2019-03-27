@@ -53,5 +53,12 @@ class Module implements ModuleDefinitionInterface
                 return $view;
             }
         );
+
+        // 主域名
+        $config = $di->get("config");
+        $di->setShared('main_host', function () use ($config, $di) {
+            $main_host = $config['app']['main_host'];
+            return $main_host;
+        });
     }
 }

@@ -12,7 +12,21 @@ class BrandgroupController extends AdminController
         $this->setModelName('Asa\\Erp\\ZlBrandgroup');
     }
 
-    public function indexAction()
+    /**
+     * 取出主域名
+     */
+    public function getmainhostAction()
+    {
+        // 逻辑
+        return $this->main_host;
+    }
+
+    /**
+     * 获取当前品牌的产品列表
+     * @param $id
+     * @return mixed
+     */
+    public function detailAction($id)
     {
 
     }

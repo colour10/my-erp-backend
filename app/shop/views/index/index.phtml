@@ -334,33 +334,7 @@
 <script src="/shop/assets/corporate/scripts/layout.js" type="text/javascript"></script>
 <script src="/shop/assets/pages/scripts/bs-carousel.js" type="text/javascript"></script>
 
-<script type="text/javascript">
-    // 申请跨域访问
-    var main_host = '<?php echo $this->getDI()->get('config')->app['main_host']; ?>';
-    var navigations = $('.header-navigation').children('ul').eq(0);
-    var html = '';
-    $(function() {
-
-        Layout.init();
-        Layout.initOWL();
-        Layout.initImageZoom();
-        Layout.initTouchspin();
-
-        // 实现跨域
-        $.getJSON('http://'+main_host+'/brandgroup/getlist?callback=?', function(response) {
-            // 打印
-            console.log(response);
-            // 开始填充数据
-            var len = response.length;
-            if (len > 0) {
-                for (var i=0; i<len; i++) {
-                    html += '<li><a href="javascript:;">'+response[i].name_cn+'</a></li>';
-                }
-                navigations.append(html);
-            }
-        });
-    });
-</script>
+<script src="/shop/assets/script.js" type="text/javascript" ></script>
 <!-- END PAGE LEVEL JAVASCRIPTS -->
 
 </body>
