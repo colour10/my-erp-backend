@@ -22,12 +22,21 @@ class BrandgroupController extends AdminController
     }
 
     /**
+     * 取出图片域名
+     */
+    public function getfileprexAction()
+    {
+        // 逻辑
+        return $this->file_prex;
+    }
+
+    /**
      * 获取当前品牌的产品列表
      * @param $id
      * @return mixed
      */
     public function detailAction($id)
     {
-
+        // 逻辑
     }
 }
