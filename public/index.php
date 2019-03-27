@@ -115,6 +115,17 @@ try {
                 ]
             )->setHostName($config->app->shop_host);
 
+            // 添加新路由，多一个自定义参数
+            $router->add(
+                "/:controller/:action/:params",
+                [
+                    "module" => "shop",
+                    "controller" => 1,
+                    "action" => 2,
+                    "params" => 3,
+                ]
+            )->setHostName($config->app->shop_host);
+
             return $router;
         }
     );

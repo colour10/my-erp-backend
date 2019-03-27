@@ -5,6 +5,7 @@ namespace Multiple\Home\Controllers;
 use Phalcon\Mvc\Controller;
 use Phalcon\Db\Column;
 use  Phalcon\Mvc\Model\Message;
+//use Asa\Erp\TbProduct;
 
 class CommonController extends BaseController
 {
@@ -82,5 +83,45 @@ class CommonController extends BaseController
         }
         
         echo json_encode($result);        
+    }
+
+    function loadnameAction() {
+        $services = [
+            "product" => ["table"=>"Asa\\Erp\\TbProduct", "columns"=>["productname", "countries"]],
+            "country" =>["table"=>"Asa\\Erp\\ZlCountry", "columns"=>["code", "name_cn"]],
+            "warehouse" =>["table"=>"Asa\\Erp\\TbWarehouse", "columns"=>["code", "name"]],
+            "user" =>["table"=>"Asa\\Erp\\TbUser", "columns"=>["login_name", "real_name"]],
+        ];
+
+        //new \Asa\Erp\TbProduct();
+
+        $params = json_decode($_POST['params']);
+
+        $output = [];
+        foreach($params as $service_name=>$id_array) {
+            if(count($id_array)>0 && isset($services[$service_name])) {
+                $service_output = [];
+                $idstring = implode(",", $id_array);
+                if(!preg_match("#^\d+(,\d+)*$#", $idstring)) {
+                    continue;
+                }
+
+                $findByIdString = new \ReflectionMethod($services[$service_name]['table'], 'findByIdString');
+                $result = $findByIdString->invokeArgs(null, [$idstring]);
+
+                
+                foreach($result as $row) {
+                    $line = [];
+                    foreach ($services[$service_name]['columns'] as $value) {
+                        $line[$value] = $row->$value;
+                    }
+                    $service_output[$row->id] = $line;
+                }
+
+                $output[$service_name] = $service_output;
+            }
+        }
+
+        echo json_encode($output);
     }
 }

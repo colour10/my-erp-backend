@@ -23,9 +23,7 @@ class PermissionController extends AdminController {
     public function treeAction()
     {
         // 逻辑
-        $permissions = TbPermission::find([
-            'sys_delete_flag' => '0'
-        ]);
+        $permissions = TbPermission::find();
         if(!$permissions) {
             return $this->error(['permissions are not exist']);
         }

@@ -10,20 +10,20 @@ use Phalcon\Validation\Validator\Regex;
 /**
  * 销售单 明细表
  */
-class XsSalesdetails extends BaseModel
+class TbSalesdetails extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('xs_salesdetails');
+        $this->setSource('tb_salesdetails');
 
         // 销售详情表-销售主表，一对多反向
         $this->belongsTo(
             'salesid',
-            '\Asa\Erp\XsSales',
+            '\Asa\Erp\TbSales',
             'id',
             [
-                'alias' => 'xssale',
+                'alias' => 'tbsales',
                 "foreignKey" => [
                     // 关联字段存在性验证
                     'action' => Relation::ACTION_RESTRICT,

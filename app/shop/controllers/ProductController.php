@@ -18,7 +18,7 @@ class ProductController extends CadminController {
     function searchAction() {
         if($this->request->isPost()) {
             $where = array(
-                sprintf("companyid=%d", $this->companyid)
+                sprintf("sys_delete_flag=0 and companyid=%d", $this->companyid)
             );
             if(isset($_POST["productname"]) && trim($_POST["productname"])!="") {
                 $where[] = sprintf("productname like '%%%s%%'", addslashes($_POST["productname"]));

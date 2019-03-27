@@ -4,10 +4,10 @@ namespace Multiple\Home\Controllers;
 
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
-use Asa\Erp\XsSales;
+use Asa\Erp\TbSales;
 use Asa\Erp\TbCompany;
 use Asa\Erp\Util;
-use Asa\Erp\XsSalesdetails;
+use Asa\Erp\TbSalesdetails;
 
 /**
  * 销售单主表
@@ -27,7 +27,7 @@ class SalesController extends CadminController
     {
         parent::initialize();
 
-        $this->setModelName('Asa\\Erp\\XsSales');
+        $this->setModelName('Asa\\Erp\\TbSales');
 
         // 当前用户
         $this->userid = $this->auth['id'];
@@ -60,7 +60,7 @@ class SalesController extends CadminController
         if ($this->salesid) {
             // 有销售单号就修改
             // 查找销售单号是否存在
-            $sale = XsSales::findFirstById($this->salesid);
+            $sale = TbSales::findFirstById($this->salesid);
             if (!$sale) {
                 $msg = $this->getValidateMessage('sale', 'template', 'notexist');
                 return $this->error([$msg]);
@@ -131,7 +131,7 @@ class SalesController extends CadminController
 
                 // 使用模型更新
                 // 这里用的是销售单详情表
-                $salesdetail = new XsSalesdetails();
+                $salesdetail = new TbSalesdetails();
                 $data = [
                     'productid' => $_POST['productid'],
                     'sizecontentid' => $_POST['sizecontentid'],
@@ -210,7 +210,7 @@ class SalesController extends CadminController
 
                 // 使用模型更新
                 // 这里用的是销售单详情表
-                $salesdetail = new XsSalesdetails();
+                $salesdetail = new TbSalesdetails();
                 $data = [
                     'productid' => $_POST['productid'],
                     'sizecontentid' => $_POST['sizecontentid'],
@@ -286,64 +286,6 @@ class SalesController extends CadminController
         }
     }
 
-    // /**
-    //  * 销售单详情表分功能，内嵌共通，因为涉及到事务回滚，如果操作失败就报错，所以此封装作废
-    //  */
-    // private function addsalesdetail()
-    // {
-    //     foreach ($this->saleParams['list'] as $k => $item) {
-    //         if (isset($item)) {
-    //             $_POST = $item;
-    //         }
-    //
-    //         // 添加销售单
-    //         if (!isset($_POST["salesid"]) || $_POST["salesid"] == "") {
-    //             $_POST["salesid"] = $this->salesid;
-    //         }
-    //
-    //         // 判断接收的参数是否正常
-    //         // 首先是键名是否存在
-    //         if (
-    //             !array_key_exists('productid', $_POST) ||
-    //             !array_key_exists('sizecontentid', $_POST) ||
-    //             !array_key_exists('number', $_POST)
-    //         ) {
-    //             $this->db->rollback();
-    //             $msg = $this->getValidateMessage('orderdetail', 'db', 'add-failed');
-    //             return $this->error([$msg]);
-    //         }
-    //
-    //         // 其次是键值是否正常
-    //         if (
-    //             !$_POST['productid'] ||
-    //             !$_POST['sizecontentid'] ||
-    //             !$_POST['number']
-    //         ) {
-    //             $this->db->rollback();
-    //             $msg = $this->getValidateMessage('orderdetail', 'db', 'add-failed');
-    //             return $this->error([$msg]);
-    //         }
-    //
-    //         // 使用模型更新
-    //         // 这里用的是销售单详情表
-    //         $salesdetail = new XsSalesdetails();
-    //         $data = [
-    //             'productid' => $_POST['productid'],
-    //             'sizecontentid' => $_POST['sizecontentid'],
-    //             'number' => $_POST['number'],
-    //             'salesid' => $_POST['salesid'],
-    //             'saleno' => $this->saleno,
-    //         ];
-    //
-    //         if (!$salesdetail->save($data)) {
-    //             $this->db->rollback();
-    //             $msg = $this->getValidateMessage('salesdetail', 'db', 'add-failed');
-    //             return $this->error([$msg]);
-    //         }
-    //     }
-    // }
-
-
     /**
      * 根据销售单id查询出每个销售单下面的模型和具体销售单详情
      * @param $salesid
@@ -352,7 +294,7 @@ class SalesController extends CadminController
     public function getsale($salesid)
     {
         // 根据salesid查询出当前销售单以及销售单详情的所有信息
-        $sale = XsSales::findFirstById($salesid);
+        $sale = TbSales::findFirstById($salesid);
         // 判断销售单是否存在
         if (!$sale) {
             $msg = $this->getValidateMessage('salesdetail', 'template', 'notexist');
@@ -367,12 +309,10 @@ class SalesController extends CadminController
         // 循环添加数据
         foreach ($sale->salesdetails as $k => $salesdetail) {
             // 过滤已经删除的数据
-            if ($salesdetail->sys_delete_flag == '0') {
-                $product = $salesdetail->product->toArray();
-                $salesdetail = $salesdetail->toArray();
-                $salesdetail["product"] = $product;
-                $this->saleParams['list'][] = $salesdetail;
-            }
+            $product = $salesdetail->product->toArray();
+            $salesdetail = $salesdetail->toArray();
+            $salesdetail["product"] = $product;
+            $this->saleParams['list'][] = $salesdetail;
         }
         // 最终成功返回，原来的数据还要保留，再加上销售单详情之中每个商品的名称也要放进去
         echo $this->success($this->saleParams);
@@ -393,7 +333,7 @@ class SalesController extends CadminController
         }
         $this->salesid = $this->request->get('id');
         // 根据salesid查询出当前销售单以及销售单详情的所有信息
-        $sale = XsSales::findFirstById($this->salesid);
+        $sale = TbSales::findFirstById($this->salesid);
         // 判断销售单是否存在
         if (!$sale) {
             $msg = $this->getValidateMessage('sale', 'template', 'notexist');

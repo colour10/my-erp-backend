@@ -93,11 +93,9 @@ class WarehousingController extends BaseController {
                 'orderdetailsid' => $item['orderdetailsid'],
                 'warehousingid' => $order->id,
                 'confirmorderdetailsid'=> $item['confirmorderdetailsid']
-            ];
+            ];           
 
-            $detail = new TbWarehousingdetails();
-
-            if ($detail->create($data)===false) {
+            if ($order->addDetail($data)===false) {
                 $this->db->rollback();
                 $msg = $this->getValidateMessage('orderdetail', 'db', 'add-failed');
                 return $this->error($detail);
