@@ -55,7 +55,6 @@ class RequisitionController extends BaseController {
             $requisition->apply_staff = $this->currentUser;
             $requisition->apply_date = date('Y-m-d H:i:s');
             $requisition->companyid = $this->companyid;
-            $memo = $submitData['form']['memo'];
             if($requisition->create()==false) {
                 $this->db->rollback();
                 return $this->error($requisition);
@@ -102,95 +101,15 @@ class RequisitionController extends BaseController {
             sprintf("id=%d and companyid=%d", $submitData["id"], $this->companyid)
         );
 
-        if($requisition!=false) {
-            //如果total为0，说明全部都被拒绝了。调拨单无需拆单
-            $total = $submitData['total'];
-            $this->db->begin();
+        //print_r($submitData);
 
-            if($total=='0' || $total==0) {
-                $requisition->status = 1;
-                if($requisition->update()==false) {
-                    $this->db->rollback();
-                    return $this->error($requisition);
-                }
-            }
-            else if($total =="all") {
-                //全部通过
-                $requisition->status = 3;
-                if($requisition->update()==false) {
-                    $this->db->rollback();
-                    echo $this->error($requisition);
-                    return ;
-                }
+        if($requisition!=false) {            
+            if($requisition->doOut($submitData['list'])) {
+                echo $this->success($requisition->toArray());
             }
             else {
-                //需要拆单
-                $apply = $submitData['list'];
-                
-                $details = $requisition->requisitionDetail;
-
-                $return_array = [];
-                foreach($details as $detail) {
-                    if(isset($apply[$detail->id])) {
-                        if($detail->number>=$apply[$detail->id]) {
-                            //有一部分被拒绝了
-                            //
-                            $arr = $detail->toArray();
-                            $arr['number'] = $detail->number-$apply[$detail->id];//拒绝的数量
-                            $return_array[] = $arr;
-
-                            $detail->out_number = $apply[$detail->id]; //出库数量
-                            if($detail->update()==false) {
-                                $this->db->rollback();
-                                echo $this->error($detail);
-                                return ;
-                            }
-                        }
-                        else {
-                            $this->db->rollback();
-                            return "";
-                        }
-                    }
-                    else {
-                        $this->db->rollback();
-                        return "";
-                    }
-                }
-
-                //拒绝的出库明细生成另外一个单
-                $newrequisition = new TbRequisition();
-                $newrequisition->status = 1;
-                $newrequisition->out_id = $requisition->out_id;
-                $newrequisition->in_id = $requisition->in_id;
-                $newrequisition->apply_staff = $requisition->apply_staff;
-                $newrequisition->apply_date = $requisition->apply_date;
-                $newrequisition->companyid = $requisition->companyid;
-                $newrequisition->memo = "out refuse";
-                if($newrequisition->create()==false) {
-                    $this->db->rollback();
-                    return $this->error($newrequisition);
-                }
-
-                //增加调拨明细
-                foreach($return_array as $row) {
-                    $data = [
-                        "productid" => $row['productid'],
-                        "sizecontentid" => $row['sizecontentid'],
-                        "number" => $row['number'],
-                        "requisitionid" => $newrequisition->id
-                    ];
-                    $result = $newrequisition->addDetal($data);
-                    if($result!==true) {
-                        $this->db->rollback();
-                        return $this->error($result);
-                    }
-                }
+                echo $this->error(['fail']);
             }            
-
-
-            $this->db->commit();
-
-            echo $this->success();
         }
     }
 
@@ -199,6 +118,21 @@ class RequisitionController extends BaseController {
      * @return [type] [description]
      */
     function confirminAction() {
+        $submitData = json_decode($_POST["params"], true);
+        $id = $submitData["id"];
+        $requisition = TbRequisition::findFirst(
+            sprintf("id=%d and companyid=%d", $submitData["id"], $this->companyid)
+        );
 
+        //print_r($submitData);
+
+        if($requisition!=false) {            
+            if($requisition->doIn($submitData['list'])) {
+                echo $this->success($requisition->toArray());
+            }
+            else {
+                echo $this->error(['fail']);
+            }            
+        }
     }
 }

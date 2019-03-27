@@ -430,7 +430,7 @@ return array(
     "rukushijian" => "入库时间",
     "quxiao" => "取消",
     "chukushuliang" => "出库数量",
-    "yingyezhizhaohao" => "营业执照号",
+    "rukushuliang" => "入库数量",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
@@ -654,6 +654,6 @@ return array(
         "2" => "出库待确认",
         "3" => "在途",
         "4" => "入库拒绝",
-        "5" => "入库拒绝"
+        "5" => "完成"
     )
 );
