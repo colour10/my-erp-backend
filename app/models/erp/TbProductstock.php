@@ -13,6 +13,13 @@ use Phalcon\Mvc\Model\Relation;
  */
 class TbProductstock extends BaseCommonModel
 {
+    const SALES = 1; //销售
+    const REQUISITION_IN = 2; //调拨入库
+    const REQUISITION_OUT = 3; //调拨出库
+    const WAREHOSING = 4; //入库
+    const DEFECTIVE = 5; //残次品入库
+
+
     public function initialize()
     {
         parent::initialize();
@@ -24,12 +31,7 @@ class TbProductstock extends BaseCommonModel
             '\Asa\Erp\TbProduct',
             'id',
             [
-                'alias' => 'product',
-                "foreignKey" => [
-                    // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message" => $this->getValidateMessage('notexist', 'product'),
-                ],
+                'alias' => 'product'
             ]
         );
 
@@ -128,5 +130,123 @@ class TbProductstock extends BaseCommonModel
         $human_name = $language->$name;
         // 返回最终的友好提示信息
         return sprintf($template_name, $human_name);
+    }
+
+    function addStock($number, $change_type, $relationid) {
+        if($number>0) {
+            return $this->changeStock($number, $change_type, $relationid);
+        }
+        else {
+            return false;
+        }
+    }
+
+    function reduceStock($number, $change_type, $relationid) {
+        if($number>0) {
+            return $this->changeStock(-1*abs($number), $change_type, $relationid);
+        }
+        else {
+            return false;
+        }
+    }
+
+    /**
+     * 更改库存
+     */
+    private function changeStock($number, $change_type, $relationid) {
+        $db = $this->getDI()->get('db');
+
+        $db->begin();
+        $old_number = $this->number;
+
+        $this->number = $this->number+$number;
+        $this->change_time = date("Y-m-d H:i:s");
+        $this->change_stuff = $this->getDI()->get('currentUser');
+        if($this->update()) {
+            //更新库存成功，记录操作日志            
+            $log = new TbProductstockLog();
+            $log->warehouseid = $this->warehouseid;
+            $log->productstockid = $this->id;
+            $log->number_before = $old_number;
+            $log->nuber_after = $this->number;
+            $log->change_type = $change_type;
+            $log->change_time = date("Y-m-d H:i:s");
+            $log->relationid = $relationid;
+            $log->companyid = $this->companyid;
+            $log->change_stuff = $this->getDI()->get('currentUser');
+            if($log->create()===false) {
+                $db->rollback();
+                return false;
+            }
+        }
+        else {
+            $db->rollback();
+            return false;
+        }
+        $db->commit();
+        return $this;
+    }
+
+    /**
+     * 初始化库存
+     * @return [type] [description]
+     */
+    public static function initStock($stock_info, $change_type, $relationid) {
+        $db = $this->getDI()->get('db');
+        $userid = $this->getDI()->get('currentUser');;
+        $companyid = $this->getDI()->get('currentCompany');
+
+        $db->begin();
+
+        $column = ["productid","warehouseid","sizecontentid","property","number"];
+        $productStock = new TbProductstock();
+
+        //残次品标志
+        if(isset($stock_info['is_defective'])) {
+            $is_defective = (int) $stock_info['is_defective'];
+            $productStock->is_defective = ($is_defective==1) ? 1:0;
+        }
+        else {
+            $productStock->is_defective = 0;
+        }
+
+        foreach($column as $name) {
+            $value = (int)$stock_info[$name];
+            if($value>0) {
+                $productStock->$name = $value;
+            }
+            else {
+                $db->rollback("{$name} 非法。");
+                return false;
+            }
+        }
+        $productStock->companyid = $this->getDI()->get('currentCompany');
+        $productStock->create_stuff = $userid;
+        $productStock->create_time = date("Y-m-d H:i:s");
+        $productStock->change_stuff = $userid;
+        $productStock->change_time = $productStock->create_time;
+        if($productStock->create()==false) {
+            $db->rollback();
+            return false;
+        }
+
+        //更新库存成功，记录操作日志            
+        $log = new TbProductstockLog();
+        $log->warehouseid = $productStock->warehouseid;
+        $log->productstockid = $productStock->id;
+        $log->number_before = 0;
+        $log->nuber_after = $productStock->number;
+        $log->change_type = $change_type;
+        $log->change_time = date("Y-m-d H:i:s");
+        $log->relationid = $relationid;
+        $log->companyid = $companyid;
+        $log->change_stuff = $userid;
+        if($log->create()===false) {
+            $db->rollback();
+            return false;
+        }
+
+        $db->commit();
+        return $productStock;
     }
 }

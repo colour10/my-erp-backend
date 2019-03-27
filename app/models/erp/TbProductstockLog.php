@@ -5,14 +5,14 @@ use Phalcon\Validation\Validator\Between;
 use Phalcon\Validation\Validator\Uniqueness;
 
 /**
- * 调拨单相关，调拨单明细（数量）表
+ * 库存日志表
  */
-class TbRequisitionDetailGroup extends BaseModel
+class TbProductstockLog extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('tb_requisition_detail_group');
+        $this->setSource('tb_productstock_log');
     }
 
     public function validation() {

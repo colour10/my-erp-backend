@@ -4,7 +4,7 @@ use Phalcon\Mvc\Controller;
 use Asa\Erp\TbDepartment;
 use Asa\Erp\TbUser;
 use Asa\Erp\TbCompany;
-
+use Asa\Erp\TbRequisitionDetail;
 class IndexController extends BaseController
 {
 
@@ -140,5 +140,19 @@ class IndexController extends BaseController
         $depart->save();
         
         echo "Init Success.";exit;
+    }
+
+    function testAction() {
+        $row = new TbRequisitionDetail();
+        $row->requisitionid = 55;
+        $row->productstockid = 4;
+        $row->number = 33;
+        if($row->save()) {
+            echo "OK";
+        }
+        else {
+            echo $this->error($row);
+        }
+        exit;
     }
 }

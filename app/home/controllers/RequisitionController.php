@@ -86,8 +86,13 @@ class RequisitionController extends BaseController {
         $result = TbRequisitionDetail::find(
             sprintf("requisitionid=%d", $_POST['requisitionid'])
         );
-//print_r($result->toArray());
-        echo $this->success($result->toArray());
+        //print_r($result->toArray());
+        $array = [];
+        foreach($result as $row) {
+            $productstock = $row->productstock;
+            $array[] = array_merge($productstock->toArray(), $row->toArray());
+        }
+        echo $this->success($array);
     }
 
     /**
