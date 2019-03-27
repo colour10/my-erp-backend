@@ -56,9 +56,15 @@ class Module implements ModuleDefinitionInterface
 
         // 主域名
         $config = $di->get("config");
-        $di->setShared('main_host', function () use ($config, $di) {
+        $di->setShared('main_host', function () use ($config) {
             $main_host = $config['app']['main_host'];
             return $main_host;
+        });
+
+        // 图片域名
+        $di->setShared('file_prex', function () use ($config) {
+            $file_prex = $config['file_prex'];
+            return $file_prex;
         });
     }
 }
