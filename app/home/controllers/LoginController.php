@@ -12,7 +12,7 @@ class LoginController extends Controller
             $password = $this->request->getPost('password');
             //Find the user in the database
             $user = TbUser::findFirst(array(
-                sprintf("login_name='%s' and password='%s' and sys_delete_flag=0", addslashes($username), md5($password))
+                sprintf("login_name='%s' and password='%s'", addslashes($username), md5($password))
             ));
             if ($user!=false) {
                 $this->session->set('user', array(

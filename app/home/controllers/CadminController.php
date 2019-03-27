@@ -35,7 +35,7 @@ class CadminController extends AdminController {
 	function loadAction() {
 	    $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
 	    $row = $findFirst->invokeArgs(null, array(
-	        sprintf("sys_delete_flag=0 and companyid=%d and id=%d", $this->companyid, $_POST["id"])
+	        sprintf("id=%d and companyid=%d", $_POST["id"], $this->companyid)
 	    ));
 
 	    if($row!=false) {   
@@ -54,7 +54,7 @@ class CadminController extends AdminController {
         $fieldTypes = $metaData->getDataTypes($model);
 
         $array = array(
-            sprintf("companyid=%d and sys_delete_flag=0", $this->companyid)
+            sprintf("companyid=%d", $this->companyid)
         );
 
         foreach ($primaryKeys as $key) {

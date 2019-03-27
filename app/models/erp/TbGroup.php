@@ -91,17 +91,13 @@ class TbGroup extends BaseModel
 
         // 循环得到权限
         foreach ($this->permissions as $permission) {
-            if ($permission->sys_delete_flag == '0') {
-                foreach ($permission->modules as $module) {
-                    if ($module->sys_delete_flag == '0') {
-                        $current_modules[] = [
-                            'permissionid' => $module->permissionid,
-                            'module' => $module->module,
-                            'controller' => $module->controller,
-                            'action' => $module->action,
-                        ];
-                    }
-                }
+            foreach ($permission->modules as $module) {
+                $current_modules[] = [
+                    'permissionid' => $module->permissionid,
+                    'module' => $module->module,
+                    'controller' => $module->controller,
+                    'action' => $module->action,
+                ];
             }
         }
 

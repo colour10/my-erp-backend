@@ -207,8 +207,6 @@ class AdminController extends BaseController
                 }
             } else {
                 $result['is_add'] = "1";
-                $result['sys_create_stuff'] = $row->sys_create_stuff;
-                $result['sys_create_date'] = $row->sys_create_date;
                 $result['id'] = $row->id;
                 //$message['idd'] = "999";
             }

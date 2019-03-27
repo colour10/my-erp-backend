@@ -15,34 +15,8 @@ class BaseModel extends \Phalcon\Mvc\Model {
     private $validate_language;
     
     public function initialize() {
-        $this->addBehavior(new AsaBehabior());
+        //$this->addBehavior(new AsaBehabior());
 
-        // 软删除
-        $this->addBehavior(
-            new SoftDelete(
-                array(
-                    'field' => 'sys_delete_stuff',
-                    'value' => $this->getDI()->get("currentUser")
-                )
-            )
-        );
-        $this->addBehavior(
-            new SoftDelete(
-                array(
-                    'field' => 'sys_delete_date',
-                    'value' => date('Y-m-d H:i:s')
-                )
-            )
-        );
-        $this->addBehavior(
-            new SoftDelete(
-                array(
-                    'field' => 'sys_delete_flag',
-                    'value' => self::FG_DELETED
-                )
-            )
-        );
-        $this->useDynamicUpdate(true);
     }
 
     /**
@@ -50,29 +24,9 @@ class BaseModel extends \Phalcon\Mvc\Model {
      * @return [type] [description]
      */
     function getSearchBaseCondition() {
-        return ["sys_delete_flag=0"];
+        return [];
     }
-    
-    // function delete() {
-    //     $current = $this->getDI()->get("currentUser");
-    //
-    //     if($current!="") {
-    //         $now = date("Y-m-d H:i:s");
-    //         $this->sys_delete_stuff = $current;
-    //         $this->sys_delete_flag = 1;
-    //         $this->sys_delete_date = $now;
-    //         $this->sys_modify_date = $now;
-    //
-    //         return $this->save();
-    //     }
-    //     else {
-    //         $language = $this->getLanguage();
-    //         $message = new Message($language["model-delete-message"]);
-	//         $this->appendMessage($message);
-	//         return false;
-	//     }
-    // }
-    
+        
     function getLanguage() {
         return $this->getDI()->get("language");
     }
@@ -109,7 +63,7 @@ class BaseModel extends \Phalcon\Mvc\Model {
     public static function findByIdString($idstring) {
         if(preg_match("#^\d+(,\d+)*$#", $idstring)) {
             return self::find(
-                sprintf("id in (%s) and sys_delete_flag=0", $idstring)
+                sprintf("id in (%s)", $idstring)
             );
         }
         else {

@@ -79,7 +79,7 @@ class DepartmentController extends CadminController {
     {
         // 取出公司下面的所有部门
         $departments = TbDepartment::find([
-            sprintf("sys_delete_flag=0 and companyid=%d", $this->companyid)
+            sprintf("companyid=%d", $this->companyid)
         ]);
 
         if(!$departments->toArray()) {

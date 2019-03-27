@@ -10,17 +10,17 @@ use Phalcon\Validation\Validator\Regex;
 /**
  * 销售单主表
  */
-class XsSales extends BaseModel
+class TbSales extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('xs_sales');
+        $this->setSource('tb_sales');
 
         // 订单-订单详情，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\XsSalesdetails",
+            "\Asa\Erp\TbSalesdetails",
             "salesid",
             [
                 'alias' => 'salesdetails',
