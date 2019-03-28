@@ -12,14 +12,7 @@ class IndexController extends AdminController
      */
     public function indexAction()
     {
-        // $brandGroups_obj = new BrandgroupController();
-        // $brandGroups = $brandGroups_obj->getlistAction();
-        // return json_encode($brandGroups);
-        // echo '<pre>';
-        // print_r($brandGroups);
-        // echo '</pre>';
-        // exit;
-        // $this->view->setVar('brandGroups',$brandGroups->toArray());
+
     }
 
     /**
