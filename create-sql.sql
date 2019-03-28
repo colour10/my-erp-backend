@@ -1068,13 +1068,13 @@ CREATE TABLE `zl_childproductgroup` (
   `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
   `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
   `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
-  `childcode` varchar(50) DEFAULT NULL,
-  `productgroupid` int(10) unsigned DEFAULT NULL,
-  `producttemplateid` int(10) unsigned DEFAULT NULL,
-  `weight` decimal(16,9) DEFAULT NULL,
-  `isfj` varchar(1) DEFAULT NULL COMMENT '0-否 1-法检',
-  `cname4male` int(10) unsigned DEFAULT NULL,
-  `cname4female` int(10) unsigned DEFAULT NULL,
+  `childcode` varchar(50) DEFAULT NULL COMMENT '子集编号',
+  `productgroupid` int(10) unsigned DEFAULT NULL COMMENT '父级ID',
+  `producttemplateid` int(10) unsigned DEFAULT NULL COMMENT '尺码规格ID',
+  `weight` decimal(16,9) DEFAULT NULL COMMENT '毛重',
+  `isfj` varchar(1) DEFAULT NULL COMMENT '是否法检(未使用)：0-否 1-法检',
+  `cname4male` int(10) unsigned DEFAULT NULL COMMENT '报关名称（男）',
+  `cname4female` int(10) unsigned DEFAULT NULL COMMENT '报关名称（女）',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='子品类';
 
