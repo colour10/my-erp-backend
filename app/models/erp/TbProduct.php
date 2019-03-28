@@ -1,8 +1,10 @@
 <?php
+
 namespace Asa\Erp;
+
 use Phalcon\Validation;
-use Phalcon\Validation\Validator\Between;
 use Phalcon\Validation\Validator\Uniqueness;
+use Phalcon\Mvc\Model\Relation;
 
 /**
  * 商品表
@@ -13,6 +15,21 @@ class TbProduct extends BaseModel
     {
         parent::initialize();
         $this->setSource('tb_product');
+
+        // 商品-子品类，一对多反向
+        $this->belongsTo(
+            'childbrand',
+            '\Asa\Erp\zl_childproductgroup',
+            'id',
+            [
+                'alias' => 'childproductgroup',
+                'foreignKey' => [
+                    // 关联字段禁止自动删除
+                    'action' => Relation::ACTION_RESTRICT,
+                    "message" => $this->getValidateMessage('notexist', 'childproductgroup-list'),
+                ],
+            ]
+        );
     }
 
     public function validation() {
