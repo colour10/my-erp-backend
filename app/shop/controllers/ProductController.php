@@ -5,7 +5,7 @@ use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
 use Asa\Erp\ZlBrand;
 
-class ProductController extends ZadminController {
+class ProductController extends AdminController {
     public function initialize() {
         $this->setModelName('Asa\\Erp\\TbProduct');
     }
