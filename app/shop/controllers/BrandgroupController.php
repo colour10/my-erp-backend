@@ -31,7 +31,7 @@ class BrandgroupController extends AdminController
     }
 
     /**
-     * 获取当前品牌的产品列表
+     * 获取当前主分类产品列表
      * @param $id
      * @return mixed
      */

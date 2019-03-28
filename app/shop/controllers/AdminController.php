@@ -4,7 +4,7 @@ namespace Multiple\Shop\Controllers;
 
 use Phalcon\Mvc\Controller;
 use Phalcon\Db\Column;
-use  Phalcon\Mvc\Model\Message;
+use Phalcon\Mvc\Model\Message;
 
 class AdminController extends Controller
 {
@@ -91,10 +91,20 @@ class AdminController extends Controller
     function doAdd()
     {
         if ($this->request->isPost()) {
-            //�������ݿ�
+            // 获取模型
             $row = $this->getModelObject();
 
             $fields = $this->getAttributes();
+
+            // 新增，把post过来的值重新赋值给$_POST，2019/3/21
+            foreach ($this->request->get() as $key => $value) {
+                $_POST[$key] = $value;
+            }
+            // 并清除冗余的_url键，2019/3/21
+            if (array_key_exists('_url', $_POST)) {
+                unset($_POST['_url']);
+            }
+
             foreach ($fields as $name) {
                 if (isset($_POST[$name])) {
                     $row->$name = $_POST[$name];

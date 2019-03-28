@@ -87,7 +87,7 @@ try {
                 ]
             )->setHostName($config->app->main_host);
 
-            //店铺域名路由规则
+            // 店铺域名路由规则
             $router->add(
                 "/",
                 [
