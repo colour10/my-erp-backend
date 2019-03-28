@@ -527,6 +527,7 @@ return array(
     'supplier' => '供货商',
     'warehouseid' => '仓库ID',
     'brandgroup-list' => '品类列表',
+    'childproductgroup-list' => '子品类列表',
     // 通用型，以后有需要再改
     'hasmany-foreign-message' => '正在使用，不能删除',
     'belongsto-foreign-message' => '记录不存在',
