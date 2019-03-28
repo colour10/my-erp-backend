@@ -87,4 +87,33 @@ class TbWarehouse extends BaseModel
             return TbProductstock::initStock($data, $change_type, $relationid);
         }
     }
+
+    function getLocalStock($productstock) {
+        $myproductstock = TbProductstock::findFirst(
+            sprintf(
+                "companyid=%d and warehouseid=%d and productid=%d and sizecontentid=%d and is_defective=%d and property=%d",
+                $productstock->companyid,
+                $this->id,
+                $productstock->productid,
+                $productstock->sizecontentid,
+                $productstock->is_defective,
+                $productstock->property
+            )
+        );
+
+        if($myproductstock!=false) {
+            return $myproductstock->addStock($number, $change_type, $relationid);
+        }
+        else {["productid","warehouseid","sizecontentid","property","number"];
+            $data = array(
+                "productid" => $productstock->productid,
+                "warehouseid" => $this->id,
+                "sizecontentid" => $productstock->sizecontentid,
+                "property" => $productstock->property,
+                "is_defective" => $productstock->is_defective,
+                "number" => $number
+            );
+            return TbProductstock::initStock($data, $change_type, $relationid);
+        }
+    }
 }
