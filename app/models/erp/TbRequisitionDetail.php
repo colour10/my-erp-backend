@@ -3,6 +3,7 @@ namespace Asa\Erp;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Between;
 use Phalcon\Validation\Validator\Uniqueness;
+//use Phalcon\Mvc\Model\Relation;
 
 /**
  * 调拨单相关，调拨单明细表
@@ -13,6 +14,16 @@ class TbRequisitionDetail extends BaseCommonModel
     {
         parent::initialize();
         $this->setSource('tb_requisition_detail');
+
+        // 库存-仓库表，一对多反向
+       $this->belongsTo(
+            'productstockid',
+            '\Asa\Erp\TbProductstock',
+            'id',
+            [
+                'alias' => 'productstock'
+            ]
+        );
     }
 
     public function validation() {
@@ -39,5 +50,9 @@ class TbRequisitionDetail extends BaseCommonModel
 //        );
 
         return $this->validate($validator);
+    }
+
+    function delete() {
+        return false;
     }
 }
