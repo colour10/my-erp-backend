@@ -1,6 +1,8 @@
 // 申请跨域访问
 // 首先根据地址栏中的网址，判断是否存在本域名
-var url = window.location.host;
+// var url = window.location.host;
+
+// 填充节点
 $(function() {
     // 取出主域名，如果不存在就直接跳转
     var main_host = getmainhost();
