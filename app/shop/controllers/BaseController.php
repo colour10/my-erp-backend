@@ -1,6 +1,6 @@
 <?php
 
-namespace Multiple\Home\Controllers;
+namespace Multiple\Shop\Controllers;
 
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
