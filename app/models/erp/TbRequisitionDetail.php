@@ -17,11 +17,20 @@ class TbRequisitionDetail extends BaseCommonModel
 
         // 库存-仓库表，一对多反向
        $this->belongsTo(
-            'productstockid',
+            'out_productstockid',
             '\Asa\Erp\TbProductstock',
             'id',
             [
-                'alias' => 'productstock'
+                'alias' => 'outProductstock'
+            ]
+        );
+
+       $this->belongsTo(
+            'in_productstockid',
+            '\Asa\Erp\TbProductstock',
+            'id',
+            [
+                'alias' => 'inProductstock'
             ]
         );
     }

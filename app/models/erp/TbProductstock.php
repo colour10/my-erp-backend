@@ -2,6 +2,7 @@
 
 namespace Asa\Erp;
 
+use Phalcon\Di;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Validation\Validator\PresenceOf;
@@ -168,7 +169,7 @@ class TbProductstock extends BaseCommonModel
             $log->warehouseid = $this->warehouseid;
             $log->productstockid = $this->id;
             $log->number_before = $old_number;
-            $log->nuber_after = $this->number;
+            $log->number_after = $this->number;
             $log->change_type = $change_type;
             $log->change_time = date("Y-m-d H:i:s");
             $log->relationid = $relationid;
@@ -192,9 +193,10 @@ class TbProductstock extends BaseCommonModel
      * @return [type] [description]
      */
     public static function initStock($stock_info) {
-        $db = $this->getDI()->get('db');
-        $userid = $this->getDI()->get('currentUser');;
-        $companyid = $this->getDI()->get('currentCompany');
+        $di = Di::getDefault();
+        $db = $di->get('db');
+        $userid = $di->get('currentUser');;
+        $companyid = $di->get('currentCompany');
 
         $db->begin();
 
@@ -220,7 +222,7 @@ class TbProductstock extends BaseCommonModel
                 return false;
             }
         }
-        $productStock->companyid = $this->getDI()->get('currentCompany');
+        $productStock->companyid = $companyid;
         $productStock->create_stuff = $userid;
         $productStock->create_time = date("Y-m-d H:i:s");
         $productStock->change_stuff = $userid;

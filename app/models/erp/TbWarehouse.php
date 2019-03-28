@@ -117,7 +117,7 @@ class TbWarehouse extends BaseModel
                 "property" => $productstock->property,
                 "is_defective" => $productstock->is_defective
             );
-            return TbProductstock::initStock($data, $change_type, $relationid);
+            return TbProductstock::initStock($data);
         }
     }
 }
