@@ -198,3 +198,13 @@
 .copyright-text a {
     color: #bfbfbf;
 }
+
+/* 补充css */
+.title h4 {
+    font-size:1.1em;
+    line-height: 2.4em;
+    text-align: center;
+}
+.title h4 a,.title h4 a:hover {
+    color:#333;
+}

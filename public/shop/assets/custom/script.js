@@ -1,6 +1,12 @@
 // 申请跨域访问
 // 首先根据地址栏中的网址，判断是否存在本域名
-// var url = window.location.host;
+var host = window.location.host;
+var url = window.location.href;
+
+// http://www.myshop.com/brandgroup/detail/2
+console.log(url);
+// /brandgroup/detail/2
+console.log(GetUrlRelativePath());
 
 // 填充节点
 $(function() {
@@ -100,12 +106,31 @@ $(function() {
     }
 
     // 主分类页面商品列表
-    var main_product_list = $('.main_product_list2');
+    var main_product_list = $('.main_product_list');
     var main_product_list_html = '';
     if (main_product_list.length > 0) {
-        main_product_list_html += '这里是主分类列表';
-        // 填充
-        main_product_list.html(main_product_list_html);
+        $.getJSON('http://'+main_host+'/brandgroup/detail/1?callback=?', function(response) {
+            console.log(response);
+            // 开始填充数据
+            var main_len = response.length;
+            console.log(main_len);
+            if (main_len > 0) {
+                for (let i=0; i<main_len; i++) {
+                    main_product_list_html += '<div class="post-masonry col-sm-6 col-md-3">';
+                    main_product_list_html += '    <div class="post-thumb">';
+                    main_product_list_html += '        <img src="http://www.jxstbw.com/storage/n8Xhf2fNkeF8o6gn23UMsyEAm0LxTUCRNgVIGKXd.png" alt="无机纤维保温层案例4" />';
+                    main_product_list_html += '        <div class="title">';
+                    main_product_list_html += '            <h4>';
+                    main_product_list_html += '                <a href="http://www.jxstbw.com/wjxwpt-cases/18.main_product_list_html">无机纤维保温层案例4</a>';
+                    main_product_list_html += '            </h4>';
+                    main_product_list_html += '        </div>';
+                    main_product_list_html += '    </div>';
+                    main_product_list_html += '</div>';
+                }
+                // 填充
+                main_product_list.html(main_product_list_html);
+            }
+        });
     }
 
     // 子分类页面商品列表
@@ -160,4 +185,21 @@ function getmainhost() {
     });
     // 返回
     return result;
+}
+
+/**
+ * 获取当前页面的相对地址
+ * @returns {string}
+ * @constructor
+ */
+function GetUrlRelativePath() {
+    var url = document.location.toString();
+    var arrUrl = url.split("//");
+    var start = arrUrl[1].indexOf("/");
+    // stop省略，截取从start开始到结尾的所有字符
+    var relUrl = arrUrl[1].substring(start);
+    if(relUrl.indexOf("?") != -1) {
+        relUrl = relUrl.split("?")[0];
+    }
+    return relUrl;
 }
