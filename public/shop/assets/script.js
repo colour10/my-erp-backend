@@ -21,43 +21,81 @@ $(function() {
     Layout.initTouchspin();
 
     // 导航部门实现跨域查询
-    let navigations = $('.header-navigation').children('ul').eq(0);
-    let html = '';
-    $.getJSON('http://'+main_host+'/brandgroup/getlist?callback=?', function(response) {
-        // 开始填充数据
-        let len = response.length;
-        if (len > 0) {
-            for (let i=0; i<len; i++) {
-                html += '<li><a href="/brandgroup/detail/'+response[i].id+'">'+response[i].name_cn+'</a></li>';
+    var navigations = $('.header-navigation').children('ul').eq(0);
+    // 如果存在则填充
+    if (navigations.length > 0) {
+        var html = '';
+        $.getJSON('http://'+main_host+'/brandgroup/getlist?callback=?', function(response) {
+            // 开始填充数据
+            var len = response.length;
+            if (len > 0) {
+                for (let i=0; i<len; i++) {
+                    html += '<li><a href="/brandgroup/detail/'+response[i].id+'">'+response[i].name_cn+'</a></li>';
+                }
+                // 填充
+                navigations.append(html);
             }
-            // 填充
-            navigations.append(html);
-        }
-    });
+        });
+    }
+
 
     // 首页推荐产品列表，跨域
-    let Recommend_products = $('.Recommend_products_content');
-    let productlist = '';
-    $.getJSON('http://'+main_host+'/product/getindexrec?callback=?', function(response) {
-        console.log(response);
-        // 开始填充数据
-        len = response.length;
-        if (len > 0) {
-            for (var i=0; i<len; i++) {
-                productlist += '<div class="col-xs-12 col-sm-6 col-md-3">';
-                productlist += '   <div class="thumbnail">';
-                productlist += '       <a href="/product/detail/'+response[i].id+'"><img src="'+file_prex+response[i].picture+'" alt="'+response[i].productname+'" /></a>';
-                productlist += '       <div class="caption">';
-                productlist += '           <h3 class="text-center"><a href="/product/detail/'+response[i].id+'">'+response[i].productname+'</a></h3>';
-                productlist += '           <p>$29.00</p>';
-                productlist += '        </div>';
-                productlist += '    </div>';
-                productlist += '</div>';
+    var Recommend_products = $('.Recommend_products_content');
+    // 如果存在则填充
+    if (Recommend_products.length > 0) {
+        var productlist = '';
+        $.getJSON('http://'+main_host+'/product/getindexrec?callback=?', function(response) {
+            // 开始填充数据
+            var len = response.length;
+            if (len > 0) {
+                for (let i=0; i<len; i++) {
+                    productlist += '<div class="col-xs-12 col-sm-6 col-md-3">';
+                    productlist += '   <div class="thumbnail">';
+                    productlist += '       <a href="/product/detail/'+response[i].id+'"><img src="'+file_prex+response[i].picture+'" alt="'+response[i].productname+'" /></a>';
+                    productlist += '       <div class="caption">';
+                    productlist += '           <h3 class="text-center"><a href="/product/detail/'+response[i].id+'">'+response[i].productname+'</a></h3>';
+                    productlist += '           <p>$29.00</p>';
+                    productlist += '        </div>';
+                    productlist += '    </div>';
+                    productlist += '</div>';
+                }
+                // 填充
+                Recommend_products.html(productlist);
             }
-            // 填充
-            Recommend_products.html(productlist);
-        }
-    });
+        });
+    }
+
+    // 侧边sidebar
+    var sidebar_menu = $('.sidebar-menu');
+    if (sidebar_menu.length > 0) {
+        var sitebarlist = '';
+        $.getJSON('http://'+main_host+'/brandgroup/getalllist?callback=?', function(response) {
+            // 开始填充数据
+            var first_len = response.length;
+            if (first_len > 0) {
+                for (let i=0; i<first_len; i++) {
+                    // 如果有子节点
+                    var children_length = response[i].children.length;
+                    var children_node = response[i].children;
+                    if (children_length > 0) {
+                        sitebarlist += '<li class="list-group-item clearfix dropdown">';
+                        sitebarlist += '    <a href="javascript:void(0);" class="collapsed"><i class="fa fa-angle-right"></i>'+response[i].name_cn+'</a>';
+                        sitebarlist += '    <ul class="dropdown-menu" style="display:block;">';
+                        // 继续遍历子节点
+                        for (let i=0; i<children_length; i++) {
+                            sitebarlist += '<li><a href="shop-product-list.html"><i class="fa fa-angle-right"></i> '+children_node[i].name_cn+'</a></li>';
+                        }
+                        sitebarlist += '    </ul>';
+                        sitebarlist += '</li>';
+                    } else {
+                        sitebarlist += '<li class="list-group-item clearfix"><a href="shop-product-list.html"><i class="fa fa-angle-right"></i> '+response[i].name_cn+'</a></li>';
+                    }
+                }
+                // 填充
+                sidebar_menu.html(sitebarlist);
+            }
+        });
+    }
 
 });
 
