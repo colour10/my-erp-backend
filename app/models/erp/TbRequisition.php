@@ -229,7 +229,7 @@ class TbRequisition extends BaseCommonModel
                     $details[] = [
                         "out_productstockid" => $detail->in_productstockid,
                         "in_productstockid" => $detail->out_productstockid,
-                        "number" => $detail->out_number-$detail->in_number
+                        "number" => $detail->out_number-$detail->in_number,
                         "out_number" => $detail->out_number-$detail->in_number
                     ];
                 }

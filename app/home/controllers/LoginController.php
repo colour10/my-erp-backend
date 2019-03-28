@@ -18,7 +18,8 @@ class LoginController extends Controller
                 $this->session->set('user', array(
                     'id' => $user->id,
                     'username' => $user->login_name,
-                    'companyid' => $user->companyid
+                    'companyid' => $user->companyid,
+                    'saleport' => $user->saleport
                 ));
                 //Forward to the 'invoices' controller if the user is valid
                 //header("location:/");

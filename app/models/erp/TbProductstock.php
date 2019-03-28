@@ -42,12 +42,7 @@ class TbProductstock extends BaseCommonModel
             '\Asa\Erp\ZlSizecontent',
             'id',
             [
-                'alias' => 'sizecontent',
-                "foreignKey" => [
-                    // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message" => $this->getValidateMessage('notexist', 'sizecontent'),
-                ],
+                'alias' => 'sizecontent'
             ]
         );
 
@@ -57,12 +52,16 @@ class TbProductstock extends BaseCommonModel
             '\Asa\Erp\TbWarehouse',
             'id',
             [
-                'alias' => 'warehouse',
-                "foreignKey" => [
-                    // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message" => $this->getValidateMessage('notexist', 'warehouse'),
-                ],
+                'alias' => 'warehouse'
+            ]
+        );
+
+        $this->belongsTo(
+            'goodsid',
+            '\Asa\Erp\TbGoods',
+            'id',
+            [
+                'alias' => 'goods'
             ]
         );
     }
@@ -200,17 +199,8 @@ class TbProductstock extends BaseCommonModel
 
         $db->begin();
 
-        $column = ["productid","warehouseid","sizecontentid","property"];
+        $column = ["goodsid","productid","warehouseid","sizecontentid","property","defective_level"];
         $productStock = new TbProductstock();
-
-        //残次品标志
-        if(isset($stock_info['is_defective'])) {
-            $is_defective = (int) $stock_info['is_defective'];
-            $productStock->is_defective = ($is_defective==1) ? 1:0;
-        }
-        else {
-            $productStock->is_defective = 0;
-        }
 
         foreach($column as $name) {
             $value = (int)$stock_info[$name];

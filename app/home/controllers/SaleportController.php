@@ -3,27 +3,27 @@ namespace Multiple\Home\Controllers;
 
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
-use Asa\Erp\TbWarehouse;
-use Asa\Erp\TbWarehouseUser;
+use Asa\Erp\TbSaleport;
+use Asa\Erp\TbSaleportUser;
 /**
- * 仓库表
+ * 销售端口表
  */
-class WarehouseController extends CadminController {
+class SaleportController extends CadminController {
     public function initialize() {
-	    parent::initialize();
+        parent::initialize();
 
-	    $this->setModelName('Asa\\Erp\\TbWarehouse');
+        $this->setModelName('Asa\\Erp\\TbSaleport');
     }
 
-    function userlistAction() {
-        $result = TbWarehouseUser::find(
+    public function listAction() {
+        $result = TbSaleportUser::find(
             sprintf("userid=%d", $this->currentUser)
         );
 
         $array = [];
         foreach ($result as $key => $value) {
            // print_r($value->toArray());
-            $array[] = $value->warehouse->toArray();
+            $array[] = $value->saleport->toArray();
         }
 
         echo $this->success($array);

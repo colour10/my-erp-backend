@@ -91,6 +91,7 @@ class CommonController extends BaseController
             "country" =>["table"=>"Asa\\Erp\\ZlCountry", "columns"=>["code", "name_cn"]],
             "warehouse" =>["table"=>"Asa\\Erp\\TbWarehouse", "columns"=>["code", "name"]],
             "user" =>["table"=>"Asa\\Erp\\TbUser", "columns"=>["login_name", "real_name"]],
+            "goods" =>["table"=>"Asa\\Erp\\TbGoods", "columns"=>["price", "productid"]],
         ];
 
         //new \Asa\Erp\TbProduct();

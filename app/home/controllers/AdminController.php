@@ -109,6 +109,7 @@ class AdminController extends BaseController
 
     public function indexAction()
     {
+        echo 55;exit;
 	}
 	
 	function pageAction() {

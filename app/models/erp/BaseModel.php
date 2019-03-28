@@ -71,4 +71,10 @@ class BaseModel extends \Phalcon\Mvc\Model {
         }
     }
 
+    function debug() {
+        foreach ($this->getMessages() as $message) {
+            echo $message->getMessage();
+        }
+    }
+
 }
