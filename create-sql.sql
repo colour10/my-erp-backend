@@ -1040,7 +1040,7 @@ DROP TABLE IF EXISTS `zl_brandgroup`;
 
 CREATE TABLE `zl_brandgroup` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `code` varchar(50) DEFAULT NULL,
+  `code` varchar(50) DEFAULT NULL COMMENT '代码',
   `name_cn` varchar(100) DEFAULT NULL COMMENT '中文名称',
   `name_en` varchar(100) DEFAULT NULL COMMENT '英文名称',
   `name_hk` varchar(100) DEFAULT NULL COMMENT '粤语名称',
