@@ -191,14 +191,14 @@ class TbProductstock extends BaseCommonModel
      * 初始化库存
      * @return [type] [description]
      */
-    public static function initStock($stock_info, $change_type, $relationid) {
+    public static function initStock($stock_info) {
         $db = $this->getDI()->get('db');
         $userid = $this->getDI()->get('currentUser');;
         $companyid = $this->getDI()->get('currentCompany');
 
         $db->begin();
 
-        $column = ["productid","warehouseid","sizecontentid","property","number"];
+        $column = ["productid","warehouseid","sizecontentid","property"];
         $productStock = new TbProductstock();
 
         //残次品标志
@@ -225,23 +225,8 @@ class TbProductstock extends BaseCommonModel
         $productStock->create_time = date("Y-m-d H:i:s");
         $productStock->change_stuff = $userid;
         $productStock->change_time = $productStock->create_time;
+        $productStock->number = 0;
         if($productStock->create()==false) {
-            $db->rollback();
-            return false;
-        }
-
-        //更新库存成功，记录操作日志            
-        $log = new TbProductstockLog();
-        $log->warehouseid = $productStock->warehouseid;
-        $log->productstockid = $productStock->id;
-        $log->number_before = 0;
-        $log->nuber_after = $productStock->number;
-        $log->change_type = $change_type;
-        $log->change_time = date("Y-m-d H:i:s");
-        $log->relationid = $relationid;
-        $log->companyid = $companyid;
-        $log->change_stuff = $userid;
-        if($log->create()===false) {
             $db->rollback();
             return false;
         }

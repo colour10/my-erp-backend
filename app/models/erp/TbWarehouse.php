@@ -75,7 +75,7 @@ class TbWarehouse extends BaseModel
         if($myproductstock!=false) {
             return $myproductstock->addStock($number, $change_type, $relationid);
         }
-        else {["productid","warehouseid","sizecontentid","property","number"];
+        else {
             $data = array(
                 "productid" => $productstock->productid,
                 "warehouseid" => $this->id,
@@ -88,6 +88,11 @@ class TbWarehouse extends BaseModel
         }
     }
 
+    /**
+     * 根据另外一个库存对象，查找本库的相同信息的库存对象，如果没有则创建一个数量为0的库存对象
+     * @param  TbProductstock $productstock [description]
+     * @return [type]               [description]
+     */
     function getLocalStock($productstock) {
         $myproductstock = TbProductstock::findFirst(
             sprintf(
@@ -102,16 +107,15 @@ class TbWarehouse extends BaseModel
         );
 
         if($myproductstock!=false) {
-            return $myproductstock->addStock($number, $change_type, $relationid);
+            return $myproductstock;
         }
-        else {["productid","warehouseid","sizecontentid","property","number"];
+        else {
             $data = array(
                 "productid" => $productstock->productid,
                 "warehouseid" => $this->id,
                 "sizecontentid" => $productstock->sizecontentid,
                 "property" => $productstock->property,
-                "is_defective" => $productstock->is_defective,
-                "number" => $number
+                "is_defective" => $productstock->is_defective
             );
             return TbProductstock::initStock($data, $change_type, $relationid);
         }
