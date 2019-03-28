@@ -22,7 +22,7 @@ $(function() {
     Layout.initImageZoom();
     Layout.initTouchspin();
 
-    // 导航部门实现跨域查询
+    // 导航部分实现跨域查询
     var navigations = $('.header-navigation').children('ul').eq(0);
     // 如果存在则填充
     if (navigations.length > 0) {
@@ -85,18 +85,36 @@ $(function() {
                         sitebarlist += '    <ul class="dropdown-menu" style="display:block;">';
                         // 继续遍历子节点
                         for (let i=0; i<children_length; i++) {
-                            sitebarlist += '<li><a href="shop-product-list.html"><i class="fa fa-angle-right"></i> '+children_node[i].name_cn+'</a></li>';
+                            sitebarlist += '<li><a href="/childproductgroup/detail/'+children_node[i].id+'"><i class="fa fa-angle-right"></i> '+children_node[i].name_cn+'</a></li>';
                         }
                         sitebarlist += '    </ul>';
                         sitebarlist += '</li>';
                     } else {
-                        sitebarlist += '<li class="list-group-item clearfix"><a href="shop-product-list.html"><i class="fa fa-angle-right"></i> '+response[i].name_cn+'</a></li>';
+                        sitebarlist += '<li class="list-group-item clearfix"><a href="/brandgroup/detail/'+response[i].id+'"><i class="fa fa-angle-right"></i> '+response[i].name_cn+'</a></li>';
                     }
                 }
                 // 填充
                 sidebar_menu.html(sitebarlist);
             }
         });
+    }
+
+    // 主分类页面商品列表
+    var main_product_list = $('.main_product_list2');
+    var main_product_list_html = '';
+    if (main_product_list.length > 0) {
+        main_product_list_html += '这里是主分类列表';
+        // 填充
+        main_product_list.html(main_product_list_html);
+    }
+
+    // 子分类页面商品列表
+    var child_product_list = $('.child_product_list2');
+    var child_product_list_html = '';
+    if (child_product_list.length > 0) {
+        child_product_list_html += '这里是子分类列表';
+        // 填充
+        child_product_list.html(child_product_list_html);
     }
 
 });
