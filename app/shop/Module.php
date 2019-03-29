@@ -8,6 +8,7 @@ use Phalcon\DiInterface;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 use Multiple\Shop\Controllers\BrandgroupController;
+use Multiple\Shop\Controllers\BuycarController;
 
 class Module implements ModuleDefinitionInterface
 {
@@ -86,6 +87,11 @@ class Module implements ModuleDefinitionInterface
             $allcates = $brandGroup->allcatesAction();
             return $allcates;
         });
-
+        //获取购物车
+		$buycar = new BuycarController();
+        $di->setShared('buycar', function () use ($buycar) {
+            $cates = $buycar->getListAction();
+            return $cates;
+        });
     }
 }
