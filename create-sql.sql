@@ -192,6 +192,13 @@ insert  into `dd_orderdetails`(`id`,`orderid`,`sizecontentid`,`number`,`producti
 
 DROP TABLE IF EXISTS `tb_company`;
 
+CREATE TABLE `tb_buycar` (
+  `id` int(10) NOT NULL,
+  `product_id` int(10) UNSIGNED NOT NULL,
+  `member_id` int(10) UNSIGNED NOT NULL,
+  `number` int(10) UNSIGNED NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='购物车';
+
 CREATE TABLE `tb_company` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `name_cn` varchar(1000) DEFAULT NULL COMMENT '中文名称',

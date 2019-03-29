@@ -5,7 +5,7 @@
             <!-- BEGIN TOP BAR LEFT PART -->
             <div class="col-md-6 col-sm-6 additional-shop-info">
                 <ul class="list-unstyled list-inline">
-                    <li><i class="fa fa-phone"></i><span>13666666666</span></li>
+                    <li><i class="fa fa-phone"></i><span><?php if($this->session->get('member')){ echo $this->session->get('member')['phoneno'];} ?></span></li>
                     <!-- BEGIN LANGS -->
 <!--                    <li class="langs-block">-->
 <!--                        <a href="javascript:void(0);" class="current">English </a>-->
@@ -24,9 +24,11 @@
             <!-- BEGIN TOP BAR MENU -->
             <div class="col-md-6 col-sm-6 additional-nav">
                 <ul class="list-unstyled list-inline pull-right">
+                	<li><a href="shop-account.html"><?php if($this->session->get('member')){ echo '欢迎 '.$this->session->get('member')['login_name'];} ?></a></li>
                     <li><a href="shop-account.html">个人资料</a></li>
-                    <li><a href="shop-checkout.html">购物车</a></li>
-                    <li><a href="/login/index">登录</a></li>
+                    <li><a href="/buycar/index">购物车</a></li>
+                    <li <?php if($this->session->get('member')){ echo "style='display:none;'";} ?>><a href="/login/index">登录</a></li>
+                    <li <?php if(!$this->session->get('member')){ echo "style='display:none;'";} ?>><a href="/login/logout">退出</a></li>
                 </ul>
             </div>
             <!-- END TOP BAR MENU -->
