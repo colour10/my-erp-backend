@@ -15,8 +15,16 @@ class ProductstockController extends BaseController {
     }
 
     function pageAction() {
-        $result = TbProductstock::find(
+
+        $conditions = [
             sprintf("companyid=%d", $this->companyid)
+        ];
+
+        if(isset($_POST["warehouseid"]) && $_POST["warehouseid"]>0) {
+            $conditions[] = sprintf("warehouseid=%d", $_POST["warehouseid"]);
+        }
+        $result = TbProductstock::find(
+            implode(" and ", $conditions)
         );
         echo $this->success($result->toArray());
     }

@@ -157,6 +157,7 @@ var $ASA = (function() {
         arrayMerge: arrayMerge,
         findByKey: findByKey,
         round: round,
-        filterNumber: filterNumber
+        filterNumber: filterNumber,
+        $:$
     }
 })()

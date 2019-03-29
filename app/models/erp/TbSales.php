@@ -127,12 +127,11 @@ class TbSales extends BaseModel
                 return $row;
             }
             else {
-                $row->debug();
+                //$row->debug();
                 return false;
             }
         }
         else {
-            echo 44;
             return false;
         }
     }
