@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+
+<!-- Head BEGIN -->
+<head>
+    <meta charset="utf-8">
+    <title>主分类产品列表页</title>
+
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <meta content="Metronic Shop UI description" name="description">
+    <meta content="Metronic Shop UI keywords" name="keywords">
+
+    <!-- Global styles START -->
+    <link href="/shop/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/shop/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Global styles END -->
+
+    <!-- Page level plugin styles START -->
+    <link href="/shop/assets/plugins/fancybox/source/jquery.fancybox.css" rel="stylesheet">
+    <link href="/shop/assets/plugins/owl.carousel/assets/owl.carousel.css" rel="stylesheet">
+    <link href="/shop/assets/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css">
+    <link href="/shop/assets/plugins/jquery-ui/jquery-ui.css" rel="stylesheet" type="text/css"><!-- for slider-range -->
+    <link href="/shop/assets/plugins/rateit/src/rateit.css" rel="stylesheet" type="text/css">
+    <!-- Page level plugin styles END -->
+
+    <!-- Theme styles START -->
+    <link href="/shop/assets/pages/css/components.css" rel="stylesheet">
+    <link href="/shop/assets/corporate/css/style.css" rel="stylesheet">
+    <link href="/shop/assets/pages/css/style-shop.css" rel="stylesheet" type="text/css">
+    <link href="/shop/assets/corporate/css/style-responsive.css" rel="stylesheet">
+    <link href="/shop/assets/corporate/css/themes/red.css" rel="stylesheet" id="style-color">
+    <link href="/shop/assets/corporate/css/custom.css" rel="stylesheet">
+    <link href="/shop/assets/custom/templatemo-style.css" rel="stylesheet" />
+    <!-- Theme styles END -->
+</head>
+<!-- Head END -->
+
+<!-- Body BEGIN -->
+<body class="ecommerce">
+
+<?php echo $this->view->getPartial('layouts/_header') ?>
+
+<div class="main">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="index.html">首页</a></li>
+            <li><a href="">Store</a></li>
+            <li class="active">Men category</li>
+        </ul>
+
+
+        <!-- BEGIN SIDEBAR & CONTENT -->
+        <div class="row margin-bottom-40">
+
+            <?php echo $this->view->getPartial('layouts/_sidebar'); ?>
+
+            <!-- BEGIN CONTENT -->
+            <div class="col-md-9 col-sm-7">
+
+                <!-- BEGIN PRODUCT LIST -->
+                <div class="child_product_list row product-list">
+
+                    <?php foreach ($page->items as $item) { ?>
+                        <!-- PRODUCT ITEM START -->
+                        <div class="col-md-4 col-sm-6 col-xs-12">
+                            <div class="product-item">
+                                <div class="pi-img-wrapper">
+                                    <img src="<?php echo $this->file_prex.$item->picture; ?>" class="img-responsive" alt="<?php echo $item->productname; ?>">
+                                    <div>
+                                        <a href="<?php echo $file_prex.$item->picture; ?>" class="btn btn-default fancybox-button">Zoom</a>
+                                    </div>
+                                </div>
+                                <h3><a href="/product/detail/<?php echo $item->id; ?>"><?php echo $item->productname; ?></a></h3>
+                                <div class="pi-price">￥<?php echo round($item->wordprice,2); ?></div>
+                                <a href="javascript:;" class="btn btn-default add2cart">加入购物车</a>
+                            </div>
+                        </div>
+                        <!-- PRODUCT ITEM END -->
+                    <?php } ?>
+
+                </div>
+                <!-- END PRODUCT LIST -->
+
+                <!-- BEGIN PAGINATOR -->
+                <?php if($page->total_pages > 1) { ?>
+                    <div class="page_margin pull-right">
+                        <ul class="pagination ">
+                            <li class="<?php echo $page->current <= 1?'disabled':''; ?>"><a href="<?php echo $this->url->get('index/search', array('page' => $page->before, 'keyword' => $keyword)); ?>">&laquo;</a></li>
+                            <?php for ($i = 1; $i <= $page->total_pages; $i++) { ?>
+                                <li class="<?php echo $page->current == $i?'active':''; ?>"><a href="<?php echo $this->url->get('index/search', array('page' => $i, 'keyword' => $keyword)); ?>"><?php echo $i; ?></a></li>
+                            <?php } ?>
+                            <li class="<?php echo $page->current >= $page->total_pages?'disabled':''; ?>"><a href="<?php echo $this->url->get('index/search', array('page' => $page->next, 'keyword' => $keyword));?>">&raquo;</a></li>
+                        </ul>
+                    </div>
+                <?php } ?>
+                <!-- END PAGINATOR -->
+
+            </div>
+            <!-- END CONTENT -->
+
+        </div>
+        <!-- END SIDEBAR & CONTENT -->
+
+    </div>
+</div>
+
+<?php echo $this->view->getPartial('layouts/_footer'); ?>
+
+<script type="text/javascript" src="/shop/assets/custom/modernizr-2.6.2.min.js"></script>
+<script type="text/javascript" src="/shop/assets/custom/plugins.min.js"></script>
+<script type="text/javascript" src="/shop/assets/custom/main.min.js"></script>
+
+</body>
+<!-- END BODY -->
+</html>
