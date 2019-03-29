@@ -42,11 +42,19 @@ class ChildproductgroupController extends AdminController {
         // 展示分页
         $page = $paginator->getPaginate();
 
+        // 取出上级
+        $brandgroup = $model->brandgroup;
+
+        // 定义面包屑导航
+        $lang = $this->getDI()->get('language')->lang;
+        $name = 'name_'.$lang;
+        $breadcrumb = '<li><a href="/">首页</a></li><li><a href="/brandgroup/detail/'.$brandgroup->id.'">'.$brandgroup->$name.'</a></li><li class="active">'.$model->$name.'</li>';
+
         // 推送给模板
         $this->view->setVars([
             'page' => $page,
             'id' => $id,
-            'file_prex' => $this->file_prex,
+            'breadcrumb' => $breadcrumb,
         ]);
     }
 }

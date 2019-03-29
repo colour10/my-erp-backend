@@ -73,10 +73,16 @@ class BrandgroupController extends AdminController
         // 展示分页
         $page = $paginator->getPaginate();
 
+        // 定义面包屑导航
+        $lang = $this->getDI()->get('language')->lang;
+        $name = 'name_'.$lang;
+        $breadcrumb = '<li><a href="/">首页</a></li><li class="active">'.$brandGroup->$name.'</li>';
+
         // 推送给模板
         $this->view->setVars([
             'page' => $page,
             'id' => $id,
+            'breadcrumb' => $breadcrumb,
         ]);
     }
 
