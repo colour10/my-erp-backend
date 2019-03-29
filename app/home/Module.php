@@ -70,6 +70,17 @@ class Module implements ModuleDefinitionInterface
                 return "";
             }
         });
+
+        $di->setShared('currentCompany', function () use ($config, $di) {
+            $session = $di->get('session');
+            if ($session->has("user")) {
+                // Retrieve its value
+                $user = $session->get("user");
+                return $user["companyid"];
+            } else {
+                return "";
+            }
+        });
         
         $di->setShared('auth', function () use ($config, $di) {
             $session = $di->get('session');

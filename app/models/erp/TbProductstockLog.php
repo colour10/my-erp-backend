@@ -5,14 +5,14 @@ use Phalcon\Validation\Validator\Between;
 use Phalcon\Validation\Validator\Uniqueness;
 
 /**
- * 会员相关，储值卡操作记录表
+ * 库存日志表
  */
-class TbMemberCardHistory extends BaseModel
+class TbProductstockLog extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('tb_member_card_history');
+        $this->setSource('tb_productstock_log');
     }
 
     public function validation() {

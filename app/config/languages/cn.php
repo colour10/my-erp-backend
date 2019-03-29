@@ -430,7 +430,7 @@ return array(
     "rukushijian" => "入库时间",
     "quxiao" => "取消",
     "chukushuliang" => "出库数量",
-    "yingyezhizhaohao" => "营业执照号",
+    "rukushuliang" => "入库数量",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
@@ -526,6 +526,8 @@ return array(
     'orderdetail-over-max-number' => '发货量超过了订单数量',
     'supplier' => '供货商',
     'warehouseid' => '仓库ID',
+    'brandgroup-list' => '品类列表',
+    'childproductgroup-list' => '子品类列表',
     // 通用型，以后有需要再改
     'hasmany-foreign-message' => '正在使用，不能删除',
     'belongsto-foreign-message' => '记录不存在',
@@ -654,6 +656,6 @@ return array(
         "2" => "出库待确认",
         "3" => "在途",
         "4" => "入库拒绝",
-        "5" => "入库拒绝"
+        "5" => "完成"
     )
 );
