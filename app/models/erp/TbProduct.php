@@ -19,7 +19,7 @@ class TbProduct extends BaseModel
         // 商品-子品类，一对多反向
         $this->belongsTo(
             'childbrand',
-            '\Asa\Erp\zl_childproductgroup',
+            '\Asa\Erp\ZlChildproductgroup',
             'id',
             [
                 'alias' => 'childproductgroup',
