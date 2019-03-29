@@ -50,9 +50,7 @@
 <div class="main">
     <div class="container">
         <ul class="breadcrumb">
-            <li><a href="index.html">首页</a></li>
-            <li><a href="">Store</a></li>
-            <li class="active">Men category</li>
+            <?php echo $breadcrumb; ?>
         </ul>
 
         <!-- BEGIN SIDEBAR & CONTENT -->
@@ -71,9 +69,9 @@
                     <div class="col-md-4 col-sm-6 col-xs-12">
                         <div class="product-item">
                             <div class="pi-img-wrapper">
-                                <img src="<?php echo $file_prex.$item->picture; ?>" class="img-responsive" alt="<?php echo $item->productname; ?>">
+                                <img src="<?php echo $this->file_prex.$item->picture; ?>" class="img-responsive" alt="<?php echo $item->productname; ?>">
                                 <div>
-                                    <a href="<?php echo $file_prex.$item->picture; ?>" class="btn btn-default fancybox-button">Zoom</a>
+                                    <a href="<?php echo $this->file_prex.$item->picture; ?>" class="btn btn-default fancybox-button">Zoom</a>
                                 </div>
                             </div>
                             <h3><a href="/product/detail/<?php echo $item->id; ?>"><?php echo $item->productname; ?></a></h3>

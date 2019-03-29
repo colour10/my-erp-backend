@@ -32,17 +32,23 @@ class BrandgroupController extends AdminController
         return $this->file_prex;
     }
 
+
     /**
      * 获取当前主分类产品列表
-     * @param $id
-     * @return mixed
      */
-    public function detailAction($id)
+    public function detailAction()
     {
         // 逻辑
+        // 先过滤
+        $params = $this->dispatcher->getParams();
+        if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
+            exit('Params error!');
+        }
+
+        // 赋值
+        $id = $params[0];
         // 分页
         $currentPage = $this->request->getQuery("page", "int", 1);
-
         // 取出数据
         $brandGroup = ZlBrandgroup::findFirstById($id);
         // 定义一个变量用来存储结果
@@ -73,10 +79,16 @@ class BrandgroupController extends AdminController
         // 展示分页
         $page = $paginator->getPaginate();
 
+        // 定义面包屑导航
+        $lang = $this->getDI()->get('language')->lang;
+        $name = 'name_'.$lang;
+        $breadcrumb = '<li><a href="/">首页</a></li><li class="active">'.$brandGroup->$name.'</li>';
+
         // 推送给模板
         $this->view->setVars([
             'page' => $page,
             'id' => $id,
+            'breadcrumb' => $breadcrumb,
         ]);
     }
 
