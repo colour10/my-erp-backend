@@ -1081,7 +1081,16 @@ CREATE TABLE `zl_childproductgroup` (
 
 /*Data for the table `zl_childproductgroup` */
 
-insert  into `zl_childproductgroup`(`id`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`childcode`,`productgroupid`,`producttemplateid`,`weight`,`isfj`,`cname4male`,`cname4female`) values (1,'33','','',NULL,NULL,NULL,NULL,'33',NULL,0,'33.000000000',NULL,NULL,NULL);
+INSERT INTO `zl_childproductgroup` (`id`, `name_cn`, `name_en`, `name_hk`, `name_fr`, `name_it`, `name_sp`, `name_de`, `childcode`, `productgroupid`, `producttemplateid`, `weight`, `isfj`, `cname4male`, `cname4female`) VALUES
+(1, '春上新', '', '', NULL, NULL, NULL, NULL, '0001', 1, 0, '33.000000000', NULL, NULL, NULL),
+(2, '连衣裙', NULL, NULL, NULL, NULL, NULL, NULL, '0002', 1, NULL, NULL, NULL, NULL, NULL),
+(3, 'T恤', NULL, NULL, NULL, NULL, NULL, NULL, '0003', 1, NULL, NULL, NULL, NULL, NULL),
+(4, '衬衫', NULL, NULL, NULL, NULL, NULL, NULL, '0004', 1, NULL, NULL, NULL, NULL, NULL),
+(5, '高跟鞋', NULL, NULL, NULL, NULL, NULL, NULL, '0005', 3, NULL, NULL, NULL, NULL, NULL),
+(6, '厚底鞋', NULL, NULL, NULL, NULL, NULL, NULL, '0006', 3, NULL, NULL, NULL, NULL, NULL),
+(7, '圆头鞋', NULL, NULL, NULL, NULL, NULL, NULL, '0007', 3, NULL, NULL, NULL, NULL, NULL),
+(8, '双肩包', NULL, NULL, NULL, NULL, NULL, NULL, '0008', 2, NULL, NULL, NULL, NULL, NULL),
+(9, '水桶包', NULL, NULL, NULL, NULL, NULL, NULL, '0009', 2, NULL, NULL, NULL, NULL, NULL);
 
 /*Table structure for table `zl_closedway` */
 
