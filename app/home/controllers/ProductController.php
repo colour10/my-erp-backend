@@ -64,17 +64,4 @@ class ProductController extends CadminController {
 
         echo json_encode($output);
     }
-
-    /**
-     * 取出首页的推荐产品，跨域处理
-     * @return string
-     */
-    public function getindexrecAction()
-    {
-        // 逻辑
-        $callback = $this->request->get('callback');
-        $list = TbProduct::find();
-        // 此处的callback需要和客户端ajax请求中的jsonp属性保持一致。
-        return $callback."(".json_encode($list).")";
-    }
 }

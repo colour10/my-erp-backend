@@ -7,6 +7,7 @@ use Phalcon\Mvc\View;
 use Phalcon\DiInterface;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\ModuleDefinitionInterface;
+use Multiple\Shop\Controllers\BrandgroupController;
 
 class Module implements ModuleDefinitionInterface
 {
@@ -72,5 +73,19 @@ class Module implements ModuleDefinitionInterface
             $language = $config->language;
             return new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
         });
+
+        // 取出所有的主分类
+        $brandGroup = new BrandgroupController();
+        $di->setShared('cates', function () use ($brandGroup) {
+            $cates = $brandGroup->catesAction();
+            return $cates;
+        });
+
+        // 取出所有的主分类以及二级分类
+        $di->setShared('allcates', function () use ($brandGroup) {
+            $allcates = $brandGroup->allcatesAction();
+            return $allcates;
+        });
+
     }
 }

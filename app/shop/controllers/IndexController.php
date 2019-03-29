@@ -2,7 +2,7 @@
 
 namespace Multiple\Shop\Controllers;
 
-use Multiple\Home\Controllers\BrandgroupController;
+use Asa\Erp\TbProduct;
 
 class IndexController extends AdminController
 {
@@ -12,14 +12,24 @@ class IndexController extends AdminController
      */
     public function indexAction()
     {
-
+        // 逻辑
+        // 最新促销
+        $productlist = TbProduct::find();
+        // 分配到模板
+        $this->view->setVars([
+           'productlist' => $productlist,
+        ]);
     }
 
     /**
-     *
+     * 测试，如果需要引用其他命名空间的模块，只能用dispatcher来做跳转
      */
-    public function gethostAction()
+    public function testAction()
     {
-
+        $this->dispatcher->forward([
+            'module' => 'home',
+            'controller' => 'index',
+            'action' => 'index'
+        ]);
     }
 }
