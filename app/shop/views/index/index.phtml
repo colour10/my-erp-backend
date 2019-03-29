@@ -147,9 +147,9 @@
                     <div>
                         <div class="product-item">
                             <div class="pi-img-wrapper">
-                                <img src="/shop/assets/pages/img/products/model5.jpg" class="img-responsive" alt="Berry Lace Dress">
+                                <img src="<?php echo $this->file_prex.$item->picture; ?>" class="img-responsive" alt="<?php echo $item->productname; ?>">
                                 <div>
-                                    <a href="/shop/assets/pages/img/products/model5.jpg" class="btn btn-default fancybox-button">Zoom</a>
+                                    <a href="<?php echo $this->file_prex.$item->picture; ?>" class="btn btn-default fancybox-button">Zoom</a>
                                 </div>
                             </div>
                             <h3><a href="/product/detail/<?php echo $item->id; ?>"><?php echo $item->productname; ?></a></h3>
