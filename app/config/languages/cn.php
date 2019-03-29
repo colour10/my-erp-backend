@@ -527,6 +527,7 @@ return array(
     'orderdetail-over-max-number' => '发货量超过了订单数量',
     'supplier' => '供货商',
     'warehouseid' => '仓库ID',
+    'member' => '会员',
     'brandgroup-list' => '品类列表',
     'childproductgroup-list' => '子品类列表',
     // 通用型，以后有需要再改

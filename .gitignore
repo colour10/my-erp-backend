@@ -16,3 +16,4 @@ public/js/async.min.js
 vendor/
 composer.json
 composer.lock
+app/config/config.php

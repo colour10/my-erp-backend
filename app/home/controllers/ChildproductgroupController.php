@@ -14,19 +14,4 @@ class ChildproductgroupController extends ZadminController {
 
 	    $this->setModelName('Asa\\Erp\\ZlChildproductgroup');
     }
-
-    /**
-     * 获取当前品类下面的所有商品
-     * @param $id
-     * @return string
-     */
-    public function detailAction($id)
-    {
-        // 逻辑
-        $callback = $this->request->get('callback');
-        $model = ZlChildproductgroup::findFirstById($id);
-        $products= $model->products;
-        // 此处的callback需要和客户端ajax请求中的jsonp属性保持一致
-        return $callback."(".json_encode($products).")";
-    }
 }

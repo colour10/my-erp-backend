@@ -190,6 +190,15 @@ insert  into `dd_orderdetails`(`id`,`orderid`,`sizecontentid`,`number`,`producti
 
 /*Table structure for table `tb_company` */
 
+DROP TABLE IF EXISTS `tb_buycar`;
+
+CREATE TABLE `tb_buycar` (
+  `id` int(10) NOT NULL,
+  `product_id` int(10) UNSIGNED NOT NULL,
+  `member_id` int(10) UNSIGNED NOT NULL,
+  `number` int(10) UNSIGNED NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='购物车';
+
 DROP TABLE IF EXISTS `tb_company`;
 
 CREATE TABLE `tb_company` (
@@ -255,35 +264,35 @@ DROP TABLE IF EXISTS `tb_member`;
 
 CREATE TABLE `tb_member` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `login_name` varchar(100) DEFAULT NULL,
+  `login_name` varchar(100) DEFAULT NULL COMMENT '登录名',
   `name` varchar(50) DEFAULT NULL COMMENT '会员名',
-  `password` varchar(32) DEFAULT NULL,
-  `code` varchar(20) DEFAULT NULL,
-  `gender` tinyint(1) DEFAULT NULL COMMENT '0-female 1-male',
-  `birthday` varchar(10) DEFAULT NULL COMMENT '生日',
-  `phoneno` varchar(50) DEFAULT NULL,
-  `email` varchar(50) DEFAULT NULL,
-  `address` varchar(50) DEFAULT NULL,
-  `zipcode` varchar(10) DEFAULT NULL,
-  `qq` varchar(50) DEFAULT NULL,
-  `wechat` varchar(50) DEFAULT NULL,
-  `microblog` varchar(50) DEFAULT NULL,
-  `totalscore` bigint(20) DEFAULT NULL,
-  `score` bigint(20) DEFAULT NULL,
-  `membercard` varchar(50) DEFAULT NULL,
-  `memberlevelid` int(10) unsigned DEFAULT NULL,
-  `membertype` varchar(1) DEFAULT NULL COMMENT '0-个人会员 1-公司会员',
-  `membercardid` int(10) unsigned DEFAULT NULL,
-  `creatorid` int(10) unsigned DEFAULT NULL,
-  `sourceid` int(10) unsigned DEFAULT NULL,
-  `idno` varchar(50) DEFAULT NULL,
-  `taxno` varchar(50) DEFAULT NULL,
-  `contactor` varchar(50) DEFAULT NULL,
-  `asawebno` varchar(50) DEFAULT NULL,
-  `openid` varchar(50) DEFAULT NULL,
-  `invitesum` bigint(20) DEFAULT NULL,
-  `invitetotal` bigint(20) DEFAULT NULL,
-  `invoteuser` int(10) unsigned DEFAULT NULL,
+  `password` varchar(32) DEFAULT NULL COMMENT '密码',
+  `code` varchar(20) DEFAULT NULL COMMENT '代码',
+  `gender` tinyint(1) DEFAULT NULL COMMENT '性别：0-female 1-male',
+  `birthday` varchar(10) DEFAULT NULL COMMENT '出生日期',
+  `phoneno` varchar(50) DEFAULT NULL COMMENT '手机号',
+  `email` varchar(50) DEFAULT NULL COMMENT '邮箱',
+  `address` varchar(50) DEFAULT NULL COMMENT '地址',
+  `zipcode` varchar(10) DEFAULT NULL COMMENT '邮编',
+  `qq` varchar(50) DEFAULT NULL COMMENT 'QQ',
+  `wechat` varchar(50) DEFAULT NULL COMMENT '微信',
+  `microblog` varchar(50) DEFAULT NULL COMMENT '微博',
+  `totalscore` bigint(20) DEFAULT NULL COMMENT '历史积分',
+  `score` bigint(20) DEFAULT NULL COMMENT '显存积分',
+  `membercard` varchar(50) DEFAULT NULL COMMENT '会员卡号',
+  `memberlevelid` int(10) unsigned DEFAULT NULL COMMENT '会员等级',
+  `membertype` varchar(1) DEFAULT NULL COMMENT '会员类型：0-个人会员 1-公司会员',
+  `membercardid` int(10) unsigned DEFAULT NULL COMMENT '会员卡号id',
+  `creatorid` int(10) unsigned DEFAULT NULL COMMENT '建立人',
+  `sourceid` int(10) unsigned DEFAULT NULL COMMENT '客户来源',
+  `idno` varchar(50) DEFAULT NULL COMMENT '身份证号',
+  `taxno` varchar(50) DEFAULT NULL COMMENT '税号',
+  `contactor` varchar(50) DEFAULT NULL COMMENT '联系人',
+  `asawebno` varchar(50) DEFAULT NULL COMMENT '爱莎商城注册编码',
+  `openid` varchar(50) DEFAULT NULL COMMENT '微信OPENID',
+  `invitesum` bigint(20) DEFAULT NULL COMMENT '推荐账户余额',
+  `invitetotal` bigint(20) DEFAULT NULL COMMENT '推荐账户总额',
+  `invoteuser` int(10) unsigned DEFAULT NULL COMMENT '推荐人',
   `companyid` int(11) DEFAULT NULL COMMENT '公司ID',
   PRIMARY KEY (`id`),
   KEY `sys_delete_flag` (`companyid`)
@@ -1081,7 +1090,16 @@ CREATE TABLE `zl_childproductgroup` (
 
 /*Data for the table `zl_childproductgroup` */
 
-insert  into `zl_childproductgroup`(`id`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`childcode`,`productgroupid`,`producttemplateid`,`weight`,`isfj`,`cname4male`,`cname4female`) values (1,'33','','',NULL,NULL,NULL,NULL,'33',NULL,0,'33.000000000',NULL,NULL,NULL);
+INSERT INTO `zl_childproductgroup` (`id`, `name_cn`, `name_en`, `name_hk`, `name_fr`, `name_it`, `name_sp`, `name_de`, `childcode`, `productgroupid`, `producttemplateid`, `weight`, `isfj`, `cname4male`, `cname4female`) VALUES
+(1, '春上新', '', '', NULL, NULL, NULL, NULL, '0001', 1, 0, '33.000000000', NULL, NULL, NULL),
+(2, '连衣裙', NULL, NULL, NULL, NULL, NULL, NULL, '0002', 1, NULL, NULL, NULL, NULL, NULL),
+(3, 'T恤', NULL, NULL, NULL, NULL, NULL, NULL, '0003', 1, NULL, NULL, NULL, NULL, NULL),
+(4, '衬衫', NULL, NULL, NULL, NULL, NULL, NULL, '0004', 1, NULL, NULL, NULL, NULL, NULL),
+(5, '高跟鞋', NULL, NULL, NULL, NULL, NULL, NULL, '0005', 3, NULL, NULL, NULL, NULL, NULL),
+(6, '厚底鞋', NULL, NULL, NULL, NULL, NULL, NULL, '0006', 3, NULL, NULL, NULL, NULL, NULL),
+(7, '圆头鞋', NULL, NULL, NULL, NULL, NULL, NULL, '0007', 3, NULL, NULL, NULL, NULL, NULL),
+(8, '双肩包', NULL, NULL, NULL, NULL, NULL, NULL, '0008', 2, NULL, NULL, NULL, NULL, NULL),
+(9, '水桶包', NULL, NULL, NULL, NULL, NULL, NULL, '0009', 2, NULL, NULL, NULL, NULL, NULL);
 
 /*Table structure for table `zl_closedway` */
 

@@ -13,3 +13,6 @@
 .Recommend_products_content h3 a:hover {
     text-decoration: none;
 }
+.sale-product h2 {
+    margin-bottom:0.5em;
+}

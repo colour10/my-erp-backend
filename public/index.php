@@ -14,6 +14,7 @@ try {
     define('APP_PATH', dirname(dirname(__FILE__)));
 
     error_reporting(E_ALL);
+      ini_set('display_errors', 'On');
 
     $config = new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/config.php");
 
