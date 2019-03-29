@@ -190,7 +190,7 @@ insert  into `dd_orderdetails`(`id`,`orderid`,`sizecontentid`,`number`,`producti
 
 /*Table structure for table `tb_company` */
 
-DROP TABLE IF EXISTS `tb_company`;
+DROP TABLE IF EXISTS `tb_buycar`;
 
 CREATE TABLE `tb_buycar` (
   `id` int(10) NOT NULL,
@@ -198,6 +198,8 @@ CREATE TABLE `tb_buycar` (
   `member_id` int(10) UNSIGNED NOT NULL,
   `number` int(10) UNSIGNED NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='购物车';
+
+DROP TABLE IF EXISTS `tb_company`;
 
 CREATE TABLE `tb_company` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
