@@ -66,5 +66,11 @@ class Module implements ModuleDefinitionInterface
             $file_prex = $config['file_prex'];
             return $file_prex;
         });
+
+        // 为了使用共享model数据，需要注册language
+        $di->setShared('language', function () use ($config, $di) {
+            $language = $config->language;
+            return new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
+        });
     }
 }
