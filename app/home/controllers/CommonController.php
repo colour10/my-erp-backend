@@ -92,6 +92,7 @@ class CommonController extends BaseController
             "warehouse" =>["table"=>"Asa\\Erp\\TbWarehouse", "columns"=>["code", "name"]],
             "user" =>["table"=>"Asa\\Erp\\TbUser", "columns"=>["login_name", "real_name"]],
             "goods" =>["table"=>"Asa\\Erp\\TbGoods", "columns"=>["price", "productid"]],
+            "orderdetails" =>["table"=>"Asa\\Erp\\DdOrderdetails", "columns"=>[]],
         ];
 
         //new \Asa\Erp\TbProduct();
@@ -113,8 +114,13 @@ class CommonController extends BaseController
                 
                 foreach($result as $row) {
                     $line = [];
-                    foreach ($services[$service_name]['columns'] as $value) {
-                        $line[$value] = $row->$value;
+                    if(count($services[$service_name]['columns'])>0) {
+                        foreach ($services[$service_name]['columns'] as $value) {
+                            $line[$value] = $row->$value;
+                        }
+                    }
+                    else {
+                        $line = $row->toArray();
                     }
                     $service_output[$row->id] = $line;
                 }

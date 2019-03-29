@@ -11,7 +11,7 @@ use Phalcon\Validation\Validator\Regex;
 /**
  * 订单明细表
  */
-class DdOrderdetails extends BaseCommonModel
+class DdOrderdetails extends BaseModel
 {
     public function initialize()
     {

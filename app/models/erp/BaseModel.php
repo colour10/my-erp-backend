@@ -16,7 +16,7 @@ class BaseModel extends \Phalcon\Mvc\Model {
     
     public function initialize() {
         //$this->addBehavior(new AsaBehabior());
-
+        $this->useDynamicUpdate(true);
     }
 
     /**

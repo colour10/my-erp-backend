@@ -11,7 +11,7 @@ use Phalcon\Validation\Validator\Regex;
 /**
  * 订单主表
  */
-class DdOrder extends BaseCommonModel
+class DdOrder extends BaseModel
 {
     public function initialize()
     {
@@ -27,44 +27,7 @@ class DdOrder extends BaseCommonModel
             "\Asa\Erp\DdOrderdetails",
             "orderid",
             [
-                'alias' => 'orderdetails',
-                'foreignKey' => [
-                    // 关联字段存在性验证
-                    // ACTION_CASCADE代表有关联则自动删除
-                    'action' => Relation::ACTION_CASCADE,
-                    "message"    => $this->getValidateMessage('hasmany-foreign-message', 'orderdetail'),
-                ],
-            ]
-        );
-
-        // 订单-订单详情，一对多
-        $this->hasMany(
-            "id",
-            "\Asa\Erp\DdOrderdetails",
-            "orderid",
-            [
-                'alias' => 'orderdetails',
-                'foreignKey' => [
-                    // 关联字段存在性验证
-                    // ACTION_CASCADE代表有关联则自动删除
-                    'action' => Relation::ACTION_CASCADE,
-                    "message"    => $this->getValidateMessage('hasmany-foreign-message', 'orderdetail'),
-                ],
-            ]
-        );
-
-        // 订单-年代季节，一对多反向
-        $this->belongsTo(
-            'ageseason',
-            '\Asa\Erp\ZlAgeseason',
-            'id',
-            [
-                'alias' => 'ageseason',
-                "foreignKey" => [
-                    // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message" => $this->getValidateMessage('notexist', 'ageseason'),
-                ],
+                'alias' => 'orderdetails'
             ]
         );
     }

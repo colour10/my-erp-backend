@@ -6,6 +6,7 @@ use Asa\Erp\Util;
 use Asa\Erp\ZlSizecontent;
 use Phalcon\Mvc\Controller;
 use Asa\Erp\DdOrder;
+use Asa\Erp\TbProduct;
 /**
  * 订单主表
  */
@@ -108,6 +109,8 @@ class OrderController extends BaseController
                 'sizecontentid' => $item['sizecontentid'],
                 'number' => $item['number'],
                 'companyid' => $this->companyid,
+                'price' => TbProduct::getInstance($item['productid'])->realprice,
+                'createdate' => date("Y-m-d H:i:s"),
                 'orderid' => $order->id
             ];
             if(isset($item['id']) && $item['id']!='') {

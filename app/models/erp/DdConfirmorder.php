@@ -5,7 +5,7 @@ use Phalcon\Mvc\Model\Relation;
 /**
  * 发货单主表
  */
-class DdConfirmorder extends BaseCommonModel
+class DdConfirmorder extends BaseModel
 {
     public function initialize()
     {
@@ -17,13 +17,7 @@ class DdConfirmorder extends BaseCommonModel
             "\Asa\Erp\DdConfirmorderdetails",
             "confirmorderid",
             [
-                'alias' => 'confirmorderdetails',
-                'foreignKey' => [
-                    // 关联字段存在性验证
-                    // ACTION_CASCADE代表有关联则自动删除
-                    'action' => Relation::ACTION_CASCADE,
-                    "message"    => $this->getValidateMessage('hasmany-foreign-message', 'confirmorderdetail'),
-                ],
+                'alias' => 'confirmorderdetails'
             ]
         );
     }
@@ -79,20 +73,13 @@ class DdConfirmorder extends BaseCommonModel
         $list = [];
             $hashmap = [];
         foreach ($this->confirmorderdetails as $k => $row) {
-            if(!in_array($row->productid, $hashmap)) {
-                $productlist[] = $row->product->toArray();
-                $hashmap[] = $row->productid;
-            }
-
             $temp = $row->toArray();
-            $temp['orderdetails'] = $row->orderdetails->toArray();
-            $list[] = $temp;
+            $list[] = $row->toArray();
         }
 
         return [
             'form' => $this->toArray(),
-            'list' => $list,
-            'productlist' => $productlist
+            'list' => $this->confirmorderdetails->toArray()
         ];;
     }
 }

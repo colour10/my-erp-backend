@@ -78,7 +78,7 @@ class ConfirmorderController extends BaseController {
             $result = DdOrderdetails::find(
                 //暂时先不限定status=3
                 //sprintf("orderid in(%s) and status=3 and actualnumber<number", implode(",", $order_id_array))
-                sprintf("orderid in(%s) and actualnumber<number", implode(",", $order_id_array))
+                sprintf("orderid in(%s) and confirm_number<number", implode(",", $order_id_array))
             );
 
             $productlist = [];
@@ -185,8 +185,7 @@ class ConfirmorderController extends BaseController {
         foreach ($submitData['list'] as $k => $item) {
             // 使用模型更新
             $data = [
-                'productid' => $item['productid'],
-                'sizecontentid' => $item['sizecontentid'],
+                'price' => $item['price'],
                 'number' => $item['number'],
                 'orderdetailsid' => $item['orderdetailsid'],
                 'companyid' => $this->companyid,
@@ -252,13 +251,34 @@ class ConfirmorderController extends BaseController {
     public function confirmAction() {
         $orderid = (int)$_POST['id'];
 
+        $db = $this->db;
+        $db->begin();
         // 根据orderid查询出当前发货单
         $order = DdConfirmorder::findFirstById($orderid);
         if($order!=false && $order->companyid==$this->companyid) {
             $order->status = $_POST['status']=="3" ? 3: 1;
 
-            $this->doTableAction($order,"update");
+            if($order->update()==false) {
+                $db->rollback();
+                return $this->error(['error']);
+            }
+
+            if($order->status==3) {
+                //同步订单的已发货数量
+                foreach($order->confirmorderdetails as $confirmorderdetails) {
+                    $orderdetail = $confirmorderdetails->orderdetails;
+                    $orderdetail->confirm_number += $confirmorderdetails->number;
+                    if($orderdetail->update()==false) {
+                        $db->rollback();
+                        return $this->error(['error-detail']);
+                    }
+                }
+            }
         }
+
+        $db->commit();
+
+        return $this->success();
     }
 
     /**
