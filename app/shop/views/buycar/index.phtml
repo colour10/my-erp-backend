@@ -383,16 +383,16 @@ Nostrud duis molestie at dolore.</p>
 	                      '</div>'+
 	                    '</td>'+
 	                    '<td class="goods-page-price">'+
-	                      '<strong><span>$</span>'+Number(result.auth[i].product.factoryprice).toFixed(2)+'</strong>'+
+	                      '<strong><span>$</span>'+Number(result.auth[i].product.realprice).toFixed(2)+'</strong>'+
 	                    '</td>'+
 	                    '<td class="goods-page-total">'+
-	                      '<strong><span>$</span>'+Number(result.auth[i].product.factoryprice*result.auth[i].number).toFixed(2)+'</strong>'+
+	                      '<strong><span>$</span>'+Number(result.auth[i].product.realprice*result.auth[i].number).toFixed(2)+'</strong>'+
 	                    '</td>'+
 	                    '<td class="del-goods-col">'+
 	                      '<a class="del-goods" href="javascript:;">&nbsp;</a>'+
 	                    '</td>'+
 	                  '</tr>'
-	                total += parseFloat(parseFloat(result.auth[i].product.factoryprice)*parseFloat(result.auth[i].number))
+	                total += parseFloat(parseFloat(result.auth[i].product.realprice)*parseFloat(result.auth[i].number))
 	                console.log(total)
 	        			}
 	        			total = Number(total).toFixed(2)

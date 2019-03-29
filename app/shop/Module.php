@@ -90,7 +90,7 @@ class Module implements ModuleDefinitionInterface
         //获取购物车
 		$buycar = new BuycarController();
         $di->setShared('buycar', function () use ($buycar) {
-            $cates = $buycar->getListAction();
+            $cates = $buycar->getListsAction();
             return $cates;
         });
     }
