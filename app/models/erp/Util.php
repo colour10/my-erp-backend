@@ -142,7 +142,7 @@ class Util {
         if ($currency == 'USD') {
             $new_currency = '$';
         } else if ($currency == 'CAD') {
-            $new_currency = 'C$';
+            $new_currency = 'CAD';
         } else if ($currency == 'EUR') {
             $new_currency = '€';
         } else if ($currency == 'HKD') {
@@ -156,5 +156,20 @@ class Util {
         }
         // 返回
         return $new_currency;
+    }
+
+    /**
+     * 判断一个字符串是否为合法网址
+     * @param $str
+     * @return bool
+     */
+    public static function is_url($str)
+    {
+        // 逻辑
+        if (filter_var($str, FILTER_VALIDATE_URL)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
