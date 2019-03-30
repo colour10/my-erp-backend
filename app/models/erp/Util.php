@@ -129,4 +129,32 @@ class Util {
         // 返回
         return $str;
     }
+
+
+    /**
+     * 把货币改成简写
+     * @param $currency
+     * @return string
+     */
+    public static function change_currency($currency)
+    {
+        // 逻辑
+        if ($currency == 'USD') {
+            $new_currency = '$';
+        } else if ($currency == 'CAD') {
+            $new_currency = 'C$';
+        } else if ($currency == 'EUR') {
+            $new_currency = '€';
+        } else if ($currency == 'HKD') {
+            $new_currency = 'HK$';
+        } else if ($currency == 'GBP') {
+            $new_currency = '￡';
+        } else if ($currency == 'JPY') {
+            $new_currency = 'J￥';
+        } else {
+            $new_currency = '￥';
+        }
+        // 返回
+        return $new_currency;
+    }
 }
