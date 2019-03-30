@@ -17,6 +17,15 @@ MySQL - 5.7.25 : Database - erp
 
 /*Table structure for table `dd_confirmorder` */
 
+DROP TABLE IF EXISTS `tb_buycar`;
+
+CREATE TABLE `tb_buycar` (
+  `id` int(10) NOT NULL,
+  `product_id` int(10) UNSIGNED NOT NULL,
+  `member_id` int(10) UNSIGNED NOT NULL,
+  `number` int(10) UNSIGNED NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='购物车';
+
 DROP TABLE IF EXISTS `dd_confirmorder`;
 
 CREATE TABLE `dd_confirmorder` (
@@ -28,7 +37,7 @@ CREATE TABLE `dd_confirmorder` (
   `makedate` datetime DEFAULT NULL COMMENT '制单日期',
   `makestaff` int(10) unsigned DEFAULT NULL COMMENT '制单人',
   `currency` int(10) unsigned DEFAULT NULL COMMENT '货币类型',
-  `total` decimal(16,9) DEFAULT NULL COMMENT '总金额',
+  `total` decimal(16,2) DEFAULT NULL COMMENT '总金额',
   `isstatus` tinyint(1) DEFAULT NULL COMMENT '0-在途未入库，1-已入库，2-已备货未发出',
   `memo` varchar(200) DEFAULT NULL,
   `brandid` int(10) unsigned DEFAULT NULL,
@@ -36,7 +45,7 @@ CREATE TABLE `dd_confirmorder` (
   `seasontype` tinyint(1) DEFAULT NULL COMMENT '0-pre ,1-main ,2-fashion show',
   `auditstaff` int(10) unsigned DEFAULT NULL COMMENT '审核人',
   `auditdate` datetime DEFAULT NULL COMMENT '审核日期',
-  `exchangerate` decimal(16,9) DEFAULT NULL,
+  `exchangerate` decimal(16,4) DEFAULT NULL,
   `finalsupplierid` int(10) unsigned DEFAULT NULL COMMENT '供货单位id',
   `flightno` varchar(50) DEFAULT NULL COMMENT '航班号',
   `flightdate` varchar(10) DEFAULT NULL,
@@ -53,8 +62,8 @@ CREATE TABLE `dd_confirmorder` (
   `motortransportpool` varchar(50) DEFAULT NULL,
   `warehouseid` int(10) unsigned DEFAULT NULL,
   `box_number` int(11) DEFAULT NULL COMMENT '箱数',
-  `weight` decimal(16,9) DEFAULT NULL COMMENT '重量',
-  `volume` decimal(16,9) DEFAULT NULL COMMENT '体积',
+  `weight` decimal(16,2) DEFAULT NULL COMMENT '重量',
+  `volume` decimal(16,2) DEFAULT NULL COMMENT '体积',
   `issjyh` varchar(1) DEFAULT NULL,
   `sellerid` int(10) unsigned DEFAULT NULL,
   `sjyhresult` varchar(50) DEFAULT NULL,
@@ -64,18 +73,18 @@ CREATE TABLE `dd_confirmorder` (
   `property` tinyint(1) DEFAULT NULL COMMENT '0-自采 1-代销',
   `payoutpercentage` varchar(10) DEFAULT NULL COMMENT '属性',
   `pickingaddress` text,
-  `chargedweight` decimal(16,9) DEFAULT NULL COMMENT '计费重量',
+  `chargedweight` decimal(16,2) DEFAULT NULL COMMENT '计费重量',
   `paydate` varchar(10) DEFAULT NULL,
   `apickingdate` varchar(10) DEFAULT NULL COMMENT '安排提货时间',
   `aarrivaldate` varchar(10) DEFAULT NULL COMMENT '到库时间',
   `invoiceno` varchar(50) DEFAULT NULL,
   `dd_company` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='发货单';
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COMMENT='发货单';
 
 /*Data for the table `dd_confirmorder` */
 
-insert  into `dd_confirmorder`(`id`,`companyid`,`status`,`orderno`,`supplierid`,`makedate`,`makestaff`,`currency`,`total`,`isstatus`,`memo`,`brandid`,`ageseasonid`,`seasontype`,`auditstaff`,`auditdate`,`exchangerate`,`finalsupplierid`,`flightno`,`flightdate`,`arrivaldate`,`mblno`,`hblno`,`dispatchport`,`deliveryport`,`transcompany`,`isexamination`,`examinationresult`,`clearancedate`,`pickingdate`,`motortransportpool`,`warehouseid`,`box_number`,`weight`,`volume`,`issjyh`,`sellerid`,`sjyhresult`,`buyerid`,`transporttype`,`paytype`,`property`,`payoutpercentage`,`pickingaddress`,`chargedweight`,`paydate`,`apickingdate`,`aarrivaldate`,`invoiceno`,`dd_company`) values (1,1,3,'C000001201903231657143155',3,'2019-03-23 16:57:14',1,0,'0.000000000',NULL,NULL,NULL,5,1,NULL,NULL,'1.140000000',5,'','',NULL,'','666','','',0,NULL,NULL,NULL,NULL,NULL,2,0,'0.000000000','0.000000000',NULL,0,NULL,0,0,0,2,NULL,NULL,'0.000000000','','','','',0),(2,1,3,'C000001201903261144565441',0,'2019-03-26 11:44:56',1,0,'0.000000000',NULL,NULL,NULL,0,0,NULL,NULL,'0.000000000',0,'','',NULL,'','','','',0,NULL,NULL,NULL,NULL,NULL,0,0,'0.000000000','0.000000000',NULL,0,NULL,0,0,0,0,NULL,NULL,'0.000000000','','','','',0);
+insert  into `dd_confirmorder`(`id`,`companyid`,`status`,`orderno`,`supplierid`,`makedate`,`makestaff`,`currency`,`total`,`isstatus`,`memo`,`brandid`,`ageseasonid`,`seasontype`,`auditstaff`,`auditdate`,`exchangerate`,`finalsupplierid`,`flightno`,`flightdate`,`arrivaldate`,`mblno`,`hblno`,`dispatchport`,`deliveryport`,`transcompany`,`isexamination`,`examinationresult`,`clearancedate`,`pickingdate`,`motortransportpool`,`warehouseid`,`box_number`,`weight`,`volume`,`issjyh`,`sellerid`,`sjyhresult`,`buyerid`,`transporttype`,`paytype`,`property`,`payoutpercentage`,`pickingaddress`,`chargedweight`,`paydate`,`apickingdate`,`aarrivaldate`,`invoiceno`,`dd_company`) values (25,1,3,'C000001201903291913295586',2,'2019-03-29 19:13:29',1,5,'0.00',NULL,NULL,NULL,0,1,NULL,NULL,'0.0000',2,'','',NULL,'','','','',0,NULL,NULL,NULL,NULL,NULL,2,0,'0.00','0.00',NULL,0,NULL,0,0,0,1,NULL,NULL,'0.00','','','','',0);
 
 /*Table structure for table `dd_confirmorderdetails` */
 
@@ -85,27 +94,20 @@ CREATE TABLE `dd_confirmorderdetails` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `confirmorderid` int(10) unsigned DEFAULT NULL COMMENT '发货单id',
   `orderdetailsid` int(10) unsigned DEFAULT NULL COMMENT '订单明细id',
-  `productid` int(10) unsigned DEFAULT NULL COMMENT '商品id',
-  `sizecontentid` int(10) unsigned DEFAULT NULL COMMENT '尺码id',
-  `number` int(11) DEFAULT NULL,
-  `currency` int(10) unsigned DEFAULT NULL,
-  `price` decimal(16,9) DEFAULT NULL,
-  `cost` decimal(16,9) DEFAULT NULL,
-  `actualnumber` int(11) DEFAULT NULL,
-  `isstatus` varchar(1) DEFAULT NULL COMMENT '0-未完成\n            1-完成',
-  `containerno` varchar(500) DEFAULT NULL,
-  `cjj` decimal(16,9) DEFAULT NULL,
-  `yj` decimal(16,9) DEFAULT NULL,
-  `size` varchar(50) DEFAULT NULL,
-  `weight` varchar(50) DEFAULT NULL,
-  `companyid` int(11) DEFAULT NULL,
+  `number` int(11) DEFAULT NULL COMMENT '发货数量',
+  `price` decimal(16,2) DEFAULT NULL COMMENT '单价',
+  `actualnumber` int(11) DEFAULT NULL COMMENT '到货数量',
+  `companyid` int(11) DEFAULT NULL COMMENT '公司id',
   PRIMARY KEY (`id`),
-  KEY `confirmorderid` (`confirmorderid`,`productid`,`sizecontentid`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COMMENT='发货单明细';
+  KEY `orderdetailsid` (`orderdetailsid`),
+  KEY `confirmorderid` (`confirmorderid`),
+  CONSTRAINT `dd_confirmorderdetails_ibfk_1` FOREIGN KEY (`orderdetailsid`) REFERENCES `dd_orderdetails` (`id`),
+  CONSTRAINT `dd_confirmorderdetails_ibfk_2` FOREIGN KEY (`confirmorderid`) REFERENCES `dd_confirmorder` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COMMENT='发货单明细';
 
 /*Data for the table `dd_confirmorderdetails` */
 
-insert  into `dd_confirmorderdetails`(`id`,`confirmorderid`,`orderdetailsid`,`productid`,`sizecontentid`,`number`,`currency`,`price`,`cost`,`actualnumber`,`isstatus`,`containerno`,`cjj`,`yj`,`size`,`weight`,`companyid`) values (9,1,36,1,3,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1),(10,1,35,1,4,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1),(11,1,34,1,5,4,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1),(12,2,37,1,2,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1),(13,2,36,1,3,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1),(14,2,35,1,4,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1),(15,2,34,1,5,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1);
+insert  into `dd_confirmorderdetails`(`id`,`confirmorderid`,`orderdetailsid`,`number`,`price`,`actualnumber`,`companyid`) values (3,25,37,2,'1000.00',NULL,1),(4,25,36,2,'1000.00',NULL,1),(5,25,35,2,'1000.00',NULL,1);
 
 /*Table structure for table `dd_order` */
 
@@ -122,14 +124,13 @@ CREATE TABLE `dd_order` (
   `agentid` int(10) unsigned DEFAULT NULL,
   `purchasedept` int(10) unsigned DEFAULT NULL,
   `orderno` varchar(50) DEFAULT NULL COMMENT '订单编号',
-  `total` decimal(16,9) DEFAULT NULL COMMENT '总金额',
+  `total` decimal(16,2) DEFAULT NULL COMMENT '总金额',
   `currency` varchar(10) DEFAULT NULL COMMENT '总金额货币',
   `auditstaff` int(10) unsigned DEFAULT NULL COMMENT '审核人',
-  `auditdate` datetime DEFAULT NULL,
+  `auditdate` datetime DEFAULT NULL COMMENT '审核时间',
   `ordercode` varchar(50) DEFAULT NULL COMMENT '订单号',
   `worldordercode` varchar(50) DEFAULT NULL COMMENT '海外订单号',
-  `auditstatus` varchar(1) DEFAULT NULL,
-  `isstatus` varchar(1) DEFAULT NULL COMMENT '0-未完结 1-已完结',
+  `isstatus` tinyint(1) DEFAULT NULL COMMENT '0-未完结 1-已完结',
   `formtype` varchar(2) DEFAULT NULL COMMENT '1-女款，2-男款,3-男款/女款',
   `memo` varchar(200) DEFAULT NULL COMMENT '备注',
   `contactor` varchar(200) DEFAULT NULL COMMENT '订货单位联系人',
@@ -137,22 +138,21 @@ CREATE TABLE `dd_order` (
   `ageseason` int(10) unsigned DEFAULT NULL COMMENT '年代季节',
   `seasontype` tinyint(1) DEFAULT NULL COMMENT '0-pre ,1-main ,2-fashion show',
   `invoiceno` varchar(50) DEFAULT NULL COMMENT '订单发票号',
-  `ddtype` varchar(1) DEFAULT NULL COMMENT '0-客户订单，1-品牌订单',
+  `ddtype` tinyint(1) DEFAULT NULL COMMENT '0-客户订单，1-品牌订单',
   `morderid` int(10) unsigned DEFAULT NULL,
-  `exchangerate` decimal(16,9) DEFAULT NULL COMMENT '汇率',
-  `bussinesstype` varchar(1) DEFAULT NULL COMMENT '订单类型：0-期货 1-现货',
-  `discount` decimal(16,9) DEFAULT NULL COMMENT '折扣',
-  `tsl` decimal(16,9) DEFAULT NULL,
-  `property` varchar(1) DEFAULT NULL COMMENT '0-自采 1-代销',
+  `exchangerate` decimal(16,4) DEFAULT NULL COMMENT '汇率',
+  `bussinesstype` tinyint(1) DEFAULT NULL COMMENT '订单类型：0-期货 1-现货',
+  `discount` decimal(16,2) DEFAULT NULL COMMENT '折扣',
+  `property` tinyint(1) DEFAULT NULL COMMENT '0-自采 1-代销',
   `companyid` int(11) DEFAULT NULL,
   `status` int(11) DEFAULT NULL COMMENT '订单状态：1=保存；2=送审；3=审核完成',
   PRIMARY KEY (`id`),
   KEY `companyid` (`companyid`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COMMENT='订单主表';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COMMENT='订单主表';
 
 /*Data for the table `dd_order` */
 
-insert  into `dd_order`(`id`,`bussinesstypeid`,`makedate`,`makestaff`,`supplierid`,`finalsupplierid`,`bookingid`,`agentid`,`purchasedept`,`orderno`,`total`,`currency`,`auditstaff`,`auditdate`,`ordercode`,`worldordercode`,`auditstatus`,`isstatus`,`formtype`,`memo`,`contactor`,`ourcontactor`,`ageseason`,`seasontype`,`invoiceno`,`ddtype`,`morderid`,`exchangerate`,`bussinesstype`,`discount`,`tsl`,`property`,`companyid`,`status`) values (5,NULL,'2019-03-23 13:20:38',1,2,2,3,NULL,NULL,'D000001201903231320381195','0.000000000','',0,NULL,'','',NULL,NULL,'','','','',5,0,'',NULL,NULL,'0.000000000','1','0.000000000',NULL,'',1,3),(6,NULL,'2019-03-23 14:50:37',1,2,0,0,NULL,NULL,'D000001201903231450374953','0.000000000','',0,NULL,'','',NULL,NULL,'','','','',5,0,'',NULL,NULL,'0.000000000','1','0.000000000',NULL,'',1,1),(7,NULL,'2019-03-23 14:51:44',1,2,0,0,NULL,NULL,'D000001201903231451448476','0.000000000','',0,NULL,'','',NULL,NULL,'','','','',5,0,'',NULL,NULL,'0.000000000','1','0.000000000',NULL,'',1,1),(8,NULL,'2019-03-23 14:52:13',1,2,0,0,NULL,NULL,'D000001201903231452136206','0.000000000','',0,NULL,'','',NULL,NULL,'','','','',6,0,'',NULL,NULL,'0.000000000','1','0.000000000',NULL,'',1,1),(9,NULL,'2019-03-23 14:57:52',1,3,0,0,NULL,NULL,'D000001201903231457527136','0.000000000','',0,NULL,'','',NULL,NULL,'','','','',7,0,'',NULL,NULL,'0.000000000','1','0.000000000',NULL,'',1,1),(10,NULL,'2019-03-23 15:28:44',1,3,0,0,NULL,NULL,'D000001201903231528445606','0.000000000','',0,NULL,'','',NULL,NULL,'','','','',5,0,'',NULL,NULL,'0.000000000','','0.000000000',NULL,'',1,3);
+insert  into `dd_order`(`id`,`bussinesstypeid`,`makedate`,`makestaff`,`supplierid`,`finalsupplierid`,`bookingid`,`agentid`,`purchasedept`,`orderno`,`total`,`currency`,`auditstaff`,`auditdate`,`ordercode`,`worldordercode`,`isstatus`,`formtype`,`memo`,`contactor`,`ourcontactor`,`ageseason`,`seasontype`,`invoiceno`,`ddtype`,`morderid`,`exchangerate`,`bussinesstype`,`discount`,`property`,`companyid`,`status`) values (6,NULL,'2019-03-29 16:27:36',1,2,0,0,NULL,NULL,'D000001201903291627363324','0.00','',0,NULL,'','',NULL,'','','','',5,0,'',NULL,NULL,'0.0000',1,'0.00',0,1,3);
 
 /*Table structure for table `dd_orderdetails` */
 
@@ -160,44 +160,30 @@ DROP TABLE IF EXISTS `dd_orderdetails`;
 
 CREATE TABLE `dd_orderdetails` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `orderid` int(10) unsigned NOT NULL,
-  `sizecontentid` int(10) unsigned NOT NULL,
-  `number` int(11) NOT NULL,
-  `productid` int(10) unsigned NOT NULL,
-  `price` decimal(16,9) DEFAULT NULL,
-  `actualnumber` int(11) DEFAULT '0' COMMENT '发货数量',
-  `isstatus` tinyint(1) DEFAULT '0' COMMENT '是否审核；0-未完成\n 1-完成',
-  `cost` decimal(16,9) DEFAULT NULL,
-  `cbtype` varchar(1) DEFAULT NULL,
-  `zkl` decimal(16,9) DEFAULT NULL,
-  `tsbl` decimal(16,9) DEFAULT NULL,
-  `cjj` decimal(16,9) DEFAULT NULL,
-  `yj` decimal(16,9) DEFAULT NULL,
-  `sortnum` int(11) DEFAULT NULL,
-  `zje` decimal(16,9) DEFAULT NULL,
-  `thattimestock` int(11) DEFAULT NULL,
-  `companyid` int(11) DEFAULT NULL,
+  `orderid` int(10) unsigned NOT NULL COMMENT '订单id',
+  `sizecontentid` int(10) unsigned NOT NULL COMMENT '尺码id',
+  `number` int(11) NOT NULL COMMENT '数量',
+  `productid` int(10) unsigned NOT NULL COMMENT '产品id',
+  `price` decimal(16,2) DEFAULT NULL COMMENT '成交价',
+  `confirm_number` int(11) DEFAULT '0' COMMENT '发货数量',
+  `companyid` int(11) DEFAULT NULL COMMENT '公司id',
   `is_append` tinyint(11) DEFAULT '0' COMMENT '是否追加',
   `createdate` datetime DEFAULT NULL COMMENT '创建时间',
-  `status` tinyint(1) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT NULL COMMENT '状态',
+  `actualnumber` int(11) DEFAULT '0' COMMENT '已经发货数量',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `companyid` (`companyid`,`orderid`,`productid`,`sizecontentid`)
-) ENGINE=InnoDB AUTO_INCREMENT=78 DEFAULT CHARSET=utf8mb4 COMMENT='订单明细';
+  UNIQUE KEY `companyid` (`companyid`,`orderid`,`productid`,`sizecontentid`),
+  KEY `orderid` (`orderid`),
+  KEY `productid` (`productid`),
+  CONSTRAINT `dd_orderdetails_ibfk_1` FOREIGN KEY (`orderid`) REFERENCES `dd_order` (`id`),
+  CONSTRAINT `dd_orderdetails_ibfk_2` FOREIGN KEY (`productid`) REFERENCES `tb_product` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COMMENT='订单明细';
 
 /*Data for the table `dd_orderdetails` */
 
-insert  into `dd_orderdetails`(`id`,`orderid`,`sizecontentid`,`number`,`productid`,`price`,`actualnumber`,`isstatus`,`cost`,`cbtype`,`zkl`,`tsbl`,`cjj`,`yj`,`sortnum`,`zje`,`thattimestock`,`companyid`,`is_append`,`createdate`,`status`) values (34,5,5,4,1,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(35,5,4,1,1,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(36,5,3,1,1,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(37,5,2,1,1,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(38,5,1,2,1,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(39,6,13,1,2,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(40,6,12,1,2,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(41,6,11,1,2,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(42,6,10,1,2,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(43,6,9,1,2,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(44,6,8,1,2,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(45,6,7,1,2,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(46,6,6,1,2,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(56,8,4,3,4,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(57,8,3,1,4,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(58,8,2,1,4,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(59,8,1,3,4,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(60,7,5,1,1,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(61,7,4,3,1,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(62,7,3,1,1,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(63,7,2,1,1,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(64,7,1,1,1,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(65,9,13,1,2,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(66,9,12,1,2,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(67,9,11,1,2,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(68,9,10,1,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(69,9,9,1,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(70,9,8,1,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(71,9,7,1,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(72,9,6,1,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(73,10,5,1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(74,10,4,3,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(75,10,3,3,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(76,10,2,1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL),(77,10,1,1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,0,NULL,NULL);
+insert  into `dd_orderdetails`(`id`,`orderid`,`sizecontentid`,`number`,`productid`,`price`,`confirm_number`,`companyid`,`is_append`,`createdate`,`status`,`actualnumber`) values (35,6,13,2,2,'1000.00',2,1,0,'2019-03-29 16:27:36',NULL,0),(36,6,12,2,2,'1000.00',2,1,0,'2019-03-29 16:27:36',NULL,0),(37,6,11,2,2,'1000.00',2,1,0,'2019-03-29 16:27:36',NULL,0),(38,6,10,2,2,'1000.00',0,1,0,'2019-03-29 16:27:36',NULL,0),(39,6,9,5,2,'1000.00',0,1,0,'2019-03-29 16:27:36',NULL,0),(40,6,8,3,2,'1000.00',0,1,0,'2019-03-29 16:27:36',NULL,0),(41,6,7,2,2,'1000.00',0,1,0,'2019-03-29 16:27:36',NULL,0),(42,6,6,3,2,'1000.00',0,1,0,'2019-03-29 16:27:36',NULL,0);
 
 /*Table structure for table `tb_company` */
-
-DROP TABLE IF EXISTS `tb_buycar`;
-
-CREATE TABLE `tb_buycar` (
-  `id` int(10) NOT NULL,
-  `product_id` int(10) UNSIGNED NOT NULL,
-  `member_id` int(10) UNSIGNED NOT NULL,
-  `number` int(10) UNSIGNED NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='购物车';
 
 DROP TABLE IF EXISTS `tb_company`;
 
@@ -212,8 +198,7 @@ CREATE TABLE `tb_company` (
   `name_de` varchar(1000) DEFAULT NULL COMMENT '德语名称',
   `countryid` int(10) unsigned DEFAULT NULL COMMENT '国家id',
   `memo` text COMMENT '备注说明',
-  `host` json DEFAULT NULL COMMENT '绑定域名',
-  `randid` int(11) DEFAULT NULL COMMENT '唯一安全标识',
+  `randid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `randid` (`randid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
@@ -242,6 +227,28 @@ CREATE TABLE `tb_department` (
 
 insert  into `tb_department`(`id`,`name`,`memo`,`companyid`,`priceid`,`spotid`,`up_dp_id`,`checkingflag`) values (1,'company1552557078',NULL,1,NULL,NULL,0,NULL),(2,'售后',NULL,1,NULL,NULL,1,NULL),(3,'技术12',NULL,1,NULL,NULL,1,NULL);
 
+/*Table structure for table `tb_goods` */
+
+DROP TABLE IF EXISTS `tb_goods`;
+
+CREATE TABLE `tb_goods` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `productid` int(10) unsigned NOT NULL,
+  `sizecontentid` int(10) unsigned NOT NULL,
+  `defective_level` tinyint(11) DEFAULT '0' COMMENT '残次品等级；0=合格品 1=残次品',
+  `property` tinyint(1) DEFAULT NULL COMMENT '0-自采 1-代销',
+  `change_time` datetime DEFAULT NULL COMMENT '修改时间',
+  `change_stuff` int(10) unsigned DEFAULT NULL COMMENT '修改人',
+  `price` decimal(11,2) NOT NULL COMMENT '价格',
+  `companyid` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `productid` (`companyid`,`productid`,`sizecontentid`,`defective_level`,`property`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COMMENT='库存商品表';
+
+/*Data for the table `tb_goods` */
+
+insert  into `tb_goods`(`id`,`productid`,`sizecontentid`,`defective_level`,`property`,`change_time`,`change_stuff`,`price`,`companyid`) values (1,1,3,0,1,NULL,NULL,'1100.00',1),(2,1,4,0,2,NULL,NULL,'8000.00',1),(9,2,11,0,1,'2019-03-30 10:49:49',NULL,'1000.00',1),(10,2,12,0,1,'2019-03-30 10:49:49',NULL,'1000.00',1),(11,2,13,0,1,'2019-03-30 10:49:49',NULL,'1000.00',1);
+
 /*Table structure for table `tb_group` */
 
 DROP TABLE IF EXISTS `tb_group`;
@@ -264,35 +271,35 @@ DROP TABLE IF EXISTS `tb_member`;
 
 CREATE TABLE `tb_member` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `login_name` varchar(100) DEFAULT NULL COMMENT '登录名',
+  `login_name` varchar(100) DEFAULT NULL,
   `name` varchar(50) DEFAULT NULL COMMENT '会员名',
-  `password` varchar(32) DEFAULT NULL COMMENT '密码',
-  `code` varchar(20) DEFAULT NULL COMMENT '代码',
-  `gender` tinyint(1) DEFAULT NULL COMMENT '性别：0-female 1-male',
-  `birthday` varchar(10) DEFAULT NULL COMMENT '出生日期',
-  `phoneno` varchar(50) DEFAULT NULL COMMENT '手机号',
-  `email` varchar(50) DEFAULT NULL COMMENT '邮箱',
-  `address` varchar(50) DEFAULT NULL COMMENT '地址',
-  `zipcode` varchar(10) DEFAULT NULL COMMENT '邮编',
-  `qq` varchar(50) DEFAULT NULL COMMENT 'QQ',
-  `wechat` varchar(50) DEFAULT NULL COMMENT '微信',
-  `microblog` varchar(50) DEFAULT NULL COMMENT '微博',
-  `totalscore` bigint(20) DEFAULT NULL COMMENT '历史积分',
-  `score` bigint(20) DEFAULT NULL COMMENT '显存积分',
-  `membercard` varchar(50) DEFAULT NULL COMMENT '会员卡号',
-  `memberlevelid` int(10) unsigned DEFAULT NULL COMMENT '会员等级',
-  `membertype` varchar(1) DEFAULT NULL COMMENT '会员类型：0-个人会员 1-公司会员',
-  `membercardid` int(10) unsigned DEFAULT NULL COMMENT '会员卡号id',
-  `creatorid` int(10) unsigned DEFAULT NULL COMMENT '建立人',
-  `sourceid` int(10) unsigned DEFAULT NULL COMMENT '客户来源',
-  `idno` varchar(50) DEFAULT NULL COMMENT '身份证号',
-  `taxno` varchar(50) DEFAULT NULL COMMENT '税号',
-  `contactor` varchar(50) DEFAULT NULL COMMENT '联系人',
-  `asawebno` varchar(50) DEFAULT NULL COMMENT '爱莎商城注册编码',
-  `openid` varchar(50) DEFAULT NULL COMMENT '微信OPENID',
-  `invitesum` bigint(20) DEFAULT NULL COMMENT '推荐账户余额',
-  `invitetotal` bigint(20) DEFAULT NULL COMMENT '推荐账户总额',
-  `invoteuser` int(10) unsigned DEFAULT NULL COMMENT '推荐人',
+  `password` varchar(32) DEFAULT NULL,
+  `code` varchar(20) DEFAULT NULL,
+  `gender` tinyint(1) DEFAULT NULL COMMENT '0-female 1-male',
+  `birthday` varchar(10) DEFAULT NULL COMMENT '生日',
+  `phoneno` varchar(50) DEFAULT NULL,
+  `email` varchar(50) DEFAULT NULL,
+  `address` varchar(50) DEFAULT NULL,
+  `zipcode` varchar(10) DEFAULT NULL,
+  `qq` varchar(50) DEFAULT NULL,
+  `wechat` varchar(50) DEFAULT NULL,
+  `microblog` varchar(50) DEFAULT NULL,
+  `totalscore` bigint(20) DEFAULT NULL,
+  `score` bigint(20) DEFAULT NULL,
+  `membercard` varchar(50) DEFAULT NULL,
+  `memberlevelid` int(10) unsigned DEFAULT NULL,
+  `membertype` varchar(1) DEFAULT NULL COMMENT '0-个人会员 1-公司会员',
+  `membercardid` int(10) unsigned DEFAULT NULL,
+  `creatorid` int(10) unsigned DEFAULT NULL,
+  `sourceid` int(10) unsigned DEFAULT NULL,
+  `idno` varchar(50) DEFAULT NULL,
+  `taxno` varchar(50) DEFAULT NULL,
+  `contactor` varchar(50) DEFAULT NULL,
+  `asawebno` varchar(50) DEFAULT NULL,
+  `openid` varchar(50) DEFAULT NULL,
+  `invitesum` bigint(20) DEFAULT NULL,
+  `invitetotal` bigint(20) DEFAULT NULL,
+  `invoteuser` int(10) unsigned DEFAULT NULL,
   `companyid` int(11) DEFAULT NULL COMMENT '公司ID',
   PRIMARY KEY (`id`),
   KEY `sys_delete_flag` (`companyid`)
@@ -327,109 +334,24 @@ CREATE TABLE `tb_member_address` (
 DROP TABLE IF EXISTS `tb_permission`;
 
 CREATE TABLE `tb_permission` (
-                               `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-                               `pid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '所属权限id，默认0为顶级权限',
-                               `name` varchar(100) NOT NULL DEFAULT '' COMMENT '权限名称',
-                               `memo_cn` text COMMENT '中文描述',
-                               `memo_en` text COMMENT '英文描述',
-                               `memo_hk` text COMMENT '粤语描述',
-                               `memo_fr` text COMMENT '法语描述',
-                               `memo_it` text COMMENT '意大利语描述',
-                               `memo_sp` text COMMENT '西班牙语描述',
-                               `memo_de` text COMMENT '德语描述',
-                               `code` varchar(100) NOT NULL DEFAULT '' COMMENT '权限代码',
-                               `is_only_superadmin` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为专属超级管理员权限，0-不是 1-是',
-                               PRIMARY KEY (`id`),
-                               UNIQUE KEY `permission_name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `pid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '所属权限id，默认0为顶级权限',
+  `name` varchar(100) NOT NULL DEFAULT '' COMMENT '权限名称',
+  `memo_cn` text COMMENT '中文描述',
+  `memo_en` text COMMENT '英文描述',
+  `memo_hk` text COMMENT '粤语描述',
+  `memo_fr` text COMMENT '法语描述',
+  `memo_it` text COMMENT '意大利语描述',
+  `memo_sp` text COMMENT '西班牙语描述',
+  `memo_de` text COMMENT '德语描述',
+  `is_only_superadmin` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为专属超级管理员权限，0-不是 1-是',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `permission_name` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `tb_permission` */
 
-INSERT INTO `tb_permission` (`id`, `pid`, `name`, `memo_cn`, `memo_en`, `memo_hk`, `memo_fr`, `memo_it`, `memo_sp`, `memo_de`, `code`, `is_only_superadmin`) VALUES
-(1, 0, 'userControl', '用户管理', NULL, NULL, NULL, NULL, NULL, NULL, '001', 0),
-(2, 0, 'databaseControl', '基础数据', NULL, NULL, NULL, NULL, NULL, NULL, '002', 0),
-(3, 0, 'productControl', '商品管理', NULL, NULL, NULL, NULL, NULL, NULL, '003', 0),
-(4, 0, 'customControl', '客户管理', NULL, NULL, NULL, NULL, NULL, NULL, '004', 0),
-(5, 0, 'supplierControl', '供应链管理', NULL, NULL, NULL, NULL, NULL, NULL, '005', 0),
-(6, 0, 'stockControl', '库存管理', NULL, NULL, NULL, NULL, NULL, NULL, '006', 0),
-(7, 0, 'salesControl', '销售管理', NULL, NULL, NULL, NULL, NULL, NULL, '007', 0),
-(8, 0, 'memberControl', '会员管理', NULL, NULL, NULL, NULL, NULL, NULL, '008', 0),
-(9, 0, 'costControl', '费用管理', NULL, NULL, NULL, NULL, NULL, NULL, '009', 0),
-(10, 0, 'financialControl', '财务管理', NULL, NULL, NULL, NULL, NULL, NULL, '010', 0),
-(11, 0, 'systemControl', '系统管理', NULL, NULL, NULL, NULL, NULL, NULL, '011', 0),
-(12, 1, 'user', '员工信息', NULL, NULL, NULL, NULL, NULL, NULL, '012', 0),
-(13, 1, 'group', '组信息', NULL, NULL, NULL, NULL, NULL, NULL, '013', 0),
-(14, 1, 'department', '部门信息', NULL, NULL, NULL, NULL, NULL, NULL, '014', 0),
-(15, 2, 'productRelate', '商品相关', NULL, NULL, NULL, NULL, NULL, NULL, '015', 0),
-(16, 2, 'priceRelate', '价格相关', NULL, NULL, NULL, NULL, NULL, NULL, '016', 0),
-(17, 2, 'otherRelate', '其他', NULL, NULL, NULL, NULL, NULL, NULL, '017', 0),
-(18, 3, 'product', '商品信息', NULL, NULL, NULL, NULL, NULL, NULL, '018', 0),
-(19, 3, 'picture', '图片管理', NULL, NULL, NULL, NULL, NULL, NULL, '019', 0),
-(20, 3, 'pictureupload', '图片上传', NULL, NULL, NULL, NULL, NULL, NULL, '020', 0),
-(21, 4, 'supplier', '关系单位信息', NULL, NULL, NULL, NULL, NULL, NULL, '021', 0),
-(22, 4, 'quotation', '供货商报价', NULL, NULL, NULL, NULL, NULL, NULL, '022', 0),
-(23, 4, 'supplierlevel', '供货商级别', NULL, NULL, NULL, NULL, NULL, NULL, '023', 0),
-(24, 5, 'orderRelate', '订单管理', NULL, NULL, NULL, NULL, NULL, NULL, '024', 0),
-(25, 5, 'confirmorder', '发货单管理', NULL, NULL, NULL, NULL, NULL, NULL, '025', 0),
-(26, 5, 'warehousingRelate', '到货入库', NULL, NULL, NULL, NULL, NULL, NULL, '026', 0),
-(27, 6, 'requisitionRelate', '调拨相关', NULL, NULL, NULL, NULL, NULL, NULL, '027', 0),
-(28, 6, 'checkRelate', '库存盘点', NULL, NULL, NULL, NULL, NULL, NULL, '028', 0),
-(29, 6, 'stocksnapshot', '库存余额查询', NULL, NULL, NULL, NULL, NULL, NULL, '029', 0),
-(30, 6, 'productstock', '库存查询', NULL, NULL, NULL, NULL, NULL, NULL, '030', 0),
-(31, 6, 'productstockSnapshot', '库存快照统计', NULL, NULL, NULL, NULL, NULL, NULL, '031', 0),
-(32, 7, 'sales', '商品零售批发', NULL, NULL, NULL, NULL, NULL, NULL, '032', 0),
-(33, 7, 'salesstock', '销售端口库存统计', NULL, NULL, NULL, NULL, NULL, NULL, '033', 0),
-(34, 7, 'sfRelate', '销售对账', NULL, NULL, NULL, NULL, NULL, NULL, '034', 0),
-(35, 7, 'sale/statistics', '销售统计', NULL, NULL, NULL, NULL, NULL, NULL, '035', 0),
-(36, 8, 'member', '会员管理', NULL, NULL, NULL, NULL, NULL, NULL, '036', 0),
-(37, 8, 'memberlevel', '会员级别', NULL, NULL, NULL, NULL, NULL, NULL, '037', 0),
-(38, 9, 'fee', '费用申请', NULL, NULL, NULL, NULL, NULL, NULL, '038', 0),
-(39, 9, 'fee/leader', '费用申请主管审批', NULL, NULL, NULL, NULL, NULL, NULL, '039', 0),
-(40, 9, 'fee/finance', '费用申请财务审批', NULL, NULL, NULL, NULL, NULL, NULL, '040', 0),
-(41, 9, 'fee/manager', '费用申请经理审批', NULL, NULL, NULL, NULL, NULL, NULL, '041', 0),
-(42, 10, 'sfsheet', '对账查询', NULL, NULL, NULL, NULL, NULL, NULL, '042', 0),
-(43, 11, 'help', '系统帮助', NULL, NULL, NULL, NULL, NULL, NULL, '043', 0),
-(44, 11, 'modifypassword', '修改密码', NULL, NULL, NULL, NULL, NULL, NULL, '044', 0),
-(45, 11, 'logout', '退出登录', NULL, NULL, NULL, NULL, NULL, NULL, '045', 0),
-(46, 15, 'brand', '品牌维护', NULL, NULL, NULL, NULL, NULL, NULL, '046', 0),
-(47, 15, 'brandgroup', '品类维护', NULL, NULL, NULL, NULL, NULL, NULL, '047', 0),
-(48, 15, 'ageseason', '款式年代', NULL, NULL, NULL, NULL, NULL, NULL, '048', 0),
-(49, 15, 'colortemplate', '颜色模板', NULL, NULL, NULL, NULL, NULL, NULL, '049', 0),
-(50, 15, 'sizetop', '商品尺码', NULL, NULL, NULL, NULL, NULL, NULL, '050', 0),
-(51, 15, 'material', '材质管理', NULL, NULL, NULL, NULL, NULL, NULL, '051', 0),
-(52, 15, 'ulnarinch', '商品尺寸', NULL, NULL, NULL, NULL, NULL, NULL, '052', 0),
-(53, 15, 'aliases', '商品别名', NULL, NULL, NULL, NULL, NULL, NULL, '053', 0),
-(54, 15, 'productinnards', '内部结构', NULL, NULL, NULL, NULL, NULL, NULL, '054', 0),
-(55, 15, 'productparts', '附带配件', NULL, NULL, NULL, NULL, NULL, NULL, '055', 0),
-(56, 15, 'occasionsstyle', '场合风格', NULL, NULL, NULL, NULL, NULL, NULL, '056', 0),
-(57, 15, 'closedway', '闭合方式', NULL, NULL, NULL, NULL, NULL, NULL, '057', 0),
-(58, 15, 'executioncategory', '执行标准', NULL, NULL, NULL, NULL, NULL, NULL, '058', 0),
-(59, 15, 'securitycategory', '安全类别', NULL, NULL, NULL, NULL, NULL, NULL, '059', 0),
-(60, 15, 'washinginstructions', '洗涤说明', NULL, NULL, NULL, NULL, NULL, NULL, '060', 0),
-(61, 15, 'winterproofing', '防寒指数', NULL, NULL, NULL, NULL, NULL, NULL, '061', 0),
-(62, 16, 'productprice', '商品价格管理', NULL, NULL, NULL, NULL, NULL, NULL, '062', 0),
-(63, 16, 'costformula', '成本计算管理', NULL, NULL, NULL, NULL, NULL, NULL, '063', 0),
-(64, 17, 'warehouse', '仓库管理', NULL, NULL, NULL, NULL, NULL, NULL, '064', 0),
-(65, 17, 'salesport', '销售端口管理', NULL, NULL, NULL, NULL, NULL, NULL, '065', 0),
-(66, 17, 'country', '国际及地区信息维护', NULL, NULL, NULL, NULL, NULL, NULL, '066', 0),
-(67, 17, 'feenames', '费用名称', NULL, NULL, NULL, NULL, NULL, NULL, '067', 0),
-(68, 17, 'shippingtype', '运输方式', NULL, NULL, NULL, NULL, NULL, NULL, '068', 0),
-(69, 17, 'salesmethods', '销售性质', NULL, NULL, NULL, NULL, NULL, NULL, '069', 0),
-(70, 17, 'businesstype', '业务类型', NULL, NULL, NULL, NULL, NULL, NULL, '070', 0),
-(71, 17, 'reportstyle', '快递单样式', NULL, NULL, NULL, NULL, NULL, NULL, '071', 0),
-(72, 17, 'imagetool', '图片工具', NULL, NULL, NULL, NULL, NULL, NULL, '072', 0),
-(73, 24, 'order', '订单管理', NULL, NULL, NULL, NULL, NULL, NULL, '073', 0),
-(74, 24, 'order/search', '订单状态查询', NULL, NULL, NULL, NULL, NULL, NULL, '074', 0),
-(75, 24, 'order/export', '订单导出', NULL, NULL, NULL, NULL, NULL, NULL, '075', 0),
-(76, 26, 'warehousing', '到货入库', NULL, NULL, NULL, NULL, NULL, NULL, '076', 0),
-(77, 26, 'warehousing/list', '入库单查询', NULL, NULL, NULL, NULL, NULL, NULL, '077', 0),
-(78, 27, 'requisition/apply', '调拨单查询/申请', NULL, NULL, NULL, NULL, NULL, NULL, '078', 0),
-(79, 27, 'requisition/turnout', '调拨出库确认', NULL, NULL, NULL, NULL, NULL, NULL, '079', 0),
-(80, 27, 'requisition/turnin', '调拨入库确认', NULL, NULL, NULL, NULL, NULL, NULL, '080', 0),
-(81, 28, 'check', '盘点单列表', NULL, NULL, NULL, NULL, NULL, NULL, '081', 0),
-(82, 28, 'check/detail', '库存变动查询', NULL, NULL, NULL, NULL, NULL, NULL, '082', 0),
-(83, 34, 'sf/sheet', '销售对账页面', NULL, NULL, NULL, NULL, NULL, NULL, '083', 0),
-(84, 34, 'sf/search', '对账查询页面', NULL, NULL, NULL, NULL, NULL, NULL, '084', 0);
+insert  into `tb_permission`(`id`,`pid`,`name`,`memo_cn`,`memo_en`,`memo_hk`,`memo_fr`,`memo_it`,`memo_sp`,`memo_de`,`is_only_superadmin`) values (1,0,'userControl','用户管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(2,0,'databaseControl','基础数据',NULL,NULL,NULL,NULL,NULL,NULL,0),(3,0,'productControl','商品管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(4,0,'customControl','客户管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(5,0,'supplierControl','供应链管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(6,0,'stockControl','库存管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(7,0,'salesControl','销售管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(8,0,'memberControl','会员管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(9,0,'costControl','费用管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(10,0,'financialControl','财务管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(11,0,'systemControl','系统管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(12,1,'user','员工信息',NULL,NULL,NULL,NULL,NULL,NULL,0),(13,1,'group','组信息',NULL,NULL,NULL,NULL,NULL,NULL,0),(14,1,'department','部门信息',NULL,NULL,NULL,NULL,NULL,NULL,0),(15,2,'productRelate','商品相关',NULL,NULL,NULL,NULL,NULL,NULL,0),(16,2,'priceRelate','价格相关',NULL,NULL,NULL,NULL,NULL,NULL,0),(17,2,'otherRelate','其他',NULL,NULL,NULL,NULL,NULL,NULL,0),(18,3,'product','商品信息',NULL,NULL,NULL,NULL,NULL,NULL,0),(19,3,'picture','图片管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(20,3,'pictureupload','图片上传',NULL,NULL,NULL,NULL,NULL,NULL,0),(21,4,'supplier','关系单位信息',NULL,NULL,NULL,NULL,NULL,NULL,0),(22,4,'quotation','供货商报价',NULL,NULL,NULL,NULL,NULL,NULL,0),(23,4,'supplierlevel','供货商级别',NULL,NULL,NULL,NULL,NULL,NULL,0),(24,5,'orderRelate','订单管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(25,5,'confirmorder','发货单管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(26,5,'warehousingRelate','到货入库',NULL,NULL,NULL,NULL,NULL,NULL,0),(27,6,'requisitionRelate','调拨相关',NULL,NULL,NULL,NULL,NULL,NULL,0),(28,6,'checkRelate','库存盘点',NULL,NULL,NULL,NULL,NULL,NULL,0),(29,6,'stocksnapshot','库存余额查询',NULL,NULL,NULL,NULL,NULL,NULL,0),(30,6,'productstock','库存查询',NULL,NULL,NULL,NULL,NULL,NULL,0),(31,6,'productstockSnapshot','库存快照统计',NULL,NULL,NULL,NULL,NULL,NULL,0),(32,7,'sales','商品零售批发',NULL,NULL,NULL,NULL,NULL,NULL,0),(33,7,'salesstock','销售端口库存统计',NULL,NULL,NULL,NULL,NULL,NULL,0),(34,7,'sfRelate','销售对账',NULL,NULL,NULL,NULL,NULL,NULL,0),(35,7,'sale/statistics','销售统计',NULL,NULL,NULL,NULL,NULL,NULL,0),(36,8,'member','会员管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(37,8,'memberlevel','会员级别',NULL,NULL,NULL,NULL,NULL,NULL,0),(38,9,'fee','费用申请',NULL,NULL,NULL,NULL,NULL,NULL,0),(39,9,'fee/leader','费用申请主管审批',NULL,NULL,NULL,NULL,NULL,NULL,0),(40,9,'fee/finance','费用申请财务审批',NULL,NULL,NULL,NULL,NULL,NULL,0),(41,9,'fee/manager','费用申请经理审批',NULL,NULL,NULL,NULL,NULL,NULL,0),(42,10,'sfsheet','对账查询',NULL,NULL,NULL,NULL,NULL,NULL,0),(43,11,'help','系统帮助',NULL,NULL,NULL,NULL,NULL,NULL,0),(44,11,'modifypassword','修改密码',NULL,NULL,NULL,NULL,NULL,NULL,0),(45,11,'logout','退出登录',NULL,NULL,NULL,NULL,NULL,NULL,0),(46,15,'brand','品牌维护',NULL,NULL,NULL,NULL,NULL,NULL,0),(47,15,'brandgroup','品类维护',NULL,NULL,NULL,NULL,NULL,NULL,0),(48,15,'ageseason','款式年代',NULL,NULL,NULL,NULL,NULL,NULL,0),(49,15,'colortemplate','颜色模板',NULL,NULL,NULL,NULL,NULL,NULL,0),(50,15,'sizetop','商品尺码',NULL,NULL,NULL,NULL,NULL,NULL,0),(51,15,'material','材质管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(52,15,'ulnarinch','商品尺寸',NULL,NULL,NULL,NULL,NULL,NULL,0),(53,15,'aliases','商品别名',NULL,NULL,NULL,NULL,NULL,NULL,0),(54,15,'productinnards','内部结构',NULL,NULL,NULL,NULL,NULL,NULL,0),(55,15,'productparts','附带配件',NULL,NULL,NULL,NULL,NULL,NULL,0),(56,15,'occasionsstyle','场合风格',NULL,NULL,NULL,NULL,NULL,NULL,0),(57,15,'closedway','闭合方式',NULL,NULL,NULL,NULL,NULL,NULL,0),(58,15,'executioncategory','执行标准',NULL,NULL,NULL,NULL,NULL,NULL,0),(59,15,'securitycategory','安全类别',NULL,NULL,NULL,NULL,NULL,NULL,0),(60,15,'washinginstructions','洗涤说明',NULL,NULL,NULL,NULL,NULL,NULL,0),(61,15,'winterproofing','防寒指数',NULL,NULL,NULL,NULL,NULL,NULL,0),(62,16,'productprice','商品价格管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(63,16,'costformula','成本计算管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(64,17,'warehouse','仓库管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(65,17,'salesport','销售端口管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(66,17,'country','国际及地区信息维护',NULL,NULL,NULL,NULL,NULL,NULL,0),(67,17,'feenames','费用名称',NULL,NULL,NULL,NULL,NULL,NULL,0),(68,17,'shippingtype','运输方式',NULL,NULL,NULL,NULL,NULL,NULL,0),(69,17,'salesmethods','销售性质',NULL,NULL,NULL,NULL,NULL,NULL,0),(70,17,'businesstype','业务类型',NULL,NULL,NULL,NULL,NULL,NULL,0),(71,17,'reportstyle','快递单样式',NULL,NULL,NULL,NULL,NULL,NULL,0),(72,17,'imagetool','图片工具',NULL,NULL,NULL,NULL,NULL,NULL,0),(73,24,'order','订单管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(74,24,'order/search','订单状态查询',NULL,NULL,NULL,NULL,NULL,NULL,0),(75,24,'order/export','订单导出',NULL,NULL,NULL,NULL,NULL,NULL,0),(76,26,'warehousing','到货入库',NULL,NULL,NULL,NULL,NULL,NULL,0),(78,26,'warehousing/list','入库单查询',NULL,NULL,NULL,NULL,NULL,NULL,0),(79,27,'requisition/apply','调拨单查询/申请',NULL,NULL,NULL,NULL,NULL,NULL,0),(80,27,'requisition/turnout','调拨出库确认',NULL,NULL,NULL,NULL,NULL,NULL,0),(81,27,'requisition/turnin','调拨入库确认',NULL,NULL,NULL,NULL,NULL,NULL,0),(82,28,'check','盘点单列表',NULL,NULL,NULL,NULL,NULL,NULL,0),(83,28,'check/detail','库存变动查询',NULL,NULL,NULL,NULL,NULL,NULL,0),(84,34,'sf/sheet','销售对账页面',NULL,NULL,NULL,NULL,NULL,NULL,0),(85,34,'sf/search','对账查询页面',NULL,NULL,NULL,NULL,NULL,NULL,0);
 
 /*Table structure for table `tb_permission_group` */
 
@@ -481,85 +403,84 @@ insert  into `tb_picture`(`id`,`name`,`filename`,`productid`) values (1,'60c871d
 
 DROP TABLE IF EXISTS `tb_product`;
 
-
 CREATE TABLE `tb_product` (
-                            `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-                            `productno` varchar(100) DEFAULT NULL COMMENT '货号',
-                            `productname` varchar(50) DEFAULT NULL COMMENT '商品名称',
-                            `wordcode_1` varchar(50) DEFAULT NULL COMMENT '国际货号1',
-                            `wordcode_2` varchar(50) DEFAULT NULL COMMENT '国际货号2',
-                            `wordcode_3` varchar(50) DEFAULT NULL COMMENT '国际货号3',
-                            `wordcode_4` varchar(50) DEFAULT NULL COMMENT '国际货号4',
-                            `wordprice` decimal(16,9) DEFAULT NULL COMMENT '国际零售价',
-                            `wordpricecurrency` varchar(10) DEFAULT NULL COMMENT '国际零售价币种',
-                            `gender` varchar(100) DEFAULT NULL COMMENT '0-女式 1-男士 2-中性',
-                            `brandid` int(10) unsigned DEFAULT NULL COMMENT '品牌',
-                            `brandgroupid` int(10) unsigned DEFAULT NULL COMMENT '品类',
-                            `childbrand` int(10) unsigned DEFAULT NULL COMMENT '子集品类',
-                            `brandcolor` varchar(100) DEFAULT NULL COMMENT '品牌色板',
-                            `brandcolor2` int(10) unsigned DEFAULT NULL COMMENT '品牌颜色2',
-                            `picture2` varchar(100) DEFAULT NULL COMMENT '副图',
-                            `picture` varchar(100) DEFAULT NULL COMMENT '主图',
-                            `closeway` int(10) unsigned DEFAULT NULL COMMENT '闭合方式（暂时没用）',
-                            `ageseason` varchar(200) DEFAULT NULL COMMENT '年代',
-                            `productsize` int(10) unsigned DEFAULT NULL COMMENT '尺码',
-                            `countries` varchar(100) DEFAULT NULL COMMENT '产地',
-                            `securitycategory` int(10) unsigned DEFAULT NULL COMMENT '安全类别',
-                            `executioncategory` int(10) unsigned DEFAULT NULL COMMENT '执行标准',
-                            `material` int(10) unsigned DEFAULT NULL COMMENT '材质',
-                            `productparst` int(10) unsigned DEFAULT NULL COMMENT '附带配件（暂时没用）',
-                            `occasion` varchar(200) DEFAULT NULL COMMENT '场合风格',
-                            `producttemplate` int(10) unsigned DEFAULT NULL COMMENT '尺码规格模板',
-                            `materialstatus` int(10) unsigned DEFAULT NULL COMMENT '材质类型',
-                            `season` varchar(20) DEFAULT NULL COMMENT '季节',
-                            `oldasacode` varchar(50) DEFAULT NULL COMMENT '旧爱莎码',
-                            `officialwebsite` varchar(500) DEFAULT NULL COMMENT '官方网址',
-                            `oldbarcode` varchar(500) DEFAULT NULL COMMENT '商品条码',
-                            `laststoragedate` varchar(19) DEFAULT NULL COMMENT '最后入库时间',
-                            `aliases_1` varchar(50) DEFAULT NULL COMMENT '备注1',
-                            `aliases_2` varchar(50) DEFAULT NULL COMMENT '备注2',
-                            `aliases` varchar(50) DEFAULT NULL COMMENT '别名',
-                            `series_id` int(10) unsigned DEFAULT NULL COMMENT '系列ID',
-                            `series2_id` int(10) unsigned DEFAULT NULL COMMENT '子系列',
-                            `ulnarinch` varchar(50) DEFAULT NULL COMMENT '尺寸',
-                            `vat` decimal(16,9) DEFAULT NULL COMMENT '增值税比例',
-                            `tariff` decimal(16,9) DEFAULT NULL COMMENT '关税比例',
-                            `basecurrency` varchar(10) DEFAULT NULL COMMENT '基准币种',
-                            `baseprice` decimal(16,9) DEFAULT NULL COMMENT '基准价格',
-                            `entrymonth` varchar(5) DEFAULT NULL COMMENT '入库时间',
-                            `factoryprice` decimal(16,9) DEFAULT NULL COMMENT '出厂价',
-                            `factorypricecurrency` varchar(10) DEFAULT NULL COMMENT '出厂价币种',
-                            `realprice` decimal(16,9) DEFAULT NULL COMMENT '成交价格',
-                            `retailpricecurrency` varchar(10) DEFAULT NULL COMMENT '成交价格币种',
-                            `dutyparagraph` varchar(50) DEFAULT NULL COMMENT '海关税号',
-                            `orderprice` decimal(16,9) DEFAULT NULL COMMENT '合同价格',
-                            `orderpricecurrency` varchar(10) DEFAULT NULL COMMENT '合同价格币种',
-                            `retailprice` decimal(16,9) DEFAULT NULL COMMENT '可以填写的成本，入库时同步修改',
-                            `groupid` int(10) unsigned DEFAULT NULL COMMENT '同款不同色',
-                            `iskj` varchar(1) DEFAULT NULL COMMENT '0-否 1-是',
-                            `bxzs` varchar(1) DEFAULT NULL COMMENT '0-修身1-适中2-宽松',
-                            `hbzs` varchar(1) DEFAULT NULL COMMENT '0-薄1-适中2-厚',
-                            `rrzs` varchar(1) DEFAULT NULL COMMENT '0-柔软1-适中2-偏硬',
-                            `tlzs` varchar(1) DEFAULT NULL COMMENT '0-无弹1-适中2-弹力',
-                            `salemethodid` int(10) unsigned DEFAULT NULL COMMENT '销售类型',
-                            `nationalprice` decimal(16,9) DEFAULT NULL COMMENT '国内零售价',
-                            `taxrate` decimal(16,9) DEFAULT NULL COMMENT '税率',
-                            `isjh` varchar(1) DEFAULT NULL COMMENT '0-否1-是',
-                            `inlenth` varchar(50) DEFAULT NULL COMMENT '鞋内长度',
-                            `jdname` varchar(200) DEFAULT NULL COMMENT '京东别名',
-                            `winterproofing` int(10) DEFAULT NULL COMMENT '防寒指数',
-                            `isfj` varchar(1) DEFAULT NULL COMMENT '是否法检：0-否 1-法检',
-                            `discount` decimal(10,2) DEFAULT NULL COMMENT '折扣率',
-                            `ulnarinch_memo` varchar(100) DEFAULT NULL COMMENT '尺寸备注',
-                            `sizetopid` int(11) DEFAULT NULL COMMENT '尺码模板',
-                            `companyid` int(11) DEFAULT NULL COMMENT '公司ID',
-                            `adduserid` int(11) DEFAULT NULL COMMENT '建档人',
-                            PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品表';
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `productno` varchar(100) DEFAULT NULL COMMENT '货号',
+  `productname` varchar(50) DEFAULT NULL,
+  `wordcode_1` varchar(50) DEFAULT NULL,
+  `wordcode_2` varchar(50) DEFAULT NULL,
+  `wordcode_3` varchar(50) DEFAULT NULL,
+  `wordcode_4` varchar(50) DEFAULT NULL,
+  `wordprice` decimal(16,9) DEFAULT NULL COMMENT '国际零售价',
+  `wordpricecurrency` varchar(10) DEFAULT NULL COMMENT '国际零售价币种',
+  `gender` varchar(100) DEFAULT NULL COMMENT '0-女式 1-男士 2-中性',
+  `brandid` int(10) unsigned DEFAULT NULL COMMENT '品牌',
+  `brandgroupid` int(10) unsigned DEFAULT NULL COMMENT '品类',
+  `childbrand` int(10) unsigned DEFAULT NULL,
+  `brandcolor` varchar(100) DEFAULT NULL COMMENT '品牌色板',
+  `brandcolor2` int(10) unsigned DEFAULT NULL,
+  `picture2` varchar(100) DEFAULT NULL COMMENT '副图',
+  `picture` varchar(100) DEFAULT NULL COMMENT '主图',
+  `closeway` int(10) unsigned DEFAULT NULL,
+  `ageseason` varchar(200) DEFAULT NULL COMMENT '年代',
+  `productsize` int(10) unsigned DEFAULT NULL,
+  `countries` varchar(100) DEFAULT NULL COMMENT '产地',
+  `securitycategory` int(10) unsigned DEFAULT NULL COMMENT '安全类别',
+  `executioncategory` int(10) unsigned DEFAULT NULL COMMENT '执行标准',
+  `material` int(10) unsigned DEFAULT NULL,
+  `productparst` int(10) unsigned DEFAULT NULL,
+  `occasion` varchar(200) DEFAULT NULL COMMENT '场合风格',
+  `producttemplate` int(10) unsigned DEFAULT NULL,
+  `materialstatus` int(10) unsigned DEFAULT NULL,
+  `season` varchar(20) DEFAULT NULL,
+  `oldasacode` varchar(50) DEFAULT NULL,
+  `officialwebsite` varchar(500) DEFAULT NULL,
+  `oldbarcode` varchar(500) DEFAULT NULL,
+  `laststoragedate` varchar(19) DEFAULT NULL,
+  `aliases_1` varchar(50) DEFAULT NULL COMMENT '商品系列',
+  `aliases_2` varchar(50) DEFAULT NULL COMMENT '商品子系列',
+  `aliases` varchar(50) DEFAULT NULL,
+  `series_id` int(10) unsigned DEFAULT NULL,
+  `series2_id` int(10) unsigned DEFAULT NULL,
+  `ulnarinch` varchar(50) DEFAULT NULL,
+  `vat` decimal(16,9) DEFAULT NULL,
+  `tariff` decimal(16,9) DEFAULT NULL,
+  `basecurrency` varchar(10) DEFAULT NULL,
+  `baseprice` decimal(16,2) DEFAULT NULL,
+  `entrymonth` varchar(5) DEFAULT NULL,
+  `factoryprice` decimal(16,2) DEFAULT NULL COMMENT '出厂价',
+  `factorypricecurrency` varchar(10) DEFAULT NULL COMMENT '出厂价币种',
+  `realprice` decimal(16,2) DEFAULT NULL COMMENT '成交价格',
+  `retailpricecurrency` varchar(10) DEFAULT NULL COMMENT '成交价格币种',
+  `dutyparagraph` varchar(50) DEFAULT NULL,
+  `orderprice` decimal(16,2) DEFAULT NULL COMMENT '合同价格',
+  `orderpricecurrency` varchar(10) DEFAULT NULL COMMENT '合同价格币种',
+  `retailprice` decimal(16,2) DEFAULT NULL COMMENT '可以填写的成本，入库时同步修改',
+  `groupid` int(10) unsigned DEFAULT NULL COMMENT '同款不同色',
+  `iskj` varchar(1) DEFAULT NULL COMMENT '0-否 1-是',
+  `bxzs` varchar(1) DEFAULT NULL COMMENT '0-修身1-适中2-宽松',
+  `hbzs` varchar(1) DEFAULT NULL COMMENT '0-薄1-适中2-厚',
+  `rrzs` varchar(1) DEFAULT NULL COMMENT '0-柔软1-适中2-偏硬',
+  `tlzs` varchar(1) DEFAULT NULL COMMENT '0-无弹1-适中2-弹力',
+  `salemethodid` int(10) unsigned DEFAULT NULL,
+  `nationalprice` decimal(16,9) DEFAULT NULL,
+  `taxrate` decimal(16,9) DEFAULT NULL,
+  `isjh` varchar(1) DEFAULT NULL COMMENT '0-否1-是',
+  `inlenth` varchar(50) DEFAULT NULL,
+  `jdname` varchar(200) DEFAULT NULL,
+  `winterproofing` int(10) DEFAULT NULL,
+  `isfj` varchar(1) DEFAULT NULL COMMENT '0-否 1-法检',
+  `discount` decimal(10,2) DEFAULT NULL,
+  `ulnarinch_memo` varchar(100) DEFAULT NULL COMMENT '尺寸备注',
+  `sizetopid` int(11) DEFAULT NULL COMMENT '尺码模板',
+  `companyid` int(11) DEFAULT NULL,
+  `adduserid` int(11) DEFAULT NULL COMMENT '建档人',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COMMENT='商品表';
 
 /*Data for the table `tb_product` */
 
-insert  into `tb_product`(`id`,`productno`,`productname`,`wordcode_1`,`wordcode_2`,`wordcode_3`,`wordcode_4`,`wordprice`,`wordpricecurrency`,`gender`,`brandid`,`brandgroupid`,`childbrand`,`brandcolor`,`brandcolor2`,`picture2`,`picture`,`closeway`,`ageseason`,`productsize`,`countries`,`securitycategory`,`executioncategory`,`material`,`productparst`,`occasion`,`producttemplate`,`materialstatus`,`season`,`oldasacode`,`officialwebsite`,`oldbarcode`,`laststoragedate`,`aliases_1`,`aliases_2`,`aliases`,`series_id`,`series2_id`,`ulnarinch`,`vat`,`tariff`,`basecurrency`,`baseprice`,`entrymonth`,`factoryprice`,`factorypricecurrency`,`realprice`,`retailpricecurrency`,`dutyparagraph`,`orderprice`,`orderpricecurrency`,`retailprice`,`groupid`,`iskj`,`bxzs`,`hbzs`,`rrzs`,`tlzs`,`salemethodid`,`nationalprice`,`taxrate`,`isjh`,`inlenth`,`jdname`,`winterproofing`,`isfj`,`discount`,`ulnarinch_memo`,`sizetopid`,`companyid`,`adduserid`) values (1,'213659874562','测试商品','6542','x6x5','ddsw','33','999.360000000','RMB','5,3,1',1,1,1,'2,1',NULL,'product/ea79feeeee36dfb964f0341a1dad38b5.jpg','product/69e58f464fa1b44a47e7becc80974c42.jpg',NULL,'6,7',0,'2,1',1,1,0,0,'0,2,1',0,0,'5,4','','','','','','','',0,0,'','0.000000000','0.000000000','0','0.000000000','','13.000000000','USD','12.000000000','CAD','','0.000000000','0','0.000000000',0,'','','','','',0,'1002.000000000','0.000000000','','','',0,'','0.00','77',1,1,NULL),(2,'','测试商品2','111','','','','0.000000000','','',2,1,1,'2',NULL,'product/96d821008f5dafc77012b9e8706431fd.jpg','product/a820ad1b132e17bf95f90e91c698b31d.jpg',NULL,'',0,'4,2',0,0,0,0,'',0,2,'','','','','','','','',0,0,'','0.000000000','0.000000000','','0.000000000','','0.000000000','','0.000000000','','','0.000000000','','0.000000000',0,'','','','','',0,'0.000000000','0.000000000','','','',0,'','0.00','',2,1,NULL),(3,'','皮鞋','','','','','0.000000000','','',2,0,0,'1',NULL,'product/0ece4a911e75eafbdf9fc315d57af3ef.jpg','product/2385effe9046df387a341239f0177a10.jpg',NULL,'',0,'5,4',0,0,0,0,'2',0,0,'','','','','','','','',0,0,'','0.000000000','0.000000000','','0.000000000','','0.000000000','','0.000000000','','','0.000000000','','0.000000000',0,'','','','','',0,'0.000000000','0.000000000','','','',0,'','0.00','',2,1,1),(4,'','9999','','','','','0.000000000','','',2,1,0,'',NULL,'product/ba6e1532143591340379979be0b6b88c.jpg','product/91d70dbb3a787313e649869041319f45.jpg',NULL,'',0,'',0,0,0,0,'',0,0,'','','','','','','','',0,0,'','0.000000000','0.000000000','','0.000000000','','0.000000000','','0.000000000','','','0.000000000','','0.000000000',0,'','','','','',0,'0.000000000','0.000000000','','','',0,'','0.00','',1,1,1),(5,'','对对对','','','','','0.000000000','','',0,0,0,'',NULL,'product/dc2e67ae864304af75a56faa22d737cc.jpg','product/71f37308966f7279519e347a433c0fef.jpg',NULL,'',0,'',0,0,0,0,'',0,0,'','','','','','','','',0,0,'','0.000000000','0.000000000','','0.000000000','','0.000000000','','0.000000000','','','0.000000000','','0.000000000',0,'','','','','',0,'0.000000000','0.000000000','','','',0,'','0.00','',0,1,1),(6,'','uuu','','','','','0.000000000','','',1,0,0,'',NULL,'','',NULL,'',0,'',0,0,0,0,'',0,0,'','','','','','','','',0,0,'','0.000000000','0.000000000','','0.000000000','','0.000000000','','0.000000000','','','0.000000000','','0.000000000',0,'','','','','',0,'0.000000000','0.000000000','','','',0,'','0.00','',0,1,1);
+insert  into `tb_product`(`id`,`productno`,`productname`,`wordcode_1`,`wordcode_2`,`wordcode_3`,`wordcode_4`,`wordprice`,`wordpricecurrency`,`gender`,`brandid`,`brandgroupid`,`childbrand`,`brandcolor`,`brandcolor2`,`picture2`,`picture`,`closeway`,`ageseason`,`productsize`,`countries`,`securitycategory`,`executioncategory`,`material`,`productparst`,`occasion`,`producttemplate`,`materialstatus`,`season`,`oldasacode`,`officialwebsite`,`oldbarcode`,`laststoragedate`,`aliases_1`,`aliases_2`,`aliases`,`series_id`,`series2_id`,`ulnarinch`,`vat`,`tariff`,`basecurrency`,`baseprice`,`entrymonth`,`factoryprice`,`factorypricecurrency`,`realprice`,`retailpricecurrency`,`dutyparagraph`,`orderprice`,`orderpricecurrency`,`retailprice`,`groupid`,`iskj`,`bxzs`,`hbzs`,`rrzs`,`tlzs`,`salemethodid`,`nationalprice`,`taxrate`,`isjh`,`inlenth`,`jdname`,`winterproofing`,`isfj`,`discount`,`ulnarinch_memo`,`sizetopid`,`companyid`,`adduserid`) values (1,'213659874562','黑色运动上衣','6542','x6x5','ddsw','33','999.360000000','RMB','5,3,1',1,1,5,'2,1',NULL,'product/ea79feeeee36dfb964f0341a1dad38b5.jpg','product/69e58f464fa1b44a47e7becc80974c42.jpg',NULL,'6,7',0,'2,1',1,1,0,0,'0,2,1',0,0,'5,4','','','','','','','',0,0,'','0.000000000','0.000000000','0','0.00','','13.00','USD','300.00','CAD','','0.00','0','0.00',0,'','','','','',0,'1002.000000000','0.000000000','','','',0,'','0.00','77',1,1,NULL),(2,'','电脑包','111','','','','0.000000000','','',2,2,14,'2',NULL,'product/96d821008f5dafc77012b9e8706431fd.jpg','product/a820ad1b132e17bf95f90e91c698b31d.jpg',NULL,'',0,'4,2',0,0,0,0,'',0,2,'','','','','','','','',0,0,'','0.000000000','0.000000000','','0.00','','0.00','','1000.00','','','0.00','','0.00',0,'','','','','',0,'0.000000000','0.000000000','','','',0,'','0.00','',2,1,NULL),(3,'','耐克足球鞋','','','','','0.000000000','','',2,3,7,'1',NULL,'product/0ece4a911e75eafbdf9fc315d57af3ef.jpg','product/2385effe9046df387a341239f0177a10.jpg',NULL,'',0,'5,4',0,0,0,0,'2',0,0,'','','','','','','','',0,0,'','0.000000000','0.000000000','','0.00','','0.00','','2000.00','','','0.00','','0.00',0,'','','','','',0,'0.000000000','0.000000000','','','',0,'','0.00','',2,1,1),(4,'','复古运动上衣','','','','','0.000000000','','',2,1,2,'',NULL,'product/ba6e1532143591340379979be0b6b88c.jpg','product/91d70dbb3a787313e649869041319f45.jpg',NULL,'',0,'',0,0,0,0,'',0,0,'','','','','','','','',0,0,'','0.000000000','0.000000000','','0.00','','0.00','','3000.00','','','0.00','','0.00',0,'','','','','',0,'0.000000000','0.000000000','','','',0,'','0.00','',1,1,1),(5,'','乔丹运动鞋','','','','','0.000000000','','',1,3,9,'',NULL,'product/dc2e67ae864304af75a56faa22d737cc.jpg','product/71f37308966f7279519e347a433c0fef.jpg',NULL,'',0,'',0,0,0,0,'',0,0,'','','','','','','','',0,0,'','0.000000000','0.000000000','','0.00','','0.00','','1500.00','','','0.00','','0.00',0,'','','','','',0,'0.000000000','0.000000000','','','',0,'','0.00','',0,1,1),(6,'','阿迪达斯跑步鞋','','','','','0.000000000','','',1,3,9,'',NULL,'product/b1fad46f357cc65820b94b2c19f9cdac.jpg','product/dbbeecbd53ecd6ff8a33850b3ed4a0e9.jpg',NULL,'',0,'4',0,0,0,0,'',0,0,'','','','','','','','',0,0,'','0.000000000','0.000000000','','0.00','','0.00','','2500.00','','','0.00','','0.00',0,'','','','','',0,'0.000000000','0.000000000','','','',0,'','0.00','',0,1,1);
 
 /*Table structure for table `tb_product_price` */
 
@@ -586,37 +507,26 @@ CREATE TABLE `tb_product_price` (
 DROP TABLE IF EXISTS `tb_productstock`;
 
 CREATE TABLE `tb_productstock` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `goodsid` int(10) unsigned DEFAULT NULL,
   `productid` int(10) unsigned NOT NULL,
   `sizecontentid` int(10) unsigned NOT NULL,
+  `defective_level` tinyint(11) DEFAULT '0' COMMENT '残次品等级；0=合格品 1=残次品',
+  `property` tinyint(1) DEFAULT NULL COMMENT '0-自采 1-代销',
   `warehouseid` int(10) unsigned NOT NULL COMMENT '仓库id',
   `companyid` int(11) NOT NULL,
-  `storagetime` datetime DEFAULT NULL,
-  `storagestaff` int(10) unsigned DEFAULT NULL,
-  `productno` bigint(20) DEFAULT NULL,
-  `cost` decimal(16,9) DEFAULT NULL,
-  `selltype` int(11) DEFAULT NULL COMMENT '0-待销\n            1-已售出\n            2-预售\n            3-在途\n            4-调拨锁定',
-  `dealprice` decimal(16,9) DEFAULT NULL,
-  `qualitystatus` int(11) DEFAULT NULL COMMENT '0-合格品\n            1-残次品\n            2-库存差异',
-  `sellstaff` int(10) unsigned DEFAULT NULL,
-  `is_print` tinyint(1) DEFAULT NULL COMMENT '0-未打印\n            1-条形码打印\n            2-二维码打印',
-  `corderid` int(10) unsigned DEFAULT NULL,
-  `currencyid` int(10) unsigned DEFAULT NULL,
-  `memo` varchar(500) DEFAULT NULL,
-  `cpdate` datetime DEFAULT NULL,
-  `cp_op` int(10) unsigned DEFAULT NULL,
-  `intime` datetime DEFAULT NULL,
-  `property` tinyint(1) DEFAULT NULL COMMENT '0-自采 1-代销',
-  `kpflag` tinyint(1) DEFAULT NULL COMMENT '0-未开票 1-已开票',
-  `decadeid` int(10) unsigned DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `create_stuff` int(10) unsigned DEFAULT NULL COMMENT '创建人',
+  `change_time` datetime DEFAULT NULL COMMENT '修改时间',
+  `change_stuff` int(10) unsigned DEFAULT NULL COMMENT '修改人',
   `number` int(11) NOT NULL DEFAULT '0' COMMENT '数量',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `companyid` (`companyid`,`warehouseid`,`productid`,`sizecontentid`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COMMENT='库存';
+  UNIQUE KEY `companyid` (`companyid`,`warehouseid`,`goodsid`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COMMENT='库存';
 
 /*Data for the table `tb_productstock` */
 
-insert  into `tb_productstock`(`id`,`productid`,`sizecontentid`,`warehouseid`,`companyid`,`storagetime`,`storagestaff`,`productno`,`cost`,`selltype`,`dealprice`,`qualitystatus`,`sellstaff`,`is_print`,`corderid`,`currencyid`,`memo`,`cpdate`,`cp_op`,`intime`,`property`,`kpflag`,`decadeid`,`number`) values (1,1,3,2,1,'2019-03-26 12:03:35',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1),(2,1,4,2,1,'2019-03-26 12:03:35',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1),(3,1,5,2,1,'2019-03-26 12:03:35',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,4),(4,1,2,1,1,'2019-03-26 12:08:42',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1),(5,1,3,1,1,'2019-03-26 12:08:42',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1),(6,1,4,1,1,'2019-03-26 12:08:42',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1),(7,1,5,1,1,'2019-03-26 12:08:42',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,2);
+insert  into `tb_productstock`(`id`,`goodsid`,`productid`,`sizecontentid`,`defective_level`,`property`,`warehouseid`,`companyid`,`create_time`,`create_stuff`,`change_time`,`change_stuff`,`number`) values (1,1,1,3,0,1,2,1,'2019-03-26 12:03:35',1,'2019-03-30 14:20:40',1,3),(2,2,1,4,0,2,2,1,'2019-03-26 12:03:35',1,'2019-03-30 14:20:40',1,12),(3,2,1,4,0,2,4,1,'2019-03-28 09:26:28',1,'2019-03-28 09:28:37',1,3),(4,1,1,3,0,1,4,1,'2019-03-28 09:26:28',1,'2019-03-30 14:19:26',1,2),(5,9,2,11,0,1,2,1,'2019-03-30 10:49:49',1,'2019-03-30 10:49:49',1,2),(6,10,2,12,0,1,2,1,'2019-03-30 10:49:49',1,'2019-03-30 10:49:49',1,2),(7,11,2,13,0,1,2,1,'2019-03-30 10:49:49',1,'2019-03-30 10:49:49',1,1),(8,1,1,3,0,1,1,1,'2019-03-30 14:18:55',1,'2019-03-30 14:21:24',1,5),(9,2,1,4,0,2,1,1,'2019-03-30 14:18:55',1,'2019-03-30 14:20:58',1,5);
 
 /*Table structure for table `tb_productstock_log` */
 
@@ -627,17 +537,20 @@ CREATE TABLE `tb_productstock_log` (
   `warehouseid` int(11) NOT NULL,
   `productstockid` int(11) NOT NULL,
   `number_before` int(11) NOT NULL,
-  `nuber_after` int(11) NOT NULL,
+  `number_after` int(11) NOT NULL,
   `change_type` int(11) NOT NULL,
   `change_time` datetime NOT NULL,
-  `relation_id` int(11) DEFAULT NULL,
+  `relationid` int(11) DEFAULT NULL,
   `companyid` int(11) DEFAULT NULL,
+  `change_stuff` int(11) DEFAULT NULL COMMENT '操作人',
   PRIMARY KEY (`id`),
   KEY `companyid` (`companyid`,`warehouseid`),
   KEY `companyid_2` (`companyid`,`productstockid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 /*Data for the table `tb_productstock_log` */
+
+insert  into `tb_productstock_log`(`id`,`warehouseid`,`productstockid`,`number_before`,`number_after`,`change_type`,`change_time`,`relationid`,`companyid`,`change_stuff`) values (1,2,2,10,6,3,'2019-03-28 09:27:22',1,1,1),(2,2,1,10,5,3,'2019-03-28 09:27:22',2,1,1),(3,4,3,0,3,2,'2019-03-28 09:28:37',1,1,1),(4,4,4,0,4,2,'2019-03-28 09:28:37',2,1,1),(5,2,2,6,7,2,'2019-03-28 09:55:43',5,1,1),(6,2,1,5,6,2,'2019-03-28 09:55:43',6,1,1),(7,2,1,6,5,1,'2019-03-29 11:12:14',14,1,1),(8,2,2,7,5,1,'2019-03-29 11:18:59',15,1,1),(9,2,1,5,4,1,'2019-03-29 11:18:59',16,1,1),(10,2,2,5,3,1,'2019-03-29 11:26:59',17,1,1),(11,2,1,4,1,1,'2019-03-29 11:26:59',18,1,1),(12,2,1,10,6,1,'2019-03-29 11:29:07',19,1,1),(13,2,2,20,17,1,'2019-03-29 11:29:07',20,1,1),(14,2,5,0,2,4,'2019-03-30 10:49:49',13,1,1),(15,2,6,0,2,4,'2019-03-30 10:49:49',14,1,1),(16,2,7,0,1,4,'2019-03-30 10:49:49',15,1,1),(17,4,4,4,2,3,'2019-03-30 14:19:26',8,1,1),(18,2,2,17,12,3,'2019-03-30 14:20:40',9,1,1),(19,2,1,6,3,3,'2019-03-30 14:20:40',10,1,1),(20,1,9,0,5,2,'2019-03-30 14:20:58',9,1,1),(21,1,8,0,3,2,'2019-03-30 14:20:58',10,1,1),(22,1,8,3,5,2,'2019-03-30 14:21:24',8,1,1);
 
 /*Table structure for table `tb_productstock_snapshot` */
 
@@ -699,12 +612,16 @@ CREATE TABLE `tb_requisition` (
   `markno` varchar(50) DEFAULT NULL,
   `is_return` tinyint(1) DEFAULT NULL COMMENT '0-普通调拨单，1-反向调拨单',
   `companyid` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='调拨单主表';
+  PRIMARY KEY (`id`),
+  KEY `out_id` (`out_id`),
+  KEY `in_id` (`in_id`),
+  CONSTRAINT `tb_requisition_ibfk_1` FOREIGN KEY (`out_id`) REFERENCES `tb_warehouse` (`id`),
+  CONSTRAINT `tb_requisition_ibfk_2` FOREIGN KEY (`in_id`) REFERENCES `tb_warehouse` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COMMENT='调拨单主表';
 
 /*Data for the table `tb_requisition` */
 
-insert  into `tb_requisition`(`id`,`feecurrencyid`,`fee`,`apply_staff`,`apply_date`,`turnin_staff`,`turnin_date`,`turnout_staff`,`turnout_date`,`out_id`,`in_id`,`memo`,`status`,`requisitionno`,`salesid`,`ism`,`is_quality`,`is_amortized`,`expresscomoany`,`address`,`markno`,`is_return`,`companyid`) values (1,NULL,NULL,1,'2019-03-26 16:07:25',NULL,NULL,NULL,NULL,1,2,NULL,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1),(2,NULL,NULL,1,'2019-03-26 16:07:25',NULL,NULL,NULL,NULL,2,4,NULL,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1);
+insert  into `tb_requisition`(`id`,`feecurrencyid`,`fee`,`apply_staff`,`apply_date`,`turnin_staff`,`turnin_date`,`turnout_staff`,`turnout_date`,`out_id`,`in_id`,`memo`,`status`,`requisitionno`,`salesid`,`ism`,`is_quality`,`is_amortized`,`expresscomoany`,`address`,`markno`,`is_return`,`companyid`) values (2,NULL,NULL,1,'2019-03-28 09:26:28',1,'2019-03-28 09:28:37',1,'2019-03-28 09:27:22',2,4,NULL,5,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1),(3,NULL,NULL,1,'2019-03-28 09:26:28',NULL,NULL,NULL,NULL,2,4,'out deny',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1),(4,NULL,NULL,1,'2019-03-28 09:28:37',1,'2019-03-28 09:55:43',1,'2019-03-28 09:28:37',4,2,'in deny',5,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1),(10,NULL,NULL,1,'2019-03-30 14:18:55',1,'2019-03-30 14:21:24',1,'2019-03-30 14:19:26',4,1,NULL,5,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1),(11,NULL,NULL,1,'2019-03-30 14:18:55',1,'2019-03-30 14:20:58',1,'2019-03-30 14:20:40',2,1,NULL,5,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1);
 
 /*Table structure for table `tb_requisition_detail` */
 
@@ -712,20 +629,60 @@ DROP TABLE IF EXISTS `tb_requisition_detail`;
 
 CREATE TABLE `tb_requisition_detail` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `requisitionid` int(10) unsigned NOT NULL,
-  `productid` int(10) unsigned DEFAULT NULL,
-  `sizecontentid` int(10) unsigned DEFAULT NULL,
+  `requisitionid` int(10) unsigned NOT NULL COMMENT '调拨单id',
+  `out_productstockid` int(11) unsigned DEFAULT NULL COMMENT '调出库存ID',
+  `in_productstockid` int(11) unsigned DEFAULT NULL COMMENT '调入库存id',
   `number` int(11) DEFAULT NULL COMMENT '数量',
   `memo` varchar(100) DEFAULT NULL,
-  `ctnno` varchar(50) DEFAULT NULL,
   `out_number` int(11) DEFAULT NULL COMMENT '出库数量',
   `in_number` int(11) DEFAULT NULL COMMENT '入库数量',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='调拨单明细(数量)';
+  PRIMARY KEY (`id`),
+  KEY `in_productstockid` (`in_productstockid`),
+  KEY `out_productstockid` (`out_productstockid`),
+  CONSTRAINT `tb_requisition_detail_ibfk_1` FOREIGN KEY (`in_productstockid`) REFERENCES `tb_productstock` (`id`),
+  CONSTRAINT `tb_requisition_detail_ibfk_2` FOREIGN KEY (`out_productstockid`) REFERENCES `tb_productstock` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COMMENT='调拨单明细(数量)';
 
 /*Data for the table `tb_requisition_detail` */
 
-insert  into `tb_requisition_detail`(`id`,`requisitionid`,`productid`,`sizecontentid`,`number`,`memo`,`ctnno`,`out_number`,`in_number`) values (1,1,1,5,2,NULL,NULL,NULL,NULL),(2,2,1,5,2,NULL,NULL,NULL,NULL);
+insert  into `tb_requisition_detail`(`id`,`requisitionid`,`out_productstockid`,`in_productstockid`,`number`,`memo`,`out_number`,`in_number`) values (1,2,2,3,7,NULL,4,3),(2,2,1,4,6,NULL,5,4),(3,3,2,3,3,NULL,NULL,NULL),(4,3,1,4,1,NULL,NULL,NULL),(5,4,3,2,1,NULL,1,1),(6,4,4,1,1,NULL,1,1),(7,55,NULL,NULL,33,NULL,NULL,NULL),(8,10,4,8,2,NULL,2,2),(9,11,2,9,5,NULL,5,5),(10,11,1,8,3,NULL,3,3);
+
+/*Table structure for table `tb_saleport` */
+
+DROP TABLE IF EXISTS `tb_saleport`;
+
+CREATE TABLE `tb_saleport` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '名称',
+  `discount` decimal(5,3) DEFAULT NULL COMMENT '折扣',
+  `create_time` datetime DEFAULT NULL,
+  `companyid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+/*Data for the table `tb_saleport` */
+
+insert  into `tb_saleport`(`id`,`name`,`discount`,`create_time`,`companyid`) values (1,'银河广场','1.600',NULL,1),(2,'京东平台','1.500',NULL,1),(3,'哈尔滨零售店','1.300',NULL,1),(4,'100','1.200',NULL,1);
+
+/*Table structure for table `tb_saleport_user` */
+
+DROP TABLE IF EXISTS `tb_saleport_user`;
+
+CREATE TABLE `tb_saleport_user` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `userid` int(11) unsigned DEFAULT NULL,
+  `saleportid` int(11) unsigned DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `userid` (`userid`,`saleportid`),
+  KEY `saleportid` (`saleportid`),
+  CONSTRAINT `tb_saleport_user_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `tb_user` (`id`),
+  CONSTRAINT `tb_saleport_user_ibfk_2` FOREIGN KEY (`saleportid`) REFERENCES `tb_saleport` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+/*Data for the table `tb_saleport_user` */
+
+insert  into `tb_saleport_user`(`id`,`userid`,`saleportid`,`create_time`) values (1,1,1,NULL),(2,1,3,NULL);
 
 /*Table structure for table `tb_sales` */
 
@@ -733,44 +690,33 @@ DROP TABLE IF EXISTS `tb_sales`;
 
 CREATE TABLE `tb_sales` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `actualprice` decimal(16,9) DEFAULT NULL,
   `memberid` int(10) unsigned DEFAULT NULL COMMENT '会员ID',
-  `pricelistid` int(10) unsigned DEFAULT NULL,
   `salesstaff` int(10) unsigned DEFAULT NULL COMMENT '销售人员ID',
   `salesdate` varchar(10) DEFAULT NULL COMMENT '销售日期',
-  `salesmode` varchar(2) DEFAULT NULL COMMENT '0-现金\n            1-刷卡\n            2-支票\n            3-储值卡\n            4-转账\n            5-协议结算\n            6-支付宝\n            7-微信支付',
-  `sellspotid` int(10) unsigned DEFAULT NULL,
-  `companyid` int(10) unsigned DEFAULT NULL,
-  `saleno` varchar(50) DEFAULT NULL,
-  `salestype` varchar(1) DEFAULT NULL COMMENT '0-未转 1-已转',
+  `discount` decimal(5,2) DEFAULT NULL COMMENT '折扣',
+  `saleportid` int(10) unsigned DEFAULT NULL COMMENT '销售端口id',
+  `companyid` int(10) unsigned NOT NULL COMMENT '公司id',
+  `ordercode` varchar(50) DEFAULT NULL COMMENT '对账单号',
   `warehouseid` int(10) unsigned DEFAULT NULL COMMENT '销售仓库id',
   `expressno` varchar(50) DEFAULT NULL,
-  `expresspaidtype` varchar(1) DEFAULT NULL COMMENT '0-预付 1-到付 2-第三方付费 3-储值卡 4-转账 5-协议结算',
-  `expressfee` decimal(16,9) DEFAULT NULL,
-  `expressfeepayid` int(10) unsigned DEFAULT NULL,
-  `status` varchar(1) DEFAULT NULL COMMENT '0-预售 1-已售 2-作废',
-  `expresscomoany` varchar(1) DEFAULT NULL COMMENT '0-顺丰 1-德邦 2-京东 3-其他 4-圆通',
-  `address` int(10) unsigned DEFAULT NULL,
-  `islocal` varchar(1) DEFAULT NULL COMMENT '0-跨境电商 1-线下店铺 2-爱莎商城 3-分公司间调拨销售 4-代销 ',
+  `expresspaidtype` tinyint(1) DEFAULT NULL COMMENT '0-预付 1-到付 2-第三方付费 3-储值卡 4-转账 5-协议结算',
+  `expressfee` decimal(16,2) DEFAULT NULL,
+  `status` tinyint(1) NOT NULL COMMENT '0-预售 1-已售 2-作废',
+  `address` varchar(255) DEFAULT NULL,
   `externalno` varchar(50) DEFAULT NULL COMMENT '外部订单号',
-  `ischeck` varchar(1) DEFAULT NULL,
-  `sheetid` int(10) unsigned DEFAULT NULL,
-  `type` varchar(1) DEFAULT NULL COMMENT '0-普通 1-扫码 ',
-  `pickingtype` varchar(1) DEFAULT NULL COMMENT '0-自提 1-快递 2-门店直发',
-  `sender` int(10) unsigned DEFAULT NULL,
-  `supplierid` int(10) unsigned DEFAULT NULL,
-  `isjf` varchar(1) DEFAULT NULL COMMENT '0-未使用积分抵扣，1-使用积分抵扣',
-  `dksum` decimal(16,9) DEFAULT NULL,
-  `usedscore` bigint(20) DEFAULT NULL,
-  `exhibitionid` int(10) unsigned DEFAULT NULL,
-  `isused` varchar(1) DEFAULT NULL,
-  `invitesum` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COMMENT='销售主表';
+  `pickingtype` tinyint(1) DEFAULT NULL COMMENT '0-自提 1-快递 2-门店直发',
+  `makestaff` int(11) unsigned NOT NULL COMMENT '制单人',
+  `makedate` datetime NOT NULL COMMENT '制单日期',
+  `orderno` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `orderno` (`orderno`),
+  KEY `saleportid` (`saleportid`),
+  CONSTRAINT `tb_sales_ibfk_1` FOREIGN KEY (`saleportid`) REFERENCES `tb_saleport` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COMMENT='销售主表';
 
 /*Data for the table `tb_sales` */
 
-insert  into `tb_sales`(`id`,`actualprice`,`memberid`,`pricelistid`,`salesstaff`,`salesdate`,`salesmode`,`sellspotid`,`companyid`,`saleno`,`salestype`,`warehouseid`,`expressno`,`expresspaidtype`,`expressfee`,`expressfeepayid`,`status`,`expresscomoany`,`address`,`islocal`,`externalno`,`ischeck`,`sheetid`,`type`,`pickingtype`,`sender`,`supplierid`,`isjf`,`dksum`,`usedscore`,`exhibitionid`,`isused`,`invitesum`) values (1,NULL,0,NULL,1,'',NULL,NULL,1,'S000001201903211450227407',NULL,0,'','','0.000000000',NULL,'1',NULL,0,NULL,'',NULL,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(2,NULL,0,NULL,1,'',NULL,NULL,1,'S000001201903211503554560',NULL,0,'','','0.000000000',NULL,'2',NULL,0,NULL,'',NULL,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(3,NULL,1,NULL,1,'',NULL,NULL,1,'S000001201903211504021826',NULL,0,'','','0.000000000',NULL,'2',NULL,0,NULL,'',NULL,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(4,NULL,1,NULL,1,'',NULL,NULL,1,'S000001201903211504215393',NULL,0,'','','0.000000000',NULL,'2',NULL,0,NULL,'',NULL,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(5,NULL,0,NULL,1,'',NULL,NULL,1,'S000001201903211509311898',NULL,0,'','','0.000000000',NULL,'1',NULL,0,NULL,'',NULL,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(6,NULL,2,NULL,1,'',NULL,NULL,1,'S000001201903211510083858',NULL,1,'','','0.000000000',NULL,'1',NULL,0,NULL,'',NULL,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(7,NULL,1,NULL,1,'',NULL,NULL,1,'S000001201903211521402780',NULL,2,'','2','0.000000000',NULL,'1',NULL,0,NULL,'',NULL,NULL,NULL,'2',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(8,NULL,1,NULL,1,'',NULL,NULL,1,'S000001201903211823301457',NULL,1,'','','0.000000000',NULL,'0',NULL,0,NULL,'',NULL,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(9,NULL,1,NULL,1,'',NULL,NULL,1,'S000001201903211827142948',NULL,1,'','','0.000000000',NULL,'1',NULL,0,NULL,'',NULL,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(10,NULL,0,NULL,1,'',NULL,NULL,1,'S000001201903211827399047',NULL,0,'','','0.000000000',NULL,'0',NULL,0,NULL,'',NULL,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11,NULL,0,NULL,0,'',NULL,NULL,1,'S000001201903270907397723',NULL,0,'','','0.000000000',NULL,'1',NULL,0,NULL,'',NULL,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(12,NULL,0,NULL,0,'',NULL,NULL,1,'S000001201903270908188631',NULL,0,'','','0.000000000',NULL,'1',NULL,0,NULL,'',NULL,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(13,NULL,0,NULL,0,'',NULL,NULL,1,'S000001201903270917514348',NULL,0,'','','0.000000000',NULL,'1',NULL,0,NULL,'',NULL,NULL,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+insert  into `tb_sales`(`id`,`memberid`,`salesstaff`,`salesdate`,`discount`,`saleportid`,`companyid`,`ordercode`,`warehouseid`,`expressno`,`expresspaidtype`,`expressfee`,`status`,`address`,`externalno`,`pickingtype`,`makestaff`,`makedate`,`orderno`) values (53,0,0,'','1.60',1,1,'',2,'',0,'0.00',1,'','',0,1,'2019-03-29 11:12:14','S000001201903291112146905'),(54,2,0,'','1.30',3,1,'',2,'',0,'0.00',1,'','',0,1,'2019-03-29 11:13:46','S000001201903291113461155'),(55,0,0,'','1.60',1,1,'',2,'',0,'0.00',1,'','',0,1,'2019-03-29 11:26:59','S000001201903291126598729'),(56,0,0,'','1.60',1,1,'',2,'',0,'0.00',1,'','',0,1,'2019-03-29 11:29:07','S000001201903291129073631');
 
 /*Table structure for table `tb_salesdetails` */
 
@@ -779,26 +725,21 @@ DROP TABLE IF EXISTS `tb_salesdetails`;
 CREATE TABLE `tb_salesdetails` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `salesid` int(10) unsigned NOT NULL COMMENT '销售单id',
-  `productid` int(10) unsigned DEFAULT NULL COMMENT '产品id',
-  `sizecontentid` int(10) unsigned DEFAULT NULL COMMENT '尺码详情id',
+  `productstockid` int(10) unsigned DEFAULT NULL COMMENT '库存id',
   `number` int(11) DEFAULT NULL COMMENT '数量',
-  `dealprice` decimal(16,9) DEFAULT NULL,
-  `price` decimal(16,9) DEFAULT NULL,
-  `rate` decimal(16,9) DEFAULT NULL,
-  `memo` varchar(500) DEFAULT NULL,
-  `returnid` int(10) unsigned DEFAULT NULL,
-  `totalsellprice` decimal(16,9) DEFAULT NULL,
-  `saleno` varchar(50) DEFAULT NULL,
-  `stockid` int(10) unsigned DEFAULT NULL,
-  `pricememo` varchar(500) DEFAULT NULL,
-  `exchangerate` decimal(16,9) DEFAULT NULL,
-  `totalsellpricebwb` decimal(16,9) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=utf8mb4 COMMENT='销售单明细(数量)';
+  `dealprice` decimal(16,2) DEFAULT NULL COMMENT '成交总价',
+  `price` decimal(16,2) DEFAULT NULL COMMENT '基准单价',
+  `is_match` tinyint(1) DEFAULT NULL COMMENT '是否是端口价格',
+  PRIMARY KEY (`id`),
+  KEY `salesid` (`salesid`),
+  KEY `productstockid` (`productstockid`),
+  CONSTRAINT `tb_salesdetails_ibfk_1` FOREIGN KEY (`salesid`) REFERENCES `tb_sales` (`id`),
+  CONSTRAINT `tb_salesdetails_ibfk_2` FOREIGN KEY (`productstockid`) REFERENCES `tb_productstock` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COMMENT='销售单明细(数量)';
 
 /*Data for the table `tb_salesdetails` */
 
-insert  into `tb_salesdetails`(`id`,`salesid`,`productid`,`sizecontentid`,`number`,`dealprice`,`price`,`rate`,`memo`,`returnid`,`totalsellprice`,`saleno`,`stockid`,`pricememo`,`exchangerate`,`totalsellpricebwb`) values (1,1,2,7,2,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211450227407',NULL,NULL,NULL,NULL),(2,2,1,7,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211503554560',NULL,NULL,NULL,NULL),(3,2,2,8,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211503554560',NULL,NULL,NULL,NULL),(4,3,1,7,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211504021826',NULL,NULL,NULL,NULL),(5,3,2,8,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211504021826',NULL,NULL,NULL,NULL),(6,4,1,7,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211504215393',NULL,NULL,NULL,NULL),(7,4,2,8,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211504215393',NULL,NULL,NULL,NULL),(8,5,1,2,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211509311898',NULL,NULL,NULL,NULL),(9,6,1,2,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211510083858',NULL,NULL,NULL,NULL),(10,7,3,7,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211521402780',NULL,NULL,NULL,NULL),(11,7,3,7,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(12,1,2,9,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(13,1,2,9,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(14,1,4,12,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(15,1,2,9,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(16,1,2,9,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(17,1,4,5,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(18,1,1,1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(19,1,4,5,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(20,1,2,9,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(21,1,2,8,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(22,1,2,9,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(23,1,4,5,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(24,1,1,1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(25,1,2,8,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(26,1,2,9,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(27,1,4,5,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(28,1,1,3,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(29,7,1,5,3,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(30,7,1,4,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(31,7,1,3,5,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(32,7,1,2,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(33,7,1,1,4,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(34,2,3,6,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(35,2,3,7,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(36,2,3,8,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(37,2,3,9,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(38,2,3,10,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(39,2,3,11,3,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(40,2,3,12,3,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(41,2,3,13,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(42,3,1,1,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(43,3,1,2,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(44,3,1,3,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(45,3,1,4,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(46,3,1,5,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(47,8,1,5,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211823301457',NULL,NULL,NULL,NULL),(48,8,1,4,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211823301457',NULL,NULL,NULL,NULL),(49,8,1,3,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211823301457',NULL,NULL,NULL,NULL),(50,8,1,2,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211823301457',NULL,NULL,NULL,NULL),(51,8,1,1,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211823301457',NULL,NULL,NULL,NULL),(52,9,3,13,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211827142948',NULL,NULL,NULL,NULL),(53,9,3,12,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211827142948',NULL,NULL,NULL,NULL),(54,9,3,11,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211827142948',NULL,NULL,NULL,NULL),(55,9,3,10,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211827142948',NULL,NULL,NULL,NULL),(56,9,3,9,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211827142948',NULL,NULL,NULL,NULL),(57,9,3,8,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211827142948',NULL,NULL,NULL,NULL),(58,9,3,7,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211827142948',NULL,NULL,NULL,NULL),(59,9,3,6,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211827142948',NULL,NULL,NULL,NULL),(60,10,1,5,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211827399047',NULL,NULL,NULL,NULL),(61,10,1,4,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211827399047',NULL,NULL,NULL,NULL),(62,10,1,3,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211827399047',NULL,NULL,NULL,NULL),(63,10,1,2,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211827399047',NULL,NULL,NULL,NULL),(64,10,1,1,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903211827399047',NULL,NULL,NULL,NULL),(65,9,3,6,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(66,9,3,7,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(67,9,3,8,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(68,9,3,9,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(69,9,3,10,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(70,9,3,11,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(71,9,3,12,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(72,9,3,13,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(73,11,1,5,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903270907397723',NULL,NULL,NULL,NULL),(74,11,1,4,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903270907397723',NULL,NULL,NULL,NULL),(75,11,1,3,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903270907397723',NULL,NULL,NULL,NULL),(76,11,1,2,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903270907397723',NULL,NULL,NULL,NULL),(77,11,1,1,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903270907397723',NULL,NULL,NULL,NULL),(78,12,1,5,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903270908188631',NULL,NULL,NULL,NULL),(79,12,1,4,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903270908188631',NULL,NULL,NULL,NULL),(80,12,1,3,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903270908188631',NULL,NULL,NULL,NULL),(81,12,1,2,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903270908188631',NULL,NULL,NULL,NULL),(82,12,1,1,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903270908188631',NULL,NULL,NULL,NULL),(83,13,1,5,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903270917514348',NULL,NULL,NULL,NULL),(84,13,1,4,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903270917514348',NULL,NULL,NULL,NULL),(85,13,1,3,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903270917514348',NULL,NULL,NULL,NULL),(86,13,1,2,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903270917514348',NULL,NULL,NULL,NULL),(87,13,1,1,1,NULL,NULL,NULL,NULL,NULL,NULL,'S000001201903270917514348',NULL,NULL,NULL,NULL);
+insert  into `tb_salesdetails`(`id`,`salesid`,`productstockid`,`number`,`dealprice`,`price`,`is_match`) values (14,53,1,1,'0.00','1100.00',1),(15,54,2,2,'0.00','8000.00',1),(16,54,1,1,'0.00','1100.00',1),(17,55,2,2,'0.00','8000.00',1),(18,55,1,3,'0.00','1100.00',1),(19,56,1,4,'0.00','1100.00',1),(20,56,2,3,'0.00','8000.00',1);
 
 /*Table structure for table `tb_supplier` */
 
@@ -887,13 +828,16 @@ CREATE TABLE `tb_user` (
   `costdisplay` varchar(1) DEFAULT NULL,
   `wechat` varchar(50) DEFAULT NULL,
   `openid` varchar(50) DEFAULT NULL,
+  `saleportid` int(11) unsigned DEFAULT NULL COMMENT '默认销售端口',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `tb_user_login_name` (`login_name`)
+  UNIQUE KEY `tb_user_login_name` (`login_name`),
+  KEY `saleportid` (`saleportid`),
+  CONSTRAINT `tb_user_ibfk_1` FOREIGN KEY (`saleportid`) REFERENCES `tb_saleport` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
 
 /*Data for the table `tb_user` */
 
-insert  into `tb_user`(`id`,`login_name`,`password`,`real_name`,`departmentid`,`companyid`,`groupid`,`storeid`,`sex`,`section`,`date`,`phone`,`mobilephone`,`e_mail`,`email_password`,`memo`,`countryid`,`departmentid2`,`address`,`contactor`,`leave_date`,`defaultprice`,`defaultwarehouse`,`defaultsellspot`,`idno`,`education`,`collegemajor`,`degree`,`graduatedcollege`,`stateofmarriage`,`censusregistration`,`status`,`reason`,`contactorphone`,`costdisplay`,`wechat`,`openid`) values (1,'admin','e10adc3949ba59abbe56e057f20f883e','场合',1,1,1,0,'','','','','','','',NULL,0,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(2,'tt','bcc720f2981d1a68dbd66ffd67560c37','',2,1,2,0,'','','','','','','',NULL,0,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+insert  into `tb_user`(`id`,`login_name`,`password`,`real_name`,`departmentid`,`companyid`,`groupid`,`storeid`,`sex`,`section`,`date`,`phone`,`mobilephone`,`e_mail`,`email_password`,`memo`,`countryid`,`departmentid2`,`address`,`contactor`,`leave_date`,`defaultprice`,`defaultwarehouse`,`defaultsellspot`,`idno`,`education`,`collegemajor`,`degree`,`graduatedcollege`,`stateofmarriage`,`censusregistration`,`status`,`reason`,`contactorphone`,`costdisplay`,`wechat`,`openid`,`saleportid`) values (1,'admin','e10adc3949ba59abbe56e057f20f883e','场合',1,1,1,0,'','','','','','','',NULL,0,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(2,'路人甲','bcc720f2981d1a68dbd66ffd67560c37','',2,1,2,0,'','','','','','','',NULL,0,NULL,'',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 
 /*Table structure for table `tb_warehouse` */
 
@@ -919,11 +863,31 @@ CREATE TABLE `tb_warehouse` (
   `companyid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `companyid` (`companyid`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COMMENT='仓库信息';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COMMENT='仓库信息';
 
 /*Data for the table `tb_warehouse` */
 
-insert  into `tb_warehouse`(`id`,`countryid`,`city`,`name`,`address`,`contact`,`toll`,`fax`,`mobile`,`othercontact`,`code`,`defaultstore`,`zipcode`,`is_real`,`maxstock`,`maxsku`,`companyid`) values (1,0,'','北京仓库','','',NULL,'','','','',NULL,'','0',NULL,NULL,1),(2,0,'','成都仓库','','',NULL,'','','','',NULL,'','',NULL,NULL,1),(3,0,'','广州仓库','','',NULL,'','','','',NULL,'','',NULL,NULL,1),(4,0,'','香港仓库','','',NULL,'','','','',NULL,'','',NULL,NULL,1);
+insert  into `tb_warehouse`(`id`,`countryid`,`city`,`name`,`address`,`contact`,`toll`,`fax`,`mobile`,`othercontact`,`code`,`defaultstore`,`zipcode`,`is_real`,`maxstock`,`maxsku`,`companyid`) values (1,0,'','北京仓库','','',NULL,'','','','',NULL,'','0',NULL,NULL,1),(2,0,'','成都仓库','','',NULL,'','','','',NULL,'','',NULL,NULL,1),(3,0,'','广州仓库','','',NULL,'','','','',NULL,'','',NULL,NULL,1),(4,0,'','香港仓库','','',NULL,'','','','',NULL,'','',NULL,NULL,1),(5,0,'','郑州仓库','','',NULL,'','','','',NULL,'','0',NULL,NULL,1);
+
+/*Table structure for table `tb_warehouse_user` */
+
+DROP TABLE IF EXISTS `tb_warehouse_user`;
+
+CREATE TABLE `tb_warehouse_user` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `warehouseid` int(11) unsigned NOT NULL,
+  `userid` int(11) unsigned NOT NULL,
+  `create_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `warehouseid` (`warehouseid`,`userid`),
+  KEY `userid` (`userid`),
+  CONSTRAINT `tb_warehouse_user_ibfk_1` FOREIGN KEY (`warehouseid`) REFERENCES `tb_warehouse` (`id`),
+  CONSTRAINT `tb_warehouse_user_ibfk_2` FOREIGN KEY (`userid`) REFERENCES `tb_user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+/*Data for the table `tb_warehouse_user` */
+
+insert  into `tb_warehouse_user`(`id`,`warehouseid`,`userid`,`create_time`) values (1,1,1,NULL),(2,2,1,NULL),(3,5,1,NULL);
 
 /*Table structure for table `tb_warehousing` */
 
@@ -933,26 +897,18 @@ CREATE TABLE `tb_warehousing` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `orderno` varchar(100) DEFAULT NULL COMMENT '入库单号',
   `companyid` int(11) DEFAULT NULL COMMENT '公司id',
+  `warehouseid` int(11) DEFAULT NULL COMMENT '仓库id',
   `confirmorderid` int(10) unsigned DEFAULT NULL COMMENT '发货单id',
-  `seasontype` varchar(1) DEFAULT NULL COMMENT '0-pre ,1-main ,2-fashion show',
   `makedate` datetime DEFAULT NULL COMMENT '操作时间',
   `makestaff` int(10) unsigned NOT NULL COMMENT '操作人',
-  `memo` varchar(500) DEFAULT NULL COMMENT '备注',
-  `ischecked` tinyint(1) DEFAULT NULL COMMENT '是否审核',
-  `isamortized` tinyint(1) DEFAULT NULL COMMENT '是否平摊',
-  `exchangerate` decimal(16,9) DEFAULT NULL COMMENT '汇率',
-  `property` varchar(1) DEFAULT NULL COMMENT '0-自采 1-代销',
-  `supplierid` int(10) unsigned NOT NULL COMMENT '供货商id',
-  `warehouseid` int(10) unsigned NOT NULL COMMENT '仓库id',
-  `entrydate` datetime NOT NULL COMMENT '入库日期',
-  `ageseasonid` int(10) unsigned DEFAULT NULL COMMENT '年代季节',
+  `entrydate` date NOT NULL COMMENT '入库日期',
   PRIMARY KEY (`id`),
   UNIQUE KEY `confirmorderid` (`confirmorderid`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='入库单主表';
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COMMENT='入库单主表';
 
 /*Data for the table `tb_warehousing` */
 
-insert  into `tb_warehousing`(`id`,`orderno`,`companyid`,`confirmorderid`,`seasontype`,`makedate`,`makestaff`,`memo`,`ischecked`,`isamortized`,`exchangerate`,`property`,`supplierid`,`warehouseid`,`entrydate`,`ageseasonid`) values (1,'T000001201903261203356666',1,1,'1','2019-03-26 12:03:35',1,NULL,NULL,NULL,'1.140000000','2',3,2,'2019-03-28 00:00:00',5),(2,'T000001201903261208422547',1,2,'0','2019-03-26 12:08:42',1,NULL,NULL,NULL,'0.000000000','0',5,1,'2019-03-27 00:00:00',5);
+insert  into `tb_warehousing`(`id`,`orderno`,`companyid`,`warehouseid`,`confirmorderid`,`makedate`,`makestaff`,`entrydate`) values (14,'T000001201903301049492874',1,2,25,'2019-03-30 10:49:49',1,'2019-03-30');
 
 /*Table structure for table `tb_warehousingdetails` */
 
@@ -962,24 +918,16 @@ CREATE TABLE `tb_warehousingdetails` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `companyid` int(11) NOT NULL,
   `orderdetailsid` int(10) unsigned NOT NULL,
-  `warehousingid` int(10) unsigned NOT NULL,
-  `productid` int(10) unsigned NOT NULL,
-  `sizecontentid` int(10) unsigned NOT NULL,
   `number` int(11) NOT NULL,
-  `cost` decimal(16,9) DEFAULT NULL,
-  `memo` varchar(500) DEFAULT NULL,
-  `cjj` decimal(16,9) DEFAULT NULL,
-  `yj` decimal(16,9) DEFAULT NULL,
-  `sellprice` decimal(16,9) DEFAULT NULL,
-  `finalcost` decimal(16,9) DEFAULT NULL,
-  `currency` tinyint(10) unsigned DEFAULT NULL,
   `confirmorderdetailsid` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COMMENT='入库单明细表';
+  `warehousingid` int(11) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `warehousingid` (`warehousingid`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COMMENT='入库单明细表';
 
 /*Data for the table `tb_warehousingdetails` */
 
-insert  into `tb_warehousingdetails`(`id`,`companyid`,`orderdetailsid`,`warehousingid`,`productid`,`sizecontentid`,`number`,`cost`,`memo`,`cjj`,`yj`,`sellprice`,`finalcost`,`currency`,`confirmorderdetailsid`) values (1,1,36,1,1,3,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,9),(2,1,35,1,1,4,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,10),(3,1,34,1,1,5,4,NULL,NULL,NULL,NULL,NULL,NULL,NULL,11),(4,1,37,2,1,2,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,12),(5,1,36,2,1,3,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,13),(6,1,35,2,1,4,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,14),(7,1,34,2,1,5,2,NULL,NULL,NULL,NULL,NULL,NULL,NULL,15);
+insert  into `tb_warehousingdetails`(`id`,`companyid`,`orderdetailsid`,`number`,`confirmorderdetailsid`,`warehousingid`) values (13,1,37,2,3,14),(14,1,36,2,4,14),(15,1,35,1,5,14);
 
 /*Table structure for table `zl_ageseason` */
 
@@ -1038,11 +986,11 @@ CREATE TABLE `zl_brand` (
   `memo` text,
   `officialwebsite` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='品牌表';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COMMENT='品牌表';
 
 /*Data for the table `zl_brand` */
 
-insert  into `zl_brand`(`id`,`code`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`countryid`,`brandgroupid`,`filename`,`memo`,`officialwebsite`) values (1,'','Gucci',NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,'',''),(2,'001','耐克','Nike','',NULL,NULL,NULL,NULL,2,1,NULL,'',''),(3,'004','Adidas','','',NULL,NULL,NULL,NULL,4,0,NULL,'','');
+insert  into `zl_brand`(`id`,`code`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`countryid`,`brandgroupid`,`filename`,`memo`,`officialwebsite`) values (1,'','Gucci',NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,'',''),(2,'001','耐克','Nike','',NULL,NULL,NULL,NULL,2,1,NULL,'',''),(3,'004','Adidas','','',NULL,NULL,NULL,NULL,4,0,NULL,'',''),(4,'005','彪马','','',NULL,NULL,NULL,NULL,4,2,NULL,'','');
 
 /*Table structure for table `zl_brandgroup` */
 
@@ -1050,7 +998,7 @@ DROP TABLE IF EXISTS `zl_brandgroup`;
 
 CREATE TABLE `zl_brandgroup` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `code` varchar(50) DEFAULT NULL COMMENT '代码',
+  `code` varchar(50) DEFAULT NULL,
   `name_cn` varchar(100) DEFAULT NULL COMMENT '中文名称',
   `name_en` varchar(100) DEFAULT NULL COMMENT '英文名称',
   `name_hk` varchar(100) DEFAULT NULL COMMENT '粤语名称',
@@ -1078,28 +1026,19 @@ CREATE TABLE `zl_childproductgroup` (
   `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
   `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
   `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
-  `childcode` varchar(50) DEFAULT NULL COMMENT '子集编号',
-  `productgroupid` int(10) unsigned DEFAULT NULL COMMENT '父级ID',
-  `producttemplateid` int(10) unsigned DEFAULT NULL COMMENT '尺码规格ID',
-  `weight` decimal(16,9) DEFAULT NULL COMMENT '毛重',
-  `isfj` varchar(1) DEFAULT NULL COMMENT '是否法检(未使用)：0-否 1-法检',
-  `cname4male` int(10) unsigned DEFAULT NULL COMMENT '报关名称（男）',
-  `cname4female` int(10) unsigned DEFAULT NULL COMMENT '报关名称（女）',
+  `childcode` varchar(50) DEFAULT NULL,
+  `brandgroupid` int(10) unsigned DEFAULT NULL,
+  `producttemplateid` int(10) unsigned DEFAULT NULL,
+  `weight` decimal(16,9) DEFAULT NULL,
+  `isfj` varchar(1) DEFAULT NULL COMMENT '0-否 1-法检',
+  `cname4male` int(10) unsigned DEFAULT NULL,
+  `cname4female` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='子品类';
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COMMENT='子品类';
 
 /*Data for the table `zl_childproductgroup` */
 
-INSERT INTO `zl_childproductgroup` (`id`, `name_cn`, `name_en`, `name_hk`, `name_fr`, `name_it`, `name_sp`, `name_de`, `childcode`, `productgroupid`, `producttemplateid`, `weight`, `isfj`, `cname4male`, `cname4female`) VALUES
-(1, '春上新', '', '', NULL, NULL, NULL, NULL, '0001', 1, 0, '33.000000000', NULL, NULL, NULL),
-(2, '连衣裙', NULL, NULL, NULL, NULL, NULL, NULL, '0002', 1, NULL, NULL, NULL, NULL, NULL),
-(3, 'T恤', NULL, NULL, NULL, NULL, NULL, NULL, '0003', 1, NULL, NULL, NULL, NULL, NULL),
-(4, '衬衫', NULL, NULL, NULL, NULL, NULL, NULL, '0004', 1, NULL, NULL, NULL, NULL, NULL),
-(5, '高跟鞋', NULL, NULL, NULL, NULL, NULL, NULL, '0005', 3, NULL, NULL, NULL, NULL, NULL),
-(6, '厚底鞋', NULL, NULL, NULL, NULL, NULL, NULL, '0006', 3, NULL, NULL, NULL, NULL, NULL),
-(7, '圆头鞋', NULL, NULL, NULL, NULL, NULL, NULL, '0007', 3, NULL, NULL, NULL, NULL, NULL),
-(8, '双肩包', NULL, NULL, NULL, NULL, NULL, NULL, '0008', 2, NULL, NULL, NULL, NULL, NULL),
-(9, '水桶包', NULL, NULL, NULL, NULL, NULL, NULL, '0009', 2, NULL, NULL, NULL, NULL, NULL);
+insert  into `zl_childproductgroup`(`id`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`childcode`,`brandgroupid`,`producttemplateid`,`weight`,`isfj`,`cname4male`,`cname4female`) values (2,'上衣','','',NULL,NULL,NULL,NULL,'0101',1,0,'0.000000000',NULL,NULL,NULL),(3,'风衣','','',NULL,NULL,NULL,NULL,'0102',1,0,'0.000000000',NULL,NULL,NULL),(4,'夹克','','',NULL,NULL,NULL,NULL,'0103',1,0,'0.000000000',NULL,NULL,NULL),(5,'运动服','','',NULL,NULL,NULL,NULL,'0105',1,0,'0.000000000',NULL,NULL,NULL),(6,'网球鞋','','',NULL,NULL,NULL,NULL,'0301',3,0,'0.000000000',NULL,NULL,NULL),(7,'足球鞋','','',NULL,NULL,NULL,NULL,'0302',3,0,'0.000000000',NULL,NULL,NULL),(8,'篮球鞋','','',NULL,NULL,NULL,NULL,'0303',3,0,'0.000000000',NULL,NULL,NULL),(9,'跑步鞋','','',NULL,NULL,NULL,NULL,'0304',3,0,'0.000000000',NULL,NULL,NULL),(10,'项链','','',NULL,NULL,NULL,NULL,'0401',4,0,'0.000000000',NULL,NULL,NULL),(11,'戒指','','',NULL,NULL,NULL,NULL,'0402',4,0,'0.000000000',NULL,NULL,NULL),(12,'旅行箱','','',NULL,NULL,NULL,NULL,'0201',2,0,'0.000000000',NULL,NULL,NULL),(13,'手提包','','',NULL,NULL,NULL,NULL,'0202',2,0,'0.000000000',NULL,NULL,NULL),(14,'电脑包','','',NULL,NULL,NULL,NULL,'0203',2,0,'0.000000000',NULL,NULL,NULL);
 
 /*Table structure for table `zl_closedway` */
 
