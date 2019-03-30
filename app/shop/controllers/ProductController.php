@@ -1,9 +1,11 @@
 <?php
 namespace Multiple\Shop\Controllers;
 
+use Asa\Erp\Util;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
 use Asa\Erp\TbProduct;
+use Asa\Erp\ZlColortemplate;
 
 class ProductController extends AdminController {
     public function initialize() {
@@ -26,6 +28,31 @@ class ProductController extends AdminController {
         $id = $params[0];
         // 取出数据
         $product = TbProduct::findFirstById($id);
+        if (!$product) {
+            exit('product does not exist!');
+        }
+        // 尺码组
+        if ($product->sizetop) {
+            $sizecontents = $product->sizetop->sizecontents->toArray();
+        } else {
+            $sizecontents = [];
+        }
+        // 颜色
+        if ($product->brandcolor) {
+            $colors = explode(',', $product->brandcolor);
+            foreach ($colors as $k => $color) {
+                $colors_arr[] = ZlColortemplate::findFirstById($color)->toArray();
+            }
+        } else {
+            $colors_arr = [];
+        }
+
+        // 取出合同价、成交价格、国内零售价格
+        // $orderpricecurrency = Util::change_currency($product->orderpricecurrency);
+        $retailpricecurrency = Util::change_currency($product->retailpricecurrency);
+        $realprice = round($product->realprice, 2);
+        $nationalprice = round($product->nationalprice, 2);
+        // $orderprice = $product->orderprice;
 
         // 取出上级分类
         $childproductgroup = $product->childproductgroup;
@@ -39,6 +66,13 @@ class ProductController extends AdminController {
         // 推送给模板
         $this->view->setVars([
             'product' => $product,
+            'sizecontents' => $sizecontents,
+            'colors' => $colors_arr,
+            // 'orderpricecurrency' => $orderpricecurrency,
+            'retailpricecurrency' => $retailpricecurrency,
+            'realprice' => $realprice,
+            'nationalprice' => $nationalprice,
+            // 'orderprice' => $orderprice,
             'id' => $id,
             'breadcrumb' => $breadcrumb,
         ]);
