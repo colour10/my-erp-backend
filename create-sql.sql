@@ -1221,6 +1221,20 @@ CREATE TABLE `zl_material` (
 
 /*Data for the table `zl_material` */
 
+INSERT INTO `zl_material` (`id`, `name_cn`, `name_en`, `name_hk`, `name_fr`, `name_it`, `name_sp`, `name_de`, `code`) VALUES
+(1, '凯门鳄', NULL, NULL, NULL, NULL, NULL, NULL, '001'),
+(2, '纤维', NULL, NULL, NULL, NULL, NULL, NULL, '002'),
+(3, '鳄鱼皮', NULL, NULL, NULL, NULL, NULL, NULL, '003'),
+(4, '树脂', NULL, NULL, NULL, NULL, NULL, NULL, '004'),
+(5, '水貂', NULL, NULL, NULL, NULL, NULL, NULL, '005'),
+(6, '橡胶', NULL, NULL, NULL, NULL, NULL, NULL, '006'),
+(7, '黄麻', NULL, NULL, NULL, NULL, NULL, NULL, '007'),
+(8, '塑料', NULL, NULL, NULL, NULL, NULL, NULL, '008'),
+(9, '腈纶', NULL, NULL, NULL, NULL, NULL, NULL, '009'),
+(10, '蛇皮', NULL, NULL, NULL, NULL, NULL, NULL, '010');
+
+
+
 /*Table structure for table `zl_materialnote` */
 
 DROP TABLE IF EXISTS `zl_materialnote`;
