@@ -158,6 +158,7 @@ var $ASA = (function() {
         findByKey: findByKey,
         round: round,
         filterNumber: filterNumber,
-        $:$
+        $:$,
+        extend:$.extend
     }
 })()

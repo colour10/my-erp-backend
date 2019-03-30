@@ -201,16 +201,21 @@ class TbProductstock extends BaseCommonModel
 
         $column = ["goodsid","productid","warehouseid","sizecontentid","property","defective_level"];
         $productStock = new TbProductstock();
-
-        foreach($column as $name) {
-            $value = (int)$stock_info[$name];
-            if($value>0) {
-                $productStock->$name = $value;
-            }
-            else {
-                $db->rollback("{$name} 非法。");
-                return false;
-            }
+        $productStock->warehouseid = $stock_info['warehouseid'];
+        if(isset($stock_info['goods'])) {
+            $goods = $stock_info['goods'];
+            $productStock->goodsid = $goods->id; 
+            $productStock->productid = $goods->productid;
+            $productStock->sizecontentid = $goods->sizecontentid;
+            $productStock->property = $goods->property;
+            $productStock->defective_level = $goods->defective_level;
+        }
+        else {
+            $productStock->goodsid = $stock_info['goodsid'];
+            $productStock->productid = $stock_info['productid'];
+            $productStock->sizecontentid = $stock_info['sizecontentid'];
+            $productStock->property = $stock_info['property'];
+            $productStock->defective_level = $stock_info['defective_level'];
         }
         $productStock->companyid = $companyid;
         $productStock->create_stuff = $userid;

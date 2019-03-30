@@ -1,7 +1,10 @@
 <?php
 namespace Asa\Erp;
 use Phalcon\Validation;
+use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Mvc\Model\Relation;
+use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Validation\Validator\Regex;
 /**
  * 发货单主表
  */
@@ -20,6 +23,36 @@ class DdConfirmorder extends BaseModel
                 'alias' => 'confirmorderdetails'
             ]
         );
+    }
+
+    /**
+     * 验证器
+     * 因为采用特殊的json参数传值，所以不同于一般的验证
+     * @return bool
+     */
+    public function validation()
+    {
+        $validator = new Validation();
+
+        // 开始验证
+        // 必填字段为：年代id-ageseason；供货商id-supplierid
+        // 年代id-ageseason不能为空
+        // 供货商id-supplierid必须是正整数
+        $validator->add('property', new Regex([
+            'message' => $this->getValidateMessage('invalid', 'property'),
+            "pattern" => "/^[0-9]+$/",
+            'cancelOnFail' => true,
+        ]));
+
+        // 供货商id-supplierid必须是正整数
+        $validator->add('supplierid', new Regex([
+            'message' => $this->getValidateMessage('invalid', 'supplierid'),
+            "pattern" => "/^[0-9]+$/",
+            'cancelOnFail' => true,
+        ]));
+
+        // 返回
+        return $this->validate($validator);
     }
 
     /**

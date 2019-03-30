@@ -59,6 +59,8 @@ class TbWarehousing extends BaseCommonModel
         return $this->validate($validator);
     }
 
+
+
     /**
      * 增加入库单明细并修改库存
      * @param [type] $data [description]
@@ -70,32 +72,7 @@ class TbWarehousing extends BaseCommonModel
         }
 
         //修改库存
-        $productStock = TbProductstock::findFirst(
-            sprintf("companyid=%d and warehouseid=%d and productid=%d and sizecontentid=%d", $this->companyid, $this->warehouseid, $detail->productid, $detail->sizecontentid)
-        );
-
-        if($productStock!=false) {
-            //这里可以加一个库存变动明细
-            
-            $productStock->number += $detail->number;
-            if($productStock->save()==false) {
-                return false;
-            }
-        }
-        else {
-            $productStock = new TbProductstock();
-            $productStock->companyid = $this->companyid;
-            $productStock->warehouseid = $this->warehouseid;
-            $productStock->productid = $detail->productid;
-            $productStock->sizecontentid = $detail->sizecontentid;
-            $productStock->number = $detail->number;
-            $productStock->storagetime = date("Y-m-d H:i:s");
-            $productStock->storagestaff = $this->makestaff;
-            if($productStock->create()==false) {
-                return false;
-            }
-        }
-
-        return true;
+        $productStock = $detail->getProductStock();
+        return $productStock->addStock($detail->number, TbProductstock::WAREHOSING, $detail->id);
     }
 }

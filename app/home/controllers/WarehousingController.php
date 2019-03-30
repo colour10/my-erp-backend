@@ -32,21 +32,12 @@ class WarehousingController extends BaseController {
         }
         // 转换成数组
         $submitData = json_decode($params, true);
-
-        // 订单主表中，开始验证必填字段
-        // 年代id、供货商id为必填项
-
-        // // 判断订单是否有数据
-        // // 订单数据可以为空，暂时注释
-        // if (count($submitData['list']) == '0') {
-        //     return $this->error(['order list is empty']);
-        // }
-
         // 判断是否有订单号，分别进行
-        $orderid = $submitData['form']['id'];
+        $form = $submitData['form'];
+        $orderid = $form['id'];
 
         $order = TbWarehousing::findFirst(
-            sprintf("confirmorderid=%d and companyid=%d",  $submitData['form']['confirmorderid'], $this->companyid)
+            sprintf("confirmorderid=%d and companyid=%d",  $form['confirmorderid'], $this->companyid)
         );
         if($order!=false) {
             exit;
@@ -55,16 +46,17 @@ class WarehousingController extends BaseController {
         // 采用事务处理
         $this->db->begin();
 
+        $confirmorder = DdConfirmorder::findFirstById($form["confirmorderid"]);
+
         // 没有订单号就新增
         $order = new TbWarehousing();
-        foreach ($submitData['form'] as $k => $item) {
-            $order->$k = $item;
-        }
-
         // 添加制单人及制单日期
+        $order->entrydate = $form["entrydate"];
         $order->makestaff = $this->currentUser;
         $order->makedate = date('Y-m-d H:i:s');
         $order->companyid = $this->companyid;
+        $order->warehouseid = $confirmorder->warehouseid;
+        $order->confirmorderid = $confirmorder->id;
 
         // 生成订单号
         $order->orderno = sprintf(
@@ -86,8 +78,6 @@ class WarehousingController extends BaseController {
         foreach ($submitData['list'] as $k => $item) {
             // 使用模型更新
             $data = [
-                'productid' => $item['productid'],
-                'sizecontentid' => $item['sizecontentid'],
                 'number' => $item['number'],
                 'companyid' => $this->companyid,
                 'orderdetailsid' => $item['orderdetailsid'],
@@ -129,7 +119,8 @@ class WarehousingController extends BaseController {
         if ($warehousing!=false) {
             $result['form'] = $warehousing->toArray();
 
-            $list = $warehousing->confirmorder->confirmorderdetails;
+            $result['list'] = $warehousing->confirmorder->confirmorderdetails->toArray();
+
         } 
         else {
             $confirmorder = DdConfirmorder::findFirst(
@@ -139,15 +130,13 @@ class WarehousingController extends BaseController {
             if ($confirmorder!=false) {
                 $result['confirmorder'] = $confirmorder->toArray();
 
-                $list = $confirmorder->confirmorderdetails;
+                $result['list'] = $confirmorder->confirmorderdetails->toArray();
             }
             else {
                 $this->debug("参数错误");
                 exit;
             }
-        }
-        
-        $result['list'] = $list->toArray();
+        }               
 
         echo $this->success($result);
     }

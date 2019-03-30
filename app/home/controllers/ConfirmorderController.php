@@ -116,6 +116,10 @@ class ConfirmorderController extends BaseController {
 
         // 判断是否有发货单号，分别进行
         $orderid = $submitData['form']['id'];
+        $status = (int)$submitData['form']['status'];
+        if($status!=1 && $status!=2) {
+            exit;
+        }
 
         // 采用事务处理
         $this->db->begin();
@@ -127,9 +131,14 @@ class ConfirmorderController extends BaseController {
             $order = DdConfirmorder::findFirst(
                 sprintf("id=%d and companyid=%d", $orderid, $this->companyid)
             );
-            if(!$order || $order->status!=1) {
+            if(!$order) {
                 $this->debug("状态错误");
                 exit;
+            }
+
+            if($order->status!=1) {
+                return ;
+                //return $this->save($order, $submitData['form']);
             }
 
             // 开始更新
@@ -138,9 +147,7 @@ class ConfirmorderController extends BaseController {
                 $order->$k = $item;
             }
 
-            if($order->status!=1 && $order->status!=2) {
-                 $order->status = 1;
-            }
+            $order->status = $status;
 
             // 判断是否成功
             if (!$order->save()) {
@@ -150,9 +157,6 @@ class ConfirmorderController extends BaseController {
             }
 
         } else {
-            // 没有发货单号就新增
-            // 采用事务处理
-
             // 没有订单号就新增
             $order = new DdConfirmorder();
             foreach ($submitData['form'] as $k => $item) {
@@ -163,7 +167,7 @@ class ConfirmorderController extends BaseController {
             $order->makestaff = $this->currentUser;
             $order->makedate = date('Y-m-d H:i:s');
             $order->companyid = $this->companyid;
-            $order->status = 1;
+            $order->status = $status;
 
             // 生成主单号
             $order->orderno = sprintf(
@@ -294,6 +298,59 @@ class ConfirmorderController extends BaseController {
             $order->status = 2;
 
             $this->doTableAction($order,"update");             
+        }
+    }
+
+    function deleteAction() {
+        $orderid = (int)$_GET['id'];
+
+        $db = $this->db;
+        $db->begin();
+        // 根据orderid查询出当前发货单
+        $order = DdConfirmorder::findFirstById($orderid);
+        if($order!=false && $order->companyid==$this->companyid) {
+            if($order->status==1) {
+                foreach($order->confirmorderdetails as $confirmorderdetails) {
+                    if($confirmorderdetails->delete()==false) {
+                        $db->rollback();
+                        return $this->error(['delete-detail']);
+                    }
+                }
+
+                if($order->delete()==false) {
+                    $db->rollback();
+                    return $this->error(['delete-detail']);
+                }
+            }
+            else {
+                return $this->error(['delete-deny']);
+            }
+        }
+
+        $db->commit();
+
+        return $this->success();
+    }
+
+     /**
+     * 订单提交生效以后的修改
+     * @return [type] [description]
+     */
+    function save($order, $form) {
+        $columns =["finalsupplierid","seasontype","property","currency","exchangerate","paydate","dd_company","apickingdate","flightno","flightdate","mblno","hblno","dispatchport","deliveryport","box_number","weight","volume","chargedweight","transcompany","invoiceno","aarrivaldate","buyerid","sellerid","transporttype","paytype"];
+        // 开始更新
+        foreach ($form as $k => $item) {
+            // 把里面的参数转成post参数传递过去
+            if(in_array($k, $columns)) {
+                $order->$k = $item;
+            }                
+        }
+
+        if($order->update()==false) {
+            return $this->error(['updage-fail']);
+        }
+        else {
+            return $this->success($order->getOrderDetail());
         }
     }
 }
