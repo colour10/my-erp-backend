@@ -48,7 +48,7 @@ class RequisitionController extends BaseController {
 
         foreach($array as $key => $rows) {
             $temp = explode('_', $key);
-
+echo $key;
             $requisition = new TbRequisition();
             $requisition->status = 2;
             $requisition->out_id = $temp[0];
@@ -57,6 +57,7 @@ class RequisitionController extends BaseController {
             $requisition->apply_date = date('Y-m-d H:i:s');
             $requisition->companyid = $this->companyid;
             if($requisition->create()==false) {
+                echo 33;exit;
                 $this->db->rollback();
                 return $this->error($requisition);
             }
@@ -74,11 +75,13 @@ class RequisitionController extends BaseController {
                     ];
                     $result = $requisition->addDetal($data);
                     if($result!==true) {
+                        echo 334;exit;
                         $this->db->rollback();
                         return $this->error($result);
                     }
                 }
                 else {
+                    echo 55;exit;
                     $this->db->rollback();
                     return $this->error(["operate_fail"]);
                 }

@@ -445,7 +445,7 @@ return array(
     "xiaoshoushuliang" => "销售数量",
     "chengjiaojia" => "成交价",
     "dingdanzongjia" => "订单总价",
-    "yingyezhizhaohao" => "营业执照号",
+    "chanpinguanli" => "产品管理",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",

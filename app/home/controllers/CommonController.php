@@ -87,7 +87,7 @@ class CommonController extends BaseController
 
     function loadnameAction() {
         $services = [
-            "product" => ["table"=>"Asa\\Erp\\TbProduct", "columns"=>["productname", "countries"]],
+            "product" => ["table"=>"Asa\\Erp\\TbProduct", "columns"=>[]],
             "country" =>["table"=>"Asa\\Erp\\ZlCountry", "columns"=>["code", "name_cn"]],
             "warehouse" =>["table"=>"Asa\\Erp\\TbWarehouse", "columns"=>["code", "name"]],
             "user" =>["table"=>"Asa\\Erp\\TbUser", "columns"=>["login_name", "real_name"]],
