@@ -1215,7 +1215,7 @@ CREATE TABLE `zl_material` (
   `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
   `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
   `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
-  `code` varchar(20) DEFAULT NULL,
+  `code` varchar(20) DEFAULT NULL COMMENT '材质编号',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='材质';
 
