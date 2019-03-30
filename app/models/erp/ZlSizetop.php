@@ -23,7 +23,7 @@ class ZlSizetop extends BaseModel
             "\Asa\Erp\ZlSizecontent",
             "topid",
             [
-                'alias' => 'Sizecontents',
+                'alias' => 'sizecontents',
                 'foreignKey' => [
                     // 关联字段存在性验证
                     'action' => Relation::ACTION_RESTRICT,

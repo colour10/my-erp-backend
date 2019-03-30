@@ -30,9 +30,6 @@ class ZlSizecontent extends BaseModel
                 ],
             ]
         );
-
-        // 设置当前语言
-        $this->setValidateLanguage($this->getLanguage()['lang']);
     }
 
     /**

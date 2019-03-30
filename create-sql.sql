@@ -1080,10 +1080,10 @@ CREATE TABLE `zl_colortemplate` (
   `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
   `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
   `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
-  `picture` varchar(200) DEFAULT NULL,
-  `code` varchar(4) DEFAULT NULL,
-  `color_note` varchar(200) DEFAULT NULL,
-  `colortype` varchar(50) DEFAULT NULL,
+  `picture` varchar(200) DEFAULT NULL COMMENT '图片地址',
+  `code` varchar(4) DEFAULT NULL COMMENT '颜色编号',
+  `color_note` varchar(200) DEFAULT NULL COMMENT '备注',
+  `colortype` varchar(50) DEFAULT NULL COMMENT '颜色分类',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='asa颜色模板';
 
@@ -1154,11 +1154,25 @@ CREATE TABLE `zl_material` (
   `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
   `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
   `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
-  `code` varchar(20) DEFAULT NULL,
+  `code` varchar(20) DEFAULT NULL COMMENT '材质编号',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='材质';
 
 /*Data for the table `zl_material` */
+
+INSERT INTO `zl_material` (`id`, `name_cn`, `name_en`, `name_hk`, `name_fr`, `name_it`, `name_sp`, `name_de`, `code`) VALUES
+(1, '凯门鳄', NULL, NULL, NULL, NULL, NULL, NULL, '001'),
+(2, '纤维', NULL, NULL, NULL, NULL, NULL, NULL, '002'),
+(3, '鳄鱼皮', NULL, NULL, NULL, NULL, NULL, NULL, '003'),
+(4, '树脂', NULL, NULL, NULL, NULL, NULL, NULL, '004'),
+(5, '水貂', NULL, NULL, NULL, NULL, NULL, NULL, '005'),
+(6, '橡胶', NULL, NULL, NULL, NULL, NULL, NULL, '006'),
+(7, '黄麻', NULL, NULL, NULL, NULL, NULL, NULL, '007'),
+(8, '塑料', NULL, NULL, NULL, NULL, NULL, NULL, '008'),
+(9, '腈纶', NULL, NULL, NULL, NULL, NULL, NULL, '009'),
+(10, '蛇皮', NULL, NULL, NULL, NULL, NULL, NULL, '010');
+
+
 
 /*Table structure for table `zl_materialnote` */
 
