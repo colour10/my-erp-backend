@@ -93,6 +93,7 @@ class CommonController extends BaseController
             "user" =>["table"=>"Asa\\Erp\\TbUser", "columns"=>["login_name", "real_name"]],
             "goods" =>["table"=>"Asa\\Erp\\TbGoods", "columns"=>["price", "productid"]],
             "orderdetails" =>["table"=>"Asa\\Erp\\DdOrderdetails", "columns"=>[]],
+            "warehousingdetails" =>["table"=>"Asa\\Erp\\TbWarehousingdetails", "columns"=>['number'], "key"=>"confirmorderdetailsid"],
         ];
 
         //new \Asa\Erp\TbProduct();
@@ -108,8 +109,22 @@ class CommonController extends BaseController
                     continue;
                 }
 
-                $findByIdString = new \ReflectionMethod($services[$service_name]['table'], 'findByIdString');
-                $result = $findByIdString->invokeArgs(null, [$idstring]);
+                if(isset($services[$service_name]['method'])) {
+                    $method = $services[$service_name]['method'];
+                }
+                else {
+                    $method = "findByIdString";
+                }
+
+                if(isset($services[$service_name]['key'])) {
+                    $key = $services[$service_name]['key'];
+                }
+                else {
+                    $key = "id";
+                }
+
+                $findByIdString = new \ReflectionMethod($services[$service_name]['table'], $method);
+                $result = $findByIdString->invokeArgs(null, [$idstring, $key]);
 
                 
                 foreach($result as $row) {
@@ -122,7 +137,7 @@ class CommonController extends BaseController
                     else {
                         $line = $row->toArray();
                     }
-                    $service_output[$row->id] = $line;
+                    $service_output[$row->$key] = $line;
                 }
 
                 $output[$service_name] = $service_output;

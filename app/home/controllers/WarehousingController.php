@@ -118,6 +118,7 @@ class WarehousingController extends BaseController {
 
         if ($warehousing!=false) {
             $result['form'] = $warehousing->toArray();
+            $result['confirmorder'] = $warehousing->confirmorder->toArray();
 
             $result['list'] = $warehousing->confirmorder->confirmorderdetails->toArray();
 

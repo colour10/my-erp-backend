@@ -106,4 +106,15 @@ class TbWarehousingdetails extends BaseModel
         }
         return $productstock;        
     }
+
+    public static function findByConformorderdetailIdString($idstring) {
+        if(preg_match("#^\d+(,\d+)*$#", $idstring)) {
+            return self::find(
+                sprintf("confirmorderdetailsid in (%s)", $idstring)
+            );
+        }
+        else {
+            return [];
+        }
+    }
 }
