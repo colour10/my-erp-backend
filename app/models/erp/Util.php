@@ -142,7 +142,7 @@ class Util {
         if ($currency == 'USD') {
             $new_currency = '$';
         } else if ($currency == 'CAD') {
-            $new_currency = 'C$';
+            $new_currency = 'CAD';
         } else if ($currency == 'EUR') {
             $new_currency = '€';
         } else if ($currency == 'HKD') {
