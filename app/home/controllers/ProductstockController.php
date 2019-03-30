@@ -9,42 +9,37 @@ use Asa\Erp\TbProductstock;
 /**
  * 库存表
  */
-class ProductstockController extends AdminController {
+class ProductstockController extends BaseController {
     public function initialize() {
         parent::initialize();
-
-        $this->setModelName('Asa\\Erp\\TbProductstock');
     }
 
-    /**
-     * 实际可用库存
-     */
-    public function availableAction()
-    {
+    function pageAction() {
 
+        $conditions = [
+            sprintf("companyid=%d", $this->companyid)
+        ];
+
+        if(isset($_POST["warehouseid"]) && $_POST["warehouseid"]>0) {
+            $conditions[] = sprintf("warehouseid=%d", $_POST["warehouseid"]);
+        }
+        $result = TbProductstock::find(
+            implode(" and ", $conditions)
+        );
+        echo $this->success($result->toArray());
     }
 
-    /**
-     * 预售库存
-     */
-    public function presaleAction()
-    {
+    function searchAction() {
+        $conditions = [
+            sprintf("companyid=%d", $this->companyid)
+        ];
 
-    }
-
-    /**
-     * 调拨锁定库存
-     */
-    public function requisitionAction()
-    {
-
-    }
-
-    /**
-     * 在途库存
-     */
-    public function intransitAction()
-    {
-
+        if(isset($_POST["warehouseid"]) && $_POST["warehouseid"]>0) {
+            $conditions[] = sprintf("warehouseid=%d", $_POST["warehouseid"]);
+        }
+        $result = TbProductstock::find(
+            implode(" and ", $conditions)
+        );
+        echo $this->success($result->toArray());
     }
 }

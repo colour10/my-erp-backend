@@ -124,7 +124,7 @@ class TbRequisition extends BaseCommonModel
                 }
 
                 //减库存
-                $ret = $detail->productstock->reduceStock($detail->out_number, TbProductstock::REQUISITION_OUT, $detail->id);
+                $ret = $detail->outProductstock->reduceStock($detail->out_number, TbProductstock::REQUISITION_OUT, $detail->id);
                 if($ret==false) {
                     $db->rollback("减库存失败");
                     return false;
@@ -134,7 +134,8 @@ class TbRequisition extends BaseCommonModel
 
                 if($detail->number-$detail->out_number>0) {
                     $details[] = [
-                        "productstockid" => $detail->productstockid,
+                        "out_productstockid" => $detail->out_productstockid,
+                        "in_productstockid" => $detail->in_productstockid,
                         "number" => $detail->number-$detail->out_number
                     ];
                 }
@@ -202,6 +203,7 @@ class TbRequisition extends BaseCommonModel
             }
 
             $total = 0;
+            $details = [];
             foreach ($this->requisitionDetail as $detail) {
                 if($list[$detail->id]>$detail->out_number) {
                     $db->rollback();
@@ -215,13 +217,22 @@ class TbRequisition extends BaseCommonModel
                 }
 
                 //加库存
-                $ret = $this->inWarehouse->addStock($detail->productstock, $detail->in_number, TbProductstock::REQUISITION_IN, $detail->id);
+                $ret = $detail->inProductstock->addStock($detail->in_number, TbProductstock::REQUISITION_IN, $detail->id);
                 if($ret==false) {
                     $db->rollback("添加库存失败");
                     return false;
                 }
 
                 $total += $detail->out_number-$detail->in_number;
+
+                if($detail->number-$detail->out_number>0) {
+                    $details[] = [
+                        "out_productstockid" => $detail->in_productstockid,
+                        "in_productstockid" => $detail->out_productstockid,
+                        "number" => $detail->out_number-$detail->in_number,
+                        "out_number" => $detail->out_number-$detail->in_number
+                    ];
+                }
             }
 
             if($total>0) {
@@ -241,17 +252,8 @@ class TbRequisition extends BaseCommonModel
                     return false;
                 }
 
-                foreach ($this->requisitionDetail as $detail) {
-                    if($detail->in_number==$detail->out_number) {
-                        continue;
-                    }
-                    $data = [
-                        "productid" => $detail->productid,
-                        "sizecontentid" => $detail->sizecontentid,
-                        "number" => $detail->out_number-$detail->in_number,
-                        "out_number" => $detail->out_number-$detail->in_number,
-                        "requisitionid" => $newrequisition->id
-                    ];
+                foreach ($details as $data) {
+                    $data['requisitionid'] = $newrequisition->id;
                     $result = $newrequisition->addDetal($data);
                     if($result!==true) {
                         $db->rollback();

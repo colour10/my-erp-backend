@@ -23,13 +23,16 @@ class TbSales extends BaseModel
             "\Asa\Erp\TbSalesdetails",
             "salesid",
             [
-                'alias' => 'salesdetails',
-                'foreignKey' => [
-                    // 关联字段存在性验证
-                    // 销售单只有预售的可以做退货处理，剩下的都不能删除
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message"    => $this->getValidateMessage('hasmany-foreign-message', 'orderdetail'),
-                ],
+                'alias' => 'salesdetails'
+            ]
+        );
+
+        $this->belongsTo(
+            'saleportid',
+            '\Asa\Erp\TbSaleport',
+            'id',
+            [
+                'alias' => 'saleport'
             ]
         );
     }
@@ -92,5 +95,65 @@ class TbSales extends BaseModel
         $human_name = $language->$name;
         // 返回最终的友好提示信息
         return sprintf($template_name, $human_name);
+    }
+
+    /**
+     * 添加一条明细数据
+     * @param [type] $form 表单数据
+     */
+    public function addDetail($form) {
+        $row = new TbSalesdetails();
+        if($row->create($form)) {
+            return $row;
+        }
+        else {
+            $row->debug();
+            return false;
+        }
+    }
+
+    /**
+     * 更新明细数据
+     * @param  [type] $form 表单数据
+     * @return [type]       [description]
+     */
+    public function updateDetail($form) {
+        $row = TbSalesdetails::findFirst(
+            sprintf("id=%d", $form['id'])
+        );
+
+        if($row!=false) {
+            if($row->update($form)) {
+                return $row;
+            }
+            else {
+                //$row->debug();
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+    }
+
+    function getOrderDetail() {        
+        $data = [
+            'form' => $this->toArray(),
+            'list'=>[]
+        ];
+
+        // 循环添加数据
+        foreach ($this->salesdetails as $k => $detail) {
+            $orderdetail_array = $detail->toArray();
+            $productstock = $detail->productstock;
+
+            $orderdetail_array['productname'] = $productstock->product->productname;
+            $orderdetail_array['sizecontentid'] = $productstock->sizecontentid;
+            $orderdetail_array['price'] = $productstock->goods->price;
+            $orderdetail_array['productstock'] = $detail->productstock->toArray();
+            $data['list'][] = $orderdetail_array;
+        }
+
+        return $data;
     }
 }

@@ -5,14 +5,14 @@ use Phalcon\Validation\Validator\Between;
 use Phalcon\Validation\Validator\Uniqueness;
 
 /**
- * 调拨单相关，预调拨单表
+ * 商品条目表
  */
-class TbPreRequisition extends BaseModel
+class TbGoods extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('tb_pre_requisition');
+        $this->setSource('tb_goods');
     }
 
     public function validation() {

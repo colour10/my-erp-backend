@@ -16,7 +16,7 @@ class BaseModel extends \Phalcon\Mvc\Model {
     
     public function initialize() {
         //$this->addBehavior(new AsaBehabior());
-
+        $this->useDynamicUpdate(true);
     }
 
     /**
@@ -60,14 +60,20 @@ class BaseModel extends \Phalcon\Mvc\Model {
      */
     function getValidateMessage($template, $name) {}
 
-    public static function findByIdString($idstring) {
+    public static function findByIdString($idstring, $column) {
         if(preg_match("#^\d+(,\d+)*$#", $idstring)) {
             return self::find(
-                sprintf("id in (%s)", $idstring)
+                sprintf("{$column} in (%s)", $idstring)
             );
         }
         else {
             return [];
+        }
+    }
+
+    function debug() {
+        foreach ($this->getMessages() as $message) {
+            echo $message->getMessage();
         }
     }
 

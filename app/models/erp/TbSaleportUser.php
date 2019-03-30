@@ -5,30 +5,30 @@ use Phalcon\Validation\Validator\Between;
 use Phalcon\Validation\Validator\Uniqueness;
 
 /**
- * 入库单主表
+ * 销售端口表
  */
-class TbWarehousing extends BaseCommonModel
+class TbSaleportUser extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('tb_warehousing');
+        $this->setSource('tb_saleport_user');
 
-        $this->hasOne(
-            'confirmorderid',
-            '\Asa\Erp\DdConfirmorder',
+        $this->belongsTo(
+            'saleportid',
+            '\Asa\Erp\TbSaleport',
             'id',
             [
-                'alias' => 'confirmorder'
+                'alias' => 'saleport'
             ]
         );
 
-        $this->hasMany(
-            "id",
-            "\Asa\Erp\TbWarehousingdetails",
-            "warehousingid",
+        $this->belongsTo(
+            'userid',
+            '\Asa\Erp\TbUser',
+            'id',
             [
-                'alias' => 'warehousingdetails'
+                'alias' => 'user'
             ]
         );
     }
@@ -57,22 +57,5 @@ class TbWarehousing extends BaseCommonModel
 //        );
 
         return $this->validate($validator);
-    }
-
-
-
-    /**
-     * 增加入库单明细并修改库存
-     * @param [type] $data [description]
-     */
-    function addDetail($data) {
-        $detail = new TbWarehousingdetails();
-        if ($detail->create($data)===false) {
-            return false;
-        }
-
-        //修改库存
-        $productStock = $detail->getProductStock();
-        return $productStock->addStock($detail->number, TbProductstock::WAREHOSING, $detail->id);
     }
 }

@@ -87,10 +87,13 @@ class CommonController extends BaseController
 
     function loadnameAction() {
         $services = [
-            "product" => ["table"=>"Asa\\Erp\\TbProduct", "columns"=>["productname", "countries"]],
+            "product" => ["table"=>"Asa\\Erp\\TbProduct", "columns"=>[]],
             "country" =>["table"=>"Asa\\Erp\\ZlCountry", "columns"=>["code", "name_cn"]],
             "warehouse" =>["table"=>"Asa\\Erp\\TbWarehouse", "columns"=>["code", "name"]],
             "user" =>["table"=>"Asa\\Erp\\TbUser", "columns"=>["login_name", "real_name"]],
+            "goods" =>["table"=>"Asa\\Erp\\TbGoods", "columns"=>["price", "productid"]],
+            "orderdetails" =>["table"=>"Asa\\Erp\\DdOrderdetails", "columns"=>[]],
+            "warehousingdetails" =>["table"=>"Asa\\Erp\\TbWarehousingdetails", "columns"=>['number'], "key"=>"confirmorderdetailsid"],
         ];
 
         //new \Asa\Erp\TbProduct();
@@ -106,16 +109,35 @@ class CommonController extends BaseController
                     continue;
                 }
 
-                $findByIdString = new \ReflectionMethod($services[$service_name]['table'], 'findByIdString');
-                $result = $findByIdString->invokeArgs(null, [$idstring]);
+                if(isset($services[$service_name]['method'])) {
+                    $method = $services[$service_name]['method'];
+                }
+                else {
+                    $method = "findByIdString";
+                }
+
+                if(isset($services[$service_name]['key'])) {
+                    $key = $services[$service_name]['key'];
+                }
+                else {
+                    $key = "id";
+                }
+
+                $findByIdString = new \ReflectionMethod($services[$service_name]['table'], $method);
+                $result = $findByIdString->invokeArgs(null, [$idstring, $key]);
 
                 
                 foreach($result as $row) {
                     $line = [];
-                    foreach ($services[$service_name]['columns'] as $value) {
-                        $line[$value] = $row->$value;
+                    if(count($services[$service_name]['columns'])>0) {
+                        foreach ($services[$service_name]['columns'] as $value) {
+                            $line[$value] = $row->$value;
+                        }
                     }
-                    $service_output[$row->id] = $line;
+                    else {
+                        $line = $row->toArray();
+                    }
+                    $service_output[$row->$key] = $line;
                 }
 
                 $output[$service_name] = $service_output;

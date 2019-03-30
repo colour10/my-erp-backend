@@ -23,44 +23,19 @@ class TbSalesdetails extends BaseModel
             '\Asa\Erp\TbSales',
             'id',
             [
-                'alias' => 'tbsales',
-                "foreignKey" => [
-                    // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message" => $this->getValidateMessage('notexist', 'sale'),
-                ],
+                'alias' => 'tbsales'
             ]
         );
 
-        // 订单详情-商品尺码表，一对多反向
         $this->belongsTo(
-            'sizecontentid',
-            '\Asa\Erp\ZlSizecontent',
+            'productstockid',
+            '\Asa\Erp\TbProductstock',
             'id',
             [
-                'alias' => 'sizecontent',
-                "foreignKey" => [
-                    // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message" => $this->getValidateMessage('notexist', 'sizecontent'),
-                ],
+                'alias' => 'productstock'
             ]
         );
 
-        // 销售详情表-商品表，一对多反向
-        $this->belongsTo(
-            'productid',
-            '\Asa\Erp\TbProduct',
-            'id',
-            [
-                'alias' => 'product',
-                "foreignKey" => [
-                    // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message" => $this->getValidateMessage('notexist', 'product'),
-                ],
-            ]
-        );
     }
 
     /**

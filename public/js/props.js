@@ -212,6 +212,14 @@
                 inline:true
             },
             controller:"supplier"
+        },
+
+        "saleport":{
+            columns:[            
+                {name:"name", label:$ASAL["mingcheng"], is_focus:true},
+                {name:"discount", label:$ASAL["zhekou"], is_focus:true}
+            ],
+            controller:"saleport"
         }
     }
 

@@ -5,6 +5,7 @@ use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
 use Asa\Erp\TbRequisition;
 use Asa\Erp\TbRequisitionDetail;
+use Asa\Erp\TbProductstock;
 
 /**
  * 调拨单主表
@@ -62,16 +63,24 @@ class RequisitionController extends BaseController {
 
             //增加调拨明细
             foreach($rows as $row) {
-                $data = [
-                    "productid" => $row['productid'],
-                    "sizecontentid" => $row['sizecontentid'],
-                    "number" => $row['number'],
-                    "requisitionid" => $requisition->id
-                ];
-                $result = $requisition->addDetal($data);
-                if($result!==true) {
+                $out_productstock = TbProductstock::findFirstById($row['productstockid']);
+
+                if($out_productstock!=false) {
+                    $data = [
+                        "out_productstockid" => $out_productstock->id,
+                        "in_productstockid" => $requisition->inWarehouse->getLocalStock($out_productstock)->id,
+                        "number" => $row['number'],
+                        "requisitionid" => $requisition->id
+                    ];
+                    $result = $requisition->addDetal($data);
+                    if($result!==true) {
+                        $this->db->rollback();
+                        return $this->error($result);
+                    }
+                }
+                else {
                     $this->db->rollback();
-                    return $this->error($result);
+                    return $this->error(["operate_fail"]);
                 }
             }            
         }        
@@ -89,7 +98,7 @@ class RequisitionController extends BaseController {
         //print_r($result->toArray());
         $array = [];
         foreach($result as $row) {
-            $productstock = $row->productstock;
+            $productstock = $row->outProductstock;
             $array[] = array_merge($productstock->toArray(), $row->toArray());
         }
         echo $this->success($array);

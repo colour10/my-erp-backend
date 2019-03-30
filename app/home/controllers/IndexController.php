@@ -5,6 +5,8 @@ use Asa\Erp\TbDepartment;
 use Asa\Erp\TbUser;
 use Asa\Erp\TbCompany;
 use Asa\Erp\TbRequisitionDetail;
+use Phalcon\Mvc\View;
+
 class IndexController extends BaseController
 {
 
@@ -143,16 +145,19 @@ class IndexController extends BaseController
     }
 
     function testAction() {
-        $row = new TbRequisitionDetail();
-        $row->requisitionid = 55;
-        $row->productstockid = 4;
-        $row->number = 33;
-        if($row->save()) {
-            echo "OK";
-        }
-        else {
-            echo $this->error($row);
-        }
-        exit;
+        $this->view->enable();
+        $this->view->setVar("system_language", $this->language);
+        $this->view->setVar("__sytem_time", time());
+        
+        $default_language = $this->config->language;
+        $this->view->setVar("__default_language", $this->config->language);
+        $this->view->setVar("__config", $this->config);
+        
+        $this->view->disableLevel(
+            array(
+                View::LEVEL_LAYOUT      => true,
+                View::LEVEL_MAIN_LAYOUT => true
+            )
+        );
     }
 }

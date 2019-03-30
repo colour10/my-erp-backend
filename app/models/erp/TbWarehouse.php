@@ -53,42 +53,6 @@ class TbWarehouse extends BaseModel
     }
 
     /**
-     * 先判断当前仓库中是否有对应的库存，如果没有则添加
-     * @param [type] $productstockid [description]
-     * @param [type] $number         [description]
-     * @param [type] $change_type    [description]
-     * @param [type] $relationid     [description]
-     */
-    public function addStock($productstock, $number, $change_type, $relationid) {
-        $myproductstock = TbProductstock::findFirst(
-            sprintf(
-                "companyid=%d and warehouseid=%d and productid=%d and sizecontentid=%d and is_defective=%d and property=%d",
-                $productstock->companyid,
-                $this->id,
-                $productstock->productid,
-                $productstock->sizecontentid,
-                $productstock->is_defective,
-                $productstock->property
-            )
-        );
-
-        if($myproductstock!=false) {
-            return $myproductstock->addStock($number, $change_type, $relationid);
-        }
-        else {
-            $data = array(
-                "productid" => $productstock->productid,
-                "warehouseid" => $this->id,
-                "sizecontentid" => $productstock->sizecontentid,
-                "property" => $productstock->property,
-                "is_defective" => $productstock->is_defective,
-                "number" => $number
-            );
-            return TbProductstock::initStock($data, $change_type, $relationid);
-        }
-    }
-
-    /**
      * 根据另外一个库存对象，查找本库的相同信息的库存对象，如果没有则创建一个数量为0的库存对象
      * @param  TbProductstock $productstock [description]
      * @return [type]               [description]
@@ -96,13 +60,10 @@ class TbWarehouse extends BaseModel
     function getLocalStock($productstock) {
         $myproductstock = TbProductstock::findFirst(
             sprintf(
-                "companyid=%d and warehouseid=%d and productid=%d and sizecontentid=%d and is_defective=%d and property=%d",
+                "companyid=%d and warehouseid=%d and goodsid=%d",
                 $productstock->companyid,
                 $this->id,
-                $productstock->productid,
-                $productstock->sizecontentid,
-                $productstock->is_defective,
-                $productstock->property
+                $productstock->goodsid
             )
         );
 
@@ -112,12 +73,13 @@ class TbWarehouse extends BaseModel
         else {
             $data = array(
                 "productid" => $productstock->productid,
+                "goodsid" => $productstock->goodsid,
                 "warehouseid" => $this->id,
                 "sizecontentid" => $productstock->sizecontentid,
                 "property" => $productstock->property,
-                "is_defective" => $productstock->is_defective
+                "defective_level" => $productstock->defective_level
             );
-            return TbProductstock::initStock($data, $change_type, $relationid);
+            return TbProductstock::initStock($data);
         }
     }
 }

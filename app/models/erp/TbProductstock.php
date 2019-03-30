@@ -2,6 +2,7 @@
 
 namespace Asa\Erp;
 
+use Phalcon\Di;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Validation\Validator\PresenceOf;
@@ -41,12 +42,7 @@ class TbProductstock extends BaseCommonModel
             '\Asa\Erp\ZlSizecontent',
             'id',
             [
-                'alias' => 'sizecontent',
-                "foreignKey" => [
-                    // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message" => $this->getValidateMessage('notexist', 'sizecontent'),
-                ],
+                'alias' => 'sizecontent'
             ]
         );
 
@@ -56,12 +52,16 @@ class TbProductstock extends BaseCommonModel
             '\Asa\Erp\TbWarehouse',
             'id',
             [
-                'alias' => 'warehouse',
-                "foreignKey" => [
-                    // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message" => $this->getValidateMessage('notexist', 'warehouse'),
-                ],
+                'alias' => 'warehouse'
+            ]
+        );
+
+        $this->belongsTo(
+            'goodsid',
+            '\Asa\Erp\TbGoods',
+            'id',
+            [
+                'alias' => 'goods'
             ]
         );
     }
@@ -168,7 +168,7 @@ class TbProductstock extends BaseCommonModel
             $log->warehouseid = $this->warehouseid;
             $log->productstockid = $this->id;
             $log->number_before = $old_number;
-            $log->nuber_after = $this->number;
+            $log->number_after = $this->number;
             $log->change_type = $change_type;
             $log->change_time = date("Y-m-d H:i:s");
             $log->relationid = $relationid;
@@ -192,35 +192,32 @@ class TbProductstock extends BaseCommonModel
      * @return [type] [description]
      */
     public static function initStock($stock_info) {
-        $db = $this->getDI()->get('db');
-        $userid = $this->getDI()->get('currentUser');;
-        $companyid = $this->getDI()->get('currentCompany');
+        $di = Di::getDefault();
+        $db = $di->get('db');
+        $userid = $di->get('currentUser');;
+        $companyid = $di->get('currentCompany');
 
         $db->begin();
 
-        $column = ["productid","warehouseid","sizecontentid","property"];
+        $column = ["goodsid","productid","warehouseid","sizecontentid","property","defective_level"];
         $productStock = new TbProductstock();
-
-        //残次品标志
-        if(isset($stock_info['is_defective'])) {
-            $is_defective = (int) $stock_info['is_defective'];
-            $productStock->is_defective = ($is_defective==1) ? 1:0;
+        $productStock->warehouseid = $stock_info['warehouseid'];
+        if(isset($stock_info['goods'])) {
+            $goods = $stock_info['goods'];
+            $productStock->goodsid = $goods->id; 
+            $productStock->productid = $goods->productid;
+            $productStock->sizecontentid = $goods->sizecontentid;
+            $productStock->property = $goods->property;
+            $productStock->defective_level = $goods->defective_level;
         }
         else {
-            $productStock->is_defective = 0;
+            $productStock->goodsid = $stock_info['goodsid'];
+            $productStock->productid = $stock_info['productid'];
+            $productStock->sizecontentid = $stock_info['sizecontentid'];
+            $productStock->property = $stock_info['property'];
+            $productStock->defective_level = $stock_info['defective_level'];
         }
-
-        foreach($column as $name) {
-            $value = (int)$stock_info[$name];
-            if($value>0) {
-                $productStock->$name = $value;
-            }
-            else {
-                $db->rollback("{$name} 非法。");
-                return false;
-            }
-        }
-        $productStock->companyid = $this->getDI()->get('currentCompany');
+        $productStock->companyid = $companyid;
         $productStock->create_stuff = $userid;
         $productStock->create_time = date("Y-m-d H:i:s");
         $productStock->change_stuff = $userid;

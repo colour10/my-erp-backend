@@ -11,6 +11,8 @@ use Phalcon\Mvc\Model\Relation;
  */
 class TbProduct extends BaseModel
 {
+    private static $box;
+    
     public function initialize()
     {
         parent::initialize();
@@ -86,5 +88,13 @@ class TbProduct extends BaseModel
 //        );
 
         return $this->validate($validator);
+    }
+
+    public static function getInstance($productid) {
+        if(!isset(self::$box[$productid])) {
+            self::$box[$productid] = TbProduct::findFirstById($productid);
+        }
+
+        return self::$box[$productid];
     }
 }

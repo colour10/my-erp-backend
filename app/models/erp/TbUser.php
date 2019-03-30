@@ -49,6 +49,16 @@ class TbUser extends BaseModel
             ]
         );
 
+        // 用户表-组表，一对多反向
+        $this->belongsTo(
+            'saleportid',
+            '\Asa\Erp\TbSaleport',
+            'id',
+            [
+                'alias' => 'saleport'
+            ]
+        );
+
         // 设置当前语言
         $this->setValidateLanguage($this->getLanguage()['lang']);
     }
@@ -153,5 +163,33 @@ class TbUser extends BaseModel
         $human_name = $language->$name;
         // 返回最终的友好提示信息
         return sprintf($template_name, $human_name);
+    }
+
+    /**
+     * 获得用户对指定商品，指定销售端口的价格
+     * @param  [type] $goods    [description]
+     * @param  string $saleport [description]
+     * @return [type]           [description]
+     */
+    function getPrice($goods, $saleport) {
+        return round($goods->price * $saleport->discount,2);
+    }
+
+    function getDefaultSaleportid() {
+        if($this->saleport>0) {
+            return $this->saleport;
+        }
+        else {
+            $saleport = TbSaleportUser::findFirst(array(
+                sprintf("userid=%d", $this->id),
+                "order" => "id asc"
+            ));
+
+            if( $saleport!=false) {
+                return  $saleport->saleportid;
+            }
+
+            return 0;
+        }
     }
 }
