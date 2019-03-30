@@ -157,4 +157,19 @@ class Util {
         // 返回
         return $new_currency;
     }
+
+    /**
+     * 判断一个字符串是否为合法网址
+     * @param $str
+     * @return bool
+     */
+    public static function is_url($str)
+    {
+        // 逻辑
+        if (filter_var($str, FILTER_VALIDATE_URL)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
