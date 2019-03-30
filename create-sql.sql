@@ -1141,10 +1141,10 @@ CREATE TABLE `zl_colortemplate` (
   `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
   `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
   `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
-  `picture` varchar(200) DEFAULT NULL,
-  `code` varchar(4) DEFAULT NULL,
-  `color_note` varchar(200) DEFAULT NULL,
-  `colortype` varchar(50) DEFAULT NULL,
+  `picture` varchar(200) DEFAULT NULL COMMENT '图片地址',
+  `code` varchar(4) DEFAULT NULL COMMENT '颜色编号',
+  `color_note` varchar(200) DEFAULT NULL COMMENT '备注',
+  `colortype` varchar(50) DEFAULT NULL COMMENT '颜色分类',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='asa颜色模板';
 
