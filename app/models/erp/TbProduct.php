@@ -31,28 +31,28 @@ class TbProduct extends BaseModel
             ]
         );
 
-        // 商品-尺码表，一对多反向
+        // 商品-尺码组，一对多反向
         $this->belongsTo(
             'productsize',
-            '\Asa\Erp\ZlSizecontent',
+            '\Asa\Erp\ZlSizetop',
             'id',
             [
-                'alias' => 'sizecontent',
+                'alias' => 'sizetop',
                 'foreignKey' => [
                     // 关联字段禁止自动删除
                     'action' => Relation::ACTION_RESTRICT,
-                    "message" => $this->getValidateMessage('notexist', 'sizecontent'),
+                    "message" => $this->getValidateMessage('notexist', 'sizetop'),
                 ],
             ]
         );
 
-        // 商品-材质表，一对多反向
+        // 商品-材质表，一对多反向，因为关联表字段用的是material，所以别名换成了getmaterial
         $this->belongsTo(
             'material',
             '\Asa\Erp\ZlMaterial',
             'id',
             [
-                'alias' => 'material',
+                'alias' => 'getmaterial',
                 'foreignKey' => [
                     // 关联字段禁止自动删除
                     'action' => Relation::ACTION_RESTRICT,
