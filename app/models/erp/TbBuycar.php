@@ -10,6 +10,16 @@ use Phalcon\Mvc\Model\Relation;
  */
 class TbBuycar extends BaseModel
 {
+	
+	public $id;
+
+	public $product_id;
+ 	
+ 	public $member_id;
+ 	
+ 	public $number;
+	
+	
     public function initialize()
     {
         parent::initialize();
