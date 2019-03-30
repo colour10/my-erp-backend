@@ -30,21 +30,6 @@ class ZlSizecontent extends BaseModel
                 ],
             ]
         );
-
-        // 尺码-商品尺码关联表，一对多
-        $this->hasMany(
-            "id",
-            "\Asa\Erp\LinkProductToSizecontent",
-            "productid",
-            [
-                'alias' => 'products',
-                'foreignKey' => [
-                    // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message"    => $this->getValidateMessage('hasmany-foreign-message', 'product'),
-                ],
-            ]
-        );
     }
 
     /**
