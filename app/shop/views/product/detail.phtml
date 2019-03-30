@@ -145,7 +145,12 @@
     			'product_id': $("#product_id").attr("attr-id")
     		},
     		success:function(result){
-    			
+    			if(!result.auth){
+    				alert(result.messages);
+    			}else{
+    				window.location.reload();
+    			}
+        		
     		}
     	})
 	});

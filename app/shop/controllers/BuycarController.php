@@ -121,7 +121,6 @@ class BuycarController extends AdminController
     			$model->number = $_POST['number'];
     			$model->member_id = $rs['member_id'];
     			$res =$model -> save();
-    			var_dump($res);exit;
     		//有则更新数量
 			}else{
 				$cars->number = $_POST['number'] + $cars->toArray()['number'];
@@ -134,9 +133,10 @@ class BuycarController extends AdminController
     		foreach($rs as $k=>$v){
     			if($rs[$k]['product']['id'] == $_POST['product_id']){
     				$rs[$k]['number'] += $_POST['number'];
-    				$rs[0]['total_pay'] = sprintf("%.2f", $rs[0]['totalpay'] + sprintf("%.2f", $rs[$k]['product']['realprice'] * $_POST['number']));
+    				$rs[0]['totalpay'] = sprintf("%.2f", $rs[0]['totalpay'] + sprintf("%.2f", $rs[$k]['product']['realprice'] * $_POST['number']));
     				$rs[0]['totalnum'] += $_POST['number'];
     				$is_sure = true;
+    				break;
     			}
     		}
     		if($is_sure == false){
@@ -155,7 +155,7 @@ class BuycarController extends AdminController
 				$rs[] = $temp_array;
     		} 
     		$this->session->set('buycar',$rs);
-    		var_dump($rs);exit;
+    		echo json_encode(['code' => '200', 'auth' =>$rs, 'messages' => []]);
     		
     	}else{
     		// 数据整合
@@ -178,6 +178,7 @@ class BuycarController extends AdminController
 			$cars_arr[0]['totalpay'] = $totalpay;
 			$cars_arr[0]['totalnum'] = $totalnum;
 			$this->session->set('buycar',$cars_arr);
+			echo json_encode(['code' => '200', 'auth' =>$rs, 'messages' => []]);
     	}
     }
 }
