@@ -16,3 +16,9 @@
 .sale-product h2 {
     margin-bottom:0.5em;
 }
+.borderTopNone {
+    border-top:none;
+}
+.price-availability-block .availability {
+    margin-top:16px;
+}
