@@ -168,8 +168,10 @@ class OrderController extends BaseController
             sprintf("id=%d and companyid=%d", $_GET["id"], $this->companyid)
         );
         // 判断订单是否存在
-        if ($order!=false && $order->status!=1) {
+        if ($order!=false && (int)$order->status==1) {
             $this->doTableAction($order,"delete");
+        }
+        else {
         }
     }
     /**

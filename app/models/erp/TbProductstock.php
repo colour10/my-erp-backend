@@ -12,7 +12,7 @@ use Phalcon\Mvc\Model\Relation;
 /**
  * 库存表
  */
-class TbProductstock extends BaseCommonModel
+class TbProductstock extends BaseCompanyModel
 {
     const SALES = 1; //销售
     const REQUISITION_IN = 2; //调拨入库

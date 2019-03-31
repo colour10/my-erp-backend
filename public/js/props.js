@@ -103,13 +103,13 @@
                 {name:"countryid", label:$ASAL["guojiadiqu"], is_hide:true, type:'select', source:"country"},
                 {name:"city", label:$ASAL["chengshi"]},
                 {name:"address", label:$ASAL["dizhi"]},
-                {name:"zipcode", label:$ASAL["youbian"]}, 
+                {name:"zipcode", label:$ASAL["youbian"], is_hide:true}, 
                 
                 {name:"contact", label:$ASAL["lianxiren"]}, 
-                {name:"mobile", label:$ASAL["yidongdianhua"]},
-                {name:"fax", label:$ASAL["chuanzhen"]},
-                {name:"code", label:$ASAL["bianhao"]},
-                {name:"othercontact", label:$ASAL["qitalianxifangshi"]},
+                {name:"mobile", label:$ASAL["yidongdianhua"], is_hide:true},
+                {name:"fax", label:$ASAL["chuanzhen"], is_hide:true},
+                {name:"code", label:$ASAL["bianhao"], is_hide:true},
+                {name:"othercontact", label:$ASAL["qitalianxifangshi"], is_hide:true},
                 {name:"is_real", label:$ASAL["shifoukeyong"], type:"switch"}
             ],
             controller:"warehouse"

@@ -3,36 +3,16 @@ namespace Asa\Erp;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Between;
 use Phalcon\Validation\Validator\Uniqueness;
-//use Phalcon\Mvc\Model\Relation;
 
 /**
- * 调拨单相关，调拨单明细表
+ * 商品货号表
  */
-class TbRequisitionDetail extends BaseCompanyModel
+class TbProductcode extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('tb_requisition_detail');
-
-        // 库存-仓库表，一对多反向
-       $this->belongsTo(
-            'out_productstockid',
-            '\Asa\Erp\TbProductstock',
-            'id',
-            [
-                'alias' => 'outProductstock'
-            ]
-        );
-
-       $this->belongsTo(
-            'in_productstockid',
-            '\Asa\Erp\TbProductstock',
-            'id',
-            [
-                'alias' => 'inProductstock'
-            ]
-        );
+        $this->setSource('tb_productcode');
     }
 
     public function validation() {
@@ -59,9 +39,5 @@ class TbRequisitionDetail extends BaseCompanyModel
 //        );
 
         return $this->validate($validator);
-    }
-
-    function delete() {
-        return false;
     }
 }

@@ -7,7 +7,7 @@ use Phalcon\Validation\Validator\Uniqueness;
 /**
  * 调拨单主表
  */
-class TbRequisition extends BaseCommonModel
+class TbRequisition extends BaseCompanyModel
 {
     public function initialize()
     {

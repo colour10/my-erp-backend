@@ -5,6 +5,7 @@ namespace Asa\Erp;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Mvc\Model\Relation;
 
 /**
  * 仓库表
@@ -15,6 +16,32 @@ class TbWarehouse extends BaseModel
     {
         parent::initialize();
         $this->setSource('tb_warehouse');
+
+        $this->hasMany(
+            "id",
+            "\Asa\Erp\TbWarehouseUser",
+            "warehouseid",
+            [
+                'alias' => 'warehouseUser',
+                'foreignKey' => array(
+                    'message' => '#1003#',
+                    'action' => Relation::ACTION_RESTRICT
+                )                
+            ]
+        );
+
+        $this->hasMany(
+            "id",
+            "\Asa\Erp\DdConfirmorder",
+            "warehouseid",
+            [
+                'alias' => 'confirmorder',
+                'foreignKey' => array(
+                    'message' => '#1003#',
+                    'action' => Relation::ACTION_RESTRICT
+                )                
+            ]
+        );
     }
 
     /**

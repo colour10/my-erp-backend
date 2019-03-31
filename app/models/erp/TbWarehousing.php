@@ -3,18 +3,19 @@ namespace Asa\Erp;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Between;
 use Phalcon\Validation\Validator\Uniqueness;
+use Phalcon\Mvc\Model\Relation;
 
 /**
  * 入库单主表
  */
-class TbWarehousing extends BaseCommonModel
+class TbWarehousing extends BaseCompanyModel
 {
     public function initialize()
     {
         parent::initialize();
         $this->setSource('tb_warehousing');
 
-        $this->hasOne(
+        $this->belongsTo(
             'confirmorderid',
             '\Asa\Erp\DdConfirmorder',
             'id',
@@ -28,7 +29,11 @@ class TbWarehousing extends BaseCommonModel
             "\Asa\Erp\TbWarehousingdetails",
             "warehousingid",
             [
-                'alias' => 'warehousingdetails'
+                'alias' => 'warehousingdetails',
+                'foreignKey' => array(
+                    'message' => '#1003#',
+                    'action' => Relation::ACTION_RESTRICT
+                )   
             ]
         );
     }

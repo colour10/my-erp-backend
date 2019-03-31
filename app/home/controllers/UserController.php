@@ -4,6 +4,7 @@ namespace Multiple\Home\Controllers;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
 use Asa\Erp\TbUser;
+use Asa\Erp\TbSaleport;
 
 class UserController extends CadminController {
     public function initialize() {
@@ -123,5 +124,24 @@ class UserController extends CadminController {
         }
         // 返回正确的结果
         return $user;
+    }
+
+    /**
+     * 获取当前登录用户的销售端口
+     * @return [type] [description]
+     */
+    function saleportlistAction() {
+        $auth = $this->auth;
+        if($auth['saleportids']!="") {
+            $result = TbSaleport::find(
+                sprintf("id in (%s)", $auth['saleportids'])
+            );
+
+            return $this->success($result->toArray());
+        }
+        else {
+            return $this->success();
+        }
+        
     }
 }

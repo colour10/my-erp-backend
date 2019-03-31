@@ -19,7 +19,8 @@ class LoginController extends Controller
                     'id' => $user->id,
                     'username' => $user->login_name,
                     'companyid' => $user->companyid,
-                    'saleport' => $user->saleport
+                    'saleportid' => $user->saleportid,
+                    'saleportids' => $user->saleportids
                 ));
                 //Forward to the 'invoices' controller if the user is valid
                 //header("location:/");

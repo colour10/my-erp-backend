@@ -14,13 +14,18 @@ class DdConfirmorder extends BaseModel
     {
         parent::initialize();
         $this->setSource('dd_confirmorder');
+        
         // 订单-订单详情，一对多
         $this->hasMany(
             "id",
             "\Asa\Erp\DdConfirmorderdetails",
             "confirmorderid",
             [
-                'alias' => 'confirmorderdetails'
+                'alias' => 'confirmorderdetails',
+                'foreignKey' => array(
+                    'message' => '#1003#',
+                    'action' => Relation::ACTION_RESTRICT
+                )  
             ]
         );
     }

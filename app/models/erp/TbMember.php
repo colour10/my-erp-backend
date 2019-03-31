@@ -11,7 +11,7 @@ use Phalcon\Validation\Validator\Email;
 /**
  * 会员相关，会员表
  */
-class TbMember extends BaseCommonModel
+class TbMember extends BaseCompanyModel
 {
     public function initialize()
     {

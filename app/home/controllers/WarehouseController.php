@@ -17,7 +17,7 @@ class WarehouseController extends CadminController {
 
     function userlistAction() {
         $result = TbWarehouseUser::find(
-            sprintf("userid=%d", $this->currentUser)
+            sprintf("userid=%d and warehouseroleid=2", $this->currentUser)
         );
 
         $array = [];

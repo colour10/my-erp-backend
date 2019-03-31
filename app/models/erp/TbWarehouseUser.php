@@ -3,6 +3,7 @@
 namespace Asa\Erp;
 
 use Phalcon\Validation;
+use Phalcon\Mvc\Model\Relation;
 use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Validation\Validator\PresenceOf;
 

@@ -76,4 +76,11 @@ class ZlAgeseason extends BaseModel
         // 返回最终的友好提示信息
         return sprintf($template_name, $human_name);
     }
+
+    public function toArrayPipe() {
+        $fullname = sprintf("%s%s", $this->sessionmark, $this->name);
+        $array = $this->toArray();
+        $array['fullname'] = $fullname;
+        return $array;
+    }
 }

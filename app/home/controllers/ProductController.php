@@ -4,7 +4,7 @@ namespace Multiple\Home\Controllers;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
 use Asa\Erp\TbProduct;
-
+use Asa\Erp\TbProductcode;
 /**
  * 商品表
  */
@@ -41,7 +41,7 @@ class ProductController extends CadminController {
         }
     }
 
-    function loadnameAction() {
+    /*function loadnameAction() {
         $array = explode(",", $_POST['ids']);
         foreach($array as &$row) {
             $row = (int)$row;
@@ -62,5 +62,33 @@ class ProductController extends CadminController {
         }
 
         echo json_encode($output);
+    }*/
+
+    function codelistAction() {
+        $result = TbProductcode::find(
+            sprintf("productid=%d", $_POST['id'])
+        );
+
+        echo $this->success($result->toArray());
+    }
+
+    function savecodeAction() {
+        $form = json_decode($_POST["params"], true);
+
+        $this->db->begin();
+        $product = TbProduct::findFirstById($form['productid']);
+        if($product!=false) {
+            try {
+                foreach ($form['list'] as $key => $value) {
+                    $product->setProjectCode($value['sizecontentid'], $value['goods_code']);
+                }
+            }
+            catch(\Exception $e) {
+                $this->db->rollback();
+                return $this->error([$e->getMessage()]);
+            }
+        }
+        $this->db->commit();
+        return $this->success();
     }
 }

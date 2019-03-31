@@ -1,9 +1,15 @@
 <?php 
 
+
+
 return array(
     "system_name" => "ERP管理系统",
     "lang" => "cn",
     "language" => "简体中文",
+    "1001" => "非法数据",
+    "1002" => "操作失败",
+    "1003" => "数据正在使用，无法删除",
+    "8000" => "不能为空",
     "menu-1" => "用户管理",
     "menu-1-1" => "员工信息",
     "menu-1-2" => "组信息",
@@ -448,7 +454,6 @@ return array(
     "dingdanzongjia" => "订单总价",
     "chanpinguanli" => "产品管理",
     "juese" => "角色",
-    "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
