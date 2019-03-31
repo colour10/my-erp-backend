@@ -88,6 +88,17 @@ try {
                 ]
             )->setHostName($config->app->main_host);
 
+            $router->add(
+                "/l/([a-z]+)",
+                [
+                    "module" => "home",
+                    "controller" => "common",
+                    "action" => "list",
+                    "table" => 1
+                ]
+            )->setHostName($config->app->main_host);
+
+
             // 店铺域名路由规则
             $router->add(
                 "/",

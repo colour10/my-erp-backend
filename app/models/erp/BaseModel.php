@@ -2,8 +2,7 @@
 namespace Asa\Erp;
 use Phalcon\Mvc\Model\Message as Message;
 use Asa\Erp\Behavior\AsaBehabior;
-// 引入软删除类
-use Phalcon\Mvc\Model\Behavior\SoftDelete;
+use Phalcon\Db\Column;
 
 class BaseModel extends \Phalcon\Mvc\Model {
 
@@ -62,7 +61,7 @@ class BaseModel extends \Phalcon\Mvc\Model {
 
     public static function findByIdString($idstring, $column) {
         if(preg_match("#^\d+(,\d+)*$#", $idstring)) {
-            return self::find(
+            return static::find(
                 sprintf("{$column} in (%s)", $idstring)
             );
         }
@@ -77,4 +76,43 @@ class BaseModel extends \Phalcon\Mvc\Model {
         }
     }
 
+    public function toArrayPipe() {
+        return $this->toArray();
+    }
+
+    public static function doList($form) {            
+        $where = static::getSearchCondition($form);
+        
+        $result = static::find($where);       
+        
+        $list = array();
+        foreach($result as $row) { 
+             $list[] = $row->toArrayPipe();
+        }   
+        return $list;
+    }
+
+    public static function getSearchCondition($form) {
+        $class = new \ReflectionClass(get_called_class());
+        $model = $class->newInstance();
+        $metaData = $model->getModelsMetaData();
+        $primaryKeys = $metaData->getPrimaryKeyAttributes($model);
+        $fieldTypes = $metaData->getDataTypes($model);
+        
+        //var_dump($fieldTypes);
+
+        $array = $model->getSearchBaseCondition();
+
+        foreach ($fieldTypes as $key=>$value) {
+            if(isset($form[$key]) && $form[$key]!="" ) {
+                if ($fieldTypes[$key] == Column::TYPE_INTEGER || $fieldTypes[$key] == Column::TYPE_BIGINTEGER ) {
+                    $array[] = sprintf("%s=%d", $key, $form[$key]);
+                } else { //($fieldTypes[$key] == Column::TYPE_CHAR || $fieldTypes[$key] == Column::TYPE_VARCHAR) {
+                    $array[] = sprintf("%s='%s'", $key, addslashes($form[$key]));
+                }
+            }
+        }
+
+        return implode(' and ', $array);
+    }
 }

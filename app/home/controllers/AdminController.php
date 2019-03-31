@@ -124,55 +124,7 @@ class AdminController extends BaseController
             echo $this->reportJson(array("data"=>$result->toArray()),200,[]);
         }
 	}
-
-	public function listAction() {
-	    $this->doList();
-	}
-
-	public function doList($columns=array()) {
-	    
-	    if($this->request->isAjax()) {
-	        $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
-	        
-	        $where = $this->getSearchCondition();
-	        //echo $where;exit;
-	        
-	        $result = $findFirst->invokeArgs(null, array($where));
-	        
-            
-            $list = array();
-            foreach($result as $row) { 
-                $arr = $this->beforeOutputListLoop($row);
-                if(is_array($arr)) {
-                    $line = array_merge($row->toArray(), $arr);
-                }
-                else {
-                    $line = $row->toArray();
-                }
-                
-                
-                if($this->list_key_column!="" && count($this->list_columns)>0) {
-                    $column_name = $this->list_key_column;
-                    $output_line = array();
-                    //print_r($line);
-                    foreach($this->list_columns as $name) {
-	                    $output_line[$name] = $line[$name];
-	                }
-	                $list[$line[$column_name]] = $output_line;
-                }
-                else {
-                    $list[] = $line;   
-                }
-            }           
-            echo $this->reportJson(array("data"=>$list) );           
-	    }
-	    
-	}
 	
-	function beforeOutputListLoop($row) {
-	    
-	}
-
 	function editAction() {
 	    //print_r($this->dispatcher->getParams());exit;
 	    $this->doEdit();

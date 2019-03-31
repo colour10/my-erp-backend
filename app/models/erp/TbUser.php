@@ -192,4 +192,5 @@ class TbUser extends BaseModel
             return 0;
         }
     }
+
 }

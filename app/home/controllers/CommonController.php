@@ -146,4 +146,78 @@ class CommonController extends BaseController
 
         echo json_encode($output);
     }
+
+    function listAction() {
+        $maps = [
+            "confirmorderdetails" => ["model"=>'Asa\Erp\DdConfirmorderdetails',"company"=>true],
+            "confirmorder" => ["model"=>'Asa\Erp\DdConfirmorder',"company"=>true],
+            "orderdetails" => ["model"=>'Asa\Erp\DdOrderdetails',"company"=>true],
+            "order" => ["model"=>'Asa\Erp\DdOrder',"company"=>true],
+            "buycar" => ["model"=>'Asa\Erp\TbBuycar',"company"=>true],
+            "company" => ["model"=>'Asa\Erp\TbCompany',"company"=>false],
+            "department" => ["model"=>'Asa\Erp\TbDepartment',"company"=>true],
+            "goods" => ["model"=>'Asa\Erp\TbGoods',"company"=>true],
+            "group" => ["model"=>'Asa\Erp\TbGroup',"company"=>true],
+            "member_address" => ["model"=>'Asa\Erp\TbMemberAddress',"company"=>true],
+            "member" => ["model"=>'Asa\Erp\TbMember',"company"=>true],
+            "permission_group" => ["model"=>'Asa\Erp\TbPermissionGroup',"company"=>false],
+            "permission_module" => ["model"=>'Asa\Erp\TbPermissionModule',"company"=>false],
+            "permission" => ["model"=>'Asa\Erp\TbPermission',"company"=>false],
+            "picture" => ["model"=>'Asa\Erp\TbPicture',"company"=>true],
+            "product" => ["model"=>'Asa\Erp\TbProduct',"company"=>true],
+            "productstock_log" => ["model"=>'Asa\Erp\TbProductstockLog',"company"=>true],
+            "productstock" => ["model"=>'Asa\Erp\TbProductstock',"company"=>true],
+            "productstock_snapshot" => ["model"=>'Asa\Erp\TbProductstockSnapshot',"company"=>true],
+            "requisition_detail" => ["model"=>'Asa\Erp\TbRequisitionDetail',"company"=>true],
+            "requisition" => ["model"=>'Asa\Erp\TbRequisition',"company"=>true],
+            "saleport" => ["model"=>'Asa\Erp\TbSaleport',"company"=>true],
+            "saleport_user" => ["model"=>'Asa\Erp\TbSaleportUser',"company"=>true],
+            "salesdetails" => ["model"=>'Asa\Erp\TbSalesdetails',"company"=>true],
+            "sales" => ["model"=>'Asa\Erp\TbSales',"company"=>true],
+            "supplier" => ["model"=>'Asa\Erp\TbSupplier',"company"=>true],
+            "user" => ["model"=>'Asa\Erp\TbUser',"company"=>true],
+            "warehouse" => ["model"=>'Asa\Erp\TbWarehouse',"company"=>true],
+            "warehouse_user" => ["model"=>'Asa\Erp\TbWarehouseUser',"company"=>true],
+            "warehousingdetails" => ["model"=>'Asa\Erp\TbWarehousingdetails',"company"=>true],
+            "warehousing" => ["model"=>'Asa\Erp\TbWarehousing',"company"=>true],
+            "ageseason" => ["model"=>'Asa\Erp\ZlAgeseason',"company"=>false],
+            "aliases" => ["model"=>'Asa\Erp\ZlAliases',"company"=>false],
+            "brandgroup" => ["model"=>'Asa\Erp\ZlBrandgroup',"company"=>false],
+            "brand" => ["model"=>'Asa\Erp\ZlBrand',"company"=>false],
+            "brandremark" => ["model"=>'Asa\Erp\ZlBrandremark',"company"=>false],
+            "businesstype" => ["model"=>'Asa\Erp\ZlBusinesstype',"company"=>false],
+            "childproductgroup" => ["model"=>'Asa\Erp\ZlChildproductgroup',"company"=>false],
+            "closedway" => ["model"=>'Asa\Erp\ZlClosedway',"company"=>false],
+            "colortemplate" => ["model"=>'Asa\Erp\ZlColortemplate',"company"=>false],
+            "country" => ["model"=>'Asa\Erp\ZlCountry',"company"=>false],
+            "executioncategory" => ["model"=>'Asa\Erp\ZlExecutioncategory',"company"=>false],
+            "materialnote" => ["model"=>'Asa\Erp\ZlMaterialnote',"company"=>false],
+            "material" => ["model"=>'Asa\Erp\ZlMaterial',"company"=>false],
+            "materialstatus" => ["model"=>'Asa\Erp\ZlMaterialstatus',"company"=>false],
+            "occasionsstyle" => ["model"=>'Asa\Erp\ZlOccasionsstyle',"company"=>false],
+            "productinnards" => ["model"=>'Asa\Erp\ZlProductinnards',"company"=>false],
+            "productparts" => ["model"=>'Asa\Erp\ZlProductparts',"company"=>false],
+            "producttemplate" => ["model"=>'Asa\Erp\ZlProducttemplate',"company"=>false],
+            "securitycategory" => ["model"=>'Asa\Erp\ZlSecuritycategory',"company"=>false],
+            "series2" => ["model"=>'Asa\Erp\ZlSeries2',"company"=>false],
+            "series" => ["model"=>'Asa\Erp\ZlSeries',"company"=>false],
+            "sizecontent" => ["model"=>'Asa\Erp\ZlSizecontent',"company"=>false],
+            "sizetop" => ["model"=>'Asa\Erp\ZlSizetop',"company"=>false],
+            "templatemanage" => ["model"=>'Asa\Erp\ZlTemplatemanage',"company"=>false],
+            "ulnarinch" => ["model"=>'Asa\Erp\ZlUlnarinch',"company"=>false],
+            "washinginstructions" => ["model"=>'Asa\Erp\ZlWashinginstructions',"company"=>false],
+            "winterproofing" => ["model"=>'Asa\Erp\ZlWinterproofing',"company"=>false]
+        ];
+        $table = $this->dispatcher->getParam("table");
+        $model = $maps[$table];
+
+        if($model) {
+            $doList = new \ReflectionMethod($model['model'], 'doList');
+            $result = $doList->invokeArgs(null, [$_REQUEST]);
+            echo $this->reportJson(array("data"=>$result) ); 
+        }
+        else {
+            echo $this->error(["error"]);
+        }
+    }
 }

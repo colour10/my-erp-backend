@@ -160,4 +160,21 @@ class IndexController extends BaseController
             )
         );
     }
+
+    function formAction() {
+        $this->view->enable();
+        $this->view->setVar("system_language", $this->language);
+        $this->view->setVar("__sytem_time", time());
+        
+        $default_language = $this->config->language;
+        $this->view->setVar("__default_language", $this->config->language);
+        $this->view->setVar("__config", $this->config);
+        
+        $this->view->disableLevel(
+            array(
+                View::LEVEL_LAYOUT      => true,
+                View::LEVEL_MAIN_LAYOUT => true
+            )
+        );
+    }
 }

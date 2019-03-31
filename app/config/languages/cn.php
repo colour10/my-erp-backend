@@ -186,6 +186,7 @@ return array(
     "shanchu" => "删除",
     "miaoshu" => "描述",
     "xinjianxinxi" => "新建信息",
+    "yonghuxinxi" => "用户信息",
     "xiugaixinxi" => "修改信息",
     "yuzhong" => "语种",
     "pinpaijieshao" => "品牌介绍",
