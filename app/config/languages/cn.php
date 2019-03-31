@@ -447,7 +447,7 @@ return array(
     "chengjiaojia" => "成交价",
     "dingdanzongjia" => "订单总价",
     "chanpinguanli" => "产品管理",
-    "yingyezhizhaohao" => "营业执照号",
+    "juese" => "角色",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
@@ -662,5 +662,10 @@ return array(
         "3" => "在途",
         "4" => "入库拒绝",
         "5" => "完成"
-    )
+    ),
+
+    "list_warehouserole" => array(
+        "1" => "管理员",
+        "2" => "销售"
+    ),
 );

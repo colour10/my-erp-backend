@@ -135,7 +135,12 @@ class AdminController extends BaseController
 	}
 
 	function addAction() {
-	    $this->doAdd();
+        try {
+            $this->doAdd();
+        }
+	    catch(\Exception $e) {
+            echo $this->error([$this->language['operate_fail']]);
+        }
 	}
 
 	function doAdd() {
