@@ -28,8 +28,8 @@ class TbCompany extends BaseModel
                 "foreignKey" => [
                     // 关联字段存在性验证
                     'action' => Relation::ACTION_RESTRICT,
-                    "message" => $this->getValidateMessage('notexist', 'country'),
-                ],
+                    "message" => "#1004#关联的国家数据不存在#",
+                ]
             ]
         );
 
@@ -43,8 +43,17 @@ class TbCompany extends BaseModel
                 'foreignKey' => [
                     // 关联字段存在性验证
                     'action' => Relation::ACTION_RESTRICT,
-                    "message"    => $this->getValidateMessage('hasmany-foreign-message', 'department'),
-                ],
+                    "message"    => "#1003#",
+                ]
+            ]
+        );
+
+        $this->belongsTo(
+            'saleportid',
+            '\Asa\Erp\TbSaleport',
+            'id',
+            [
+                'alias' => 'shopSaleport'
             ]
         );
 

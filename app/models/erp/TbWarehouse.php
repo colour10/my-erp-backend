@@ -42,6 +42,15 @@ class TbWarehouse extends BaseModel
                 )                
             ]
         );
+
+        $this->hasMany(
+            "id",
+            "\Asa\Erp\TbProductstock",
+            "warehouseid",
+            [
+                'alias' => 'productstocks'
+            ]
+        );
     }
 
     /**
