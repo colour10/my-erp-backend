@@ -183,4 +183,17 @@ class AdminController extends Controller
         echo json_encode($result);
         $this->view->disable();
     }
+
+    /**
+     * 取出对应的语言字段名称
+     * @param $fieldname
+     * @return string
+     */
+    public function getlangfield($fieldname)
+    {
+        // 逻辑
+        $lang = $this->language['lang'];
+        // 返回
+        return $fieldname . '_' .$lang;
+    }
 }

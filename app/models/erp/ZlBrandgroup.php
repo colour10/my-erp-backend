@@ -21,7 +21,7 @@ class ZlBrandgroup extends BaseModel
         $this->hasMany(
             "id",
             "\Asa\Erp\ZlChildproductgroup",
-            "productgroupid",
+            "brandgroupid",
             [
                 'alias' => 'childproductgroups',
                 'foreignKey' => [

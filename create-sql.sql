@@ -2,7 +2,8 @@
 SQLyog Ultimate v9.60 
 MySQL - 5.7.25 : Database - erp
 *********************************************************************
-*/
+*/
+
 
 /*!40101 SET NAMES utf8 */;
 
@@ -1551,6 +1552,27 @@ CREATE TABLE `zl_winterproofing` (
 /*Data for the table `zl_winterproofing` */
 
 insert  into `zl_winterproofing`(`id`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`memo_cn`,`memo_en`,`memo_hk`,`memo_fr`,`memo_it`,`memo_sp`,`memo_de`) values (1,'22','','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+
+--
+-- 表的结构 `tb_companyhost`
+--
+
+CREATE TABLE `tb_companyhost` (
+                                `id` int(10) UNSIGNED NOT NULL COMMENT '主键id',
+                                `url` varchar(100) DEFAULT NULL COMMENT '网址',
+                                `companyid` int(10) UNSIGNED NOT NULL COMMENT '公司id',
+                                `is_default` tinyint(1) DEFAULT '0' COMMENT '是否为默认：0-非默认 1-默认'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='公司商铺域名表';
+
+--
+-- 转存表中的数据 `tb_companyhost`
+--
+
+INSERT INTO `tb_companyhost` (`id`, `url`, `companyid`, `is_default`) VALUES
+(1, 'www.myshop.com', 1, 0),
+(2, 'aa.myshop.com', 1, 0),
+(3, 'a.myshop.com', 1, 0),
+(4, 'aaaa.myshop.com', 1, 0);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

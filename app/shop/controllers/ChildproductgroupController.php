@@ -1,6 +1,7 @@
 <?php
 namespace Multiple\Shop\Controllers;
 
+use Asa\Erp\TbProduct;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
 use Asa\Erp\ZlChildproductgroup;
@@ -12,7 +13,7 @@ use Phalcon\Paginator\Adapter\Model as PaginatorModel;
 class ChildproductgroupController extends AdminController {
 
     public function initialize() {
-	    $this->setModelName('Asa\\Erp\\ZlChildproductgroup');
+        $this->setModelName('Asa\\Erp\\ZlChildproductgroup');
     }
 
 
@@ -22,6 +23,13 @@ class ChildproductgroupController extends AdminController {
     public function detailAction()
     {
         // 逻辑
+        // 判断当前域名是否绑定了公司
+        if (!$this->host) {
+            return $this->dispatcher->forward([
+                'controller' => 'error',
+                'action' => 'error404',
+            ]);
+        }
         // 先过滤
         $params = $this->dispatcher->getParams();
         if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
@@ -32,9 +40,9 @@ class ChildproductgroupController extends AdminController {
         $id = $params[0];
         // 分页
         $currentPage = $this->request->getQuery("page", "int", 1);
-        // 取出数据
+        // 取出数据，只展示当前公司下面的产品
         $model = ZlChildproductgroup::findFirstById($id);
-        $products= $model->products;
+        $products = TbProduct::find("childbrand=$id AND companyid={$this->host['companyhost']->companyid}");
 
         // 创建分页对象
         $paginator = new PaginatorModel(
@@ -52,8 +60,7 @@ class ChildproductgroupController extends AdminController {
         $brandgroup = $model->brandgroup;
 
         // 定义面包屑导航
-        $lang = $this->getDI()->get('language')->lang;
-        $name = 'name_'.$lang;
+        $name = $this->getlangfield('name');
         $breadcrumb = '<li><a href="/">首页</a></li><li><a href="/brandgroup/detail/'.$brandgroup->id.'">'.$brandgroup->$name.'</a></li><li class="active">'.$model->$name.'</li>';
 
         // 推送给模板
@@ -61,6 +68,7 @@ class ChildproductgroupController extends AdminController {
             'page' => $page,
             'id' => $id,
             'breadcrumb' => $breadcrumb,
+            'title' => $model->$name,
         ]);
     }
 }
