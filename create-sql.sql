@@ -12,10 +12,6 @@ MySQL - 5.7.25 : Database - erp
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`erp` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_bin */;
-
-USE `erp`;
-
 /*Table structure for table `dd_confirmorder` */
 
 DROP TABLE IF EXISTS `dd_confirmorder`;
@@ -175,6 +171,26 @@ CREATE TABLE `dd_orderdetails` (
 
 insert  into `dd_orderdetails`(`id`,`orderid`,`sizecontentid`,`number`,`productid`,`price`,`confirm_number`,`companyid`,`is_append`,`createdate`,`status`,`actualnumber`) values (35,6,13,2,2,'1000.00',2,1,0,'2019-03-29 16:27:36',NULL,0),(36,6,12,2,2,'1000.00',2,1,0,'2019-03-29 16:27:36',NULL,0),(37,6,11,2,2,'1000.00',2,1,0,'2019-03-29 16:27:36',NULL,0),(38,6,10,2,2,'1000.00',0,1,0,'2019-03-29 16:27:36',NULL,0),(39,6,9,5,2,'1000.00',0,1,0,'2019-03-29 16:27:36',NULL,0),(40,6,8,3,2,'1000.00',0,1,0,'2019-03-29 16:27:36',NULL,0),(41,6,7,2,2,'1000.00',0,1,0,'2019-03-29 16:27:36',NULL,0),(42,6,6,3,2,'1000.00',0,1,0,'2019-03-29 16:27:36',NULL,0);
 
+/*Table structure for table `tb_buycar` */
+
+DROP TABLE IF EXISTS `tb_buycar`;
+
+CREATE TABLE `tb_buycar` (
+  `id` int(10) NOT NULL,
+  `product_id` int(10) unsigned NOT NULL COMMENT '商品id',
+  `product_name` varchar(255) NOT NULL COMMENT '商品名称',
+  `color_id` int(10) unsigned NOT NULL COMMENT '颜色id',
+  `color_name` int(11) NOT NULL COMMENT '颜色名称',
+  `size_id` int(11) NOT NULL COMMENT '规格id',
+  `size_name` int(11) NOT NULL COMMENT '规格名称',
+  `member_id` int(10) unsigned NOT NULL COMMENT '用户id',
+  `number` int(10) unsigned NOT NULL DEFAULT '1' COMMENT '数量',
+  `price` decimal(9,2) NOT NULL COMMENT '价格',
+  `total_price` decimal(9,2) NOT NULL COMMENT '总价格'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='购物车';
+
+/*Data for the table `tb_buycar` */
+
 /*Table structure for table `tb_company` */
 
 DROP TABLE IF EXISTS `tb_company`;
@@ -191,13 +207,14 @@ CREATE TABLE `tb_company` (
   `countryid` int(10) unsigned DEFAULT NULL COMMENT '国家id',
   `memo` text COMMENT '备注说明',
   `randid` int(11) DEFAULT NULL,
+  `saleportid` int(11) unsigned DEFAULT NULL COMMENT '商城的销售端口',
   PRIMARY KEY (`id`),
   UNIQUE KEY `randid` (`randid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `tb_company` */
 
-insert  into `tb_company`(`id`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`countryid`,`memo`,`randid`) values (1,'company1552557078',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1);
+insert  into `tb_company`(`id`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`countryid`,`memo`,`randid`,`saleportid`) values (1,'company1552557078',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1);
 
 /*Table structure for table `tb_department` */
 
@@ -472,7 +489,7 @@ CREATE TABLE `tb_product` (
 
 /*Data for the table `tb_product` */
 
-insert  into `tb_product`(`id`,`productno`,`productname`,`wordcode_1`,`wordcode_2`,`wordcode_3`,`wordcode_4`,`wordprice`,`wordpricecurrency`,`gender`,`brandid`,`brandgroupid`,`childbrand`,`brandcolor`,`brandcolor2`,`picture2`,`picture`,`closeway`,`ageseason`,`productsize`,`countries`,`securitycategory`,`executioncategory`,`material`,`productparst`,`occasion`,`producttemplate`,`materialstatus`,`season`,`oldasacode`,`officialwebsite`,`oldbarcode`,`laststoragedate`,`aliases_1`,`aliases_2`,`aliases`,`series_id`,`series2_id`,`ulnarinch`,`vat`,`tariff`,`basecurrency`,`baseprice`,`entrymonth`,`factoryprice`,`factorypricecurrency`,`realprice`,`retailpricecurrency`,`dutyparagraph`,`orderprice`,`orderpricecurrency`,`retailprice`,`groupid`,`iskj`,`bxzs`,`hbzs`,`rrzs`,`tlzs`,`salemethodid`,`nationalprice`,`taxrate`,`isjh`,`inlenth`,`jdname`,`winterproofing`,`isfj`,`discount`,`ulnarinch_memo`,`sizetopid`,`companyid`,`adduserid`) values (1,'213659874562','黑色运动上衣','6542','x6x5','ddsw','33','999.360000000','RMB','5,3,1',1,1,5,'2,1',NULL,'product/ea79feeeee36dfb964f0341a1dad38b5.jpg','product/69e58f464fa1b44a47e7becc80974c42.jpg',NULL,'6,7',0,'2,1',1,1,0,0,'0,2,1',0,2,'5,4','','','','','','','',0,0,'','0.000000000','0.000000000','0','0.00','','13.00','USD','300.00','CAD','','0.00','0','0.00',0,'','','','','',0,'1002.000000000','0.000000000','','','',0,'','0.00','77',1,1,NULL),(2,'','电脑包','111','','','','0.000000000','','',2,2,14,'2',NULL,'product/96d821008f5dafc77012b9e8706431fd.jpg','product/a820ad1b132e17bf95f90e91c698b31d.jpg',NULL,'',0,'4,2',0,0,0,0,'',0,2,'','','','','','','','',0,0,'','0.000000000','0.000000000','','0.00','','0.00','','1000.00','','','0.00','','0.00',0,'','','','','',0,'0.000000000','0.000000000','','','',0,'','0.00','',2,1,NULL),(3,'','耐克足球鞋','','','','','0.000000000','','',2,3,7,'1',NULL,'product/0ece4a911e75eafbdf9fc315d57af3ef.jpg','product/2385effe9046df387a341239f0177a10.jpg',NULL,'',0,'5,4',0,0,0,0,'2',0,0,'','','','','','','','',0,0,'','0.000000000','0.000000000','','0.00','','0.00','','2000.00','','','0.00','','0.00',0,'','','','','',0,'0.000000000','0.000000000','','','',0,'','0.00','',2,1,1),(4,'','复古运动上衣','','','','','0.000000000','','',2,1,2,'',NULL,'product/ba6e1532143591340379979be0b6b88c.jpg','product/91d70dbb3a787313e649869041319f45.jpg',NULL,'',0,'',0,0,0,0,'',0,0,'','','','','','','','',0,0,'','0.000000000','0.000000000','','0.00','','0.00','','3000.00','','','0.00','','0.00',0,'','','','','',0,'0.000000000','0.000000000','','','',0,'','0.00','',1,1,1),(5,'','乔丹运动鞋','','','','','0.000000000','','',1,3,9,'',NULL,'product/dc2e67ae864304af75a56faa22d737cc.jpg','product/71f37308966f7279519e347a433c0fef.jpg',NULL,'',0,'',0,0,0,0,'',0,0,'','','','','','','','',0,0,'','0.000000000','0.000000000','','0.00','','0.00','','1500.00','','','0.00','','0.00',0,'','','','','',0,'0.000000000','0.000000000','','','',0,'','0.00','',0,1,1),(6,'','阿迪达斯跑步鞋','','','','','0.000000000','','',1,3,9,'',NULL,'product/b1fad46f357cc65820b94b2c19f9cdac.jpg','product/dbbeecbd53ecd6ff8a33850b3ed4a0e9.jpg',NULL,'',0,'4',0,0,0,0,'',0,0,'','','','','','','','',0,0,'','0.000000000','0.000000000','','0.00','','0.00','','2500.00','','','0.00','','0.00',0,'','','','','',0,'0.000000000','0.000000000','','','',0,'','0.00','',0,1,1);
+insert  into `tb_product`(`id`,`productno`,`productname`,`wordcode_1`,`wordcode_2`,`wordcode_3`,`wordcode_4`,`wordprice`,`wordpricecurrency`,`gender`,`brandid`,`brandgroupid`,`childbrand`,`brandcolor`,`brandcolor2`,`picture2`,`picture`,`closeway`,`ageseason`,`productsize`,`countries`,`securitycategory`,`executioncategory`,`material`,`productparst`,`occasion`,`producttemplate`,`materialstatus`,`season`,`oldasacode`,`officialwebsite`,`oldbarcode`,`laststoragedate`,`aliases_1`,`aliases_2`,`aliases`,`series_id`,`series2_id`,`ulnarinch`,`vat`,`tariff`,`basecurrency`,`baseprice`,`entrymonth`,`factoryprice`,`factorypricecurrency`,`realprice`,`retailpricecurrency`,`dutyparagraph`,`orderprice`,`orderpricecurrency`,`retailprice`,`groupid`,`iskj`,`bxzs`,`hbzs`,`rrzs`,`tlzs`,`salemethodid`,`nationalprice`,`taxrate`,`isjh`,`inlenth`,`jdname`,`winterproofing`,`isfj`,`discount`,`ulnarinch_memo`,`sizetopid`,`companyid`,`adduserid`) values (1,'213659874562','黑色运动上衣','6542','x6x5','ddsw','33','999.360000000','RMB','5,3,1',1,1,5,'2,1',NULL,'product/ea79feeeee36dfb964f0341a1dad38b5.jpg','product/69e58f464fa1b44a47e7becc80974c42.jpg',NULL,'6,7',0,'2,1',1,1,0,0,'0,2,1',0,2,'5,4','','','','','','','',0,0,'','0.000000000','0.000000000','0','0.00','','13.00','USD','300.00','CAD','','0.00','0','0.00',0,'','','','','',0,'1002.000000000','0.000000000','','','',0,'','0.00','77',1,1,NULL),(2,'','电脑包','111','','','','0.000000000','','',2,2,14,'2',NULL,'product/96d821008f5dafc77012b9e8706431fd.jpg','product/a820ad1b132e17bf95f90e91c698b31d.jpg',NULL,'',0,'4,2',0,0,0,0,'',0,2,'','','','','','','','',0,0,'','0.000000000','0.000000000','','0.00','','0.00','','1000.00','','','0.00','','0.00',0,'','','','','',0,'0.000000000','0.000000000','','','',0,'','0.00','',2,1,NULL),(3,'','耐克足球鞋','','','','','0.000000000','','',2,3,7,'1',NULL,'product/0ece4a911e75eafbdf9fc315d57af3ef.jpg','product/2385effe9046df387a341239f0177a10.jpg',NULL,'',0,'5,4',0,0,0,0,'2',0,0,'','','','','','','','',0,0,'','0.000000000','0.000000000','','0.00','','0.00','','2000.00','','','0.00','','0.00',0,'','','','','',0,'0.000000000','0.000000000','','','',0,'','0.00','',2,1,1),(4,'','复古运动上衣','','','','','0.000000000','','',2,1,2,'',NULL,'product/ba6e1532143591340379979be0b6b88c.jpg','product/91d70dbb3a787313e649869041319f45.jpg',NULL,'',0,'',0,0,0,0,'',0,0,'','','','','','','','',0,0,'','0.000000000','0.000000000','','0.00','','0.00','','3000.00','','','0.00','','0.00',0,'','','','','',0,'0.000000000','0.000000000','','','',0,'','0.00','',1,1,1),(5,'','乔丹运动鞋','','','','','0.000000000','','',1,3,9,'',NULL,'product/dc2e67ae864304af75a56faa22d737cc.jpg','product/71f37308966f7279519e347a433c0fef.jpg',NULL,'',0,'',0,0,0,0,'',0,0,'','','','','','','','',0,0,'','0.000000000','0.000000000','','0.00','','0.00','','1500.00','','','0.00','','0.00',0,'','','','','',0,'0.000000000','0.000000000','','','',0,'','0.00','',1,1,1),(6,'','阿迪达斯跑步鞋','','','','','0.000000000','','',1,3,9,'',NULL,'product/b1fad46f357cc65820b94b2c19f9cdac.jpg','product/dbbeecbd53ecd6ff8a33850b3ed4a0e9.jpg',NULL,'',0,'4',0,0,0,0,'',0,0,'','','','','','','','',0,0,'','0.000000000','0.000000000','','0.00','','0.00','','2500.00','','','0.00','','0.00',0,'','','','','',0,'0.000000000','0.000000000','','','',0,'','0.00','',1,1,1);
 
 /*Table structure for table `tb_product_price` */
 
@@ -493,6 +510,32 @@ CREATE TABLE `tb_product_price` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='成交价，参考价，基准零售价，国内零售价 历史记录';
 
 /*Data for the table `tb_product_price` */
+
+/*Table structure for table `tb_product_search` */
+
+DROP TABLE IF EXISTS `tb_product_search`;
+
+CREATE TABLE `tb_product_search` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `productname` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '商品名称',
+  `productid` int(11) unsigned DEFAULT NULL COMMENT '商品id',
+  `sizetopid` int(11) DEFAULT NULL COMMENT '尺码组id',
+  `brandgroupid` int(11) DEFAULT NULL COMMENT '品类id',
+  `childbrand` int(11) DEFAULT NULL COMMENT '子品类id',
+  `number` int(11) DEFAULT NULL,
+  `picture` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '主图',
+  `picture2` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '副图',
+  `color` varchar(20) COLLATE utf8_bin DEFAULT NULL COMMENT '颜色',
+  `color_group` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '同组颜色',
+  `companyid` int(11) DEFAULT NULL,
+  UNIQUE KEY `companyid_2` (`companyid`,`productid`),
+  KEY `id` (`id`),
+  KEY `companyid` (`companyid`,`brandgroupid`,`childbrand`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+/*Data for the table `tb_product_search` */
+
+insert  into `tb_product_search`(`id`,`productname`,`productid`,`sizetopid`,`brandgroupid`,`childbrand`,`number`,`picture`,`picture2`,`color`,`color_group`,`companyid`) values (6,'电脑包',2,2,2,14,5,'product/a820ad1b132e17bf95f90e91c698b31d.jpg','product/96d821008f5dafc77012b9e8706431fd.jpg',NULL,NULL,1),(7,'黑色运动上衣',1,1,1,5,25,'product/69e58f464fa1b44a47e7becc80974c42.jpg','product/ea79feeeee36dfb964f0341a1dad38b5.jpg',NULL,NULL,1);
 
 /*Table structure for table `tb_productcode` */
 
@@ -530,7 +573,8 @@ CREATE TABLE `tb_productstock` (
   `change_stuff` int(10) unsigned DEFAULT NULL COMMENT '修改人',
   `number` int(11) NOT NULL DEFAULT '0' COMMENT '数量',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `companyid` (`companyid`,`warehouseid`,`goodsid`)
+  UNIQUE KEY `companyid` (`companyid`,`warehouseid`,`goodsid`),
+  KEY `warehouseid` (`warehouseid`,`defective_level`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COMMENT='库存';
 
 /*Data for the table `tb_productstock` */
@@ -623,9 +667,7 @@ CREATE TABLE `tb_requisition` (
   `companyid` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `out_id` (`out_id`),
-  KEY `in_id` (`in_id`),
-  CONSTRAINT `tb_requisition_ibfk_1` FOREIGN KEY (`out_id`) REFERENCES `tb_warehouse` (`id`),
-  CONSTRAINT `tb_requisition_ibfk_2` FOREIGN KEY (`in_id`) REFERENCES `tb_warehouse` (`id`)
+  KEY `in_id` (`in_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COMMENT='调拨单主表';
 
 /*Data for the table `tb_requisition` */
@@ -647,9 +689,7 @@ CREATE TABLE `tb_requisition_detail` (
   `in_number` int(11) DEFAULT NULL COMMENT '入库数量',
   PRIMARY KEY (`id`),
   KEY `in_productstockid` (`in_productstockid`),
-  KEY `out_productstockid` (`out_productstockid`),
-  CONSTRAINT `tb_requisition_detail_ibfk_1` FOREIGN KEY (`in_productstockid`) REFERENCES `tb_productstock` (`id`),
-  CONSTRAINT `tb_requisition_detail_ibfk_2` FOREIGN KEY (`out_productstockid`) REFERENCES `tb_productstock` (`id`)
+  KEY `out_productstockid` (`out_productstockid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COMMENT='调拨单明细(数量)';
 
 /*Data for the table `tb_requisition_detail` */
@@ -672,6 +712,23 @@ CREATE TABLE `tb_saleport` (
 /*Data for the table `tb_saleport` */
 
 insert  into `tb_saleport`(`id`,`name`,`discount`,`create_time`,`companyid`) values (1,'银河广场','1.600',NULL,1),(2,'京东平台','1.500',NULL,1),(3,'哈尔滨零售店','1.300',NULL,1),(4,'100','1.200',NULL,1);
+
+/*Table structure for table `tb_saleport_warehouse` */
+
+DROP TABLE IF EXISTS `tb_saleport_warehouse`;
+
+CREATE TABLE `tb_saleport_warehouse` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `saleportid` int(11) unsigned DEFAULT NULL,
+  `warehouseid` int(11) unsigned DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `saleportid` (`saleportid`,`warehouseid`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+/*Data for the table `tb_saleport_warehouse` */
+
+insert  into `tb_saleport_warehouse`(`id`,`saleportid`,`warehouseid`,`create_time`) values (1,1,1,NULL),(2,1,2,NULL);
 
 /*Table structure for table `tb_sales` */
 
@@ -870,11 +927,11 @@ CREATE TABLE `tb_warehouse_user` (
   `companyid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `warehouseid` (`companyid`,`warehouseid`,`userid`,`warehouseroleid`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 /*Data for the table `tb_warehouse_user` */
 
-insert  into `tb_warehouse_user`(`id`,`warehouseid`,`userid`,`warehouseroleid`,`create_time`,`companyid`) values (1,1,1,1,NULL,1),(2,2,1,2,NULL,1),(3,5,1,2,NULL,1),(4,4,1,2,NULL,1),(5,2,2,NULL,NULL,1);
+insert  into `tb_warehouse_user`(`id`,`warehouseid`,`userid`,`warehouseroleid`,`create_time`,`companyid`) values (1,1,1,1,NULL,1),(2,2,1,2,NULL,1),(3,5,1,2,NULL,1),(5,2,2,NULL,NULL,1);
 
 /*Table structure for table `tb_warehousing` */
 
