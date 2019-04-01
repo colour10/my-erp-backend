@@ -36,8 +36,11 @@ class ProductController extends AdminController {
         // 取出数据
         $product = TbProduct::findFirstById($id);
         // 如果不是当前公司下面的产品，则不允许访问
-        if (!$product || $product->companyid != $this->host['companyhost']->companyid) {
-            exit('product does not exist!');
+        if (!$product || $product->company->id != $this->currentCompany) {
+            return $this->dispatcher->forward([
+                'controller' => 'error',
+                'action' => 'error404',
+            ]);
         }
         // 尺码组
         if ($product->sizetop) {
