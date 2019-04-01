@@ -45,6 +45,9 @@ class BaseController extends Controller
                 $array[] = $message->getMessage();
             }
         }
+        else if(is_string($messages)) {
+            $array = [$messages];
+        }
         else {
             $array = $messages;
         }
