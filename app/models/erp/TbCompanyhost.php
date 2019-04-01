@@ -20,26 +20,18 @@ class TbCompanyhost extends BaseModel
 
         // 公司域名表-公司表，一对多反向
         $this->belongsTo(
-            'countryid',
-            '\Asa\Erp\ZlCountry',
+            'companyid',
+            '\Asa\Erp\TbCompany',
             'id',
             [
-                'alias' => 'country',
+                'alias' => 'company',
                 "foreignKey" => [
                     // 关联字段存在性验证
                     'action' => Relation::ACTION_RESTRICT,
-                    "message" => $this->getValidateMessage('notexist', 'country'),
+                    "message" => $this->getValidateMessage('notexist', 'company'),
                 ],
             ]
         );
-    }
-
-    /**
-     * 设置多语言字段
-     * @return array
-     */
-    function getLanguageColumns() {
-        return ['name'];
     }
 
     /**
@@ -67,9 +59,9 @@ class TbCompanyhost extends BaseModel
                 'cancelOnFail' => true,
             ]
         ));
-        
+
         // 过滤
-        $validator->setFilters($name, 'trim');
+        $validator->setFilters('url', 'trim');
 
         return $this->validate($validator);
     }

@@ -48,6 +48,21 @@ class TbCompany extends BaseModel
             ]
         );
 
+        // 公司-商品表，一对多
+        $this->hasMany(
+            "id",
+            "\Asa\Erp\TbProduct",
+            "companyid",
+            [
+                'alias' => 'products',
+                'foreignKey' => [
+                    // 关联字段存在性验证
+                    'action' => Relation::ACTION_RESTRICT,
+                    "message"    => $this->getValidateMessage('hasmany-foreign-message', 'product'),
+                ],
+            ]
+        );
+
         $this->belongsTo(
             'saleportid',
             '\Asa\Erp\TbSaleport',

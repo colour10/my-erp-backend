@@ -18,6 +18,13 @@ class ProductController extends AdminController {
     public function detailAction()
     {
         // 逻辑
+        // 判断当前域名是否绑定了公司
+        if (!$this->host) {
+            return $this->dispatcher->forward([
+                'controller' => 'error',
+                'action' => 'error404',
+            ]);
+        }
         // 先过滤
         $params = $this->dispatcher->getParams();
         if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
@@ -28,7 +35,8 @@ class ProductController extends AdminController {
         $id = $params[0];
         // 取出数据
         $product = TbProduct::findFirstById($id);
-        if (!$product) {
+        // 如果不是当前公司下面的产品，则不允许访问
+        if (!$product || $product->companyid != $this->host['companyhost']->companyid) {
             exit('product does not exist!');
         }
         // 尺码组
