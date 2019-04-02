@@ -84,6 +84,10 @@ class IndexController extends AdminController
         return json_encode($this->session->get('member'));
     }
 
+    function testAction() {
+        
+    }
+
     // /**
     //  * 判断公司是否绑定了当前域名，接口，js当中用的
     //  */
@@ -105,5 +109,4 @@ class IndexController extends AdminController
     //         return false;
     //     }
     // }
-
 }

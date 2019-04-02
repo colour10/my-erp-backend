@@ -7,6 +7,9 @@ use Phalcon\Mvc\Router;
 use Phalcon\DI\FactoryDefault;
 use Phalcon\Db\Adapter\Pdo\Mysql as DbAdapter;
 use Phalcon\Session\Adapter\Files as Session;
+use Phalcon\Events\Manager as EventsManager;
+use Phalcon\Logger;
+use Phalcon\Logger\Adapter\File as FileLogger;
 
 ini_set('date.timezone', 'Asia/Shanghai');
 
@@ -49,10 +52,32 @@ try {
 
     // Set the database service
     $di['db'] = function () use ($config) {
-        $connection = new DbAdapter($config->database->db->toArray());
+        if($config->mode=='develop') {
+            $eventsManager = new EventsManager();
 
-        $connection->execute("SET CHARSET 'UTF8'");
-        return $connection;
+            $logger = new FileLogger($config->app->log_path . "/weblog.log");
+
+            // Listen all the database events
+            $eventsManager->attach('db', function ($event, $connection) use ($logger) {
+                if ($event->getType() == 'beforeQuery') {
+                    $logger->log(\Phalcon\Logger::INFO, $connection->getSQLStatement());
+                }
+            });
+
+            $connection = new DbAdapter($config->database->db->toArray());
+
+            $connection->execute("SET CHARSET 'UTF8'");
+
+            $connection->setEventsManager($eventsManager);
+            return $connection;
+        }
+        else {
+
+            $connection = new DbAdapter($config->database->db->toArray());
+
+            $connection->execute("SET CHARSET 'UTF8'");
+            return $connection;
+        }
     };
 
     $di->set( "router", function () use ($config, $di){
@@ -135,6 +160,34 @@ try {
                     "controller" => 1,
                     "action" => 2,
                     "params" => 3,
+                ]
+            )->setHostName($config->app->shop_host);
+
+            $router->add(
+                "/common/systemlanguage",
+                [
+                    "module" => "home",
+                    "controller" => "common",
+                    "action" => "systemlanguage"
+                ]
+            )->setHostName($config->app->shop_host);
+
+            $router->add(
+                "/common/loadname",
+                [
+                    "module" => "home",
+                    "controller" => "common",
+                    "action" => "loadname"
+                ]
+            )->setHostName($config->app->shop_host);
+
+            $router->add(
+                "/l/([a-z]+)",
+                [
+                    "module" => "home",
+                    "controller" => "common",
+                    "action" => "list",
+                    "table" => 1
                 ]
             )->setHostName($config->app->shop_host);
 
