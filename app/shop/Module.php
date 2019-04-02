@@ -9,7 +9,7 @@ use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 use Multiple\Shop\Controllers\BrandgroupController;
 use Multiple\Shop\Controllers\BuycarController;
-use Multiple\Shop\Controllers\CompanyhostController;
+use Multiple\Shop\Controllers\CompanyController;
 
 class Module implements ModuleDefinitionInterface
 {
@@ -97,17 +97,15 @@ class Module implements ModuleDefinitionInterface
         });
 
         // 获取当前域名及所属公司的模型
-        $di->setShared('host', function () {
-            $tbcompany = new CompanyhostController();
+        $tbcompany = new CompanyController();
+        $di->setShared('host', function () use ($tbcompany) {
             $host = $tbcompany->gethost();
             return $host;
         });
 
         // 为了使用共享model数据，需要注册currentCompany
-        $di->setShared('currentCompany', function () {
-            $tbcompany = new CompanyhostController();
-            $host = $tbcompany->gethost();
-            return $host['companyhost']->id;
+        $di->setShared('currentCompany', function () use ($tbcompany) {
+            return $tbcompany->gethost()['company']->id;
         });
     }
 }

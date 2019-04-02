@@ -42,7 +42,7 @@ class ChildproductgroupController extends AdminController {
         $currentPage = $this->request->getQuery("page", "int", 1);
         // 取出数据，只展示当前公司下面的产品
         $model = ZlChildproductgroup::findFirstById($id);
-        $products = TbProduct::find("childbrand=$id AND companyid={$this->host['companyhost']->companyid}");
+        $products = TbProduct::find("childbrand=$id AND companyid={$this->currentCompany}");
 
         // 创建分页对象
         $paginator = new PaginatorModel(

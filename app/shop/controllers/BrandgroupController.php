@@ -70,7 +70,7 @@ class BrandgroupController extends AdminController
 
         // 查找隶属于子品类的商品
         $products = TbProduct::find([
-            'conditions'=>'childbrand IN ({brandGroup_ids:array}) AND companyid = '.$this->host['companyhost']->companyid,
+            'conditions'=>'childbrand IN ({brandGroup_ids:array}) AND companyid = '.$this->currentCompany,
             'bind'=>['brandGroup_ids'=>$brandGroup_ids],
         ]);
 

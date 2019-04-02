@@ -4,12 +4,12 @@ namespace Multiple\Shop\Controllers;
 use Asa\Erp\Util;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
-use Asa\Erp\TbProduct;
+use Asa\Erp\TbProductSearch;
 use Asa\Erp\ZlColortemplate;
 
 class ProductController extends AdminController {
     public function initialize() {
-        $this->setModelName('Asa\\Erp\\TbProduct');
+        $this->setModelName('Asa\\Erp\\TbProductSearch');
     }
 
     /**
@@ -34,9 +34,9 @@ class ProductController extends AdminController {
         // 赋值
         $id = $params[0];
         // 取出数据
-        $product = TbProduct::findFirstById($id);
+        $product = TbProductSearch::findFirstById($id);
         // 如果不是当前公司下面的产品，则不允许访问
-        if (!$product || $product->company->id != $this->currentCompany) {
+        if (!$product || $product->companyid != $this->currentCompany) {
             return $this->dispatcher->forward([
                 'controller' => 'error',
                 'action' => 'error404',
