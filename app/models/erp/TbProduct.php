@@ -19,7 +19,7 @@ class TbProduct extends BaseCompanyModel
         $this->setSource('tb_product');
 
 
-        // 商品-子品类，一对多反向
+        /*// 商品-子品类，一对多反向
         $this->belongsTo(
             'childbrand',
             '\Asa\Erp\ZlChildproductgroup',
@@ -62,7 +62,7 @@ class TbProduct extends BaseCompanyModel
                     "message" => $this->getValidateMessage('notexist', 'material'),
                 ],
             ]
-        );
+        );*/
 
         // 商品-公司表，一对多反向
         $this->belongsTo(
@@ -70,12 +70,7 @@ class TbProduct extends BaseCompanyModel
             '\Asa\Erp\TbCompany',
             'id',
             [
-                'alias' => 'company',
-                'foreignKey' => [
-                    // 关联字段禁止自动删除
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message" => $this->getValidateMessage('notexist', 'company'),
-                ],
+                'alias' => 'company'
             ]
         );
 
