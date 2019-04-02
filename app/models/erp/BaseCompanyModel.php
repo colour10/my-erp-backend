@@ -5,9 +5,7 @@ use Phalcon\Mvc\Model\Message as Message;
 /**
  * 
  */
-class BaseCompanyModel extends BaseModel {
-    protected $companyid;
-    
+class BaseCompanyModel extends BaseModel {   
     public function initialize() {
         parent::initialize();
     }

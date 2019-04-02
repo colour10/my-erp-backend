@@ -19,7 +19,7 @@ class ZlChildproductgroup extends BaseModel
 
         // 子品类-品类，一对多反向
         $this->belongsTo(
-            'productgroupid',
+            'brandgroupid',
             '\Asa\Erp\ZlBrandgroup',
             'id',
             [
@@ -42,7 +42,7 @@ class ZlChildproductgroup extends BaseModel
                 'foreignKey' => [
                     // 关联字段存在性验证
                     'action' => Relation::ACTION_RESTRICT,
-                    "message"    => $this->getValidateMessage('hasmany-foreign-message', 'product'),
+                    "message"    => "#1003#子类已经在商品信息中使用#",
                 ],
             ]
         );
@@ -64,7 +64,7 @@ class ZlChildproductgroup extends BaseModel
     public function validation()
     {
         $validator = new Validation();
-
+/*
         $name = $this->getColumnName("name");
         // name-子品类名称不能为空或者重复
         $validator->add($name, new PresenceOf([
@@ -83,10 +83,10 @@ class ZlChildproductgroup extends BaseModel
         $validator->add('childcode', new Uniqueness([
             'message' => $this->getValidateMessage('uniqueness', 'code'),
             'cancelOnFail' => true,
-        ]));
+        ]));*/
 
         // 过滤
-        $validator->setFilters($name, 'trim');
+ //       $validator->setFilters($name, 'trim');
 
         return $this->validate($validator);
     }

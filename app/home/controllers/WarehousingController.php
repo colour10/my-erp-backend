@@ -87,8 +87,7 @@ class WarehousingController extends BaseController {
 
             if ($order->addDetail($data)===false) {
                 $this->db->rollback();
-                $msg = $this->getValidateMessage('orderdetail', 'db', 'add-failed');
-                return $this->error($detail);
+                return $this->error("#1002#入库单明细添加失败#");
             }
         }
 

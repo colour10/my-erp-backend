@@ -36,7 +36,7 @@ class TbProduct extends BaseCompanyModel
 
         // 商品-尺码组，一对多反向
         $this->belongsTo(
-            'productsize',
+            'sizetopid',
             '\Asa\Erp\ZlSizetop',
             'id',
             [

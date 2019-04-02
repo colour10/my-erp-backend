@@ -41,20 +41,20 @@ class ZlAgeseason extends BaseModel
         ));
 
         // mark-年代英文标识不能为空
-        $validator->add('mark', new PresenceOf([
+        $validator->add('sessionmark', new PresenceOf([
             'message' => $this->getValidateMessage('required', 'ageseason-mark'),
             'cancelOnFail' => true,
         ]));
 
         // 年代、标识唯一性索引
-        $validator->add(['name', 'mark'], new Uniqueness([
+        $validator->add(['name', 'sessionmark'], new Uniqueness([
             'message' => $this->getValidateMessage('uniqueness', 'ageseason-name-mark'),
             'cancelOnFail' => true,
         ]));
 
         // 过滤
         $validator->setFilters('name', 'trim');
-        $validator->setFilters('mark', 'trim');
+        $validator->setFilters('sessionmark', 'trim');
 
         return $this->validate($validator);
     }

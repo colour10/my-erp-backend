@@ -216,7 +216,7 @@
 
         "saleport":{
             columns:[            
-                {name:"name", label:$ASAL["mingcheng"], is_focus:true},
+                {name:"name", label:$ASAL["xiaoshouduankou"], is_focus:true},
                 {name:"discount", label:$ASAL["zhekou"], is_focus:true}
             ],
             controller:"saleport"
