@@ -207,7 +207,8 @@ CREATE TABLE `tb_company` (
   `name_de` varchar(1000) DEFAULT NULL COMMENT '德语名称',
   `countryid` int(10) unsigned DEFAULT NULL COMMENT '国家id',
   `memo` text COMMENT '备注说明',
-  `randid` int(11) DEFAULT NULL,
+  `randid` int(11) DEFAULT NULL COMMENT '公司唯一标识',
+  `host` varchar(100) DEFAULT NULL COMMENT '绑定域名',
   `saleportid` int(11) unsigned DEFAULT NULL COMMENT '商城的销售端口',
   PRIMARY KEY (`id`),
   UNIQUE KEY `randid` (`randid`)
@@ -523,7 +524,7 @@ CREATE TABLE `tb_product_search` (
   `sizetopid` int(11) DEFAULT NULL COMMENT '尺码组id',
   `brandgroupid` int(11) DEFAULT NULL COMMENT '品类id',
   `childbrand` int(11) DEFAULT NULL COMMENT '子品类id',
-  `number` int(11) DEFAULT NULL,
+  `number` int(11) DEFAULT NULL COMMENT '库存数量',
   `picture` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '主图',
   `picture2` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '副图',
   `color` varchar(20) COLLATE utf8_bin DEFAULT NULL COMMENT '颜色',
@@ -1552,27 +1553,6 @@ CREATE TABLE `zl_winterproofing` (
 /*Data for the table `zl_winterproofing` */
 
 insert  into `zl_winterproofing`(`id`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`memo_cn`,`memo_en`,`memo_hk`,`memo_fr`,`memo_it`,`memo_sp`,`memo_de`) values (1,'22','','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-
---
--- 表的结构 `tb_companyhost`
---
-
-CREATE TABLE `tb_companyhost` (
-                                `id` int(10) UNSIGNED NOT NULL COMMENT '主键id',
-                                `url` varchar(100) DEFAULT NULL COMMENT '网址',
-                                `companyid` int(10) UNSIGNED NOT NULL COMMENT '公司id',
-                                `is_default` tinyint(1) DEFAULT '0' COMMENT '是否为默认：0-非默认 1-默认'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='公司商铺域名表';
-
---
--- 转存表中的数据 `tb_companyhost`
---
-
-INSERT INTO `tb_companyhost` (`id`, `url`, `companyid`, `is_default`) VALUES
-(1, 'www.myshop.com', 1, 0),
-(2, 'aa.myshop.com', 1, 0),
-(3, 'a.myshop.com', 1, 0),
-(4, 'aaaa.myshop.com', 1, 0);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
