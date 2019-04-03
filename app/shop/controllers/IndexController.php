@@ -2,9 +2,9 @@
 
 namespace Multiple\Shop\Controllers;
 
-use Asa\Erp\TbProduct;
+use Asa\Erp\TbProductSearch;
+use Asa\Erp\Util;
 use Phalcon\Paginator\Adapter\Model as PaginatorModel;
-use Asa\Erp\TbCompanyhost;
 
 class IndexController extends AdminController
 {
@@ -22,8 +22,11 @@ class IndexController extends AdminController
             ]);
         }
         // 最新促销，需要从当前域名绑定的公司提取资料
-        $company = $this->host['company'];
-        $productlist = $company->products->toArray();
+        $productlist = TbProductSearch::find("companyid={$this->currentCompany}")->toArray();
+        // 把币种加工一下
+        foreach ($productlist as $k => $item) {
+            $productlist[$k]['retailpricecurrency2'] = Util::change_currency($item['retailpricecurrency']);
+        }
         // 分配到模板
         $this->view->setVars([
             'productlist' => $productlist,
@@ -49,7 +52,7 @@ class IndexController extends AdminController
         $currentPage = $this->request->getQuery("page", "int", 1);
 
         // 取出结果
-        $productlist = TbProduct::find([
+        $productlist = TbProductSearch::find([
             'conditions' => 'productname like :keyword:',
             'bind' => ['keyword' => '%'.$keyword.'%'],
         ]);
@@ -82,10 +85,6 @@ class IndexController extends AdminController
         // 逻辑
         // 如果post或者ajax请求，那么就返回json字符串
         return json_encode($this->session->get('member'));
-    }
-
-    function testAction() {
-        
     }
 
     // /**

@@ -1,16 +1,17 @@
 <?php
+
 namespace Multiple\Shop\Controllers;
 
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
-use Asa\Erp\TbCompanyhost;
+use Asa\Erp\TbCompany;
 
 /**
  * 公司域名表
  */
-class CompanyhostController extends AdminController {
+class CompanyController extends AdminController {
     public function initialize() {
-	    $this->setModelName('Asa\\Erp\\TbCompanyhost');
+	    $this->setModelName('Asa\\Erp\\TbCompany');
     }
 
     /**
@@ -20,14 +21,13 @@ class CompanyhostController extends AdminController {
     {
         // 开始去数据库查找
         $host = $_SERVER['HTTP_HOST'];
-        $companyhost = TbCompanyhost::findFirst("url = '$host'");
+        $company = TbCompany::findFirst("host = '$host'");
         // 判断
-        if (!$companyhost) {
+        if (!$company) {
             return false;
         } else {
-            $company = $companyhost->company;
             $name = $this->getlangfield('name');
-            return ['companyhost' => $companyhost, 'company' => $company, 'webtitle' => $company->$name];
+            return ['company' => $company, 'webtitle' => $company->$name];
         }
     }
 }

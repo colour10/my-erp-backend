@@ -1,6 +1,7 @@
 <?php
 namespace Multiple\Shop\Controllers;
 
+use Asa\Erp\TbProductSearch;
 use Phalcon\Mvc\Controller;
 use Asa\Erp\TbBrandgroup;
 use Asa\Erp\TbProduct;
@@ -69,10 +70,12 @@ class BrandgroupController extends AdminController
         array_unshift($brandGroup_ids, $id);
 
         // 查找隶属于子品类的商品
-        $products = TbProduct::find([
-            'conditions'=>'childbrand IN ({brandGroup_ids:array}) AND companyid = '.$this->host['companyhost']->companyid,
+        $products = TbProductSearch::find([
+            'conditions'=>'childbrand IN ({brandGroup_ids:array}) AND companyid = '.$this->currentCompany,
             'bind'=>['brandGroup_ids'=>$brandGroup_ids],
         ]);
+
+        // return json_encode($products);
 
         // 创建分页对象
         $paginator = new PaginatorModel(

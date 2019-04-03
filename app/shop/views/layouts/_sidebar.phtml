@@ -9,12 +9,12 @@
                 if (count($children)) {
         ?>
         <li class="list-group-item clearfix dropdown">
-            <a href="javascript:void(0);" class="collapsed"><i class="fa fa-angle-right"></i><?php echo $item['name_cn']; ?></a>
+            <a href="javascript:void(0);" class="collapsed"><i class="fa fa-angle-right"></i><?php echo $item['name']; ?></a>
             <ul class="dropdown-menu" style="display:block;">
         <?php
                     for ($i=0; $i<count($children); $i++) {
         ?>
-                <li><a href="/childproductgroup/detail/<?php echo $children[$i]['id']; ?>"><i class="fa fa-angle-right"></i> <?php echo $children[$i]['name_cn']; ?></a></li>
+                <li><a href="/childproductgroup/detail/<?php echo $children[$i]['id']; ?>"><i class="fa fa-angle-right"></i> <?php echo $children[$i]['name']; ?></a></li>
         <?php
                     }
         ?>
@@ -23,7 +23,7 @@
         <?php
                 } else {
         ?>
-        <li class="list-group-item clearfix"><a href="/brandgroup/detail/<?php echo $item['id']; ?>"><i class="fa fa-angle-right"></i> <?php echo $item['name_cn']; ?></a></li>
+        <li class="list-group-item clearfix"><a href="/brandgroup/detail/<?php echo $item['id']; ?>"><i class="fa fa-angle-right"></i> <?php echo $item['name']; ?></a></li>
         <?php
                 }
             }
