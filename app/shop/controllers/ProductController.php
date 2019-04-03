@@ -26,6 +26,15 @@ class ProductController extends AdminController {
                 'action' => 'error404',
             ]);
         }
+
+        // 判断是否登录
+        if (!$this->session->get('member')) {
+            return $this->dispatcher->forward([
+                'controller' => 'login',
+                'action' => 'index',
+            ]);
+        }
+
         // 先过滤
         $params = $this->dispatcher->getParams();
         if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
@@ -34,26 +43,35 @@ class ProductController extends AdminController {
         // 赋值
         $id = $params[0];
         // 取出数据
-        $product = TbProductSearch::findFirst("productid=$id");
+        $product = TbProductSearch::findFirst("productid=$id AND companyid=".$this->currentCompany);
 
-        // 如果不是当前公司下面的产品，则不允许访问
-        if (!$product || $product->companyid != $this->currentCompany) {
+        // 如果不存在，就跳转到404
+        if (!$product) {
             return $this->dispatcher->forward([
                 'controller' => 'error',
                 'action' => 'error404',
             ]);
         }
+        // 尺码组颜色需要修改为js调用方式，状态：待修改
+        $name = $this->getlangfield('name');
+        $content = $this->getlangfield('content');
         // 尺码组
         if ($product->sizetopid) {
-            $sizecontents = ZlSizecontent::find("topid=".$product->sizetopid)->toArray();
+            $sizecontents_arr = ZlSizecontent::find("topid=".$product->sizetopid)->toArray();
+            foreach ($sizecontents_arr as $k => $sizecontent) {
+                $sizecontents_arr[$k]['content'] = $sizecontent[$content];
+            }
         } else {
-            $sizecontents = [];
+            $sizecontents_arr = [];
         }
         // 颜色
         if ($product->color) {
             $colors = explode(',', $product->color);
             foreach ($colors as $k => $color) {
                 $colors_arr[] = ZlColortemplate::findFirstById($color)->toArray();
+            }
+            foreach ($colors_arr as $k => $item) {
+                $colors_arr[$k]['name'] = $item[$name];
             }
         } else {
             $colors_arr = [];
@@ -70,17 +88,10 @@ class ProductController extends AdminController {
         $childbrandname = $this->getlangfield('childbrandname');
         $breadcrumb = '<li><a href="/">首页</a></li><li><a href="/brandgroup/detail/'.$product->brandgroupid.'">'.$product->$brandgroupname.'</a></li><li><a href="/childproductgroup/detail/'.$product->childbrand.'">'.$product->$childbrandname.'</a></li>';
 
-        // 库存显示文字
-        if ($product->number) {
-            $number_desc = $product->number;
-        } else {
-            $number_desc = '缺货';
-        }
-
         // 推送给模板
         $this->view->setVars([
             'product' => $product,
-            'sizecontents' => $sizecontents,
+            'sizecontents' => $sizecontents_arr,
             'colors' => $colors_arr,
             'retailpricecurrency' => $retailpricecurrency,
             'realprice' => $realprice,
@@ -88,7 +99,7 @@ class ProductController extends AdminController {
             'orderprice' => $orderprice,
             'id' => $id,
             'breadcrumb' => $breadcrumb,
-            'number' => $number_desc,
+            'number' => $product->number,
         ]);
     }
 }

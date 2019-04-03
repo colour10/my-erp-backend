@@ -21,6 +21,15 @@ class IndexController extends AdminController
                 'action' => 'error404',
             ]);
         }
+
+        // 判断是否登录
+        if (!$this->session->get('member')) {
+            return $this->dispatcher->forward([
+                'controller' => 'login',
+                'action' => 'index',
+            ]);
+        }
+
         // 最新促销，需要从当前域名绑定的公司提取资料
         $productlist = TbProductSearch::find("companyid={$this->currentCompany}")->toArray();
         // 把币种加工一下
@@ -46,6 +55,15 @@ class IndexController extends AdminController
                 'action' => 'error404',
             ]);
         }
+
+        // 判断是否登录
+        if (!$this->session->get('member')) {
+            return $this->dispatcher->forward([
+                'controller' => 'login',
+                'action' => 'index',
+            ]);
+        }
+
         // 外部搜索内容
         $keyword = $this->request->get('keyword', 'string', '');
         // 分页
@@ -82,9 +100,22 @@ class IndexController extends AdminController
      */
     public function isloginAction()
     {
-        // 逻辑
-        // 如果post或者ajax请求，那么就返回json字符串
-        return json_encode($this->session->get('member'));
+
+        // 判断是否登录
+        if (!$this->session->get('member')) {
+            return $this->dispatcher->forward([
+                'controller' => 'login',
+                'action' => 'index',
+            ]);
+        }
+    }
+
+    /*
+     * 测试页面
+     */
+    public function testAction()
+    {
+
     }
 
     // /**
