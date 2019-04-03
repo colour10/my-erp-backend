@@ -30,6 +30,15 @@ class ChildproductgroupController extends AdminController {
                 'action' => 'error404',
             ]);
         }
+
+        // 判断是否登录
+        if (!$this->session->get('member')) {
+            return $this->dispatcher->forward([
+                'controller' => 'login',
+                'action' => 'index',
+            ]);
+        }
+
         // 先过滤
         $params = $this->dispatcher->getParams();
         if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
