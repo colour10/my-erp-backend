@@ -66,7 +66,7 @@ class ChildproductgroupController extends AdminController {
             $childbrandname = $products[0]->$childbrand_name;
         } else {
             // 取出子品类
-            $childbrand = ZlChildproductgroup::findFirstById($id);
+            $childbrand = TbBrandgroupchild::findFirstById($id);
             // 如果模型不存在，则返回404
             if (!$childbrand) {
                 return $this->dispatcher->forward([

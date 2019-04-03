@@ -3,7 +3,6 @@
 namespace Multiple\Shop\Controllers;
 
 use Asa\Erp\TbProductSearch;
-use Asa\Erp\Util;
 use Phalcon\Paginator\Adapter\Model as PaginatorModel;
 
 class IndexController extends AdminController
@@ -32,10 +31,6 @@ class IndexController extends AdminController
 
         // 最新促销，需要从当前域名绑定的公司提取资料
         $productlist = TbProductSearch::find("companyid={$this->currentCompany}")->toArray();
-        // 把币种加工一下
-        foreach ($productlist as $k => $item) {
-            $productlist[$k]['retailpricecurrency2'] = Util::change_currency($item['retailpricecurrency']);
-        }
         // 分配到模板
         $this->view->setVars([
             'productlist' => $productlist,

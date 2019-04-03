@@ -2,9 +2,7 @@
 namespace Multiple\Shop\Controllers;
 
 use Asa\Erp\TbProductSearch;
-use Phalcon\Mvc\Controller;
 use Asa\Erp\TbBrandgroup;
-use Asa\Erp\TbProduct;
 use Phalcon\Paginator\Adapter\Model as PaginatorModel;
 
 class BrandgroupController extends AdminController

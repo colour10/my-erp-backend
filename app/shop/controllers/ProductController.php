@@ -1,15 +1,13 @@
 <?php
 namespace Multiple\Shop\Controllers;
 
-use Asa\Erp\Util;
-use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\View;
-use Asa\Erp\TbProduct;
+use Asa\Erp\TbSizecontent;
+use Asa\Erp\TbProductSearch;
 use Asa\Erp\TbColortemplate;
 
 class ProductController extends AdminController {
     public function initialize() {
-        $this->setModelName('Asa\\Erp\\TbProduct');
+        $this->setModelName('Asa\\Erp\\TbProductSearch');
     }
 
     /**
@@ -25,67 +23,73 @@ class ProductController extends AdminController {
                 'action' => 'error404',
             ]);
         }
+
+        // 判断是否登录
+        if (!$this->session->get('member')) {
+            return $this->dispatcher->forward([
+                'controller' => 'login',
+                'action' => 'index',
+            ]);
+        }
+
         // 先过滤
         $params = $this->dispatcher->getParams();
         if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
             exit('Params error!');
         }
-
         // 赋值
         $id = $params[0];
         // 取出数据
-        $product = TbProduct::findFirstById($id);
-        // 如果不是当前公司下面的产品，则不允许访问
-        if (!$product || $product->company->id != $this->currentCompany) {
+        $product = TbProductSearch::findFirst("productid=$id AND companyid=".$this->currentCompany);
+
+        // 如果不存在，就跳转到404
+        if (!$product) {
             return $this->dispatcher->forward([
                 'controller' => 'error',
                 'action' => 'error404',
             ]);
         }
+        // 尺码组颜色需要修改为js调用方式，状态：待修改
+        // 尺码组加入多语言字段content
+        $name = $this->getlangfield('name');
+        $content = $this->getlangfield('content');
         // 尺码组
-        if ($product->sizetop) {
-            $sizecontents = $product->sizetop->sizecontents->toArray();
+        if ($product->sizetopid) {
+            $sizecontents_arr = TbSizecontent::find("topid=".$product->sizetopid)->toArray();
+            foreach ($sizecontents_arr as $k => $sizecontent) {
+                $sizecontents_arr[$k]['content'] = $sizecontent[$content];
+            }
         } else {
-            $sizecontents = [];
+            $sizecontents_arr = [];
         }
-        // 颜色
-        if ($product->brandcolor) {
-            $colors = explode(',', $product->brandcolor);
+        // 颜色，添加多语言字段name
+        if ($product->color) {
+            $colors = explode(',', $product->color);
             foreach ($colors as $k => $color) {
                 $colors_arr[] = TbColortemplate::findFirstById($color)->toArray();
+            }
+            foreach ($colors_arr as $k => $item) {
+                $colors_arr[$k]['name'] = $item[$name];
             }
         } else {
             $colors_arr = [];
         }
 
-        // 取出合同价、成交价格、国内零售价格
-        // $orderpricecurrency = Util::change_currency($product->orderpricecurrency);
-        $retailpricecurrency = Util::change_currency($product->retailpricecurrency);
-        $realprice = round($product->realprice, 2);
-        $nationalprice = round($product->nationalprice, 2);
-        // $orderprice = $product->orderprice;
-
-        // 取出上级分类
-        $childproductgroup = $product->childproductgroup;
-        $brandgroup = $childproductgroup->brandgroup;
-
         // 定义面包屑导航
-        $lang = $this->getDI()->get('language')->lang;
-        $name = 'name_'.$lang;
-        $breadcrumb = '<li><a href="/">首页</a></li><li><a href="/brandgroup/detail/'.$brandgroup->id.'">'.$brandgroup->$name.'</a></li><li><a href="/childproductgroup/detail/'.$childproductgroup->id.'">'.$childproductgroup->$name.'</a></li>';
+        $brandgroupname = $this->getlangfield('brandgroupname');
+        $childbrandname = $this->getlangfield('childbrandname');
+        $breadcrumb = '<li><a href="/">首页</a></li><li><a href="/brandgroup/detail/'.$product->brandgroupid.'">'.$product->$brandgroupname.'</a></li><li><a href="/childproductgroup/detail/'.$product->childbrand.'">'.$product->$childbrandname.'</a></li>';
 
         // 推送给模板
         $this->view->setVars([
             'product' => $product,
-            'sizecontents' => $sizecontents,
+            'sizecontents' => $sizecontents_arr,
             'colors' => $colors_arr,
-            // 'orderpricecurrency' => $orderpricecurrency,
-            'retailpricecurrency' => $retailpricecurrency,
-            'realprice' => $realprice,
-            'nationalprice' => $nationalprice,
-            // 'orderprice' => $orderprice,
+            'price' => $product->price,
+            'realprice' => $product->realprice,
             'id' => $id,
             'breadcrumb' => $breadcrumb,
+            'number' => $product->number,
         ]);
     }
 }
