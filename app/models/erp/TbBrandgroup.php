@@ -1,38 +1,39 @@
 <?php
+
 namespace Asa\Erp;
+
 use Phalcon\Validation;
-use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Validation\Validator\PresenceOf;
-use Phalcon\Validation\Validator\Regex;
+use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Mvc\Model\Relation;
 
 /**
- * 品牌表
+ * 品类表
  */
-class ZlBrand extends BaseModel
+class TbBrandgroup extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('zl_brand');
+        $this->setSource('tb_brandgroup');
 
-        // 品牌-国家表，一对多反向
-        $this->belongsTo(
-            'countryid',
-            '\Asa\Erp\ZlCountry',
-            'id',
+        // 品类-子品类，一对多
+        $this->hasMany(
+            "id",
+            "\Asa\Erp\TbBrandgroupchild",
+            "brandgroupid",
             [
-                'alias' => 'country',
+                'alias' => 'brandgroupchilds',
                 'foreignKey' => [
-                    // 关联字段禁止自动删除
+                    // 关联字段存在性验证
                     'action' => Relation::ACTION_RESTRICT,
-                    "message" => $this->getValidateMessage('notexist', 'country'),
+                    "message"    => $this->getValidateMessage('hasmany-foreign-message', 'child-product-group'),
                 ],
             ]
         );
 
         // 设置当前语言
-        $this->setValidateLanguage($this->getLanguage()['lang']);
+        //$this->setValidateLanguage($this->getLanguage()['lang']);
     }
 
     /**
@@ -52,7 +53,8 @@ class ZlBrand extends BaseModel
         $validator = new Validation();
 
         $name = $this->getColumnName("name");
-        // name-品牌名称不能为空或者重复
+        //echo $name;
+        // name-品类名称不能为空或者重复
         $validator->add($name, new PresenceOf([
             'message' => $this->getValidateMessage('required', 'name'),
             'cancelOnFail' => true,
@@ -61,25 +63,7 @@ class ZlBrand extends BaseModel
             'message' => $this->getValidateMessage('uniqueness', 'name'),
             'cancelOnFail' => true,
         ]));
-        // countryid-所属国家ID
-        $validator->add('countryid', new Regex(
-            [
-                'message' => $this->getValidateMessage('invalid', 'countryid'),
-                "pattern" => "/^[1-9]\d*$/",
-                'cancelOnFail' => true,
-            ]
-        ));
-
-        // brandgroupid-所属国家ID
-        $validator->add('countryid', new Regex(
-            [
-                'message' => $this->getValidateMessage('invalid', 'countryid'),
-                "pattern" => "/^[1-9]\d*$/",
-                'cancelOnFail' => true,
-            ]
-        ));
-
-        // code-品牌编码
+        // code-品类编码
         $validator->add('code', new PresenceOf([
             'message' => $this->getValidateMessage('required', 'code'),
             'cancelOnFail' => true,

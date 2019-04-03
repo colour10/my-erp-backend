@@ -4,7 +4,7 @@ namespace Multiple\Shop\Controllers;
 use Asa\Erp\TbProduct;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
-use Asa\Erp\ZlChildproductgroup;
+use Asa\Erp\TbBrandgroupchild;
 use Phalcon\Paginator\Adapter\Model as PaginatorModel;
 
 /**
@@ -13,7 +13,7 @@ use Phalcon\Paginator\Adapter\Model as PaginatorModel;
 class ChildproductgroupController extends AdminController {
 
     public function initialize() {
-        $this->setModelName('Asa\\Erp\\ZlChildproductgroup');
+        $this->setModelName('Asa\\Erp\\TbBrandgroupchild');
     }
 
 
@@ -41,7 +41,7 @@ class ChildproductgroupController extends AdminController {
         // 分页
         $currentPage = $this->request->getQuery("page", "int", 1);
         // 取出数据，只展示当前公司下面的产品
-        $model = ZlChildproductgroup::findFirstById($id);
+        $model = TbBrandgroupchild::findFirstById($id);
         $products = TbProduct::find("childbrand=$id AND companyid={$this->host['companyhost']->companyid}");
 
         // 创建分页对象

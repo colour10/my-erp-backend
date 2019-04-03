@@ -10,17 +10,17 @@ use Phalcon\Mvc\Model\Relation;
 /**
  * 子子品类
  */
-class ZlChildproductgroup extends BaseModel
+class TbBrandgroupchild extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('zl_childproductgroup');
+        $this->setSource('tb_brandgroupchild');
 
         // 子品类-品类，一对多反向
         $this->belongsTo(
             'brandgroupid',
-            '\Asa\Erp\ZlBrandgroup',
+            '\Asa\Erp\TbBrandgroup',
             'id',
             [
                 'alias' => 'brandgroup',

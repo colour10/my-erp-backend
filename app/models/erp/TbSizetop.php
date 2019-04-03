@@ -3,37 +3,37 @@
 namespace Asa\Erp;
 
 use Phalcon\Validation;
-use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Uniqueness;
+use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Mvc\Model\Relation;
 
 /**
- * 品类表
+ * 商品尺码信息
  */
-class ZlBrandgroup extends BaseModel
+class TbSizetop extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('zl_brandgroup');
+        $this->setSource('tb_sizetop');
 
-        // 品类-子品类，一对多
+        // 尺码组-尺码详情，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\ZlChildproductgroup",
-            "brandgroupid",
+            "\Asa\Erp\TbSizecontent",
+            "topid",
             [
-                'alias' => 'childproductgroups',
+                'alias' => 'sizecontents',
                 'foreignKey' => [
                     // 关联字段存在性验证
                     'action' => Relation::ACTION_RESTRICT,
-                    "message"    => $this->getValidateMessage('hasmany-foreign-message', 'child-product-group'),
+                    "message"    => $this->getValidateMessage('hasmany-foreign-message', 'sizecontent'),
                 ],
             ]
         );
 
         // 设置当前语言
-        //$this->setValidateLanguage($this->getLanguage()['lang']);
+        $this->setValidateLanguage($this->getLanguage()['lang']);
     }
 
     /**
@@ -53,8 +53,7 @@ class ZlBrandgroup extends BaseModel
         $validator = new Validation();
 
         $name = $this->getColumnName("name");
-        //echo $name;
-        // name-品类名称不能为空或者重复
+        // name-尺码组名称不能为空或者重复
         $validator->add($name, new PresenceOf([
             'message' => $this->getValidateMessage('required', 'name'),
             'cancelOnFail' => true,
@@ -63,7 +62,8 @@ class ZlBrandgroup extends BaseModel
             'message' => $this->getValidateMessage('uniqueness', 'name'),
             'cancelOnFail' => true,
         ]));
-        // code-品类编码
+
+        // code-尺码组代码不能为空或者重复
         $validator->add('code', new PresenceOf([
             'message' => $this->getValidateMessage('required', 'code'),
             'cancelOnFail' => true,
@@ -75,6 +75,7 @@ class ZlBrandgroup extends BaseModel
 
         // 过滤
         $validator->setFilters($name, 'trim');
+        $validator->setFilters('code', 'trim');
 
         return $this->validate($validator);
     }

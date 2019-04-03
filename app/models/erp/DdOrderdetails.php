@@ -24,27 +24,17 @@ class DdOrderdetails extends BaseModel
             '\Asa\Erp\TbProduct',
             'id',
             [
-                'alias' => 'product',
-                "foreignKey" => [
-                    // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message" => $this->getValidateMessage('notexist', 'product'),
-                ],
+                'alias' => 'product'
             ]
         );
 
         // 订单详情-商品尺码表，一对多反向
         $this->belongsTo(
             'sizecontentid',
-            '\Asa\Erp\ZlSizecontent',
+            '\Asa\Erp\TbSizecontent',
             'id',
             [
-                'alias' => 'sizecontent',
-                "foreignKey" => [
-                    // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message" => $this->getValidateMessage('notexist', 'sizecontent'),
-                ],
+                'alias' => 'sizecontent'
             ]
         );
 
@@ -54,12 +44,7 @@ class DdOrderdetails extends BaseModel
             '\Asa\Erp\DdOrder',
             'id',
             [
-                'alias' => 'order',
-                "foreignKey" => [
-                    // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message" => $this->getValidateMessage('notexist', 'order'),
-                ],
+                'alias' => 'order'
             ]
         );
     }

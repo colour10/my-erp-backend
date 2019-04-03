@@ -21,7 +21,7 @@ class TbCompany extends BaseModel
         // 公司-国家，一对多反向
         $this->belongsTo(
             'countryid',
-            '\Asa\Erp\ZlCountry',
+            '\Asa\Erp\TbCountry',
             'id',
             [
                 'alias' => 'country',

@@ -22,7 +22,7 @@ class TbProduct extends BaseCompanyModel
         /*// 商品-子品类，一对多反向
         $this->belongsTo(
             'childbrand',
-            '\Asa\Erp\ZlChildproductgroup',
+            '\Asa\Erp\TbBrandgroupchild',
             'id',
             [
                 'alias' => 'childproductgroup',
@@ -37,7 +37,7 @@ class TbProduct extends BaseCompanyModel
         // 商品-尺码组，一对多反向
         $this->belongsTo(
             'sizetopid',
-            '\Asa\Erp\ZlSizetop',
+            '\Asa\Erp\TbSizetop',
             'id',
             [
                 'alias' => 'sizetop',
