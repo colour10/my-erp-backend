@@ -87,7 +87,7 @@
                                     <label class="control-label">尺码：</label>
                                     <select class="form-control input-sm">
                                         <?php foreach ($sizecontents as $sizecontent) { ?>
-                                        <option value="<?php echo $sizecontent['id']; ?>"><?php echo $sizecontent['content_cn']; ?></option>
+                                        <option value="<?php echo $sizecontent['id']; ?>"><?php echo $sizecontent['content']; ?></option>
                                         <?php } ?>
                                     </select>
                                 </div>
@@ -95,7 +95,7 @@
                                     <label class="control-label">颜色：</label>
                                     <select class="form-control input-sm">
                                         <?php foreach ($colors as $color) { ?>
-                                            <option value="<?php echo $color['id']; ?>"><?php echo $color['name_cn']; ?></option>
+                                            <option value="<?php echo $color['id']; ?>"><?php echo $color['name']; ?></option>
                                         <?php } ?>
                                     </select>
                                 </div>
