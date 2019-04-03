@@ -107,5 +107,10 @@ class Module implements ModuleDefinitionInterface
         $di->setShared('currentCompany', function () use ($tbcompany) {
             return $tbcompany->gethost()['company']->id;
         });
+
+        // 默认货币，以后会从配置文件导入，这个先随便写个，有变动在修改
+        $di->setShared('currency', function () {
+            return "$";
+        });
     }
 }
