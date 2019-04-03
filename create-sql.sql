@@ -183,6 +183,7 @@ CREATE TABLE `tb_company` (
   `name_de` varchar(1000) DEFAULT NULL COMMENT '德语名称',
   `countryid` int(10) unsigned DEFAULT NULL COMMENT '国家id',
   `memo` text COMMENT '备注说明',
+  `host` varchar(100) DEFAULT NULL COMMENT '绑定域名',
   `randid` int(11) DEFAULT NULL,
   `saleportid` int(11) unsigned DEFAULT NULL COMMENT '商城的销售端口',
   PRIMARY KEY (`id`),
@@ -192,19 +193,6 @@ CREATE TABLE `tb_company` (
 /*Data for the table `tb_company` */
 
 insert  into `tb_company`(`id`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`countryid`,`memo`,`randid`,`saleportid`) values (1,'company1552557078',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1);
-
-/*Table structure for table `tb_companyhost` */
-
-DROP TABLE IF EXISTS `tb_companyhost`;
-
-CREATE TABLE `tb_companyhost` (
-  `id` int(10) unsigned NOT NULL COMMENT '主键id',
-  `url` varchar(100) DEFAULT NULL COMMENT '网址',
-  `companyid` int(10) unsigned NOT NULL COMMENT '公司id',
-  `is_default` tinyint(1) DEFAULT '0' COMMENT '是否为默认：0-非默认 1-默认'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='公司商铺域名表';
-
-/*Data for the table `tb_companyhost` */
 
 /*Table structure for table `tb_confirmorderdetails` */
 
