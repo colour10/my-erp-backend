@@ -42,14 +42,6 @@ class BrandgroupController extends AdminController
     public function detailAction()
     {
         // 逻辑
-        // 判断当前域名是否绑定了公司
-        if (!$this->host) {
-            return $this->dispatcher->forward([
-                'controller' => 'error',
-                'action' => 'error404',
-            ]);
-        }
-
         // 判断是否登录
         if (!$this->session->get('member')) {
             return $this->dispatcher->forward([

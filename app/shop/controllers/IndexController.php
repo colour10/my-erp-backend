@@ -13,14 +13,6 @@ class IndexController extends AdminController
     public function indexAction()
     {
         // 逻辑
-        // 判断当前域名是否绑定了公司
-        if (!$this->host) {
-            return $this->dispatcher->forward([
-                'controller' => 'error',
-                'action' => 'error404',
-            ]);
-        }
-
         // 判断是否登录
         if (!$this->session->get('member')) {
             return $this->dispatcher->forward([
@@ -43,14 +35,6 @@ class IndexController extends AdminController
     public function searchAction()
     {
         // 逻辑
-        // 判断当前域名是否绑定了公司
-        if (!$this->host) {
-            return $this->dispatcher->forward([
-                'controller' => 'error',
-                'action' => 'error404',
-            ]);
-        }
-
         // 判断是否登录
         if (!$this->session->get('member')) {
             return $this->dispatcher->forward([
@@ -66,7 +50,7 @@ class IndexController extends AdminController
 
         // 取出结果
         $productlist = TbProductSearch::find([
-            'conditions' => 'productname like :keyword:',
+            'conditions' => 'productname like :keyword: AND companyid = '.$this->currentCompany,
             'bind' => ['keyword' => '%'.$keyword.'%'],
         ]);
 
@@ -95,13 +79,11 @@ class IndexController extends AdminController
      */
     public function isloginAction()
     {
-
-        // 判断是否登录
-        if (!$this->session->get('member')) {
-            return $this->dispatcher->forward([
-                'controller' => 'login',
-                'action' => 'index',
-            ]);
+        // 判断是否登录，判断member
+        if ($this->session->get('member')) {
+            return $this->session->get('member');
+        } else {
+            return false;
         }
     }
 
