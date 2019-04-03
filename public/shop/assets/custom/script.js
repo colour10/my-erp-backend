@@ -8,14 +8,6 @@ $(function() {
     // 取出当前地址栏的相对地址
     var relativepath = GetUrlRelativePath();
 
-    // 要判断当前的域名是否绑定了company
-
-
-    // console.log(url);
-    // http://www.myshop.com/brandgroup/detail/2
-    // console.log(GetUrlRelativePath());
-    // /brandgroup/detail/2
-
     // 取出主域名，如果不存在就直接跳转
     var main_host = getmainhost();
     if (!main_host) {
@@ -36,15 +28,6 @@ $(function() {
         Layout.initTouchspin();
     }
 
-    // 判断是否登录，如果没有登录则跳转到登录页面
-    var member = islogin();
-    if (!member) {
-        // 如果当前页面是非登录页，则跳转到登录页
-        if (relativepath != '/login/index') {
-            window.location.href= '/login/index';
-        }
-    }
-
 });
 
 /**
@@ -57,7 +40,7 @@ function getfileprex() {
     // 同步处理
     $.ajaxSetup({ async: false });
     // 逻辑
-    $.get('/brandgroup/getfileprex', function(response) {
+    $.post('/brandgroup/getfileprex', function(response) {
         if (response) {
             result = response;
         } else {
@@ -79,7 +62,7 @@ function getmainhost() {
     // 同步处理
     $.ajaxSetup({ async: false });
     // 逻辑
-    $.get('/brandgroup/getmainhost', function(response) {
+    $.post('/brandgroup/getmainhost', function(response) {
         if (response) {
             result = response;
         } else {
@@ -105,26 +88,4 @@ function GetUrlRelativePath() {
         relUrl = relUrl.split("?")[0];
     }
     return relUrl;
-}
-
-
-/**
- * 判断是否登录
- * @returns {boolean}
- */
-function islogin() {
-    // 初始化
-    var result = false;
-    // 同步处理
-    $.ajaxSetup({ async: false });
-    // 逻辑
-    $.post('/test/islogin', function(response) {
-        if (response) {
-            result = response;
-        } else {
-            result = false;
-        }
-    });
-    // 返回
-    return result;
 }
