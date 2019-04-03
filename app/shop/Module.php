@@ -2,6 +2,7 @@
 
 namespace Multiple\Shop;
 
+use Multiple\Shop\Controllers\IndexController;
 use Phalcon\Loader;
 use Phalcon\Mvc\View;
 use Phalcon\DiInterface;
@@ -96,6 +97,12 @@ class Module implements ModuleDefinitionInterface
             return $cates;
         });
 
+        // 判断是否登录
+        $di->setShared('islogin', function () {
+            $index = new IndexController();
+            return $index->isloginAction();
+        });
+
         // 获取当前域名及所属公司的模型
         $tbcompany = new CompanyController();
         $di->setShared('host', function () use ($tbcompany) {
@@ -105,7 +112,10 @@ class Module implements ModuleDefinitionInterface
 
         // 为了使用共享model数据，需要注册currentCompany
         $di->setShared('currentCompany', function () use ($tbcompany) {
-            return $tbcompany->gethost()['company']->id;
+            $result = $tbcompany->gethost();
+            if ($result) {
+                return $result['company']->id;
+            }
         });
 
         // 默认货币，以后会从配置文件导入，这个先随便写个，有变动在修改
