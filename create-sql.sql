@@ -2,7 +2,8 @@
 SQLyog Ultimate v9.60 
 MySQL - 5.7.25 : Database - erp
 *********************************************************************
-*/
+*/
+
 
 /*!40101 SET NAMES utf8 */;
 
@@ -616,13 +617,29 @@ CREATE TABLE `tb_product_search` (
   `productid` int(11) unsigned DEFAULT NULL COMMENT '商品id',
   `sizetopid` int(11) DEFAULT NULL COMMENT '尺码组id',
   `brandgroupid` int(11) DEFAULT NULL COMMENT '品类id',
+  `brandgroupname_cn` varchar(100) DEFAULT NULL COMMENT '品类中文名称',
+  `brandgroupname_en` varchar(100) DEFAULT NULL COMMENT '品类英文名称',
+  `brandgroupname_hk` varchar(100) DEFAULT NULL COMMENT '品类粤语名称',
+  `brandgroupname_fr` varchar(100) DEFAULT NULL COMMENT '品类法语名称',
+  `brandgroupname_it` varchar(100) DEFAULT NULL COMMENT '品类意大利语名称',
+  `brandgroupname_sp` varchar(100) DEFAULT NULL COMMENT '品类西班牙语名称',
+  `brandgroupname_de` varchar(100) DEFAULT NULL COMMENT '品类德语名称',
   `childbrand` int(11) DEFAULT NULL COMMENT '子品类id',
-  `number` int(11) DEFAULT NULL,
+  `childbrandname_cn` varchar(100) DEFAULT NULL COMMENT '子品类中文名称',
+  `childbrandname_en` varchar(100) DEFAULT NULL COMMENT '子品类英文名称',
+  `childbrandname_hk` varchar(100) DEFAULT NULL COMMENT '子品类粤语名称',
+  `childbrandname_fr` varchar(100) DEFAULT NULL COMMENT '子品类法语名称',
+  `childbrandname_it` varchar(100) DEFAULT NULL COMMENT '子品类意大利语名称',
+  `childbrandname_sp` varchar(100) DEFAULT NULL COMMENT '子品类西班牙语名称',
+  `childbrandname_de` varchar(100) DEFAULT NULL COMMENT '子品类德语名称',
+  `number` int(11) DEFAULT NULL COMMENT '库存数量',
   `picture` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '主图',
   `picture2` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '副图',
   `color` varchar(20) COLLATE utf8_bin DEFAULT NULL COMMENT '颜色',
   `color_group` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '同组颜色',
-  `companyid` int(11) DEFAULT NULL,
+  `price` decimal(16,2) DEFAULT NULL COMMENT '原价',
+  `realprice` decimal(16,2) DEFAULT NULL COMMENT '折扣价',
+  `companyid` int(11) DEFAULT NULL COMMENT '公司id',
   UNIQUE KEY `companyid_2` (`companyid`,`productid`),
   KEY `id` (`id`),
   KEY `companyid` (`companyid`,`brandgroupid`,`childbrand`)
