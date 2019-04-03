@@ -3,7 +3,8 @@ namespace Multiple\Shop\Controllers;
 
 use Asa\Erp\TbProductSearch;
 use Phalcon\Mvc\Controller;
-use Asa\Erp\ZlBrandgroup;
+use Asa\Erp\TbBrandgroup;
+use Asa\Erp\TbProduct;
 use Phalcon\Paginator\Adapter\Model as PaginatorModel;
 
 class BrandgroupController extends AdminController
@@ -11,7 +12,7 @@ class BrandgroupController extends AdminController
 
     public function initialize()
     {
-        $this->setModelName('Asa\\Erp\\ZlBrandgroup');
+        $this->setModelName('Asa\\Erp\\TbBrandgroup');
     }
 
     /**
@@ -69,11 +70,11 @@ class BrandgroupController extends AdminController
         // 分页
         $currentPage = $this->request->getQuery("page", "int", 1);
         // 取出数据
-        $brandGroup = ZlBrandgroup::findFirstById($id);
+        $brandGroup = TbBrandgroup::findFirstById($id);
         // 定义一个变量用来存储结果
         $brandGroup_ids = [];
         // 寻找下面的子品类id
-        foreach ($brandGroup->childproductgroups as $childgroup) {
+        foreach ($brandGroup->brandgroupchilds as $childgroup) {
             $brandGroup_ids[] = $childgroup->id;
         }
 
@@ -119,7 +120,7 @@ class BrandgroupController extends AdminController
     public function catesAction()
     {
         // 逻辑
-        $list = ZlBrandgroup::find();
+        $list = TbBrandgroup::find();
         // 语言字段重新设计
         $list_array = $list->toArray();
         foreach ($list_array as $k => $item) {
@@ -140,7 +141,7 @@ class BrandgroupController extends AdminController
         // 定义一个变量用来存储结果
         $list_arr = [];
         // 取出所有一级品牌
-        $list = ZlBrandgroup::find();
+        $list = TbBrandgroup::find();
         if($list) {
             $list_arr = $list->toArray();
         }
@@ -148,7 +149,7 @@ class BrandgroupController extends AdminController
         foreach ($list_arr as $k => $item) {
             $list_arr[$k]['name'] = $item[$this->getlangfield('name')];
             // 开始添加子分类当前语言信息
-            $childproductgroups_array = ZlBrandgroup::findFirstById($item['id'])->childproductgroups->toArray();
+            $childproductgroups_array = TbBrandgroup::findFirstById($item['id'])->brandgroupchilds->toArray();
             // 判断是否有子分类
             if ($childproductgroups_array) {
                 foreach ($childproductgroups_array as $key => $childproductgroup) {
@@ -171,7 +172,7 @@ class BrandgroupController extends AdminController
     public function getdetailAction($id)
     {
         // 逻辑
-        $brandGroup = ZlBrandgroup::find('id='.$id);
+        $brandGroup = TbBrandgroup::find('id='.$id);
         // 返回
         return $brandGroup;
     }

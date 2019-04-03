@@ -3,7 +3,7 @@ namespace Multiple\Home\Controllers;
 
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
-use Asa\Erp\ZlAgeseason;
+use Asa\Erp\TbAgeseason;
 
 /**
  * 年代表
@@ -12,7 +12,7 @@ class AgeseasonController extends AdminController {
     public function initialize() {
 	    parent::initialize();
 
-	    $this->setModelName('Asa\\Erp\\ZlAgeseason');
+	    $this->setModelName('Asa\\Erp\\TbAgeseason');
 	    //$this->configList("fullname", [ "name","sessionmark" ]);
     }
     

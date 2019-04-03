@@ -3,15 +3,15 @@ namespace Multiple\Home\Controllers;
 
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
-use Asa\Erp\ZlChildproductgroup;
+use Asa\Erp\TbBrandgroupchild;
 
 /**
  * 基础资料，子品类表
  */
-class ChildproductgroupController extends ZadminController {
+class BrandgroupchildController extends ZadminController {
     public function initialize() {
 	    parent::initialize();
 
-	    $this->setModelName('Asa\\Erp\\ZlChildproductgroup');
+	    $this->setModelName('Asa\\Erp\\TbBrandgroupchild');
     }
 }

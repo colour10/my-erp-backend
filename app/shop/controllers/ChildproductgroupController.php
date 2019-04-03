@@ -4,7 +4,7 @@ namespace Multiple\Shop\Controllers;
 use Asa\Erp\TbProductSearch;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
-use Asa\Erp\ZlChildproductgroup;
+use Asa\Erp\TbBrandgroupchild;
 use Phalcon\Paginator\Adapter\Model as PaginatorModel;
 
 /**
@@ -13,7 +13,7 @@ use Phalcon\Paginator\Adapter\Model as PaginatorModel;
 class ChildproductgroupController extends AdminController {
 
     public function initialize() {
-        $this->setModelName('Asa\\Erp\\ZlChildproductgroup');
+        $this->setModelName('Asa\\Erp\\TbBrandgroupchild');
     }
 
 

@@ -9,17 +9,17 @@ use Phalcon\Mvc\Model\Relation;
 /**
  * 商品尺码明细信息表
  */
-class ZlSizecontent extends BaseModel
+class TbSizecontent extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('zl_sizecontent');
+        $this->setSource('tb_sizecontent');
 
         // 尺码详情-尺码组-尺码详情，一对多反向
         $this->belongsTo(
             'topid',
-            '\Asa\Erp\ZlSizetop',
+            '\Asa\Erp\TbSizetop',
             'id',
             [
                 'alias' => 'sizetop',

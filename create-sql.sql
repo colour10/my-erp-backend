@@ -2,8 +2,7 @@
 SQLyog Ultimate v9.60 
 MySQL - 5.7.25 : Database - erp
 *********************************************************************
-*/
-
+*/
 
 /*!40101 SET NAMES utf8 */;
 
@@ -69,11 +68,11 @@ CREATE TABLE `dd_confirmorder` (
   `invoiceno` varchar(50) DEFAULT NULL,
   `dd_company` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COMMENT='发货单';
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COMMENT='发货单';
 
 /*Data for the table `dd_confirmorder` */
 
-insert  into `dd_confirmorder`(`id`,`companyid`,`status`,`orderno`,`supplierid`,`makedate`,`makestaff`,`currency`,`total`,`isstatus`,`memo`,`brandid`,`ageseasonid`,`seasontype`,`auditstaff`,`auditdate`,`exchangerate`,`finalsupplierid`,`flightno`,`flightdate`,`arrivaldate`,`mblno`,`hblno`,`dispatchport`,`deliveryport`,`transcompany`,`isexamination`,`examinationresult`,`clearancedate`,`pickingdate`,`motortransportpool`,`warehouseid`,`box_number`,`weight`,`volume`,`issjyh`,`sellerid`,`sjyhresult`,`buyerid`,`transporttype`,`paytype`,`property`,`payoutpercentage`,`pickingaddress`,`chargedweight`,`paydate`,`apickingdate`,`aarrivaldate`,`invoiceno`,`dd_company`) values (25,1,3,'C000001201903291913295586',2,'2019-03-29 19:13:29',1,5,'0.00',NULL,NULL,NULL,0,1,NULL,NULL,'0.0000',2,'','',NULL,'','','','',0,NULL,NULL,NULL,NULL,NULL,2,0,'0.00','0.00',NULL,0,NULL,0,0,0,1,NULL,NULL,'0.00','','','','',0);
+insert  into `dd_confirmorder`(`id`,`companyid`,`status`,`orderno`,`supplierid`,`makedate`,`makestaff`,`currency`,`total`,`isstatus`,`memo`,`brandid`,`ageseasonid`,`seasontype`,`auditstaff`,`auditdate`,`exchangerate`,`finalsupplierid`,`flightno`,`flightdate`,`arrivaldate`,`mblno`,`hblno`,`dispatchport`,`deliveryport`,`transcompany`,`isexamination`,`examinationresult`,`clearancedate`,`pickingdate`,`motortransportpool`,`warehouseid`,`box_number`,`weight`,`volume`,`issjyh`,`sellerid`,`sjyhresult`,`buyerid`,`transporttype`,`paytype`,`property`,`payoutpercentage`,`pickingaddress`,`chargedweight`,`paydate`,`apickingdate`,`aarrivaldate`,`invoiceno`,`dd_company`) values (25,1,3,'C000001201903291913295586',1,'2019-03-29 19:13:29',1,5,'0.00',NULL,NULL,NULL,1,1,NULL,NULL,'0.0000',1,'','',NULL,'','','','',0,NULL,NULL,NULL,NULL,NULL,2,0,'0.00','0.00',NULL,0,NULL,0,0,0,1,NULL,NULL,'0.00','','','','',0),(26,1,3,'C000001201904011733341115',4,'2019-04-01 17:33:34',1,0,'0.00',NULL,NULL,NULL,6,1,NULL,NULL,'0.0000',4,'','',NULL,'','','','',0,NULL,NULL,NULL,NULL,NULL,2,0,'0.00','0.00',NULL,0,NULL,0,0,0,1,NULL,NULL,'0.00','','','','',0),(27,1,2,'C000001201904011939563784',6,'2019-04-01 19:39:56',1,0,'0.00',NULL,NULL,NULL,2,1,NULL,NULL,'0.0000',6,'','',NULL,'','','','',0,NULL,NULL,NULL,NULL,NULL,4,0,'0.00','0.00',NULL,0,NULL,0,0,0,1,NULL,NULL,'0.00','','','','',0),(28,1,2,'C000001201904011941139972',5,'2019-04-01 19:41:13',1,0,'0.00',NULL,NULL,NULL,5,1,NULL,NULL,'0.0000',5,'','',NULL,'','','','',0,NULL,NULL,NULL,NULL,NULL,4,0,'0.00','0.00',NULL,0,NULL,0,0,0,1,NULL,NULL,'0.00','','','','',0),(29,1,3,'C000001201904011941359914',6,'2019-04-01 19:41:35',1,0,'0.00',NULL,NULL,NULL,6,2,NULL,NULL,'0.0000',6,'','',NULL,'','','','',0,NULL,NULL,NULL,NULL,NULL,4,0,'0.00','0.00',NULL,0,NULL,0,0,0,2,NULL,NULL,'0.00','','','','',0);
 
 /*Table structure for table `dd_confirmorderdetails` */
 
@@ -92,11 +91,11 @@ CREATE TABLE `dd_confirmorderdetails` (
   KEY `confirmorderid` (`confirmorderid`),
   CONSTRAINT `dd_confirmorderdetails_ibfk_1` FOREIGN KEY (`orderdetailsid`) REFERENCES `dd_orderdetails` (`id`),
   CONSTRAINT `dd_confirmorderdetails_ibfk_2` FOREIGN KEY (`confirmorderid`) REFERENCES `dd_confirmorder` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COMMENT='发货单明细';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COMMENT='发货单明细';
 
 /*Data for the table `dd_confirmorderdetails` */
 
-insert  into `dd_confirmorderdetails`(`id`,`confirmorderid`,`orderdetailsid`,`number`,`price`,`actualnumber`,`companyid`) values (3,25,37,2,'1000.00',NULL,1),(4,25,36,2,'1000.00',NULL,1),(5,25,35,2,'1000.00',NULL,1);
+insert  into `dd_confirmorderdetails`(`id`,`confirmorderid`,`orderdetailsid`,`number`,`price`,`actualnumber`,`companyid`) values (3,25,37,2,'1000.00',NULL,1),(4,25,36,2,'1000.00',NULL,1),(5,25,35,2,'1000.00',NULL,1),(6,26,42,1,'1000.00',NULL,1),(7,26,41,2,'1000.00',NULL,1);
 
 /*Table structure for table `dd_order` */
 
@@ -137,11 +136,11 @@ CREATE TABLE `dd_order` (
   `status` int(11) DEFAULT NULL COMMENT '订单状态：1=保存；2=送审；3=审核完成',
   PRIMARY KEY (`id`),
   KEY `companyid` (`companyid`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COMMENT='订单主表';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COMMENT='订单主表';
 
 /*Data for the table `dd_order` */
 
-insert  into `dd_order`(`id`,`bussinesstypeid`,`makedate`,`makestaff`,`supplierid`,`finalsupplierid`,`bookingid`,`agentid`,`purchasedept`,`orderno`,`total`,`currency`,`auditstaff`,`auditdate`,`ordercode`,`worldordercode`,`isstatus`,`formtype`,`memo`,`contactor`,`ourcontactor`,`ageseason`,`seasontype`,`invoiceno`,`ddtype`,`morderid`,`exchangerate`,`bussinesstype`,`discount`,`property`,`companyid`,`status`) values (6,NULL,'2019-03-29 16:27:36',1,2,0,0,NULL,NULL,'D000001201903291627363324','0.00','',0,NULL,'','',NULL,'','','','',5,0,'',NULL,NULL,'0.0000',1,'0.00',0,1,3);
+insert  into `dd_order`(`id`,`bussinesstypeid`,`makedate`,`makestaff`,`supplierid`,`finalsupplierid`,`bookingid`,`agentid`,`purchasedept`,`orderno`,`total`,`currency`,`auditstaff`,`auditdate`,`ordercode`,`worldordercode`,`isstatus`,`formtype`,`memo`,`contactor`,`ourcontactor`,`ageseason`,`seasontype`,`invoiceno`,`ddtype`,`morderid`,`exchangerate`,`bussinesstype`,`discount`,`property`,`companyid`,`status`) values (6,NULL,'2019-03-29 16:27:36',1,6,0,0,NULL,NULL,'D000001201903291627363324','0.00','',0,NULL,'','',NULL,'','','','',2,0,'',NULL,NULL,'0.0000',1,'0.00',0,1,2),(7,NULL,'2019-04-01 19:31:46',1,1,1,0,NULL,NULL,'D000001201904011931467284','0.00','',0,NULL,'','',NULL,'','','','',1,1,'',NULL,NULL,'0.0000',1,'0.00',1,1,3),(8,NULL,'2019-04-01 19:32:29',1,5,5,0,NULL,NULL,'D000001201904011932295137','0.00','',0,NULL,'','',NULL,'','','','',6,1,'',NULL,NULL,'0.0000',2,'0.00',1,1,2),(9,NULL,'2019-04-01 19:33:22',1,6,6,0,NULL,NULL,'D000001201904011933222331','0.00','',0,NULL,'','',NULL,'','','','',5,2,'',NULL,NULL,'0.0000',1,'0.00',1,1,2),(10,NULL,'2019-04-01 19:33:57',1,4,4,0,NULL,NULL,'D000001201904011933571910','0.00','',0,NULL,'','',NULL,'','','','',2,1,'',NULL,NULL,'0.0000',2,'0.00',2,1,2);
 
 /*Table structure for table `dd_orderdetails` */
 
@@ -166,11 +165,100 @@ CREATE TABLE `dd_orderdetails` (
   KEY `productid` (`productid`),
   CONSTRAINT `dd_orderdetails_ibfk_1` FOREIGN KEY (`orderid`) REFERENCES `dd_order` (`id`),
   CONSTRAINT `dd_orderdetails_ibfk_2` FOREIGN KEY (`productid`) REFERENCES `tb_product` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COMMENT='订单明细';
+) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8mb4 COMMENT='订单明细';
 
 /*Data for the table `dd_orderdetails` */
 
-insert  into `dd_orderdetails`(`id`,`orderid`,`sizecontentid`,`number`,`productid`,`price`,`confirm_number`,`companyid`,`is_append`,`createdate`,`status`,`actualnumber`) values (35,6,13,2,2,'1000.00',2,1,0,'2019-03-29 16:27:36',NULL,0),(36,6,12,2,2,'1000.00',2,1,0,'2019-03-29 16:27:36',NULL,0),(37,6,11,2,2,'1000.00',2,1,0,'2019-03-29 16:27:36',NULL,0),(38,6,10,2,2,'1000.00',0,1,0,'2019-03-29 16:27:36',NULL,0),(39,6,9,5,2,'1000.00',0,1,0,'2019-03-29 16:27:36',NULL,0),(40,6,8,3,2,'1000.00',0,1,0,'2019-03-29 16:27:36',NULL,0),(41,6,7,2,2,'1000.00',0,1,0,'2019-03-29 16:27:36',NULL,0),(42,6,6,3,2,'1000.00',0,1,0,'2019-03-29 16:27:36',NULL,0);
+insert  into `dd_orderdetails`(`id`,`orderid`,`sizecontentid`,`number`,`productid`,`price`,`confirm_number`,`companyid`,`is_append`,`createdate`,`status`,`actualnumber`) values (35,6,13,2,2,'1000.00',6,1,0,'2019-04-01 19:27:43',NULL,0),(36,6,12,2,2,'1000.00',6,1,0,'2019-04-01 19:27:43',NULL,0),(37,6,11,2,2,'1000.00',6,1,0,'2019-04-01 19:27:43',NULL,0),(38,6,10,2,2,'1000.00',0,1,0,'2019-04-01 19:27:43',NULL,0),(39,6,9,5,2,'1000.00',0,1,0,'2019-04-01 19:27:43',NULL,0),(40,6,8,3,2,'1000.00',0,1,0,'2019-04-01 19:27:43',NULL,0),(41,6,7,2,2,'1000.00',4,1,0,'2019-04-01 19:27:43',NULL,0),(42,6,6,3,2,'1000.00',2,1,0,'2019-04-01 19:27:43',NULL,0),(43,8,5,1,6,'2500.00',0,1,0,'2019-04-01 19:32:43',NULL,0),(44,8,4,1,6,'2500.00',0,1,0,'2019-04-01 19:32:43',NULL,0),(45,8,3,1,6,'2500.00',0,1,0,'2019-04-01 19:32:43',NULL,0),(46,8,2,1,6,'2500.00',0,1,0,'2019-04-01 19:32:43',NULL,0),(47,8,1,1,6,'2500.00',0,1,0,'2019-04-01 19:32:43',NULL,0),(48,8,5,1,1,'126.50',0,1,0,'2019-04-01 19:32:43',NULL,0),(49,8,4,1,1,'126.50',0,1,0,'2019-04-01 19:32:43',NULL,0),(50,8,3,1,1,'126.50',0,1,0,'2019-04-01 19:32:43',NULL,0),(51,8,2,1,1,'126.50',0,1,0,'2019-04-01 19:32:43',NULL,0),(52,8,1,1,1,'126.50',0,1,0,'2019-04-01 19:32:43',NULL,0),(53,9,13,1,3,'2000.00',0,1,0,'2019-04-01 19:33:22',NULL,0),(54,9,12,1,3,'2000.00',0,1,0,'2019-04-01 19:33:22',NULL,0),(55,9,11,1,3,'2000.00',0,1,0,'2019-04-01 19:33:22',NULL,0),(56,9,10,1,3,'2000.00',0,1,0,'2019-04-01 19:33:22',NULL,0),(57,9,9,1,3,'2000.00',0,1,0,'2019-04-01 19:33:22',NULL,0),(58,9,8,1,3,'2000.00',0,1,0,'2019-04-01 19:33:22',NULL,0),(59,9,7,1,3,'2000.00',0,1,0,'2019-04-01 19:33:22',NULL,0),(60,9,6,1,3,'2000.00',0,1,0,'2019-04-01 19:33:22',NULL,0),(61,10,13,1,2,'1000.00',0,1,0,'2019-04-01 19:33:57',NULL,0),(62,10,12,1,2,'1000.00',0,1,0,'2019-04-01 19:33:57',NULL,0),(63,10,11,1,2,'1000.00',0,1,0,'2019-04-01 19:33:57',NULL,0),(64,10,10,1,2,'1000.00',0,1,0,'2019-04-01 19:33:57',NULL,0),(65,10,9,1,2,'1000.00',0,1,0,'2019-04-01 19:33:57',NULL,0),(66,10,8,1,2,'1000.00',0,1,0,'2019-04-01 19:33:57',NULL,0),(67,10,7,1,2,'1000.00',0,1,0,'2019-04-01 19:33:57',NULL,0),(68,10,6,1,2,'1000.00',0,1,0,'2019-04-01 19:33:57',NULL,0),(69,10,5,1,1,'126.50',0,1,0,'2019-04-01 19:33:57',NULL,0),(70,10,4,1,1,'126.50',0,1,0,'2019-04-01 19:33:57',NULL,0),(71,10,3,1,1,'126.50',0,1,0,'2019-04-01 19:33:57',NULL,0),(72,10,2,1,1,'126.50',0,1,0,'2019-04-01 19:33:57',NULL,0),(73,10,1,1,1,'126.50',0,1,0,'2019-04-01 19:33:57',NULL,0);
+
+/*Table structure for table `tb_ageseason` */
+
+DROP TABLE IF EXISTS `tb_ageseason`;
+
+CREATE TABLE `tb_ageseason` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `sessionmark` varchar(10) DEFAULT NULL,
+  `name` varchar(100) DEFAULT NULL COMMENT '中文名称',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COMMENT='年代季节';
+
+/*Data for the table `tb_ageseason` */
+
+insert  into `tb_ageseason`(`id`,`sessionmark`,`name`) values (1,'XX','2018'),(2,'SS','2018'),(3,'SS','2019'),(4,'FW','2019'),(5,'SS','2012'),(6,'FW','2018'),(7,'SS','2015'),(8,'FW','2015');
+
+/*Table structure for table `tb_brand` */
+
+DROP TABLE IF EXISTS `tb_brand`;
+
+CREATE TABLE `tb_brand` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `code` varchar(50) DEFAULT NULL,
+  `name_cn` varchar(100) DEFAULT NULL COMMENT '中文名称',
+  `name_en` varchar(100) DEFAULT NULL COMMENT '英文名称',
+  `name_hk` varchar(100) DEFAULT NULL COMMENT '粤语名称',
+  `name_fr` varchar(100) DEFAULT NULL COMMENT '法语名称',
+  `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
+  `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
+  `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
+  `countryid` int(10) unsigned DEFAULT NULL,
+  `brandgroupid` int(10) unsigned DEFAULT NULL,
+  `filename` varchar(200) DEFAULT NULL COMMENT 'LOGO',
+  `memo` text,
+  `officialwebsite` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COMMENT='品牌表';
+
+/*Data for the table `tb_brand` */
+
+insert  into `tb_brand`(`id`,`code`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`countryid`,`brandgroupid`,`filename`,`memo`,`officialwebsite`) values (1,'','Gucci',NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,'',''),(2,'001','耐克','Nike','',NULL,NULL,NULL,NULL,2,1,NULL,'',''),(3,'004','Adidas','','',NULL,NULL,NULL,NULL,4,0,NULL,'',''),(4,'005','彪马','','',NULL,NULL,NULL,NULL,4,2,NULL,'',''),(5,'006','BOUTIQUE MOSCHINO','','',NULL,NULL,NULL,NULL,1,0,NULL,'',''),(6,'PRADA','PRADA','','',NULL,NULL,NULL,NULL,6,0,NULL,'',''),(7,'CELINE','CELINE','','',NULL,NULL,NULL,NULL,1,0,NULL,'',''),(8,'FENDI','FENDI','','',NULL,NULL,NULL,NULL,1,0,NULL,'',''),(9,'CHIARA FERRAGNI','CHIARA FERRAGNI','','',NULL,NULL,NULL,NULL,1,0,NULL,'','');
+
+/*Table structure for table `tb_brandgroup` */
+
+DROP TABLE IF EXISTS `tb_brandgroup`;
+
+CREATE TABLE `tb_brandgroup` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `code` varchar(50) DEFAULT NULL,
+  `name_cn` varchar(100) DEFAULT NULL COMMENT '中文名称',
+  `name_en` varchar(100) DEFAULT NULL COMMENT '英文名称',
+  `name_hk` varchar(100) DEFAULT NULL COMMENT '粤语名称',
+  `name_fr` varchar(100) DEFAULT NULL COMMENT '法语名称',
+  `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
+  `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
+  `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COMMENT='品类表';
+
+/*Data for the table `tb_brandgroup` */
+
+insert  into `tb_brandgroup`(`id`,`code`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`) values (1,'33','衣服','','',NULL,NULL,NULL,NULL),(2,'44','包袋','','',NULL,NULL,NULL,NULL),(3,'55','鞋子','','',NULL,NULL,NULL,NULL),(4,'66','首饰','','',NULL,NULL,NULL,NULL),(5,'67','上装','','',NULL,NULL,NULL,NULL),(6,'68','眼镜','','',NULL,NULL,NULL,NULL),(7,'69','腰带','','',NULL,NULL,NULL,NULL);
+
+/*Table structure for table `tb_brandgroupchild` */
+
+DROP TABLE IF EXISTS `tb_brandgroupchild`;
+
+CREATE TABLE `tb_brandgroupchild` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `name_cn` varchar(100) DEFAULT NULL COMMENT '中文名称',
+  `name_en` varchar(100) DEFAULT NULL COMMENT '英文名称',
+  `name_hk` varchar(100) DEFAULT NULL COMMENT '粤语名称',
+  `name_fr` varchar(100) DEFAULT NULL COMMENT '法语名称',
+  `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
+  `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
+  `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
+  `childcode` varchar(50) DEFAULT NULL,
+  `brandgroupid` int(10) unsigned DEFAULT NULL,
+  `producttemplateid` int(10) unsigned DEFAULT NULL,
+  `weight` decimal(16,9) DEFAULT NULL,
+  `isfj` varchar(1) DEFAULT NULL COMMENT '0-否 1-法检',
+  `cname4male` int(10) unsigned DEFAULT NULL,
+  `cname4female` int(10) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COMMENT='子品类';
+
+/*Data for the table `tb_brandgroupchild` */
+
+insert  into `tb_brandgroupchild`(`id`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`childcode`,`brandgroupid`,`producttemplateid`,`weight`,`isfj`,`cname4male`,`cname4female`) values (2,'上衣','','',NULL,NULL,NULL,NULL,'0101',1,0,'0.000000000',NULL,NULL,NULL),(3,'风衣','','',NULL,NULL,NULL,NULL,'0102',1,0,'0.000000000',NULL,NULL,NULL),(4,'夹克','','',NULL,NULL,NULL,NULL,'0103',1,0,'0.000000000',NULL,NULL,NULL),(5,'运动服','','',NULL,NULL,NULL,NULL,'0105',1,0,'0.000000000',NULL,NULL,NULL),(6,'网球鞋','','',NULL,NULL,NULL,NULL,'0301',3,0,'0.000000000',NULL,NULL,NULL),(7,'足球鞋','','',NULL,NULL,NULL,NULL,'0302',3,0,'0.000000000',NULL,NULL,NULL),(8,'篮球鞋','','',NULL,NULL,NULL,NULL,'0303',3,0,'0.000000000',NULL,NULL,NULL),(9,'跑步鞋','','',NULL,NULL,NULL,NULL,'0304',3,0,'0.000000000',NULL,NULL,NULL),(10,'项链','','',NULL,NULL,NULL,NULL,'0401',4,0,'0.000000000',NULL,NULL,NULL),(11,'戒指','','',NULL,NULL,NULL,NULL,'0402',4,0,'0.000000000',NULL,NULL,NULL),(12,'背包','','',NULL,NULL,NULL,NULL,'0201',2,0,'0.000000000',NULL,NULL,NULL),(13,'手提包','','',NULL,NULL,NULL,NULL,'0202',2,0,'0.000000000',NULL,NULL,NULL),(14,'电脑包','','',NULL,NULL,NULL,NULL,'0203',2,0,'0.000000000',NULL,NULL,NULL),(15,'长袖T恤衫','','',NULL,NULL,NULL,NULL,'',5,1,'0.000000000',NULL,NULL,NULL),(16,'斜挎包','','',NULL,NULL,NULL,NULL,'',2,0,'0.000000000',NULL,NULL,NULL),(17,'手提包','','',NULL,NULL,NULL,NULL,'',2,0,'0.000000000',NULL,NULL,NULL),(18,'太阳镜','','',NULL,NULL,NULL,NULL,'',6,0,'0.000000000',NULL,NULL,NULL),(19,'腰带','','',NULL,NULL,NULL,NULL,'',7,0,'0.000000000',NULL,NULL,NULL);
 
 /*Table structure for table `tb_buycar` */
 
@@ -207,8 +295,7 @@ CREATE TABLE `tb_company` (
   `name_de` varchar(1000) DEFAULT NULL COMMENT '德语名称',
   `countryid` int(10) unsigned DEFAULT NULL COMMENT '国家id',
   `memo` text COMMENT '备注说明',
-  `randid` int(11) DEFAULT NULL COMMENT '公司唯一标识',
-  `host` varchar(100) DEFAULT NULL COMMENT '绑定域名',
+  `randid` int(11) DEFAULT NULL,
   `saleportid` int(11) unsigned DEFAULT NULL COMMENT '商城的销售端口',
   PRIMARY KEY (`id`),
   UNIQUE KEY `randid` (`randid`)
@@ -217,6 +304,41 @@ CREATE TABLE `tb_company` (
 /*Data for the table `tb_company` */
 
 insert  into `tb_company`(`id`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`countryid`,`memo`,`randid`,`saleportid`) values (1,'company1552557078',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1);
+
+/*Table structure for table `tb_companyhost` */
+
+DROP TABLE IF EXISTS `tb_companyhost`;
+
+CREATE TABLE `tb_companyhost` (
+  `id` int(10) unsigned NOT NULL COMMENT '主键id',
+  `url` varchar(100) DEFAULT NULL COMMENT '网址',
+  `companyid` int(10) unsigned NOT NULL COMMENT '公司id',
+  `is_default` tinyint(1) DEFAULT '0' COMMENT '是否为默认：0-非默认 1-默认'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='公司商铺域名表';
+
+/*Data for the table `tb_companyhost` */
+
+/*Table structure for table `tb_country` */
+
+DROP TABLE IF EXISTS `tb_country`;
+
+CREATE TABLE `tb_country` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `code` varchar(20) NOT NULL,
+  `name_cn` varchar(100) DEFAULT NULL COMMENT '中文名称',
+  `name_en` varchar(100) DEFAULT NULL COMMENT '英文名称',
+  `name_hk` varchar(100) DEFAULT NULL COMMENT '粤语名称',
+  `name_fr` varchar(100) DEFAULT NULL COMMENT '法语名称',
+  `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
+  `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
+  `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
+  `localcurrency` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COMMENT='国家表';
+
+/*Data for the table `tb_country` */
+
+insert  into `tb_country`(`id`,`code`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`localcurrency`) values (1,'Spain','西班牙','','',NULL,NULL,NULL,NULL,'CAD'),(2,'France','法国','','',NULL,NULL,NULL,NULL,'USD'),(3,'787','英国','','',NULL,NULL,NULL,NULL,'EUR'),(4,'799','德国','','',NULL,NULL,NULL,NULL,''),(5,'800','美国','','',NULL,NULL,NULL,NULL,''),(6,'1','罗马尼亚','','',NULL,NULL,NULL,NULL,''),(7,'2','意大利','','',NULL,NULL,NULL,NULL,''),(8,'3','中国','','',NULL,NULL,NULL,NULL,'');
 
 /*Table structure for table `tb_department` */
 
@@ -254,11 +376,11 @@ CREATE TABLE `tb_goods` (
   `companyid` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `productid` (`companyid`,`productid`,`sizecontentid`,`defective_level`,`property`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COMMENT='库存商品表';
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COMMENT='库存商品表';
 
 /*Data for the table `tb_goods` */
 
-insert  into `tb_goods`(`id`,`productid`,`sizecontentid`,`defective_level`,`property`,`change_time`,`change_stuff`,`price`,`companyid`) values (1,1,3,0,1,NULL,NULL,'1100.00',1),(2,1,4,0,2,NULL,NULL,'8000.00',1),(9,2,11,0,1,'2019-03-30 10:49:49',NULL,'1000.00',1),(10,2,12,0,1,'2019-03-30 10:49:49',NULL,'1000.00',1),(11,2,13,0,1,'2019-03-30 10:49:49',NULL,'1000.00',1);
+insert  into `tb_goods`(`id`,`productid`,`sizecontentid`,`defective_level`,`property`,`change_time`,`change_stuff`,`price`,`companyid`) values (1,1,3,0,1,NULL,NULL,'1100.00',1),(2,1,4,0,2,NULL,NULL,'8000.00',1),(9,2,11,0,1,'2019-03-30 10:49:49',NULL,'1000.00',1),(10,2,12,0,1,'2019-03-30 10:49:49',NULL,'1000.00',1),(11,2,13,0,1,'2019-03-30 10:49:49',NULL,'1000.00',1),(18,2,6,0,1,'2019-04-01 17:50:11',NULL,'1000.00',1),(19,2,7,0,1,'2019-04-01 17:50:11',NULL,'1000.00',1);
 
 /*Table structure for table `tb_group` */
 
@@ -404,11 +526,11 @@ CREATE TABLE `tb_picture` (
   `filename` varchar(200) DEFAULT NULL,
   `productid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COMMENT='图片表';
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COMMENT='图片表';
 
 /*Data for the table `tb_picture` */
 
-insert  into `tb_picture`(`id`,`name`,`filename`,`productid`) values (1,'60c871d4-f5b6-4576-922b-aa5dba77e537.jpg','product/b7a99f2cf0403a6a0f70d4beb6004759.jpg',NULL),(2,'下载.jpg','product/a52ed93c656aee6a072fa8bec842f529.jpg',NULL),(3,'下载 (1).jpg','product/d21e35b830dcac19e66472488a4df453.jpg',NULL),(4,'下载 (1).jpg','product/c7c6cea60322a5db87614a0e96c10f33.jpg',NULL),(5,'下载.jpg','product/6b313ca8ef9bb69870fa57ff95918b5e.jpg',NULL),(6,'60c871d4-f5b6-4576-922b-aa5dba77e537.jpg','product/abdb17b3650f1e46a9784fe4bcf65e52.jpg',1),(7,'60c871d4-f5b6-4576-922b-aa5dba77e537.jpg','product/b73dbfa2dcc8d0a02c141c2df4fcf8a6.jpg',1),(8,'60c871d4-f5b6-4576-922b-aa5dba77e537.jpg','product/ad35d904308c798bccb0b3e25b990f12.jpg',1),(9,'下载.jpg','product/7d4bf152db62db3234c7a4e0b1d02bfc.jpg',1),(10,'下载 (1).jpg','product/2864be543116105840894a606cf78017.jpg',1),(11,'下载.jpg','product/8bcf6a0c6cc88ff260d0fa78b0f57eae.jpg',1),(12,'下载 (1).jpg','product/435fb1115b1b06afe0b6c7adf5f974aa.jpg',1),(13,'下载.jpg','product/3425fa313d2614ca10c423fa43f20372.jpg',1),(14,'下载 (1).jpg','product/8b50e51db96203eee3fee394940b9fb5.jpg',1),(15,'下载.jpg','product/28d746c501f7e70261ab98184ddf0ef1.jpg',1),(16,'下载 (1).jpg','product/fb321ece3b350c9efb8dfb1708765527.jpg',1),(17,'下载.jpg','product/772181cede835ae77e1aa74dadb6586b.jpg',1),(18,'60c871d4-f5b6-4576-922b-aa5dba77e537.jpg','product/9ea1fbd6778852de47bce6ae87cc49c8.jpg',1),(19,'60c871d4-f5b6-4576-922b-aa5dba77e537.jpg','product/c86aa0902d9cca60c7b54d7796335d7e.jpg',1),(20,'60c871d4-f5b6-4576-922b-aa5dba77e537.jpg','product/8bdfb4547875859ac65a184557e41c17.jpg',1),(21,'60c871d4-f5b6-4576-922b-aa5dba77e537.jpg','product/6f5a52858b061e916709cbfcabee9e04.jpg',1),(22,'60c871d4-f5b6-4576-922b-aa5dba77e537.jpg','product/f15ee7b88c9659cdeb6fdf141319eeed.jpg',1),(23,'下载 (1).jpg','product/6118615a70c265497a4ae3cf7382071f.jpg',2),(24,'60c871d4-f5b6-4576-922b-aa5dba77e537.jpg','product/bd352194b8bd7e772a2df0a5d4c982d2.jpg',1),(25,'60c871d4-f5b6-4576-922b-aa5dba77e537.jpg','product/0745a0887ccc1d417dc4d21a59e01735.jpg',2),(26,'下载 (1).jpg','product/7562457cb4a12f44e807f2f9702069cc.jpg',6),(27,'下载.jpg','product/dfd37e5e56c74b5bfeab869a8790c352.jpg',1),(28,'下载.jpg','product/14b568d5d3ec652e544b1c4a5905b7d0.jpg',5),(29,'下载 (1).jpg','product/20ab3f3335b0ada9e127d0e7929d5620.jpg',5);
+insert  into `tb_picture`(`id`,`name`,`filename`,`productid`) values (1,'60c871d4-f5b6-4576-922b-aa5dba77e537.jpg','product/b7a99f2cf0403a6a0f70d4beb6004759.jpg',NULL),(2,'下载.jpg','product/a52ed93c656aee6a072fa8bec842f529.jpg',NULL),(3,'下载 (1).jpg','product/d21e35b830dcac19e66472488a4df453.jpg',NULL),(4,'下载 (1).jpg','product/c7c6cea60322a5db87614a0e96c10f33.jpg',NULL),(5,'下载.jpg','product/6b313ca8ef9bb69870fa57ff95918b5e.jpg',NULL),(6,'60c871d4-f5b6-4576-922b-aa5dba77e537.jpg','product/abdb17b3650f1e46a9784fe4bcf65e52.jpg',1),(7,'60c871d4-f5b6-4576-922b-aa5dba77e537.jpg','product/b73dbfa2dcc8d0a02c141c2df4fcf8a6.jpg',1),(8,'60c871d4-f5b6-4576-922b-aa5dba77e537.jpg','product/ad35d904308c798bccb0b3e25b990f12.jpg',1),(9,'下载.jpg','product/7d4bf152db62db3234c7a4e0b1d02bfc.jpg',1),(10,'下载 (1).jpg','product/2864be543116105840894a606cf78017.jpg',1),(11,'下载.jpg','product/8bcf6a0c6cc88ff260d0fa78b0f57eae.jpg',1),(12,'下载 (1).jpg','product/435fb1115b1b06afe0b6c7adf5f974aa.jpg',1),(13,'下载.jpg','product/3425fa313d2614ca10c423fa43f20372.jpg',1),(14,'下载 (1).jpg','product/8b50e51db96203eee3fee394940b9fb5.jpg',1),(15,'下载.jpg','product/28d746c501f7e70261ab98184ddf0ef1.jpg',1),(16,'下载 (1).jpg','product/fb321ece3b350c9efb8dfb1708765527.jpg',1),(17,'下载.jpg','product/772181cede835ae77e1aa74dadb6586b.jpg',1),(18,'60c871d4-f5b6-4576-922b-aa5dba77e537.jpg','product/9ea1fbd6778852de47bce6ae87cc49c8.jpg',1),(19,'60c871d4-f5b6-4576-922b-aa5dba77e537.jpg','product/c86aa0902d9cca60c7b54d7796335d7e.jpg',1),(20,'60c871d4-f5b6-4576-922b-aa5dba77e537.jpg','product/8bdfb4547875859ac65a184557e41c17.jpg',1),(21,'60c871d4-f5b6-4576-922b-aa5dba77e537.jpg','product/6f5a52858b061e916709cbfcabee9e04.jpg',1),(22,'60c871d4-f5b6-4576-922b-aa5dba77e537.jpg','product/f15ee7b88c9659cdeb6fdf141319eeed.jpg',1),(23,'下载 (1).jpg','product/6118615a70c265497a4ae3cf7382071f.jpg',2),(24,'60c871d4-f5b6-4576-922b-aa5dba77e537.jpg','product/bd352194b8bd7e772a2df0a5d4c982d2.jpg',1),(25,'60c871d4-f5b6-4576-922b-aa5dba77e537.jpg','product/0745a0887ccc1d417dc4d21a59e01735.jpg',2),(26,'下载 (1).jpg','product/7562457cb4a12f44e807f2f9702069cc.jpg',6),(27,'下载.jpg','product/dfd37e5e56c74b5bfeab869a8790c352.jpg',1),(28,'下载.jpg','product/14b568d5d3ec652e544b1c4a5905b7d0.jpg',5),(29,'下载 (1).jpg','product/20ab3f3335b0ada9e127d0e7929d5620.jpg',5),(30,'2101062000023(1).jpg','product/cee36038c5a2752a77d881778d904153.jpg',4),(31,'2101062000023(2).JPG','product/b7454388764a965db3fbc3219fcbe2d7.jpg',4),(32,'2101062000023(3).JPG','product/6fe1fe4d5ac2ed3289cd86441798ec0d.jpg',4),(33,'2101062000023(3).JPG','product/ffe0dc1f58a7b7fed97c2c5acb2c1237.jpg',4),(34,'2101062000023(5).JPG','product/2c27a8db327cdf1bc64ee855917635b9.jpg',4),(35,'2101062000023(6).JPG','product/b3cb0feeb12e847cde4aa9430ede879d.jpg',4),(36,'2101062000023(8).JPG','product/35f73d1102fd67aadb1bc6c6c648eb68.jpg',4);
 
 /*Table structure for table `tb_product` */
 
@@ -416,13 +538,12 @@ DROP TABLE IF EXISTS `tb_product`;
 
 CREATE TABLE `tb_product` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `productno` varchar(100) DEFAULT NULL COMMENT '货号',
   `productname` varchar(50) DEFAULT NULL,
   `wordcode_1` varchar(50) DEFAULT NULL,
   `wordcode_2` varchar(50) DEFAULT NULL,
   `wordcode_3` varchar(50) DEFAULT NULL,
   `wordcode_4` varchar(50) DEFAULT NULL,
-  `wordprice` decimal(16,9) DEFAULT NULL COMMENT '国际零售价',
+  `wordprice` decimal(16,2) DEFAULT NULL COMMENT '国际零售价',
   `wordpricecurrency` varchar(10) DEFAULT NULL COMMENT '国际零售价币种',
   `gender` varchar(100) DEFAULT NULL COMMENT '0-女式 1-男士 2-中性',
   `brandid` int(10) unsigned DEFAULT NULL COMMENT '品牌',
@@ -432,21 +553,13 @@ CREATE TABLE `tb_product` (
   `brandcolor2` int(10) unsigned DEFAULT NULL,
   `picture2` varchar(100) DEFAULT NULL COMMENT '副图',
   `picture` varchar(100) DEFAULT NULL COMMENT '主图',
-  `closeway` int(10) unsigned DEFAULT NULL,
   `ageseason` varchar(200) DEFAULT NULL COMMENT '年代',
   `productsize` int(10) unsigned DEFAULT NULL,
   `countries` varchar(100) DEFAULT NULL COMMENT '产地',
-  `securitycategory` int(10) unsigned DEFAULT NULL COMMENT '安全类别',
-  `executioncategory` int(10) unsigned DEFAULT NULL COMMENT '执行标准',
   `material` int(10) unsigned DEFAULT NULL,
   `productparst` int(10) unsigned DEFAULT NULL,
-  `occasion` varchar(200) DEFAULT NULL COMMENT '场合风格',
   `producttemplate` int(10) unsigned DEFAULT NULL,
-  `materialstatus` int(10) unsigned DEFAULT NULL,
   `season` varchar(20) DEFAULT NULL,
-  `oldasacode` varchar(50) DEFAULT NULL,
-  `officialwebsite` varchar(500) DEFAULT NULL,
-  `oldbarcode` varchar(500) DEFAULT NULL,
   `laststoragedate` varchar(19) DEFAULT NULL,
   `aliases_1` varchar(50) DEFAULT NULL COMMENT '商品系列',
   `aliases_2` varchar(50) DEFAULT NULL COMMENT '商品子系列',
@@ -454,44 +567,24 @@ CREATE TABLE `tb_product` (
   `series_id` int(10) unsigned DEFAULT NULL,
   `series2_id` int(10) unsigned DEFAULT NULL,
   `ulnarinch` varchar(50) DEFAULT NULL,
-  `vat` decimal(16,9) DEFAULT NULL,
-  `tariff` decimal(16,9) DEFAULT NULL,
-  `basecurrency` varchar(10) DEFAULT NULL,
-  `baseprice` decimal(16,2) DEFAULT NULL,
   `entrymonth` varchar(5) DEFAULT NULL,
   `factoryprice` decimal(16,2) DEFAULT NULL COMMENT '出厂价',
   `factorypricecurrency` varchar(10) DEFAULT NULL COMMENT '出厂价币种',
-  `realprice` decimal(16,2) DEFAULT NULL COMMENT '成交价格',
+  `retailprice` decimal(16,2) DEFAULT NULL COMMENT '成交价格',
   `retailpricecurrency` varchar(10) DEFAULT NULL COMMENT '成交价格币种',
-  `dutyparagraph` varchar(50) DEFAULT NULL,
-  `orderprice` decimal(16,2) DEFAULT NULL COMMENT '合同价格',
-  `orderpricecurrency` varchar(10) DEFAULT NULL COMMENT '合同价格币种',
-  `retailprice` decimal(16,2) DEFAULT NULL COMMENT '可以填写的成本，入库时同步修改',
   `groupid` int(10) unsigned DEFAULT NULL COMMENT '同款不同色',
-  `iskj` varchar(1) DEFAULT NULL COMMENT '0-否 1-是',
-  `bxzs` varchar(1) DEFAULT NULL COMMENT '0-修身1-适中2-宽松',
-  `hbzs` varchar(1) DEFAULT NULL COMMENT '0-薄1-适中2-厚',
-  `rrzs` varchar(1) DEFAULT NULL COMMENT '0-柔软1-适中2-偏硬',
-  `tlzs` varchar(1) DEFAULT NULL COMMENT '0-无弹1-适中2-弹力',
-  `salemethodid` int(10) unsigned DEFAULT NULL,
-  `nationalprice` decimal(16,9) DEFAULT NULL,
-  `taxrate` decimal(16,9) DEFAULT NULL,
-  `isjh` varchar(1) DEFAULT NULL COMMENT '0-否1-是',
-  `inlenth` varchar(50) DEFAULT NULL,
-  `jdname` varchar(200) DEFAULT NULL,
+  `nationalprice` decimal(16,2) DEFAULT NULL COMMENT '国内价格',
   `winterproofing` int(10) DEFAULT NULL,
-  `isfj` varchar(1) DEFAULT NULL COMMENT '0-否 1-法检',
-  `discount` decimal(10,2) DEFAULT NULL,
   `ulnarinch_memo` varchar(100) DEFAULT NULL COMMENT '尺寸备注',
   `sizetopid` int(11) DEFAULT NULL COMMENT '尺码模板',
   `companyid` int(11) DEFAULT NULL,
   `adduserid` int(11) DEFAULT NULL COMMENT '建档人',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COMMENT='商品表';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COMMENT='商品表';
 
 /*Data for the table `tb_product` */
 
-insert  into `tb_product`(`id`,`productno`,`productname`,`wordcode_1`,`wordcode_2`,`wordcode_3`,`wordcode_4`,`wordprice`,`wordpricecurrency`,`gender`,`brandid`,`brandgroupid`,`childbrand`,`brandcolor`,`brandcolor2`,`picture2`,`picture`,`closeway`,`ageseason`,`productsize`,`countries`,`securitycategory`,`executioncategory`,`material`,`productparst`,`occasion`,`producttemplate`,`materialstatus`,`season`,`oldasacode`,`officialwebsite`,`oldbarcode`,`laststoragedate`,`aliases_1`,`aliases_2`,`aliases`,`series_id`,`series2_id`,`ulnarinch`,`vat`,`tariff`,`basecurrency`,`baseprice`,`entrymonth`,`factoryprice`,`factorypricecurrency`,`realprice`,`retailpricecurrency`,`dutyparagraph`,`orderprice`,`orderpricecurrency`,`retailprice`,`groupid`,`iskj`,`bxzs`,`hbzs`,`rrzs`,`tlzs`,`salemethodid`,`nationalprice`,`taxrate`,`isjh`,`inlenth`,`jdname`,`winterproofing`,`isfj`,`discount`,`ulnarinch_memo`,`sizetopid`,`companyid`,`adduserid`) values (1,'213659874562','黑色运动上衣','6542','x6x5','ddsw','33','999.360000000','RMB','5,3,1',1,1,5,'2,1',NULL,'product/ea79feeeee36dfb964f0341a1dad38b5.jpg','product/69e58f464fa1b44a47e7becc80974c42.jpg',NULL,'6,7',0,'2,1',1,1,0,0,'0,2,1',0,2,'5,4','','','','','','','',0,0,'','0.000000000','0.000000000','0','0.00','','13.00','USD','300.00','CAD','','0.00','0','0.00',0,'','','','','',0,'1002.000000000','0.000000000','','','',0,'','0.00','77',1,1,NULL),(2,'','电脑包','111','','','','0.000000000','','',2,2,14,'2',NULL,'product/96d821008f5dafc77012b9e8706431fd.jpg','product/a820ad1b132e17bf95f90e91c698b31d.jpg',NULL,'',0,'4,2',0,0,0,0,'',0,2,'','','','','','','','',0,0,'','0.000000000','0.000000000','','0.00','','0.00','','1000.00','','','0.00','','0.00',0,'','','','','',0,'0.000000000','0.000000000','','','',0,'','0.00','',2,1,NULL),(3,'','耐克足球鞋','','','','','0.000000000','','',2,3,7,'1',NULL,'product/0ece4a911e75eafbdf9fc315d57af3ef.jpg','product/2385effe9046df387a341239f0177a10.jpg',NULL,'',0,'5,4',0,0,0,0,'2',0,0,'','','','','','','','',0,0,'','0.000000000','0.000000000','','0.00','','0.00','','2000.00','','','0.00','','0.00',0,'','','','','',0,'0.000000000','0.000000000','','','',0,'','0.00','',2,1,1),(4,'','复古运动上衣','','','','','0.000000000','','',2,1,2,'',NULL,'product/ba6e1532143591340379979be0b6b88c.jpg','product/91d70dbb3a787313e649869041319f45.jpg',NULL,'',0,'',0,0,0,0,'',0,0,'','','','','','','','',0,0,'','0.000000000','0.000000000','','0.00','','0.00','','3000.00','','','0.00','','0.00',0,'','','','','',0,'0.000000000','0.000000000','','','',0,'','0.00','',1,1,1),(5,'','乔丹运动鞋','','','','','0.000000000','','',1,3,9,'',NULL,'product/dc2e67ae864304af75a56faa22d737cc.jpg','product/71f37308966f7279519e347a433c0fef.jpg',NULL,'',0,'',0,0,0,0,'',0,0,'','','','','','','','',0,0,'','0.000000000','0.000000000','','0.00','','0.00','','1500.00','','','0.00','','0.00',0,'','','','','',0,'0.000000000','0.000000000','','','',0,'','0.00','',1,1,1),(6,'','阿迪达斯跑步鞋','','','','','0.000000000','','',1,3,9,'',NULL,'product/b1fad46f357cc65820b94b2c19f9cdac.jpg','product/dbbeecbd53ecd6ff8a33850b3ed4a0e9.jpg',NULL,'',0,'4',0,0,0,0,'',0,0,'','','','','','','','',0,0,'','0.000000000','0.000000000','','0.00','','0.00','','2500.00','','','0.00','','0.00',0,'','','','','',0,'0.000000000','0.000000000','','','',0,'','0.00','',1,1,1);
+insert  into `tb_product`(`id`,`productname`,`wordcode_1`,`wordcode_2`,`wordcode_3`,`wordcode_4`,`wordprice`,`wordpricecurrency`,`gender`,`brandid`,`brandgroupid`,`childbrand`,`brandcolor`,`brandcolor2`,`picture2`,`picture`,`ageseason`,`productsize`,`countries`,`material`,`productparst`,`producttemplate`,`season`,`laststoragedate`,`aliases_1`,`aliases_2`,`aliases`,`series_id`,`series2_id`,`ulnarinch`,`entrymonth`,`factoryprice`,`factorypricecurrency`,`retailprice`,`retailpricecurrency`,`groupid`,`nationalprice`,`winterproofing`,`ulnarinch_memo`,`sizetopid`,`companyid`,`adduserid`) values (1,'BOUTIQUE MOSCHINO 女士黄色长袖T恤衫','0221','A1410 ','','','275.00','2','5,3,1',5,5,15,'2,1',NULL,'product/0820505ecba45bc993739ba4152aeecf.jpg','product/d237442d5a8662c9a997666a652d5693.jpg','6,7',0,'2,1',0,0,0,'5,4','','','','',0,0,'','','110.00','2','0.00','2',0,'0.00',0,'',1,1,NULL),(2,'PRADA 黑色斜跨包','111','','','','0.00','','',6,2,16,'2',NULL,'product/ae8deb1ae3139a6e603475441d75680f.jpg','product/91a791ff46592e73f3b37a5e293a0033.jpg','',0,'6',0,0,0,'','','','','',0,0,'','','0.00','','0.00','',0,'0.00',0,'',2,1,NULL),(3,'CELINE 女士黑色皮秋千手提包','','','','','0.00','','',7,2,17,'1',NULL,'product/6b68287325bb6c177db50fc2df87b60c.jpg','product/648b73a8f8f5fea0b2d4b5350cb011fb.jpg','',0,'7',0,0,0,'','','','','',0,0,'','','0.00','','0.00','',0,'0.00',0,'',2,1,1),(4,'FENDI棕色猫眼太阳眼镜','','','','','0.00','','',8,6,18,'',NULL,'product/02527a4f790df36804113733063d950e.jpg','product/229af358a71ac1ff37121de9d945377f.jpg','',0,'7',0,0,0,'','','','','',0,0,'','','0.00','','0.00','',0,'0.00',0,'',1,1,1),(5,'FENDI 女士巧克力色腰带','','','','','0.00','','',8,7,19,'1',NULL,'product/52df0f5164d0a27477eed0f2f68470b5.jpg','product/dec023d82f398c2aa2408c589aa13ec3.jpg','8',0,'7',0,0,0,'','','','','',0,0,'','','0.00','','0.00','',0,'0.00',0,'',1,1,1),(6,'CHIARA FERRAGNI 女士黑色背包','','','','','0.00','','',9,2,12,'',NULL,'product/c150ec24aa1394ec267e5bc80b835c5f.jpg','product/18f80ccfeb3cac2bf41e7bf14ff5fa5c.jpg','',0,'8',0,0,0,'','','','','',0,0,'','','0.00','','0.00','',0,'0.00',0,'',1,1,1),(7,'333377','','','','','0.00','','',5,2,12,'2',NULL,'product/75d558e4814861b7ceafa5e735ba0079.jpg','product/f12c64fefbfa5e8ec9d83c4353e170be.jpg','3',0,'6',0,0,0,'','','','','',0,0,'','','0.00','','0.00','',0,'0.00',0,'',1,1,1);
 
 /*Table structure for table `tb_product_price` */
 
@@ -523,35 +616,17 @@ CREATE TABLE `tb_product_search` (
   `productid` int(11) unsigned DEFAULT NULL COMMENT '商品id',
   `sizetopid` int(11) DEFAULT NULL COMMENT '尺码组id',
   `brandgroupid` int(11) DEFAULT NULL COMMENT '品类id',
-  `brandgroupname_cn` varchar(100) DEFAULT NULL COMMENT '品类中文名称',
-  `brandgroupname_en` varchar(100) DEFAULT NULL COMMENT '品类英文名称',
-  `brandgroupname_hk` varchar(100) DEFAULT NULL COMMENT '品类粤语名称',
-  `brandgroupname_fr` varchar(100) DEFAULT NULL COMMENT '品类法语名称',
-  `brandgroupname_it` varchar(100) DEFAULT NULL COMMENT '品类意大利语名称',
-  `brandgroupname_sp` varchar(100) DEFAULT NULL COMMENT '品类西班牙语名称',
-  `brandgroupname_de` varchar(100) DEFAULT NULL COMMENT '品类德语名称',
   `childbrand` int(11) DEFAULT NULL COMMENT '子品类id',
-  `childbrandname_cn` varchar(100) DEFAULT NULL COMMENT '子品类中文名称',
-  `childbrandname_en` varchar(100) DEFAULT NULL COMMENT '子品类英文名称',
-  `childbrandname_hk` varchar(100) DEFAULT NULL COMMENT '子品类粤语名称',
-  `childbrandname_fr` varchar(100) DEFAULT NULL COMMENT '子品类法语名称',
-  `childbrandname_it` varchar(100) DEFAULT NULL COMMENT '子品类意大利语名称',
-  `childbrandname_sp` varchar(100) DEFAULT NULL COMMENT '子品类西班牙语名称',
-  `childbrandname_de` varchar(100) DEFAULT NULL COMMENT '子品类德语名称',
-  `number` int(11) DEFAULT NULL COMMENT '库存数量',
+  `number` int(11) DEFAULT NULL,
   `picture` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '主图',
   `picture2` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '副图',
   `color` varchar(20) COLLATE utf8_bin DEFAULT NULL COMMENT '颜色',
   `color_group` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '同组颜色',
-  `realprice` decimal(16,2) DEFAULT NULL COMMENT '零售价格',
-  `retailpricecurrency` varchar(10) DEFAULT NULL COMMENT '零售价格币种',
-  `orderprice` decimal(16,2) DEFAULT NULL COMMENT '批发价格',
-  `orderpricecurrency` varchar(10) DEFAULT NULL COMMENT '批发价格币种',
   `companyid` int(11) DEFAULT NULL,
   UNIQUE KEY `companyid_2` (`companyid`,`productid`),
-  PRIMARY KEY `id` (`id`),
+  KEY `id` (`id`),
   KEY `companyid` (`companyid`,`brandgroupid`,`childbrand`)
-) ENGINE=InnoDB CHARSET=utf8mb4 COMMENT='商品、品类、子品类冗余查询表';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 /*Data for the table `tb_product_search` */
 
@@ -572,7 +647,7 @@ CREATE TABLE `tb_productcode` (
 
 /*Data for the table `tb_productcode` */
 
-insert  into `tb_productcode`(`id`,`productid`,`sizecontentid`,`goods_code`) values (1,1,1,'66'),(2,1,2,'656'),(3,1,3,'55'),(4,1,4,'66'),(5,1,5,'5656');
+insert  into `tb_productcode`(`id`,`productid`,`sizecontentid`,`goods_code`) values (1,1,1,'23564569891'),(2,1,2,'23564569892'),(3,1,3,'23564569893'),(4,1,4,'23564569894'),(5,1,5,'23564569895');
 
 /*Table structure for table `tb_productstock` */
 
@@ -595,11 +670,11 @@ CREATE TABLE `tb_productstock` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `companyid` (`companyid`,`warehouseid`,`goodsid`),
   KEY `warehouseid` (`warehouseid`,`defective_level`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COMMENT='库存';
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COMMENT='库存';
 
 /*Data for the table `tb_productstock` */
 
-insert  into `tb_productstock`(`id`,`goodsid`,`productid`,`sizecontentid`,`defective_level`,`property`,`warehouseid`,`companyid`,`create_time`,`create_stuff`,`change_time`,`change_stuff`,`number`) values (1,1,1,3,0,1,2,1,'2019-03-26 12:03:35',1,'2019-03-30 14:20:40',1,3),(2,2,1,4,0,2,2,1,'2019-03-26 12:03:35',1,'2019-03-30 14:20:40',1,12),(3,2,1,4,0,2,4,1,'2019-03-28 09:26:28',1,'2019-03-28 09:28:37',1,3),(4,1,1,3,0,1,4,1,'2019-03-28 09:26:28',1,'2019-03-30 14:19:26',1,2),(5,9,2,11,0,1,2,1,'2019-03-30 10:49:49',1,'2019-03-30 10:49:49',1,2),(6,10,2,12,0,1,2,1,'2019-03-30 10:49:49',1,'2019-03-30 10:49:49',1,2),(7,11,2,13,0,1,2,1,'2019-03-30 10:49:49',1,'2019-03-30 10:49:49',1,1),(8,1,1,3,0,1,1,1,'2019-03-30 14:18:55',1,'2019-03-30 14:21:24',1,5),(9,2,1,4,0,2,1,1,'2019-03-30 14:18:55',1,'2019-03-30 14:20:58',1,5);
+insert  into `tb_productstock`(`id`,`goodsid`,`productid`,`sizecontentid`,`defective_level`,`property`,`warehouseid`,`companyid`,`create_time`,`create_stuff`,`change_time`,`change_stuff`,`number`) values (1,1,1,3,0,1,2,1,'2019-03-26 12:03:35',1,'2019-03-30 14:20:40',1,3),(2,2,1,4,0,2,2,1,'2019-03-26 12:03:35',1,'2019-03-30 14:20:40',1,12),(3,2,1,4,0,2,4,1,'2019-03-28 09:26:28',1,'2019-03-28 09:28:37',1,3),(4,1,1,3,0,1,4,1,'2019-03-28 09:26:28',1,'2019-03-30 14:19:26',1,2),(5,9,2,11,0,1,2,1,'2019-03-30 10:49:49',1,'2019-03-30 10:49:49',1,2),(6,10,2,12,0,1,2,1,'2019-03-30 10:49:49',1,'2019-03-30 10:49:49',1,2),(7,11,2,13,0,1,2,1,'2019-03-30 10:49:49',1,'2019-03-30 10:49:49',1,1),(8,1,1,3,0,1,1,1,'2019-03-30 14:18:55',1,'2019-04-01 17:50:56',1,3),(9,2,1,4,0,2,1,1,'2019-03-30 14:18:55',1,'2019-03-30 14:20:58',1,5),(16,18,2,6,0,1,2,1,'2019-04-01 17:50:11',1,'2019-04-01 17:50:11',1,1),(17,19,2,7,0,1,2,1,'2019-04-01 17:50:11',1,'2019-04-01 17:50:11',1,2),(18,1,1,3,0,1,5,1,'2019-04-01 17:50:48',1,'2019-04-01 17:51:00',1,2);
 
 /*Table structure for table `tb_productstock_log` */
 
@@ -619,11 +694,11 @@ CREATE TABLE `tb_productstock_log` (
   PRIMARY KEY (`id`),
   KEY `companyid` (`companyid`,`warehouseid`),
   KEY `companyid_2` (`companyid`,`productstockid`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 /*Data for the table `tb_productstock_log` */
 
-insert  into `tb_productstock_log`(`id`,`warehouseid`,`productstockid`,`number_before`,`number_after`,`change_type`,`change_time`,`relationid`,`companyid`,`change_stuff`) values (1,2,2,10,6,3,'2019-03-28 09:27:22',1,1,1),(2,2,1,10,5,3,'2019-03-28 09:27:22',2,1,1),(3,4,3,0,3,2,'2019-03-28 09:28:37',1,1,1),(4,4,4,0,4,2,'2019-03-28 09:28:37',2,1,1),(5,2,2,6,7,2,'2019-03-28 09:55:43',5,1,1),(6,2,1,5,6,2,'2019-03-28 09:55:43',6,1,1),(7,2,1,6,5,1,'2019-03-29 11:12:14',14,1,1),(8,2,2,7,5,1,'2019-03-29 11:18:59',15,1,1),(9,2,1,5,4,1,'2019-03-29 11:18:59',16,1,1),(10,2,2,5,3,1,'2019-03-29 11:26:59',17,1,1),(11,2,1,4,1,1,'2019-03-29 11:26:59',18,1,1),(12,2,1,10,6,1,'2019-03-29 11:29:07',19,1,1),(13,2,2,20,17,1,'2019-03-29 11:29:07',20,1,1),(14,2,5,0,2,4,'2019-03-30 10:49:49',13,1,1),(15,2,6,0,2,4,'2019-03-30 10:49:49',14,1,1),(16,2,7,0,1,4,'2019-03-30 10:49:49',15,1,1),(17,4,4,4,2,3,'2019-03-30 14:19:26',8,1,1),(18,2,2,17,12,3,'2019-03-30 14:20:40',9,1,1),(19,2,1,6,3,3,'2019-03-30 14:20:40',10,1,1),(20,1,9,0,5,2,'2019-03-30 14:20:58',9,1,1),(21,1,8,0,3,2,'2019-03-30 14:20:58',10,1,1),(22,1,8,3,5,2,'2019-03-30 14:21:24',8,1,1);
+insert  into `tb_productstock_log`(`id`,`warehouseid`,`productstockid`,`number_before`,`number_after`,`change_type`,`change_time`,`relationid`,`companyid`,`change_stuff`) values (1,2,2,10,6,3,'2019-03-28 09:27:22',1,1,1),(2,2,1,10,5,3,'2019-03-28 09:27:22',2,1,1),(3,4,3,0,3,2,'2019-03-28 09:28:37',1,1,1),(4,4,4,0,4,2,'2019-03-28 09:28:37',2,1,1),(5,2,2,6,7,2,'2019-03-28 09:55:43',5,1,1),(6,2,1,5,6,2,'2019-03-28 09:55:43',6,1,1),(7,2,1,6,5,1,'2019-03-29 11:12:14',14,1,1),(8,2,2,7,5,1,'2019-03-29 11:18:59',15,1,1),(9,2,1,5,4,1,'2019-03-29 11:18:59',16,1,1),(10,2,2,5,3,1,'2019-03-29 11:26:59',17,1,1),(11,2,1,4,1,1,'2019-03-29 11:26:59',18,1,1),(12,2,1,10,6,1,'2019-03-29 11:29:07',19,1,1),(13,2,2,20,17,1,'2019-03-29 11:29:07',20,1,1),(14,2,5,0,2,4,'2019-03-30 10:49:49',13,1,1),(15,2,6,0,2,4,'2019-03-30 10:49:49',14,1,1),(16,2,7,0,1,4,'2019-03-30 10:49:49',15,1,1),(17,4,4,4,2,3,'2019-03-30 14:19:26',8,1,1),(18,2,2,17,12,3,'2019-03-30 14:20:40',9,1,1),(19,2,1,6,3,3,'2019-03-30 14:20:40',10,1,1),(20,1,9,0,5,2,'2019-03-30 14:20:58',9,1,1),(21,1,8,0,3,2,'2019-03-30 14:20:58',10,1,1),(22,1,8,3,5,2,'2019-03-30 14:21:24',8,1,1),(23,2,16,0,1,4,'2019-04-01 17:50:11',22,1,1),(24,2,17,0,2,4,'2019-04-01 17:50:11',23,1,1),(25,1,8,5,3,3,'2019-04-01 17:50:56',11,1,1),(26,5,18,0,2,2,'2019-04-01 17:51:00',11,1,1);
 
 /*Table structure for table `tb_productstock_snapshot` */
 
@@ -688,11 +763,11 @@ CREATE TABLE `tb_requisition` (
   PRIMARY KEY (`id`),
   KEY `out_id` (`out_id`),
   KEY `in_id` (`in_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COMMENT='调拨单主表';
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COMMENT='调拨单主表';
 
 /*Data for the table `tb_requisition` */
 
-insert  into `tb_requisition`(`id`,`feecurrencyid`,`fee`,`apply_staff`,`apply_date`,`turnin_staff`,`turnin_date`,`turnout_staff`,`turnout_date`,`out_id`,`in_id`,`memo`,`status`,`requisitionno`,`salesid`,`ism`,`is_quality`,`is_amortized`,`expresscomoany`,`address`,`markno`,`is_return`,`companyid`) values (2,NULL,NULL,1,'2019-03-28 09:26:28',1,'2019-03-28 09:28:37',1,'2019-03-28 09:27:22',2,4,NULL,5,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1),(3,NULL,NULL,1,'2019-03-28 09:26:28',NULL,NULL,NULL,NULL,2,4,'out deny',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1),(4,NULL,NULL,1,'2019-03-28 09:28:37',1,'2019-03-28 09:55:43',1,'2019-03-28 09:28:37',4,2,'in deny',5,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1),(10,NULL,NULL,1,'2019-03-30 14:18:55',1,'2019-03-30 14:21:24',1,'2019-03-30 14:19:26',4,1,NULL,5,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1),(11,NULL,NULL,1,'2019-03-30 14:18:55',1,'2019-03-30 14:20:58',1,'2019-03-30 14:20:40',2,1,NULL,5,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1);
+insert  into `tb_requisition`(`id`,`feecurrencyid`,`fee`,`apply_staff`,`apply_date`,`turnin_staff`,`turnin_date`,`turnout_staff`,`turnout_date`,`out_id`,`in_id`,`memo`,`status`,`requisitionno`,`salesid`,`ism`,`is_quality`,`is_amortized`,`expresscomoany`,`address`,`markno`,`is_return`,`companyid`) values (2,NULL,NULL,1,'2019-03-28 09:26:28',1,'2019-03-28 09:28:37',1,'2019-03-28 09:27:22',2,4,NULL,5,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1),(3,NULL,NULL,1,'2019-03-28 09:26:28',NULL,NULL,NULL,NULL,2,4,'out deny',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1),(4,NULL,NULL,1,'2019-03-28 09:28:37',1,'2019-03-28 09:55:43',1,'2019-03-28 09:28:37',4,2,'in deny',5,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1),(10,NULL,NULL,1,'2019-03-30 14:18:55',1,'2019-03-30 14:21:24',1,'2019-03-30 14:19:26',4,1,NULL,5,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1),(11,NULL,NULL,1,'2019-03-30 14:18:55',1,'2019-03-30 14:20:58',1,'2019-03-30 14:20:40',2,1,NULL,5,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1),(12,NULL,NULL,1,'2019-04-01 17:50:48',1,'2019-04-01 17:51:00',1,'2019-04-01 17:50:56',1,5,NULL,5,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1);
 
 /*Table structure for table `tb_requisition_detail` */
 
@@ -710,11 +785,11 @@ CREATE TABLE `tb_requisition_detail` (
   PRIMARY KEY (`id`),
   KEY `in_productstockid` (`in_productstockid`),
   KEY `out_productstockid` (`out_productstockid`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COMMENT='调拨单明细(数量)';
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COMMENT='调拨单明细(数量)';
 
 /*Data for the table `tb_requisition_detail` */
 
-insert  into `tb_requisition_detail`(`id`,`requisitionid`,`out_productstockid`,`in_productstockid`,`number`,`memo`,`out_number`,`in_number`) values (1,2,2,3,7,NULL,4,3),(2,2,1,4,6,NULL,5,4),(3,3,2,3,3,NULL,NULL,NULL),(4,3,1,4,1,NULL,NULL,NULL),(5,4,3,2,1,NULL,1,1),(6,4,4,1,1,NULL,1,1),(7,55,NULL,NULL,33,NULL,NULL,NULL),(8,10,4,8,2,NULL,2,2),(9,11,2,9,5,NULL,5,5),(10,11,1,8,3,NULL,3,3);
+insert  into `tb_requisition_detail`(`id`,`requisitionid`,`out_productstockid`,`in_productstockid`,`number`,`memo`,`out_number`,`in_number`) values (1,2,2,3,7,NULL,4,3),(2,2,1,4,6,NULL,5,4),(3,3,2,3,3,NULL,NULL,NULL),(4,3,1,4,1,NULL,NULL,NULL),(5,4,3,2,1,NULL,1,1),(6,4,4,1,1,NULL,1,1),(7,55,NULL,NULL,33,NULL,NULL,NULL),(8,10,4,8,2,NULL,2,2),(9,11,2,9,5,NULL,5,5),(10,11,1,8,3,NULL,3,3),(11,12,8,18,2,NULL,2,2);
 
 /*Table structure for table `tb_saleport` */
 
@@ -727,11 +802,11 @@ CREATE TABLE `tb_saleport` (
   `create_time` datetime DEFAULT NULL,
   `companyid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 /*Data for the table `tb_saleport` */
 
-insert  into `tb_saleport`(`id`,`name`,`discount`,`create_time`,`companyid`) values (1,'银河广场','1.600',NULL,1),(2,'京东平台','1.500',NULL,1),(3,'哈尔滨零售店','1.300',NULL,1),(4,'100','1.200',NULL,1);
+insert  into `tb_saleport`(`id`,`name`,`discount`,`create_time`,`companyid`) values (1,'银河广场','0.900',NULL,1),(2,'自营网站','1.000',NULL,1),(3,'哈尔滨零售店','0.900',NULL,1),(4,'京东批发','0.800',NULL,1),(5,'寺库网','0.850',NULL,1),(6,'天猫自营店铺','0.900',NULL,1);
 
 /*Table structure for table `tb_saleport_warehouse` */
 
@@ -807,6 +882,56 @@ CREATE TABLE `tb_salesdetails` (
 
 insert  into `tb_salesdetails`(`id`,`salesid`,`productstockid`,`number`,`dealprice`,`price`,`is_match`) values (14,53,1,1,'0.00','1100.00',1),(15,54,2,2,'0.00','8000.00',1),(16,54,1,1,'0.00','1100.00',1),(17,55,2,2,'0.00','8000.00',1),(18,55,1,3,'0.00','1100.00',1),(19,56,1,4,'0.00','1100.00',1),(20,56,2,3,'0.00','8000.00',1);
 
+/*Table structure for table `tb_sizecontent` */
+
+DROP TABLE IF EXISTS `tb_sizecontent`;
+
+CREATE TABLE `tb_sizecontent` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `topid` int(10) unsigned DEFAULT NULL,
+  `content_cn` varchar(100) DEFAULT NULL COMMENT '中文代码名称',
+  `content_en` varchar(100) DEFAULT NULL COMMENT '英文代码名称',
+  `content_hk` varchar(100) DEFAULT NULL COMMENT '粤语代码名称',
+  `content_fr` varchar(100) DEFAULT NULL COMMENT '法语代码名称',
+  `content_it` varchar(100) DEFAULT NULL COMMENT '意大利语代码名称',
+  `content_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语代码名称',
+  `content_de` varchar(100) DEFAULT NULL COMMENT '德语代码名称',
+  `sortnum` int(11) DEFAULT NULL,
+  `memo_cn` text COMMENT '中文备注',
+  `memo_en` text COMMENT '英文备注',
+  `memo_hk` text COMMENT '粤语备注',
+  `memo_fr` text COMMENT '法语备注',
+  `memo_it` text COMMENT '意大利语备注',
+  `memo_sp` text COMMENT '西班牙语备注',
+  `memo_de` text COMMENT '德语备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COMMENT='尺码明细';
+
+/*Data for the table `tb_sizecontent` */
+
+insert  into `tb_sizecontent`(`id`,`topid`,`content_cn`,`content_en`,`content_hk`,`content_fr`,`content_it`,`content_sp`,`content_de`,`sortnum`,`memo_cn`,`memo_en`,`memo_hk`,`memo_fr`,`memo_it`,`memo_sp`,`memo_de`) values (1,1,'XXL','','',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(2,1,'XL','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(3,1,'S','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(4,1,'M','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(5,1,'XXXL','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(6,2,'36','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(7,2,'37','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(8,2,'38','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(9,2,'39','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(10,2,'40','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11,2,'41','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(12,2,'42','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(13,2,'43','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+
+/*Table structure for table `tb_sizetop` */
+
+DROP TABLE IF EXISTS `tb_sizetop`;
+
+CREATE TABLE `tb_sizetop` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `name_cn` varchar(100) DEFAULT NULL COMMENT '中文名称',
+  `name_en` varchar(100) DEFAULT NULL COMMENT '英文名称',
+  `name_hk` varchar(100) DEFAULT NULL COMMENT '粤语名称',
+  `name_fr` varchar(100) DEFAULT NULL COMMENT '法语名称',
+  `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
+  `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
+  `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
+  `code` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='尺码组';
+
+/*Data for the table `tb_sizetop` */
+
+insert  into `tb_sizetop`(`id`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`code`) values (1,'欧码','','',NULL,NULL,NULL,NULL,'001'),(2,'鞋号','','',NULL,NULL,NULL,NULL,'');
+
 /*Table structure for table `tb_supplier` */
 
 DROP TABLE IF EXISTS `tb_supplier`;
@@ -846,11 +971,11 @@ CREATE TABLE `tb_supplier` (
   `settlecompanyid` int(10) unsigned DEFAULT NULL,
   `memo` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COMMENT='任何表都应该包含的列';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COMMENT='任何表都应该包含的列';
 
 /*Data for the table `tb_supplier` */
 
-insert  into `tb_supplier`(`id`,`suppliername`,`englishname`,`address`,`phone`,`zipcode`,`email`,`quotedprice`,`developdate`,`nationality`,`nature`,`supplierlevel`,`companyzipcode`,`maincontacts`,`microblog`,`countrycity`,`suppliercode`,`fax`,`calculation`,`legal`,`heading`,`businesslicense`,`headingnumber`,`registered`,`registeredcapital`,`endtime`,`type`,`contractfrom`,`contractto`,`contractrate`,`contractremind`,`settlecompanyid`,`memo`) values (1,'爱莎','66','56','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'11','115','',NULL,'','','',NULL,'','0','','',NULL,NULL,NULL,NULL,NULL,'66'),(2,'顺丰速递','','rr','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'1','007','',NULL,'','','',NULL,'','0','','',NULL,NULL,NULL,NULL,NULL,''),(3,'菜鸟物流','','','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2','003','',NULL,'','','',NULL,'','0','','',NULL,NULL,NULL,NULL,NULL,''),(4,'rr','','','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2','005','',NULL,'','','',NULL,'','0','','',NULL,NULL,NULL,NULL,NULL,''),(5,'ASA','','','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'','008','',NULL,'','','',NULL,'','0','','',NULL,NULL,NULL,NULL,NULL,'');
+insert  into `tb_supplier`(`id`,`suppliername`,`englishname`,`address`,`phone`,`zipcode`,`email`,`quotedprice`,`developdate`,`nationality`,`nature`,`supplierlevel`,`companyzipcode`,`maincontacts`,`microblog`,`countrycity`,`suppliercode`,`fax`,`calculation`,`legal`,`heading`,`businesslicense`,`headingnumber`,`registered`,`registeredcapital`,`endtime`,`type`,`contractfrom`,`contractto`,`contractrate`,`contractremind`,`settlecompanyid`,`memo`) values (1,'GIANO S.N.C.','66','56','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'11','GIANO S.N.C.','',NULL,'','','',NULL,'','0','','',NULL,NULL,NULL,NULL,NULL,'66'),(2,'顺丰速递','','rr','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'1','007','',NULL,'','','',NULL,'','0','','',NULL,NULL,NULL,NULL,NULL,''),(3,'菜鸟物流','','','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2','003','',NULL,'','','',NULL,'','0','','',NULL,NULL,NULL,NULL,NULL,''),(4,'GILMAR','','','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'2','GILMAR','',NULL,'','','',NULL,'','0','','',NULL,NULL,NULL,NULL,NULL,''),(5,'LEMCO SRL','','','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'','LEMCO SRL','',NULL,'','','',NULL,'','0','','',NULL,NULL,NULL,NULL,NULL,''),(6,'VASA-FASHION SRL','','','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'','VASA-FASHION SRL','',NULL,'','','',NULL,'','0','','',NULL,NULL,NULL,NULL,NULL,'');
 
 /*Table structure for table `tb_user` */
 
@@ -968,11 +1093,11 @@ CREATE TABLE `tb_warehousing` (
   `entrydate` date NOT NULL COMMENT '入库日期',
   PRIMARY KEY (`id`),
   UNIQUE KEY `confirmorderid` (`confirmorderid`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COMMENT='入库单主表';
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COMMENT='入库单主表';
 
 /*Data for the table `tb_warehousing` */
 
-insert  into `tb_warehousing`(`id`,`orderno`,`companyid`,`warehouseid`,`confirmorderid`,`makedate`,`makestaff`,`entrydate`) values (14,'T000001201903301049492874',1,2,25,'2019-03-30 10:49:49',1,'2019-03-30');
+insert  into `tb_warehousing`(`id`,`orderno`,`companyid`,`warehouseid`,`confirmorderid`,`makedate`,`makestaff`,`entrydate`) values (14,'T000001201903301049492874',1,2,25,'2019-03-30 10:49:49',1,'2019-03-30'),(21,'T000001201904011750116202',1,2,26,'2019-04-01 17:50:11',1,'2019-04-02'),(22,'T000001201904011945443290',1,4,27,'2019-04-01 19:45:44',1,'2019-04-01'),(23,'T000001201904011946153752',1,4,28,'2019-04-01 19:46:15',1,'2019-03-31'),(24,'T000001201904011946285391',1,4,29,'2019-04-01 19:46:28',1,'2019-03-28');
 
 /*Table structure for table `tb_warehousingdetails` */
 
@@ -987,26 +1112,11 @@ CREATE TABLE `tb_warehousingdetails` (
   `warehousingid` int(11) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `warehousingid` (`warehousingid`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COMMENT='入库单明细表';
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COMMENT='入库单明细表';
 
 /*Data for the table `tb_warehousingdetails` */
 
-insert  into `tb_warehousingdetails`(`id`,`companyid`,`orderdetailsid`,`number`,`confirmorderdetailsid`,`warehousingid`) values (13,1,37,2,3,14),(14,1,36,2,4,14),(15,1,35,1,5,14);
-
-/*Table structure for table `zl_ageseason` */
-
-DROP TABLE IF EXISTS `zl_ageseason`;
-
-CREATE TABLE `zl_ageseason` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `sessionmark` varchar(10) DEFAULT NULL,
-  `name` varchar(100) DEFAULT NULL COMMENT '中文名称',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COMMENT='年代季节';
-
-/*Data for the table `zl_ageseason` */
-
-insert  into `zl_ageseason`(`id`,`sessionmark`,`name`) values (1,'SS',NULL),(2,'SS',NULL),(3,'FW',NULL),(4,'SS',NULL),(5,'SS','2012'),(6,'FW','2018'),(7,'SS','2015');
+insert  into `tb_warehousingdetails`(`id`,`companyid`,`orderdetailsid`,`number`,`confirmorderdetailsid`,`warehousingid`) values (13,1,37,2,3,14),(14,1,36,2,4,14),(15,1,35,1,5,14),(22,1,42,1,6,21),(23,1,41,2,7,21);
 
 /*Table structure for table `zl_aliases` */
 
@@ -1029,107 +1139,6 @@ CREATE TABLE `zl_aliases` (
 /*Data for the table `zl_aliases` */
 
 insert  into `zl_aliases`(`id`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`code`,`brandid`) values (1,'44','','',NULL,NULL,NULL,NULL,'33',2),(2,'fd','','',NULL,NULL,NULL,NULL,'ere',2);
-
-/*Table structure for table `zl_brand` */
-
-DROP TABLE IF EXISTS `zl_brand`;
-
-CREATE TABLE `zl_brand` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `code` varchar(50) DEFAULT NULL,
-  `name_cn` varchar(100) DEFAULT NULL COMMENT '中文名称',
-  `name_en` varchar(100) DEFAULT NULL COMMENT '英文名称',
-  `name_hk` varchar(100) DEFAULT NULL COMMENT '粤语名称',
-  `name_fr` varchar(100) DEFAULT NULL COMMENT '法语名称',
-  `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
-  `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
-  `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
-  `countryid` int(10) unsigned DEFAULT NULL,
-  `brandgroupid` int(10) unsigned DEFAULT NULL,
-  `filename` varchar(200) DEFAULT NULL COMMENT 'LOGO',
-  `memo` text,
-  `officialwebsite` varchar(500) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COMMENT='品牌表';
-
-/*Data for the table `zl_brand` */
-
-insert  into `zl_brand`(`id`,`code`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`countryid`,`brandgroupid`,`filename`,`memo`,`officialwebsite`) values (1,'','Gucci',NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,'',''),(2,'001','耐克','Nike','',NULL,NULL,NULL,NULL,2,1,NULL,'',''),(3,'004','Adidas','','',NULL,NULL,NULL,NULL,4,0,NULL,'',''),(4,'005','彪马','','',NULL,NULL,NULL,NULL,4,2,NULL,'','');
-
-/*Table structure for table `zl_brandgroup` */
-
-DROP TABLE IF EXISTS `zl_brandgroup`;
-
-CREATE TABLE `zl_brandgroup` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `code` varchar(50) DEFAULT NULL,
-  `name_cn` varchar(100) DEFAULT NULL COMMENT '中文名称',
-  `name_en` varchar(100) DEFAULT NULL COMMENT '英文名称',
-  `name_hk` varchar(100) DEFAULT NULL COMMENT '粤语名称',
-  `name_fr` varchar(100) DEFAULT NULL COMMENT '法语名称',
-  `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
-  `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
-  `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COMMENT='品类表';
-
-/*Data for the table `zl_brandgroup` */
-
-insert  into `zl_brandgroup`(`id`,`code`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`) values (1,'33','衣服','','',NULL,NULL,NULL,NULL),(2,'44','箱包','','',NULL,NULL,NULL,NULL),(3,'55','鞋子','','',NULL,NULL,NULL,NULL),(4,'66','首饰','','',NULL,NULL,NULL,NULL);
-
-/*Table structure for table `zl_childproductgroup` */
-
-DROP TABLE IF EXISTS `zl_childproductgroup`;
-
-CREATE TABLE `zl_childproductgroup` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `name_cn` varchar(100) DEFAULT NULL COMMENT '中文名称',
-  `name_en` varchar(100) DEFAULT NULL COMMENT '英文名称',
-  `name_hk` varchar(100) DEFAULT NULL COMMENT '粤语名称',
-  `name_fr` varchar(100) DEFAULT NULL COMMENT '法语名称',
-  `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
-  `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
-  `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
-  `childcode` varchar(50) DEFAULT NULL,
-  `brandgroupid` int(10) unsigned DEFAULT NULL,
-  `producttemplateid` int(10) unsigned DEFAULT NULL,
-  `weight` decimal(16,9) DEFAULT NULL,
-  `isfj` varchar(1) DEFAULT NULL COMMENT '0-否 1-法检',
-  `cname4male` int(10) unsigned DEFAULT NULL,
-  `cname4female` int(10) unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COMMENT='子品类';
-
-/*Data for the table `zl_childproductgroup` */
-
-insert  into `zl_childproductgroup`(`id`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`childcode`,`brandgroupid`,`producttemplateid`,`weight`,`isfj`,`cname4male`,`cname4female`) values (2,'上衣','','',NULL,NULL,NULL,NULL,'0101',1,0,'0.000000000',NULL,NULL,NULL),(3,'风衣','','',NULL,NULL,NULL,NULL,'0102',1,0,'0.000000000',NULL,NULL,NULL),(4,'夹克','','',NULL,NULL,NULL,NULL,'0103',1,0,'0.000000000',NULL,NULL,NULL),(5,'运动服','','',NULL,NULL,NULL,NULL,'0105',1,0,'0.000000000',NULL,NULL,NULL),(6,'网球鞋','','',NULL,NULL,NULL,NULL,'0301',3,0,'0.000000000',NULL,NULL,NULL),(7,'足球鞋','','',NULL,NULL,NULL,NULL,'0302',3,0,'0.000000000',NULL,NULL,NULL),(8,'篮球鞋','','',NULL,NULL,NULL,NULL,'0303',3,0,'0.000000000',NULL,NULL,NULL),(9,'跑步鞋','','',NULL,NULL,NULL,NULL,'0304',3,0,'0.000000000',NULL,NULL,NULL),(10,'项链','','',NULL,NULL,NULL,NULL,'0401',4,0,'0.000000000',NULL,NULL,NULL),(11,'戒指','','',NULL,NULL,NULL,NULL,'0402',4,0,'0.000000000',NULL,NULL,NULL),(12,'旅行箱','','',NULL,NULL,NULL,NULL,'0201',2,0,'0.000000000',NULL,NULL,NULL),(13,'手提包','','',NULL,NULL,NULL,NULL,'0202',2,0,'0.000000000',NULL,NULL,NULL),(14,'电脑包','','',NULL,NULL,NULL,NULL,'0203',2,0,'0.000000000',NULL,NULL,NULL);
-
-/*Table structure for table `zl_closedway` */
-
-DROP TABLE IF EXISTS `zl_closedway`;
-
-CREATE TABLE `zl_closedway` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `name_cn` varchar(100) DEFAULT NULL COMMENT '中文名称',
-  `name_en` varchar(100) DEFAULT NULL COMMENT '英文名称',
-  `name_hk` varchar(100) DEFAULT NULL COMMENT '粤语名称',
-  `name_fr` varchar(100) DEFAULT NULL COMMENT '法语名称',
-  `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
-  `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
-  `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
-  `memo_cn` text COMMENT '中文备注',
-  `memo_en` text COMMENT '英文备注',
-  `memo_hk` text COMMENT '粤语备注',
-  `memo_fr` text COMMENT '法语备注',
-  `memo_it` text COMMENT '意大利语备注',
-  `memo_sp` text COMMENT '西班牙语备注',
-  `memo_de` text COMMENT '德语备注',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='闭合方式';
-
-/*Data for the table `zl_closedway` */
-
-insert  into `zl_closedway`(`id`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`memo_cn`,`memo_en`,`memo_hk`,`memo_fr`,`memo_it`,`memo_sp`,`memo_de`) values (1,'44','77','ff',NULL,NULL,NULL,NULL,'44','77','ff',NULL,NULL,NULL,NULL),(2,'55','','',NULL,NULL,NULL,NULL,'55','','',NULL,NULL,NULL,NULL);
 
 /*Table structure for table `zl_colortemplate` */
 
@@ -1154,56 +1163,6 @@ CREATE TABLE `zl_colortemplate` (
 /*Data for the table `zl_colortemplate` */
 
 insert  into `zl_colortemplate`(`id`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`picture`,`code`,`color_note`,`colortype`) values (1,'红色','','',NULL,NULL,NULL,NULL,'colortemplate/bde9713e9d89260fb001ef2723b53331.jpg','','',''),(2,'黑色','','黑色',NULL,NULL,NULL,NULL,'colortemplate/fa9e7e53209f9a7daf6e381a6ee9b00b.jpg','',NULL,NULL);
-
-/*Table structure for table `zl_country` */
-
-DROP TABLE IF EXISTS `zl_country`;
-
-CREATE TABLE `zl_country` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `code` varchar(20) NOT NULL,
-  `name_cn` varchar(100) DEFAULT NULL COMMENT '中文名称',
-  `name_en` varchar(100) DEFAULT NULL COMMENT '英文名称',
-  `name_hk` varchar(100) DEFAULT NULL COMMENT '粤语名称',
-  `name_fr` varchar(100) DEFAULT NULL COMMENT '法语名称',
-  `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
-  `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
-  `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
-  `localcurrency` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COMMENT='国家表';
-
-/*Data for the table `zl_country` */
-
-insert  into `zl_country`(`id`,`code`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`localcurrency`) values (1,'Spain','西班牙','','',NULL,NULL,NULL,NULL,'CAD'),(2,'France','法国','','',NULL,NULL,NULL,NULL,'USD'),(3,'787','英国','','',NULL,NULL,NULL,NULL,'EUR'),(4,'799','德国','','',NULL,NULL,NULL,NULL,''),(5,'800','美国','','',NULL,NULL,NULL,NULL,'');
-
-/*Table structure for table `zl_executioncategory` */
-
-DROP TABLE IF EXISTS `zl_executioncategory`;
-
-CREATE TABLE `zl_executioncategory` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `name_cn` varchar(100) DEFAULT NULL COMMENT '中文名称',
-  `name_en` varchar(100) DEFAULT NULL COMMENT '英文名称',
-  `name_hk` varchar(100) DEFAULT NULL COMMENT '粤语名称',
-  `name_fr` varchar(100) DEFAULT NULL COMMENT '法语名称',
-  `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
-  `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
-  `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
-  `executionmatter` varchar(500) DEFAULT NULL,
-  `memo_cn` text COMMENT '中文备注',
-  `memo_en` text COMMENT '英文备注',
-  `memo_hk` text COMMENT '粤语备注',
-  `memo_fr` text COMMENT '法语备注',
-  `memo_it` text COMMENT '意大利语备注',
-  `memo_sp` text COMMENT '西班牙语备注',
-  `memo_de` text COMMENT '德语备注',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='执行标准';
-
-/*Data for the table `zl_executioncategory` */
-
-insert  into `zl_executioncategory`(`id`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`executionmatter`,`memo_cn`,`memo_en`,`memo_hk`,`memo_fr`,`memo_it`,`memo_sp`,`memo_de`) values (1,'44','55','66',NULL,NULL,NULL,NULL,'55','454','66','55',NULL,NULL,NULL,NULL),(2,'55','','',NULL,NULL,NULL,NULL,'55','55','','',NULL,NULL,NULL,NULL);
 
 /*Table structure for table `zl_material` */
 
@@ -1241,48 +1200,6 @@ CREATE TABLE `zl_materialnote` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='材质备注';
 
 /*Data for the table `zl_materialnote` */
-
-/*Table structure for table `zl_materialstatus` */
-
-DROP TABLE IF EXISTS `zl_materialstatus`;
-
-CREATE TABLE `zl_materialstatus` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `code` varchar(20) DEFAULT NULL,
-  `name_cn` varchar(100) DEFAULT NULL COMMENT '中文名称',
-  `name_en` varchar(100) DEFAULT NULL COMMENT '英文名称',
-  `name_hk` varchar(100) DEFAULT NULL COMMENT '粤语名称',
-  `name_fr` varchar(100) DEFAULT NULL COMMENT '法语名称',
-  `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
-  `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
-  `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='材质状态';
-
-/*Data for the table `zl_materialstatus` */
-
-insert  into `zl_materialstatus`(`id`,`code`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`) values (1,'001','皮革','','',NULL,NULL,NULL,NULL),(2,'','牛皮','','',NULL,NULL,NULL,NULL);
-
-/*Table structure for table `zl_occasionsstyle` */
-
-DROP TABLE IF EXISTS `zl_occasionsstyle`;
-
-CREATE TABLE `zl_occasionsstyle` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `name_cn` varchar(100) DEFAULT NULL COMMENT '中文名称',
-  `name_en` varchar(100) DEFAULT NULL COMMENT '英文名称',
-  `name_hk` varchar(100) DEFAULT NULL COMMENT '粤语名称',
-  `name_fr` varchar(100) DEFAULT NULL COMMENT '法语名称',
-  `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
-  `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
-  `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
-  `occasionsstylemode` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='场合风格';
-
-/*Data for the table `zl_occasionsstyle` */
-
-insert  into `zl_occasionsstyle`(`id`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`occasionsstylemode`) values (1,'婚礼','','',NULL,NULL,NULL,NULL,''),(2,'Office','','',NULL,NULL,NULL,NULL,''),(3,'22','','',NULL,NULL,NULL,NULL,'33');
 
 /*Table structure for table `zl_productinnards` */
 
@@ -1347,40 +1264,6 @@ CREATE TABLE `zl_producttemplate` (
 
 insert  into `zl_producttemplate`(`id`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`picture`) values (1,'44','','',NULL,NULL,NULL,NULL,'producttemplate/ec0fbceab6b1c0ea0b6fd84665e318d5.jpg');
 
-/*Table structure for table `zl_securitycategory` */
-
-DROP TABLE IF EXISTS `zl_securitycategory`;
-
-CREATE TABLE `zl_securitycategory` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `name_cn` varchar(100) DEFAULT NULL COMMENT '中文名称',
-  `name_en` varchar(100) DEFAULT NULL COMMENT '英文名称',
-  `name_hk` varchar(100) DEFAULT NULL COMMENT '粤语名称',
-  `name_fr` varchar(100) DEFAULT NULL COMMENT '法语名称',
-  `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
-  `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
-  `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
-  `item_cn` varchar(200) DEFAULT NULL COMMENT '中文事项',
-  `item_en` varchar(200) DEFAULT NULL COMMENT '英文事项',
-  `item_hk` varchar(200) DEFAULT NULL COMMENT '粤语事项',
-  `item_fr` varchar(200) DEFAULT NULL COMMENT '法语事项',
-  `item_it` varchar(200) DEFAULT NULL COMMENT '意大利语事项',
-  `item_sp` varchar(200) DEFAULT NULL COMMENT '西班牙语事项',
-  `item_de` varchar(200) DEFAULT NULL COMMENT '德语事项',
-  `memo_cn` text COMMENT '中文备注',
-  `memo_en` text COMMENT '英文备注',
-  `memo_hk` text COMMENT '粤语备注',
-  `memo_fr` text COMMENT '法语备注',
-  `memo_it` text COMMENT '意大利语备注',
-  `memo_sp` text COMMENT '西班牙语备注',
-  `memo_de` text COMMENT '德语备注',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='安全类别维护表';
-
-/*Data for the table `zl_securitycategory` */
-
-insert  into `zl_securitycategory`(`id`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`item_cn`,`item_en`,`item_hk`,`item_fr`,`item_it`,`item_sp`,`item_de`,`memo_cn`,`memo_en`,`memo_hk`,`memo_fr`,`memo_it`,`memo_sp`,`memo_de`) values (1,'dd','','df',NULL,NULL,NULL,NULL,'ff','','df',NULL,NULL,NULL,NULL,'df','','df',NULL,NULL,NULL,NULL);
-
 /*Table structure for table `zl_series` */
 
 DROP TABLE IF EXISTS `zl_series`;
@@ -1424,56 +1307,6 @@ CREATE TABLE `zl_series2` (
 /*Data for the table `zl_series2` */
 
 insert  into `zl_series2`(`id`,`seriesid`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`code`) values (1,1,'444','454','',NULL,NULL,NULL,NULL,NULL),(2,2,'44','','',NULL,NULL,NULL,NULL,NULL),(3,1,'www','','',NULL,NULL,NULL,NULL,'www'),(4,1,'ccc','','',NULL,NULL,NULL,NULL,'cc');
-
-/*Table structure for table `zl_sizecontent` */
-
-DROP TABLE IF EXISTS `zl_sizecontent`;
-
-CREATE TABLE `zl_sizecontent` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `topid` int(10) unsigned DEFAULT NULL,
-  `content_cn` varchar(100) DEFAULT NULL COMMENT '中文代码名称',
-  `content_en` varchar(100) DEFAULT NULL COMMENT '英文代码名称',
-  `content_hk` varchar(100) DEFAULT NULL COMMENT '粤语代码名称',
-  `content_fr` varchar(100) DEFAULT NULL COMMENT '法语代码名称',
-  `content_it` varchar(100) DEFAULT NULL COMMENT '意大利语代码名称',
-  `content_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语代码名称',
-  `content_de` varchar(100) DEFAULT NULL COMMENT '德语代码名称',
-  `sortnum` int(11) DEFAULT NULL,
-  `memo_cn` text COMMENT '中文备注',
-  `memo_en` text COMMENT '英文备注',
-  `memo_hk` text COMMENT '粤语备注',
-  `memo_fr` text COMMENT '法语备注',
-  `memo_it` text COMMENT '意大利语备注',
-  `memo_sp` text COMMENT '西班牙语备注',
-  `memo_de` text COMMENT '德语备注',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COMMENT='尺码明细';
-
-/*Data for the table `zl_sizecontent` */
-
-insert  into `zl_sizecontent`(`id`,`topid`,`content_cn`,`content_en`,`content_hk`,`content_fr`,`content_it`,`content_sp`,`content_de`,`sortnum`,`memo_cn`,`memo_en`,`memo_hk`,`memo_fr`,`memo_it`,`memo_sp`,`memo_de`) values (1,1,'XXL','','',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(2,1,'XL','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(3,1,'S','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(4,1,'M','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(5,1,'XXXL','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(6,2,'36','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(7,2,'37','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(8,2,'38','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(9,2,'39','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(10,2,'40','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11,2,'41','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(12,2,'42','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(13,2,'43','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-
-/*Table structure for table `zl_sizetop` */
-
-DROP TABLE IF EXISTS `zl_sizetop`;
-
-CREATE TABLE `zl_sizetop` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `name_cn` varchar(100) DEFAULT NULL COMMENT '中文名称',
-  `name_en` varchar(100) DEFAULT NULL COMMENT '英文名称',
-  `name_hk` varchar(100) DEFAULT NULL COMMENT '粤语名称',
-  `name_fr` varchar(100) DEFAULT NULL COMMENT '法语名称',
-  `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
-  `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
-  `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
-  `code` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='尺码组';
-
-/*Data for the table `zl_sizetop` */
-
-insert  into `zl_sizetop`(`id`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`code`) values (1,'欧码','','',NULL,NULL,NULL,NULL,'001'),(2,'鞋号','','',NULL,NULL,NULL,NULL,'');
 
 /*Table structure for table `zl_templatemanage` */
 
@@ -1544,33 +1377,6 @@ CREATE TABLE `zl_washinginstructions` (
 /*Data for the table `zl_washinginstructions` */
 
 insert  into `zl_washinginstructions`(`id`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`memo_cn`,`memo_en`,`memo_hk`,`memo_fr`,`memo_it`,`memo_sp`,`memo_de`,`image`) values (1,'33','','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'');
-
-/*Table structure for table `zl_winterproofing` */
-
-DROP TABLE IF EXISTS `zl_winterproofing`;
-
-CREATE TABLE `zl_winterproofing` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `name_cn` varchar(100) DEFAULT NULL COMMENT '中文名称',
-  `name_en` varchar(100) DEFAULT NULL COMMENT '英文名称',
-  `name_hk` varchar(100) DEFAULT NULL COMMENT '粤语名称',
-  `name_fr` varchar(100) DEFAULT NULL COMMENT '法语名称',
-  `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
-  `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
-  `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
-  `memo_cn` text COMMENT '中文备注',
-  `memo_en` text COMMENT '英文备注',
-  `memo_hk` text COMMENT '粤语备注',
-  `memo_fr` text COMMENT '法语备注',
-  `memo_it` text COMMENT '意大利语备注',
-  `memo_sp` text COMMENT '西班牙语备注',
-  `memo_de` text COMMENT '德语备注',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='防寒指数';
-
-/*Data for the table `zl_winterproofing` */
-
-insert  into `zl_winterproofing`(`id`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`memo_cn`,`memo_en`,`memo_hk`,`memo_fr`,`memo_it`,`memo_sp`,`memo_de`) values (1,'22','','',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

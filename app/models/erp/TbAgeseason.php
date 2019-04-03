@@ -10,12 +10,12 @@ use Phalcon\Validation\Validator\Uniqueness;
 /**
  * 年代季节
  */
-class ZlAgeseason extends BaseModel
+class TbAgeseason extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('zl_ageseason');
+        $this->setSource('tb_ageseason');
     }
 
 

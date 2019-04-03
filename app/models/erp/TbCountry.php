@@ -7,12 +7,12 @@ use Phalcon\Validation\Validator\Uniqueness;
 /**
  * 基础资料，国家及地区信息表
  */
-class ZlCountry extends BaseModel
+class TbCountry extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('zl_country');
+        $this->setSource('tb_country');
     }
 
     public function validation() {
