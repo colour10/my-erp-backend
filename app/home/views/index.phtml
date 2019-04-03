@@ -17,9 +17,6 @@
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
     <script src="/js/jquery.min.js"></script>
     <script src="/common/systemlanguage?<?=$__sytem_time?>"></script>
-    <script src="/js/erp.js?<?=$__sytem_time?>"></script>
-    <script src="/js/asa.js?<?=$__sytem_time?>"></script>
-    <script src="/js/props.js?<?=$__sytem_time?>"></script>
     
   </head>
 
@@ -218,90 +215,6 @@
     <router-view></router-view>
   </div>
 
-<script>
-$(document).ready(function(){  
-    const routes = [
-        {
-            path: '/', component: "asapage-home",
-            children:[
-                {path: '/order', component: "asapage-order"},
-                {path: '/confirmorder', component: "asapage-confirmorder"},
-                {path:'/warehousing', component:'asapage-warehousing'},
-                {path: '/sales', component: "asapage-sales"},
-                {path: '/user', component: "asapage-user"},
-                {path: '/group', component: "asapage-group"},
-                {path: '/department', component: "asapage-department"},
-                {path: '/productstock', component: "asapage-productstock"},
-                {path: '/brand', component: "asapage-brand"},
-                {path: '/brandgroup', component: "asapage-brandgroup"},
-                {path: '/sizetop', component: "asapage-sizetop"},
-                {path: '/product', component: "asapage-product"},   
-                {path: '/requisition', component: "asapage-requisition"},     
-                {path: '/user/modifypassword', component: "asapage-usermodifypassword"},                
-                {path:'/ageseason', component:$ASA.getComponentSimple("ageseason")},
-                {path:'/ulnarinch', component:$ASA.getComponent("ulnarinch")},
-                {path:'/winterproofing', component:$ASA.getComponent("winterproofing")},
-                {path:'/washinginstructions', component:$ASA.getComponent("washinginstructions")},
-                {path:'/securitycategory', component:$ASA.getComponent("securitycategory")},
-                {path:'/executioncategory', component:$ASA.getComponent("executioncategory")},
-                {path:'/closedway', component:$ASA.getComponent("closedway")},
-                {path:'/occasionsstyle', component:$ASA.getComponent("occasionsstyle")},
-                {path:'/productparts', component:$ASA.getComponent("productparts")},
-                {path:'/productinnards', component:$ASA.getComponent("productinnards")},
-                {path:'/warehouse', component:$ASA.getComponentSimple("warehouse")},
-                {path:'/country', component:$ASA.getComponent("country")},
-                {path:'/materialnote', component:$ASA.getComponent("materialnote")},
-                {path:'/materialstatus', component:$ASA.getComponent("materialstatus")},
-                {path:'/material', component:$ASA.getComponent("material")},
-                {path:'/producttemplate', component:"asapage-producttemplate"},
-                {path:'/member', component:$ASA.getComponentSimple("member")},
-                {path:'/colortemplate', component:$ASA.getComponent("colortemplate")},
-                {path:'/supplier', component:$ASA.getComponentSimple("supplier")},
-                {path:'/saleport', component:$ASA.getComponentSimple("saleport")}
-            ]
-        },
-        {path: '/login/:action', component: "asapage-login"},
-        {path: '/login', redirect: { path: '/login/login' }}
-    ]
-
-    const router = new VueRouter({
-        routes // (缩写) 相当于 routes: routes
-    })
-
-    const store = new Vuex.Store({
-      state: {
-          auth:{}
-      },
-      getters: {
-          is_login(state) {
-              var auth = state.auth
-              if( auth['id'] && auth['id']>0) {
-                  return true;
-              }
-              else {
-                  return false;
-              }
-          }
-      },
-      mutations:{
-          login(state,payload) {
-              state.auth = payload.auth;
-          },
-          logout(state,payload) {
-              state.auth = {}
-          }
-      }
-    })
-
-    const app = new Vue({
-        router,
-        store,
-        mounted:function(){
-          //console.log(this.$options.components)
-        }
-    }).$mount('#app')
-    
-})
-</script>
+<script src="/js/asa.js?<?=$__sytem_time?>"></script>
   </body>
 </html>
