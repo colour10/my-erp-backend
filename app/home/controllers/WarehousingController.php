@@ -4,7 +4,7 @@ namespace Multiple\Home\Controllers;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
 use Asa\Erp\TbWarehousing;
-use Asa\Erp\TdConfirmorder;
+use Asa\Erp\TbConfirmorder;
 use Asa\Erp\TbWarehousingdetails;
 
 /**
@@ -46,7 +46,7 @@ class WarehousingController extends BaseController {
         // 采用事务处理
         $this->db->begin();
 
-        $confirmorder = TdConfirmorder::findFirstById($form["confirmorderid"]);
+        $confirmorder = TbConfirmorder::findFirstById($form["confirmorderid"]);
 
         // 没有订单号就新增
         $order = new TbWarehousing();
@@ -123,7 +123,7 @@ class WarehousingController extends BaseController {
 
         } 
         else {
-            $confirmorder = TdConfirmorder::findFirst(
+            $confirmorder = TbConfirmorder::findFirst(
                 sprintf("id=%d and companyid=%d", $confirmorderid, $this->companyid)
             );
 

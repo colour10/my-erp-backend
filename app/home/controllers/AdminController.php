@@ -118,11 +118,7 @@ class AdminController extends BaseController
 	        $this->getSearchCondition()
 	    ));
         
-        if($this->request->isAjax()) {
-            //echo json_encode($result->toArray());
-
-            echo $this->reportJson(array("data"=>$result->toArray()),200,[]);
-        }
+         echo $this->reportJson(array("data"=>$result->toArray()),200,[]);
 	}
 	
 	function editAction() {

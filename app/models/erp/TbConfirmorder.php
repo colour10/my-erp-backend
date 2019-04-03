@@ -8,7 +8,7 @@ use Phalcon\Validation\Validator\Regex;
 /**
  * 发货单主表
  */
-class TdConfirmorder extends BaseModel
+class TbConfirmorder extends BaseModel
 {
     public function initialize()
     {
@@ -18,7 +18,7 @@ class TdConfirmorder extends BaseModel
         // 订单-订单详情，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\TdConfirmorderdetails",
+            "\Asa\Erp\TbConfirmorderdetails",
             "confirmorderid",
             [
                 'alias' => 'confirmorderdetails',
@@ -65,7 +65,7 @@ class TdConfirmorder extends BaseModel
      * @param [type] $form 表单数据
      */
     public function addDetail($form) {
-        $row = new TdConfirmorderdetails();
+        $row = new TbConfirmorderdetails();
         //print_r($form);
         if($row->create($form)) {
             //print_r($form);
@@ -83,7 +83,7 @@ class TdConfirmorder extends BaseModel
      * @return [type]       [description]
      */
     public function updateDetail($form) {
-        $row = TdConfirmorderdetails::findFirst(
+        $row = TbConfirmorderdetails::findFirst(
             sprintf("id=%d", $form['id'])
         );
 

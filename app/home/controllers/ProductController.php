@@ -28,7 +28,7 @@ class ProductController extends CadminController {
                 implode(" and ", $where)
             );    
             
-            echo json_encode($result->toArray());
+            return $this->success($result->toArray());
         }        
     }
     

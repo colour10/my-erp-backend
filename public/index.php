@@ -46,7 +46,14 @@ try {
     // Start the session the first time when some component request the session service
     $di->setShared('session', function () {
         $session = new Session();
+
+        if(isset($_REQUEST["_session_id"])) {
+            $session->setId($_REQUEST["_session_id"]);
+        }
+        
         $session->start();
+        //$session->setId(time());
+        
         return $session;
     });    
 

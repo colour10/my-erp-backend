@@ -42,6 +42,6 @@ class PermissionController extends AdminController {
         // return json_encode($permissions_array);
 
         // 交给下面的格式化为目录树处理并返回
-        return json_encode(Util::format_tree($permissions_array));
+        return $this->success(Util::format_tree($permissions_array));
     }
 }

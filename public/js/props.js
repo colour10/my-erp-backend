@@ -22,63 +22,6 @@
             key_column:"name"
         },
 
-        "winterproofing":{
-            columns:[
-                {name:"name",label:$ASAL["fanghanzhishu"], is_multiple:true, is_focus:true},
-                {name:"memo", label:$ASAL["beizhu"], type:"textarea"}
-            ],
-            controller:"winterproofing",
-            key_column:"name"
-        },
-
-        "washinginstructions":{
-            columns:[
-                {name:"name",label:$ASAL["xidimingcheng"], is_multiple:true, is_focus:true},
-                {name:"image", label:$ASAL["tupian"], type:"upload", multiple:false, limit:1,is_image:true,image_width:60, image_height:60},
-                {name:"memo", label:$ASAL["beizhu"], type:"textarea"}
-            ],
-            controller:"washinginstructions",
-            key_column:"name"
-        },
-
-        "securitycategory":{
-            columns:[
-                {name:"name", label:$ASAL["leibiemingcheng"], is_multiple:true, is_focus:true},
-                {name:"item", label:$ASAL["zhuyishixiang"], is_multiple:true, type:"textarea"},
-                {name:"memo", label:$ASAL["beizhu"], is_multiple:true, type:"textarea"}
-            ],
-            controller:"securitycategory",
-            key_column:"name"
-        },
-
-        "executioncategory":{
-            columns:[
-                {name:"name", label:$ASAL["mingcheng"], is_multiple:true, is_focus:true},
-                {name:"executionmatter", label:$ASAL["shixiang"], type:"textarea"},
-                {name:"memo", label:$ASAL["beizhu"], is_multiple:true, type:"textarea"}
-            ],
-            controller:"executioncategory",
-            key_column:"name"
-        },
-
-        "closedway":{
-            columns:[
-                {name:"name", label:$ASAL["bihefangshimingcheng"], is_multiple:true, is_focus:true},
-                {name:"memo", label:$ASAL["bihefangshishuoming"], is_multiple:true, type:"textarea"}
-            ],
-            controller:"closedway",
-            key_column:"name"
-        },
-
-        "occasionsstyle":{
-            columns:[
-                {name:"name", label:$ASAL["changhemingcheng"], is_multiple:true, is_focus:true},
-                {name:"occasionsstylemode", label:$ASAL["changheshuoming"], type:"textarea"}
-            ],
-            controller:"occasionsstyle",
-            key_column:"name"
-        },
-
         "productparts":{
             columns:[            
                 {name:"name", label:$ASAL["peijianmingcheng"], is_multiple:true, is_focus:true},
@@ -133,15 +76,6 @@
             key_column:"content"
         },
 
-        "materialstatus":{
-            columns:[            
-                {name:"name", label:$ASAL["zhongwenmingcheng"], is_multiple:true, is_focus:true},
-                {name:"code", label:$ASAL["bianhao"]}
-            ],
-            controller:"materialstatus",
-            key_column:"name"
-        },
-
         "material":{
             columns:[
                 {name:"code", label:$ASAL["caizhidaima"], is_focus:true},
@@ -150,28 +84,6 @@
             ],
             controller:"material",
             key_column:"name"
-        },
-
-        "member":{
-            columns:[
-                {name:"name", label:$ASAL["huiyuanming"], class:"width2"},
-                {name:"gender", label:$ASAL["xingbie"], class:"width2", type:"select", source:"gender2"},
-                
-                {name:"phoneno", label:$ASAL["shouji"], class:"width2", is_hide:true},     
-                {name:"birthday", label:$ASAL["shengri"], class:"width2", type:"date"},       
-                {name:"zipcode", label:$ASAL["youbian"], class:"width2", is_hide:true},
-                {name:"qq", label:$ASAL["qq"], class:"width2", is_hide:true},
-                {name:"wechat", label:$ASAL["weixin"], class:"width2", is_hide:true},
-                {name:"microblog", label:$ASAL["weibo"], class:"width2", is_hide:true},
-                {name:"address", label:$ASAL["dizhi"], class:"width1", is_hide:true},            
-                {name:"email", label:$ASAL["email"], class:"width1", is_hide:true},         
-            ],
-            options:{
-                dialogWidth:'700px',
-                formSize:'small',
-                inline:true
-            },
-            controller:"member"
         },
 
         "colortemplate":{

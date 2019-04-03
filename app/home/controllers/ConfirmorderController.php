@@ -2,11 +2,11 @@
 
 namespace Multiple\Home\Controllers;
 
-use Asa\Erp\TdConfirmorderdetails;
+use Asa\Erp\TbConfirmorderdetails;
 use Asa\Erp\TbProduct;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
-use Asa\Erp\TdConfirmorder;
+use Asa\Erp\TbConfirmorder;
 use Asa\Erp\TbOrder;
 use Asa\Erp\TbOrderdetails;
 use Phalcon\Filter;
@@ -31,7 +31,7 @@ class ConfirmorderController extends BaseController {
     }
 
     public function pageAction() {
-        $result = TdConfirmorder::find(
+        $result = TbConfirmorder::find(
             sprintf("companyid=%d", $this->companyid)
         );
 
@@ -128,7 +128,7 @@ class ConfirmorderController extends BaseController {
         if ($orderid) {
             // 有发货单号就修改
             // 查找发货单号是否存在
-            $order = TdConfirmorder::findFirst(
+            $order = TbConfirmorder::findFirst(
                 sprintf("id=%d and companyid=%d", $orderid, $this->companyid)
             );
             if(!$order) {
@@ -158,7 +158,7 @@ class ConfirmorderController extends BaseController {
 
         } else {
             // 没有订单号就新增
-            $order = new TdConfirmorder();
+            $order = new TbConfirmorder();
             foreach ($submitData['form'] as $k => $item) {
                 $order->$k = $item;
             }
@@ -214,7 +214,7 @@ class ConfirmorderController extends BaseController {
 
         //清除不存在的详情id
         if(count($detail_id_array)>0) {
-            $details = TdConfirmorderdetails::find(
+            $details = TbConfirmorderdetails::find(
                 sprintf("confirmorderid=%d and id not in(%s)", $order->id, implode(",", $detail_id_array))
             );
 
@@ -238,7 +238,7 @@ class ConfirmorderController extends BaseController {
     public function loadorderAction()
     {
         // 根据orderid查询出当前订单以及订单详情的所有信息
-        $order = TdConfirmorder::findFirst(
+        $order = TbConfirmorder::findFirst(
             sprintf("id=%d and companyid=%d", $_REQUEST["id"], $this->companyid)
         );
 
@@ -258,7 +258,7 @@ class ConfirmorderController extends BaseController {
         $db = $this->db;
         $db->begin();
         // 根据orderid查询出当前发货单
-        $order = TdConfirmorder::findFirstById($orderid);
+        $order = TbConfirmorder::findFirstById($orderid);
         if($order!=false && $order->companyid==$this->companyid) {
             $order->status = $_POST['status']=="3" ? 3: 1;
 
@@ -293,7 +293,7 @@ class ConfirmorderController extends BaseController {
         $orderid = (int)$_POST['id'];
 
         // 根据orderid查询出当前订单以及订单详情的所有信息
-        $order = TdConfirmorder::findFirstById($orderid);
+        $order = TbConfirmorder::findFirstById($orderid);
         if($order!=false && $order->companyid==$this->companyid) {
             $order->status = 2;
 
@@ -307,7 +307,7 @@ class ConfirmorderController extends BaseController {
         $db = $this->db;
         $db->begin();
         // 根据orderid查询出当前发货单
-        $order = TdConfirmorder::findFirstById($orderid);
+        $order = TbConfirmorder::findFirstById($orderid);
         if($order!=false && $order->companyid==$this->companyid) {
             if($order->status==1) {
                 foreach($order->confirmorderdetails as $confirmorderdetails) {

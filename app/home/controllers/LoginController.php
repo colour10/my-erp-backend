@@ -3,6 +3,10 @@ namespace Multiple\Home\Controllers;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
 use Asa\Erp\TbUser;
+
+header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
+        header('Access-Control-Allow-Methods: Get,Post,Put,OPTIONS');
 class LoginController extends Controller
 {
     function loginAction() {
@@ -24,7 +28,7 @@ class LoginController extends Controller
                 ));
                 //Forward to the 'invoices' controller if the user is valid
                 //header("location:/");
-                echo json_encode(['code' => '200', 'auth' =>$this->session->get('user'), 'messages' => []]);
+                echo json_encode(['code' => '200', 'auth' =>$this->session->get('user'), "session_id" => $this->session->getId(), 'messages' => []]);
             }
             else {
                 echo json_encode(['code' => '200', 'messages' => ["登录失败。用户名或密码错误。"]]);

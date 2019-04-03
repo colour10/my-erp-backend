@@ -108,7 +108,7 @@ class OrderController extends BaseController
                 'sizecontentid' => $item['sizecontentid'],
                 'number' => $item['number'],
                 'companyid' => $this->companyid,
-                'price' => TbProduct::getInstance($item['productid'])->realprice,
+                'price' => TbProduct::getInstance($item['productid'])->retailprice,
                 'createdate' => date("Y-m-d H:i:s"),
                 'orderid' => $order->id
             ];

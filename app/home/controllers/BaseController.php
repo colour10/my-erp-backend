@@ -13,6 +13,11 @@ class BaseController extends Controller
 
     public function initialize()
     {
+        //允许跨域请求
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
+        header('Access-Control-Allow-Methods: Get,Post,Put,OPTIONS');
+
         $auth = $this->auth;
         if($auth) {
             $this->companyid = (int)$auth["companyid"];

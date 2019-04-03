@@ -5,7 +5,7 @@ use Phalcon\Mvc\Model\Relation;
 /**
  * 发货单明细表
  */
-class TdConfirmorderdetails extends BaseModel
+class TbConfirmorderdetails extends BaseModel
 {
     public function initialize()
     {
@@ -15,7 +15,7 @@ class TdConfirmorderdetails extends BaseModel
         // 发货单详情-发货单主表，一对多反向
         $this->belongsTo(
             'confirmorderid',
-            '\Asa\Erp\TdConfirmorder',
+            '\Asa\Erp\TbConfirmorder',
             'id',
             [
                 'alias' => 'confirmorder'

@@ -149,8 +149,8 @@ class CommonController extends BaseController
 
     function listAction() {
         $maps = [
-            "confirmorderdetails" => ["model"=>'Asa\Erp\TdConfirmorderdetails',"company"=>true],
-            "confirmorder" => ["model"=>'Asa\Erp\TdConfirmorder',"company"=>true],
+            "confirmorderdetails" => ["model"=>'Asa\Erp\TbConfirmorderdetails',"company"=>true],
+            "confirmorder" => ["model"=>'Asa\Erp\TbConfirmorder',"company"=>true],
             "orderdetails" => ["model"=>'Asa\Erp\TbOrderdetails',"company"=>true],
             "order" => ["model"=>'Asa\Erp\TbOrder',"company"=>true],
             "buycar" => ["model"=>'Asa\Erp\TbBuycar',"company"=>true],
@@ -184,7 +184,7 @@ class CommonController extends BaseController
             "aliases" => ["model"=>'Asa\Erp\TbAliases',"company"=>false],
             "brandgroup" => ["model"=>'Asa\Erp\TbBrandgroup',"company"=>false],
             "brand" => ["model"=>'Asa\Erp\TbBrand',"company"=>false],
-            "childproductgroup" => ["model"=>'Asa\Erp\TbBrandgroupchild',"company"=>false],
+            "brandgroupchild" => ["model"=>'Asa\Erp\TbBrandgroupchild',"company"=>false],
             "colortemplate" => ["model"=>'Asa\Erp\TbColortemplate',"company"=>false],
             "country" => ["model"=>'Asa\Erp\TbCountry',"company"=>false],
             "materialnote" => ["model"=>'Asa\Erp\TbMaterialnote',"company"=>false],
