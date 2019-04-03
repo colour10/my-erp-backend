@@ -1,10 +1,10 @@
 <?php
 namespace Multiple\Home\Controllers;
-use Asa\Erp\DdOrderdetails;
+use Asa\Erp\TbOrderdetails;
 use Asa\Erp\TbCompany;
 use Asa\Erp\Util;
 use Phalcon\Mvc\Controller;
-use Asa\Erp\DdOrder;
+use Asa\Erp\TbOrder;
 use Asa\Erp\TbProduct;
 /**
  * 订单主表
@@ -19,7 +19,7 @@ class OrderController extends BaseController
         $this->permission_msg = $this->getValidateMessage('order-gurd-alert-message');
     }
     public function pageAction() {
-        $result = DdOrder::find(
+        $result = TbOrder::find(
             sprintf("companyid=%d", $this->companyid)
         );
         echo $this->success($result->toArray());
@@ -53,7 +53,7 @@ class OrderController extends BaseController
             // 有订单号就修改
             // 查找订单号是否存在或者非法
             // 只有status=1的订单才可以修改
-            $order = DdOrder::findFirst(
+            $order = TbOrder::findFirst(
                 sprintf("id=%d and companyid=%d", $orderid, $this->companyid)
             );
             if(!$order || $order->status!=1) {
@@ -73,7 +73,7 @@ class OrderController extends BaseController
         }
         else {
             // 没有订单号就新增
-            $order = new DdOrder();
+            $order = new TbOrder();
             foreach ($submitData['form'] as $k => $item) {
                 $order->$k = $item;
             }
@@ -128,7 +128,7 @@ class OrderController extends BaseController
         }
         //清除不存在的详情id
         if(count($detail_id_array)>0) {
-            $details = DdOrderdetails::find(
+            $details = TbOrderdetails::find(
                 sprintf("orderid=%d and id not in(%s)", $order->id, implode(",", $detail_id_array))
             );
             foreach($details as $detail) {
@@ -148,7 +148,7 @@ class OrderController extends BaseController
     public function loadorderAction()
     {
         // 根据orderid查询出当前订单以及订单详情的所有信息
-        $order = DdOrder::findFirst(
+        $order = TbOrder::findFirst(
             sprintf("id=%d and companyid=%d", $_REQUEST["id"], $this->companyid)
         );
         // 判断订单是否存在
@@ -163,7 +163,7 @@ class OrderController extends BaseController
     public function deleteAction()
     {
         // 根据orderid查询出当前订单以及订单详情的所有信息
-        $order = DdOrder::findFirst(
+        $order = TbOrder::findFirst(
             sprintf("id=%d and companyid=%d", $_GET["id"], $this->companyid)
         );
         // 判断订单是否存在
@@ -180,7 +180,7 @@ class OrderController extends BaseController
     public function confirmAction() {
         $orderid = (int)$_POST['id'];
         // 根据orderid查询出当前订单以及订单详情的所有信息
-        $order = DdOrder::findFirstById($orderid);
+        $order = TbOrder::findFirstById($orderid);
         if($order!=false && $order->companyid==$this->companyid) {
             $order->status = $_POST['status']=="3" ? 3: 1;
             $this->doTableAction($order,"update");
@@ -193,7 +193,7 @@ class OrderController extends BaseController
     public function cancelAction() {
         $orderid = (int)$_POST['id'];
         // 根据orderid查询出当前订单以及订单详情的所有信息
-        $order = DdOrder::findFirstById($orderid);
+        $order = TbOrder::findFirstById($orderid);
         if($order!=false && $order->companyid==$this->companyid) {
             $order->status = 2;
             $this->doTableAction($order,"update");
@@ -206,7 +206,7 @@ class OrderController extends BaseController
     public function finishAction() {
         $orderid = (int)$_POST['id'];
         // 根据orderid查询出当前订单以及订单详情的所有信息
-        $order = DdOrder::findFirstById($orderid);
+        $order = TbOrder::findFirstById($orderid);
         if($order!=false && $order->companyid==$this->companyid) {
             $order->isstatus = 1;
             $this->doTableAction($order,"update");
@@ -219,7 +219,7 @@ class OrderController extends BaseController
     public function modifyAction() {
         $orderid = (int)$_POST['id'];
         // 根据orderid查询出当前订单以及订单详情的所有信息
-        $order = DdOrder::findFirstById($orderid);
+        $order = TbOrder::findFirstById($orderid);
         if($order!=false && $order->companyid==$this->companyid) {
             //定义可以修改的字段名
             $columns = array();

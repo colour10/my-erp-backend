@@ -16,7 +16,7 @@ class TbWarehousingdetails extends BaseModel
 
         $this->belongsTo(
             'orderdetailsid',
-            '\Asa\Erp\DdOrderdetails',
+            '\Asa\Erp\TbOrderdetails',
             'id',
             [
                 'alias' => 'orderdetails'
@@ -25,7 +25,7 @@ class TbWarehousingdetails extends BaseModel
 
         $this->belongsTo(
             'confirmorderdetailsid',
-            '\Asa\Erp\DdConfirmorderdetails',
+            '\Asa\Erp\TdConfirmorderdetails',
             'id',
             [
                 'alias' => 'confirmorderdetails'

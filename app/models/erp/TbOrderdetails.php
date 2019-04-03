@@ -11,12 +11,12 @@ use Phalcon\Validation\Validator\Regex;
 /**
  * 订单明细表
  */
-class DdOrderdetails extends BaseModel
+class TbOrderdetails extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('dd_orderdetails');
+        $this->setSource('tb_orderdetails');
 
         // 订单详情-商品主表，一对多反向
         $this->belongsTo(
@@ -41,7 +41,7 @@ class DdOrderdetails extends BaseModel
         // 订单详情-商品主表，一对多反向
         $this->belongsTo(
             'orderid',
-            '\Asa\Erp\DdOrder',
+            '\Asa\Erp\TbOrder',
             'id',
             [
                 'alias' => 'order'

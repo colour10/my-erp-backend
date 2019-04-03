@@ -18,52 +18,6 @@ class TbProduct extends BaseCompanyModel
         parent::initialize();
         $this->setSource('tb_product');
 
-
-        /*// 商品-子品类，一对多反向
-        $this->belongsTo(
-            'childbrand',
-            '\Asa\Erp\TbBrandgroupchild',
-            'id',
-            [
-                'alias' => 'childproductgroup',
-                'foreignKey' => [
-                    // 关联字段禁止自动删除
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message" => $this->getValidateMessage('notexist', 'childproductgroup-list'),
-                ],
-            ]
-        );
-
-        // 商品-尺码组，一对多反向
-        $this->belongsTo(
-            'sizetopid',
-            '\Asa\Erp\TbSizetop',
-            'id',
-            [
-                'alias' => 'sizetop',
-                'foreignKey' => [
-                    // 关联字段禁止自动删除
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message" => $this->getValidateMessage('notexist', 'sizetop'),
-                ],
-            ]
-        );
-
-        // 商品-材质表，一对多反向，因为关联表字段用的是material，所以别名换成了getmaterial
-        $this->belongsTo(
-            'material',
-            '\Asa\Erp\ZlMaterial',
-            'id',
-            [
-                'alias' => 'getmaterial',
-                'foreignKey' => [
-                    // 关联字段禁止自动删除
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message" => $this->getValidateMessage('notexist', 'material'),
-                ],
-            ]
-        );*/
-
         // 商品-公司表，一对多反向
         $this->belongsTo(
             'companyid',

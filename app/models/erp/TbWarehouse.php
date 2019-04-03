@@ -32,7 +32,7 @@ class TbWarehouse extends BaseModel
 
         $this->hasMany(
             "id",
-            "\Asa\Erp\DdConfirmorder",
+            "\Asa\Erp\TdConfirmorder",
             "warehouseid",
             [
                 'alias' => 'confirmorder',

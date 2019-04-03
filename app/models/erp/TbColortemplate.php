@@ -9,12 +9,12 @@ use Phalcon\Validation\Validator\PresenceOf;
 /**
  * 基础资料，ASA颜色模板表
  */
-class ZlColortemplate extends BaseModel
+class TbColortemplate extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('zl_colortemplate');
+        $this->setSource('tb_colortemplate');
 
         // 设置当前语言
         $this->setValidateLanguage($this->getLanguage()['lang']);

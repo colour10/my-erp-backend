@@ -5,14 +5,14 @@ use Phalcon\Validation\Validator\Between;
 use Phalcon\Validation\Validator\Uniqueness;
 
 /**
- * 基础资料，材质表
+ * 基础资料，商品尺码描述子表
  */
-class ZlMaterial extends BaseModel
+class TbTemplatemanage extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('zl_material');
+        $this->setSource('tb_templatemanage');
     }
 
     public function validation() {

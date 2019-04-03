@@ -5,16 +5,16 @@ use Phalcon\Validation\Validator\Between;
 use Phalcon\Validation\Validator\Uniqueness;
 
 /**
- * 基础资料 别名表
+ * 子系列，品牌相关
  */
-class ZlAliases extends BaseModel
+class TbSeries2 extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('zl_aliases');
+        $this->setSource('tb_series2');
     }
-
+    
     public function validation() {
         $validator = new Validation();
 
@@ -28,7 +28,7 @@ class ZlAliases extends BaseModel
 //                ]
 //            )
 //        );
-//
+//        
 //        $validator->add(
 //            'name',
 //            new Uniqueness(
@@ -41,3 +41,4 @@ class ZlAliases extends BaseModel
         return $this->validate($validator);
     }
 }
+        

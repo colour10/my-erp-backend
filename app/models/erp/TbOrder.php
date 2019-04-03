@@ -11,12 +11,12 @@ use Phalcon\Validation\Validator\Regex;
 /**
  * 订单主表
  */
-class DdOrder extends BaseModel
+class TbOrder extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('dd_order');
+        $this->setSource('tb_order');
 
         // 动态更新
         $this->useDynamicUpdate(true);
@@ -24,7 +24,7 @@ class DdOrder extends BaseModel
         // 订单-订单详情，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\DdOrderdetails",
+            "\Asa\Erp\TbOrderdetails",
             "orderid",
             [
                 'alias' => 'orderdetails'
@@ -96,7 +96,7 @@ class DdOrder extends BaseModel
      * @param [type] $form 表单数据
      */
     public function addDetail($form) {
-        $row = new DdOrderdetails();
+        $row = new TbOrderdetails();
         if($row->create($form)) {
             return $row;
         }
@@ -111,7 +111,7 @@ class DdOrder extends BaseModel
      * @return [type]       [description]
      */
     public function updateDetail($form) {
-        $row = DdOrderdetails::findFirst(
+        $row = TbOrderdetails::findFirst(
             sprintf("id=%d", $form['id'])
         );
 

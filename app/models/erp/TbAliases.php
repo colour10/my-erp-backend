@@ -5,14 +5,14 @@ use Phalcon\Validation\Validator\Between;
 use Phalcon\Validation\Validator\Uniqueness;
 
 /**
- * 品牌系列，品牌相关数据
+ * 基础资料 别名表
  */
-class ZlSeries extends BaseModel
+class TbAliases extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('zl_series');
+        $this->setSource('tb_aliases');
     }
 
     public function validation() {

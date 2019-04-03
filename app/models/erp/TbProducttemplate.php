@@ -5,14 +5,14 @@ use Phalcon\Validation\Validator\Between;
 use Phalcon\Validation\Validator\Uniqueness;
 
 /**
- * 基础资料，商品尺寸表
+ * 基础资料，商品尺码描述主表
  */
-class ZlUlnarinch extends BaseModel
+class TbProducttemplate extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('zl_ulnarinch');
+        $this->setSource('tb_producttemplate');
     }
 
     public function validation() {

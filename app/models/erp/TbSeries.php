@@ -5,16 +5,16 @@ use Phalcon\Validation\Validator\Between;
 use Phalcon\Validation\Validator\Uniqueness;
 
 /**
- * 附带配件
+ * 品牌系列，品牌相关数据
  */
-class ZlProductparts extends BaseModel
+class TbSeries extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('zl_productparts');
+        $this->setSource('tb_series');
     }
-    
+
     public function validation() {
         $validator = new Validation();
 
@@ -28,7 +28,7 @@ class ZlProductparts extends BaseModel
 //                ]
 //            )
 //        );
-//        
+//
 //        $validator->add(
 //            'name',
 //            new Uniqueness(
@@ -41,4 +41,3 @@ class ZlProductparts extends BaseModel
         return $this->validate($validator);
     }
 }
-        

@@ -5,16 +5,16 @@ use Phalcon\Validation\Validator\Between;
 use Phalcon\Validation\Validator\Uniqueness;
 
 /**
- * 内部结构
+ * 基础资料，材质备注表
  */
-class ZlProductinnards extends BaseModel
+class TbMaterialnote extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('zl_productinnards');
+        $this->setSource('tb_materialnote');
     }
-    
+
     public function validation() {
         $validator = new Validation();
 
@@ -28,7 +28,7 @@ class ZlProductinnards extends BaseModel
 //                ]
 //            )
 //        );
-//        
+//
 //        $validator->add(
 //            'name',
 //            new Uniqueness(
@@ -41,4 +41,3 @@ class ZlProductinnards extends BaseModel
         return $this->validate($validator);
     }
 }
-        

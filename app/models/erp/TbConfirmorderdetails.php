@@ -5,17 +5,17 @@ use Phalcon\Mvc\Model\Relation;
 /**
  * 发货单明细表
  */
-class DdConfirmorderdetails extends BaseModel
+class TdConfirmorderdetails extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('dd_confirmorderdetails');
+        $this->setSource('tb_confirmorderdetails');
 
         // 发货单详情-发货单主表，一对多反向
         $this->belongsTo(
             'confirmorderid',
-            '\Asa\Erp\DdConfirmorder',
+            '\Asa\Erp\TdConfirmorder',
             'id',
             [
                 'alias' => 'confirmorder'
@@ -24,7 +24,7 @@ class DdConfirmorderdetails extends BaseModel
         // 发货单详情-订单详情表，一对多反向
         $this->belongsTo(
             'orderdetailsid',
-            '\Asa\Erp\DdOrderdetails',
+            '\Asa\Erp\TbOrderdetails',
             'id',
             [
                 'alias' => 'orderdetails'

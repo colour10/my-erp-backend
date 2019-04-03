@@ -4,17 +4,17 @@ use Phalcon\Validation;
 use Phalcon\Validation\Validator\Between;
 use Phalcon\Validation\Validator\Uniqueness;
 
-/*
- * 洗涤标准
+/**
+ * 基础资料，材质表
  */
-class ZlWashinginstructions extends BaseModel
+class TbMaterial extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('zl_washinginstructions');
+        $this->setSource('tb_material');
     }
-    
+
     public function validation() {
         $validator = new Validation();
 
@@ -28,7 +28,7 @@ class ZlWashinginstructions extends BaseModel
 //                ]
 //            )
 //        );
-//        
+//
 //        $validator->add(
 //            'name',
 //            new Uniqueness(

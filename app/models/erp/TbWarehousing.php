@@ -17,7 +17,7 @@ class TbWarehousing extends BaseCompanyModel
 
         $this->belongsTo(
             'confirmorderid',
-            '\Asa\Erp\DdConfirmorder',
+            '\Asa\Erp\TdConfirmorder',
             'id',
             [
                 'alias' => 'confirmorder'

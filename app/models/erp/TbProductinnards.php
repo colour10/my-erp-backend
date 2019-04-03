@@ -5,16 +5,16 @@ use Phalcon\Validation\Validator\Between;
 use Phalcon\Validation\Validator\Uniqueness;
 
 /**
- * 基础资料，商品尺码描述子表
+ * 内部结构
  */
-class ZlTemplatemanage extends BaseModel
+class TbProductinnards extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('zl_templatemanage');
+        $this->setSource('tb_productinnards');
     }
-
+    
     public function validation() {
         $validator = new Validation();
 
@@ -28,7 +28,7 @@ class ZlTemplatemanage extends BaseModel
 //                ]
 //            )
 //        );
-//
+//        
 //        $validator->add(
 //            'name',
 //            new Uniqueness(
@@ -41,3 +41,4 @@ class ZlTemplatemanage extends BaseModel
         return $this->validate($validator);
     }
 }
+        
