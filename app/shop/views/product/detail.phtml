@@ -101,10 +101,15 @@
                                 </div>
                             </div>
                             <div class="product-page-cart">
+                                <?php if ($number == '0') { ?>
+                                <button disabled="disabled" class="btn btn-primary" type="submit" id="add-buycar">暂时缺货</button>
+                                <? } else { ?>
+
                                 <div class="product-quantity">
                                     <input id="product-quantity" type="text" value="1" readonly class="form-control input-sm">
                                 </div>
                                 <button class="btn btn-primary" type="submit" id="add-buycar">加入购物车</button>
+                                <? } ?>
                             </div>
                         </div>
 
