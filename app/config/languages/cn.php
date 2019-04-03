@@ -539,6 +539,7 @@ return array(
     'childproductgroup-list' => '子品类列表',
     'material' => '材质',
     'url' => '网址',
+    'product-description' => '商品详情',
     // 通用型，以后有需要再改
     'hasmany-foreign-message' => '正在使用，不能删除',
     'belongsto-foreign-message' => '记录不存在',
