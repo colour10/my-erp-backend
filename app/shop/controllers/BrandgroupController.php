@@ -20,7 +20,9 @@ class BrandgroupController extends AdminController
     public function getmainhostAction()
     {
         // 逻辑
-        return $this->main_host;
+        if ($this->request->isPost()) {
+            return $this->main_host;
+        }
     }
 
     /**
@@ -29,7 +31,9 @@ class BrandgroupController extends AdminController
     public function getfileprexAction()
     {
         // 逻辑
-        return $this->file_prex;
+        if ($this->request->isPost()) {
+            return $this->file_prex;
+        }
     }
 
 
@@ -46,12 +50,20 @@ class BrandgroupController extends AdminController
                 'action' => 'error404',
             ]);
         }
+
+        // 判断是否登录
+        if (!$this->session->get('member')) {
+            return $this->dispatcher->forward([
+                'controller' => 'login',
+                'action' => 'index',
+            ]);
+        }
+
         // 先过滤
         $params = $this->dispatcher->getParams();
         if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
             exit('Params error!');
         }
-
         // 赋值
         $id = $params[0];
         // 分页
@@ -73,8 +85,6 @@ class BrandgroupController extends AdminController
             'conditions'=>'childbrand IN ({brandGroup_ids:array}) AND companyid = '.$this->currentCompany,
             'bind'=>['brandGroup_ids'=>$brandGroup_ids],
         ]);
-
-        // return json_encode($products);
 
         // 创建分页对象
         $paginator = new PaginatorModel(
