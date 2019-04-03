@@ -71,8 +71,8 @@
                             <h1><?php echo $product->productname; ?></h1>
                             <div class="price-availability-block clearfix">
                                 <div class="price">
-                                    <strong><span><?php echo $retailpricecurrency; ?></span><?php echo $realprice; ?></strong>
-                                    <em><?php echo $orderpricecurrency; ?><span><?php echo $orderprice; ?></span></em>
+                                    <strong><span><?php echo $this->currency; ?></span><?php echo $realprice; ?></strong>
+                                    <em><?php echo $this->currency; ?><span><?php echo $price; ?></span></em>
                                 </div>
                                 <div class="availability">
                                     在库: <strong><?php echo $number; ?></strong>
