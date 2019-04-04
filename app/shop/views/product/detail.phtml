@@ -70,16 +70,11 @@
                             <h1><?php echo $product->productname; ?></h1>
                             <div class="price-availability-block clearfix">
                                 <div class="price">
-<<<<<<< HEAD
-                                    <strong><span><?php echo $retailpricecurrency; ?></span><span id="price"><?php echo $realprice; ?></span></strong>
-                                    <em>￥<span><?php echo $nationalprice; ?></span></em>
-=======
                                     <strong><span><?php echo $this->currency; ?></span><?php echo $realprice; ?></strong>
                                     <em><?php echo $this->currency; ?><span><?php echo $price; ?></span></em>
                                 </div>
                                 <div class="availability">
                                     在库: <strong><?php echo $number; ?></strong>
->>>>>>> 77d5485261443ee480e79f93db4a7ad6d9d6b5a7
                                 </div>
                             </div>
 <!--                            <div class="description">-->
@@ -89,19 +84,10 @@
                             <div class="product-page-options borderTopNone">
                                 <div class="pull-left">
                                     <label class="control-label">尺码：</label>
-<<<<<<< HEAD
-                                    <select class="form-control input-sm" id="product_size">
-                                        <!--<?php foreach ($sizecontents as $sizecontent) { ?>
-                                        <option value="<?php echo $sizecontent['id']; ?>"><?php echo $sizecontent['content_cn']; ?></option>
-                                        <?php } ?>-->
-                                        <option value="1">S</option>
-                                        <option value="2">M</option>
-=======
                                     <select class="form-control input-sm">
                                         <?php foreach ($sizecontents as $sizecontent) { ?>
                                         <option value="<?php echo $sizecontent['id']; ?>"><?php echo $sizecontent['content']; ?></option>
                                         <?php } ?>
->>>>>>> 77d5485261443ee480e79f93db4a7ad6d9d6b5a7
                                     </select>
                                 </div>
                                 <div class="pull-left">
