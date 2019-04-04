@@ -91,4 +91,58 @@ class ProductController extends CadminController {
         $this->db->commit();
         return $this->success();
     }
+
+    /**
+     * 保存同款不同色数据
+     * @return [type] [description]
+     */
+    function savecolorgroupAction() {
+        $form = json_decode($_POST["params"], true);
+        
+        $product = TbProduct::findFirstById($form['productid']);
+        if($product!=false) {
+            try {
+                $this->db->begin();
+
+                //先解绑颜色组
+                $product->cancelBindColor();   
+
+                $products = [$product];
+                $data = [$product->id.",".$product->brandcolor];
+                //处理新增的记录
+                foreach ($form['list'] as &$row) {
+                    if($row['id']=='') {                        
+                        $product_else = $product->cloneByColor($row['brandcolor'], $row['wordcode_1'], $row['wordcode_2'], $row['wordcode_3'], $row['wordcode_4']);
+                    }
+                    else {
+                        $product_else = TbProduct::findFirstById($row['id']);
+                        if($product_else==false) {
+                            throw new \Exception("#1002#绑定的商品不存在#");
+                        }
+                    }
+                    $products[] = $product_else;
+                    $data[] = $product_else->id.",".$product_else->brandcolor;
+                }
+
+                $product_group = implode('|', $data);
+                //逐个更新，绑定关系
+                foreach($products as $row) {
+                    $row->product_group = $product_group;
+                    if($row->update()==false) {
+                        throw new \Exception("#1002#更新product_group字段失败#");
+                    }
+                }
+
+                $this->db->commit();
+                return $this->success();
+            }
+            catch(\Exception $e) {
+                $this->db->rollback();
+                return $this->error($e->getMessage());
+            }
+        }
+        else {
+            return $this->error("#1001#产品数据不存在#");
+        }
+    }
 }

@@ -93,4 +93,77 @@ class TbProduct extends BaseCompanyModel
 
         return $obj;
     }
+
+    /**
+     * 解绑定同款不同色关系
+     * @return [type] [description]
+     */
+    function cancelBindColor() {
+        $db = $this->getDI()->get('db');
+
+        $db->begin();
+        $products = TbProduct::find(
+            sprintf("product_group='%s'", addslashes($this->product_group))
+        );
+
+        foreach ($products as $key => $product) {
+            $product->product_group = "";
+            if($product->update()==false) {
+                throw new Exception("#1002#解绑定同款不同色关系失败#");
+            }
+        }
+        return $db->commit();
+    }
+
+    /**
+     * 复制同款商品
+     * @param  [type] $brandcolor [description]
+     * @param  [type] $wordcode_1 [description]
+     * @param  [type] $wordcode_2 [description]
+     * @param  [type] $wordcode_3 [description]
+     * @param  [type] $wordcode_4 [description]
+     * @return [type]             [description]
+     */
+    function cloneByColor($brandcolor, $wordcode_1, $wordcode_2, $wordcode_3, $wordcode_4) {
+        $product = new TbProduct();
+        $product->brandcolor = $brandcolor;
+        $product->wordcode_1 = $wordcode_1;
+        $product->wordcode_2 = $wordcode_2;
+        $product->wordcode_3 = $wordcode_3;
+        $product->wordcode_4 = $wordcode_4;
+        $product->productname = $this->productname;
+        $product->wordprice = $this->wordprice;
+        $product->wordpricecurrency = $this->wordpricecurrency;
+        $product->gender = $this->gender;
+        $product->brandid = $this->brandid;
+        $product->brandgroupid = $this->brandgroupid;
+        $product->childbrand = $this->childbrand;
+        $product->picture2 = "";
+        $product->picture = "";
+        $product->ageseason = $this->ageseason;
+        $product->countries = $this->countries;
+        $product->material = $this->material;
+        $product->producttemplate = $this->producttemplate;
+        $product->season = $this->season;
+        //$product->laststoragedate = $this->laststoragedate;
+        $product->aliases = $this->aliases;
+        $product->series = $this->series;
+        $product->series2 = $this->series2;
+        $product->ulnarinch = $this->ulnarinch;
+        $product->factoryprice = $this->factoryprice;
+        $product->factorypricecurrency = $this->factorypricecurrency;
+        $product->retailprice = $this->retailprice;
+        $product->retailpricecurrency = $this->retailpricecurrency;
+        $product->product_group = "";
+        $product->nationalprice = $this->nationalprice;
+        $product->ulnarinch_memo = $this->ulnarinch_memo;
+        $product->sizetopid = $this->sizetopid;
+        $product->companyid = $this->companyid;
+        $product->adduserid = $this->getDI()->get("currentUser");
+        if($product->create()==false) {
+            throw new Exception("#1002#复制商品失败#");
+        }
+
+        return $product;
+    }
 }
