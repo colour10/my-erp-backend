@@ -2,6 +2,7 @@
 
 namespace Multiple\Shop;
 
+use Multiple\Shop\Controllers\IndexController;
 use Phalcon\Loader;
 use Phalcon\Mvc\View;
 use Phalcon\DiInterface;
@@ -9,6 +10,7 @@ use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 use Multiple\Shop\Controllers\BrandgroupController;
 use Multiple\Shop\Controllers\BuycarController;
+use Multiple\Shop\Controllers\CompanyController;
 
 class Module implements ModuleDefinitionInterface
 {
@@ -87,11 +89,38 @@ class Module implements ModuleDefinitionInterface
             $allcates = $brandGroup->allcatesAction();
             return $allcates;
         });
-        //获取购物车
-		$buycar = new BuycarController();
+
+        // 获取购物车
+        $buycar = new BuycarController();
         $di->setShared('buycar', function () use ($buycar) {
             $cates = $buycar->getListsAction();
             return $cates;
+        });
+
+        // 判断是否登录
+        $di->setShared('islogin', function () {
+            $index = new IndexController();
+            return $index->isloginAction();
+        });
+
+        // 获取当前域名及所属公司的模型
+        $tbcompany = new CompanyController();
+        $di->setShared('host', function () use ($tbcompany) {
+            $host = $tbcompany->gethost();
+            return $host;
+        });
+
+        // 为了使用共享model数据，需要注册currentCompany
+        $di->setShared('currentCompany', function () use ($tbcompany) {
+            $result = $tbcompany->gethost();
+            if ($result) {
+                return $result['company']->id;
+            }
+        });
+
+        // 默认货币，以后会从配置文件导入，这个先随便写个，有变动在修改
+        $di->setShared('currency', function () {
+            return "$";
         });
     }
 }

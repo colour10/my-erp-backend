@@ -1,17 +1,16 @@
 <?php
 namespace Multiple\Shop\Controllers;
 
-use Phalcon\Mvc\Controller;
-use Asa\Erp\ZlBrandgroup;
-use Asa\Erp\TbProduct;
+use Asa\Erp\TbProductSearch;
+use Asa\Erp\TbBrandgroup;
 use Phalcon\Paginator\Adapter\Model as PaginatorModel;
 
 class BrandgroupController extends AdminController
 {
 
-	public function initialize()
+    public function initialize()
     {
-        $this->setModelName('Asa\\Erp\\ZlBrandgroup');
+        $this->setModelName('Asa\\Erp\\TbBrandgroup');
     }
 
     /**
@@ -20,7 +19,9 @@ class BrandgroupController extends AdminController
     public function getmainhostAction()
     {
         // 逻辑
-        return $this->main_host;
+        if ($this->request->isPost()) {
+            return $this->main_host;
+        }
     }
 
     /**
@@ -29,7 +30,9 @@ class BrandgroupController extends AdminController
     public function getfileprexAction()
     {
         // 逻辑
-        return $this->file_prex;
+        if ($this->request->isPost()) {
+            return $this->file_prex;
+        }
     }
 
 
@@ -39,22 +42,29 @@ class BrandgroupController extends AdminController
     public function detailAction()
     {
         // 逻辑
+        // 判断是否登录
+        if (!$this->session->get('member')) {
+            return $this->dispatcher->forward([
+                'controller' => 'login',
+                'action' => 'index',
+            ]);
+        }
+
         // 先过滤
         $params = $this->dispatcher->getParams();
         if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
             exit('Params error!');
         }
-
         // 赋值
         $id = $params[0];
         // 分页
         $currentPage = $this->request->getQuery("page", "int", 1);
         // 取出数据
-        $brandGroup = ZlBrandgroup::findFirstById($id);
+        $brandGroup = TbBrandgroup::findFirstById($id);
         // 定义一个变量用来存储结果
         $brandGroup_ids = [];
         // 寻找下面的子品类id
-        foreach ($brandGroup->childproductgroups as $childgroup) {
+        foreach ($brandGroup->brandgroupchilds as $childgroup) {
             $brandGroup_ids[] = $childgroup->id;
         }
 
@@ -62,9 +72,9 @@ class BrandgroupController extends AdminController
         array_unshift($brandGroup_ids, $id);
 
         // 查找隶属于子品类的商品
-        $products = TbProduct::find([
-            'conditions'=>'childbrand IN ({brandGroup_ids:array})',
-            'bind'=>['brandGroup_ids'=>$brandGroup_ids]
+        $products = TbProductSearch::find([
+            'conditions'=>'childbrand IN ({brandGroup_ids:array}) AND companyid = '.$this->currentCompany,
+            'bind'=>['brandGroup_ids'=>$brandGroup_ids],
         ]);
 
         // 创建分页对象
@@ -80,8 +90,7 @@ class BrandgroupController extends AdminController
         $page = $paginator->getPaginate();
 
         // 定义面包屑导航
-        $lang = $this->getDI()->get('language')->lang;
-        $name = 'name_'.$lang;
+        $name = $this->getlangfield('name');
         $breadcrumb = '<li><a href="/">首页</a></li><li class="active">'.$brandGroup->$name.'</li>';
 
         // 推送给模板
@@ -89,6 +98,7 @@ class BrandgroupController extends AdminController
             'page' => $page,
             'id' => $id,
             'breadcrumb' => $breadcrumb,
+            'title' => $brandGroup->$name,
         ]);
     }
 
@@ -100,9 +110,14 @@ class BrandgroupController extends AdminController
     public function catesAction()
     {
         // 逻辑
-        $list = ZlBrandgroup::find();
-        // 此处的callback需要和客户端ajax请求中的jsonp属性保持一致
-        return $list->toArray();
+        $list = TbBrandgroup::find();
+        // 语言字段重新设计
+        $list_array = $list->toArray();
+        foreach ($list_array as $k => $item) {
+            $list_array[$k]['name'] = $item[$this->getlangfield('name')];
+        }
+        // 返回
+        return $list_array;
     }
 
 
@@ -116,15 +131,25 @@ class BrandgroupController extends AdminController
         // 定义一个变量用来存储结果
         $list_arr = [];
         // 取出所有一级品牌
-        $list = ZlBrandgroup::find();
+        $list = TbBrandgroup::find();
         if($list) {
             $list_arr = $list->toArray();
         }
         // 填充子分类
         foreach ($list_arr as $k => $item) {
-            $list_arr[$k]['children'] = ZlBrandgroup::findFirstById($item['id'])->childproductgroups->toArray();
+            $list_arr[$k]['name'] = $item[$this->getlangfield('name')];
+            // 开始添加子分类当前语言信息
+            $childproductgroups_array = TbBrandgroup::findFirstById($item['id'])->brandgroupchilds->toArray();
+            // 判断是否有子分类
+            if ($childproductgroups_array) {
+                foreach ($childproductgroups_array as $key => $childproductgroup) {
+                    $childproductgroups_array[$key]['name'] = $childproductgroup[$this->getlangfield('name')];
+                }
+            }
+            // 添加子分类
+            $list_arr[$k]['children'] = $childproductgroups_array;
         }
-        // 此处的callback需要和客户端ajax请求中的jsonp属性保持一致
+        // 返回
         return $list_arr;
     }
 
@@ -137,10 +162,9 @@ class BrandgroupController extends AdminController
     public function getdetailAction($id)
     {
         // 逻辑
-        $brandGroup = ZlBrandgroup::find('id='.$id);
+        $brandGroup = TbBrandgroup::find('id='.$id);
         // 返回
         return $brandGroup;
     }
-
 
 }

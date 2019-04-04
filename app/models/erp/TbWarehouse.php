@@ -32,7 +32,7 @@ class TbWarehouse extends BaseModel
 
         $this->hasMany(
             "id",
-            "\Asa\Erp\DdConfirmorder",
+            "\Asa\Erp\TdConfirmorder",
             "warehouseid",
             [
                 'alias' => 'confirmorder',
@@ -40,6 +40,15 @@ class TbWarehouse extends BaseModel
                     'message' => '#1003#',
                     'action' => Relation::ACTION_RESTRICT
                 )                
+            ]
+        );
+
+        $this->hasMany(
+            "id",
+            "\Asa\Erp\TbProductstock",
+            "warehouseid",
+            [
+                'alias' => 'productstocks'
             ]
         );
     }

@@ -17,6 +17,17 @@ class TbProduct extends BaseCompanyModel
     {
         parent::initialize();
         $this->setSource('tb_product');
+
+        // 商品-公司表，一对多反向
+        $this->belongsTo(
+            'companyid',
+            '\Asa\Erp\TbCompany',
+            'id',
+            [
+                'alias' => 'company'
+            ]
+        );
+
     }
 
     public function validation() {

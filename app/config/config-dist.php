@@ -17,6 +17,8 @@ return array(
         //Shop系统域名
         'shop_host' => 'shop.localhost.com'
     ),
+
+    'mode' => 'develop',//product
     
     //数据库表配置
     'database' => array(

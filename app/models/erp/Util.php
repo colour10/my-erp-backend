@@ -172,4 +172,26 @@ class Util {
             return false;
         }
     }
+
+    /**
+     * 根据查询到的一个结果集，获取指定列，并生成数组
+     */
+    public static function recordListColumn($list, $column) {
+        $array = [];
+        foreach ($list as $key => $value) {
+            $array[] = $value->$column;
+        }
+        return $array;
+    }
+
+    /**
+     * 根据查询到的一个结果集，指定两列，生成哈希表
+     */
+    public static function recordToHashtable($list, $columnKey, $columnValue) {
+        $array = [];
+        foreach ($list as $key => $value) {
+            $array[$value->$columnKey] = $value->$columnValue;
+        }
+        return $array;
+    }
 }

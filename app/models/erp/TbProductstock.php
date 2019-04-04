@@ -39,7 +39,7 @@ class TbProductstock extends BaseCompanyModel
         // 库存-尺码表，一对多反向
         $this->belongsTo(
             'sizecontentid',
-            '\Asa\Erp\ZlSizecontent',
+            '\Asa\Erp\TbSizecontent',
             'id',
             [
                 'alias' => 'sizecontent'

@@ -60,6 +60,10 @@ class BaseModel extends \Phalcon\Mvc\Model {
     function getValidateMessage($template, $name) {}
 
     public static function findByIdString($idstring, $column) {
+        if(is_array($idstring)) {
+            $idstring = implode(',', $idstring);
+        }
+        
         if(preg_match("#^\d+(,\d+)*$#", $idstring)) {
             return static::find(
                 sprintf("{$column} in (%s)", $idstring)

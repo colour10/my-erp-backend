@@ -9,6 +9,7 @@ return array(
     "1001" => "非法数据",
     "1002" => "操作失败",
     "1003" => "数据正在使用，无法删除",
+    "1004" => "非法数据",//关联信息不存在
     "8000" => "不能为空",
     "menu-1" => "用户管理",
     "menu-1-1" => "员工信息",
@@ -540,6 +541,7 @@ return array(
     'childproductgroup-list' => '子品类列表',
     'material' => '材质',
     'url' => '网址',
+    'product-description' => '商品详情',
     // 通用型，以后有需要再改
     'hasmany-foreign-message' => '正在使用，不能删除',
     'belongsto-foreign-message' => '记录不存在',

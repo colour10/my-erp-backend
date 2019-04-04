@@ -2,13 +2,13 @@
 
 namespace Multiple\Home\Controllers;
 
-use Asa\Erp\DdConfirmorderdetails;
+use Asa\Erp\TdConfirmorderdetails;
 use Asa\Erp\TbProduct;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
-use Asa\Erp\DdConfirmorder;
-use Asa\Erp\DdOrder;
-use Asa\Erp\DdOrderdetails;
+use Asa\Erp\TdConfirmorder;
+use Asa\Erp\TbOrder;
+use Asa\Erp\TbOrderdetails;
 use Phalcon\Filter;
 use Asa\Erp\TbCompany;
 use Asa\Erp\Util;
@@ -31,7 +31,7 @@ class ConfirmorderController extends BaseController {
     }
 
     public function pageAction() {
-        $result = DdConfirmorder::find(
+        $result = TdConfirmorder::find(
             sprintf("companyid=%d", $this->companyid)
         );
 
@@ -67,7 +67,7 @@ class ConfirmorderController extends BaseController {
         }
 
         // 开始查询，可能会查询到多条发货单，再根据每条发货单去查询当前记录的详情列表
-        $orders = DdOrder::find(implode(' and ', $wherelist));
+        $orders = TbOrder::find(implode(' and ', $wherelist));
 
         if(count($orders)>0) {
             $order_id_array = [];
@@ -75,7 +75,7 @@ class ConfirmorderController extends BaseController {
                 $order_id_array[] = $order->id;
             }
 
-            $result = DdOrderdetails::find(
+            $result = TbOrderdetails::find(
                 //暂时先不限定status=3
                 //sprintf("orderid in(%s) and status=3 and actualnumber<number", implode(",", $order_id_array))
                 sprintf("orderid in(%s) and confirm_number<number", implode(",", $order_id_array))
@@ -128,7 +128,7 @@ class ConfirmorderController extends BaseController {
         if ($orderid) {
             // 有发货单号就修改
             // 查找发货单号是否存在
-            $order = DdConfirmorder::findFirst(
+            $order = TdConfirmorder::findFirst(
                 sprintf("id=%d and companyid=%d", $orderid, $this->companyid)
             );
             if(!$order) {
@@ -158,7 +158,7 @@ class ConfirmorderController extends BaseController {
 
         } else {
             // 没有订单号就新增
-            $order = new DdConfirmorder();
+            $order = new TdConfirmorder();
             foreach ($submitData['form'] as $k => $item) {
                 $order->$k = $item;
             }
@@ -214,7 +214,7 @@ class ConfirmorderController extends BaseController {
 
         //清除不存在的详情id
         if(count($detail_id_array)>0) {
-            $details = DdConfirmorderdetails::find(
+            $details = TdConfirmorderdetails::find(
                 sprintf("confirmorderid=%d and id not in(%s)", $order->id, implode(",", $detail_id_array))
             );
 
@@ -238,7 +238,7 @@ class ConfirmorderController extends BaseController {
     public function loadorderAction()
     {
         // 根据orderid查询出当前订单以及订单详情的所有信息
-        $order = DdConfirmorder::findFirst(
+        $order = TdConfirmorder::findFirst(
             sprintf("id=%d and companyid=%d", $_REQUEST["id"], $this->companyid)
         );
 
@@ -258,7 +258,7 @@ class ConfirmorderController extends BaseController {
         $db = $this->db;
         $db->begin();
         // 根据orderid查询出当前发货单
-        $order = DdConfirmorder::findFirstById($orderid);
+        $order = TdConfirmorder::findFirstById($orderid);
         if($order!=false && $order->companyid==$this->companyid) {
             $order->status = $_POST['status']=="3" ? 3: 1;
 
@@ -293,7 +293,7 @@ class ConfirmorderController extends BaseController {
         $orderid = (int)$_POST['id'];
 
         // 根据orderid查询出当前订单以及订单详情的所有信息
-        $order = DdConfirmorder::findFirstById($orderid);
+        $order = TdConfirmorder::findFirstById($orderid);
         if($order!=false && $order->companyid==$this->companyid) {
             $order->status = 2;
 
@@ -307,7 +307,7 @@ class ConfirmorderController extends BaseController {
         $db = $this->db;
         $db->begin();
         // 根据orderid查询出当前发货单
-        $order = DdConfirmorder::findFirstById($orderid);
+        $order = TdConfirmorder::findFirstById($orderid);
         if($order!=false && $order->companyid==$this->companyid) {
             if($order->status==1) {
                 foreach($order->confirmorderdetails as $confirmorderdetails) {

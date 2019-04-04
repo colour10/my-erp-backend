@@ -9,7 +9,7 @@
 <!-- Head BEGIN -->
 <head>
     <meta charset="utf-8">
-    <title>ASA</title>
+    <title><?php echo $this->host['webtitle']; ?></title>
 
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -144,20 +144,20 @@
                 <div class="owl-carousel owl-carousel5">
 
                     <?php foreach ($productlist as $item) { ?>
-                    <div>
-                        <div class="product-item">
-                            <div class="pi-img-wrapper">
-                                <img src="<?php echo $this->file_prex.$item->picture; ?>" class="img-responsive" alt="<?php echo $item->productname; ?>">
-                                <div>
-                                    <a href="<?php echo $this->file_prex.$item->picture; ?>" class="btn btn-default fancybox-button">Zoom</a>
+                        <div>
+                            <div class="product-item">
+                                <div class="pi-img-wrapper">
+                                    <img src="<?php echo $this->file_prex.$item['picture']; ?>" class="img-responsive" alt="<?php echo $item['productname']; ?>">
+                                    <div>
+                                        <a href="<?php echo $this->file_prex.$item['picture']; ?>" class="btn btn-default fancybox-button">Zoom</a>
+                                    </div>
                                 </div>
+                                <h3><a href="/product/detail/<?php echo $item['productid']; ?>"><?php echo $item['productname']; ?></a></h3>
+                                <div class="pi-price"><?php echo $this->currency; ?><?php echo $item['realprice']; ?></div>
+                                <a href="javascript:;" class="btn btn-default add2cart">加入购物车</a>
+                                <div class="sticker sticker-sale"></div>
                             </div>
-                            <h3><a href="/product/detail/<?php echo $item->id; ?>"><?php echo $item->productname; ?></a></h3>
-                            <div class="pi-price">￥<?php echo round($item->wordprice,2); ?></div>
-                            <a href="javascript:;" class="btn btn-default add2cart">加入购物车</a>
-                            <div class="sticker sticker-sale"></div>
                         </div>
-                    </div>
                     <? } ?>
 
                 </div>
