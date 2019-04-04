@@ -27,6 +27,7 @@
                 	<li><a href="shop-account.html"><?php if($this->session->get('member')){ echo '欢迎 '.$this->session->get('member')['login_name'];} ?></a></li>
                     <li><a href="shop-account.html">个人资料</a></li>
                     <li><a href="/buycar/index">购物车</a></li>
+                     <li><a href="/order/myorder">我的订单</a></li>
                     <li <?php if($this->session->get('member')){ echo "style='display:none;'";} ?>><a href="/login/index">登录</a></li>
                     <li <?php if(!$this->session->get('member')){ echo "style='display:none;'";} ?>><a href="/login/logout">退出</a></li>
                 </ul>
@@ -49,13 +50,14 @@
         <div class="top-cart-block">
             <div class="top-cart-info">
                 <a href="javascript:void(0);" class="top-cart-info-count"><?php echo $this->buycar[0]['totalnum']; ?></a>
-                <a href="javascript:void(0);" class="top-cart-info-value">$<?php echo $this->buycar[0]['totalpay']; ?></a>
+                <a href="javascript:void(0);" class="top-cart-info-value"><?php if($this->buycar[0]['totalnum'] && $this->buycar[0]['totalprice']) echo '| $'.$this->buycar[0]['totalprice']; ?></a>
             </div>
             <i class="fa fa-shopping-cart"></i>
 
             <div class="top-cart-content-wrapper">
                 <div class="top-cart-content">
                     <ul class="scroller" style="height: 250px;">
+                    	<?php if ($this->buycar){ ?>
                         	<?php foreach ($this->buycar as $k => $v) { ?>
                         		<li>
                         			<a href="/"><img src="/shop/assets/pages/img/cart-img.jpg" alt="Rolex Classic Watch" width="37" height="34"></a>
@@ -65,10 +67,13 @@
 		                            <a href="javascript:void(0);" class="del-goods">&nbsp;</a>
                         		</li>
                         	<?php } ?>
+                    	<?php }else{ ?>
+                    		<li>你的购物车空空如也</li>
+                    	<?php } ?>
                     </ul>
                     <div class="text-right">
-                        <a href="shop-shopping-cart.html" class="btn btn-default">View Cart</a>
-                        <a href="/buycar/index" class="btn btn-primary">Checkout</a>
+                        <a href="/buycar/index" class="btn btn-default">查看购物车</a>
+                        <!--<a href="/order/index" class="btn btn-primary">去结算</a>-->
                     </div>
                 </div>
             </div>

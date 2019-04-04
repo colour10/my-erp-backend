@@ -30,9 +30,8 @@ class LoginController extends AdminController
             $rs = TbMember::findFirst(array(
             	"login_name = '$username' and password = '$password'"
             ));
-            $res = $rs->toArray();
-            if($rs->toArray()){
-            	$this->session->set('member',$res);
+            if($rs){
+            	$this->session->set('member',$rs->toArray());
             	echo json_encode(['code' => '200', 'auth' =>$this->session->get('member'), 'messages' => []]);
             }
             else {

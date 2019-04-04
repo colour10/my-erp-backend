@@ -8,68 +8,58 @@ use Phalcon\Mvc\Model\Relation;
 /**
  * 商品表
  */
-class TbBuycar extends BaseModel
+class TbShoporderCommon extends BaseModel
 {
 	
 	public $id;
 
-	public $product_id;
+	public $order_no;
 	
-	public $product_name;
+	public $member_id;
 	
-	public $price;
+	public $reciver_name;
  	
- 	public $number;
+ 	public $reciver_phone;
+ 	
+ 	public $reciver_address;
+ 	
+ 	public $reciver_no;
  	
  	public $total_price;
  	
- 	public $color_id;
+ 	public $send_price;
  	
- 	public $color_name;
+ 	public $final_price;
  	
- 	public $size_id;
+ 	public $order_status = 1;
  	
- 	public $size_name;
+ 	public $pay_style = 0;
  	
- 	public $member_id;
+ 	public $create_time;
+ 	
+ 	public $pay_time;
 	
 	
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('tb_buycar');
+        $this->setSource('tb_shoporder_common');
         
         // 表关联
         // 与用户表关联，一对多反向
-        $this->belongsTo(
-            "member_id",
-            "\Asa\Erp\TbMember",
+        $this->hasMany(
             "id",
+            "\Asa\Erp\TbShoporder",
+            "order_commonid",
             [
-                'alias' => 'member',
+                'alias' => 'shoporder',
                 'foreignKey' => [
                     // 关联字段禁止自动删除
                     'action' => Relation::ACTION_RESTRICT,
-                    "message"    => $this->getValidateMessage('belongsto-foreign-message', 'member'),
+                    "message"    => $this->getValidateMessage('belongsto-foreign-message', 'shoporder'),
                 ],
             ]
         );
-        
-        // 与产品表关联，一对多反向
-        $this->belongsTo(
-            "product_id",
-            "\Asa\Erp\TbProduct",
-            "id",
-            [
-                'alias' => 'product',
-                'foreignKey' => [
-                    // 关联字段禁止自动删除
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message"    => $this->getValidateMessage('belongsto-foreign-message', 'product'),
-                ],
-            ]
-        );
-        
     }
 
     public function validation() {

@@ -9,7 +9,7 @@
 <!-- Head BEGIN -->
 <head>
     <meta charset="utf-8">
-    <title><?php echo $product->productname; ?></title>
+    <title id="product_name"><?php echo $product->productname; ?></title>
 
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -70,7 +70,7 @@
                             <h1><?php echo $product->productname; ?></h1>
                             <div class="price-availability-block clearfix">
                                 <div class="price">
-                                    <strong><span><?php echo $retailpricecurrency; ?></span><?php echo $realprice; ?></strong>
+                                    <strong><span><?php echo $retailpricecurrency; ?></span><span id="price"><?php echo $realprice; ?></span></strong>
                                     <em>￥<span><?php echo $nationalprice; ?></span></em>
                                 </div>
 <!--                                <div class="availability">-->
@@ -84,15 +84,17 @@
                             <div class="product-page-options borderTopNone">
                                 <div class="pull-left">
                                     <label class="control-label">尺码：</label>
-                                    <select class="form-control input-sm">
-                                        <?php foreach ($sizecontents as $sizecontent) { ?>
+                                    <select class="form-control input-sm" id="product_size">
+                                        <!--<?php foreach ($sizecontents as $sizecontent) { ?>
                                         <option value="<?php echo $sizecontent['id']; ?>"><?php echo $sizecontent['content_cn']; ?></option>
-                                        <?php } ?>
+                                        <?php } ?>-->
+                                        <option value="1">S</option>
+                                        <option value="2">M</option>
                                     </select>
                                 </div>
                                 <div class="pull-left">
                                     <label class="control-label">颜色：</label>
-                                    <select class="form-control input-sm">
+                                    <select class="form-control input-sm" id="product_color">
                                         <?php foreach ($colors as $color) { ?>
                                             <option value="<?php echo $color['id']; ?>"><?php echo $color['name_cn']; ?></option>
                                         <?php } ?>
@@ -135,6 +137,20 @@
 <!-- END BODY -->
 <script>
 	$("#add-buycar").click(function(){
+		var color_id = $("#product_color").val();
+		var color_name = '';
+		var size_id = $("#product_size").val();
+		var size_name = '';
+		$("#product_color option").each(function(){
+			if(color_id == $("#product_color").val()){
+				color_name = $(this).html()
+			}
+		});
+		$("#product_size option").each(function(){
+			if(size_id == $("#product_size").val()){
+				size_name = $(this).html()
+			}
+		});
 		$.ajax({
     		type:"post",
     		url:"/buycar/add",
@@ -142,7 +158,14 @@
     		dataType:'json',
     		data:{
     			'number': $("#product-quantity").val(),
-    			'product_id': $("#product_id").attr("attr-id")
+    			'price': $("#price").html(),
+    			'total_price': $("#product-quantity").val()*$("#price").html(),
+    			'product_name': $("#product_name").html(),
+    			'product_id': $("#product_id").attr("attr-id"),
+    			'size_id': size_id,
+    			'size_name': size_name,
+    			'color_id': color_id,
+    			'color_name': color_name,
     		},
     		success:function(result){
     			if(!result.auth){
