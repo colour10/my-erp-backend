@@ -535,6 +535,8 @@ return array(
     'supplier' => '供货商',
     'warehouseid' => '仓库ID',
     'member' => '会员',
+    'shoporder_common' => '订单',
+    'shoporder' => '子订单',
     'brandgroup-list' => '品类列表',
     'childproductgroup-list' => '子品类列表',
     'material' => '材质',

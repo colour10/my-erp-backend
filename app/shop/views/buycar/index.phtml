@@ -94,7 +94,8 @@
 	                	<tr>
 	                    <th class="goods-page-image">图片</th>
 	                    <th class="goods-page-description">商品名称</th>
-	                    <th class="goods-page-ref-no">商品货号</th>
+	                    <th class="goods-page-color">商品颜色</th>
+	                    <th class="goods-page-size">商品尺寸</th>
 	                    <th class="goods-page-quantity">数量</th>
 	                    <th class="goods-page-price">单价</th>
 	                    <th class="goods-page-total" colspan="2">总价</th>
@@ -122,8 +123,8 @@
                   </ul>
                 </div>
               </div>
-              <button class="btn btn-default" type="submit">Continue shopping <i class="fa fa-shopping-cart"></i></button>
-              <button class="btn btn-primary" type="submit">Checkout <i class="fa fa-check"></i></button>
+              <button class="btn btn-default" type="submit">继续购物 <i class="fa fa-shopping-cart"></i></button>
+              <button class="btn btn-primary" type="button" id="btn-checkout">去结算 <i class="fa fa-check"></i></button>
             </div>
           </div>
           <!-- END CONTENT -->
@@ -349,6 +350,10 @@ Nostrud duis molestie at dolore.</p>
 
     <script src="/shop/assets/corporate/scripts/layout.js" type="text/javascript"></script>
     <script type="text/javascript">
+ 				var postData = [];
+ 				var data_common = [];
+ 				var data_product = [];
+ 				var total_price = 0;
         jQuery(document).ready(function() {
         	$.ajax({
 	        		type:"post",
@@ -362,7 +367,6 @@ Nostrud duis molestie at dolore.</p>
 	        			console.log(result.auth)
 	        			$("#table-buycar tbody").html('');
 	        			var htmls = '';
-	        			var total = 0	;
 	        			for(var i in result.auth){
 	        				htmls += 
 	        					'<tr>'+
@@ -370,12 +374,15 @@ Nostrud duis molestie at dolore.</p>
 	                      '<a href="javascript:;"><img src="/shop/assets/pages/img/products/model3.jpg" alt="Berry Lace Dress"></a>'+
 	                    '</td>'+
 	                    '<td class="goods-page-description">'+
-	                      '<h3><a href="javascript:;">'+result.auth[i].product.productname+''+
+	                      '<h3><a href="javascript:;">'+result.auth[i].product_name+''+
 //	                      '<p><strong>Item 1</strong> - Color: Green; Size: S</p>'+
 //	                      '<em>More info is here</em>'+
 	                    '</td>'+
-	                    '<td class="goods-page-ref-no">'+
-	                      result.auth[i].product.productno+
+	                    '<td class="goods-page-color">'+
+	                      result.auth[i].color_name+
+	                    '</td>'+
+	                    '<td class="goods-page-size">'+
+	                      result.auth[i].size_name+
 	                    '</td>'+
 	                    '<td class="goods-page-quantity">'+
 	                      '<div class="product-quantity">'+
@@ -383,31 +390,65 @@ Nostrud duis molestie at dolore.</p>
 	                      '</div>'+
 	                    '</td>'+
 	                    '<td class="goods-page-price">'+
-	                      '<strong><span>$</span>'+Number(result.auth[i].product.realprice).toFixed(2)+'</strong>'+
+	                      '<strong><span>$</span>'+result.auth[i].price+'</strong>'+
 	                    '</td>'+
 	                    '<td class="goods-page-total">'+
-	                      '<strong><span>$</span>'+Number(result.auth[i].product.realprice*result.auth[i].number).toFixed(2)+'</strong>'+
+	                      '<strong><span>$</span>'+result.auth[0].total_price+'</strong>'+
 	                    '</td>'+
 	                    '<td class="del-goods-col">'+
 	                      '<a class="del-goods" href="javascript:;">&nbsp;</a>'+
 	                    '</td>'+
 	                  '</tr>'
-	                total += parseFloat(parseFloat(result.auth[i].product.realprice)*parseFloat(result.auth[i].number))
-	                console.log(total)
+	                  
+	                  var temp_data = {};
+	                  temp_data['product_id'] = result.auth[i].product_id;
+	                  temp_data['product_name'] = result.auth[i].product_name;
+	                  temp_data['picture'] =  result.auth[i].picture;
+	                  temp_data['color_id'] =  result.auth[i].color_id;
+	                  temp_data['color_name'] =  result.auth[i].color_name;
+	                  temp_data['size_id'] =  result.auth[i].size_id;
+	                  temp_data['size_name'] =  result.auth[i].size_name;
+	                  temp_data['number'] =  result.auth[i].number;
+	                  temp_data['price'] =  result.auth[i].price;
+	                  temp_data['total_price'] =  result.auth[i].total_price;
+	                  postData.push(temp_data);
+	                  total_price = result.auth[0].totalprice;
+	                  
 	        			}
-	        			total = Number(total).toFixed(2)
+	        			postData[0]['total_price'] = total_price;
+	        			postData[0]['final_price'] = total_price;
+	        			
 	        			$("#table-buycar tbody").html(htmls);
-	        			$("#price-1").html('<span>$</span>'+total);
+	        			$("#price-1").html('<span>$</span>'+total_price);
 	        			$("#price-2").html('<span>$</span>'+Number(0).toFixed(2));
-	        			$("#price-3").html('<span>$</span>'+total);
+	        			$("#price-3").html('<span>$</span>'+total_price);
 	        		}
         	});
-        	Layout.init();    
+        		Layout.init();    
             Layout.initOWL();
 //          Layout.initTwitter();
             Layout.initImageZoom();
             Layout.initTouchspin();
         });
+     	$("#btn-checkout").click(function(){
+     		$.ajax({
+	        		type:"post",
+	        		url:"/order/addOrder",
+	        		async:true,
+	        		dataType:'json',
+	        		data:{
+	        			'data':postData
+	        		},
+	        		success:function(result){
+	        			if(result.auth){
+	        				location.href = "/order/index"
+	        			}else{
+	        				
+	        			}
+	        		}
+	       });
+	       
+     	})
     </script>
     <!-- END PAGE LEVEL JAVASCRIPTS -->
 </body>

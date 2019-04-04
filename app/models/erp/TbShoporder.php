@@ -8,10 +8,12 @@ use Phalcon\Mvc\Model\Relation;
 /**
  * 商品表
  */
-class TbBuycar extends BaseModel
+class TbShoporder extends BaseModel
 {
 	
 	public $id;
+	
+	public $ordershop_commomid;
 
 	public $product_id;
 	
@@ -30,42 +32,25 @@ class TbBuycar extends BaseModel
  	public $size_id;
  	
  	public $size_name;
- 	
- 	public $member_id;
 	
 	
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('tb_buycar');
+        $this->setSource('tb_shoporder');
         
         // 表关联
         // 与用户表关联，一对多反向
         $this->belongsTo(
-            "member_id",
-            "\Asa\Erp\TbMember",
+            "order_commonid",
+            "\Asa\Erp\TbShoporderCommon",
             "id",
             [
-                'alias' => 'member',
+                'alias' => 'shoporder_common',
                 'foreignKey' => [
                     // 关联字段禁止自动删除
                     'action' => Relation::ACTION_RESTRICT,
-                    "message"    => $this->getValidateMessage('belongsto-foreign-message', 'member'),
-                ],
-            ]
-        );
-        
-        // 与产品表关联，一对多反向
-        $this->belongsTo(
-            "product_id",
-            "\Asa\Erp\TbProduct",
-            "id",
-            [
-                'alias' => 'product',
-                'foreignKey' => [
-                    // 关联字段禁止自动删除
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message"    => $this->getValidateMessage('belongsto-foreign-message', 'product'),
+                    "message"    => $this->getValidateMessage('belongsto-foreign-message', 'shoporder_common'),
                 ],
             ]
         );
