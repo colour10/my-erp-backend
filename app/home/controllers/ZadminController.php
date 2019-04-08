@@ -35,34 +35,6 @@ class ZadminController extends AdminController {
 	    return parent::getSearchCondition();
     }
     
-    function doAdd() {
-	    if($this->request->isPost()) {
-	        //更新数据库
-	        $row = $this->getModelObject();
-
-	        $fields = $this->getAttributes();
-	        foreach($fields as $name) {
-	            if(isset($_POST[$name])) {
-	                $row->$name = $_POST[$name];
-	            }
-	        }
-
-            $result = array("code"=>200, "messages" => array());
-	        if ($row->create() === false) {
-                $messages = $row->getMessages();
-
-                foreach ($messages as $message) {
-                    $result["messages"][] = $message->getMessage();
-                }
-            }
-            else {
-                $result['is_add'] = "1";
-                $result['id'] = $row->id;
-            }
-            echo json_encode($result);            
-	    }
-	}
-	
 	function loadAction() {
 	    $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
 	    $row = $findFirst->invokeArgs(null, array(
@@ -77,43 +49,7 @@ class ZadminController extends AdminController {
 	    }
 	}	
 
-    function doEdit()
-    {
-        if ($this->request->isPost()) {
-            //锟斤拷锟斤拷锟斤拷锟捷匡拷
-            $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
-            $row = $findFirst->invokeArgs(null, array($this->getCondition()));
-
-            if ($row != false) {
-                $row->setValidateLanguage(isset($_REQUEST['lang']) ? $_REQUEST['lang'] : $this->default_language);
-
-                $fields = $this->getAttributes();
-
-                foreach ($fields as $name) {
-                    if (isset($_POST[$name]) && !preg_match("#^sys_#", $name)) {
-                        $row->$name = $_POST[$name];
-                    }
-                }
-                
-
-                $result = array("code" => 200, "messages" => array());
-                if ($row->save() === false) {
-                    $messages = $row->getMessages();
-
-                    foreach ($messages as $message) {
-                        $result["messages"][] = $message->getMessage();
-                    }
-                }
-                
-                echo json_encode($result);
-                
-            }
-            else {
-                $result = array("code"=>200, "messages" => array("数据不存在"));
-
-                echo json_encode($result);
-                exit;
-            }
-        }
+    function before_edit($row) {
+        $row->setValidateLanguage(isset($_REQUEST['lang']) ? $_REQUEST['lang'] : $this->default_language);
     }
 }

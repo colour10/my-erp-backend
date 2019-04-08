@@ -23,12 +23,7 @@ class TbBrandgroupchild extends BaseModel
             '\Asa\Erp\TbBrandgroup',
             'id',
             [
-                'alias' => 'brandgroup',
-                'foreignKey' => [
-                    // 关联字段禁止自动删除
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message" => $this->getValidateMessage('notexist', 'brand-group'),
-                ],
+                'alias' => 'brandgroup'
             ]
         );
 
@@ -107,5 +102,20 @@ class TbBrandgroupchild extends BaseModel
         $human_name = $language->$name;
         // 返回最终的友好提示信息
         return sprintf($template_name, $human_name);
+    }
+
+    function getPropertyList() {
+        return TbProperty::find(
+            sprintf("parent_type=%d and parent_id=%d", TbProperty::BRANDGROUPCHILD, $this->id)
+        );
+    }
+
+    function delete() {
+        if(count($this->getPropertyList())>0) {
+            throw new Exception('/1003/子品类数据正在属性中使用，不能删除/');//
+        }
+        else {
+            return parent::delete();
+        }
     }
 }
