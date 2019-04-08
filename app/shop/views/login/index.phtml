@@ -19,7 +19,7 @@ License: You must have a valid license purchased only from themeforest (the abov
 <!-- Head BEGIN -->
 <head>
   <meta charset="utf-8">
-  <title>Login | Metronic Frontend</title>
+  <title>登录页</title>
 
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -36,10 +36,6 @@ License: You must have a valid license purchased only from themeforest (the abov
   <meta property="og:url" content="-CUSTOMER VALUE-">
 
   <link rel="shortcut icon" href="favicon.ico">
-
-  <!-- Fonts START -->
-  <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|PT+Sans+Narrow|Source+Sans+Pro:200,300,400,600,700,900&amp;subset=all" rel="stylesheet" type="text/css"> 
-  <!-- Fonts END -->
 
   <!-- Global styles START -->          
   <link href="/shop/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
@@ -61,7 +57,7 @@ License: You must have a valid license purchased only from themeforest (the abov
   <link href="/shop/assets/corporate/css/style-responsive.css" rel="stylesheet">
   <link href="/shop/assets/corporate/css/themes/red.css" rel="stylesheet" id="style-color">
   <link href="/shop/assets/corporate/css/custom.css" rel="stylesheet">
-  	
+
   <!-- Theme styles END -->
 </head>
 <!-- Head END -->
@@ -115,43 +111,43 @@ License: You must have a valid license purchased only from themeforest (the abov
                     <div class="form-group">
                       <label for="password" class="col-lg-4 control-label">密码 <span class="require">*</span></label>
                       <div class="col-lg-8">
-                        <input type="text" class="form-control" id="password" name ="password">
+                        <input type="password" class="form-control" id="password" name ="password">
                       </div>
                     </div>
-                    <div class="row">
-                      <div class="col-lg-8 col-md-offset-4 padding-left-0">
-                        <a href="page-forgotton-password.html">Forget Password?</a>
-                      </div>
-                    </div>
+<!--                    <div class="row">-->
+<!--                      <div class="col-lg-8 col-md-offset-4 padding-left-0">-->
+<!--                        <a href="page-forgotton-password.html">Forget Password?</a>-->
+<!--                      </div>-->
+<!--                    </div>-->
                     <div class="row">
                       <div class="col-lg-8 col-md-offset-4 padding-left-0 padding-top-20">
                         <button type="button" class="btn btn-primary" id="btn-login">登录</button>
                       </div>
                     </div>
-                    <div class="row">
-                      <div class="col-lg-8 col-md-offset-4 padding-left-0 padding-top-10 padding-right-30">
-                        <hr>
-                        <div class="login-socio">
-                            <p class="text-muted">or login using:</p>
-                            <ul class="social-icons">
-                                <li><a href="#" data-original-title="facebook" class="facebook" title="facebook"></a></li>
-                                <li><a href="#" data-original-title="Twitter" class="twitter" title="Twitter"></a></li>
-                                <li><a href="#" data-original-title="Google Plus" class="googleplus" title="Google Plus"></a></li>
-                                <li><a href="#" data-original-title="Linkedin" class="linkedin" title="LinkedIn"></a></li>
-                            </ul>
-                        </div>
-                      </div>
+<!--                    <div class="row">-->
+<!--                      <div class="col-lg-8 col-md-offset-4 padding-left-0 padding-top-10 padding-right-30">-->
+<!--                        <hr>-->
+<!--                        <div class="login-socio">-->
+<!--                            <p class="text-muted">or login using:</p>-->
+<!--                            <ul class="social-icons">-->
+<!--                                <li><a href="#" data-original-title="facebook" class="facebook" title="facebook"></a></li>-->
+<!--                                <li><a href="#" data-original-title="Twitter" class="twitter" title="Twitter"></a></li>-->
+<!--                                <li><a href="#" data-original-title="Google Plus" class="googleplus" title="Google Plus"></a></li>-->
+<!--                                <li><a href="#" data-original-title="Linkedin" class="linkedin" title="LinkedIn"></a></li>-->
+<!--                            </ul>-->
+<!--                        </div>-->
+<!--                      </div>-->
                     </div>
                   </form>
                 </div>
-                <div class="col-md-4 col-sm-4 pull-right">
-                  <div class="form-info">
-                    <h2><em>Important</em> Information</h2>
-                    <p>Duis autem vel eum iriure at dolor vulputate velit esse vel molestie at dolore.</p>
-
-                    <button type="submit" class="btn btn-default">More details</button>
-                  </div>
-                </div>
+<!--                <div class="col-md-4 col-sm-4 pull-right">-->
+<!--                  <div class="form-info">-->
+<!--                    <h2><em>Important</em> Information</h2>-->
+<!--                    <p>Duis autem vel eum iriure at dolor vulputate velit esse vel molestie at dolore.</p>-->
+<!---->
+<!--                    <button type="submit" class="btn btn-default">More details</button>-->
+<!--                  </div>-->
+<!--                </div>-->
               </div>
             </div>
           </div>
@@ -168,31 +164,9 @@ License: You must have a valid license purchased only from themeforest (the abov
     <?php echo $this->view->getPartial('layouts/_footer'); ?>
     <!-- END FOOTER -->
 
-    <!-- Load javascripts at bottom, this will reduce page load time -->
-    <!-- BEGIN CORE PLUGINS (REQUIRED FOR ALL PAGES) -->
-    <!--[if lt IE 9]>
-    <script src="/shop/assets/static/js/respond.min.js"></script>
-    <![endif]--> 
-    <script src="/shop/assets/static/js/jquery-1.11.0.min.js" type="text/javascript"></script>
-    <script src="/shop/assets/static/js/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
-    <script src="/shop/assets/static/js/bootstrap.min.js" type="text/javascript"></script>      
-    <script src="/shop/assets/static/js/back-to-top.js" type="text/javascript"></script>
-    <script type="text/javascript" src="/js/common.js" ></script>
-    <script type="text/javascript" src="/js/erp.js" ></script>
-    <script type="text/javascript" src="/js/common.js" ></script>
-    <!-- END CORE PLUGINS -->
-
-    <!-- BEGIN PAGE LEVEL JAVASCRIPTS (REQUIRED ONLY FOR CURRENT PAGE) -->
-    <script src="/shop/assets/static/js/jquery.fancybox.pack.js" type="text/javascript"></script><!-- pop up -->
-    <script src="/shop/assets/static/js/jquery.uniform.min.js" type="text/javascript"></script>
-
-    <script src="/shop/assets/static/js/layout.js" type="text/javascript"></script>
+    <!-- 加入layer实现简易弹窗 -->
+    <script src="/shop/assets/static/js/layer_mobile/layer.js"></script>
     <script type="text/javascript">
-        jQuery(document).ready(function() {
-            Layout.init();
-            Layout.initUniform();
-            Layout.initTwitter();
-        });
         $("#btn-login").click(function(){
         	$.ajax({
         		type:"post",
@@ -203,14 +177,29 @@ License: You must have a valid license purchased only from themeforest (the abov
         			'login_name' : $("#login_name").val(),
         			'password' : $("#password").val(),
         		},
-        		success:function(result){
-        			if(!result.messages){
-        				alert(result.messages);
-        			}else{
-        				location.href = "/";
-        			}
+        		success:function(result) {
+        		    // 判断是否有错误
+                    if(result.messages.length > 0) {
+                        layer.open({
+                            content: result.messages[0],
+                            btn: '我知道了'
+                        });
+                    } else {
+                        //提示
+                        layer.open({
+                            content: '登录成功',
+                            skin: 'msg',
+                            time: 2, //2秒后自动关闭
+                        });
+                        // 3秒后跳转
+                        setTimeout(function() {
+                            window.location.href = '/';
+                        }, 3000);
+                    }
         		}
         	});
+            // 禁止自动跳转
+            return false;
         });
     </script>
     <!-- END PAGE LEVEL JAVASCRIPTS -->
