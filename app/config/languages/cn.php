@@ -457,8 +457,8 @@ return array(
     "juese" => "角色",
     "qingkong" => "清空",
     "chaxunjieguo" => "查询结果",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
+    "nicheng" => "昵称",
+    "tuichu" => "退出",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
@@ -676,5 +676,14 @@ return array(
     "list_warehouserole" => array(
         "1" => "管理员",
         "2" => "销售"
+    ),
+
+    "list_suppliertype" => array(
+        "0" => "供货商",
+        "1" => "报关行",
+        "2" => "供应商",
+        "3" => "承运人",
+        "4" => "客户",
+        "5" => "品牌商"
     ),
 );
