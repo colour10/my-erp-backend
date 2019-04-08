@@ -111,6 +111,11 @@ class ProductController extends CadminController {
                 $data = [$product->id.",".$product->brandcolor];
                 //处理新增的记录
                 foreach ($form['list'] as &$row) {
+                    //当前的产品信息已经添加过了。
+                    if($row['id']==$product->id) {
+                        continue;
+                    }
+
                     if($row['id']=='') {                        
                         $product_else = $product->cloneByColor($row['brandcolor'], $row['wordcode_1'], $row['wordcode_2'], $row['wordcode_3'], $row['wordcode_4']);
                     }
@@ -134,12 +139,23 @@ class ProductController extends CadminController {
                 }
 
                 $this->db->commit();
-                return $this->success();
+                return $this->success(["list"=>$product->getColorGroupList(), "form"=>$product->toArray()]);
             }
             catch(\Exception $e) {
                 $this->db->rollback();
                 return $this->error($e->getMessage());
             }
+        }
+        else {
+            return $this->error("#1001#产品数据不存在#");
+        }
+    }
+
+    function getcolorgrouplistAction() {
+        $id = (int)$_POST['id'];
+         $product = TbProduct::findFirstById($id);
+        if($product!=false) {
+            return $this->success($product->getColorGroupList());
         }
         else {
             return $this->error("#1001#产品数据不存在#");

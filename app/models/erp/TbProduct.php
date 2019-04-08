@@ -166,4 +166,38 @@ class TbProduct extends BaseCompanyModel
 
         return $product;
     }
+
+    /**
+     * 获取同款多色的颜色分组数组
+     * @return [type] [description]
+     */
+    function getColorGroupArray() {
+        $result = [];
+
+        if($this->product_group=='') {
+            return $result;
+        }
+
+        $array = explode('|', $this->product_group);
+        foreach ($array as $key => $value) {
+            # code...
+            $temp = explode(",", $value);
+            $result[$temp[0]] = $temp[1];
+        }
+        return $result;
+    }
+
+    /**
+     * 获取同款多色的各个产品的产品数据
+     * @return [type] [description]
+     */
+    function getColorGroupList() {
+        $ids = array_keys($this->getColorGroupArray());
+        if(count($ids)>0) {
+            return static::findByIdString($ids,'id');
+        }
+        else {
+            return [];
+        }
+    }
 }
