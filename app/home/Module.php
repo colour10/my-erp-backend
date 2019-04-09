@@ -9,6 +9,7 @@ use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 use Phalcon\Events\Manager as EventsManager;
 use SecurityPlugin;
+use ExceptionPlugin;
 
 class Module implements ModuleDefinitionInterface
 {
@@ -42,6 +43,8 @@ class Module implements ModuleDefinitionInterface
         
             // Handle exceptions and not-found exceptions using NotFoundPlugin
             //$eventsManager->attach('dispatch:beforeException', new NotFoundPlugin);
+            //
+            $eventsManager->attach('dispatch:beforeException', new ExceptionPlugin);
         
             $dispatcher = new Dispatcher();
             

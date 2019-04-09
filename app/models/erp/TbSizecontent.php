@@ -22,12 +22,7 @@ class TbSizecontent extends BaseModel
             '\Asa\Erp\TbSizetop',
             'id',
             [
-                'alias' => 'sizetop',
-                "foreignKey" => [
-                    // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message" => $this->getValidateMessage('notexist', 'sizetop'),
-                ],
+                'alias' => 'sizetop'
             ]
         );
     }
@@ -37,7 +32,7 @@ class TbSizecontent extends BaseModel
      * @return array
      */
     function getLanguageColumns() {
-        return ['content', 'memo'];
+        return ['content'];
     }
 
     /**
@@ -49,22 +44,16 @@ class TbSizecontent extends BaseModel
         $validator = new Validation();
 
         $content = $this->getColumnName("content");
+        //echo $content;
+
         // $content-尺寸代码名称不能为空
         $validator->add($content, new PresenceOf([
             'message' => $this->getValidateMessage('required', 'sizecontent-content'),
             'cancelOnFail' => true,
         ]));
 
-        $memo = $this->getColumnName("memo");
-        // $memo-尺寸描述
-        $validator->add($memo, new PresenceOf([
-            'message' => $this->getValidateMessage('required', 'sizecontent-memo'),
-            'cancelOnFail' => true,
-        ]));
-
         // 过滤
         $validator->setFilters($content, 'trim');
-        $validator->setFilters($memo, 'trim');
 
         return $this->validate($validator);
     }
@@ -85,5 +74,64 @@ class TbSizecontent extends BaseModel
         $human_name = $language->$name;
         // 返回最终的友好提示信息
         return sprintf($template_name, $human_name);
+    }
+
+    function doUp() {
+        $property = static::findFirst([
+            sprintf("topid=%d and displayindex<%d", $this->topid, $this->displayindex),
+            "order" => "displayindex desc"
+        ]);
+
+        if($property!=false) {
+            $current_index = $this->displayindex;
+
+            $db = $this->getDI()->get("db");
+
+            $db->begin();
+            $this->displayindex = $property->displayindex;
+            if($this->update()==false) {
+                $db->rollback();
+                throw new Exception("#1002#更新尺码详情的排序规则失败1#");
+            }
+
+            $property->displayindex = $current_index;
+            $property->update();
+            if($property->update()==false) {
+                $db->rollback();
+                throw new Exception("#1002#更新尺码详情的排序规则失败2#");
+            }
+
+             $db->commit();
+        }
+    }
+
+    function doDown() {
+        $property = static::findFirst([
+            sprintf("topid=%d and displayindex>%d", $this->topid, $this->displayindex),
+            "order" => "displayindex asc"
+        ]);
+
+        if($property!=false) {
+            $current_index = $this->displayindex;
+
+            $db = $this->getDI()->get("db");
+
+            $db->begin();
+            $this->displayindex = $property->displayindex;
+            if($this->update()==false) {
+                $this->debug();
+                $db->rollback();
+                throw new Exception("/1002/更新尺码详情的排序规则失败1/");
+            }
+
+            $property->displayindex = $current_index;
+            $property->update();
+            if($property->update()==false) {
+                $db->rollback();
+                throw new Exception("/1002/更新尺码详情的排序规则失败2/");
+            }
+
+             $db->commit();
+        }
     }
 }

@@ -14,4 +14,37 @@ class SizecontentController extends ZadminController {
 
 	    $this->setModelName('Asa\\Erp\\TbSizecontent');
     }
+
+    function pageAction() {
+        $result = TbSizecontent::find([
+            sprintf("topid=%d", $_POST['topid']),
+            "order" => "displayindex asc"
+        ]);
+
+        return $this->success($result->toArray());
+    }
+
+    function before_add() {
+        $max_displayindex = TbSizecontent::maximum([
+            sprintf("topid=%d", $_POST['topid']),
+            "column" => "displayindex"
+        ]);
+        $_POST['displayindex'] = $max_displayindex+1;
+    }
+
+    function upAction() {
+        $properry = TbSizecontent::findFirstById($_POST['id']);
+        if($properry!=false) {
+            $properry->doUp();
+        }
+        return $this->success();
+    }
+
+    function downAction() {
+        $properry = TbSizecontent::findFirstById($_POST['id']);
+        if($properry!=false) {
+            $properry->doDown();
+        }
+        return $this->success();
+    }
 }
