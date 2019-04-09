@@ -7,14 +7,14 @@ use Phalcon\Validation\Validator\Uniqueness;
 /**
  * 基础资料，商品尺寸表
  */
-class TbProperty extends BaseModel
+class TbBrandgroupchildProperty extends BaseModel
 {
     public const BRANDGROUPCHILD = 1;
     
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('tb_property');
+        $this->setSource('tb_brandgroupchild_property');
     }
 
     public function validation() {
@@ -45,7 +45,7 @@ class TbProperty extends BaseModel
 
     function doUp() {
         $property = static::findFirst([
-            sprintf("parent_type=%d and parent_id=%d and displayindex<%d",$this->parent_type, $this->parent_id, $this->displayindex),
+            sprintf("brandgroupchildid=%d and displayindex<%d", $this->brandgroupchildid, $this->displayindex),
             "order" => "displayindex desc"
         ]);
 
@@ -74,7 +74,7 @@ class TbProperty extends BaseModel
 
     function doDown() {
         $property = static::findFirst([
-            sprintf("parent_type=%d and parent_id=%d and displayindex>%d",$this->parent_type, $this->parent_id, $this->displayindex),
+            sprintf("brandgroupchildid=%d and displayindex>%d", $this->brandgroupchildid, $this->displayindex),
             "order" => "displayindex asc"
         ]);
 

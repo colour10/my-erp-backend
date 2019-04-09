@@ -28,6 +28,46 @@ class TbProduct extends BaseCompanyModel
             ]
         );
 
+        $this->hasMany(
+            "id",
+            "\Asa\Erp\TbProductSizeProperty",
+            "productid",
+            [
+                'alias' => 'productSizeProperty',
+                'foreignKey' => [
+                    // 关联字段存在性验证
+                    'action' => Relation::ACTION_CASCADE
+                ],
+            ]
+        );
+
+        $this->hasMany(
+            "id",
+            "\Asa\Erp\TbProductstock",
+            "productid",
+            [
+                'alias' => 'productstock',
+                'foreignKey' => [
+                    // 关联字段存在性验证
+                    'action' => Relation::ACTION_RESTRICT,
+                    "message" => "/1003/商品信息存在库存，不能删除。/"
+                ],
+            ]
+        );
+
+        $this->hasMany(
+            "id",
+            "\Asa\Erp\TbOrderdetails",
+            "productid",
+            [
+                'alias' => 'orderdetails',
+                'foreignKey' => [
+                    // 关联字段存在性验证
+                    'action' => Relation::ACTION_RESTRICT,
+                    "message" => "/1003/商品信息存在订单记录，不能删除。/"
+                ],
+            ]
+        );
     }
 
     public function validation() {
@@ -199,5 +239,16 @@ class TbProduct extends BaseCompanyModel
         else {
             return [];
         }
+    }
+
+    /**
+     * 获取商品的图片列表
+     * @return [type] [description]
+     */
+    function getPictureList() {
+        return TbPicture::find([
+            sprintf("productid=%d", $this->id),
+            "order" => 'id desc'
+        ]);
     }
 }

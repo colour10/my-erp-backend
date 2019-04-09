@@ -5,6 +5,9 @@ use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
 use Asa\Erp\TbProduct;
 use Asa\Erp\TbProductcode;
+use Asa\Erp\TbPicture;
+use Asa\Erp\TbProductSizeProperty;
+
 /**
  * 商品表
  */
@@ -153,9 +156,73 @@ class ProductController extends CadminController {
 
     function getcolorgrouplistAction() {
         $id = (int)$_POST['id'];
-         $product = TbProduct::findFirstById($id);
+        $product = TbProduct::findFirstById($id);
         if($product!=false) {
             return $this->success($product->getColorGroupList());
+        }
+        else {
+            return $this->error("#1001#产品数据不存在#");
+        }
+    }
+
+    function pictureAction() {
+        $id = (int)$_POST['id'];
+        $product = TbProduct::findFirstById($id);
+        if($product!=false && $product->companyid==$this->companyid) {
+            return $this->success($product->getPictureList());
+        }
+        else {
+            return $this->error("#1001#产品数据不存在#");
+        }
+    }
+
+    /**
+     * 保存商品属性
+     * @return [type] [description]
+     */
+    function savepropertyAction() {
+        $params = json_decode($_POST['params'], true);
+        //print_r($params);
+
+        $id = (int)$params['id'];
+        $product = TbProduct::findFirstById($id);
+        if($product!=false && $product->companyid==$this->companyid) {
+            $this->db->begin();
+
+            $result = array();
+            foreach($params['list'] as $key=>$row) {
+                if(preg_match("#^(\d+)_(\d+)$#", $key, $match)) {
+                    $object = TbProductSizeProperty::findFirst(
+                        sprintf("productid=%d and sizecontentid=%d and propertyid=%d", $product->id, $match[1], $match[2])
+                    );
+                    if($object==false) {
+                        $object = new  TbProductSizeProperty();
+                        $object->productid = $id;
+                        $object->sizecontentid = $match[1];
+                        $object->propertyid = $match[2];                        
+                    }
+                    $object->content = $row;
+                    if($object->save()==false) {
+                        $this->db->rollback();
+                        return $this->error("/1002/更新或者新增商品属性失败/");
+                    }
+
+                    $result[] = $object->toArray();
+                }
+            }
+            $this->db->commit();
+            return $this->success($result);
+        }
+        else {
+            return $this->error("#1001#产品数据不存在#");
+        }
+    }
+
+    function getpropertiesAction() {
+        $id = (int)$_POST['id'];
+        $product = TbProduct::findFirstById($id);
+        if($product!=false && $product->companyid==$this->companyid) {
+            return $this->success($product->productSizeProperty);
         }
         else {
             return $this->error("#1001#产品数据不存在#");

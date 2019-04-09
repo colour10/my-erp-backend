@@ -3,21 +3,21 @@ namespace Multiple\Home\Controllers;
 
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
-use Asa\Erp\TbProperty;
+use Asa\Erp\TbBrandgroupchildProperty;
 
 /**
  * 基础资料，ASA颜色模板表
  */
-class PropertyController extends ZadminController {
+class BrandgroupchildpropertyController extends ZadminController {
     public function initialize() {
 	    parent::initialize();
 
-	    $this->setModelName('Asa\\Erp\\TbProperty');
+	    $this->setModelName('Asa\\Erp\\TbBrandgroupchildProperty');
     }
 
     function pageAction() {
-        $result = TbProperty::find([
-            sprintf("parent_type=%d and parent_id=%d",$_POST['parent_type'], $_POST['parent_id']),
+        $result = TbBrandgroupchildProperty::find([
+            sprintf("brandgroupchildid=%d", $_POST['brandgroupchildid']),
             "order" => "displayindex asc"
         ]);
 
@@ -25,15 +25,15 @@ class PropertyController extends ZadminController {
     }
 
     function before_add() {
-        $max_displayindex = TbProperty::maximum([
-            sprintf("parent_type=%d and parent_id=%d",$_POST['parent_type'], $_POST['parent_id']),
+        $max_displayindex = TbBrandgroupchildProperty::maximum([
+            sprintf("brandgroupchildid=%d", $_POST['brandgroupchildid']),
             "column" => "displayindex"
         ]);
         $_POST['displayindex'] = $max_displayindex+1;
     }
 
     function upAction() {
-        $properry = TbProperty::findFirstById($_POST['id']);
+        $properry = TbBrandgroupchildProperty::findFirstById($_POST['id']);
         if($properry!=false) {
             $properry->doUp();
         }
@@ -41,7 +41,7 @@ class PropertyController extends ZadminController {
     }
 
     function downAction() {
-        $properry = TbProperty::findFirstById($_POST['id']);
+        $properry = TbBrandgroupchildProperty::findFirstById($_POST['id']);
         if($properry!=false) {
             $properry->doDown();
         }
