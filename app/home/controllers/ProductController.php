@@ -44,29 +44,10 @@ class ProductController extends CadminController {
         }
     }
 
-    /*function loadnameAction() {
-        $array = explode(",", $_POST['ids']);
-        foreach($array as &$row) {
-            $row = (int)$row;
-        }
-
-        $products = TbProduct::find(
-            sprintf("id in (%s)", implode(',', $array))
-        );
-
-        $columns = explode(",", $_POST['columns']);
-        $output = [];
-        foreach($products as $row) {
-            $line = [];
-            foreach ($columns as $value) {
-                $line[$value] = $row->$value;
-            }
-            $output[$row->id] = $line;
-        }
-
-        echo json_encode($output);
-    }*/
-
+    /**
+     * 获得商品货号数据
+     * @return [type] [description]
+     */
     function codelistAction() {
         $result = TbProductcode::find(
             sprintf("productid=%d", $_POST['id'])
@@ -75,6 +56,10 @@ class ProductController extends CadminController {
         echo $this->success($result->toArray());
     }
 
+    /**
+     * 保存商品货号
+     * @return [type] [description]
+     */
     function savecodeAction() {
         $form = json_decode($_POST["params"], true);
 
@@ -154,6 +139,10 @@ class ProductController extends CadminController {
         }
     }
 
+    /**
+     * 获取商品的同款多色的产品列表
+     * @return [type] [description]
+     */
     function getcolorgrouplistAction() {
         $id = (int)$_POST['id'];
         $product = TbProduct::findFirstById($id);
@@ -165,6 +154,10 @@ class ProductController extends CadminController {
         }
     }
 
+    /**
+     * 获取商品的图片列表
+     * @return [type] [description]
+     */
     function pictureAction() {
         $id = (int)$_POST['id'];
         $product = TbProduct::findFirstById($id);
@@ -218,6 +211,10 @@ class ProductController extends CadminController {
         }
     }
 
+    /**
+     * 获取商品的尺码描述信息
+     * @return [type] [description]
+     */
     function getpropertiesAction() {
         $id = (int)$_POST['id'];
         $product = TbProduct::findFirstById($id);

@@ -11,6 +11,13 @@ use Phalcon\Events\Manager as EventsManager;
 use SecurityPlugin;
 use ExceptionPlugin;
 
+use Phalcon\Acl;
+use Phalcon\Acl\Adapter\Memory as AclList;
+use Phalcon\Acl\Resource;
+use Phalcon\Acl\Role;
+use Asa\Erp\Util;
+use Asa\Erp\TbPermissionAction;
+
 class Module implements ModuleDefinitionInterface
 {
     /**
@@ -108,5 +115,54 @@ class Module implements ModuleDefinitionInterface
                 return $view;
             }
         );
+
+        $di->set("acl", function() use($config, $di) {
+            $session = $di->get('session');
+            $acl = $session->get("acl");
+            if(!$acl) {
+                $acl = new AclList();  
+                $acl->setDefaultAction(Acl::DENY);
+                
+                $guest = "Guest";
+                $acl->addRole($guest);
+                
+                //所有人都可以访问的资源
+                $resources = Util::getPublicResourse();
+                
+                foreach($resources as $resource) {
+                    $acl->addResource($resource[0], $resource[1]);
+                    $acl->allow($guest, $resource[0], $resource[1]);           
+                }
+
+                //只要是登录的用户就可以访问的资源
+                $loginUser = "LoginUser";
+                $acl->addRole($loginUser, $guest);
+                $resources = Util::getAuthResourse();
+                foreach($resources as $resource) {
+                    $acl->addResource($resource[0], $resource[1]);
+                    $acl->allow($loginUser, $resource[0], $resource[1]);          
+                }
+
+                //定义所有私有资源
+                $resources = TbPermissionAction::find();
+                foreach ($resources as $resource) {
+                    $acl->addResource($resource->controller, $resource->action);
+                }
+                
+                $user = "User";
+                $acl->addRole($user, $loginUser);
+
+                $auth = $di->get("auth");
+                if($auth) { 
+                    foreach ($auth['actions'] as $resource) {
+                        $acl->allow($user, $resource['controller'], $resource['action']);      
+                    }
+                    //print_r($auth['actions']);
+                    $session->set("acl", $acl);
+                } 
+            }
+
+            return $acl;
+        });
     }
 }

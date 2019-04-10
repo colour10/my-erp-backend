@@ -7,55 +7,19 @@ use Phalcon\Mvc\Dispatcher;
 use Phalcon\Acl\Adapter\Memory as AclList;
 use Phalcon\Acl\Resource;
 use Phalcon\Acl\Role;
+use Asa\Erp\Util;
+use Asa\Erp\TbPermissionAction;
 
 class SecurityPlugin extends Plugin
-{
-    function getAcl() {
-        $acl = $this->session->get("acl");
-        if(!$acl) {
-            $acl = new AclList();  
-            $acl->setDefaultAction(Acl::DENY);
-              
-            $acl->addRole("Guests");
-            
-            //所有人都可以访问的资源
-            $public_resources = array(
-                "login" => ['index', "login", "logout"]
-            );
-            
-            foreach($public_resources as $key => $actions) {
-                $acl->addResource($key, $actions);
-                $acl->allow("Guests", $key, $actions);           
-            }
-            
-            
-            // 定义 "Users" 资源
-            $privateResources = array(
-                'index' => array("index"),
-                'user' => array("index","add",'edit','delete'),
-                'errors' => array('index', 'show500', 'show404', 'show401')
-            );
-            foreach ($privateResources as $resource => $actions) {
-                $acl->addResource(new Resource($resource), $actions);
-            }
-            
-            //$acl->allow("Guests", "login", "index");
-            //$acl->allow("Guests", "login", "login");            
-            
-            $this->session->set("acl", $acl);
-        }
-
-        return $acl;
-    }
-    
+{    
     public function beforeExecuteRoute(Event $event, Dispatcher $dispatcher)
     {
         // Check whether the "auth" variable exists in session to define the active role
-        $user = $this->session->get('user');
-        if ($user) {
-            $role = 'Users';
+        $auth = $this->auth;
+        if ($auth) {
+            $role = "User";
         } else {
-            $role = 'Guests';            
+            $role = "Guest";
         }
 
         // Take the active controller/action from the dispatcher
@@ -63,33 +27,27 @@ class SecurityPlugin extends Plugin
         $action = $dispatcher->getActionName();
 
         // Obtain the ACL list
-        $acl = $this->getAcl();
+        $acl = $this->getDI()->get("acl");
 
         // Check if the Role have access to the controller (resource)
         $allowed = $acl->isAllowed($role, $controller, $action);
         
-        if ($allowed != Acl::ALLOW && false) {
-            // If he doesn't have access forward him to the index controller  
-            if($this->request->isAjax()) {
-                $result = array();
-                $result["code"] = "201";
-                echo json_encode($result);     
-            }
-            else {
-                $this->session->destroy();
-                
-                $this->flash->error("You don't have access to this module");
-                $dispatcher->forward(
-                    array(
-                        'module' => 'home',
-                        'controller' => 'login',
-                        'action'     => 'index'
-                    )
-                );
-            }            
+        if ($allowed != Acl::ALLOW) {
+            // If he doesn't have access forward him to the index controller
             
-            // Returning "false" we tell to the dispatcher to stop the current operation
-            return false;
+            header('Access-Control-Allow-Origin: *');
+            header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
+            header('Access-Control-Allow-Methods: Get,Post,Put,OPTIONS');
+            $result = array();
+            $result["code"] = "201";
+            $result["messages"] = ["Access deny."];
+            $result["controller"] = $controller;
+            $result["action"] = $action;
+            $result["role"] = $role;
+            $result["auth"] = $auth;
+            echo json_encode($result);
+
+            exit;
         }
     }
 }

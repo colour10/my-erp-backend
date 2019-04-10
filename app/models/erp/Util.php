@@ -194,4 +194,63 @@ class Util {
         }
         return $array;
     }
+
+    public static function getAuthResourse() {
+        return [
+            ["login","logout"],
+            ["user","modifypassword"],
+            ["warehouseuser","page"],
+            ["user","page"],
+            ["product","page"],
+            ["group","page"],
+            ['group','getpermissions'],
+            ["department","single"],
+            ["department","departments"],
+            ["brand","page"],
+            ["common","list"],
+            ["common","loadname"],
+            ["brandgroup","page"],
+            ["brandgroupchild","page"],
+            ["brandgroupchildproperty","page"],
+            ["ageseason","page"],
+            ["colortemplate","page"],
+            ["sizetop","page"],
+            ["sizecontent","page"],
+            ["ulnarinch","page"],
+            ["material","page"],
+            ["warehouse","page"],
+            ["country","page"],
+            ["saleport","page"],
+            ["supplier","page"],
+            ["order","page"],
+            ["order","loadorder"],
+            ["confirmorder","loadorder"],
+            ["confirmorder","page"],
+            ["warehousing","page"],
+            ["warehousing","load"],
+            ["requisition","page"],
+            ["requisition","load"],
+            ["requisition","confirmout"],
+            ["requisition","confirmin"],
+            ["productstock","search"],
+            ["permission","tree"],
+            ["user","saleportlist"],
+            ["sales","page"],
+            ["sales","loadsale"],
+            ["product","getproperties"],
+            ["product","picture"],
+            ["product","getcolorgrouplist"],
+            ["product","codelist"],
+            ["product","search"]
+        ];
+    }
+
+    public static function getPublicResourse() {
+        return [
+            ["index", 'index'],
+            ['login', 'login'],
+            ['login', 'checklogin'],
+            ['common', 'systemlanguage']
+        ];
+    }
 }

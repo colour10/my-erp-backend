@@ -23,7 +23,7 @@ class PermissionController extends AdminController {
     public function treeAction()
     {
         // 逻辑
-        $permissions = TbPermission::find();
+        $permissions = TbPermission::find("is_only_superadmin=0");
         if(!$permissions) {
             return $this->error(['permissions are not exist']);
         }

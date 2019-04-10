@@ -19,12 +19,16 @@ class LoginController extends Controller
                 sprintf("login_name='%s' and password='%s'", addslashes($username), md5($password))
             ));
             if ($user!=false) {
+                $group = $user->group;
+
                 $this->session->set('user', array(
                     'id' => $user->id,
                     'username' => $user->login_name,
                     'companyid' => $user->companyid,
                     'saleportid' => $user->saleportid,
-                    'saleportids' => $user->saleportids
+                    'saleportids' => $user->saleportids,
+                    'actions' => $group->getActionList()->toArray(),
+                    'permissions' => $group->getPermissionList()->toArray()
                 ));
                 //Forward to the 'invoices' controller if the user is valid
                 //header("location:/");

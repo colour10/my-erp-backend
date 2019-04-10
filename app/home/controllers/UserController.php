@@ -37,94 +37,94 @@ class UserController extends CadminController {
         }
     }
 
-    /**
-     * 取出当前用户的所属权限组模型
-     * @return false|string
-     */
-    public function groupAction()
-    {
-        // 判断是否返回了正确的结果
-        $user = $this->modelAction();
-        // 如果是string，说明是json，则原样返回
-        if (gettype($user) == 'string') {
-            return $user;
-        } else {
-            return json_encode($user->group);
-        }
-    }
+    ///**
+//     * 取出当前用户的所属权限组模型
+//     * @return false|string
+//     */
+//    public function groupAction()
+//    {
+//        // 判断是否返回了正确的结果
+//        $user = $this->modelAction();
+//        // 如果是string，说明是json，则原样返回
+//        if (gettype($user) == 'string') {
+//            return $user;
+//        } else {
+//            return json_encode($user->group);
+//        }
+//    }//
 
-    /**
-     * 取出当前用户的所属公司部门模型
-     * @return false|string
-     */
-    public function departmentAction()
-    {
-        // 逻辑
-        // 判断是否返回了正确的结果
-        $user = $this->modelAction();
-        // 如果是string，说明是json，则原样返回
-        if (gettype($user) == 'string') {
-            return $user;
-        } else {
-            return json_encode($user->department);
-        }
-    }
+//    /**
+//     * 取出当前用户的所属公司部门模型
+//     * @return false|string
+//     */
+//    public function departmentAction()
+//    {
+//        // 逻辑
+//        // 判断是否返回了正确的结果
+//        $user = $this->modelAction();
+//        // 如果是string，说明是json，则原样返回
+//        if (gettype($user) == 'string') {
+//            return $user;
+//        } else {
+//            return json_encode($user->department);
+//        }
+//    }//
 
-    /**
-     * 取出当前用户的所属公司模型
-     * @return false|string
-     */
-    public function companyAction()
-    {
-        // 逻辑
-        // 判断是否返回了正确的结果
-        $user = $this->modelAction();
-        // 如果是string，说明是json，则原样返回
-        if (gettype($user) == 'string') {
-            return $user;
-        } else {
-            return json_encode($user->department->company);
-        }
-    }
+//    /**
+//     * 取出当前用户的所属公司模型
+//     * @return false|string
+//     */
+//    public function companyAction()
+//    {
+//        // 逻辑
+//        // 判断是否返回了正确的结果
+//        $user = $this->modelAction();
+//        // 如果是string，说明是json，则原样返回
+//        if (gettype($user) == 'string') {
+//            return $user;
+//        } else {
+//            return json_encode($user->department->company);
+//        }
+//    }//
 
-    /**
-     * 取出当前用户的所属国家模型
-     * @return false|string
-     */
-    public function countryAction()
-    {
-        // 逻辑
-        // 判断是否返回了正确的结果
-        $user = $this->modelAction();
-        // 如果是string，说明是json，则原样返回
-        if (gettype($user) == 'string') {
-            return $user;
-        } else {
-            return json_encode($user->department->company->country);
-        }
-    }
+//    /**
+//     * 取出当前用户的所属国家模型
+//     * @return false|string
+//     */
+//    public function countryAction()
+//    {
+//        // 逻辑
+//        // 判断是否返回了正确的结果
+//        $user = $this->modelAction();
+//        // 如果是string，说明是json，则原样返回
+//        if (gettype($user) == 'string') {
+//            return $user;
+//        } else {
+//            return json_encode($user->department->company->country);
+//        }
+//    }//
 
-    /**
-     * 获取当前用户模型
-     * @return false|string
-     */
-    public function modelAction()
-    {
-        // 逻辑
-        $session_user = $this->session->get('user');
-        if (!$session_user) {
-            $msg = $this->getValidateMessage('model-delete-message');
-            return $this->error([$msg]);
-        }
-        // 查找当前登录用户的模型
-        $user = TbUser::findFirstById($session_user['id']);
-        if (!$user) {
-            $msg = $this->getValidateMessage('user', 'template', 'notexist');
-            return $this->error([$msg]);
-        }
-        // 返回正确的结果
-        return $user;
-    }
+//    /**
+//     * 获取当前用户模型
+//     * @return false|string
+//     */
+//    public function modelAction()
+//    {
+//        // 逻辑
+//        $session_user = $this->session->get('user');
+//        if (!$session_user) {
+//            $msg = $this->getValidateMessage('model-delete-message');
+//            return $this->error([$msg]);
+//        }
+//        // 查找当前登录用户的模型
+//        $user = TbUser::findFirstById($session_user['id']);
+//        if (!$user) {
+//            $msg = $this->getValidateMessage('user', 'template', 'notexist');
+//            return $this->error([$msg]);
+//        }
+//        // 返回正确的结果
+//        return $user;
+//    }
 
     /**
      * 获取当前登录用户的销售端口
@@ -141,7 +141,6 @@ class UserController extends CadminController {
         }
         else {
             return $this->success();
-        }
-        
+        }        
     }
 }

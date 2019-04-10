@@ -25,11 +25,10 @@ class TbGroup extends BaseModel
             "\Asa\Erp\TbPermissionGroup",
             "groupid",
             [
-                'alias' => 'permissions',
+                'alias' => 'permissionGroups',
                 'foreignKey' => [
                     // 关联字段禁止自动删除
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message"    => $this->getValidateMessage('hasmany-foreign-message', 'group'),
+                    'action' => Relation::ACTION_CASCADE
                 ],
             ]
         );
@@ -44,7 +43,7 @@ class TbGroup extends BaseModel
                 'foreignKey' => [
                     // 关联字段禁止自动删除
                     'action' => Relation::ACTION_RESTRICT,
-                    "message"    => $this->getValidateMessage('hasmany-foreign-message', 'user'),
+                    "message"    => "/1003/用户组使用中，不能删除/",
                 ],
             ]
         );
@@ -80,29 +79,25 @@ class TbGroup extends BaseModel
 
 
     /**
-     * 获取当前用户组下面的所有模块权限
+     * 获取当前用户组下面的所有权限操作
      * @return false|string
      */
-    public function modules()
+    public function getActionList()
     {
-        // 逻辑
-        // 初始化一个空数组，用于存放变量
-        $current_modules = [];
+        $id_array = Util::recordListColumn($this->permissionGroups, "permissionid");
 
-        // 循环得到权限
-        foreach ($this->permissions as $permission) {
-            foreach ($permission->modules as $module) {
-                $current_modules[] = [
-                    'permissionid' => $module->permissionid,
-                    'module' => $module->module,
-                    'controller' => $module->controller,
-                    'action' => $module->action,
-                ];
-            }
-        }
+        return TbPermissionAction::findByIdString($id_array, "permissionid");
+    }
 
-        // 返回最终的权限树
-        return json_encode($current_modules);
+    /**
+     * 获取当前用户组下面的所有权限
+     * @return false|string
+     */
+    public function getPermissionList()
+    {
+        $id_array = Util::recordListColumn($this->permissionGroups, "permissionid");
+
+        return TbPermission::findByIdString($id_array, "id");
     }
 
 

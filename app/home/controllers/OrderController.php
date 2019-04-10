@@ -212,20 +212,21 @@ class OrderController extends BaseController
             $this->doTableAction($order,"update");
         }
     }
-    /**
-     * 订单修改,订单提交审核之后，只能修改部分字段信息
-     * @return [type] [description]
-     */
-    public function modifyAction() {
-        $orderid = (int)$_POST['id'];
-        // 根据orderid查询出当前订单以及订单详情的所有信息
-        $order = TbOrder::findFirstById($orderid);
-        if($order!=false && $order->companyid==$this->companyid) {
-            //定义可以修改的字段名
-            $columns = array();
-            //如果需求需要，可以在这里比较修改前后的数据变化，并留痕
-            //如果不需要，直接按照定义的字段范围更新数据
-            $this->doTableAction($order,"update");
-        }
-    }
+
+   /**
+    * 订单修改,订单提交审核之后，只能修改部分字段信息
+    * @return [type] [description]
+    */
+/*   private function modifyAction() {
+       $orderid = (int)$_POST['id'];
+       // 根据orderid查询出当前订单以及订单详情的所有信息
+       $order = TbOrder::findFirstById($orderid);
+       if($order!=false && $order->companyid==$this->companyid) {
+           //定义可以修改的字段名
+           $columns = array();
+           //如果需求需要，可以在这里比较修改前后的数据变化，并留痕
+           //如果不需要，直接按照定义的字段范围更新数据
+           $this->doTableAction($order,"update");
+       }
+   }*/
 }
