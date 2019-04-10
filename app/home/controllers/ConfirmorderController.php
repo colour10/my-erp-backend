@@ -344,7 +344,9 @@ class ConfirmorderController extends BaseController {
             if(in_array($k, $columns)) {
                 $order->$k = $item;
             }                
-        }//        if($order->update()==false) {
+        }//        
+
+        if($order->update()==false) {
             return $this->error(['updage-fail']);
         }
         else {

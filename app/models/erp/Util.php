@@ -241,7 +241,10 @@ class Util {
             ["product","picture"],
             ["product","getcolorgrouplist"],
             ["product","codelist"],
-            ["product","search"]
+            ["product","search"],
+            ['aliases','page'],
+            ['series','page'],
+            ['series2','page']
         ];
     }
 
