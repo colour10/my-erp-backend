@@ -43,11 +43,11 @@ CREATE TABLE `tb_aliases` (
   `code` varchar(50) DEFAULT NULL,
   `brandid` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='任何表都应该包含的列';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='任何表都应该包含的列';
 
 /*Data for the table `tb_aliases` */
 
-insert  into `tb_aliases`(`id`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`code`,`brandid`) values (1,'44','','',NULL,NULL,NULL,NULL,'33',2),(2,'fd','','',NULL,NULL,NULL,NULL,'ere',2);
+insert  into `tb_aliases`(`id`,`name_cn`,`name_en`,`name_hk`,`name_fr`,`name_it`,`name_sp`,`name_de`,`code`,`brandid`) values (1,'44','','',NULL,NULL,NULL,NULL,'33',2),(2,'fd','','',NULL,NULL,NULL,NULL,'ere',2),(3,'1','','',NULL,'',NULL,NULL,'1',1);
 
 /*Table structure for table `tb_brand` */
 
@@ -317,7 +317,7 @@ CREATE TABLE `tb_group` (
   `group_memo` varchar(500) DEFAULT NULL,
   `companyid` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='组信息';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COMMENT='组信息';
 
 /*Data for the table `tb_group` */
 
@@ -504,21 +504,37 @@ CREATE TABLE `tb_permission` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `pid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '所属权限id，默认0为顶级权限',
   `name` varchar(100) NOT NULL DEFAULT '' COMMENT '权限名称',
-  `memo_cn` text COMMENT '中文描述',
-  `memo_en` text COMMENT '英文描述',
-  `memo_hk` text COMMENT '粤语描述',
-  `memo_fr` text COMMENT '法语描述',
-  `memo_it` text COMMENT '意大利语描述',
-  `memo_sp` text COMMENT '西班牙语描述',
-  `memo_de` text COMMENT '德语描述',
+  `memo_cn` varchar(50) DEFAULT NULL COMMENT '中文描述',
+  `memo_en` varchar(50) DEFAULT NULL COMMENT '英文描述',
+  `memo_hk` varchar(50) DEFAULT NULL COMMENT '粤语描述',
+  `memo_fr` varchar(50) DEFAULT NULL COMMENT '法语描述',
+  `memo_it` varchar(50) DEFAULT NULL COMMENT '意大利语描述',
+  `memo_sp` varchar(50) DEFAULT NULL COMMENT '西班牙语描述',
+  `memo_de` varchar(50) DEFAULT NULL COMMENT '德语描述',
   `is_only_superadmin` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否为专属超级管理员权限，0-不是 1-是',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `permission_name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8mb4;
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=87 DEFAULT CHARSET=utf8mb4;
 
 /*Data for the table `tb_permission` */
 
-insert  into `tb_permission`(`id`,`pid`,`name`,`memo_cn`,`memo_en`,`memo_hk`,`memo_fr`,`memo_it`,`memo_sp`,`memo_de`,`is_only_superadmin`) values (1,0,'userControl','用户管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(2,0,'databaseControl','基础数据',NULL,NULL,NULL,NULL,NULL,NULL,0),(3,0,'productControl','商品管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(4,0,'customControl','客户管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(5,0,'supplierControl','供应链管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(6,0,'stockControl','库存管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(7,0,'salesControl','销售管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(8,0,'memberControl','会员管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(9,0,'costControl','费用管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(10,0,'financialControl','财务管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(11,0,'systemControl','系统管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(12,1,'user','员工信息',NULL,NULL,NULL,NULL,NULL,NULL,0),(13,1,'group','组信息',NULL,NULL,NULL,NULL,NULL,NULL,0),(14,1,'department','部门信息',NULL,NULL,NULL,NULL,NULL,NULL,0),(15,2,'productRelate','商品相关',NULL,NULL,NULL,NULL,NULL,NULL,0),(16,2,'priceRelate','价格相关',NULL,NULL,NULL,NULL,NULL,NULL,0),(17,2,'otherRelate','其他',NULL,NULL,NULL,NULL,NULL,NULL,0),(18,3,'product','商品信息',NULL,NULL,NULL,NULL,NULL,NULL,0),(19,3,'picture','图片管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(20,3,'pictureupload','图片上传',NULL,NULL,NULL,NULL,NULL,NULL,0),(21,4,'supplier','关系单位信息',NULL,NULL,NULL,NULL,NULL,NULL,0),(22,4,'quotation','供货商报价',NULL,NULL,NULL,NULL,NULL,NULL,0),(23,4,'supplierlevel','供货商级别',NULL,NULL,NULL,NULL,NULL,NULL,0),(24,5,'orderRelate','订单管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(25,5,'confirmorder','发货单管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(26,5,'warehousingRelate','到货入库',NULL,NULL,NULL,NULL,NULL,NULL,0),(27,6,'requisitionRelate','调拨相关',NULL,NULL,NULL,NULL,NULL,NULL,0),(28,6,'checkRelate','库存盘点',NULL,NULL,NULL,NULL,NULL,NULL,0),(29,6,'stocksnapshot','库存余额查询',NULL,NULL,NULL,NULL,NULL,NULL,0),(30,6,'productstock','库存查询',NULL,NULL,NULL,NULL,NULL,NULL,0),(31,6,'productstockSnapshot','库存快照统计',NULL,NULL,NULL,NULL,NULL,NULL,0),(32,7,'sales','商品零售批发',NULL,NULL,NULL,NULL,NULL,NULL,0),(33,7,'salesstock','销售端口库存统计',NULL,NULL,NULL,NULL,NULL,NULL,0),(34,7,'sfRelate','销售对账',NULL,NULL,NULL,NULL,NULL,NULL,0),(35,7,'sale/statistics','销售统计',NULL,NULL,NULL,NULL,NULL,NULL,0),(36,8,'member','会员管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(37,8,'memberlevel','会员级别',NULL,NULL,NULL,NULL,NULL,NULL,0),(38,9,'fee','费用申请',NULL,NULL,NULL,NULL,NULL,NULL,0),(39,9,'fee/leader','费用申请主管审批',NULL,NULL,NULL,NULL,NULL,NULL,0),(40,9,'fee/finance','费用申请财务审批',NULL,NULL,NULL,NULL,NULL,NULL,0),(41,9,'fee/manager','费用申请经理审批',NULL,NULL,NULL,NULL,NULL,NULL,0),(42,10,'sfsheet','对账查询',NULL,NULL,NULL,NULL,NULL,NULL,0),(43,11,'help','系统帮助',NULL,NULL,NULL,NULL,NULL,NULL,0),(44,11,'modifypassword','修改密码',NULL,NULL,NULL,NULL,NULL,NULL,0),(45,11,'logout','退出登录',NULL,NULL,NULL,NULL,NULL,NULL,0),(46,15,'brand','品牌维护',NULL,NULL,NULL,NULL,NULL,NULL,0),(47,15,'brandgroup','品类维护',NULL,NULL,NULL,NULL,NULL,NULL,0),(48,15,'ageseason','款式年代',NULL,NULL,NULL,NULL,NULL,NULL,0),(49,15,'colortemplate','颜色模板',NULL,NULL,NULL,NULL,NULL,NULL,0),(50,15,'sizetop','商品尺码',NULL,NULL,NULL,NULL,NULL,NULL,0),(51,15,'material','材质管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(52,15,'ulnarinch','商品尺寸',NULL,NULL,NULL,NULL,NULL,NULL,0),(53,15,'aliases','商品别名',NULL,NULL,NULL,NULL,NULL,NULL,0),(54,15,'productinnards','内部结构',NULL,NULL,NULL,NULL,NULL,NULL,0),(55,15,'productparts','附带配件',NULL,NULL,NULL,NULL,NULL,NULL,0),(56,15,'occasionsstyle','场合风格',NULL,NULL,NULL,NULL,NULL,NULL,0),(57,15,'closedway','闭合方式',NULL,NULL,NULL,NULL,NULL,NULL,0),(58,15,'executioncategory','执行标准',NULL,NULL,NULL,NULL,NULL,NULL,0),(59,15,'securitycategory','安全类别',NULL,NULL,NULL,NULL,NULL,NULL,0),(60,15,'washinginstructions','洗涤说明',NULL,NULL,NULL,NULL,NULL,NULL,0),(61,15,'winterproofing','防寒指数',NULL,NULL,NULL,NULL,NULL,NULL,0),(62,16,'productprice','商品价格管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(63,16,'costformula','成本计算管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(64,17,'warehouse','仓库管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(65,17,'salesport','销售端口管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(66,17,'country','国际及地区信息维护',NULL,NULL,NULL,NULL,NULL,NULL,0),(67,17,'feenames','费用名称',NULL,NULL,NULL,NULL,NULL,NULL,0),(68,17,'shippingtype','运输方式',NULL,NULL,NULL,NULL,NULL,NULL,0),(69,17,'salesmethods','销售性质',NULL,NULL,NULL,NULL,NULL,NULL,0),(70,17,'businesstype','业务类型',NULL,NULL,NULL,NULL,NULL,NULL,0),(71,17,'reportstyle','快递单样式',NULL,NULL,NULL,NULL,NULL,NULL,0),(72,17,'imagetool','图片工具',NULL,NULL,NULL,NULL,NULL,NULL,0),(73,24,'order','订单管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(74,24,'order/search','订单状态查询',NULL,NULL,NULL,NULL,NULL,NULL,0),(75,24,'order/export','订单导出',NULL,NULL,NULL,NULL,NULL,NULL,0),(76,26,'warehousing','到货入库',NULL,NULL,NULL,NULL,NULL,NULL,0),(78,26,'warehousing/list','入库单查询',NULL,NULL,NULL,NULL,NULL,NULL,0),(79,27,'requisition/apply','调拨单查询/申请',NULL,NULL,NULL,NULL,NULL,NULL,0),(80,27,'requisition/turnout','调拨出库确认',NULL,NULL,NULL,NULL,NULL,NULL,0),(81,27,'requisition/turnin','调拨入库确认',NULL,NULL,NULL,NULL,NULL,NULL,0),(82,28,'check','盘点单列表',NULL,NULL,NULL,NULL,NULL,NULL,0),(83,28,'check/detail','库存变动查询',NULL,NULL,NULL,NULL,NULL,NULL,0),(84,34,'sf/sheet','销售对账页面',NULL,NULL,NULL,NULL,NULL,NULL,0),(85,34,'sf/search','对账查询页面',NULL,NULL,NULL,NULL,NULL,NULL,0);
+insert  into `tb_permission`(`id`,`pid`,`name`,`memo_cn`,`memo_en`,`memo_hk`,`memo_fr`,`memo_it`,`memo_sp`,`memo_de`,`is_only_superadmin`) values (1,0,'','组织架构',NULL,NULL,NULL,NULL,NULL,NULL,0),(2,0,'','基础数据',NULL,NULL,NULL,NULL,NULL,NULL,0),(3,0,'','商品管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(4,0,'','客户管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(5,0,'','供应链相关',NULL,NULL,NULL,NULL,NULL,NULL,0),(6,0,'','库存管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(7,0,'','销售管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(12,1,'user','员工信息管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(13,1,'group','权限组管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(14,1,'department','部门信息管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(15,2,'brand\r\n','品牌管理',NULL,NULL,NULL,NULL,NULL,NULL,1),(16,2,'brandgroup','品类管理',NULL,NULL,NULL,NULL,NULL,NULL,1),(17,2,'ageseason','款式年代管理',NULL,NULL,NULL,NULL,NULL,NULL,1),(18,2,'colortemplate','颜色模板管理',NULL,NULL,NULL,NULL,NULL,NULL,1),(19,2,'sizetop','尺码模板管理',NULL,NULL,NULL,NULL,NULL,NULL,1),(20,2,'material','材质管理',NULL,NULL,NULL,NULL,NULL,NULL,1),(21,2,'ulnarinch','商品尺寸管理',NULL,NULL,NULL,NULL,NULL,NULL,1),(22,2,'country','国际地区管理',NULL,NULL,NULL,NULL,NULL,NULL,1),(23,2,'saleport','销售端口管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(24,2,'warehouse','仓库管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(25,5,'order-submit','订单提交',NULL,NULL,NULL,NULL,NULL,NULL,0),(26,5,'order-confirm','订单审核',NULL,NULL,NULL,NULL,NULL,NULL,0),(27,5,'order-finish','订单完结',NULL,NULL,NULL,NULL,NULL,NULL,0),(28,5,'confirmorder-submit','提交发货单',NULL,NULL,NULL,NULL,NULL,NULL,0),(29,5,'confirmorder-confirm','发货单审核',NULL,NULL,NULL,NULL,NULL,NULL,0),(30,5,'warehousing','商品入库',NULL,NULL,NULL,NULL,NULL,NULL,0),(31,6,'requisition','调拨商品',NULL,NULL,NULL,NULL,NULL,NULL,0),(32,7,'sales','提交销售单',NULL,NULL,NULL,NULL,NULL,NULL,0),(33,3,'product','商品管理',NULL,NULL,NULL,NULL,NULL,NULL,0),(34,4,'supplier','客户管理',NULL,NULL,NULL,NULL,NULL,NULL,0);
+
+/*Table structure for table `tb_permission_action` */
+
+DROP TABLE IF EXISTS `tb_permission_action`;
+
+CREATE TABLE `tb_permission_action` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `permissionid` int(10) unsigned DEFAULT NULL COMMENT '权限id',
+  `controller` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '控制器名称',
+  `action` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '方法名称',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `tb_permission_module_permissionid_module_controller_action` (`permissionid`,`controller`,`action`)
+) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+/*Data for the table `tb_permission_action` */
+
+insert  into `tb_permission_action`(`id`,`permissionid`,`controller`,`action`) values (1,12,'user','add'),(3,12,'user','delete'),(7,12,'user','deletegroup'),(2,12,'user','edit'),(4,12,'warehouseuser','add'),(6,12,'warehouseuser','delete'),(5,12,'warehouseuser','edit'),(12,13,'group','add'),(14,13,'group','delete'),(13,13,'group','edit'),(11,13,'group','setting'),(8,14,'department','add'),(10,14,'department','delete'),(9,14,'department','edit'),(18,15,'aliases','add'),(20,15,'aliases','delete'),(19,15,'aliases','edit'),(15,15,'brand','add'),(17,15,'brand','delete'),(16,15,'brand','edit'),(21,15,'series','add'),(23,15,'series','delete'),(22,15,'series','edit'),(24,16,'brandgroup','add'),(26,16,'brandgroup','delete'),(25,16,'brandgroup','edit'),(27,16,'brandgroupchild','add'),(29,16,'brandgroupchild','delete'),(28,16,'brandgroupchild','edit'),(30,16,'brandgroupchildproperty','add'),(32,16,'brandgroupchildproperty','delete'),(34,16,'brandgroupchildproperty','down'),(31,16,'brandgroupchildproperty','edit'),(33,16,'brandgroupchildproperty','up'),(35,17,'ageseason','add'),(37,17,'ageseason','delete'),(36,17,'ageseason','edit'),(38,18,'colortemplate','add'),(40,18,'colortemplate','delete'),(39,18,'colortemplate','edit'),(44,19,'sizecontent','add'),(46,19,'sizecontent','delete'),(45,19,'sizecontent','edit'),(41,19,'sizetop','add'),(43,19,'sizetop','delete'),(42,19,'sizetop','edit'),(47,20,'material','add'),(49,20,'material','delete'),(48,20,'material','edit'),(50,21,'ulnarinch','add'),(52,21,'ulnarinch','delete'),(51,21,'ulnarinch','edit'),(56,22,'country','add'),(58,22,'country','delete'),(57,22,'country','edit'),(59,23,'saleport','add'),(61,23,'saleport','delete'),(60,23,'saleport','edit'),(53,24,'warehouse','add'),(55,24,'warehouse','delete'),(54,24,'warehouse','edit'),(66,25,'order','delete'),(65,25,'order','saveorder'),(68,26,'order','cancel'),(67,26,'order','confirm'),(69,27,'order','finish'),(71,28,'confirmorder','delete'),(70,28,'confirmorder','saveorder'),(72,28,'confirmorder','search'),(74,29,'confirmorder','cancel'),(73,29,'confirmorder','confirm'),(75,30,'warehousing','create'),(76,30,'warehousing','delete'),(79,31,'requisition','save'),(78,32,'sales','delete'),(77,32,'sales','savesale'),(83,33,'product','add'),(85,33,'product','delete'),(84,33,'product','edit'),(82,33,'product','savecode'),(81,33,'product','savecolorgroup'),(80,33,'product','saveproperty'),(62,34,'supplier','add'),(64,34,'supplier','delete'),(63,34,'supplier','edit');
 
 /*Table structure for table `tb_permission_group` */
 
@@ -528,27 +544,12 @@ CREATE TABLE `tb_permission_group` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `groupid` int(10) unsigned NOT NULL COMMENT '组id',
   `permissionid` int(10) unsigned NOT NULL COMMENT '权限id',
-  `companyid` int(10) unsigned DEFAULT NULL COMMENT '公司id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 /*Data for the table `tb_permission_group` */
 
-/*Table structure for table `tb_permission_module` */
-
-DROP TABLE IF EXISTS `tb_permission_module`;
-
-CREATE TABLE `tb_permission_module` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `permissionid` int(10) unsigned DEFAULT NULL COMMENT '权限id',
-  `module` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '模块名称',
-  `controller` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '控制器名称',
-  `action` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '方法名称',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `tb_permission_module_permissionid_module_controller_action` (`permissionid`,`module`,`controller`,`action`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-/*Data for the table `tb_permission_module` */
+insert  into `tb_permission_group`(`id`,`groupid`,`permissionid`) values (18,1,12),(19,1,13),(20,1,14),(21,1,33);
 
 /*Table structure for table `tb_picture` */
 
@@ -613,7 +614,7 @@ CREATE TABLE `tb_product` (
 
 /*Data for the table `tb_product` */
 
-insert  into `tb_product`(`id`,`productname`,`wordcode_1`,`wordcode_2`,`wordcode_3`,`wordcode_4`,`wordprice`,`wordpricecurrency`,`gender`,`brandid`,`brandgroupid`,`childbrand`,`brandcolor`,`picture2`,`picture`,`ageseason`,`countries`,`material`,`producttemplate`,`season`,`laststoragedate`,`aliases`,`series`,`series2`,`ulnarinch`,`factoryprice`,`factorypricecurrency`,`retailprice`,`retailpricecurrency`,`product_group`,`nationalprice`,`ulnarinch_memo`,`sizecontentids`,`sizetopid`,`companyid`,`adduserid`) values (1,'BOUTIQUE MOSCHINO 女士黄色长袖T恤衫','111','aaa','xty','','275.00','2','5,3,1',5,5,15,'6','product/0820505ecba45bc993739ba4152aeecf.jpg','product/d237442d5a8662c9a997666a652d5693.jpg','6,7','2,1',0,0,'5,4','','','0','0','','110.00','2','125.00','2','1,6|9,2|11,5','0.00','','5,1,3,4',1,1,NULL),(2,'PRADA 黑色斜跨包','111','aaa','789','','3500.00','2','',6,2,16,'2','product/ae8deb1ae3139a6e603475441d75680f.jpg','product/91a791ff46592e73f3b37a5e293a0033.jpg','4','6',0,0,'','','','0','0','','1800.00','2','2000.00','2','','0.00','',NULL,2,1,NULL),(3,'CELINE 女士黑色皮秋千手提包','111','bbb','345','','5000.00','5','',7,2,17,'1','product/6b68287325bb6c177db50fc2df87b60c.jpg','product/648b73a8f8f5fea0b2d4b5350cb011fb.jpg','8','7',0,0,'','','','0','0','','3000.00','5','3500.00','5','','4000.00','',NULL,2,1,1),(4,'FENDI棕色猫眼太阳眼镜','111','aaa','555','','2600.00','3','',8,6,18,'1','product/02527a4f790df36804113733063d950e.jpg','product/229af358a71ac1ff37121de9d945377f.jpg','2','7',0,0,'','','','0','0','','1200.00','3','1500.00','3','','1800.00','',NULL,1,1,1),(5,'FENDI 女士巧克力色腰带','111','aaa','345','','0.00','','',8,7,19,'1','product/52df0f5164d0a27477eed0f2f68470b5.jpg','product/dec023d82f398c2aa2408c589aa13ec3.jpg','8','7',0,0,'','','','0','0','','0.00','','0.00','','','0.00','',NULL,1,1,1),(6,'CHIARA FERRAGNI 女士黑色背包','111','aaa','234','','0.00','','',9,2,12,'3','product/c150ec24aa1394ec267e5bc80b835c5f.jpg','product/18f80ccfeb3cac2bf41e7bf14ff5fa5c.jpg','8','8',0,0,'','','','0','0','','0.00','','0.00','','','0.00','',NULL,1,1,1),(7,'333377','111','aaa','123','','0.00','','',5,2,12,'2','product/75d558e4814861b7ceafa5e735ba0079.jpg','product/f12c64fefbfa5e8ec9d83c4353e170be.jpg','3','6',0,0,'','','','0','0','','0.00','','0.00','','','0.00','',NULL,1,1,1),(9,'BOUTIQUE MOSCHINO 女士黄色长袖T恤衫','111','aaa','bbb','','275.00','2','5,3,1',5,5,15,'2','product/65ff30e7c8a1d58a2a3095aa17e5f016.jpg','product/bd005df1ad6841e6bca33f95030ea811.jpg','6,7','2,1',0,0,'5,4','','','0','0','','110.00','2','125.00','2','1,6|9,2|11,5','0.00','',NULL,1,1,1),(10,'BOUTIQUE MOSCHINO 女士黄色长袖T恤衫','111','aaa','ccc','','275.00','2','5,3,1',5,5,15,'3','','','6,7','2,1',0,0,'5,4',NULL,'','0','0','','110.00','2','125.00','2','','0.00','',NULL,1,1,1),(11,'BOUTIQUE MOSCHINO 女士黄色长袖T恤衫','111','aaa','ddd','','275.00','2','5,3,1',5,5,15,'5','','','6,7','2,1',0,0,'5,4',NULL,'','0','0','','110.00','2','125.00','2','1,6|9,2|11,5','0.00','',NULL,1,1,1);
+insert  into `tb_product`(`id`,`productname`,`wordcode_1`,`wordcode_2`,`wordcode_3`,`wordcode_4`,`wordprice`,`wordpricecurrency`,`gender`,`brandid`,`brandgroupid`,`childbrand`,`brandcolor`,`picture2`,`picture`,`ageseason`,`countries`,`material`,`producttemplate`,`season`,`laststoragedate`,`aliases`,`series`,`series2`,`ulnarinch`,`factoryprice`,`factorypricecurrency`,`retailprice`,`retailpricecurrency`,`product_group`,`nationalprice`,`ulnarinch_memo`,`sizecontentids`,`sizetopid`,`companyid`,`adduserid`) values (1,'BOUTIQUE MOSCHINO 女士黄色长袖T恤衫','111','aaa','xty','','275.00','2','5,3,1',5,5,15,'6','product/0820505ecba45bc993739ba4152aeecf.jpg','product/d237442d5a8662c9a997666a652d5693.jpg','6,7','2,1',0,0,'5,4','','','0','0','','110.00','2','125.00','2','1,6|9,2|11,5','0.00','','5,1,3,4',1,1,NULL),(2,'PRADA 黑色斜跨包','111','aaa','789','','3500.00','2','',6,2,16,'2','product/ae8deb1ae3139a6e603475441d75680f.jpg','product/91a791ff46592e73f3b37a5e293a0033.jpg','4','6',0,0,'','','','0','0','','1800.00','2','2000.00','2','','0.00','','10,11,12',2,1,NULL),(3,'CELINE 女士黑色皮秋千手提包','111','bbb','345','','5000.00','5','',7,2,17,'1','product/6b68287325bb6c177db50fc2df87b60c.jpg','product/648b73a8f8f5fea0b2d4b5350cb011fb.jpg','8','7',0,0,'','','','0','0','','3000.00','5','3500.00','5','','4000.00','',NULL,2,1,1),(4,'FENDI棕色猫眼太阳眼镜','111','aaa','555','','2600.00','3','',8,6,18,'1','product/02527a4f790df36804113733063d950e.jpg','product/229af358a71ac1ff37121de9d945377f.jpg','2','7',0,0,'','','','0','0','','1200.00','3','1500.00','3','','1800.00','',NULL,1,1,1),(5,'FENDI 女士巧克力色腰带','111','aaa','345','','0.00','','',8,7,19,'1','product/52df0f5164d0a27477eed0f2f68470b5.jpg','product/dec023d82f398c2aa2408c589aa13ec3.jpg','8','7',0,0,'','','','0','0','','0.00','','0.00','','','0.00','',NULL,1,1,1),(6,'CHIARA FERRAGNI 女士黑色背包','111','aaa','234','','0.00','','',9,2,12,'3','product/c150ec24aa1394ec267e5bc80b835c5f.jpg','product/18f80ccfeb3cac2bf41e7bf14ff5fa5c.jpg','8','8',0,0,'','','','0','0','','0.00','','0.00','','','0.00','',NULL,1,1,1),(7,'333377','111','aaa','123','','0.00','','',5,2,12,'2','product/75d558e4814861b7ceafa5e735ba0079.jpg','product/f12c64fefbfa5e8ec9d83c4353e170be.jpg','3','6',0,0,'','','','0','0','','0.00','','0.00','','','0.00','',NULL,1,1,1),(9,'BOUTIQUE MOSCHINO 女士黄色长袖T恤衫','111','aaa','bbb','','275.00','2','5,3,1',5,5,15,'2','product/65ff30e7c8a1d58a2a3095aa17e5f016.jpg','product/bd005df1ad6841e6bca33f95030ea811.jpg','6,7','2,1',0,0,'5,4','','','0','0','','110.00','2','125.00','2','1,6|9,2|11,5','0.00','',NULL,1,1,1),(10,'BOUTIQUE MOSCHINO 女士黄色长袖T恤衫','111','aaa','ccc','','275.00','2','5,3,1',5,5,15,'3','','','6,7','2,1',0,0,'5,4',NULL,'','0','0','','110.00','2','125.00','2','','0.00','',NULL,1,1,1),(11,'BOUTIQUE MOSCHINO 女士黄色长袖T恤衫','111','aaa','ddd','','275.00','2','5,3,1',5,5,15,'5','','','6,7','2,1',0,0,'5,4','','','0','0','','110.00','2','125.00','2','1,6|9,2|11,5','0.00','','5,4',1,1,1);
 
 /*Table structure for table `tb_product_price` */
 
@@ -1050,20 +1051,13 @@ CREATE TABLE `tb_sizecontent` (
   `content_it` varchar(100) DEFAULT NULL COMMENT '意大利语代码名称',
   `content_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语代码名称',
   `content_de` varchar(100) DEFAULT NULL COMMENT '德语代码名称',
-  `sortnum` int(11) DEFAULT NULL,
-  `memo_cn` text COMMENT '中文备注',
-  `memo_en` text COMMENT '英文备注',
-  `memo_hk` text COMMENT '粤语备注',
-  `memo_fr` text COMMENT '法语备注',
-  `memo_it` text COMMENT '意大利语备注',
-  `memo_sp` text COMMENT '西班牙语备注',
-  `memo_de` text COMMENT '德语备注',
+  `displayindex` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COMMENT='尺码明细';
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COMMENT='尺码明细';
 
 /*Data for the table `tb_sizecontent` */
 
-insert  into `tb_sizecontent`(`id`,`topid`,`content_cn`,`content_en`,`content_hk`,`content_fr`,`content_it`,`content_sp`,`content_de`,`sortnum`,`memo_cn`,`memo_en`,`memo_hk`,`memo_fr`,`memo_it`,`memo_sp`,`memo_de`) values (1,1,'XXL','','',NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(2,1,'XL','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(3,1,'S','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(4,1,'M','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(5,1,'XXXL','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(6,2,'36','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(7,2,'37','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(8,2,'38','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(9,2,'39','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(10,2,'40','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11,2,'41','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(12,2,'42','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(13,2,'43','','',NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+insert  into `tb_sizecontent`(`id`,`topid`,`content_cn`,`content_en`,`content_hk`,`content_fr`,`content_it`,`content_sp`,`content_de`,`displayindex`) values (1,1,'XXL','','',NULL,NULL,NULL,NULL,5),(2,1,'XL','','',NULL,NULL,NULL,NULL,4),(3,1,'S','','',NULL,NULL,NULL,NULL,1),(4,1,'M','','',NULL,NULL,NULL,NULL,2),(5,1,'XXXL','','',NULL,NULL,NULL,NULL,6),(6,2,'36','','',NULL,NULL,NULL,NULL,3),(7,2,'37','','',NULL,NULL,NULL,NULL,4),(8,2,'38','','',NULL,NULL,NULL,NULL,5),(9,2,'39','','',NULL,NULL,NULL,NULL,6),(10,2,'40','','',NULL,NULL,NULL,NULL,7),(11,2,'41','','',NULL,NULL,NULL,NULL,8),(12,2,'42','','',NULL,NULL,NULL,NULL,9),(13,2,'43','','',NULL,NULL,NULL,NULL,10),(14,1,'L','','',NULL,'',NULL,NULL,3),(15,2,'35','','',NULL,'',NULL,NULL,2),(16,2,'34','','',NULL,'',NULL,NULL,1);
 
 /*Table structure for table `tb_sizetop` */
 
