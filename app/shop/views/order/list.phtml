@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+
+<!-- Head BEGIN -->
+<head>
+    <meta charset="utf-8">
+    <title>订单列表</title>
+
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <meta content="Metronic Shop UI description" name="description">
+    <meta content="Metronic Shop UI keywords" name="keywords">
+    <meta content="keenthemes" name="author">
+
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <!-- Global styles START -->
+    <link href="/shop/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/shop/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Global styles END -->
+
+    <!-- Page level plugin styles START -->
+    <link href="/shop/assets/plugins/fancybox/source/jquery.fancybox.css" rel="stylesheet">
+    <link href="/shop/assets/plugins/owl.carousel/assets/owl.carousel.css" rel="stylesheet">
+    <link href="/shop/assets/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css">
+    <link href="/shop/assets/plugins/jquery-ui/jquery-ui.css" rel="stylesheet" type="text/css"><!-- for slider-range -->
+    <link href="/shop/assets/plugins/rateit/src/rateit.css" rel="stylesheet" type="text/css">
+    <!-- Page level plugin styles END -->
+
+    <!-- Theme styles START -->
+    <link href="/shop/assets/pages/css/components.css" rel="stylesheet">
+    <link href="/shop/assets/corporate/css/style.css" rel="stylesheet">
+    <link href="/shop/assets/pages/css/style-shop.css" rel="stylesheet" type="text/css">
+    <link href="/shop/assets/corporate/css/style-responsive.css" rel="stylesheet">
+    <link href="/shop/assets/corporate/css/themes/red.css" rel="stylesheet" id="style-color">
+    <link href="/shop/assets/corporate/css/custom.css" rel="stylesheet">
+    <!-- Theme styles END -->
+</head>
+<!-- Head END -->
+
+<!-- Body BEGIN -->
+<body class="ecommerce">
+
+<!-- BEGIN TOP BAR -->
+<?php echo $this->view->getPartial('layouts/_header') ?>
+<!-- Header END -->
+
+<div class="main">
+    <div class="container">
+        <!-- BEGIN SIDEBAR & CONTENT -->
+        <div class="row margin-bottom-40">
+            <!-- BEGIN CONTENT -->
+            <div class="col-md-12 col-sm-12">
+                <h1>订单列表</h1>
+                <div class="goods-page">
+                    <div class="goods-data clearfix">
+                        <div class="table-wrapper-responsive">
+                            <table summary="Shopping cart" id="table-buycar">
+                                <thead>
+                                <tr>
+                                    <th class="goods-page-image">图片</th>
+                                    <th class="goods-page-description">商品名称</th>
+                                    <th class="goods-page-color">商品颜色</th>
+                                    <th class="goods-page-size">商品尺寸</th>
+                                    <th class="goods-page-quantity">数量</th>
+                                    <th class="goods-page-price">单价</th>
+                                    <th class="goods-page-total" colspan="2">总价</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="shopping-total">
+                            <ul>
+                                <li>
+                                    <em>商品总价</em>
+                                    <strong class="price" id="price-1"></strong>
+                                </li>
+                                <li>
+                                    <em>运费</em>
+                                    <strong class="price" id="price-2"></strong>
+                                </li>
+                                <li class="shopping-total-price">
+                                    <em>总计</em>
+                                    <strong class="price" id="price-3"></strong>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <button class="btn btn-default" type="submit" id="continue">继续购物 <i class="fa fa-shopping-cart"></i></button>
+                    <button class="btn btn-primary" type="button" id="btn-checkout">去结算 <i class="fa fa-check"></i></button>
+                </div>
+            </div>
+            <!-- END CONTENT -->
+        </div>
+        <!-- END SIDEBAR & CONTENT -->
+
+    </div>
+</div>
+
+<!-- BEGIN PRE-FOOTER -->
+<?php echo $this->view->getPartial('layouts/_footer') ?>
+<!-- END FOOTER -->
+
+<!-- 加入layer实现简易弹窗 -->
+<script src="/shop/assets/static/js/layer_mobile/layer.js"></script>
+<script type="text/javascript">
+    var postData = [];
+    var data_common = [];
+    var data_product = [];
+    var total_price = 0;
+    jQuery(document).ready(function() {
+        $.ajax({
+            type:"post",
+            url:"/order/list",
+            async:true,
+            dataType:'json',
+            data:{
+                'aaa': '1'
+            },
+            success:function(result) {
+                $("#table-buycar tbody").html('');
+                // 判断购物车是否为空
+                if (result.auth.length == 0) {
+                    window.location.href = '/buycar/index_null';
+                }
+                // 不为空，则开始填充数据
+                var htmls = '';
+                for(var i in result.auth) {
+                    htmls +=
+                        '<tr>'+
+                        '<td class="goods-page-image">'+
+                        '<a href="/product/detail/'+result.auth[i].product.productid+'"><img src="'+window.localStorage.getItem('file_prex')+result.auth[i].product.picture+'" alt="'+result.auth[i].product.productname+'"></a>'+
+                        '</td>'+
+                        '<td class="goods-page-description">'+
+                        '<h3><a href="/product/detail/'+result.auth[i].product.productid+'">'+result.auth[i].product_name+''+
+                        // '<p><strong>Item 1</strong> - Color: Green; Size: S</p>'+
+                        // '<em>More info is here</em>'+
+                        '</td>'+
+                        '<td class="goods-page-color">'+
+                        result.auth[i].color_name+
+                        '</td>'+
+                        '<td class="goods-page-size">'+
+                        result.auth[i].size_name+
+                        '</td>'+
+                        '<td class="goods-page-quantity">'+
+                        '<div class="product-quantity">'+
+                        '<input id="product-quantity" type="text" value="'+result.auth[i].number+'" readonly class="form-control input-sm">'+
+                        '</div>'+
+                        '</td>'+
+                        '<td class="goods-page-price">'+
+                        '<strong><span>$</span>'+result.auth[i].price+'</strong>'+
+                        '</td>'+
+                        '<td class="goods-page-total">'+
+                        '<strong><span>$</span><em>'+result.auth[i].total_price+'</em></strong>'+
+                        '</td>'+
+                        '<td class="del-goods-col">'+
+                        '<a class="del-goods" onclick="delgoods(this, '+result.auth[i].id+');">&nbsp;</a>'+
+                        '</td>'+
+                        '</tr>';
+
+                    var temp_data = {};
+                    temp_data['id'] = result.auth[i].id;
+                    temp_data['product_id'] = result.auth[i].product_id;
+                    temp_data['product_name'] = result.auth[i].product_name;
+                    temp_data['picture'] =  result.auth[i].picture;
+                    temp_data['color_id'] =  result.auth[i].color_id;
+                    temp_data['color_name'] =  result.auth[i].color_name;
+                    temp_data['size_id'] =  result.auth[i].size_id;
+                    temp_data['size_name'] =  result.auth[i].size_name;
+                    temp_data['number'] =  result.auth[i].number;
+                    temp_data['price'] =  result.auth[i].price;
+                    temp_data['total_price'] =  result.auth[i].total_price;
+                    postData.push(temp_data);
+                    total_price = result.auth[0].totalprice;
+                }
+
+                // 开始填充
+                // 默认运费为0
+                var freight_price = Number(0).toFixed(2);
+                var final_price = Number(Number(total_price) + Number(freight_price)).toFixed(2);
+                $("#table-buycar tbody").html(htmls);
+                $("#price-1").html('<span>$</span><span id="total_price">'+total_price+'</span>');
+                $("#price-2").html('<span>$</span><span id="freight">'+freight_price+'</span>');
+                $("#price-3").html('<span>$</span><span id="final_price">'+final_price+'</span>');
+            }
+        });
+    });
+</script>
+<!-- END PAGE LEVEL JAVASCRIPTS -->
+</body>
+<!-- END BODY -->
+</html>

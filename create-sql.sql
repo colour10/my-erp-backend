@@ -652,7 +652,7 @@ CREATE TABLE `tb_product_search` (
   `realprice` decimal(16,2) DEFAULT NULL COMMENT '折扣价',
   `companyid` int(11) DEFAULT NULL COMMENT '公司id',
   UNIQUE KEY `companyid_2` (`companyid`,`productid`),
-  KEY `id` (`id`),
+  PRIMARY KEY `id` (`id`),
   KEY `companyid` (`companyid`,`brandgroupid`,`childbrand`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
