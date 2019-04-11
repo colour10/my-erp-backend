@@ -43,9 +43,14 @@ class BaseModel extends \Phalcon\Mvc\Model {
         $language_columns = $this->getLanguageColumns();
 
         //var_dump( $this->validate_language);
+        $language = $this->validate_language;
+        if($language=="") {
+            $language = $this->getLanguage();
+            $language = $language['lang'];
+        }
 
         if(in_array($name, $language_columns)) {
-            return sprintf("%s_%s", addslashes($name), $this->validate_language);
+            return sprintf("%s_%s", addslashes($name), $language);
         }   
         else {
             return $name;   

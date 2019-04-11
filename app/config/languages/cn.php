@@ -249,7 +249,7 @@ return array(
     "xuhao" => "序号",
     "neirong" => "内容",
     "yanseseban" => "颜色色板",
-    "asabianhao" => "ASA编号",
+    "asabianhao" => "颜色编码",
     "yansefenlei" => "颜色分类",
     "guojiamingcheng" => "国家名称",
     "guojiadaima" => "国家代码",
@@ -457,13 +457,13 @@ return array(
     "juese" => "角色",
     "qingkong" => "清空",
     "chaxunjieguo" => "查询结果",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
+    "nicheng" => "昵称",
+    "tuichu" => "退出",
+    "pinleishuxing" => "品类属性",
+    "xiangshang" => "向上",
+    "xiangxia" => "向下",
+    "alipay" => "支付宝",
+    "shangpinshuxing" => "商品属性",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
     "yingyezhizhaohao" => "营业执照号",
@@ -676,5 +676,14 @@ return array(
     "list_warehouserole" => array(
         "1" => "管理员",
         "2" => "销售"
+    ),
+
+    "list_suppliertype" => array(
+        "0" => "供货商",
+        "1" => "报关行",
+        "2" => "供应商",
+        "3" => "承运人",
+        "4" => "客户",
+        "5" => "品牌商"
     ),
 );

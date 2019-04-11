@@ -127,7 +127,7 @@ class AdminController extends BaseController
 	}
 
 	function deleteAction() {
-	    $this->doDelete();
+	    return $this->doDelete();
 	}
 
 	function addAction() {
@@ -135,7 +135,7 @@ class AdminController extends BaseController
             $this->doAdd();
         }
 	    catch(\Exception $e) {
-            echo $this->error([$this->language['operate_fail']]);
+            echo $this->error($e->getMessage());
         }
 	}
 
@@ -144,10 +144,12 @@ class AdminController extends BaseController
 	        //更新数据库
 	        $row = $this->getModelObject();
 
+            $this->before_add();
+
 	        $fields = $this->getAttributes(); 
 	        
 	        foreach($fields as $name) {
-	            if(isset($_POST[$name]) && !preg_match("#^sys_#", $name)) {
+	            if(isset($_POST[$name])) {
 	                $row->$name = $_POST[$name];
 	            }
 	        }
@@ -166,8 +168,8 @@ class AdminController extends BaseController
             }
             echo json_encode($result);
         }
-
     }
+
 
     function doEdit()
     {
@@ -177,9 +179,11 @@ class AdminController extends BaseController
             $row = $findFirst->invokeArgs(null, array($this->getCondition()));
 
             if ($row != false) {
+                $this->before_edit($row);
+
                 $fields = $this->getAttributes();
                 foreach ($fields as $name) {
-                    if (isset($_POST[$name]) && !preg_match("#^sys_#", $name)) {
+                    if (isset($_POST[$name])) {
                         $row->$name = $_POST[$name];
                     }
                 }
@@ -211,14 +215,23 @@ class AdminController extends BaseController
 
 	    $result = array("code"=>200, "messages" => array());
 	    if($row!=false) {
-	        if ($row->delete() == false) {
-	            $messages = $row->getMessages();
-
-                foreach ($messages as $message) {
-                    $result["messages"][] = $message->getMessage();
+            try {
+    	        if ($row->delete() == false) {
+    	            return $this->error($row);
                 }
             }
+            catch(\Exception $e) {
+                return $this->error($e->getMessage());
+            }
         }
-        echo json_encode($result);
+        return $this->success();
+    }
+
+    function before_edit($row) {
+
+    }
+
+    function before_add() {
+
     }
 }

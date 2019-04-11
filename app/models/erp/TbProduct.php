@@ -28,6 +28,46 @@ class TbProduct extends BaseCompanyModel
             ]
         );
 
+        $this->hasMany(
+            "id",
+            "\Asa\Erp\TbProductSizeProperty",
+            "productid",
+            [
+                'alias' => 'productSizeProperty',
+                'foreignKey' => [
+                    // 关联字段存在性验证
+                    'action' => Relation::ACTION_CASCADE
+                ],
+            ]
+        );
+
+        $this->hasMany(
+            "id",
+            "\Asa\Erp\TbProductstock",
+            "productid",
+            [
+                'alias' => 'productstock',
+                'foreignKey' => [
+                    // 关联字段存在性验证
+                    'action' => Relation::ACTION_RESTRICT,
+                    "message" => "/1003/商品信息存在库存，不能删除。/"
+                ],
+            ]
+        );
+
+        $this->hasMany(
+            "id",
+            "\Asa\Erp\TbOrderdetails",
+            "productid",
+            [
+                'alias' => 'orderdetails',
+                'foreignKey' => [
+                    // 关联字段存在性验证
+                    'action' => Relation::ACTION_RESTRICT,
+                    "message" => "/1003/商品信息存在订单记录，不能删除。/"
+                ],
+            ]
+        );
     }
 
     public function validation() {
@@ -165,5 +205,50 @@ class TbProduct extends BaseCompanyModel
         }
 
         return $product;
+    }
+
+    /**
+     * 获取同款多色的颜色分组数组
+     * @return [type] [description]
+     */
+    function getColorGroupArray() {
+        $result = [];
+
+        if($this->product_group=='') {
+            return $result;
+        }
+
+        $array = explode('|', $this->product_group);
+        foreach ($array as $key => $value) {
+            # code...
+            $temp = explode(",", $value);
+            $result[$temp[0]] = $temp[1];
+        }
+        return $result;
+    }
+
+    /**
+     * 获取同款多色的各个产品的产品数据
+     * @return [type] [description]
+     */
+    function getColorGroupList() {
+        $ids = array_keys($this->getColorGroupArray());
+        if(count($ids)>0) {
+            return static::findByIdString($ids,'id');
+        }
+        else {
+            return [];
+        }
+    }
+
+    /**
+     * 获取商品的图片列表
+     * @return [type] [description]
+     */
+    function getPictureList() {
+        return TbPicture::find([
+            sprintf("productid=%d", $this->id),
+            "order" => 'id desc'
+        ]);
     }
 }

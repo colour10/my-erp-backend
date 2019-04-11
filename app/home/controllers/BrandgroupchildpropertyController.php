@@ -3,21 +3,21 @@ namespace Multiple\Home\Controllers;
 
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
-use Asa\Erp\TbSizecontent;
+use Asa\Erp\TbBrandgroupchildProperty;
 
 /**
- * 商品尺码明细信息表
+ * 基础资料，ASA颜色模板表
  */
-class SizecontentController extends ZadminController {
+class BrandgroupchildpropertyController extends ZadminController {
     public function initialize() {
 	    parent::initialize();
 
-	    $this->setModelName('Asa\\Erp\\TbSizecontent');
+	    $this->setModelName('Asa\\Erp\\TbBrandgroupchildProperty');
     }
 
     function pageAction() {
-        $result = TbSizecontent::find([
-            sprintf("topid=%d", $_POST['topid']),
+        $result = TbBrandgroupchildProperty::find([
+            sprintf("brandgroupchildid=%d", $_POST['brandgroupchildid']),
             "order" => "displayindex asc"
         ]);
 
@@ -25,15 +25,15 @@ class SizecontentController extends ZadminController {
     }
 
     function before_add() {
-        $max_displayindex = TbSizecontent::maximum([
-            sprintf("topid=%d", $_POST['topid']),
+        $max_displayindex = TbBrandgroupchildProperty::maximum([
+            sprintf("brandgroupchildid=%d", $_POST['brandgroupchildid']),
             "column" => "displayindex"
         ]);
         $_POST['displayindex'] = $max_displayindex+1;
     }
 
     function upAction() {
-        $properry = TbSizecontent::findFirstById($_POST['id']);
+        $properry = TbBrandgroupchildProperty::findFirstById($_POST['id']);
         if($properry!=false) {
             $properry->doUp();
         }
@@ -41,7 +41,7 @@ class SizecontentController extends ZadminController {
     }
 
     function downAction() {
-        $properry = TbSizecontent::findFirstById($_POST['id']);
+        $properry = TbBrandgroupchildProperty::findFirstById($_POST['id']);
         if($properry!=false) {
             $properry->doDown();
         }

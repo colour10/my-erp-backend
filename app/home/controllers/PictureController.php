@@ -5,7 +5,7 @@ use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
 use Asa\Erp\TbPicture;
 
-class PictureController extends ZadminController {    
+class PictureController extends CadminController {    
     public function initialize() {
 	    parent::initialize();
 	    
