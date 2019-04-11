@@ -19,6 +19,7 @@ class WarehousingController extends BaseController {
         echo $this->success($result->toArray());
     }
 
+
     /**
      * 订单保存
      */

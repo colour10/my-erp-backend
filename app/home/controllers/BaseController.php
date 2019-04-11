@@ -24,6 +24,8 @@ class BaseController extends Controller
         }
     }
 
+    function indexAction(){}
+
     /**
      * 返回正确的json信息
      * @param string $code 状态码，默认是200

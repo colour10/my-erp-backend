@@ -196,8 +196,7 @@ class Util {
     }
 
     public static function getAuthResourse() {
-        return [
-            ["login","logout"],
+        return [           
             ["user","modifypassword"],
             ["warehouseuser","page"],
             ["user","page"],
@@ -244,6 +243,7 @@ class Util {
             ["product","search"],
             ['aliases','page'],
             ['series','page'],
+            ['product','index'],
             ['series2','page']
         ];
     }
@@ -252,6 +252,7 @@ class Util {
         return [
             ["index", 'index'],
             ['login', 'login'],
+            ["login","logout"],
             ['login', 'checklogin'],
             ['common', 'systemlanguage']
         ];

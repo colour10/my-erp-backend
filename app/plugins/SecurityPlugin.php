@@ -26,6 +26,12 @@ class SecurityPlugin extends Plugin
         $controller = $dispatcher->getControllerName();
         $action = $dispatcher->getActionName();
 
+        //执行重定向
+        if($action=='index' && $controller!='index') {
+            header("location:/#/".$controller);
+            return false;
+        }
+
         // Obtain the ACL list
         $acl = $this->getDI()->get("acl");
 

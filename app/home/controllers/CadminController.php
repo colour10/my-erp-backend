@@ -12,10 +12,7 @@ class CadminController extends AdminController {
     public function initialize() {
 	    parent::initialize();
     }
-    
-    function indexAction() {
-    }
-    
+        
     function doAdd() {
         //echo $this->companyid;exit;
         if($this->companyid<=0) {
