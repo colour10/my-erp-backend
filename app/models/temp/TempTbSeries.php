@@ -5,22 +5,22 @@ namespace Asa\Models\Temp;
 use Asa\Erp\BaseModel;
 
 /**
- * 基础资料，品牌表
+ * 基础资料，系列表
  */
-class TempTbBrand extends BaseModel
+class TempTbSeries extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('temp_tb_brand');
+        $this->setSource('temp_tb_series');
 
-        // 品牌表-国家表，一对多反向
+        // 系列-品牌表，一对多反向
         $this->belongsTo(
-            'oldcountryid',
-            '\Asa\Models\Temp\TempTbCountry',
+            'oldbrandid',
+            '\Asa\Models\Temp\TempTbBrand',
             'oldid',
             [
-                'alias' => 'country'
+                'alias' => 'brand'
             ]
         );
     }

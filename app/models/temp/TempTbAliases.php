@@ -2,53 +2,26 @@
 
 namespace Asa\Models\Temp;
 
-use Phalcon\Validation;
 use Asa\Erp\BaseModel;
 
 /**
- * 基础资料，品牌表
+ * 基础资料，别名表
  */
-class TempTbBrand extends BaseModel
+class TempTbAliases extends BaseModel
 {
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('temp_tb_brand');
+        $this->setSource('temp_tb_aliases');
 
-        // 品牌表-国家表，一对多反向
+        // 别名表-品牌表，一对多反向
         $this->belongsTo(
-            'oldcountryid',
-            '\Asa\Models\Temp\TempTbCountry',
+            'oldbrandid',
+            '\Asa\Models\Temp\TempTbBrand',
             'oldid',
             [
-                'alias' => 'country'
+                'alias' => 'brand'
             ]
         );
-    }
-
-    public function validation() {
-        $validator = new Validation();
-
-//        $validator->add(
-//            "age",
-//            new Between(
-//                [
-//                    "minimum" => 18,
-//                    "maximum" => 60,
-//                    "message" => "年龄必须是18~60岁",
-//                ]
-//            )
-//        );
-//
-//        $validator->add(
-//            'name',
-//            new Uniqueness(
-//                [
-//                    'message' => '姓名不能重复',
-//                ]
-//            )
-//        );
-
-        return $this->validate($validator);
     }
 }
