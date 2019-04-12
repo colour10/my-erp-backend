@@ -243,7 +243,7 @@ class Util {
             ["product","search"],
             ['aliases','page'],
             ['series','page'],
-            ['product','index'],
+            ['warehouse','userlist'],
             ['series2','page']
         ];
     }

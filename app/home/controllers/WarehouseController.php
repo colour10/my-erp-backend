@@ -15,6 +15,10 @@ class WarehouseController extends CadminController {
 	    $this->setModelName('Asa\\Erp\\TbWarehouse');
     }
 
+    /**
+     * 获得仓库的销售员的人员列表
+     * @return [type] [description]
+     */
     function userlistAction() {
         $result = TbWarehouseUser::find(
             sprintf("userid=%d and warehouseroleid=2", $this->currentUser)

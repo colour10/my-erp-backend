@@ -196,8 +196,7 @@ class AdminController extends BaseController
                     }
                 }
                 
-                echo json_encode($result);
-                
+                echo json_encode($result);                
     	    }
     	    else {
     	        $result = array("code"=>200, "messages" => array("数据不存在"));
@@ -215,8 +214,10 @@ class AdminController extends BaseController
 	    $result = array("code"=>200, "messages" => array());
 	    if($row!=false) {
             try {
-    	        if ($row->delete() == false) {
-    	            return $this->error($row);
+                $this->before_delete($row);
+
+                if ($row->delete() == false) {
+                    return $this->error($row);
                 }
             }
             catch(\Exception $e) {
@@ -231,6 +232,14 @@ class AdminController extends BaseController
     }
 
     function before_add() {
+
+    }
+
+    function before_delete($row) {
+
+    }
+
+    function before_page() {
 
     }
 }
