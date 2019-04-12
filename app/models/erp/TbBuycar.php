@@ -58,7 +58,7 @@ class TbBuycar extends BaseModel
         // 与产品表关联，一对多反向
         $this->belongsTo(
             "product_id",
-            "\Asa\Erp\TbProduct",
+            "\Asa\Erp\TbProductSearch",
             "id",
             [
                 'alias' => 'product',

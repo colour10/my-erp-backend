@@ -27,6 +27,8 @@ try {
         array(
             "Asa\Erp" => APP_PATH . '/app/models/erp',
             "Asa\Erp\Behavior" => APP_PATH . '/app/models/erp/behavior',
+            // 新增测试临时表模型
+            "Asa\Models\Temp" => APP_PATH . '/app/models/temp',
         )
     );
     $loader->registerDirs(
