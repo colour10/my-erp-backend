@@ -2,6 +2,7 @@
 
 namespace Multiple\Home\Controllers;
 
+use Phalcon\Paginator\Adapter\Model as PaginatorModel;
 use Asa\Erp\TbDepartment;
 use Asa\Erp\TbUser;
 use Phalcon\Mvc\Controller;
@@ -116,8 +117,35 @@ class AdminController extends BaseController
 	    $result = $findFirst->invokeArgs(null, array(
 	        $this->getSearchCondition()
 	    ));
+
+        $page = $this->request->getPost("page", "int", 1);
+        $pageSize = $this->request->getPost("pageSize", "int", 2);
+
+        $paginator = new PaginatorModel(
+            [
+                "data"  => $result,
+                "limit" => $pageSize,
+                "page"  => $page,
+            ]
+        );
+
+        // Get the paginated results
+        $pageObject = $paginator->getPaginate();
         
-         echo $this->reportJson(array("data"=>$result->toArray()),200,[]);
+        $data = [];
+        foreach($pageObject->items as $row) {
+            $data[] = $row->toArray();
+        }
+
+        $pageinfo = [
+            //"previous"      => $pageObject->previous,
+            "current"       => $pageObject->current,
+            //"totalPages"    => $pageObject->total_pages,
+            //"next"          => $pageObject->next,
+            "total"    => $pageObject->total_items,
+            "pageSize"     => $pageSize
+        ];
+        echo $this->reportJson(array("data"=>$data, "pagination" => $pageinfo),200,[]);
 	}
 	
 	function editAction() {
