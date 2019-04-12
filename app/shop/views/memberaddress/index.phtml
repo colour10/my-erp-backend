@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+
+<!-- Head BEGIN -->
+<head>
+    <meta charset="utf-8">
+    <title>地址管理</title>
+
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <meta content="Metronic Shop UI description" name="description">
+    <meta content="Metronic Shop UI keywords" name="keywords">
+    <meta content="keenthemes" name="author">
+
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <!-- Global styles START -->
+    <link href="/shop/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/shop/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Global styles END -->
+
+    <!-- Page level plugin styles START -->
+    <link href="/shop/assets/pages/css/animate.css" rel="stylesheet">
+    <link href="/shop/assets/plugins/fancybox/source/jquery.fancybox.css" rel="stylesheet">
+    <link href="/shop/assets/plugins/owl.carousel/assets/owl.carousel.css" rel="stylesheet">
+    <!-- Page level plugin styles END -->
+
+    <!-- Theme styles START -->
+    <link href="/shop/assets/pages/css/components.css" rel="stylesheet">
+    <link href="/shop/assets/pages/css/slider.css" rel="stylesheet">
+    <link href="/shop/assets/pages/css/style-shop.css" rel="stylesheet" type="text/css">
+    <link href="/shop/assets/corporate/css/style.css" rel="stylesheet">
+    <link href="/shop/assets/corporate/css/style-responsive.css" rel="stylesheet">
+    <link href="/shop/assets/corporate/css/themes/red.css" rel="stylesheet" id="style-color">
+    <link href="/shop/assets/corporate/css/custom.css" rel="stylesheet">
+    <!-- Theme styles END -->
+</head>
+<!-- Head END -->
+
+<!-- Body BEGIN -->
+<body class="corporate">
+
+<?php echo $this->view->getPartial('layouts/_header') ?>
+
+<div class="main">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="/">首页</a></li>
+            <li class="active">地址管理</li>
+        </ul>
+        <!-- BEGIN SIDEBAR & CONTENT -->
+        <div class="row margin-bottom-40">
+
+            <?php echo $this->view->getPartial('layouts/_member_sidebar') ?>
+
+            <!-- BEGIN CONTENT -->
+            <div class="col-md-9 col-sm-9">
+                <h1 class="h1-title"><span class="pull-right"><a href="/member/addressadd">添加新地址</a></span>地址管理</h1>
+                <div class="content-form-page">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table id="table-address" class="table table-bordered table-hover" style="width:100%">
+                                <tr>
+                                    <th>收货人</th>
+                                    <th>详细地址</th>
+                                    <th>联系方式</th>
+                                    <th>操作</th>
+                                    <th>设置默认</th>
+                                </tr>
+                                <?php
+                                    if (count($addresses) > 0) {
+                                        foreach ($addresses as $address) {
+                                ?>
+                                <tr>
+                                    <td><?php echo $address->name; ?></td>
+                                    <td><?php echo $address->address; ?></td>
+                                    <td><?php echo $address->tel; ?></td>
+                                    <td>
+                                        <a class="t-change" href="/member/addressedit/<?php echo $address->id; ?>" target="_self">修改</a>
+                                        <span class="t-line">|</span>
+                                        <a onclick="address_del(<?php echo $address->id; ?>);return false;"><span class="t-delete">删除</span></a></td>
+                                    <td>
+                                        <?php if ($address->is_default) { ?>
+                                            <span class="t-default">默认地址</span>
+                                        <?php } else { ?>
+                                            <a onclick="address_set_default(<?php echo $address->id; ?>);return false;">设为默认</a>
+                                        <?php } ?>
+
+                                    </td>
+                                </tr>
+                                <?php } ?>
+                                <?php } else { ?>
+                                <tr>
+                                    <td colspan="5">您没有保存任何收货地址</td>
+                                </tr>
+                                <?php } ?>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END CONTENT -->
+        </div>
+        <!-- END SIDEBAR & CONTENT -->
+    </div>
+</div>
+
+<?php echo $this->view->getPartial('layouts/_footer'); ?>
+
+</body>
+<!-- END BODY -->
+</html>
