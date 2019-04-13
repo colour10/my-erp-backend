@@ -24,10 +24,10 @@
             <!-- BEGIN TOP BAR MENU -->
             <div class="col-md-6 col-sm-6 additional-nav">
                 <ul class="list-unstyled list-inline pull-right">
-                	<li><a href="shop-account.html"><?php if($this->session->get('member')){ echo '欢迎 '.$this->session->get('member')['login_name'];} ?></a></li>
-                    <li><a href="shop-account.html">个人资料</a></li>
-                    <li><a href="/buycar/index">购物车</a></li>
-                     <li><a href="/order/myorder">我的订单</a></li>
+                	<li><?php if($this->session->get('member')){ echo '欢迎 '.$this->session->get('member')['login_name'];} ?></li>
+                    <li><a href="/member">个人资料</a></li>
+                    <li><a href="/buycar">购物车</a></li>
+                     <li><a href="/order/list">我的订单</a></li>
                     <li <?php if($this->session->get('member')){ echo "style='display:none;'";} ?>><a href="/login/index">登录</a></li>
                     <li <?php if(!$this->session->get('member')){ echo "style='display:none;'";} ?>><a href="/login/logout">退出</a></li>
                 </ul>
@@ -60,11 +60,11 @@
                     	<?php if ($this->buycar){ ?>
                         	<?php foreach ($this->buycar as $k => $v) { ?>
                         		<li>
-                        			<a href="/"><img src="/shop/assets/pages/img/cart-img.jpg" alt="Rolex Classic Watch" width="37" height="34"></a>
+                        			<a href="/"><img src="<?php echo $this->file_prex.$v['product']['picture']; ?>" alt="<?php echo $v['product_name'] ?>" width="37" height="34"></a>
 		                            <span class="cart-content-count">x <?php echo $v['number']; ?></span>
 		                            <strong><a href="/"><?php echo $v['product']['productname']; ?></a></strong>
-		                            <em>$<?php echo sprintf('%.2f', $v['product']['realprice']); ?></em>
-		                            <a href="javascript:void(0);" class="del-goods">&nbsp;</a>
+		                            <em>$<?php echo sprintf('%.2f', $v['price']); ?></em>
+		                            <a onclick="delheadergoods(this, <?php echo $v['id']; ?>);" class="del-goods">&nbsp;</a>
                         		</li>
                         	<?php } ?>
                     	<?php }else{ ?>

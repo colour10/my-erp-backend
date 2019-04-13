@@ -4,6 +4,11 @@ namespace Multiple\Shop\Controllers;
 
 use Phalcon\Mvc\Controller;
 
+/**
+ * 错误提示类
+ * Class ErrorController
+ * @package Multiple\Shop\Controllers
+ */
 class ErrorController extends Controller
 {
     /**

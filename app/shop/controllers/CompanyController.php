@@ -2,12 +2,12 @@
 
 namespace Multiple\Shop\Controllers;
 
-use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\View;
 use Asa\Erp\TbCompany;
 
 /**
- * 公司域名表
+ * 公司操作类
+ * Class CompanyController
+ * @package Multiple\Shop\Controllers
  */
 class CompanyController extends AdminController {
     public function initialize() {

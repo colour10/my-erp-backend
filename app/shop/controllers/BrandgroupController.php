@@ -5,6 +5,11 @@ use Asa\Erp\TbProductSearch;
 use Asa\Erp\TbBrandgroup;
 use Phalcon\Paginator\Adapter\Model as PaginatorModel;
 
+/**
+ * 品类操作类
+ * Class BrandgroupController
+ * @package Multiple\Shop\Controllers
+ */
 class BrandgroupController extends AdminController
 {
 

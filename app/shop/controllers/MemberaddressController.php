@@ -2,123 +2,255 @@
 
 namespace Multiple\Shop\Controllers;
 
-use Asa\Erp\TbProductSearch;
-use Phalcon\Paginator\Adapter\Model as PaginatorModel;
+use Asa\Erp\TbMemberAddress;
 
 /**
- * 首页控制器类
+ * 会员地址控制器类
  * Class IndexController
  * @package Multiple\Shop\Controllers
  */
-class IndexController extends AdminController
+class MemberaddressController extends AdminController
 {
     /**
-     * 首页
+     * 初始化
      */
-    public function indexAction()
+    public function initialize()
     {
-        // 逻辑
-        // 判断是否登录
-        if (!$this->session->get('member')) {
-            return $this->dispatcher->forward([
-                'controller' => 'login',
-                'action' => 'index',
-            ]);
-        }
-
-        // 最新促销，需要从当前域名绑定的公司提取资料
-        $productlist = TbProductSearch::find("companyid={$this->currentCompany}")->toArray();
-        // 分配到模板
-        $this->view->setVars([
-            'productlist' => $productlist,
-        ]);
+        $this->setModelName('Asa\\Erp\\TbMemberAddress');
     }
 
     /**
-     * 搜索
-     */
-    public function searchAction()
-    {
-        // 逻辑
-        // 判断是否登录
-        if (!$this->session->get('member')) {
-            return $this->dispatcher->forward([
-                'controller' => 'login',
-                'action' => 'index',
-            ]);
-        }
-
-        // 外部搜索内容
-        $keyword = $this->request->get('keyword', 'string', '');
-        // 分页
-        $currentPage = $this->request->getQuery("page", "int", 1);
-
-        // 取出结果
-        $productlist = TbProductSearch::find([
-            'conditions' => 'productname like :keyword: AND companyid = '.$this->currentCompany,
-            'bind' => ['keyword' => '%'.$keyword.'%'],
-        ]);
-
-        // 创建分页对象
-        $paginator = new PaginatorModel(
-            [
-                "data"  => $productlist,
-                "limit" => 10,
-                "page"  => $currentPage,
-            ]
-        );
-
-        // 展示分页
-        $page = $paginator->getPaginate();
-
-        // 分配到模板
-        $this->view->setVars([
-            'page' => $page,
-            'keyword' => $keyword,
-        ]);
-    }
-
-    /**
-     * 判断是否登录，并拿到当前用户模型
+     * 单条地址展示
      * @return false|string
      */
-    public function isloginAction()
+    public function showAction()
     {
-        // 判断是否登录，判断member
-        if ($this->session->get('member')) {
-            return $this->session->get('member');
-        } else {
-            return false;
+        // 逻辑
+        if (!$member = $this->session->get('member')) {
+            $msg = $this->getValidateMessage('model-delete-message');
+            return $this->error([$msg]);
+        }
+
+        // 参数检测
+        $params = $this->dispatcher->getParams();
+        if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
+            $msg = $this->getValidateMessage('params-invalid');
+            return $this->error([$msg]);
+        }
+        // 赋值
+        $id = $params[0];
+        $address = TbMemberAddress::findFirst("id=".$id." and member_id=".$member['id']);
+        // 判断是否存在
+        if (!$address) {
+            $msg = $this->getValidateMessage('address-doesnot-exist');
+            return $this->error([$msg]);
+        }
+        // 否则即存在，返回
+        return $this->success($address->toArray());
+    }
+
+
+    /**
+     * 地址添加
+     * @return false|string
+     */
+    public function addAction()
+    {
+        // 逻辑
+        if ($this->request->isPost() && $member = $this->session->get('member')) {
+            // 接收参数并过滤
+            $member_id = $member['id'];
+            $name = $this->request->get('username', 'string');
+            $tel = $this->request->get('mobile', 'int');
+            $address = $this->request->get('address', 'string');
+            // 非默认地址选项
+            $is_default = '0';
+            // 不能为空
+            if (!$name || !$tel || !$address) {
+                $msg = $this->getValidateMessage('fill-out-required-fields');
+                return $this->error([$msg]);
+            }
+            // 验证手机号
+            if (!preg_match("/^1[34578]\d{9}$/", $tel)) {
+                $msg = $this->getValidateMessage('mobile-invalid');
+                return $this->error([$msg]);
+            }
+            // 验证之前是否地址有重复
+            // 要求memberid、username、address三者唯一
+            $model = TbMemberAddress::findFirst("member_id = ".$member['id']." and name = '".$name."' and address = '".$address."'");
+            if ($model) {
+                $msg = $this->getValidateMessage('address-exist');
+                return $this->error([$msg]);
+            }
+            // 如果不存在，开始执行写入逻辑
+            $tbmemberaddress = new TbMemberAddress();
+            if (!$tbmemberaddress->save(compact('member_id', 'name', 'tel', 'address', 'is_default'))) {
+                return $this->error($tbmemberaddress);
+            }
+            // 最终成功
+            return $this->success();
+        }
+
+    }
+
+
+    /**
+     * 地址编辑
+     * @return false|string
+     */
+    public function editAction()
+    {
+        // 逻辑
+        if ($this->request->isPost() && $member = $this->session->get('member')) {
+            // 参数检测
+            $params = $this->dispatcher->getParams();
+            if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
+                $msg = $this->getValidateMessage('params-invalid');
+                return $this->error([$msg]);
+            }
+            // 赋值
+            $id = $params[0];
+            $name = $this->request->get('username', 'string');
+            $tel = $this->request->get('mobile', 'int');
+            $address = $this->request->get('address', 'string');
+
+            // 不能为空
+            if (!$name || !$tel || !$address) {
+                $msg = $this->getValidateMessage('fill-out-required-fields');
+                return $this->error([$msg]);
+            }
+            // 验证手机号
+            if (!preg_match("/^1[34578]\d{9}$/", $tel)) {
+                $msg = $this->getValidateMessage('mobile-invalid');
+                return $this->error([$msg]);
+            }
+
+            // 判断是否存在
+            $model = TbMemberAddress::findFirst("id=".$id." and member_id=".$member['id']);
+            // 如果不存在
+            if (!$model) {
+                $msg = $this->getValidateMessage('address-doesnot-exist');
+                return $this->error([$msg]);
+            }
+
+            // 但是修改的时候不能和已经保存的其他地址重复
+            $exists = TbMemberAddress::findFirst("id!=".$id." and member_id=".$member['id']." and name = '".$name."' and tel = '".$tel."' and address = '".$address."'");
+            if ($exists) {
+                $msg = $this->getValidateMessage('address-exist');
+                return $this->error([$msg]);
+            }
+
+            // 开始修改
+            if (!$model->save(compact('name', 'tel', 'address'))) {
+                return $this->error($model);
+            }
+
+            // 最终成功
+            return $this->success();
+        }
+        // 赋值
+        $address = $this->showAction();
+        $address_arr = json_decode($address, true);
+        $this->view->setVars([
+            'address' => $address_arr,
+        ]);
+    }
+
+
+    /**
+     * 地址删除
+     * @return false|string
+     */
+    public function delAction()
+    {
+        // 逻辑
+        if ($this->request->isPost()) {
+            // 必须有member
+            if ($member = $this->session->get('member')) {
+                // 参数检测
+                $params = $this->dispatcher->getParams();
+                if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
+                    $msg = $this->getValidateMessage('params-invalid');
+                    return $this->error([$msg]);
+                }
+                // 赋值
+                $id = $params[0];
+                // 查找是否存在该地址
+                $address = TbMemberAddress::findFirst("id=".$id." and member_id=".$member['id']);
+                // 如果不存在
+                if (!$address) {
+                    $msg = $this->getValidateMessage('address-doesnot-exist');
+                    return $this->error([$msg]);
+                }
+                // 执行删除
+                if (!$address->delete()) {
+                    $msg = $this->getValidateMessage('address', 'db', 'delete-failed');
+                    return $this->error([$msg]);
+                }
+                // 最终成功
+                return $this->success();
+            }
         }
     }
 
-    /*
-     * 测试页面
+    /**
+     * 设置默认地址
+     * @return false|string
      */
-    public function testAction()
+    public function setdefaultAction()
     {
+        // 逻辑
+        if ($this->request->isPost()) {
+            // 必须有member
+            if ($member = $this->session->get('member')) {
+                // 参数检测
+                $params = $this->dispatcher->getParams();
+                if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
+                    $msg = $this->getValidateMessage('params-invalid');
+                    return $this->error([$msg]);
+                }
+                // 赋值
+                $id = $params[0];
+                // 查找是否存在该地址
+                $current_address = TbMemberAddress::findFirst("id=".$id." and member_id=".$member['id']);
+                // 如果不存在
+                if (!$current_address) {
+                    $msg = $this->getValidateMessage('address-doesnot-exist');
+                    return $this->error([$msg]);
+                }
+                // 执行默认写入操作
+                // 但同时要把其他的地址设置为非默认
+                // 采用事务处理机制
+                $this->db->begin();
 
+                // 逻辑
+                $addresses = TbMemberAddress::find("member_id=".$member['id']);
+                foreach ($addresses as $address) {
+                    // 非默认
+                    $is_default = '0';
+                    if (!$address->save(compact('is_default'))) {
+                        // 回滚
+                        $this->db->rollback();
+                        $msg = $this->getValidateMessage('address', 'db', 'save-failed');
+                        return $this->error([$msg]);
+                    }
+                }
+                // 把当前地址改为默认
+                $is_default = '1';
+                if (!$current_address->save(compact('is_default'))) {
+                    // 回滚
+                    $this->db->rollback();
+                    $msg = $this->getValidateMessage('address', 'db', 'save-failed');
+                    return $this->error([$msg]);
+                }
+
+                // 提交事务
+                $this->db->commit();
+
+                // 最终成功
+                return $this->success();
+            }
+        }
     }
 
-    // /**
-    //  * 判断公司是否绑定了当前域名，接口，js当中用的
-    //  */
-    // public function checkhostAction()
-    // {
-    //     // 逻辑
-    //     $params = $this->dispatcher->getParams();
-    //     if (!$params) {
-    //         exit('params error');
-    //     }
-    //     // 赋值
-    //     $host = $params[0];
-    //     // 开始去数据库查找
-    //     $result = TbCompanyhost::findFirst("url = '$host'");
-    //     // 返回
-    //     if ($result) {
-    //         return json_encode($result);
-    //     } else {
-    //         return false;
-    //     }
-    // }
 }

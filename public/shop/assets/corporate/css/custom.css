@@ -22,3 +22,135 @@
 .price-availability-block .availability {
     margin-top:16px;
 }
+.price-availability-block .price strong {
+    font-size: 35px;
+}
+.del-goods {
+    cursor: pointer;
+}
+.goods-page-price strong em, .goods-page-total strong em, .checkout-price strong em, .checkout-total strong em {
+    font-style: normal;
+}
+.footer .text-left, .footer .text-right {
+    text-align:center;
+}
+.paymethod label {
+    cursor: pointer;
+}
+#paymethod2 {
+    margin-left:0.5em;
+}
+.product-number {
+    font-size:21px;
+}
+.h1-title, .main h1 {
+    font-size: 2em;
+    margin-top: 0;
+}
+.h1-title span {
+    font-size: 0.5em;
+    margin-top: 1em;
+}
+#table-address a {
+    cursor: pointer;
+}
+#table-address th {
+    background: #ebecf0;
+}
+table .t-default {
+    display: block;
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border: 1px solid #ff5000;
+    border-radius: 3px;
+    background: #ffd6cc;
+    color: #f30;
+}
+.label-address {
+    margin-bottom:0.8em;
+    cursor: pointer;
+}
+.label-address input {
+    vertical-align: middle;
+}
+.label-address input[type=checkbox], .label-address input[type=radio] {
+    margin:0;
+}
+
+/* 订单列表 Start */
+.margin10 {
+    margin:10px 0;
+}
+
+.border {
+    border: 1px solid #ececec;
+}
+
+.order-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    color: #3c3c3c;
+    table-layout: fixed;
+}
+
+.order-table th, .order-table td {
+    text-align: center;
+}
+
+.order-table a {
+    color: #3c3c3c;
+    text-decoration: none;
+    word-break: break-all
+}
+
+.order-table p {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    line-height: 1
+}
+
+.order-table td,.order-table th {
+    padding-top: 10px;
+    padding-bottom: 10px
+}
+
+.order-table th {
+    font-weight: 400
+}
+
+.order-table td {
+    vertical-align: middle;
+    font-size:1.1em;
+}
+.order-table-title {
+    background: #f1f1f1;
+}
+.w80 {
+    width:80px;
+    height:auto;
+}
+.text-left {
+    text-align: left!important;
+}
+.product-name {
+    margin-left:0.2em;
+}
+.font-normal {
+    font-style: normal;
+}
+button {
+    cursor: pointer;
+}
+/* 订单列表 End */
+
+@media (min-width:768px) {
+    .footer .text-left {
+        text-align: left;
+    }
+    .footer .text-right {
+        text-align: right;
+    }
+}

@@ -16,6 +16,7 @@
 
     <meta content="Metronic Shop UI description" name="description">
     <meta content="Metronic Shop UI keywords" name="keywords">
+    <meta content="keenthemes" name="author">
 
     <!-- Global styles START -->
     <link href="/shop/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
@@ -37,7 +38,6 @@
     <link href="/shop/assets/corporate/css/style-responsive.css" rel="stylesheet">
     <link href="/shop/assets/corporate/css/themes/red.css" rel="stylesheet" id="style-color">
     <link href="/shop/assets/corporate/css/custom.css" rel="stylesheet">
-    <link href="/shop/assets/custom/templatemo-style.css" rel="stylesheet" />
     <!-- Theme styles END -->
 </head>
 <!-- Head END -->
@@ -77,7 +77,6 @@
                                 </div>
                                 <h3><a href="/product/detail/<?php echo $item->productid; ?>"><?php echo $item->productname; ?></a></h3>
                                 <div class="pi-price"><?php echo $this->currency; ?><?php echo $item->realprice; ?></div>
-                                <a href="javascript:;" class="btn btn-default add2cart">加入购物车</a>
                             </div>
                         </div>
                         <!-- PRODUCT ITEM END -->
@@ -110,10 +109,6 @@
 </div>
 
 <?php echo $this->view->getPartial('layouts/_footer'); ?>
-
-<script type="text/javascript" src="/shop/assets/custom/modernizr-2.6.2.min.js"></script>
-<script type="text/javascript" src="/shop/assets/custom/plugins.min.js"></script>
-<script type="text/javascript" src="/shop/assets/custom/main.min.js"></script>
 
 </body>
 <!-- END BODY -->
