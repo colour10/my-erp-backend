@@ -25,12 +25,7 @@ class TbUser extends BaseModel
             '\Asa\Erp\TbDepartment',
             'id',
             [
-                'alias' => 'department',
-                "foreignKey" => [
-                    // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message" => $this->getValidateMessage('notexist', 'department'),
-                ],
+                'alias' => 'department'
             ]
         );
 
@@ -40,12 +35,7 @@ class TbUser extends BaseModel
             '\Asa\Erp\TbGroup',
             'id',
             [
-                'alias' => 'group',
-                "foreignKey" => [
-                    // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message" => $this->getValidateMessage('notexist', 'group'),
-                ],
+                'alias' => 'group'
             ]
         );
 

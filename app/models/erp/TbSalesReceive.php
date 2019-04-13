@@ -3,13 +3,13 @@
 namespace Asa\Erp;
 
 use Phalcon\Validation;
-use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Validation\Validator\Regex;
 use Phalcon\Mvc\Model\Relation;
 
 /**
- * 权限-组模型
+ * 销售单收款信息表
  */
-class TbPermissionGroup extends BaseModel
+class TbSalesReceive extends BaseModel
 {
     /**
      * 初始化
@@ -17,6 +17,6 @@ class TbPermissionGroup extends BaseModel
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('tb_permission_group');
+        $this->setSource('tb_sales_receive');
     }
 }

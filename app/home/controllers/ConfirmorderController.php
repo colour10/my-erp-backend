@@ -336,7 +336,7 @@ class ConfirmorderController extends BaseController {
      * 订单提交生效以后的修改
      * @return [type] [description]
      */
-    function save($order, $form) {
+    private function save($order, $form) {
         $columns =["finalsupplierid","seasontype","property","currency","exchangerate","paydate","dd_company","apickingdate","flightno","flightdate","mblno","hblno","dispatchport","deliveryport","box_number","weight","volume","chargedweight","transcompany","invoiceno","aarrivaldate","buyerid","sellerid","transporttype","paytype"];
         // 开始更新
         foreach ($form as $k => $item) {
@@ -344,7 +344,7 @@ class ConfirmorderController extends BaseController {
             if(in_array($k, $columns)) {
                 $order->$k = $item;
             }                
-        }
+        }//        
 
         if($order->update()==false) {
             return $this->error(['updage-fail']);

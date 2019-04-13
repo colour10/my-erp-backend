@@ -11,9 +11,9 @@ return array(
     "1003" => "数据正在使用，无法删除",
     "1004" => "非法数据",//关联信息不存在
     "8000" => "不能为空",
-    "menu-1" => "用户管理",
+    "menu-1" => "组织架构",
     "menu-1-1" => "员工信息",
-    "menu-1-2" => "组信息",
+    "menu-1-2" => "权限组管理",
     "menu-1-3" => "职能信息",
     "menu-1-4" => "部门信息",
     "menu-1-4-1" => "选项1",
@@ -464,10 +464,21 @@ return array(
     "xiangxia" => "向下",
     "alipay" => "支付宝",
     "shangpinshuxing" => "商品属性",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
-    "yingyezhizhaohao" => "营业执照号",
+    "fukuanleixing" => "付款类型",
+    "jine" => "金额",
+    "tianjiashoukuan" => "添加收款",
+    "fukuanriqi" => "付款日期",
+    "yiruzhang" => "已入账",
+    "tijiaoren" => "提交人",
+    "tijiaoren" => "提交人",
+    "tijiaoren" => "提交人",
+    "tijiaoren" => "提交人",
+    "tijiaoren" => "提交人",
+    "tijiaoren" => "提交人",
+    "tijiaoren" => "提交人",
+    "tijiaoren" => "提交人",
+    "tijiaoren" => "提交人",
+    "tijiaoren" => "提交人",
 
 
     // 新增
@@ -685,5 +696,10 @@ return array(
         "3" => "承运人",
         "4" => "客户",
         "5" => "品牌商"
+    ),
+
+    "list_paymenttype" => array(
+        "1" => "定金",
+        "2" => "货款"
     ),
 );

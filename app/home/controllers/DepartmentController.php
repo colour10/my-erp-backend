@@ -18,14 +18,7 @@ class DepartmentController extends CadminController {
     
     function indexAction() {
     }
-    
-    /*
-     * 保存部门信息
-     */
-    function saveAction() {        
-        $this->doEdit();
-    }
-    
+        
     private function createNode($label, $id, $description) {
         return array(
             "label" => $label,
@@ -75,7 +68,7 @@ class DepartmentController extends CadminController {
     /**
      * 取出部门列表
      */
-    public function getlist()
+    private function getlist()
     {
         // 取出公司下面的所有部门
         $departments = TbDepartment::find([

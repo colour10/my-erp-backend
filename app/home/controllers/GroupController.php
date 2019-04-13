@@ -24,56 +24,47 @@ class GroupController extends CadminController {
      */
     public function settingAction()
     {
-        // 逻辑
-        if($this->request->isPost()) {
-            // 提取参数
-            // 判断groupid不能为空
-            if (!$this->request->get('id')) {
-                $msg = $this->getValidateMessage('groupid', 'template', 'required');
-                return $this->error([$msg]);
-            }
-            $groupid = $this->request->get('id');
-            $keys = $this->request->get('keys');
-            // 验证keys合法性
-            $pattern = '/^[1-9]+(,\d)*$/';
-            if (!preg_match($pattern, $keys)) {
-                $msg = $this->getValidateMessage('group-keys', 'template', 'invalid');
-                return $this->error([$msg]);
-            }
-            // 转为数组
-            $keys_arr = Util::char_to_array($keys);
-
-            // 开始分配权限
-            // 首先清除原来的权限分配记录(查询条件为：公司id：$auth->company,groupid:$groupid)
-            $user = $this->session->get('user');
-            $companyid = $user['companyid'];
-            $result = TbPermissionGroup::find("groupid=$groupid and companyid=$companyid");
-
-            foreach ($result as $record) {
-                // 如果存在，就删除
-                if (!$record->delete()) {
-                    $msg = $this->getValidateMessage('permission', 'db', 'delete-failed');
-                    return $this->error([$msg]);
+        // 提取参数
+        $group = TbGroup::findFirstById($_POST['groupid']);
+        if($group!=false && $group->companyid==$this->companyid) {
+            $this->db->begin();
+            foreach($group->permissionGroups as $row) {
+                if($row->delete()==false) {
+                    $this->db->rollback();
+                    throw new \Exception('/1002/权限组清除就权限失败/');
                 }
             }
 
-            // 开始分配新的权限
-            foreach ($keys_arr as $permissionid) {
-                // 开始新建权限，一定要在里面新建模型，保证插入的准确性
-                $TbPermissionGroup = new TbPermissionGroup();
-                $data = [
-                    'groupid' => $groupid,
-                    'companyid' => $companyid,
-                    'permissionid' => $permissionid
-                ];
-                if (!$TbPermissionGroup->save($data)) {
-                    $msg = $this->getValidateMessage('permission', 'db', 'add-failed');
-                    return $this->error([$msg]);
+            $keys = explode(",", $_POST['keys']);
+            foreach($keys as $permissionid) {
+                $permissionGroup = new TbPermissionGroup();
+                $permissionGroup->groupid = $group->id;
+                $permissionGroup->permissionid = (int) $permissionid;
+                if($permissionGroup->create()==false) {
+                    $this->db->rollback();
+                    throw new \Exception('/1002/权限组设置权限失败/');
                 }
             }
-            // 返回最终分配好的权限目录树
-            $group = TbGroup::findFirstById($groupid);
-            return $group->permissions();
+
+            $this->db->commit();
+            return $this->success();
+        }
+        else {
+            throw new \Exception('/1002/权限组不存在。/');
+        }
+    }
+
+    /**
+     * 获得组的权限列表
+     * @return [type] [description]
+     */
+    function getpermissionsAction() {
+        $group = TbGroup::findFirstById($_POST['groupid']);
+        if($group!=false && $group->companyid==$this->companyid) {
+            return $this->success($group->permissionGroups->toArray());
+        }
+        else {
+            throw new \Exception('/1002/权限组不存在。/');
         }
     }
 }

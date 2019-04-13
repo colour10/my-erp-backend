@@ -13,7 +13,7 @@ use Asa\Erp\TbProductstock;
 /**
  * 销售单主表
  */
-class SalesController extends CadminController
+class SalesController extends BaseController
 {
     // 销售单参数
     protected $saleParams;
@@ -28,11 +28,17 @@ class SalesController extends CadminController
     {
         parent::initialize();
 
-        $this->setModelName('Asa\\Erp\\TbSales');
-
         // 当前用户
         $this->userid = $this->auth['id'];
     }
+
+    public function pageAction() {
+        $result = TbSales::find(
+            sprintf("companyid=%d", $this->companyid)
+        );
+        echo $this->success($result->toArray());
+    }
+
 
     /**
      * 销售单保存
@@ -210,7 +216,7 @@ class SalesController extends CadminController
      * 订单提交生效以后的修改
      * @return [type] [description]
      */
-    function save($sale, $form) {
+    private function save($sale, $form) {
         $columns =["memberid", "salesstaff", "externalno", "salesdate", "ordercode", "pickingtype", "expresspaidtype", "expressno", "expressfee", "address"];
         // 开始更新
         foreach ($form as $k => $item) {
