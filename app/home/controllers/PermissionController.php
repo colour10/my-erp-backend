@@ -9,13 +9,7 @@ use Asa\Erp\Util;
 /**
  * 权限表，这个控制器在页面不体现出来，所以只录入就可以了
  */
-class PermissionController extends AdminController {
-    public function initialize() {
-        parent::initialize();
-
-        $this->setModelName('Asa\\Erp\\TbPermission');
-    }
-
+class PermissionController extends BaseController {
     /**
      * 获取权限目录树
      * @return false|string

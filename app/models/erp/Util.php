@@ -244,7 +244,8 @@ class Util {
             ['aliases','page'],
             ['series','page'],
             ['warehouse','userlist'],
-            ['series2','page']
+            ['series2','page'],
+            ['productmemo', 'page']
         ];
     }
 

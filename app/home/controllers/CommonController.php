@@ -93,6 +93,9 @@ class CommonController extends BaseController
             "user" =>["table"=>"Asa\\Erp\\TbUser", "columns"=>["login_name", "real_name"]],
             "goods" =>["table"=>"Asa\\Erp\\TbGoods", "columns"=>["price", "productid"]],
             "orderdetails" =>["table"=>"Asa\\Erp\\TbOrderdetails", "columns"=>[]],
+            "order" =>["table"=>"Asa\\Erp\\TbOrder", "columns"=>[]],
+            "orderpayment" =>["table"=>"Asa\\Erp\\TbOrderPayment", "columns"=>[]],
+            "sales" =>["table"=>"Asa\\Erp\\TbSales", "columns"=>[]],
             "warehousingdetails" =>["table"=>"Asa\\Erp\\TbWarehousingdetails", "columns"=>['number'], "key"=>"confirmorderdetailsid"],
         ];
 
@@ -167,7 +170,7 @@ class CommonController extends BaseController
             "product" => ["model"=>'Asa\Erp\TbProduct',"company"=>true],
             "productstock_log" => ["model"=>'Asa\Erp\TbProductstockLog',"company"=>true],
             "productstock" => ["model"=>'Asa\Erp\TbProductstock',"company"=>true],
-            "productstock_snapshot" => ["model"=>'Asa\Erp\TbProductstockSnapshot',"company"=>true],
+            "productmemo" => ["model"=>'Asa\Erp\TbProductMemo',"company"=>false],
             "requisition_detail" => ["model"=>'Asa\Erp\TbRequisitionDetail',"company"=>true],
             "requisition" => ["model"=>'Asa\Erp\TbRequisition',"company"=>true],
             "saleport" => ["model"=>'Asa\Erp\TbSaleport',"company"=>true],
