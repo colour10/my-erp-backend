@@ -13,6 +13,10 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
+    <meta content="Metronic Shop UI description" name="description">
+    <meta content="Metronic Shop UI keywords" name="keywords">
+    <meta content="keenthemes" name="author">
+
     <!-- Global styles START -->
     <link href="/shop/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link href="/shop/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -22,7 +26,7 @@
     <link href="/shop/assets/plugins/fancybox/source/jquery.fancybox.css" rel="stylesheet">
     <link href="/shop/assets/plugins/owl.carousel/assets/owl.carousel.css" rel="stylesheet">
     <link href="/shop/assets/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css">
-    <link href="/shop/assets/plugins/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css"><!-- for slider-range -->
+    <link href="/shop/assets/plugins/jquery-ui/jquery-ui.css" rel="stylesheet" type="text/css"><!-- for slider-range -->
     <link href="/shop/assets/plugins/rateit/src/rateit.css" rel="stylesheet" type="text/css">
     <!-- Page level plugin styles END -->
 
@@ -70,7 +74,7 @@
                             <h1><?php echo $product->productname; ?></h1>
                             <div class="price-availability-block clearfix">
                                 <div class="price">
-                                    <strong><span><?php echo $this->currency; ?></span><?php echo $realprice; ?></strong>
+                                    <strong><span><?php echo $this->currency; ?></span><span id="price"><?php echo $realprice; ?></span></strong>
                                     <em><?php echo $this->currency; ?><span><?php echo $price; ?></span></em>
                                 </div>
                                 <div class="availability">
@@ -84,7 +88,7 @@
                             <div class="product-page-options borderTopNone">
                                 <div class="pull-left">
                                     <label class="control-label">尺码：</label>
-                                    <select class="form-control input-sm">
+                                    <select class="form-control input-sm" id="product_size">
                                         <?php foreach ($sizecontents as $sizecontent) { ?>
                                         <option value="<?php echo $sizecontent['id']; ?>"><?php echo $sizecontent['content']; ?></option>
                                         <?php } ?>
@@ -138,22 +142,27 @@
 
 </body>
 <!-- END BODY -->
+
 <script>
-	$("#add-buycar").click(function(){
-		var color_id = $("#product_color").val();
-		var color_name = '';
-		var size_id = $("#product_size").val();
-		var size_name = '';
-		$("#product_color option").each(function(){
-			if(color_id == $("#product_color").val()){
-				color_name = $(this).html()
-			}
-		});
-		$("#product_size option").each(function(){
-			if(size_id == $("#product_size").val()){
-				size_name = $(this).html()
-			}
-		});
+	$("#add-buycar").click(function() {
+	    // 之前select获取值错误，重写
+		// var color_id = $("#product_color").val();
+        var color_id = $('#product_color option:selected').val();
+		// var color_name = '';
+		// var size_id = $("#product_size").val();
+		var size_id = $('#product_size option:selected').val();
+		// var size_name = '';
+		// $("#product_color option").each(function(){
+		// 	if(color_id == $("#product_color").val()){
+		// 		color_name = $(this).html()
+		// 	}
+		// });
+		// $("#product_size option").each(function(){
+		// 	if(size_id == $("#product_size").val()){
+		// 		size_name = $(this).html()
+		// 	}
+		// });
+
 		$.ajax({
     		type:"post",
     		url:"/buycar/add",
@@ -163,22 +172,41 @@
     			'number': $("#product-quantity").val(),
     			'price': $("#price").html(),
     			'total_price': $("#product-quantity").val()*$("#price").html(),
-    			'product_name': $("#product_name").html(),
+                // 取商品标题
+    			'product_name': $('h1').html(),
     			'product_id': $("#product_id").attr("attr-id"),
     			'size_id': size_id,
-    			'size_name': size_name,
+    			// 'size_name': size_name,
     			'color_id': color_id,
-    			'color_name': color_name,
+    			// 'color_name': color_name,
+                // 添加封面图
+    			'picture': "<?php echo $product->picture ?>",
     		},
     		success:function(result){
+    		    console.log(result);
     			if(!result.auth){
-    				alert(result.messages);
-    			}else{
-    				window.location.reload();
+                    layer.open({
+                        content: result.messages[0],
+                        btn: '我知道了'
+                    });
+    			} else {
+    			    // return false;
+                    //提示
+                    layer.open({
+                        content: '成功添加到购物车',
+                        btn: "2秒后自动关闭",
+                        time: 2, //2秒后自动关闭
+                    });
+                    // 3秒后跳转
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 3000);
     			}
-        		
     		}
-    	})
+    	});
+
+        // 禁止后续操作
+        return false;
 	});
 </script>
 </html>

@@ -28,13 +28,6 @@ License: You must have a valid license purchased only from themeforest (the abov
   <meta content="Metronic Shop UI keywords" name="keywords">
   <meta content="keenthemes" name="author">
 
-  <meta property="og:site_name" content="-CUSTOMER VALUE-">
-  <meta property="og:title" content="-CUSTOMER VALUE-">
-  <meta property="og:description" content="-CUSTOMER VALUE-">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="-CUSTOMER VALUE-"><!-- link to image for socio -->
-  <meta property="og:url" content="-CUSTOMER VALUE-">
-
   <link rel="shortcut icon" href="favicon.ico">
 
   <!-- Global styles START -->          
@@ -64,24 +57,7 @@ License: You must have a valid license purchased only from themeforest (the abov
 
 <!-- Body BEGIN -->
 <body class="corporate">
-    <!-- BEGIN STYLE CUSTOMIZER -->
-    <div class="color-panel hidden-sm">
-      <div class="color-mode-icons icon-color"></div>
-      <div class="color-mode-icons icon-color-close"></div>
-      <div class="color-mode">
-        <p>THEME COLOR</p>
-        <ul class="inline">
-          <li class="color-red current color-default" data-style="red"></li>
-          <li class="color-blue" data-style="blue"></li>
-          <li class="color-green" data-style="green"></li>
-          <li class="color-orange" data-style="orange"></li>
-          <li class="color-gray" data-style="gray"></li>
-          <li class="color-turquoise" data-style="turquoise"></li>
-        </ul>
-      </div>
-    </div>
-    <!-- END BEGIN STYLE CUSTOMIZER --> 
-    
+
     <!-- BEGIN TOP BAR -->
     <?php echo $this->view->getPartial('layouts/_header') ?>
     <!-- END TOP BAR -->
@@ -97,7 +73,7 @@ License: You must have a valid license purchased only from themeforest (the abov
 
           <!-- BEGIN CONTENT -->
           <div class="col-md-9 col-sm-9">
-            <h1>Login</h1>
+            <h1>登录</h1>
             <div class="content-form-page">
               <div class="row">
                 <div class="col-md-7 col-sm-7">
@@ -164,8 +140,6 @@ License: You must have a valid license purchased only from themeforest (the abov
     <?php echo $this->view->getPartial('layouts/_footer'); ?>
     <!-- END FOOTER -->
 
-    <!-- 加入layer实现简易弹窗 -->
-    <script src="/shop/assets/static/js/layer_mobile/layer.js"></script>
     <script type="text/javascript">
         $("#btn-login").click(function(){
         	$.ajax({
@@ -188,13 +162,13 @@ License: You must have a valid license purchased only from themeforest (the abov
                         //提示
                         layer.open({
                             content: '登录成功',
-                            skin: 'msg',
-                            time: 2, //2秒后自动关闭
+                            btn: '2秒后自动跳转',
+                            time: 2, //2秒后自动跳转
                         });
                         // 3秒后跳转
                         setTimeout(function() {
                             window.location.href = '/';
-                        }, 3000);
+                        }, 1000);
                     }
         		}
         	});

@@ -58,11 +58,14 @@
         <div class="row margin-bottom-40">
             <!-- BEGIN CONTENT -->
             <div class="col-md-12 col-sm-12">
-                <h1>结算</h1>
+                <!--<h1>结算</h1>-->
                 <!-- BEGIN CHECKOUT PAGE -->
                 <div class="panel-group checkout-page accordion scrollable" id="checkout-page">
 
-                    <?php if (count($data['product']) > 0) { ?>
+                    <?php
+                        if (count($data['product']) > 0) {
+                            if ($data['common']['order_status'] == '1') {
+                    ?>
                     <!-- BEGIN CHECKOUT -->
                     <div id="checkout" class="panel panel-default">
                         <div class="panel-heading">
@@ -75,6 +78,10 @@
                         <div id="checkout-content" class="panel-collapse collapse in">
                             <div class="panel-body row">
                                 <div class="col-md-12 col-sm-6">
+
+                                    <?php
+                                        if (count($data['addresses']) == '0') {
+                                    ?>
                                     <div class="form-group">
                                         <label for="reciver_name">收件人姓名 <span class="require">*</span></label>
                                         <input type="text" id="reciver_name" class="form-control">
@@ -83,18 +90,22 @@
                                         <label for="reciver_phone">收件人电话 <span class="require">*</span></label>
                                         <input type="text" id="reciver_phone" class="form-control">
                                     </div>
-
-                                    <div class="form-group">
-                                        <label for="reciver_phone">收件人身份证 <span class="require">*</span></label>
-                                        <input type="text" id="reciver_no" class="form-control">
-                                    </div>
-
                                     <div class="form-group">
                                         <label for="reciver_address">收件人地址 <span class="require">*</span></label>
                                         <input type="text" id="reciver_address" class="form-control">
                                     </div>
+                                    <?php
+                                        } else {
+                                            foreach ($data['addresses'] as $address) {
+                                    ?>
+                                                <label for="address_id-<?php echo $address['id'] ?>" class="label-address"><input id="address_id-<?php echo $address['id'] ?>" name="address_id" type="radio" value="<?php echo $address['id'] ?>"<?php if ($address['is_default']) {echo 'checked="checked"';} ?>> <?php echo $address['name'] . ' ' . $address['tel'] . ' ' . $address['address']; ?><?php if ($address['is_default']) {echo ' [默认地址]';} ?></label>
+                                                <br>
+                                    <?php
+                                            }
+                                        }
+                                    ?>
 
-                                    <button class="btn btn-primary  pull-right" type="submit" data-toggle="collapse" data-parent="#checkout-page" data-target="#payment-address-content" id="button-payment-address">继续</button>
+                                    <button class="btn btn-primary pull-right" type="submit" data-toggle="collapse" data-parent="#checkout-page" data-target="#payment-address-content" id="button-payment-address">继续</button>
 
                                 </div>
                             </div>
@@ -127,9 +138,12 @@
                         </div>
                     </div>
                     <!-- END PAYMENT ADDRESS -->
+                    <?php } ?>
 
                     <!-- BEGIN CONFIRM -->
                     <div id="confirm" class="panel panel-default">
+
+                        <?php if ($data['common']['order_status'] == '1') { ?>
                         <div class="panel-heading">
                             <h2 class="panel-title">
                                 <a data-toggle="collapse" data-parent="#checkout-page" href="#confirm-content" class="accordion-toggle">
@@ -137,7 +151,9 @@
                                 </a>
                             </h2>
                         </div>
-                        <div id="confirm-content" class="panel-collapse collapse">
+                        <?php } ?>
+
+                        <div id="confirm-content" class="panel-collapse collapse<?php if ($data['common']['order_status'] != '1') { ?> in<?php  }?>">
                             <div class="panel-body row">
                                 <div class="col-md-12 clearfix">
                                     <div class="table-wrapper-responsive">
@@ -186,15 +202,27 @@
                                         </ul>
                                     </div>
                                     <div class="clearfix"></div>
-                                    <button class="btn btn-primary pull-right" type="button" id="button-confirm">支付</button>
-                                    <button type="button" class="btn btn-default pull-right margin-right-20">取消</button>
+                                    <?php if ($data['common']['order_status'] == '2') { ?>
+                                        <span class="pull-right">订单已支付未完成</span>
+                                    <?php } else if ($data['common']['order_status'] == '3') { ?>
+                                        <span class="pull-right">订单已完成</span>
+                                    <?php } else if ($data['common']['order_status'] == '4') { ?>
+                                        <span class="pull-right">订单已取消</span>
+                                    <?php } else if ($data['common']['order_status'] == '5') { ?>
+                                        <span class="pull-right">订单退款中</span>
+                                    <?php } else if ($data['common']['order_status'] == '6') { ?>
+                                        <span class="pull-right">订单已退款</span>
+                                    <?php } else { ?>
+                                        <button class="btn btn-primary pull-right" type="button" id="button-confirm" onclick="payment_order(<?php echo $data['common']['id']; ?>);return false;">支付</button>
+                                        <button type="button" class="btn btn-default pull-right margin-right-20" id="button-cancle" onclick="cancle_order(<?php echo $data['common']['id']; ?>);return false;">取消</button>
+                                    <?php } ?>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!-- END CONFIRM -->
                     <?php } else { ?>
-                    <p>呃呃...您没有未支付的订单</p>
+                        <p>订单不存在</p>
                     <?php } ?>
 
                 </div>
@@ -208,21 +236,21 @@
 
 <?php echo $this->view->getPartial('layouts/_footer'); ?>
 
-<!-- 加入layer实现简易弹窗 -->
-<script src="/shop/assets/static/js/layer_mobile/layer.js"></script>
 <script>
-    $('#button-confirm').click(function() {
+    // 订单支付逻辑
+    function payment_order(id) {
         // ajax提交
         $.ajax({
             type:"post",
-            url:"/order/confirm",
+            url:"/order/confirm/"+id,
             async:true,
             dataType:'json',
             data:{
                 'reciver_name':$('#reciver_name').val(),
                 'reciver_phone':$('#reciver_phone').val(),
-                'reciver_no':$('#reciver_no').val(),
+                // 'reciver_no':$('#reciver_no').val(),
                 'reciver_address':$('#reciver_address').val(),
+                'address_id':$("input[name='address_id']:checked").val(),
                 'pay_style':$("input[name='pay_style']:checked").val(),
             },
             beforeSend: function () {
@@ -245,7 +273,7 @@
                     });
                     // 3秒后跳转
                     setTimeout(function() {
-                        window.location.href = '/';
+                        window.location.href = '/order/list';
                     }, 1000);
                 }
             },
@@ -255,7 +283,7 @@
         });
         // 禁止自动跳转
         return false;
-    });
+    }
 </script>
 <!-- END PAGE LEVEL JAVASCRIPTS -->
 </body>

@@ -3,20 +3,28 @@
 namespace Multiple\Shop\Controllers;
 
 use Phalcon\Mvc\Controller;
-
 use Asa\Erp\TbMember;
 
+/**
+ * 会员登录类
+ * Class LoginController
+ * @package Multiple\Shop\Controllers
+ */
 class LoginController extends AdminController
 {
 
+    /**
+     * 初始化
+     */
     public function initialize()
     {
     	
     }
 
-
-
-	    function indexAction()
+    /**
+     * 登录页面
+     */
+	public function indexAction()
     {
     	
     }
@@ -51,17 +59,23 @@ class LoginController extends AdminController
             	$this->session->set('member',$rs->toArray());
             	return json_encode(['code' => '200', 'auth' =>$this->session->get('member'), 'messages' => []]);
             } else {
-                return json_encode(['code' => '200', 'messages' => ["登录失败。用户名或密码错误。"]]);
+                return json_encode(['code' => '200', 'messages' => ["登录失败：用户名或密码错误。"]]);
             }
         }
     
     }
-    
+
+    /**
+     * 退出登录
+     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
+     */
     function logoutAction()
     {
         $this->session->destroy();
-        return $this->response->redirect("index/index");
-    
+        return $this->dispatcher->forward([
+            'controller' => 'login',
+            'action' => 'index',
+        ]);
     }
     
  

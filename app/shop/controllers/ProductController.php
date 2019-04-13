@@ -1,10 +1,16 @@
 <?php
+
 namespace Multiple\Shop\Controllers;
 
 use Asa\Erp\TbSizecontent;
 use Asa\Erp\TbProductSearch;
 use Asa\Erp\TbColortemplate;
 
+/**
+ * 产品操作类
+ * Class ProductController
+ * @package Multiple\Shop\Controllers
+ */
 class ProductController extends AdminController {
     public function initialize() {
         $this->setModelName('Asa\\Erp\\TbProductSearch');

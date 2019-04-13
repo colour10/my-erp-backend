@@ -8,7 +8,7 @@
 <!-- Head BEGIN -->
 <head>
     <meta charset="utf-8">
-    <title>密码重置</title>
+    <title>地址管理</title>
 
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -51,7 +51,7 @@
     <div class="container">
         <ul class="breadcrumb">
             <li><a href="/">首页</a></li>
-            <li class="active">密码重置</li>
+            <li class="active">地址管理</li>
         </ul>
         <!-- BEGIN SIDEBAR & CONTENT -->
         <div class="row margin-bottom-40">
@@ -60,42 +60,47 @@
 
             <!-- BEGIN CONTENT -->
             <div class="col-md-9 col-sm-9">
-                <h1 class="h1-title">密码重置</h1>
+                <h1 class="h1-title"><span class="pull-right"><a href="/memberaddress/add">添加新地址</a></span>地址管理</h1>
                 <div class="content-form-page">
                     <div class="row">
-                        <div class="col-md-7 col-sm-7">
-                            <form class="form-horizontal form-without-legend" role="form">
+                        <div class="col-md-12">
+                            <table id="table-address" class="table table-bordered table-hover" style="width:100%">
+                                <tr>
+                                    <th>收货人</th>
+                                    <th>详细地址</th>
+                                    <th>联系方式</th>
+                                    <th>操作</th>
+                                    <th>设置默认</th>
+                                </tr>
+                                <?php
+                                    if (count($result) > 0) {
+                                        foreach ($result as $address) {
+                                ?>
+                                <tr>
+                                    <td><?php echo $address['name']; ?></td>
+                                    <td><?php echo $address['address']; ?></td>
+                                    <td><?php echo $address['tel']; ?></td>
+                                    <td>
+                                        <a class="t-change" href="/memberaddress/edit/<?php echo $address['id']; ?>" target="_self">修改</a>
+                                        <span class="t-line">|</span>
+                                        <a onclick="address_del(<?php echo $address['id']; ?>);return false;"><span class="t-delete">删除</span></a></td>
+                                    <td>
+                                        <?php if ($address['is_default']) { ?>
+                                            <span class="t-default">默认地址</span>
+                                        <?php } else { ?>
+                                            <a onclick="address_set_default(<?php echo $address['id']; ?>);return false;">设为默认</a>
+                                        <?php } ?>
 
-                                <div class="form-group">
-                                    <label for="old-password" class="col-lg-4 control-label">原始密码 <span class="require">*</span></label>
-                                    <div class="col-lg-8">
-                                        <input type="password" class="form-control" id="old-password">
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="new-password" class="col-lg-4 control-label">新密码 <span class="require">*</span></label>
-                                    <div class="col-lg-8">
-                                        <input type="password" class="form-control" id="new-password">
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="repeat-password" class="col-lg-4 control-label">确认密码 <span class="require">*</span></label>
-                                    <div class="col-lg-8">
-                                        <input type="password" class="form-control" id="repeat-password">
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-lg-8 col-md-offset-4 padding-left-0 padding-top-20">
-                                        <button type="submit" class="btn btn-primary" id="button-reset-password" onclick="reset_password();return false;">确认</button>
-                                    </div>
-                                </div>
-
-                            </form>
+                                    </td>
+                                </tr>
+                                <?php } ?>
+                                <?php } else { ?>
+                                <tr>
+                                    <td colspan="5">您没有保存任何收货地址</td>
+                                </tr>
+                                <?php } ?>
+                            </table>
                         </div>
-
                     </div>
                 </div>
             </div>

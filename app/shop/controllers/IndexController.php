@@ -5,6 +5,11 @@ namespace Multiple\Shop\Controllers;
 use Asa\Erp\TbProductSearch;
 use Phalcon\Paginator\Adapter\Model as PaginatorModel;
 
+/**
+ * 首页控制器类
+ * Class IndexController
+ * @package Multiple\Shop\Controllers
+ */
 class IndexController extends AdminController
 {
     /**

@@ -5,6 +5,8 @@ use Asa\Models\Temp\TempTbBrand;
 use Asa\Models\Temp\TempTbSeries;
 use Asa\Models\Temp\TempTbSeries2;
 use Asa\Models\Temp\TempTbSizecontent;
+use Asa\Models\Temp\TempTbBrandgroupchild;
+use Asa\Models\Temp\TempTbBrandgroupchildProperty2;
 
 /**
  * 临时表替换
@@ -130,6 +132,64 @@ class ReplaceTask extends \Phalcon\CLI\Task
                 $this->db->rollback();
                 // 报错
                 return json_encode(['code' => '200', 'messages' => ['生成子系列表的seriesid出错了']]);
+            }
+        }
+
+        // 给子品类表添加所属品类id-brandgroupid
+        $brandgroupchildren = TempTbBrandgroupchild::find();
+        // 遍历替换子品类表的brandgroupid
+        foreach ($brandgroupchildren as $brandgroupchild) {
+            // 写入brandgroupid，如果不存在记做NULL
+            $brandgroup = $brandgroupchild->brandgroup;
+            if (!$brandgroup) {
+                $brandgroupid = NULL;
+            } else {
+                $brandgroupid = $brandgroup->id;
+            }
+            $data = [
+                'brandgroupid' => $brandgroupid,
+            ];
+            if (!$brandgroupchild->save($data)) {
+                // 回滚
+                $this->db->rollback();
+                // 报错
+                return json_encode(['code' => '200', 'messages' => ['生成子品类表的brandgroupid出错了']]);
+            }
+        }
+
+        // 生成新的尺码规格子表
+        $results = TempTbBrandgroupchild::find();
+        $results_arr = $results->toArray();
+        foreach ($results as $k => $result) {
+            $results_arr[$k]['brandgroupchildpropertys'] = $result->brandgroupchildpropertys->toArray();
+            // 加工内部数据
+            foreach ($results_arr[$k]['brandgroupchildpropertys'] as $key => $value) {
+                $results_arr[$k]['brandgroupchildpropertys'][$key]['brandgroupchildid'] = $result->id;
+                $results_arr[$k]['brandgroupchildpropertys'][$key]['oldbrandgroupchildid'] = $result->oldid;
+            }
+        }
+        // 把新的对应关系写入到一张全新的表中
+        // 但是在插入之前，首先要清空原来的表，否则可能会产品重复数据
+        $this->db->execute("truncate table temp_tb_brandgroupchild_property2");
+        // 新表需要有oldtempid字段
+        foreach ($results_arr as $item) {
+            if (count($item['brandgroupchildpropertys']) > 0) {
+                // 继续遍历
+                foreach ($item['brandgroupchildpropertys'] as $property) {
+                    // 开始执行插入前的准备
+                    $model = new TempTbBrandgroupchildProperty2();
+                    $name_cn = $property['name_cn'];
+                    $displayindex = $property['displayindex'];
+                    $brandgroupchildid = $property['brandgroupchildid'];
+                    $oldbrandgroupchildid = $property['oldbrandgroupchildid'];
+                    $oldtempid = $item['oldtempid'];
+                    if (!$model->save(compact('name_cn', 'displayindex', 'brandgroupchildid', 'oldbrandgroupchildid', 'oldtempid'))) {
+                        // 回滚
+                        $this->db->rollback();
+                        // 报错
+                        return json_encode(['code' => '200', 'messages' => ['生成新的尺码规格子表出错了']]);
+                    }
+                }
             }
         }
 
