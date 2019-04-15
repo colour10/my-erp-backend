@@ -107,6 +107,7 @@ return array(
     "menu-11-1" => "系统帮助",
     "menu-11-2" => "修改密码",
     "menu-11-3" => "退出",
+    "en" => "英",
     
     "button-save" => "保存",
     "button-cancel" => "取消",
@@ -185,7 +186,8 @@ return array(
     "gonghuoshangdengji" => "供货商等级",
     "zhekoubili" => "折扣比例",
     "niandai" => "年代",
-    "guojiadaima" => "国家代码",
+    "guojiadaima3" => "国家代码[3]",
+    "guojiadaima2" => "国家代码[2]",
     "guojiamingcheng" => "国家名称",
     "bizhong" => "币种",
     "dianshangduizhaobiao" => "电商对照表",
@@ -608,7 +610,8 @@ return array(
         "2" => "女性",
         "3" => "中性",
         "4" => "男童",
-        "5" => "女童"
+        "5" => "女童",
+        "6" => "儿童"
     ),
 
     "list_gender2" => array(
