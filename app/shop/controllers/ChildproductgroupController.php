@@ -2,6 +2,7 @@
 
 namespace Multiple\Shop\Controllers;
 
+use Asa\Erp\TbBrandgroup;
 use Asa\Erp\TbProductSearch;
 use Asa\Erp\TbBrandgroupchild;
 use Phalcon\Paginator\Adapter\Model as PaginatorModel;
@@ -38,41 +39,42 @@ class ChildproductgroupController extends AdminController {
 
         // 赋值
         $id = $params[0];
+
+        // 取出子品类
+        $childbrand = TbBrandgroupchild::findFirstById($id);
+        // 如果模型不存在，则返回404
+        if (!$childbrand) {
+            return $this->dispatcher->forward([
+                'controller' => 'error',
+                'action' => 'error404',
+            ]);
+        }
+
         // 分页
         $currentPage = $this->request->getQuery("page", "int", 1);
         // 取出数据，只展示当前公司下面的产品
         // 从tb_product_search中查询
         $products = TbProductSearch::find("childbrand=$id AND companyid={$this->currentCompany}");
         // 必要的多语言字段
-        $brandgroup_name = $this->getlangfield('brandgroupname');
-        $childbrand_name = $this->getlangfield('childbrandname');
         $name = $this->getlangfield('name');
         // 判断是否有记录，如果有记录，就随便取一条记录，从中得到子品类和主品类相关信息
         if (count($products)) {
             // 取第一条记录
             // 主品类
             $brandgroupid = $products[0]->brandgroupid;
-            $brandgroupname = $products[0]->$brandgroup_name;
-            // 子品类
-            $childbrandname = $products[0]->$childbrand_name;
+            $brandgroup = TbBrandgroup::findFirstById($brandgroupid);
         } else {
-            // 取出子品类
-            $childbrand = TbBrandgroupchild::findFirstById($id);
-            // 如果模型不存在，则返回404
-            if (!$childbrand) {
-                return $this->dispatcher->forward([
-                    'controller' => 'error',
-                    'action' => 'error404',
-                ]);
-            }
             // 取出主品类
             $brandgroup = $childbrand->brandgroup;
             // 主品类相关字段
             $brandgroupid = $brandgroup->id;
-            $brandgroupname = $brandgroup->$name;
-            // 子品类相关字段
-            $childbrandname = $childbrand->$name;
         }
+
+        // 主品类相关字段
+        $brandgroupname = $brandgroup->$name;
+
+        // 子品类相关字段
+        $childbrandname = $childbrand->$name;
 
         // 创建分页对象
         $paginator = new PaginatorModel(
