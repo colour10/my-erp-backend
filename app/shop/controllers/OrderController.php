@@ -327,7 +327,7 @@ class OrderController extends AdminController
                 }
 
                 // 付款的过程通过另外的接口处理，这里只假设为成功或者失败
-                $payment_result = $this->paymentAction();
+                $payment_result = $this->paymentapiAction();
                 if ($payment_result['result_code'] != 'SUCCESS') {
                     // 回滚
                     $this->db->rollback();
@@ -498,10 +498,21 @@ class OrderController extends AdminController
      * 第三方付款接口
      * @return array
      */
-    public function paymentAction()
+    public function paymentapiAction()
     {
         // 逻辑
         // result_code的值SUCCESS则付款成功，FAIL则为付款失败
+        return ['result_code' => 'SUCCESS'];
+    }
+
+    /**
+     * 第三方退款接口
+     * @return array
+     */
+    public function refundapiAction()
+    {
+        // 逻辑
+        // result_code的值SUCCESS则退款成功，FAIL则为退款成功
         return ['result_code' => 'SUCCESS'];
     }
 
@@ -576,6 +587,59 @@ class OrderController extends AdminController
                 $data = [
                     'order_status' => '4',
                 ];
+                if (!$order->save($data)) {
+                    // 报错
+                    $msg = $this->getValidateMessage('order', 'db', 'save-failed');
+                    return $this->error([$msg]);
+                }
+                // 最终返回成功
+                return $this->success();
+            } else {
+                // 报错
+                $msg = $this->getValidateMessage('model-delete-message');
+                return $this->error([$msg]);
+            }
+        }
+    }
+
+    /**
+     * 订单退款
+     * @return false|string
+     */
+    public function refundAction()
+    {
+        // 逻辑
+        // 先过滤
+        if ($this->request->isPost()) {
+            if ($rs = $this->session->get('member')) {
+                $params = $this->dispatcher->getParams();
+                if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
+                    exit('Params error!');
+                }
+                // 赋值
+                $id = $params[0];
+                // 查找订单是否存在，订单要求为已付款未完成状态
+                $order = TbShoporderCommon::findFirst("member_id=".$rs['id']." and id=".$id." and order_status=2");
+                if (!$order) {
+                    // 取出错误信息
+                    $msg = $this->getValidateMessage('order', 'template', 'notexist');
+                    return $this->error([$msg]);
+                }
+                // 变更状态，向第三方接口申请退款，这个最好用异步通知来做
+                $refund_result = $this->refundapiAction();
+                // 如果退款成功，状态变为6-已退款
+                if ($refund_result['result_code'] == 'SUCCESS') {
+                    // 变更状态为已退款
+                    $data = [
+                        'order_status' => '6',
+                    ];
+                } else {
+                    // 否则变为退款中
+                    $data = [
+                        'order_status' => '5',
+                    ];
+                }
+                // 写入变更状态
                 if (!$order->save($data)) {
                     // 报错
                     $msg = $this->getValidateMessage('order', 'db', 'save-failed');

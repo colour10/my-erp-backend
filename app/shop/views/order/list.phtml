@@ -93,6 +93,10 @@
                                                                 <a href="/order/detail/<?php echo $order['id']; ?>">去支付</a>
                                                                 <a style="cursor: pointer" onclick="cancle_order(<?php echo $order['id']; ?>);return false;">取消订单</a>
                                                             </em>
+                                                        <?php } else if ($order['order_status'] == '2') { ?>
+                                                            <em class="pull-right font-normal">
+                                                                <a style="cursor: pointer" onclick="refund_order(<?php echo $order['id']; ?>);return false;">申请退款</a>
+                                                            </em>
                                                         <?php } ?>
                                                     </span>
                                                 </td>

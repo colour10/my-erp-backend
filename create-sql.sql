@@ -2,7 +2,8 @@
 SQLyog Ultimate v9.60 
 MySQL - 5.7.25 : Database - erp
 *********************************************************************
-*/
+*/
+
 
 /*!40101 SET NAMES utf8 */;
 
@@ -699,7 +700,7 @@ CREATE TABLE `tb_product_search` (
   `color_group` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '同组颜色',
   `companyid` int(11) DEFAULT NULL,
   UNIQUE KEY `companyid_2` (`companyid`,`productid`),
-  KEY `id` (`id`),
+  PRIMARY KEY `id` (`id`),
   KEY `companyid` (`companyid`,`brandgroupid`,`childbrand`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
