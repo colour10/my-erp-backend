@@ -150,6 +150,43 @@ function cancle_order(id) {
 }
 
 /**
+ * 指定id的订单申请退款
+ * @param id
+ */
+function refund_order(id) {
+    // 询问框
+    layer.open({
+        content: '您真的要申请退款吗？',
+        btn: ['是', '否'],
+        yes: function(index) {
+            // ajax取消订单
+            $.post('/order/refund/'+id, {}, function(response) {
+                // 判断是否有错误
+                if(response.messages.length > 0) {
+                    layer.open({
+                        content: response.messages[0],
+                        btn: '我知道了'
+                    });
+                } else {
+                    //提示
+                    layer.open({
+                        content: '操作成功',
+                        btn: '2秒后自动跳转',
+                        time: 2, //2秒后自动跳转
+                    });
+                    // 1秒后跳转
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 1000);
+                }
+            }, 'json');
+            // 关闭弹出层
+            layer.close(index);
+        }
+    });
+}
+
+/**
  * 重置密码
  * @returns {boolean}
  */
