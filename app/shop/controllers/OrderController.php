@@ -629,7 +629,7 @@ class OrderController extends AdminController
                 $refund_result = $this->refundapiAction();
                 // 如果退款成功，状态变为6-已退款
                 if ($refund_result['result_code'] == 'SUCCESS') {
-                    // 变更状态为退款中
+                    // 变更状态为已退款
                     $data = [
                         'order_status' => '6',
                     ];
