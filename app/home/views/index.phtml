@@ -8,7 +8,7 @@
     <title><?=isset($__title)?$__title:"ERP"?> - ASA</title>
     <script src="https://unpkg.com/vue@2.6.9/dist/vue.js"></script>
     <script src="https://unpkg.com/vuex@3.1.0/dist/vuex.js"></script>
-    <script src="https://unpkg.com/vue-router@2.0.0/dist/vue-router.js"></script>
+    <script src="https://unpkg.com/vue-router@3.0.4/dist/vue-router.js"></script>
     
 
     <!-- 引入样式 -->
@@ -248,6 +248,21 @@
 
 .product .el-table td, .el-table th {
   padding:0px;
+}
+
+.supermini .el-checkbox__label {
+    font-size: 14px
+}
+
+#top-menu {
+  top:0px;
+  position:fixed;
+  z-index: 10;
+  width:calc(100% - 30px);
+}
+
+.el-container {
+  padding-top:30px;
 }
 </style>
 <body>
