@@ -2,6 +2,7 @@
 
 namespace Multiple\Home\Controllers;
 
+use Asa\Erp\Util;
 use Phalcon\Mvc\Controller;
 use Phalcon\Db\Column;
 use  Phalcon\Mvc\Model\Message;
@@ -77,6 +78,11 @@ class CommonController extends BaseController
                 // Move the file into the application
                 $file->moveTo($this->config->upload_dir . $filename);
                 $files[$file->getName()] = $filename;
+
+                // 如果上传到产品目录，则进行图片尺寸处理，裁剪为40*40和150*150两种分辨率
+                if ($_GET["category"] == 'product') {
+                    Util::convertPics($this->config->upload_dir . $filename, ['40', '150']);
+                }
             }
             
             $result["files"] = $files;
