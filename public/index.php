@@ -40,6 +40,9 @@ try {
 
     //require_once(APP_PATH . "/app/models/vendor/autoload.php");
 
+    // 添加插件自动加载
+    require_once(APP_PATH . "/vendor/autoload.php");
+
     // Create a DI
     $di = new FactoryDefault();
 
