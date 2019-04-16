@@ -698,6 +698,8 @@ CREATE TABLE `tb_product_search` (
   `picture2` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '副图',
   `color` varchar(20) COLLATE utf8_bin DEFAULT NULL COMMENT '颜色',
   `color_group` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '同组颜色',
+  `price` decimal(16,2) DEFAULT NULL COMMENT '原价',
+  `realprice` decimal(16,2) DEFAULT NULL COMMENT '折扣价',
   `companyid` int(11) DEFAULT NULL,
   UNIQUE KEY `companyid_2` (`companyid`,`productid`),
   PRIMARY KEY `id` (`id`),
@@ -1440,6 +1442,49 @@ CREATE TABLE `td_confirmorder` (
 /*Data for the table `td_confirmorder` */
 
 insert  into `td_confirmorder`(`id`,`companyid`,`status`,`orderno`,`supplierid`,`makedate`,`makestaff`,`currency`,`total`,`isstatus`,`memo`,`brandid`,`ageseasonid`,`seasontype`,`auditstaff`,`auditdate`,`exchangerate`,`finalsupplierid`,`flightno`,`flightdate`,`arrivaldate`,`mblno`,`hblno`,`dispatchport`,`deliveryport`,`transcompany`,`isexamination`,`examinationresult`,`clearancedate`,`pickingdate`,`motortransportpool`,`warehouseid`,`box_number`,`weight`,`volume`,`issjyh`,`sellerid`,`sjyhresult`,`buyerid`,`transporttype`,`paytype`,`property`,`payoutpercentage`,`pickingaddress`,`chargedweight`,`paydate`,`apickingdate`,`aarrivaldate`,`invoiceno`,`dd_company`) values (25,1,3,'C000001201903291913295586',1,'2019-03-29 19:13:29',1,5,'0.00',NULL,NULL,NULL,1,1,NULL,NULL,'0.0000',1,'','',NULL,'','','','',0,NULL,NULL,NULL,NULL,NULL,2,0,'0.00','0.00',NULL,0,NULL,0,0,0,1,NULL,NULL,'0.00','','','','',0),(26,1,3,'C000001201904011733341115',4,'2019-04-01 17:33:34',1,0,'0.00',NULL,NULL,NULL,6,1,NULL,NULL,'0.0000',4,'','',NULL,'','','','',0,NULL,NULL,NULL,NULL,NULL,2,0,'0.00','0.00',NULL,0,NULL,0,0,0,1,NULL,NULL,'0.00','','','','',0),(27,1,2,'C000001201904011939563784',6,'2019-04-01 19:39:56',1,0,'0.00',NULL,NULL,NULL,2,1,NULL,NULL,'0.0000',6,'','',NULL,'','','','',0,NULL,NULL,NULL,NULL,NULL,4,0,'0.00','0.00',NULL,0,NULL,0,0,0,1,NULL,NULL,'0.00','','','','',0),(28,1,2,'C000001201904011941139972',5,'2019-04-01 19:41:13',1,0,'0.00',NULL,NULL,NULL,5,1,NULL,NULL,'0.0000',5,'','',NULL,'','','','',0,NULL,NULL,NULL,NULL,NULL,4,0,'0.00','0.00',NULL,0,NULL,0,0,0,1,NULL,NULL,'0.00','','','','',0),(29,1,3,'C000001201904011941359914',6,'2019-04-01 19:41:35',1,0,'0.00',NULL,NULL,NULL,6,2,NULL,NULL,'0.0000',6,'','',NULL,'','','','',0,NULL,NULL,NULL,NULL,NULL,4,0,'0.00','0.00',NULL,0,NULL,0,0,0,2,NULL,NULL,'0.00','','','','',0);
+
+/* 支付订单详情表 */
+
+DROP TABLE IF EXISTS `tb_shoporder`;
+
+CREATE TABLE `tb_shoporder` (
+                              `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+                              `product_id` int(10) NOT NULL COMMENT '商品id',
+                              `order_commonid` int(10) UNSIGNED NOT NULL COMMENT '订单公共表id',
+                              `product_name` varchar(255) NOT NULL COMMENT '商品名称',
+                              `price` decimal(9,2) NOT NULL COMMENT '价格',
+                              `number` int(10) NOT NULL COMMENT '数量',
+                              `total_price` decimal(9,2) NOT NULL COMMENT '此商品的总价格',
+                              `picture` varchar(255) DEFAULT NULL,
+                              `color_id` int(10) NOT NULL COMMENT '颜色id',
+                              `color_name` varchar(64) NOT NULL COMMENT '颜色名称',
+                              `size_id` int(10) NOT NULL COMMENT '规格id',
+                              `size_name` varchar(64) NOT NULL COMMENT '规格名称',
+                              PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='支付订单详情表';
+
+
+/* 支付订单主表 */
+
+DROP TABLE IF EXISTS `tb_shoporder_common`;
+
+CREATE TABLE `tb_shoporder_common` (
+                                     `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+                                     `order_no` varchar(255) DEFAULT NULL COMMENT '订单号',
+                                     `member_id` int(10) DEFAULT NULL COMMENT '会员id',
+                                     `reciver_name` varchar(64) DEFAULT NULL COMMENT '收件人',
+                                     `reciver_phone` varchar(64) DEFAULT NULL COMMENT '手机',
+                                     `reciver_address` varchar(255) DEFAULT NULL COMMENT '地址',
+                                     `reciver_no` varchar(18) DEFAULT NULL COMMENT '身份证',
+                                     `total_price` decimal(9,2) DEFAULT NULL COMMENT '商品总计',
+                                     `send_price` decimal(9,2) DEFAULT '0.00' COMMENT '运费',
+                                     `final_price` decimal(9,2) DEFAULT NULL COMMENT '成交价',
+                                     `order_status` int(1) DEFAULT '1' COMMENT '订单状态(1未支付；2已支付；未完成；3已完成；4已取消；5退款中；6已退款)',
+                                     `pay_style` int(1) DEFAULT '0' COMMENT '支付方式(0未支付；1微信；2支付宝)',
+                                     `create_time` datetime DEFAULT NULL COMMENT '发起时间',
+                                     `pay_time` datetime DEFAULT NULL COMMENT '支付时间',
+                                     PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='支付订单主表';
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
