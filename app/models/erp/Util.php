@@ -249,6 +249,8 @@ class Util {
             ['series2','page'],
             ['productmemo', 'page'],
             ['companyinvoice', 'page'],
+            ['supplierbank','page'],
+            ['supplierinvoice','page'],
             ['company', 'info']
         ];
     }
