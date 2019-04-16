@@ -41,7 +41,11 @@ class BuycarController extends AdminController
     {
     	
     }
-    
+
+    /**
+     * 订单列表
+     * @return bool|false|string
+     */
     function getListAction()
     {	
         if($rs = $this->session->get('member')){
@@ -90,7 +94,7 @@ class BuycarController extends AdminController
     	}
     }
     
-    //渲染用
+    // 渲染用
     function getListsAction()
     {	
         if($rs = $this->session->get('member')){

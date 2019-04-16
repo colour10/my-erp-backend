@@ -65,7 +65,8 @@
                 <!-- BEGIN PRODUCT LIST -->
                 <div class="child_product_list row product-list">
 
-                    <?php foreach ($page->items as $item) { ?>
+                    <?php if (count($page->items) > 0) { ?>
+                        <?php foreach ($page->items as $item) { ?>
                         <!-- PRODUCT ITEM START -->
                         <div class="col-md-4 col-sm-6 col-xs-12">
                             <div class="product-item">
@@ -80,6 +81,10 @@
                             </div>
                         </div>
                         <!-- PRODUCT ITEM END -->
+                        <?php } ?>
+
+                    <?php } else { ?>
+                        <div class="col-md-12 col-sm-12 col-xs-12">当前分类暂无商品</div>
                     <?php } ?>
 
                 </div>

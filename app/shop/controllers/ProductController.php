@@ -3,6 +3,7 @@
 namespace Multiple\Shop\Controllers;
 
 use Asa\Erp\TbBrandgroup;
+use Asa\Erp\TbBrandgroupchild;
 use Asa\Erp\TbSizecontent;
 use Asa\Erp\TbProductSearch;
 use Asa\Erp\TbColortemplate;
@@ -76,7 +77,7 @@ class ProductController extends AdminController {
 
         // 定义面包屑导航
         $brandgroup = TbBrandgroup::findFirstById($product->brandgroupid);
-        $brandgroupchild = TbBrandgroup::findFirstById($product->childbrand);
+        $brandgroupchild = TbBrandgroupchild::findFirstById($product->childbrand);
         $name = $this->getlangfield('name');
         $breadcrumb = '<li><a href="/">首页</a></li><li><a href="/brandgroup/detail/'.$product->brandgroupid.'">'.$brandgroup->$name.'</a></li><li><a href="/childproductgroup/detail/'.$product->childbrand.'">'.$brandgroupchild->$name.'</a></li>';
 

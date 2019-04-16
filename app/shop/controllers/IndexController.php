@@ -91,34 +91,4 @@ class IndexController extends AdminController
             return false;
         }
     }
-
-    /*
-     * 测试页面
-     */
-    public function testAction()
-    {
-
-    }
-
-    // /**
-    //  * 判断公司是否绑定了当前域名，接口，js当中用的
-    //  */
-    // public function checkhostAction()
-    // {
-    //     // 逻辑
-    //     $params = $this->dispatcher->getParams();
-    //     if (!$params) {
-    //         exit('params error');
-    //     }
-    //     // 赋值
-    //     $host = $params[0];
-    //     // 开始去数据库查找
-    //     $result = TbCompanyhost::findFirst("url = '$host'");
-    //     // 返回
-    //     if ($result) {
-    //         return json_encode($result);
-    //     } else {
-    //         return false;
-    //     }
-    // }
 }

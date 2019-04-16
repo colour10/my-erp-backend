@@ -517,6 +517,18 @@ class OrderController extends AdminController
     }
 
     /**
+     * 第三方异步通知接口，因为是自动配置并接受，所以只需要处理逻辑即可。
+     * 这个部分需要重写，现在只是演示
+     * @return array
+     */
+    public function notifyapiAction()
+    {
+        // 逻辑
+        // result_code的值SUCCESS则退款成功，FAIL则为退款成功
+        return ['result_code' => 'SUCCESS'];
+    }
+
+    /**
      * 生成唯一订单号
      * @return string
      */
@@ -618,33 +630,56 @@ class OrderController extends AdminController
                 }
                 // 赋值
                 $id = $params[0];
+
+                // 采用事务处理
+                $this->db->begin();
+
                 // 查找订单是否存在，订单要求为已付款未完成状态
                 $order = TbShoporderCommon::findFirst("member_id=".$rs['id']." and id=".$id." and order_status=2");
                 if (!$order) {
+                    // 回滚
+                    $this->db->rollback();
                     // 取出错误信息
                     $msg = $this->getValidateMessage('order', 'template', 'notexist');
                     return $this->error([$msg]);
                 }
+
+                // 取出每个订单下面具体商品信息
+                $shoporders = $order->shoporder;
+
                 // 变更状态，向第三方接口申请退款，这个最好用异步通知来做
                 $refund_result = $this->refundapiAction();
                 // 如果退款成功，状态变为6-已退款
                 if ($refund_result['result_code'] == 'SUCCESS') {
                     // 变更状态为已退款
-                    $data = [
-                        'order_status' => '6',
-                    ];
+                    $order_status = '6';
+                    // 如果是已退款，还得还原库存
+                    foreach ($shoporders as $shoporder) {
+                        // 执行写入
+                        $sql = "UPDATE tb_product_search SET number = number + ".$shoporder->number." WHERE id=".$shoporder->product_id;
+                        if (!$this->db->execute($sql)) {
+                            // 回滚
+                            $this->db->rollback();
+                            $msg = $this->getValidateMessage('order', 'db', 'save-failed');
+                            return $this->error([$msg]);
+                        }
+                    }
                 } else {
                     // 否则变为退款中
-                    $data = [
-                        'order_status' => '5',
-                    ];
+                    $order_status = '5';
                 }
                 // 写入变更状态
-                if (!$order->save($data)) {
+                if (!$order->save(compact('order_status'))) {
+                    // 回滚
+                    $this->db->rollback();
                     // 报错
                     $msg = $this->getValidateMessage('order', 'db', 'save-failed');
                     return $this->error([$msg]);
                 }
+
+                // 提交事务
+                $this->db->commit();
+
                 // 最终返回成功
                 return $this->success();
             } else {

@@ -123,13 +123,13 @@ table .t-default {
 
 .order-table td {
     vertical-align: middle;
-    font-size:1.1em;
+    font-size:0.6em;
 }
 .order-table-title {
     background: #f1f1f1;
 }
 .w80 {
-    width:80px;
+    width:40px;
     height:auto;
 }
 .text-left {
@@ -145,12 +145,45 @@ button {
     cursor: pointer;
 }
 /* 订单列表 End */
-
+.footer-text-left {
+    text-align: center !important;
+}
+.goods-data th, .checkout-page th {
+    font-size: 1em;
+}
+.margin-left-20 {
+    margin-left: 0.8em !important;
+}
+.goods-page-price strong, .goods-page-total strong, .checkout-price strong, .checkout-total strong {
+    font-size:1.2em;
+}
+.goods-page-price strong span, .goods-page-total strong span, .checkout-price strong span, .checkout-total strong span {
+    font-size: 1em;
+}
 @media (min-width:768px) {
-    .footer .text-left {
-        text-align: left;
+    .footer .text-left, .footer-text-left {
+        text-align: left !important;
     }
     .footer .text-right {
         text-align: right;
+    }
+    .goods-data th, .checkout-page th {
+        font-size: 1.4em;
+    }
+    .order-table td {
+        font-size:1.1em;
+    }
+    .w80 {
+        width:80px;
+        height:auto;
+    }
+    .margin-left-20 {
+        margin-left: 20px !important;
+    }
+    .goods-page-price strong, .goods-page-total strong, .checkout-price strong, .checkout-total strong {
+        font-size:21px;
+    }
+    .goods-page-price strong span, .goods-page-total strong span, .checkout-price strong span, .checkout-total strong span {
+        font-size: 17px;
     }
 }
