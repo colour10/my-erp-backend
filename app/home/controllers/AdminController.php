@@ -119,7 +119,7 @@ class AdminController extends BaseController
 	    ));
 
         $page = $this->request->getPost("page", "int", 1);
-        $pageSize = $this->request->getPost("pageSize", "int", 15);
+        $pageSize = $this->request->getPost("pageSize", "int", 20);
 
         $paginator = new PaginatorModel(
             [
