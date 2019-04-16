@@ -245,7 +245,9 @@ class Util {
             ['series','page'],
             ['warehouse','userlist'],
             ['series2','page'],
-            ['productmemo', 'page']
+            ['productmemo', 'page'],
+            ['companyinvoice', 'page'],
+            ['company', 'info']
         ];
     }
 
