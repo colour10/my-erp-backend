@@ -698,6 +698,8 @@ CREATE TABLE `tb_product_search` (
   `picture2` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '副图',
   `color` varchar(20) COLLATE utf8_bin DEFAULT NULL COMMENT '颜色',
   `color_group` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '同组颜色',
+  `price` decimal(16,2) DEFAULT NULL COMMENT '原价',
+  `realprice` decimal(16,2) DEFAULT NULL COMMENT '折扣价',
   `companyid` int(11) DEFAULT NULL,
   UNIQUE KEY `companyid_2` (`companyid`,`productid`),
   PRIMARY KEY `id` (`id`),
