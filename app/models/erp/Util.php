@@ -1,6 +1,8 @@
 <?php
 namespace Asa\Erp;
 
+use Gregwar\Image\Image;
+
 class Util {    
     /**
      * 格式化为目录树
@@ -259,5 +261,25 @@ class Util {
             ['login', 'checklogin'],
             ['common', 'systemlanguage']
         ];
+    }
+
+
+    /**
+     * 把图片转换成对应的分辨率，都是正方形格式的
+     * @param $filepath 图片的绝对路径，比如：/www/wwwroot/www.jinxiaocun.com/erp/public/upload/product/model4.jpg
+     * @param $resizeArray 分辨率数组，例如[80, 200]，代表裁剪为两组分辨率，分别是80*80、200*200，路径保存在和原来的图片相同的目录下
+     * @throws \Exception
+     */
+    public static function convertPics($filepath, $resizeArray)
+    {
+        // 逻辑
+        // 首先获取图片的参数
+        $pathinfo = pathinfo($filepath);
+        foreach ($resizeArray as $resize) {
+            // 开始处理
+            Image::open($filepath)
+                ->resize($resize, $resize)
+                ->save(dirname($filepath).'/'.$pathinfo['basename'].'_'.$resize.'x'.$resize.'.'.$pathinfo['extension']);
+        }
     }
 }
