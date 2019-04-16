@@ -63,15 +63,6 @@ class TbBrandgroup extends BaseModel
             'message' => $this->getValidateMessage('uniqueness', 'name'),
             'cancelOnFail' => true,
         ]));
-        // code-品类编码
-        $validator->add('code', new PresenceOf([
-            'message' => $this->getValidateMessage('required', 'code'),
-            'cancelOnFail' => true,
-        ]));
-        $validator->add('code', new Uniqueness([
-            'message' => $this->getValidateMessage('uniqueness', 'code'),
-            'cancelOnFail' => true,
-        ]));
 
         // 过滤
         $validator->setFilters($name, 'trim');
