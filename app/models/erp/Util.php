@@ -251,6 +251,7 @@ class Util {
             ['companyinvoice', 'page'],
             ['supplierbank','page'],
             ['supplierinvoice','page'],
+            ['currency', 'page'],
             ['company', 'info']
         ];
     }

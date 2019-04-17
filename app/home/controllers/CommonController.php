@@ -207,7 +207,7 @@ class CommonController extends BaseController
             "sizetop" => ["model"=>'Asa\Erp\TbSizetop',"company"=>false],
             "templatemanage" => ["model"=>'Asa\Erp\TbTemplatemanage',"company"=>false],
             "ulnarinch" => ["model"=>'Asa\Erp\TbUlnarinch',"company"=>false],
-            "washinginstructions" => ["model"=>'Asa\Erp\ZlWashinginstructions',"company"=>false],
+            "currency" => ["model"=>'Asa\Erp\TbCurrency',"company"=>false],
         ];
         $table = $this->dispatcher->getParam("table");
         $model = $maps[$table];

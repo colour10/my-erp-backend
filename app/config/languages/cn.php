@@ -474,7 +474,7 @@ return array(
     "confirm-payment?" => "确认该笔费用已经支付吗？",
     "queren" => "确认",
     "xiangqing" => "详情",
-    "tijiaoren" => "提交人",
+    "huobiguanli" => "货币管理",
     "tijiaoren" => "提交人",
     "tijiaoren" => "提交人",
     "tijiaoren" => "提交人",
