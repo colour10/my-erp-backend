@@ -67,7 +67,7 @@ try {
         if($config->mode=='develop') {
             $eventsManager = new EventsManager();
 
-            $logger = new FileLogger($config->app->log_path . "/weblog.log");
+            $logger = new FileLogger($config->app->log_path . sprintf("/weblog_%s.log",date('Ymd')));
 
             // Listen all the database events
             $eventsManager->attach('db', function ($event, $connection) use ($logger) {

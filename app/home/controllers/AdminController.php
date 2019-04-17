@@ -113,10 +113,15 @@ class AdminController extends BaseController
 	}
 	
 	function pageAction() {
+        $this->before_page();
+        $params = [$this->getSearchCondition()];
+        if(isset($_POST['__orderby'])) {
+            $params['order'] = $_POST['__orderby'];
+        }
+        //print_r($params);
+
 	    $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
-	    $result = $findFirst->invokeArgs(null, array(
-	        $this->getSearchCondition()
-	    ));
+	    $result = $findFirst->invokeArgs(null, [$params]);
 
         $page = $this->request->getPost("page", "int", 1);
         $pageSize = $this->request->getPost("pageSize", "int", 20);

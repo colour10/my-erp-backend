@@ -475,9 +475,9 @@ return array(
     "queren" => "确认",
     "xiangqing" => "详情",
     "huobiguanli" => "货币管理",
+    "jiageguanli" => "价格管理",
     "tijiaoren" => "提交人",
-    "tijiaoren" => "提交人",
-    "tijiaoren" => "提交人",
+    "xishu" => "系数",
     "tijiaoren" => "提交人",
     "tijiaoren" => "提交人",
 
@@ -595,15 +595,6 @@ return array(
         "delete-success" => "%s删除成功",
     ),
     
-    "list_currency" => [
-        "1" => array("id"=>"1", "code"=>"CAD", "name"=>"加元"),
-        "2" => array("id"=>"2", "code"=>"EUR", "name"=>"欧元"),
-        "3" => array("id"=>"3", "code"=>"HKD", "name"=>"港币"),
-        "4" => array("id"=>"4", "code"=>"JPY", "name"=>"日元"),
-        "5" => array("id"=>"5", "code"=>"RMB", "name"=>"人民币"),
-        "6" => array("id"=>"6", "code"=>"USD", "name"=>"美元")
-    ],
-    
     "list_gender" => array(
         "1" => "男性",
         "2" => "女性",
@@ -635,8 +626,8 @@ return array(
         "1" => "男款",
         "2" => "女款",
         "3" => "男/女款"
-    ),
-    
+    ),    
+
     "list_orderproperty" => array(
         "1" => "自采",
         "2" => "代销"
