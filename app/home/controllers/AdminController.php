@@ -145,7 +145,7 @@ class AdminController extends BaseController
         $pageinfo = [
             //"previous"      => $pageObject->previous,
             "current"       => $pageObject->current,
-            //"totalPages"    => $pageObject->total_pages,
+            "totalPages"    => $pageObject->total_pages,
             //"next"          => $pageObject->next,
             "total"    => $pageObject->total_items,
             "pageSize"     => $pageSize

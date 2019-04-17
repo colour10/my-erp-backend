@@ -14,4 +14,8 @@ class SizetopController extends ZadminController {
 
 	    $this->setModelName('Asa\\Erp\\TbSizetop');
     }
+
+    function before_page() {
+        $_POST["__orderby"] = "name_cn asc";
+    }
 }

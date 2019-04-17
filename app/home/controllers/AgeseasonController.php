@@ -21,4 +21,8 @@ class AgeseasonController extends AdminController {
 	        "fullname" => sprintf("%s%s", $row->sessionmark, $row->name)   
 	    );
 	}
+
+    function before_page() {
+        $_POST["__orderby"] = "name desc,sessionmark desc";
+    }
 }
