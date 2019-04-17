@@ -48,7 +48,7 @@ class LoginController extends AdminController
 
             // 查找记录
             $rs = TbMember::findFirst([
-                "login_name = :username: and password = :password:",
+                "name = :username: and password = :password:",
                 'bind' => [
                     'username' => $username,
                     'password' => md5($password),
