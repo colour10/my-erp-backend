@@ -89,10 +89,14 @@ class BaseModel extends \Phalcon\Mvc\Model {
         return $this->toArray();
     }
 
-    public static function doList($form) {            
+    public static function doList($form, $oderby="") {            
         $where = static::getSearchCondition($form);
         
-        $result = static::find($where);       
+        $params = [$where];
+        if($oderby!="") {
+            $params['order'] = $oderby;
+        }
+        $result = static::find($params);       
         
         $list = array();
         foreach($result as $row) { 
