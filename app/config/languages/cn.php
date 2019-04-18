@@ -20,7 +20,7 @@ return array(
     "xitongshezhi" => "系统设置",
     "kaipiaoxinxi" => "开票信息",
     "menu-2" => "基础数据",
-    "menu-2-1" => "商品相关",
+    "shouye" => "首页",
     "menu-2-1-1" => "品牌维护",
     "menu-2-1-2" => "品类维护",
     "menu-2-1-3" => "款式年代",
