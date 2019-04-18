@@ -147,10 +147,11 @@ class BuycarController extends AdminController
      * @return bool|void
      */
     public function addAction() {
-    	if($rs = $this->session->get('member')) {
+    	if ($rs = $this->session->get('member')) {
     		$cars = TbBuycar::findFirst(array(
     			"member_id = ".$rs['id']." and product_id = ".$_POST['product_id']." and color_id = ".$_POST['color_id']." and size_id = ".$_POST['size_id']
     		));
+
     		// 无此商品
             // 设置当前语言字段
             $name = $this->getlangfield('name');
@@ -169,7 +170,15 @@ class BuycarController extends AdminController
     			$model->size_name = TbSizecontent::findFirstById($_POST['size_id'])->$content;
     			$model->member_id = $rs['id'];
     			$res = $model -> save();
-    			return json_encode(['code' => '200', 'auth' =>$res, 'messages' => []]);
+    			if (!$res) {
+    			    $errors = [];
+                     foreach ($model->getMessages() as $message) {
+                         $errors[] = $message->getMessage();
+                    }
+                    return json_encode(['code' => '200', 'auth' =>$errors, 'messages' => []]);
+                } else {
+                    return json_encode(['code' => '200', 'auth' =>$res, 'messages' => []]);
+                }
  			   //  foreach ($model->getMessages() as $message) {
 		        //     echo $message->getMessage();
 		        // }
@@ -178,7 +187,15 @@ class BuycarController extends AdminController
     			$cars->number = $cars->number + Intval($_POST['number']);
     			$cars->total_price = sprintf($cars->total_price + sprintf("%.2f",$_POST['total_price']));
     			$res = $cars -> save();
-                return json_encode(['code' => '200', 'auth' =>$res, 'messages' => []]);
+                if (!$res) {
+                    $errors = [];
+                    foreach ($cars->getMessages() as $message) {
+                        $errors[] = $message->getMessage();
+                    }
+                    return json_encode(['code' => '200', 'auth' =>$errors, 'messages' => []]);
+                } else {
+                    return json_encode(['code' => '200', 'auth' =>$res, 'messages' => []]);
+                }
 			}
     	}else if($rs = $this->session->get('buycar')){
     		//是否已存在同款商品

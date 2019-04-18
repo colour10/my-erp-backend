@@ -144,17 +144,18 @@ insert  into `tb_brandgroupchild_property`(`id`,`name_cn`,`name_en`,`name_hk`,`n
 DROP TABLE IF EXISTS `tb_buycar`;
 
 CREATE TABLE `tb_buycar` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `product_id` int(10) unsigned NOT NULL COMMENT '商品id',
-  `product_name` varchar(255) NOT NULL COMMENT '商品名称',
-  `color_id` int(10) unsigned NOT NULL COMMENT '颜色id',
-  `color_name` int(11) NOT NULL COMMENT '颜色名称',
-  `size_id` int(11) NOT NULL COMMENT '规格id',
-  `size_name` int(11) NOT NULL COMMENT '规格名称',
-  `member_id` int(10) unsigned NOT NULL COMMENT '用户id',
-  `number` int(10) unsigned NOT NULL DEFAULT '1' COMMENT '数量',
-  `price` decimal(9,2) NOT NULL COMMENT '价格',
-  `total_price` decimal(9,2) NOT NULL COMMENT '总价格',
+                           `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+                           `product_id` int(10) UNSIGNED NOT NULL COMMENT '商品id',
+                           `product_name` varchar(255) NOT NULL COMMENT '商品名称',
+                           `color_id` int(10) UNSIGNED NOT NULL COMMENT '颜色id',
+                           `color_name` varchar(64) NOT NULL COMMENT '颜色名称',
+                           `size_id` int(11) NOT NULL COMMENT '规格id',
+                           `size_name` varchar(64) NOT NULL COMMENT '规格名称',
+                           `member_id` int(10) UNSIGNED NOT NULL COMMENT '用户id',
+                           `number` int(10) UNSIGNED NOT NULL DEFAULT '1' COMMENT '数量',
+                           `price` decimal(9,2) NOT NULL COMMENT '价格',
+                           `total_price` decimal(9,2) NOT NULL COMMENT '总价格',
+                           `picture` varchar(255) DEFAULT NULL COMMENT '商品预览图',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='购物车';
 
