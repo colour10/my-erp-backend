@@ -189,7 +189,7 @@ class CommonController extends BaseController
             "warehouse_user" => ["model"=>'Asa\Erp\TbWarehouseUser',"company"=>true],
             "warehousingdetails" => ["model"=>'Asa\Erp\TbWarehousingdetails',"company"=>true],
             "warehousing" => ["model"=>'Asa\Erp\TbWarehousing',"company"=>true],
-            "ageseason" => ["model"=>'Asa\Erp\TbAgeseason',"company"=>false],
+            "ageseason" => ["model"=>'Asa\Erp\TbAgeseason',"company"=>false, "orderby"=>"name desc,sessionmark desc"],
             "aliases" => ["model"=>'Asa\Erp\TbAliases',"company"=>false],
             "brandgroup" => ["model"=>'Asa\Erp\TbBrandgroup',"company"=>false],
             "brand" => ["model"=>'Asa\Erp\TbBrand',"company"=>false],
@@ -213,8 +213,12 @@ class CommonController extends BaseController
         $model = $maps[$table];
 
         if($model) {
+            $orderby = "";
+            if(isset($model['orderby'])) {
+                $orderby = $model['orderby'];
+            }
             $doList = new \ReflectionMethod($model['model'], 'doList');
-            $result = $doList->invokeArgs(null, [$_REQUEST]);
+            $result = $doList->invokeArgs(null, [$_REQUEST, $orderby]);
             echo $this->reportJson(array("data"=>$result) ); 
         }
         else {
