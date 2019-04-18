@@ -2,6 +2,7 @@
 namespace Asa\Erp;
 
 use Gregwar\Image\Image;
+use PHPExcel;
 
 class Util {    
     /**
@@ -285,4 +286,205 @@ class Util {
                 ->save(dirname($filepath).'/'.$pathinfo['basename'].'_'.$resize.'x'.$resize.'.'.$pathinfo['extension']);
         }
     }
+
+
+    /**
+     * 导入带图片格式的excel，即使是每一列含有多张图片也没有问题
+     * @param $excelFilePath excel文件的绝对路径
+     * @param $pictureSaveFolder 图片保存的文件夹，具体是指/public/upload下面的具体文件夹名称，比如product
+     * @return array|bool
+     * @throws \PHPExcel_Exception
+     * @throws \PHPExcel_Reader_Exception
+     */
+    public static function importExcel($excelFilePath, $pictureSaveFolder)
+    {
+        // 逻辑
+        // 首先创建所需的文件夹
+        $imgPath = APP_PATH.'/public/upload/'.$pictureSaveFolder;
+        if(!file_exists($imgPath)) {
+            mkdir($imgPath);
+        }
+
+        // 图片保存逻辑
+        // 加载2003格式的
+        $objReader = \PHPExcel_IOFactory::createReader('Excel5');
+        // 载入文件
+        $objPHPExcel = $objReader->load($excelFilePath);
+        // 取出数据
+        $datas = $objPHPExcel->getSheet(0);
+
+        // 先处理图片
+        $AllImages = $datas->getDrawingCollection();
+        foreach ($AllImages as $drawing) {
+            if ($drawing instanceof \PHPExcel_Worksheet_MemoryDrawing) {
+                // 原始文件名
+                $filename = $drawing->getIndexedFilename();
+
+                // jpeg后缀名处理
+                $imgName = substr($filename,0,strrpos($filename,'.')-1);
+                $imgType = @end(explode(".",$filename));
+                // 如果扩展名是jpeg，则修改为jpg
+                if ($imgType == 'jpeg') {
+                    $img = $imgName.'.jpg';
+                } else {
+                    $img = $imgName.'.'.$imgType;
+                }
+
+                // 把图片保存在服务器中
+                ob_start();
+                call_user_func(
+                    $drawing->getRenderingFunction(),
+                    $drawing->getImageResource()
+                );
+                $imageContents = ob_get_contents();
+                file_put_contents($imgPath.'/'.$img, $imageContents); //把文件保存到本地
+                ob_end_clean();
+
+                // 获取当前单元格位置，便于后续操作
+                $XY = $drawing->getCoordinates();
+
+                // 把图片的单元格的值设置为最终路径
+                $cell = $datas->getCell($XY);
+                $cell->setValue($pictureSaveFolder . '/' . $img);
+            }
+        }
+
+        // 返回去掉首行excel标题的数组
+        // 接下来的工作要写入数据库，参考下面的savetodb函数
+        return self::unsetFirstArray($datas->toArray());
+    }
+
+
+
+    /**
+     * 返回去掉首行，并且重新组合的数组
+     * @param $array
+     * @return array|bool
+     */
+    public static function unsetFirstArray($array)
+    {
+        // 逻辑
+        // 如果是数组
+        if (is_array($array)) {
+            // 去掉第一行
+            unset($array[0]);
+            // 重新组装数组
+            return array_values($array);
+        } else {
+            // 不是数组直接返回错误
+            return false;
+        }
+    }
+
+    /**
+     * excel导出功能，带图片
+     * @param array $title
+     * @param array $data
+     * @param string $fileName
+     * @param string $savePath
+     * @param bool $isDown
+     * @return string
+     * @throws \PHPExcel_Exception
+     */
+    public static function excelExport($title = array(), $data = array(), $fileName = '', $savePath = './', $isDown = true)
+    {
+        // 逻辑
+        // 初始化
+        $obj = new PHPExcel();
+
+        // 横向单元格标识
+        $cellName = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ');
+
+        // 设置sheet名称，默认为sheet1
+        $obj->getActiveSheet()->setTitle('sheet1');
+
+        // 设置默认对齐方式
+        $obj->getDefaultStyle()->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $obj->getDefaultStyle()->getAlignment()->setVertical(\PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+        // 设置纵向单元格标识
+        $_row = 1;
+        if ($title) {
+            // 注释掉最上面一行合并单元格的内容，有需要再恢复
+            // $_cnt = count($title);
+            // // 合并单元格
+            // $obj->getActiveSheet(0)->mergeCells('A'.$_row.':'.$cellName[$_cnt-1].$_row);
+            // 设置合并后的单元格内容
+            // $obj->setActiveSheetIndex(0)->setCellValue('A'.$_row, '数据导出：'.date('Y-m-d H:i:s'));
+            // $_row++;
+            $i = 0;
+            // 设置列标题
+            foreach ($title AS $v) {
+                $obj->setActiveSheetIndex(0)->setCellValue($cellName[$i] . $_row, $v);
+                $i++;
+            }
+            $_row++;
+        }
+
+        // 填写数据
+        if ($data) {
+            $i = 0;
+            foreach ($data as $_v) {
+                $j = 0;
+                foreach ($_v as $_cell) {
+                    $obj->getActiveSheet()->setCellValue($cellName[$j] . ($i + $_row), $_cell);
+                    // 设置自动换行
+                    $obj->getActiveSheet()->getStyle($cellName[$j] . ($i + $_row))->getAlignment()->setWrapText(TRUE);
+                    // 如果数据库含有图片，那么就把图片的地址改为插入图片
+                    if (strpos($_cell, 'jpg') !== false || strpos($_cell, 'gif') !== false || strpos($_cell, 'png') !== false) {
+                        // 首先修改图片列的单元格宽度和高度
+                        // 宽度
+                        $obj->getActiveSheet()->getColumnDimension($cellName[$j])->setWidth(16);
+                        // 然后修改默认行高和第一行高
+                        //设置默认行高
+                        $obj->getActiveSheet()->getDefaultRowDimension()->setRowHeight(100);
+                        //设置第一行高
+                        $obj->getActiveSheet()->getRowDimension(1)->setRowHeight(20);
+
+                        // 然后把图片列的内容清空
+                        $obj->getActiveSheet()->setCellValue($cellName[$j] . ($i + $_row), '');
+                        // 处理图片显示位置
+                        $img = new \PHPExcel_Worksheet_Drawing();
+                        $img->setPath(APP_PATH . '/public/upload/' . $_cell);//写入图片路径
+                        $img->setHeight(80);//写入图片高度
+                        $img->setWidth(80);//写入图片宽度
+                        $img->setOffsetX(15);//写入图片在指定格中的X坐标值
+                        $img->setOffsetY(15);//写入图片在指定格中的Y坐标值
+                        $img->setRotation(1);//设置旋转角度
+                        $img->setResizeProportional(false); //默认是按原图像缩放的，设置成false才可以。
+                        $img->getShadow()->setVisible(true);//
+                        $img->getShadow()->setDirection(50);//
+                        $img->setCoordinates($cellName[$j] . ($i + $_row));//设置图片所在表格位置
+                        $img->setWorksheet($obj->getActiveSheet());//把图片写到当前的表格中
+                    }
+
+                    $j++;
+                }
+                $i++;
+            }
+        }
+
+        // 文件名处理
+        if (!$fileName) {
+            $fileName = uniqid(time(), true);
+        }
+        $objWrite = \PHPExcel_IOFactory::createWriter($obj, 'Excel5');
+
+        // 网页下载
+        if ($isDown) {
+            header('pragma:public');
+            header("Content-Disposition:attachment;filename=$fileName.xls");
+            $objWrite->save('php://output');
+            exit;
+        }
+
+        // 转码，防止文件名乱码
+        $_fileName = iconv("utf-8", "gb2312", $fileName);
+        $_savePath = $savePath . $_fileName . '.xls';
+        $objWrite->save($_savePath);
+
+        // 返回文件名
+        return $savePath . $fileName . '.xls';
+    }
+
 }
