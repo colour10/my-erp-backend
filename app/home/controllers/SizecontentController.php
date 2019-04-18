@@ -47,4 +47,20 @@ class SizecontentController extends ZadminController {
         }
         return $this->success();
     }
+
+    function topAction() {
+        $properry = TbSizecontent::findFirstById($_POST['id']);
+        if($properry!=false) {
+            $properry->doTop();
+        }
+        return $this->success();
+    }
+
+    function bottomAction() {
+        $properry = TbSizecontent::findFirstById($_POST['id']);
+        if($properry!=false) {
+            $properry->doBottom();
+        }
+        return $this->success();
+    }
 }

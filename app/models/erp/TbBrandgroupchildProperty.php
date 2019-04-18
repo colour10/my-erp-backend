@@ -100,4 +100,28 @@ class TbBrandgroupchildProperty extends BaseModel
              $db->commit();
         }
     }
+
+    function doTop() {
+        $min = static::minimum([
+            sprintf("brandgroupchildid=%d", $this->brandgroupchildid),
+            'column' => 'displayindex'
+        ]);
+
+        $this->displayindex = $min-1;
+        if($this->update()==false) {
+            throw new Exception("#1002#更新属性的排序规则失败1#");
+        }
+    }
+
+    function doBottom() {
+        $min = static::maximum([
+            sprintf("brandgroupchildid=%d", $this->brandgroupchildid),
+            'column' => 'displayindex'
+        ]);
+
+        $this->displayindex = $min+1;
+        if($this->update()==false) {
+            throw new Exception("#1002#更新属性的排序规则失败1#");
+        }
+    }
 }

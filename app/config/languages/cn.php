@@ -479,8 +479,8 @@ return array(
     "jiageguanli" => "价格管理",
     "tijiaoren" => "提交人",
     "xishu" => "系数",
-    "tijiaoren" => "提交人",
-    "tijiaoren" => "提交人",
+    "dingbu" => "顶部",
+    "dibu" => "底部",
 
 
     // 新增

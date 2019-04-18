@@ -47,4 +47,20 @@ class BrandgroupchildpropertyController extends ZadminController {
         }
         return $this->success();
     }
+
+    function topAction() {
+        $properry = TbBrandgroupchildProperty::findFirstById($_POST['id']);
+        if($properry!=false) {
+            $properry->doTop();
+        }
+        return $this->success();
+    }
+
+    function bottomAction() {
+        $properry = TbBrandgroupchildProperty::findFirstById($_POST['id']);
+        if($properry!=false) {
+            $properry->doBottom();
+        }
+        return $this->success();
+    }
 }

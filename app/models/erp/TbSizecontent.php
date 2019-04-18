@@ -85,4 +85,28 @@ class TbSizecontent extends BaseModel
              $db->commit();
         }
     }
+
+    function doTop() {
+        $min = static::minimum([
+            sprintf("topid=%d", $this->topid),
+            'column' => 'displayindex'
+        ]);
+
+        $this->displayindex = $min-1;
+        if($this->update()==false) {
+            throw new Exception("#1002#更新尺码详情的排序规则失败1#");
+        }
+    }
+
+    function doBottom() {
+        $min = static::maximum([
+            sprintf("topid=%d", $this->topid),
+            'column' => 'displayindex'
+        ]);
+
+        $this->displayindex = $min+1;
+        if($this->update()==false) {
+            throw new Exception("#1002#更新尺码详情的排序规则失败1#");
+        }
+    }
 }
