@@ -75,14 +75,24 @@ class AdminController extends BaseController
 
         $array = $model->getSearchBaseCondition();
 
-        foreach ($fieldTypes as $key=>$value) {
-            if(isset($_REQUEST[$key]) && $_REQUEST[$key]!="" ) {
-                if ($fieldTypes[$key] == Column::TYPE_INTEGER || $fieldTypes[$key] == Column::TYPE_BIGINTEGER ) {
+        $keyword = $this->request->get("keyword", "trim");
+        $keywords = [];
+        foreach ($fieldTypes as $key=>$value) {            
+            if ($fieldTypes[$key] == Column::TYPE_INTEGER || $fieldTypes[$key] == Column::TYPE_BIGINTEGER ) {
+                if(isset($_REQUEST[$key]) && $_REQUEST[$key]!="" ) {
                     $array[] = sprintf("%s=%d", $key, $this->request->get($key));
-                } else { //($fieldTypes[$key] == Column::TYPE_CHAR || $fieldTypes[$key] == Column::TYPE_VARCHAR) {
+                }
+            } else { //($fieldTypes[$key] == Column::TYPE_CHAR || $fieldTypes[$key] == Column::TYPE_VARCHAR) {
+                if(isset($_REQUEST[$key]) && $_REQUEST[$key]!="" ) {
                     $array[] = sprintf("%s='%s'", $key, addslashes($this->request->get($key)));
                 }
+                $keywords[] = sprintf("%s like '%%%s%%'", $key, addslashes($keyword));
             }
+        }
+
+        if($keyword!="" && count($keywords)>0) {
+            $array[] = implode(" or ", $keywords);
+            //print_r($keywords);
         }
 
         return implode(' and ', $array);
