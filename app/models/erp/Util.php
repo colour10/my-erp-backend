@@ -306,8 +306,9 @@ class Util {
         }
 
         // 图片保存逻辑
-        // 加载2003格式的
-        $objReader = \PHPExcel_IOFactory::createReader('Excel5');
+        // 使用 PHPExcel_IOFactory 来鉴别文件应该使用哪一个读取类
+        $inputFileType = \PHPExcel_IOFactory::identify($excelFilePath);
+        $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
         // 载入文件
         $objPHPExcel = $objReader->load($excelFilePath);
         // 取出数据
@@ -316,6 +317,8 @@ class Util {
         // 先处理图片
         $AllImages = $datas->getDrawingCollection();
         foreach ($AllImages as $drawing) {
+            // xls和xlsx对于图片处理有着不同的逻辑，所以要进行分别处理
+            // 如果是xls
             if ($drawing instanceof \PHPExcel_Worksheet_MemoryDrawing) {
                 // 原始文件名
                 $filename = $drawing->getIndexedFilename();
@@ -347,10 +350,35 @@ class Util {
                 $cell = $datas->getCell($XY);
                 $cell->setValue($pictureSaveFolder . '/' . $img);
             }
+
+            // 如果是xlsx
+            if ($drawing instanceof \PHPExcel_Worksheet_Drawing) {
+                // 文件完整路径$filename
+                // 类似于：zip:///data/www/xxx/bdac99339.xlsx#xl/media/image2.jpg
+                $filename = $drawing->getPath();
+                // 文件后缀
+                $imgType = @end(explode(".",$filename));
+                // 文件名部分
+                $imgName = md5(time().mt_rand(100,999).uniqid());
+                // 如果扩展名是jpeg，则修改为jpg
+                if ($imgType == 'jpeg') {
+                    $img = $imgName.'.jpg';
+                } else {
+                    $img = $imgName.'.'.$imgType;
+                }
+                // 即将要复制到的文件路径
+                copy($filename, $imgPath.'/'.$img);
+
+                // 获取当前单元格位置，便于后续操作
+                $XY = $drawing->getCoordinates();
+
+                // 把图片的单元格的值设置为最终路径
+                $cell = $datas->getCell($XY);
+                $cell->setValue($pictureSaveFolder . '/' . $img);
+            }
         }
 
         // 返回去掉首行excel标题的数组
-        // 接下来的工作要写入数据库，参考下面的savetodb函数
         return self::unsetFirstArray($datas->toArray());
     }
 
