@@ -14,4 +14,8 @@ class MaterialController extends ZadminController {
 
 	    $this->setModelName('Asa\\Erp\\TbMaterial');
     }
+
+    function before_page() {
+        $_POST["__orderby"] = "code asc";
+    }
 }

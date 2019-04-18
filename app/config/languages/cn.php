@@ -41,7 +41,7 @@ return array(
     "menu-2-1-18" => "材质备注管理",
     "menu-2-1-19" => "商品尺码描述",
     "yinhangmingcheng" => "银行名称",
-    "menu-2-2-1" => "商品价格管理",
+    "gaojichaxun" => "高级查询",
     "menu-2-2-2" => "成本计算管理",
     "yinhangdizhi" => "银行地址",
     "menu-2-3-1" => "仓库管理",
