@@ -73,7 +73,7 @@ class TbProductstock extends BaseCompanyModel
     public function validation()
     {
         $validator = new Validation();
-
+/*
         // productid-商品编号不能为空
         $validator->add('productid', new PresenceOf([
             'message' => $this->getValidateMessage('required', 'productid'),
@@ -110,7 +110,7 @@ class TbProductstock extends BaseCompanyModel
             'message' => $this->getValidateMessage('uniqueness', 'productstock-productid-sizecontentid-warehouseid'),
             'cancelOnFail' => true,
         ]));
-
+*/
         return $this->validate($validator);
     }
 
@@ -225,7 +225,8 @@ class TbProductstock extends BaseCompanyModel
         $productStock->number = 0;
         if($productStock->create()==false) {
             $db->rollback();
-            return false;
+            $productStock->debug();
+            throw new Exception("/1001/不能创建初始库存/");
         }
 
         $db->commit();
