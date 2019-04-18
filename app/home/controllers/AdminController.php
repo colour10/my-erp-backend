@@ -91,7 +91,7 @@ class AdminController extends BaseController
         }
 
         if($keyword!="" && count($keywords)>0) {
-            $array[] = implode(" or ", $keywords);
+            $array[] = '(' . implode(" or ", $keywords) . ')';
             //print_r($keywords);
         }
 
