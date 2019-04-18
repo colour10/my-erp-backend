@@ -2,9 +2,8 @@
 namespace Asa\Erp;
 
 use Gregwar\Image\Image;
-use PHPExcel;
 
-class Util {    
+class Util {
     /**
      * 格式化为目录树
      * @param $result 结果集
@@ -65,16 +64,16 @@ class Util {
             // 找到父级是0的
             if ($v['up_dp_id'] == $pid) {
                 // 数据合并
-                    $tree[] = [
-                        'id' => $v['id'],
-                        'label' => str_repeat($str_repeat, $level).$v['name'],
-                        'memo' => $v['memo'],
-                        'level' => $level,
-                    ];
-                    // 继续寻找
-                    $tree = array_merge($tree, self::format_tree_single_array($result, $v['id'], $level+1));
-                }
+                $tree[] = [
+                    'id' => $v['id'],
+                    'label' => str_repeat($str_repeat, $level).$v['name'],
+                    'memo' => $v['memo'],
+                    'level' => $level,
+                ];
+                // 继续寻找
+                $tree = array_merge($tree, self::format_tree_single_array($result, $v['id'], $level+1));
             }
+        }
         // 返回
         return $tree;
     }
@@ -199,7 +198,7 @@ class Util {
     }
 
     public static function getAuthResourse() {
-        return [           
+        return [
             ["user","modifypassword"],
             ["warehouseuser","page"],
             ["user","page"],
@@ -265,6 +264,26 @@ class Util {
             ['login', 'checklogin'],
             ['common', 'systemlanguage']
         ];
+    }
+
+
+    /**
+     * 把图片转换成对应的分辨率，都是正方形格式的
+     * @param $filepath 图片的绝对路径，比如：/www/wwwroot/www.jinxiaocun.com/erp/public/upload/product/model4.jpg
+     * @param $resizeArray 分辨率数组，例如[80, 200]，代表裁剪为两组分辨率，分别是80*80、200*200，路径保存在和原来的图片相同的目录下
+     * @throws \Exception
+     */
+    public static function convertPics($filepath, $resizeArray)
+    {
+        // 逻辑
+        // 首先获取图片的参数
+        $pathinfo = pathinfo($filepath);
+        foreach ($resizeArray as $resize) {
+            // 开始处理
+            Image::open($filepath)
+                ->resize($resize, $resize)
+                ->save(dirname($filepath).'/'.$pathinfo['basename'].'_'.$resize.'x'.$resize.'.'.$pathinfo['extension']);
+        }
     }
 
 
@@ -514,5 +533,6 @@ class Util {
         // 返回文件名
         return $savePath . $fileName . '.xls';
     }
+
 
 }
