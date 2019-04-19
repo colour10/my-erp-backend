@@ -40,7 +40,7 @@ class CommonController extends BaseController
         $auth = $this->auth;
         
         $lang["_image_url_prex"] = $config->file_prex;
-        $lang["list_languages"] = $config->languages;
+        $lang["languages"] = $config->languages;
         
         //$lang["gender"] = $config->gender;
         
@@ -195,7 +195,7 @@ class CommonController extends BaseController
             "brand" => ["model"=>'Asa\Erp\TbBrand',"company"=>false],
             "brandgroupchild" => ["model"=>'Asa\Erp\TbBrandgroupchild',"company"=>false],
             "colortemplate" => ["model"=>'Asa\Erp\TbColortemplate',"company"=>false],
-            "country" => ["model"=>'Asa\Erp\TbCountry',"company"=>false],
+            "country" => ["model"=>'Asa\Erp\TbCountry',"company"=>false, "orderby"=>"name_en asc"],
             "materialnote" => ["model"=>'Asa\Erp\TbMaterialnote',"company"=>false],
             "material" => ["model"=>'Asa\Erp\TbMaterial',"company"=>false],
             "productinnards" => ["model"=>'Asa\Erp\TbProductinnards',"company"=>false],
@@ -208,18 +208,26 @@ class CommonController extends BaseController
             "templatemanage" => ["model"=>'Asa\Erp\TbTemplatemanage',"company"=>false],
             "ulnarinch" => ["model"=>'Asa\Erp\TbUlnarinch',"company"=>false],
             "currency" => ["model"=>'Asa\Erp\TbCurrency',"company"=>false],
+            "price" => ["model"=>'Asa\Erp\TbPrice',"company"=>false],
         ];
         $table = $this->dispatcher->getParam("table");
         $model = $maps[$table];
 
         if($model) {
-            $orderby = "";
+            $where = call_user_func_array($model['model'].'::getSearchCondition', [$_REQUEST]);
+        
+            $params = [$where];
             if(isset($model['orderby'])) {
-                $orderby = $model['orderby'];
+                $params['order'] = $model['orderby'];
             }
-            $doList = new \ReflectionMethod($model['model'], 'doList');
-            $result = $doList->invokeArgs(null, [$_REQUEST, $orderby]);
-            echo $this->reportJson(array("data"=>$result) ); 
+            $result = call_user_func_array($model['model'].'::find',[$params]);              
+            
+            $list = array();
+            foreach($result as $row) { 
+                 $list[] = $row->toArrayPipe();
+            }   
+
+            echo $this->reportJson(array("data"=>$list) ); 
         }
         else {
             echo $this->error(["error"]);

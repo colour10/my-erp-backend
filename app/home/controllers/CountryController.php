@@ -16,4 +16,8 @@ class CountryController extends ZadminController {
 	    //$this->configList("code", ["name","relateid"]);
 	    $this->setLanguageFlag(true);
     }
+
+    function before_page() {
+        $_POST["__orderby"] = "name_en asc";
+    }
 }

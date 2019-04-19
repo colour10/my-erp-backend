@@ -89,22 +89,6 @@ class BaseModel extends \Phalcon\Mvc\Model {
         return $this->toArray();
     }
 
-    public static function doList($form, $oderby="") {            
-        $where = static::getSearchCondition($form);
-        
-        $params = [$where];
-        if($oderby!="") {
-            $params['order'] = $oderby;
-        }
-        $result = static::find($params);       
-        
-        $list = array();
-        foreach($result as $row) { 
-             $list[] = $row->toArrayPipe();
-        }   
-        return $list;
-    }
-
     public static function getSearchCondition($form) {
         $class = new \ReflectionClass(get_called_class());
         $model = $class->newInstance();
@@ -127,5 +111,15 @@ class BaseModel extends \Phalcon\Mvc\Model {
         }
 
         return implode(' and ', $array);
+    }
+
+    public static function fetchById($id) {
+        $row = static::findFirstById($id);
+        if($row!=false) {
+            return $row->toArray();
+        }
+        else {
+            return false;
+        }
     }
 }

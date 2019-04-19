@@ -295,7 +295,7 @@ return array(
     "chengjiaojiage" => "成交价格",
     "guojilingshoujia" => "国际零售价",
     "chuchangjia" => "出厂价",
-    "guoneilingshoujia" => "国内零售价",
+    "benguolingshoujia" => "本国零售价",
     "chicunbeizhu" => "尺寸备注",
     "xingbie" => "性别",
     "jijie" => "季节",
@@ -307,7 +307,7 @@ return array(
     "zuihouruku" => "最后入库",
     "guigexinghao" => "规格型号",
     "shangpinmingcheng" => "商品名称",
-    "shangpinhuohao" => "商品货号",
+    "shangpintiaoma" => "商品条码",
     "shangpintupian" => "商品图片",
     "zhutu" => "主图",
     "futu" => "副图",
@@ -465,7 +465,7 @@ return array(
     "xiangshang" => "向上",
     "xiangxia" => "向下",
     "alipay" => "支付宝",
-    "shangpinshuxing" => "商品属性",
+    "shangpinchicun" => "商品尺寸",
     "fukuanleixing" => "付款类型",
     "jine" => "金额",
     "tianjiashoukuan" => "添加收款",
@@ -476,11 +476,21 @@ return array(
     "queren" => "确认",
     "xiangqing" => "详情",
     "huobiguanli" => "货币管理",
-    "jiageguanli" => "价格管理",
+    "jiageshezhi" => "价格设置",
     "tijiaoren" => "提交人",
     "xishu" => "系数",
     "dingbu" => "顶部",
     "dibu" => "底部",
+    "chimazu" => "尺码组",
+    "chimamingxi" => "尺码明细",
+    "jiandang" => "建档",
+    "chun" => "春季",
+    "xia" => "夏季",
+    "qiu" => "秋季",
+    "dong" => "冬季",
+    "siji" => "四季",
+    "jiageleixing" => "价格类型",
+    "jiagedingyi" => "价格定义",
 
 
     // 新增
@@ -596,117 +606,126 @@ return array(
         "delete-success" => "%s删除成功",
     ),
     
-    "list_gender" => array(
-        "1" => "男性",
-        "2" => "女性",
-        "3" => "中性",
-        "4" => "男童",
-        "5" => "女童",
-        "6" => "儿童"
-    ),
+    "list" => [
+        "gender" => array(
+            "1" => "男性",
+            "2" => "女性",
+            "3" => "中性",
+            "4" => "男童",
+            "5" => "女童",
+            "6" => "儿童"
+        ),
 
-    "list_gender2" => array(
-        "1" => "男",
-        "0" => "女"
-    ),
+        "gender2" => array(
+            "1" => "男",
+            "0" => "女"
+        ),
+        
+        "season" => array(
+            "1" => "春季",
+            "2" => "夏季",
+            "3" => "秋季",
+            "4" => "冬季",
+            "5" => "四季",
+        ),
+        
+        "bussinesstype" => array(
+            "1" => array("id"=>"1", "style"=>"color:red", "name"=>"期货"),
+            "2" => array("id"=>"2", "style"=>"", "name"=>"现货"),
+        ),
+        
+        "formtype" => array(
+            "1" => "男款",
+            "2" => "女款",
+            "3" => "男/女款"
+        ),    
+
+        "orderproperty" => array(
+            "1" => "自采",
+            "2" => "代销"
+        ),
+
+        //提货方式
+        "pickingtype" => array(
+            "1" => "自提",
+            "2" => "快递",
+            "3" => "店铺直发"
+        ),
+
+        //快递付款类型
+        "expresspaidtype" => array(
+            "1" => "预付",
+            "2" => "到付",
+            "3" => "第三方付费"
+        ),
+
+        //运输方式
+        "transporttype" => array(
+            "1" => "BY AIR",
+            "2" => "快递"
+        ),
+
+        //支付方式
+        "paytype" => array(
+            "1" => "T/T",
+            "2" => "L/C"
+        ),
+
+        //订单状态
+        "salestatus" => array(
+            "0" => "预售",
+            "1" => "已售",
+            "2" => "作废"
+        ),
+
+        //订单状态
+        "ordertatus" => array(
+            "1" => "保存",
+            "2" => "待审核",
+            "3" => "审核",
+            "4" => "作废"
+        ),
+
+        //订单状态
+        "requisitiontype" => array(
+            "1" => "统一调出",
+            "2" => "统一调入",
+            "3" => "一对一调拨"
+        ),
+
+        //调拨单状态
+        "requisitionstatus" => array(
+            "1" => "出库拒绝",
+            "2" => "出库待确认",
+            "3" => "在途",
+            "4" => "入库拒绝",
+            "5" => "完成"
+        ),
+
+        "warehouserole" => array(
+            "1" => "管理员",
+            "2" => "销售"
+        ),
+
+        "suppliertype" => array(
+            "0" => "供货商",
+            "1" => "报关行",
+            "2" => "供应商",
+            "3" => "承运人",
+            "4" => "客户",
+            "5" => "品牌商"
+        ),
+
+        "paymenttype" => array(
+            "1" => "定金",
+            "2" => "货款"
+        ),
+
+        "pricetype" => array(
+            "1" => "零售价",
+            "2" => "批发价",
+            "3" => "一口价"
+        )
+    ]
     
-    "list_season" => array(
-        "1" => "春季",
-        "2" => "夏季",
-        "3" => "秋季",
-        "4" => "冬季",
-        "5" => "四季",
-    ),
-    
-    "list_bussinesstype" => array(
-        "1" => array("id"=>"1", "style"=>"color:red", "name"=>"期货"),
-        "2" => array("id"=>"2", "style"=>"", "name"=>"现货"),
-    ),
-    
-    "list_formtype" => array(
-        "1" => "男款",
-        "2" => "女款",
-        "3" => "男/女款"
-    ),    
-
-    "list_orderproperty" => array(
-        "1" => "自采",
-        "2" => "代销"
-    ),
-
-    //提货方式
-    "list_pickingtype" => array(
-        "1" => "自提",
-        "2" => "快递",
-        "3" => "店铺直发"
-    ),
-
-    //快递付款类型
-    "list_expresspaidtype" => array(
-        "1" => "预付",
-        "2" => "到付",
-        "3" => "第三方付费"
-    ),
-
-    //运输方式
-    "list_transporttype" => array(
-        "1" => "BY AIR",
-        "2" => "快递"
-    ),
-
-    //支付方式
-    "list_paytype" => array(
-        "1" => "T/T",
-        "2" => "L/C"
-    ),
-
-    //订单状态
-    "list_salestatus" => array(
-        "0" => "预售",
-        "1" => "已售",
-        "2" => "作废"
-    ),
-
-    //订单状态
-    "list_ordertatus" => array(
-        "1" => "保存",
-        "2" => "待审核",
-        "3" => "审核",
-        "4" => "作废"
-    ),
-
-    //订单状态
-    "list_requisitiontype" => array(
-        "1" => "统一调出",
-        "2" => "统一调入",
-        "3" => "一对一调拨"
-    ),
-
-    //调拨单状态
-    "list_requisitionstatus" => array(
-        "1" => "出库拒绝",
-        "2" => "出库待确认",
-        "3" => "在途",
-        "4" => "入库拒绝",
-        "5" => "完成"
-    ),
-
-    "list_warehouserole" => array(
-        "1" => "管理员",
-        "2" => "销售"
-    ),
-
-    "list_suppliertype" => array(
-        "0" => "供货商",
-        "1" => "报关行",
-        "2" => "供应商",
-        "3" => "承运人",
-        "4" => "客户",
-        "5" => "品牌商"
-    ),
-
-    "list_paymenttype" => array(
-        "1" => "定金",
-        "2" => "货款"
-    ),
 );

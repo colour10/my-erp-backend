@@ -23,6 +23,6 @@ class AgeseasonController extends AdminController {
 	}
 
     function before_page() {
-        $_POST["__orderby"] = "name desc,sessionmark desc";
+        $_POST["__orderby"] = "name desc,sessionmark asc";
     }
 }

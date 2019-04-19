@@ -3,15 +3,15 @@ namespace Multiple\Home\Controllers;
 
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
-use Asa\Erp\TbPrice;
+use Asa\Erp\TbSaleType;
 
 /**
- * 价格定义表
+ * 销售属性表
  */
-class PriceController extends CadminController {
+class SaletypeController extends CadminController {
     public function initialize() {
 	    parent::initialize();
 
-	    $this->setModelName('Asa\\Erp\\TbPrice');
+	    $this->setModelName('Asa\\Erp\\TbSaleType');
     }
 }
