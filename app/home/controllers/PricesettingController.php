@@ -36,9 +36,13 @@ class PricesettingController extends AdminController {
 
     function before_page() {
         $_POST['companyid'] = $this->companyid;
-        $_POST["__orderby"] = "sort_value asc";
+        $_POST["__orderby"] = "priceid desc,sort_value asc";
     }
 
+    /**
+     * 格式化排序字段
+     * @return [type] [description]
+     */
     private function getSortValue() {
         $brandid = $this->request->getPost("brandid", "int", 0);
         $brandgroupid = $this->request->getPost("brandgroupid", "int", 0);
