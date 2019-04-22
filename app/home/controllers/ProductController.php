@@ -7,6 +7,7 @@ use Asa\Erp\TbProduct;
 use Asa\Erp\TbProductcode;
 use Asa\Erp\TbPicture;
 use Asa\Erp\TbProductSizeProperty;
+use Asa\Erp\TbProductstock;
 
 /**
  * 商品表
@@ -258,5 +259,17 @@ class ProductController extends CadminController {
         else {
             return $this->error("#1001#产品数据不存在#");
         }
+    }
+
+    function getproductstockAction() {
+        $conditions = [
+            sprintf("companyid=%d and productid=%d and number>0", $this->companyid, $_POST['productid'])
+        ];
+        $result = TbProductstock::find([
+            implode(" and ", $conditions),
+            "order" => "number desc"
+        ]);
+
+        echo $this->success($result->toArray());
     }
 }

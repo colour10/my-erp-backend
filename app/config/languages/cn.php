@@ -499,8 +499,8 @@ return array(
     "benguohuobi" => "本国货币",
     "morenyuyan" => "默认语言",
     "quzheng" => "取整",
-    "jiagedingyi" => "价格定义",
-    "jiagedingyi" => "价格定义",
+    "kucun" => "库存",
+    "zhiliang" => "质量",
     "jiagedingyi" => "价格定义",
     "jiagedingyi" => "价格定义",
     "jiagedingyi" => "价格定义",
@@ -755,6 +755,11 @@ return array(
             1 => "个位取整",
             2 => "十位取整",
             3 => "不取整",
+        ],
+
+        "defectivelevel" => [
+            '0' => "合格",
+            '1' => '残次品'
         ]
     ]
     
