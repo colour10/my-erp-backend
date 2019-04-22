@@ -17,6 +17,12 @@ class ProductController extends CadminController {
 
 	    $this->setModelName('Asa\\Erp\\TbProduct');
     }
+
+    function before_add() {
+        $_POST['makestaff'] = $this->currentUser;
+        $_POST['maketime'] = date("Y-m-d H:i:s");
+        parent::before_add();
+    }
     
     function searchAction() {
         if($this->request->isPost()) {
