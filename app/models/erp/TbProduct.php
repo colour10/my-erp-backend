@@ -251,4 +251,77 @@ class TbProduct extends BaseCompanyModel
             "order" => 'id desc'
         ]);
     }
+
+    function getPriceList() {
+        $prices = TbPrice::find(
+            sprintf("companyid=%d", $this->companyid)
+        );
+
+        //特殊设置的价格
+        $specialPrices = TbProductPrice::find(
+            sprintf("productid=%d", $this->id)
+        );
+        $hashTable = Util::recordToHashtable($specialPrices, 'priceid');
+
+        //获得用户的本币设置
+        $user = $this->getDI()->get("auth");
+        $company = $user['company'];
+
+        $result = [];
+        foreach($prices as $row) {
+            $setting = $row->getPriceSetting($this->brandid, $this->brandgroupid, $this->childbrand, $this->ageseason, $this->series);
+
+            if($setting!=false) {
+                $value = TbExchangeRate::convert($company->id, $this->wordpricecurrency, $company->currencyid, $this->wordprice);
+                //echo $price;exit;
+                if($value==false) {
+                    //没有设置汇率
+                    continue;
+                }
+                $autoprice = $setting->getPriceValue($value);
+                if(isset($hashTable[$row->id]) && $hashTable[$row->id]->price>0) {
+                    $price = TbExchangeRate::convert($company->id, $hashTable[$row->id]->currencyid, $company->currencyid, $hashTable[$row->id]->price);
+                    if($price==false) {
+                        continue;
+                    }
+                }
+                else {
+                    $price = $autoprice;
+                }
+
+                $result[] = [
+                    'id' => $row->id,
+                    'name' => $row->getName(),
+                    'currencyid' => $company->currencyid,
+                    'discount' => $setting->discount,
+                    'autoprice' => $autoprice,
+                    'price' => $price
+                ];
+            }
+        }
+
+        return $result;
+    }
+
+    function savePrice($priceid, $currencyid, $price) {
+        $productPrice = TbProductPrice::findFirst(
+            sprintf("productid=%d and priceid=%d", $this->id, $priceid)
+        );
+
+        if($productPrice!=false) {
+            $productPrice->currencyid = $currencyid;
+            $productPrice->price = $price;
+        }
+        else {
+            $productPrice = new TbProductPrice();
+            $productPrice->currencyid = $currencyid;
+            $productPrice->price = $price;
+            $productPrice->priceid = $priceid;
+            $productPrice->productid = $this->id;
+        }
+
+        $productPrice->updatestaff = $this->getDI()->get("currentUser");
+        $productPrice->updatetime = date("Y-m-d H:i:s");
+        return $productPrice->save();
+    }
 }

@@ -189,10 +189,10 @@ class Util {
     /**
      * 根据查询到的一个结果集，指定两列，生成哈希表
      */
-    public static function recordToHashtable($list, $columnKey, $columnValue) {
+    public static function recordToHashtable($list, $columnKey, $columnValue='') {
         $array = [];
         foreach ($list as $key => $value) {
-            $array[$value->$columnKey] = $value->$columnValue;
+            $array[$value->$columnKey] = $columnValue==''? $value : $value->$columnValue;
         }
         return $array;
     }

@@ -231,4 +231,32 @@ class ProductController extends CadminController {
             return $this->error("#1001#产品数据不存在#");
         }
     }
+
+    function getpricesAction() {
+        $id = (int)$_POST['id'];
+        $product = TbProduct::findFirstById($id);
+        if($product!=false && $product->companyid==$this->companyid) {
+            return $this->success($product->getPriceList());
+        }
+        else {
+            return $this->error("#1001#产品数据不存在#");
+        }
+    }
+
+    function savepriceAction() {
+        $id = (int)$_POST['productid'];
+        $product = TbProduct::findFirstById($id);
+        if($product!=false && $product->companyid==$this->companyid) {
+            if($product->savePrice($_POST["priceid"], $_POST["currencyid"], $_POST["price"])) {
+                return $this->success();
+            }
+            else {
+                return $this->error("/1002/设置产品价格失败/");
+            }
+            
+        }
+        else {
+            return $this->error("#1001#产品数据不存在#");
+        }
+    }
 }

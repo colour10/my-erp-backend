@@ -101,7 +101,7 @@ return array(
     "menu-9-2" => "费用申请主管审批",
     "menu-9-3" => "费用申请经理审批",
     "menu-9-3" => "费用申请财务审批",
-    "menu-10" => "财务管理",
+    "jiage" => "价格",
     "menu-10-1" => "对账查询",
     "menu-11" => "系统",
     "menu-11-1" => "系统帮助",
@@ -498,7 +498,7 @@ return array(
     "huilvguanli" => "汇率管理",
     "benguohuobi" => "本国货币",
     "morenyuyan" => "默认语言",
-    "jiagedingyi" => "价格定义",
+    "quzheng" => "取整",
     "jiagedingyi" => "价格定义",
     "jiagedingyi" => "价格定义",
     "jiagedingyi" => "价格定义",
@@ -749,7 +749,13 @@ return array(
             "1" => "零售价",
             "2" => "批发价",
             "3" => "一口价"
-        )
+        ),
+
+        "pricefilter" => [
+            1 => "个位取整",
+            2 => "十位取整",
+            3 => "不取整",
+        ]
     ]
     
 );

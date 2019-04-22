@@ -49,6 +49,15 @@ class TbUser extends BaseModel
             ]
         );
 
+        $this->belongsTo(
+            'companyid',
+            '\Asa\Erp\TbCompany',
+            'id',
+            [
+                'alias' => 'company'
+            ]
+        );
+
         // 设置当前语言
         $this->setValidateLanguage($this->getLanguage()['lang']);
     }

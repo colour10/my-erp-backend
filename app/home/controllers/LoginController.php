@@ -27,6 +27,7 @@ class LoginController extends Controller
                     'companyid' => $user->companyid,
                     'saleportid' => $user->saleportid,
                     'saleportids' => $user->saleportids,
+                    'company' => $user->company,
                     'actions' => $group->getActionList()->toArray(),
                     'permissions' => $group->getPermissionList()->toArray()
                 ));
