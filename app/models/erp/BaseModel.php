@@ -3,6 +3,7 @@ namespace Asa\Erp;
 use Phalcon\Mvc\Model\Message as Message;
 use Asa\Erp\Behavior\AsaBehabior;
 use Phalcon\Db\Column;
+use Phalcon\Validation;
 
 class BaseModel extends \Phalcon\Mvc\Model {
 
@@ -132,5 +133,35 @@ class BaseModel extends \Phalcon\Mvc\Model {
         else {
             return false;
         }
+    }
+
+    /**
+     * 返回具体的校验规则列表
+     * @return [type] [description]
+     */
+    function getRules() {
+
+    }
+
+    /**
+     * 数据校验方法
+     * @return [type] [description]
+     */
+    public function validation() {
+        $rules = $this->getRules();
+
+        if(count($rules)>0) {
+            $validation = new Validation();
+
+            foreach($rules as $field =>$rule) {
+                $validation->add($field, $rule);
+            }
+
+            return $this->validate($validation);
+        }
+        else {
+            return true;
+        }
+        
     }
 }
