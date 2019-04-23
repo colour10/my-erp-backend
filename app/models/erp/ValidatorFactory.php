@@ -8,6 +8,8 @@ use Phalcon\Mvc\Model\Relation;
 use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Numericality;
+use Phalcon\Validation\Validator\Regex;
+
 
 class ValidatorFactory implements InjectionAwareInterface {
     private $di;
@@ -39,6 +41,20 @@ class ValidatorFactory implements InjectionAwareInterface {
         return new PresenceOfMultiple(array(
             'languages' => array_keys($languages),
             'message' => sprintf($this->getTemplate('required'), $this->label($fieldCode))
+        ));
+    }
+
+    function tableid($fieldCode) {
+        return new Regex(array(
+           'pattern' => '/^[1-9]\d*$/',
+           'message' => sprintf($this->getTemplate('invalid'), $this->label($fieldCode))
+        ));
+    }
+
+    function year($fieldCode) {
+        return new Regex(array(
+           'pattern' => '#^[1-9]\d{3}$#',
+           'message' => sprintf($this->getTemplate('invalid'), $this->label($fieldCode))
         ));
     }
 
