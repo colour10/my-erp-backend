@@ -21,7 +21,7 @@
   </head>
 
   <style>
-    .el-header {
+.el-header {
     background-color: #B3C0D1;
     color: #333;
     line-height: 60px;
@@ -93,7 +93,7 @@
         width:99px;
     }
 
-    .user-form /width2 .el-form-item__content {
+    .user-form .width2 .el-form-item__content {
         width:200px;
     }
 
@@ -118,10 +118,19 @@
     }
 
     .order-form .el-input-group .el-input__inner {
-        width:155px;
+        width:156px;
     }
     .order-form .el-input-group--prepend .el-input__inner {
-        width:99px;
+        width:138px;
+    }
+
+    .order-form .el-input-group--prepend .el-input-group__prepend .el-input__inner {
+        width:60px;
+        padding:0px 5px;
+    }
+
+    .order-form .el-input-group--prepend .el-select {
+        width:60px;
     }
 
     
@@ -156,6 +165,10 @@
 
     .order-form .el-checkbox {
         margin-right:12px;
+    }
+
+    .order-form label.siji {
+      margin-right:0px;
     }
 
     .order-form .el-checkbox__label {
@@ -245,6 +258,9 @@
 .product .el-table td, .product .el-table th {
   padding:0px;
 }
+
+.product img {padding:0px;margin:0px;display: block;}
+.product td.picture .cell {padding-left:0px}
 
 .supermini .el-checkbox__label {
     font-size: 14px

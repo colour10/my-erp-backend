@@ -93,4 +93,15 @@ class TbPrice extends BaseModel
 
         return '('.implode(' or ', $array).')';
     }
+
+    public function validation()
+    {
+        $validation = new Validation;
+
+        $validation->add('countryid', $this->getValidatorFactory()->presenceOf('guojiadiqu'));
+        $validation->add('pricetype', $this->getValidatorFactory()->presenceOf('jiageleixing'));
+        $validation->add('currencyid', $this->getValidatorFactory()->presenceOf('bizhong'));
+
+        return $this->validate($validation);
+    }
 }
