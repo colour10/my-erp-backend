@@ -34,6 +34,14 @@ class ValidatorFactory implements InjectionAwareInterface {
         ));
     }
 
+    function presenceOfMultiple($fieldCode) {
+        $languages = (array)$this->di->get("config")->languages;
+        return new PresenceOfMultiple(array(
+            'languages' => array_keys($languages),
+            'message' => sprintf($this->getTemplate('required'), $this->label($fieldCode))
+        ));
+    }
+
     /**
      * 获得消息模板
      */
