@@ -338,7 +338,7 @@ return array(
     "fapiaohao" => "发票号",
     "zhidanren" => "制单人",
     "shenheren" => "审核人",
-    "shuxing" => "属性",
+    "shuxing" => "采购类型",
     "wofanglianxiren" => "我方联系人",
     "dinghuokehu" => "订货客户",
     "dinghuokehulianxiren" => "订货联系人",
@@ -501,9 +501,9 @@ return array(
     "quzheng" => "取整",
     "kucun" => "库存",
     "zhiliang" => "质量",
-    "jiagedingyi" => "价格定义",
-    "jiagedingyi" => "价格定义",
-    "jiagedingyi" => "价格定义",
+    "shoujihao" => "手机号",
+    "feiyong" => "费用",
+    "shengchengfahuodan" => "生成发货单",
     "jiagedingyi" => "价格定义",
     "jiagedingyi" => "价格定义",
     "jiagedingyi" => "价格定义",
@@ -733,11 +733,9 @@ return array(
 
         "suppliertype" => array(
             "0" => "供货商",
-            "1" => "报关行",
-            "2" => "供应商",
-            "3" => "承运人",
-            "4" => "客户",
-            "5" => "品牌商"
+            "1" => "物流",
+            "2" => "客户",
+            "3" => "其他"
         ),
 
         "paymenttype" => array(

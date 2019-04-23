@@ -19,10 +19,69 @@ class ProductController extends CadminController {
 	    $this->setModelName('Asa\\Erp\\TbProduct');
     }
 
-    function before_add() {
-        $_POST['makestaff'] = $this->currentUser;
-        $_POST['maketime'] = date("Y-m-d H:i:s");
-        parent::before_add();
+    function addAction() {
+        //print_r($_POST["params"]);
+        $params = json_decode($_POST["params"], true);
+        //print_r($params);
+
+        $products = [];
+        $colors = [];
+        $keys = ["brandid", "brandgroupid", "childbrand", "productsize", "countries", "material", "productparst", "producttemplate", "laststoragedate", "series", "ulnarinch", "factoryprice", "factorypricecurrency", "nationalpricecurrency", "nationalprice", "memo", "wordprice", "wordpricecurrency", "gender", "spring", "summer", "fall", "winter", "ageseason", "sizetopid", "sizecontentids", "productmemoids"];
+
+        $this->db->begin();
+        foreach($params['colors'] as $row){
+            $product = new TbProduct();
+            $product->companyid = $this->companyid;
+            $product->maketime = date("Y-m-d H:i:s");
+            $product->makestaff = $this->currentUser;
+            $product->wordcode_1 = $row['wordcode_1'];
+            $product->wordcode_2 = $row['wordcode_2'];
+            $product->wordcode_3 = $row['wordcode_3'];
+            $product->wordcode_4 = $row['wordcode_4'];
+            $product->brandcolor = $row['brandcolor'];
+            $product->picture = $row['picture'];
+            $product->picture2 = $row['picture2'];
+
+            foreach($keys as $key) {
+                $product->$key = $params['form'][$key];
+            }
+            if($product->create()==false) {
+                $this->db->rollback();
+                return $this->error($product);
+            }
+            else {
+                $products[] = $product;
+                $colors[] = $product->id.",".$product->brandcolor;
+            }
+        }
+
+        $product_group = implode('|', $colors);
+        //逐个更新，绑定关系
+        foreach($products as $row) {
+            $row->product_group = $product_group;
+            if($row->update()==false) {
+                throw new \Exception("/1002/更新product_group字段失败/");
+            }
+        }
+
+        $this->db->commit();
+        return $this->success();
+    }
+
+    function before_edit($row) {
+        if(isset($_POST['maketime'])) {
+            unset($_POST['maketime']);
+        }
+    }
+
+    function before_delete($row) {
+        if($row->companyid!=$this->companyid) {
+            throw new \Exception('/1002/数据非法/');
+        }
+    }
+
+    function before_page() {
+        $_POST["__orderby"] = "id desc";
     }
     
     function searchAction() {
@@ -34,9 +93,10 @@ class ProductController extends CadminController {
                 $where[] = sprintf("productname like '%%%s%%'", addslashes($_POST["productname"]));
             }
             
-            $result = TbProduct::find(
-                implode(" and ", $where)
-            );    
+            $result = TbProduct::find([
+                implode(" and ", $where),
+                "order" => "id desc"
+            ]);    
             
             return $this->success($result->toArray());
         }        
