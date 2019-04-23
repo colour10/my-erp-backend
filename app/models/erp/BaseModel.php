@@ -12,10 +12,21 @@ class BaseModel extends \Phalcon\Mvc\Model {
     const FG_NOT_DELETED = '0';
 
     private $validate_language;
+
+    protected $validatorFactory;
     
     public function initialize() {
         //$this->addBehavior(new AsaBehabior());
         $this->useDynamicUpdate(true);
+    }
+
+    function getValidatorFactory() {
+        if(!$this->validatorFactory) {
+            $this->validatorFactory = new ValidatorFactory(); 
+            $this->validatorFactory->setDI($this->getDI());
+        }
+
+        return $this->validatorFactory;
     }
 
     /**

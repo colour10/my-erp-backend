@@ -5,6 +5,9 @@ use Phalcon\Validation;
 use Phalcon\Mvc\Model\Relation;
 use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Validation\Validator\Numericality;
+
+
 
 /**
  * 汇率表
@@ -53,5 +56,16 @@ class TbExchangeRate extends BaseModel
         else {
             return $exchange->rate*$number;
         }
+    }
+
+    public function validation()
+    {
+        $validation = new Validation;
+
+        $validation->add('rate', $this->getValidatorFactory()->numericality('huilv'));
+        $validation->add('currency_from', $this->getValidatorFactory()->presenceOf('huichuhuobi'));
+        $validation->add('currency_to', $this->getValidatorFactory()->presenceOf('huiruhuobi'));
+
+        return $this->validate($validation);
     }
 }

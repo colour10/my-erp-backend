@@ -611,7 +611,8 @@ return array(
     "model-delete-message" => "请先登录",
     "template" => array(
         "uniqueness" => "%s不能重复",
-        'required' => '请填写%s',
+        'required' => '%s不能为空',
+        'numericality' => "%s必须是数字",
         'invalid' => '%s不合法',
         'hasmany-foreign-message' => '正在使用，不能删除，因为有%s正在使用它',
         'belongsto-foreign-message' => '%s上不存在',

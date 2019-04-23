@@ -17,7 +17,7 @@ use Phalcon\Acl\Resource;
 use Phalcon\Acl\Role;
 use Asa\Erp\Util;
 use Asa\Erp\TbPermissionAction;
-use Asa\Erp\StaticList;
+use Asa\Erp\StaticReader;
 
 class Module implements ModuleDefinitionInterface
 {
@@ -72,8 +72,8 @@ class Module implements ModuleDefinitionInterface
         });
 
         //访问静态列表数据的资源
-        $di->setShared('listReader', function () use ($config, $di) {
-            $reader = new StaticList();
+        $di->setShared('staticReader', function () use ($config, $di) {
+            $reader = new StaticReader();
             $reader->setDI($di);
             return $reader;
         });

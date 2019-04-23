@@ -19,7 +19,7 @@ class AdminController extends BaseController
 
     public function initialize() 
     {
-	    parent::initialize();
+	    parent::initialize();        
     }
 
     function setModelName($modelName)
@@ -217,9 +217,10 @@ class AdminController extends BaseController
     {
         if ($this->request->isPost()) {
             //锟斤拷锟斤拷锟斤拷锟捷匡拷
-            $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
-            $row = $findFirst->invokeArgs(null, array($this->getCondition()));
+            //$findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
+            //$row = $findFirst->invokeArgs(null, array($this->getCondition()));
 
+            $row = call_user_func_array("{$this->modelName}::findFirst",[$this->getCondition()]);
             if ($row != false) {
                 $this->before_edit($row);
 

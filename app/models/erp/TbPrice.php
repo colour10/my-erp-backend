@@ -34,7 +34,7 @@ class TbPrice extends BaseModel
 
         $lang = $di->get("language")->lang;
 
-        return sprintf("%s-%s",$country['name_'.$lang], $di->get("listReader")->get("pricetype", $this->pricetype));
+        return sprintf("%s-%s",$country['name_'.$lang], $di->get("staticReader")->get("pricetype", $this->pricetype));
     }
 
     function getPriceSetting($brandid, $brandgroupid, $brandgroupchildid, $ageseasonids, $seriesid) {
