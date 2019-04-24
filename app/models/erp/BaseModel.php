@@ -140,7 +140,7 @@ class BaseModel extends \Phalcon\Mvc\Model {
      * @return [type] [description]
      */
     function getRules() {
-
+        return [];
     }
 
     /**

@@ -1,11 +1,9 @@
 <?php
 namespace Multiple\Home\Controllers;
 
-use Asa\Erp\TbProduct;
+use Asa\Erp\TbBrandgroupchildProperty;
 use Asa\Erp\TbBrandgroupchild;
-use Phalcon\Mvc\Controller;
 use Asa\Erp\TbBrandgroup;
-use Asa\Erp\Util;
 
 class BrandgroupController extends ZadminController
 {
@@ -16,5 +14,78 @@ class BrandgroupController extends ZadminController
         $this->setModelName('Asa\\Erp\\TbBrandgroup');
 
         // $this->setTitle("品类维护");
+    }
+
+    function before_page() {
+        $_POST["__orderby"] = "displayindex asc";
+    }
+
+    function loadnodeAction() {
+        $brandgroupid = (int)$_POST['brandgroupid'];
+        if($brandgroupid==0) {
+            $result = TbBrandgroup::find([
+                'order' => "displayindex asc"
+            ]);
+
+            $array = [];
+            foreach($result as $row) {
+                $array[] = [
+                    "name" => $row->name_cn,
+                    "id" => $row->id,
+                    "key" => "b".$row->id,
+                    "isLeaf" => false
+                ];
+            }
+            return $this->success($array);
+        } 
+        else {
+            $result = TbBrandgroupchild::find([
+                sprintf("brandgroupid=%d", $brandgroupid),
+                'order' => "displayindex asc"
+            ]);
+
+            $array = [];
+            foreach($result as $row) {
+                $array[] = [
+                    "name" => $row->name_cn,
+                    "id" => $row->id,
+                    "key" => "c".$row->id,
+                    "isLeaf" => true
+                ];
+            }
+            return $this->success($array);
+        }
+    }
+
+    function copypropertyAction() {
+        $result = TbBrandgroupchildProperty::find(
+            sprintf("brandgroupchildid=%d", $_POST['brandgroupchildid'])
+        );
+
+        if(count($result)>0) {
+            $this->db->begin();
+            $targets = explode(",", $_POST['target']);
+            foreach ($targets as $targetId) {
+                foreach($result as $row) {
+                    $property = new TbBrandgroupchildProperty();
+                    $property->name_cn = $row->name_cn;
+                    $property->name_en = $row->name_en;
+                    $property->name_hk = $row->name_hk;
+                    $property->name_fr = $row->name_fr;
+                    $property->name_it = $row->name_it;
+                    $property->name_sp = $row->name_sp;
+                    $property->name_de = $row->name_de;
+                    $property->brandgroupchildid = $targetId;
+                    $property->displayindex = $row->displayindex;
+                    if($property->create()==false) {
+                        $this->db->rollback();
+                        return $this->error($property);
+                    }
+                }           
+            }
+
+            $this->db->commit();
+        }
+        return $this->success();
     }
 }

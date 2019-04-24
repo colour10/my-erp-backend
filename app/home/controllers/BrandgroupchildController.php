@@ -14,4 +14,8 @@ class BrandgroupchildController extends ZadminController {
 
 	    $this->setModelName('Asa\\Erp\\TbBrandgroupchild');
     }
+
+    function before_page() {
+        $_POST["__orderby"] = "displayindex asc";
+    }
 }

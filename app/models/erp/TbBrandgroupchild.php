@@ -58,15 +58,6 @@ class TbBrandgroupchild extends BaseModel
         );
     }
 
-
-    /**
-     * 设置多语言字段
-     * @return array
-     */
-    function getLanguageColumns() {
-        return ['name'];
-    }
-
     public function getRules() {
         return [
             'name_cn' => $this->getValidatorFactory()->presenceOfMultiple('zileimingcheng'),
