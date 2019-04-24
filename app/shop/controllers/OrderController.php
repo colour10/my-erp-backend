@@ -19,7 +19,7 @@ class OrderController extends AdminController
 
     public function initialize()
     {
-    	
+
     }
 
     /**
@@ -36,15 +36,15 @@ class OrderController extends AdminController
         $id = $params[0];
 
         // 判断是否登录
-        if($rs = $this->session->get('member')) {
+        if ($rs = $this->session->get('member')) {
             $order = TbShoporderCommon::findFirst(
-                "member_id = ".$rs['id'].' and id='.$id
+                "member_id = " . $rs['id'] . ' and id=' . $id
             );
             // 判断是否存在
             if ($order) {
                 $data['common'] = $order;
                 $data['product'] = $order->shoporder;
-                $data['addresses'] = TbMemberAddress::find("member_id=".$rs['id']);
+                $data['addresses'] = TbMemberAddress::find("member_id=" . $rs['id']);
                 // 转成数组
                 $data = json_decode(json_encode($data), true);
                 // 给商品加入封面图和id
@@ -79,8 +79,8 @@ class OrderController extends AdminController
     public function addOrderAction()
     {
         // 逻辑
-    	if($rs = $this->session->get('member')) {
-    	    // 因为逻辑涉及到操作多个表，所以务必使用事务处理，以保证完整性
+        if ($rs = $this->session->get('member')) {
+            // 因为逻辑涉及到操作多个表，所以务必使用事务处理，以保证完整性
             // 采用事务处理
             $this->db->begin();
 
@@ -183,7 +183,7 @@ class OrderController extends AdminController
             $model_common->member_id = $rs['id'];
             // 订单号
             $model_common->order_no = $this->generate_trade_no();
-            if(!$model_common->save()) {
+            if (!$model_common->save()) {
                 // 回滚
                 $this->db->rollback();
                 // 取出错误信息
@@ -192,7 +192,7 @@ class OrderController extends AdminController
 
             // 接着添加订单详情表
             $data_common = [];
-            foreach($_POST['data'] as $key => $value) {
+            foreach ($_POST['data'] as $key => $value) {
                 $data_common = [
                     'order_commonid' => $model_common->id,
                     'product_id' => $value['product_id'],
@@ -238,11 +238,11 @@ class OrderController extends AdminController
             // 返回提交成功，并且返回新订单的ID
             return $this->success($model_common->id);
 
-    	} else {
-    	    // 返回错误信息
+        } else {
+            // 返回错误信息
             $msg = $this->getValidateMessage('model-delete-message');
             return $this->error([$msg]);
-    	}
+        }
     }
 
 
@@ -254,7 +254,7 @@ class OrderController extends AdminController
     {
         // 逻辑
         if ($this->request->isPost()) {
-            if($rs = $this->session->get('member')) {
+            if ($rs = $this->session->get('member')) {
                 // 判断是否有传过来参数id，如果有就针对针对单个订单进行支付，否则就针对所有未支付的订单进行支付
                 // 初始化一个变量
                 $id = '';
@@ -272,12 +272,12 @@ class OrderController extends AdminController
                 if (!$id) {
                     // 查找当前用户所有未支付的订单
                     $order = TbShoporderCommon::findFirst(
-                        "member_id = ".$rs['id'].' and order_status=1'
+                        "member_id = " . $rs['id'] . ' and order_status=1'
                     );
                 } else {
                     // 查找当前id的未支付的订单
                     $order = TbShoporderCommon::findFirst(
-                        "member_id = ".$rs['id'].' and order_status=1 and id='.$id
+                        "member_id = " . $rs['id'] . ' and order_status=1 and id=' . $id
                     );
                 }
 
@@ -340,7 +340,7 @@ class OrderController extends AdminController
                 // 如果客户之前存入了地址，就从地址中选择一个插入
                 if (isset($_POST['address_id'])) {
                     // 查找地址是否存在
-                    $addressModel = TbMemberAddress::findFirst("member_id=".$rs['id']." and id=".$_POST['address_id']);
+                    $addressModel = TbMemberAddress::findFirst("member_id=" . $rs['id'] . " and id=" . $_POST['address_id']);
                     if (!$addressModel) {
                         // 回滚
                         $this->db->rollback();
@@ -433,7 +433,7 @@ class OrderController extends AdminController
      */
     public function listAction()
     {
-    	// 逻辑
+        // 逻辑
         // 判断是否登录
         if (!$member = $this->session->get('member')) {
             return $this->dispatcher->forward([
@@ -477,9 +477,9 @@ class OrderController extends AdminController
         // 创建分页对象，使用数组分页
         $paginator = new PaginatorArray(
             [
-                "data"  => $orders_array,
+                "data" => $orders_array,
                 "limit" => 5,
-                "page"  => $currentPage,
+                "page" => $currentPage,
             ]
         );
 
@@ -535,7 +535,7 @@ class OrderController extends AdminController
     public function generate_trade_no()
     {
         // 逻辑
-        return date('Ymd').substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
+        return date('Ymd') . substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
     }
 
     /**
@@ -589,7 +589,7 @@ class OrderController extends AdminController
                 // 赋值
                 $id = $params[0];
                 // 查找订单是否存在，订单要求为未付款状态
-                $order = TbShoporderCommon::findFirst("member_id=".$rs['id']." and id=".$id." and order_status=1");
+                $order = TbShoporderCommon::findFirst("member_id=" . $rs['id'] . " and id=" . $id . " and order_status=1");
                 if (!$order) {
                     // 取出错误信息
                     $msg = $this->getValidateMessage('order', 'template', 'notexist');
@@ -635,7 +635,7 @@ class OrderController extends AdminController
                 $this->db->begin();
 
                 // 查找订单是否存在，订单要求为已付款未完成状态
-                $order = TbShoporderCommon::findFirst("member_id=".$rs['id']." and id=".$id." and order_status=2");
+                $order = TbShoporderCommon::findFirst("member_id=" . $rs['id'] . " and id=" . $id . " and order_status=2");
                 if (!$order) {
                     // 回滚
                     $this->db->rollback();
@@ -656,7 +656,7 @@ class OrderController extends AdminController
                     // 如果是已退款，还得还原库存
                     foreach ($shoporders as $shoporder) {
                         // 执行写入
-                        $sql = "UPDATE tb_product_search SET number = number + ".$shoporder->number." WHERE id=".$shoporder->product_id;
+                        $sql = "UPDATE tb_product_search SET number = number + " . $shoporder->number . " WHERE id=" . $shoporder->product_id;
                         if (!$this->db->execute($sql)) {
                             // 回滚
                             $this->db->rollback();
@@ -689,5 +689,5 @@ class OrderController extends AdminController
             }
         }
     }
-    
+
 }
