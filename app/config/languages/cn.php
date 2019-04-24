@@ -505,8 +505,8 @@ return array(
     "feiyong" => "费用",
     "shengchengfahuodan" => "生成发货单",
     "sexi" => "色系",
-    "jiagedingyi" => "价格定义",
-    "jiagedingyi" => "价格定义",
+    "yansemingcheng" => "颜色名称",
+    "xianshixuhao" => "显示序号",
     "jiagedingyi" => "价格定义",
     "jiagedingyi" => "价格定义",
     "jiagedingyi" => "价格定义",
@@ -531,6 +531,7 @@ return array(
     'storeid' => '仓库编号',
     'user' => '用户',
     'department' => '部门',
+    'bumen' => "部门",
     'departmentid' => '部门编号',
     "department-list" => "部门列表",
     'user-status' => '用户个人状态',
@@ -614,6 +615,7 @@ return array(
         'required' => '%s不能为空',
         'numericality' => "%s必须是数字",
         'invalid' => '%s不合法',
+        "digit" => "%s必须是整数",
         'hasmany-foreign-message' => '正在使用，不能删除，因为有%s正在使用它',
         'belongsto-foreign-message' => '%s上不存在',
         'notexist' => '%s不存在',
@@ -747,7 +749,10 @@ return array(
         "pricetype" => array(
             "1" => "零售价",
             "2" => "批发价",
-            "3" => "一口价"
+            "3" => "电商价",
+            "4" => "期货价",
+            "5" => "折扣价",
+            "6" => "清仓价"
         ),
 
         "pricefilter" => [

@@ -16,6 +16,6 @@ class SizetopController extends ZadminController {
     }
 
     function before_page() {
-        $_POST["__orderby"] = "name_cn asc";
+        $_POST["__orderby"] = "displayindex asc";
     }
 }

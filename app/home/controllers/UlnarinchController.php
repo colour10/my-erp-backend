@@ -14,4 +14,8 @@ class UlnarinchController extends ZadminController {
 
 	    $this->setModelName('Asa\\Erp\\TbUlnarinch');
     }
+
+    function before_page() {
+        $_POST["__orderby"] = "displayindex asc";
+    }
 }

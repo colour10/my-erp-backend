@@ -9,7 +9,8 @@ use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Numericality;
 use Phalcon\Validation\Validator\Regex;
-
+use Phalcon\Validation\Validator\Digit;
+use Phalcon\Validation\Validator\Email;
 
 class ValidatorFactory implements InjectionAwareInterface {
     private $di;
@@ -30,8 +31,9 @@ class ValidatorFactory implements InjectionAwareInterface {
         ));
     }
 
-    function numericality($fieldCode) {
+    function numericality($fieldCode, $allowEmpty=true) {
         return new Numericality(array(
+            "allowEmpty" => $allowEmpty,
             'message' => sprintf($this->getTemplate('numericality'), $this->label($fieldCode))
         ));
     }
@@ -44,17 +46,39 @@ class ValidatorFactory implements InjectionAwareInterface {
         ));
     }
 
-    function tableid($fieldCode) {
+    function tableid($fieldCode, $allowEmpty=true) {
         return new Regex(array(
-           'pattern' => '/^[1-9]\d*$/',
+            "allowEmpty" => $allowEmpty,
+            'pattern' => '/^[1-9]\d*$/',
+            'message' => sprintf($this->getTemplate('invalid'), $this->label($fieldCode))
+        ));
+    }
+
+    function year($fieldCode, $allowEmpty=true) {
+        return new Regex(array(
+            "allowEmpty" => $allowEmpty,
+           'pattern' => '#^[1-9]\d{3}$#',
            'message' => sprintf($this->getTemplate('invalid'), $this->label($fieldCode))
         ));
     }
 
-    function year($fieldCode) {
-        return new Regex(array(
-           'pattern' => '#^[1-9]\d{3}$#',
-           'message' => sprintf($this->getTemplate('invalid'), $this->label($fieldCode))
+    function digit($fieldCode, $allowEmpty=true) {
+        return new Digit(array(
+            "allowEmpty" => $allowEmpty,
+            'message' => sprintf($this->getTemplate('digit'), $this->label($fieldCode))
+        ));
+    }
+
+    function uniqueness($fieldCode) {
+        return new Uniqueness(array(
+            'message' => sprintf($this->getTemplate('uniqueness'), $this->label($fieldCode))
+        ));
+    }
+
+    function email($fieldCode, $allowEmpty=true) {
+        return new Email(array(
+            "allowEmpty" => $allowEmpty,
+            'message' => sprintf($this->getTemplate('invalid'), $this->label($fieldCode))
         ));
     }
 

@@ -1,11 +1,6 @@
 <?php
 namespace Asa\Erp;
 
-use Phalcon\Validation;
-use Phalcon\Mvc\Model\Relation;
-use Phalcon\Validation\Validator\Uniqueness;
-use Phalcon\Validation\Validator\PresenceOf;
-
 /**
  * 价格定义表
  */
@@ -94,14 +89,12 @@ class TbPrice extends BaseModel
         return '('.implode(' or ', $array).')';
     }
 
-    public function validation()
-    {
-        $validation = new Validation;
-
-        $validation->add('countryid', $this->getValidatorFactory()->presenceOf('guojiadiqu'));
-        $validation->add('pricetype', $this->getValidatorFactory()->presenceOf('jiageleixing'));
-        $validation->add('currencyid', $this->getValidatorFactory()->presenceOf('bizhong'));
-
-        return $this->validate($validation);
+    public function getRules() {
+        $factory = $this->getValidatorFactory();
+        return [
+            'countryid' => [$factory->presenceOf('guojiadiqu'), $factory->digit('guojiadiqu')],
+            'pricetype' => [$factory->presenceOf('jiageleixing'), $factory->digit('jiageleixing')],
+            'currencyid' => [$factory->presenceOf('bizhong'), $factory->digit('bizhong')]
+        ];
     }
 }

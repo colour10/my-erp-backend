@@ -154,7 +154,14 @@ class BaseModel extends \Phalcon\Mvc\Model {
             $validation = new Validation();
 
             foreach($rules as $field =>$rule) {
-                $validation->add($field, $rule);
+                if(is_array($rule)) {
+                    foreach($rule as $row) {
+                        $validation->add($field, $row);
+                    }
+                }
+                else {
+                    $validation->add($field, $rule);
+                }                
             }
 
             return $this->validate($validation);

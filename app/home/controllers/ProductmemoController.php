@@ -14,4 +14,8 @@ class ProductmemoController extends ZadminController {
 
 	    $this->setModelName('Asa\\Erp\\TbProductMemo');
     }
+
+    function before_page() {
+        $_POST["__orderby"] = "displayindex asc";
+    }
 }

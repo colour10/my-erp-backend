@@ -208,6 +208,7 @@ class AdminController extends BaseController
                 $result['id'] = $row->id;
                 //$message['idd'] = "999";
             }
+            
             echo json_encode($result);
         }
     }

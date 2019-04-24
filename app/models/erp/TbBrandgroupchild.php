@@ -61,8 +61,8 @@ class TbBrandgroupchild extends BaseModel
     public function getRules() {
         return [
             'name_cn' => $this->getValidatorFactory()->presenceOfMultiple('zileimingcheng'),
-            'brandgroupid' => $this->getValidatorFactory()->tableid('pinlei') 
+            'brandgroupid' => $this->getValidatorFactory()->tableid('pinlei'),
+            'displayindex' => $this->getValidatorFactory()->digit('xuhao') 
         ];
     }
-
 }

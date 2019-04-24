@@ -2,10 +2,6 @@
 
 namespace Asa\Erp;
 
-use Phalcon\Validation;
-use Phalcon\Validation\Validator\PresenceOf;
-use Phalcon\Mvc\Model\Relation;
-
 /**
  * 商品尺码明细信息表
  */
@@ -108,5 +104,13 @@ class TbSizecontent extends BaseModel
         if($this->update()==false) {
             throw new Exception("#1002#更新尺码详情的排序规则失败1#");
         }
+    }
+
+    public function getRules() {
+        $factory = $this->getValidatorFactory();
+        return [
+            'name' => [$factory->presenceOf('neirong')],
+            'topid' => [$factory->tableid('chimazu',false)]
+        ];
     }
 }
