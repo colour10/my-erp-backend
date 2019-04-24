@@ -1,6 +1,5 @@
 <?php
 namespace Asa\Erp;
-use Phalcon\Validation;
 use Phalcon\Mvc\Model\Relation;
 /**
  * 发货单明细表
@@ -30,9 +29,5 @@ class TbConfirmorderdetails extends BaseModel
                 'alias' => 'orderdetails'
             ]
         );
-    }
-    public function validation() {
-        $validator = new Validation();
-        return $this->validate($validator);
     }
 }

@@ -2,13 +2,6 @@
 
 namespace Asa\Erp;
 
-use Phalcon\Di;
-use Phalcon\Validation;
-use Phalcon\Validation\Validator\Uniqueness;
-use Phalcon\Validation\Validator\PresenceOf;
-use Phalcon\Validation\Validator\Regex;
-use Phalcon\Mvc\Model\Relation;
-
 /**
  * 查询表
  */

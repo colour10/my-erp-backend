@@ -2,10 +2,6 @@
 
 namespace Asa\Erp;
 
-use Phalcon\Validation;
-use Phalcon\Validation\Validator\Uniqueness;
-use Phalcon\Validation\Validator\PresenceOf;
-use Phalcon\Validation\Validator\Regex;
 use Asa\Erp\Util;
 use Phalcon\Mvc\Model\Relation;
 
@@ -49,34 +45,12 @@ class TbGroup extends BaseModel
         );
     }
 
-    /**
-     * 验证器
-     * @return bool
-     */
-    public function validation()
-    {
-        $validator = new Validation();
-
-        // name-名称不能为空
-        $validator->add('group_name', new PresenceOf([
-            'message' => $this->getValidateMessage('required', 'group_name'),
-            'cancelOnFail' => true,
-        ]));
-        // companyid-所属公司ID
-        $validator->add('companyid', new Regex(
-            [
-                'message' => $this->getValidateMessage('invalid', 'companyid'),
-                "pattern" => "/^[1-9]\d*$/",
-                "allowEmpty" => true,
-                'cancelOnFail' => true,
-            ]
-        ));
-        // 过滤
-        $validator->setFilters('group_name', 'trim');
-
-        return $this->validate($validator);
+    public function getRules() {
+        $factory = $this->getValidatorFactory();
+        return [
+            'group_name' => $factory->presenceOf('zumingcheng')
+        ];
     }
-
 
     /**
      * 获取当前用户组下面的所有权限操作
@@ -98,24 +72,5 @@ class TbGroup extends BaseModel
         $id_array = Util::recordListColumn($this->permissionGroups, "permissionid");
 
         return TbPermission::findByIdString($id_array, "id");
-    }
-
-
-    /**
-     * 重写多语言版本配置读取函数
-     * @param languages下面语言文件字段的名称 如template模块下面的uniqueness
-     * @param 待验证字段的编号，显示为当前语言的友好性提示 $name
-     * @return string
-     */
-    public function getValidateMessage($template, $name)
-    {
-        // 定义变量
-        // 取出当前语言版本
-        $language = $this->getDI()->get('language');
-        // 拼接变量
-        $template_name = $language->template[$template];
-        $human_name = $language->$name;
-        // 返回最终的友好提示信息
-        return sprintf($template_name, $human_name);
     }
 }
