@@ -198,6 +198,7 @@ class CommonController extends BaseController
             "country" => ["model"=>'Asa\Erp\TbCountry',"company"=>false, "orderby"=>"name_en asc"],
             //"materialnote" => ["model"=>'Asa\Erp\TbMaterialnote',"company"=>false],
             "material" => ["model"=>'Asa\Erp\TbMaterial',"company"=>false, "orderby"=>"name_en asc"],
+            "materialnote" => ["model"=>'Asa\Erp\TbMaterialnote',"company"=>false, "orderby"=>"displayindex asc"],
             "productinnards" => ["model"=>'Asa\Erp\TbProductinnards',"company"=>false],
             "productparts" => ["model"=>'Asa\Erp\TbProductparts',"company"=>false],
             "producttemplate" => ["model"=>'Asa\Erp\TbProducttemplate',"company"=>false],

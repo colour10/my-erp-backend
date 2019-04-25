@@ -12,26 +12,6 @@ class TbPrice extends BaseModel
         $this->setSource('tb_price');
     }
 
-    function toArrayPipe() {    
-        return [
-            "id" => $this->id,
-            "name"=>$this->getName()
-        ];
-    }
-
-    function getName() {
-        $di = $this->getDI();
-
-        $country = TbCountry::fetchById($this->countryid);
-        if($country==false) {
-            throw new Exception("/1001/国家地区不存在/");
-        }
-
-        $lang = $di->get("language")->lang;
-
-        return sprintf("%s-%s",$country['name_'.$lang], $di->get("staticReader")->get("pricetype", $this->pricetype));
-    }
-
     function getPriceSetting($brandid, $brandgroupid, $brandgroupchildid, $ageseasonids, $seriesid) {
         $companyid = $this->getDI()->get("currentCompany");
 
