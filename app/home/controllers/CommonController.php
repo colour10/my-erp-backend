@@ -102,6 +102,7 @@ class CommonController extends BaseController
             "order" =>["table"=>"Asa\\Erp\\TbOrder", "columns"=>[]],
             "orderpayment" =>["table"=>"Asa\\Erp\\TbOrderPayment", "columns"=>[]],
             "sales" =>["table"=>"Asa\\Erp\\TbSales", "columns"=>[]],
+            "productmaterial" =>["table"=>"Asa\\Erp\\TbProductMaterial", "columns"=>[]],
             "warehousingdetails" =>["table"=>"Asa\\Erp\\TbWarehousingdetails", "columns"=>['number'], "key"=>"confirmorderdetailsid"],
         ];
 

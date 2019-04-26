@@ -8,6 +8,7 @@ use Asa\Erp\TbProductcode;
 use Asa\Erp\TbPicture;
 use Asa\Erp\TbProductSizeProperty;
 use Asa\Erp\TbProductstock;
+use Asa\Erp\TbProductMaterial;
 
 /**
  * 商品表
@@ -68,9 +69,77 @@ class ProductController extends CadminController {
         return $this->success();
     }
 
-    function before_edit($row) {
-        if(isset($_POST['maketime'])) {
-            unset($_POST['maketime']);
+    function editAction() {
+        $params = json_decode($_POST["params"], true);
+        //print_r($params);
+
+        $products = [];
+        $colors = [];
+        $keys = ["wordcode_1","wordcode_2","wordcode_3","wordcode_4","brandcolor","picture","picture2","brandid", "brandgroupid", "childbrand", "productsize", "countries", "productparst", "producttemplate", "laststoragedate", "series", "ulnarinch", "factoryprice", "factorypricecurrency", "nationalpricecurrency", "nationalprice", "memo", "wordprice", "wordpricecurrency", "gender", "spring", "summer", "fall", "winter", "ageseason", "sizetopid", "sizecontentids", "productmemoids"];
+
+        
+        $product = TbProduct::findFirstById($params['form']['id']);
+        if($product!=false && $product->companyid==$this->companyid) {
+            //检查是否更新了色系
+            $isChange = $params['form']['brandcolor']==$product->brandcolor;
+
+            foreach($keys as $key) {
+                $product->$key = $params['form'][$key];
+            }
+
+            $this->db->begin();
+            if($product->update()==false) {
+                $this->db->rollback();
+                return $this->error($product);
+            }
+
+            //更新材质信息
+            if(is_array($params["materials"])) {
+                foreach($params['materials'] as $row) {
+                    if(isset($row['id']) && $row['id']>0) {
+                        $productMaterial = TbProductMaterial::findFirstById($row['id']);
+                    }
+                    else {
+                        $productMaterial = new TbProductMaterial();
+                        $productMaterial->productid = $product->id;
+                    }
+                    $productMaterial->materialid = $row["materialid"];
+                    $productMaterial->materialnoteid = $row["materialnoteid"];
+                    $productMaterial->percent = $row["percent"];
+                    if($productMaterial->save()==false) {
+                        $this->db->rollback();
+                        return $this->error($productMaterial);
+                    }
+                }
+            }
+            
+            //更新同款多色
+            if($isChange) {
+                $products = TbProduct::find(
+                    sprintf("product_group='%s'", $product->product_group)
+                );
+
+                //生成绑定的颜色组的字符串
+                $data = [];
+                foreach($products as $row) {
+                    $data[] = $row->id.",".$row->brandcolor;
+                }
+
+                $product_group = implode('|', $data);
+
+                //逐个更新，绑定关系
+                foreach($products as $row) {
+                    $row->product_group = $product_group;
+                    if($row->update()==false) {
+                        throw new \Exception("#1002#更新product_group字段失败#");
+                    }
+                }
+            }
+            $this->db->commit();
+            return $this->success();
+        }
+        else {
+            throw new \Exception("/1002/数据非法/");
         }
     }
 
@@ -100,15 +169,6 @@ class ProductController extends CadminController {
             
             return $this->success($result->toArray());
         }        
-    }
-    
-    public function beforeExecuteRoute($dispatcher)
-    {
-        // 这个方法会在每一个能找到的action前执行
-        $action = $dispatcher->getActionName();
-        if ($action=='add') {
-            $_POST["adduserid"] = $this->currentUser;
-        }
     }
 
     /**
