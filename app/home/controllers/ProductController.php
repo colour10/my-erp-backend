@@ -27,7 +27,7 @@ class ProductController extends CadminController {
 
         $products = [];
         $colors = [];
-        $keys = ["brandid", "brandgroupid", "childbrand", "productsize", "countries", "material", "productparst", "producttemplate", "laststoragedate", "series", "ulnarinch", "factoryprice", "factorypricecurrency", "nationalpricecurrency", "nationalprice", "memo", "wordprice", "wordpricecurrency", "gender", "spring", "summer", "fall", "winter", "ageseason", "sizetopid", "sizecontentids", "productmemoids"];
+        $keys = ["brandid", "brandgroupid", "childbrand", "productsize", "countries", "productparst", "producttemplate", "laststoragedate", "series", "ulnarinch", "factoryprice", "factorypricecurrency", "nationalpricecurrency", "nationalprice", "memo", "wordprice", "wordpricecurrency", "gender", "spring", "summer", "fall", "winter", "ageseason", "sizetopid", "sizecontentids", "productmemoids"];
 
         $this->db->begin();
         foreach($params['colors'] as $row){
@@ -51,6 +51,21 @@ class ProductController extends CadminController {
                 return $this->error($product);
             }
             else {
+                //添加材质信息
+                if(is_array($params["materials"])) {
+                    foreach($params['materials'] as $row) {
+                        $productMaterial = new TbProductMaterial();
+                        $productMaterial->productid = $product->id;
+                        $productMaterial->materialid = $row["materialid"];
+                        $productMaterial->materialnoteid = $row["materialnoteid"];
+                        $productMaterial->percent = $row["percent"];
+                        if($productMaterial->save()==false) {
+                            $this->db->rollback();
+                            return $this->error($productMaterial);
+                        }
+                    }
+                }
+
                 $products[] = $product;
                 $colors[] = $product->id.",".$product->brandcolor;
             }
