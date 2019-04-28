@@ -510,7 +510,7 @@ return array(
     "benguochuchangjia" => "本国出厂价",
     "baifenbi" => "百分比",
     "jiancheng" => "简称",
-    "jiagedingyi" => "价格定义",
+    "beilv" => "倍率",
     "jiagedingyi" => "价格定义",
     "jiagedingyi" => "价格定义",
     "jiagedingyi" => "价格定义",
