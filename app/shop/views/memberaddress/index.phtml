@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
-<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if IE 8]>
+<html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
 <html lang="en">
 <!--<![endif]-->
@@ -73,31 +75,34 @@
                                     <th>设置默认</th>
                                 </tr>
                                 <?php
-                                    if (count($result) > 0) {
-                                        foreach ($result as $address) {
-                                ?>
-                                <tr>
-                                    <td><?php echo $address['name']; ?></td>
-                                    <td><?php echo $address['address']; ?></td>
-                                    <td><?php echo $address['tel']; ?></td>
-                                    <td>
-                                        <a class="t-change" href="/memberaddress/edit/<?php echo $address['id']; ?>" target="_self">修改</a>
-                                        <span class="t-line">|</span>
-                                        <a onclick="address_del(<?php echo $address['id']; ?>);return false;"><span class="t-delete">删除</span></a></td>
-                                    <td>
-                                        <?php if ($address['is_default']) { ?>
-                                            <span class="t-default">默认地址</span>
-                                        <?php } else { ?>
-                                            <a onclick="address_set_default(<?php echo $address['id']; ?>);return false;">设为默认</a>
-                                        <?php } ?>
+                                if (count($result) > 0) {
+                                    foreach ($result as $address) {
+                                        ?>
+                                        <tr>
+                                            <td><?php echo $address['name']; ?></td>
+                                            <td><?php echo $address['address']; ?></td>
+                                            <td><?php echo $address['tel']; ?></td>
+                                            <td>
+                                                <a class="t-change"
+                                                   href="/memberaddress/edit/<?php echo $address['id']; ?>"
+                                                   target="_self">修改</a>
+                                                <span class="t-line">|</span>
+                                                <a onclick="address_del(<?php echo $address['id']; ?>);return false;"><span
+                                                            class="t-delete">删除</span></a></td>
+                                            <td>
+                                                <?php if ($address['is_default']) { ?>
+                                                    <span class="t-default">默认地址</span>
+                                                <?php } else { ?>
+                                                    <a onclick="address_set_default(<?php echo $address['id']; ?>);return false;">设为默认</a>
+                                                <?php } ?>
 
-                                    </td>
-                                </tr>
-                                <?php } ?>
+                                            </td>
+                                        </tr>
+                                    <?php } ?>
                                 <?php } else { ?>
-                                <tr>
-                                    <td colspan="5">您没有保存任何收货地址</td>
-                                </tr>
+                                    <tr>
+                                        <td colspan="5">您没有保存任何收货地址</td>
+                                    </tr>
                                 <?php } ?>
                             </table>
                         </div>

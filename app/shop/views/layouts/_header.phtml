@@ -5,18 +5,20 @@
             <!-- BEGIN TOP BAR LEFT PART -->
             <div class="col-md-6 col-sm-6 additional-shop-info">
                 <ul class="list-unstyled list-inline">
-                    <li><i class="fa fa-phone"></i><span><?php if($this->session->get('member')){ echo $this->session->get('member')['phoneno'];} ?></span></li>
+                    <li><i class="fa fa-phone"></i><span><?php if ($this->session->get('member')) {
+                                echo $this->session->get('member')['phoneno'];
+                            } ?></span></li>
                     <!-- BEGIN LANGS -->
-<!--                    <li class="langs-block">-->
-<!--                        <a href="javascript:void(0);" class="current">English </a>-->
-<!--                        <div class="langs-block-others-wrapper">-->
-<!--                            <div class="langs-block-others">-->
-<!--                                <a href="javascript:void(0);">French</a>-->
-<!--                                <a href="javascript:void(0);">Germany</a>-->
-<!--                                <a href="javascript:void(0);">Turkish</a>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </li>-->
+                    <!--                    <li class="langs-block">-->
+                    <!--                        <a href="javascript:void(0);" class="current">English </a>-->
+                    <!--                        <div class="langs-block-others-wrapper">-->
+                    <!--                            <div class="langs-block-others">-->
+                    <!--                                <a href="javascript:void(0);">French</a>-->
+                    <!--                                <a href="javascript:void(0);">Germany</a>-->
+                    <!--                                <a href="javascript:void(0);">Turkish</a>-->
+                    <!--                            </div>-->
+                    <!--                        </div>-->
+                    <!--                    </li>-->
                     <!-- END LANGS -->
                 </ul>
             </div>
@@ -24,12 +26,18 @@
             <!-- BEGIN TOP BAR MENU -->
             <div class="col-md-6 col-sm-6 additional-nav">
                 <ul class="list-unstyled list-inline pull-right">
-                	<li><?php if($this->session->get('member')){ echo '欢迎 '.$this->session->get('member')['login_name'];} ?></li>
+                    <li><?php if ($this->session->get('member')) {
+                            echo '欢迎 ' . $this->session->get('member')['login_name'];
+                        } ?></li>
                     <li><a href="/member">个人资料</a></li>
                     <li><a href="/buycar">购物车</a></li>
-                     <li><a href="/order/list">我的订单</a></li>
-                    <li <?php if($this->session->get('member')){ echo "style='display:none;'";} ?>><a href="/login/index">登录</a></li>
-                    <li <?php if(!$this->session->get('member')){ echo "style='display:none;'";} ?>><a href="/login/logout">退出</a></li>
+                    <li><a href="/order/list">我的订单</a></li>
+                    <li <?php if ($this->session->get('member')) {
+                        echo "style='display:none;'";
+                    } ?>><a href="/login/index">登录</a></li>
+                    <li <?php if (!$this->session->get('member')) {
+                        echo "style='display:none;'";
+                    } ?>><a href="/login/logout">退出</a></li>
                 </ul>
             </div>
             <!-- END TOP BAR MENU -->
@@ -49,27 +57,31 @@
         <!-- BEGIN CART -->
         <div class="top-cart-block">
             <div class="top-cart-info">
-                <a href="javascript:void(0);" class="top-cart-info-count"><?php echo $this->buycar[0]['totalnum']; ?></a>
-                <a href="javascript:void(0);" class="top-cart-info-value"><?php if($this->buycar[0]['totalnum'] && $this->buycar[0]['totalprice']) echo '| $'.$this->buycar[0]['totalprice']; ?></a>
+                <a href="javascript:void(0);"
+                   class="top-cart-info-count"><?php echo $this->buycar['total']['totalnum']; ?></a>
+                <a href="javascript:void(0);"
+                   class="top-cart-info-value"><?php if ($this->buycar['total']['totalnum'] && $this->buycar['total']['totalprice']) echo '| $' . $this->buycar['total']['totalprice']; ?></a>
             </div>
             <i class="fa fa-shopping-cart"></i>
 
             <div class="top-cart-content-wrapper">
                 <div class="top-cart-content">
                     <ul class="scroller" style="height: 250px;">
-                    	<?php if ($this->buycar){ ?>
-                        	<?php foreach ($this->buycar as $k => $v) { ?>
-                        		<li>
-                        			<a href="/"><img src="<?php echo $this->file_prex.$v['product']['picture']; ?>" alt="<?php echo $v['product_name'] ?>" width="37" height="34"></a>
-		                            <span class="cart-content-count">x <?php echo $v['number']; ?></span>
-		                            <strong><a href="/"><?php echo $v['product']['productname']; ?></a></strong>
-		                            <em>$<?php echo sprintf('%.2f', $v['price']); ?></em>
-		                            <a onclick="delheadergoods(this, <?php echo $v['id']; ?>);" class="del-goods">&nbsp;</a>
-                        		</li>
-                        	<?php } ?>
-                    	<?php }else{ ?>
-                    		<li>你的购物车空空如也</li>
-                    	<?php } ?>
+                        <?php if ($this->buycar) { ?>
+                            <?php foreach ($this->buycar['items'] as $k => $v) { ?>
+                                <li>
+                                    <a href="/"><img src="<?php echo $this->file_prex . $v['product']['picture']; ?>"
+                                                     alt="<?php echo $v['product_name'] ?>" width="37" height="34"></a>
+                                    <span class="cart-content-count">x <?php echo $v['number']; ?></span>
+                                    <strong><a href="/"><?php echo $v['product']['productname']; ?></a></strong>
+                                    <em>$<?php echo sprintf('%.2f', $v['price']); ?></em>
+                                    <a onclick="delheadergoods(this, <?php echo $v['id']; ?>);"
+                                       class="del-goods">&nbsp;</a>
+                                </li>
+                            <?php } ?>
+                        <?php } else { ?>
+                            <li>你的购物车空空如也</li>
+                        <?php } ?>
                     </ul>
                     <div class="text-right">
                         <a href="/buycar/index" class="btn btn-default">查看购物车</a>
@@ -85,9 +97,9 @@
             <ul>
 
                 <?php foreach ($this->cates as $cate) { ?>
-                <li>
-                    <a href="/brandgroup/detail/<?php echo $cate['id']; ?>"><?php echo $cate['name_cn']; ?></a>
-                </li>
+                    <li>
+                        <a href="/brandgroup/detail/<?php echo $cate['id']; ?>"><?php echo $cate['name_cn']; ?></a>
+                    </li>
                 <?php } ?>
 
                 <!-- BEGIN TOP SEARCH -->

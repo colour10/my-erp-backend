@@ -1,9 +1,15 @@
 <?php
+
 namespace Multiple\Shop\Controllers;
 
+use Asa\Erp\TbCompany;
+use Asa\Erp\TbProduct;
 use Asa\Erp\TbProductSearch;
 use Asa\Erp\TbBrandgroup;
-use Phalcon\Paginator\Adapter\Model as PaginatorModel;
+use Asa\Erp\TbProductstock;
+use Asa\Erp\TbSizecontent;
+use Asa\Erp\Util;
+use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
 
 /**
  * 品类操作类
@@ -48,7 +54,7 @@ class BrandgroupController extends AdminController
     {
         // 逻辑
         // 判断是否登录
-        if (!$this->session->get('member')) {
+        if (!$member = $this->session->get('member')) {
             return $this->dispatcher->forward([
                 'controller' => 'login',
                 'action' => 'index',
@@ -77,17 +83,87 @@ class BrandgroupController extends AdminController
         array_unshift($brandGroup_ids, $id);
 
         // 查找隶属于子品类的商品
-        $products = TbProductSearch::find([
-            'conditions'=>'childbrand IN ({brandGroup_ids:array}) AND companyid = '.$this->currentCompany,
-            'bind'=>['brandGroup_ids'=>$brandGroup_ids],
+        $productsModel = TbProductSearch::find([
+            'conditions' => 'childbrand IN ({brandGroup_ids:array}) AND companyid = ' . $this->currentCompany,
+            'bind' => ['brandGroup_ids' => $brandGroup_ids],
         ]);
 
-        // 创建分页对象
-        $paginator = new PaginatorModel(
+        // 加工数据
+        // 尺码多语言字段
+        $contentname = $this->getlangfield('content');
+        // 在取出库存之前，首先获取销售端口
+        $company = TbCompany::findFirstById($member['companyid']);
+        $saleport = $company->shopSaleport;
+        $array = Util::recordListColumn($saleport->saleportWarehouses, 'warehouseid');
+        if (count($array) == 0) {
+            return $array;
+        }
+
+        // 需要拿到每个商品下面所有的尺码，库存数
+        $products = $productsModel->toArray();
+        foreach ($productsModel as $k => $item) {
+            // 国际码
+            $productModel = TbProduct::findFirstById($item->productid);
+            if ($productModel) {
+                $wordcode = $productModel->wordcode_1 . $productModel->wordcode_2 . $productModel->wordcode_3 . $productModel->wordcode_4;
+            } else {
+                $wordcode = '';
+            }
+            if ($item->sizetopid) {
+                $sizecontents = TbProductstock::sum([
+                    sprintf("warehouseid in (%s) and defective_level=0 and productid = %s", implode(',', $array), $item->productid),
+                    "group" => 'productid, sizecontentid',
+                    "column" => 'number',
+                ]);
+                if ($sizecontents) {
+                    $sizecontents = $sizecontents->toArray();
+                }
+            } else {
+                $sizecontents = [];
+            }
+            // 尺码组赋值
+            $products[$k]['sizecontents'] = $sizecontents;
+            // 国际码赋值
+            $products[$k]['wordcode'] = $wordcode;
+        }
+
+        // 重新遍历，把尺码名称填写进去
+        // 每个分页当中把当前最大尺码记录数加入进去
+        foreach ($products as $k => $product) {
+            // 把sizecontents的统计数量加入进去
+            $products[$k]['sum_sizecontents'] = count($product['sizecontents']);
+            foreach ($product['sizecontents'] as $key => $item) {
+                $TbSizecontentModel = TbSizecontent::findFirstById($item['sizecontentid']);
+                if ($TbSizecontentModel) {
+                    $sizecontentname = $TbSizecontentModel->$contentname;
+                } else {
+                    $sizecontentname = '';
+                }
+                $products[$k]['sizecontents'][$key]['sizecontentname'] = $sizecontentname;
+            }
+        }
+
+        // 使用冒泡排序算法得出当前最大sum_sizecontents值
+        $count = count($products);
+        for ($i = 0; $i < $count - 1; $i++) {
+            for ($j = 0; $j < $count - $i - 1; $j++) {
+                if ($products[$j]['sum_sizecontents'] > $products[$j + 1]['sum_sizecontents']) {
+                    $temp = $products[$j];
+                    $products[$j] = $products[$j + 1];
+                    $products[$j + 1] = $temp;
+                }
+            }
+        }
+
+        // 得出最大尺码组的值，最后需要传递给模板
+        $max_sum_sizecontents = $products[$count - 1]['sum_sizecontents'];
+
+        // 创建分页对象，使用数组分页
+        $paginator = new PaginatorArray(
             [
-                "data"  => $products,
+                "data" => $products,
                 "limit" => 10,
-                "page"  => $currentPage,
+                "page" => $currentPage,
             ]
         );
 
@@ -96,7 +172,7 @@ class BrandgroupController extends AdminController
 
         // 定义面包屑导航
         $name = $this->getlangfield('name');
-        $breadcrumb = '<li><a href="/">首页</a></li><li class="active">'.$brandGroup->$name.'</li>';
+        $breadcrumb = '<li><a href="/">首页</a></li><li class="active">' . $brandGroup->$name . '</li>';
 
         // 推送给模板
         $this->view->setVars([
@@ -104,6 +180,7 @@ class BrandgroupController extends AdminController
             'id' => $id,
             'breadcrumb' => $breadcrumb,
             'title' => $brandGroup->$name,
+            'max_sum_sizecontents' => $max_sum_sizecontents,
         ]);
     }
 
@@ -137,7 +214,7 @@ class BrandgroupController extends AdminController
         $list_arr = [];
         // 取出所有一级品牌
         $list = TbBrandgroup::find();
-        if($list) {
+        if ($list) {
             $list_arr = $list->toArray();
         }
         // 填充子分类
@@ -167,7 +244,7 @@ class BrandgroupController extends AdminController
     public function getdetailAction($id)
     {
         // 逻辑
-        $brandGroup = TbBrandgroup::find('id='.$id);
+        $brandGroup = TbBrandgroup::find('id=' . $id);
         // 返回
         return $brandGroup;
     }

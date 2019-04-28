@@ -194,7 +194,7 @@ class AdminController extends Controller
         // 逻辑
         $lang = $this->language['lang'];
         // 返回
-        return $fieldname . '_' .$lang;
+        return $fieldname . '_' . $lang;
     }
 
     /**
@@ -217,16 +217,14 @@ class AdminController extends Controller
      */
     public function error($messages = [], $code = '200')
     {
-        if($messages instanceof Model===true) {
+        if ($messages instanceof Model === true) {
             $array = [];
             foreach ($messages->getMessages() as $message) {
                 $array[] = $message->getMessage();
             }
-        }
-        else if(is_string($messages)) {
+        } else if (is_string($messages)) {
             $array = [$messages];
-        }
-        else {
+        } else {
             $array = $messages;
         }
 
@@ -240,7 +238,7 @@ class AdminController extends Controller
      * @param $module_rule 模块验证规则，比如cn.php中的template模块下面的uniqueness
      * @return string
      */
-    public function getValidateMessage($field_name, $module_name='', $module_rule='')
+    public function getValidateMessage($field_name, $module_name = '', $module_rule = '')
     {
         // 逻辑
         // 定义变量
