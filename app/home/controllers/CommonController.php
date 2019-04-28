@@ -49,7 +49,7 @@ class CommonController extends BaseController
         $lang["_currentUsername"] = $auth['username'];
         $lang["_currentid"] = $auth['id'];
 
-        if(isset($auth['company'])) {
+        if(isset($auth['company']) && isset($auth['company']->currencyid)) {
             $lang["_currencyid"] = $auth['company']->currencyid;
         }
         //var_dump($auth);
