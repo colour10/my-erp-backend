@@ -14,4 +14,8 @@ class PriceController extends CadminController {
 
 	    $this->setModelName('Asa\\Erp\\TbPrice');
     }
+
+    function before_page() {
+        $_POST["__orderby"] = "displayindex asc";
+    }
 }
