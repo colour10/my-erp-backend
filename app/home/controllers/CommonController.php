@@ -48,6 +48,7 @@ class CommonController extends BaseController
         $lang["_date"] = date("Y-m-d");
         $lang["_currentUsername"] = $auth['username'];
         $lang["_currentid"] = $auth['id'];
+        $lang["_currencyid"] = $auth['company']->currencyid;
         //var_dump($auth);
         
         echo sprintf("\$ASAL = %s", json_encode((array)$lang), JSON_OBJECT_AS_ARRAY );
@@ -211,6 +212,7 @@ class CommonController extends BaseController
             "ulnarinch" => ["model"=>'Asa\Erp\TbUlnarinch',"company"=>false, "orderby"=>"displayindex asc"],
             "currency" => ["model"=>'Asa\Erp\TbCurrency',"company"=>false, "orderby"=>"code asc"],
             "price" => ["model"=>'Asa\Erp\TbPrice',"company"=>false],
+            "saletype" => ["model"=>'Asa\Erp\TbSaleType',"company"=>false, "orderby"=>"displayindex asc"],
         ];
         $table = $this->dispatcher->getParam("table");
         $model = $maps[$table];

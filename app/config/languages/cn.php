@@ -511,8 +511,8 @@ return array(
     "baifenbi" => "百分比",
     "jiancheng" => "简称",
     "beilv" => "倍率",
-    "jiagedingyi" => "价格定义",
-    "jiagedingyi" => "价格定义",
+    "xitongmoren" => "系统默认",
+    "dangqianshijian" => "当前时间",
     "jiagedingyi" => "价格定义",
 
 

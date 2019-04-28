@@ -8,10 +8,14 @@ use Asa\Erp\TbSaleType;
 /**
  * 销售属性表
  */
-class SaletypeController extends CadminController {
+class SaletypeController extends AdminController {
     public function initialize() {
 	    parent::initialize();
 
 	    $this->setModelName('Asa\\Erp\\TbSaleType');
+    }
+
+    function before_page() {
+        $_POST["__orderby"] = "displayindex asc";
     }
 }
