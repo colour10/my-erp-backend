@@ -69,8 +69,9 @@ class ValidatorFactory implements InjectionAwareInterface {
         ));
     }
 
-    function uniqueness($fieldCode) {
+    function uniqueness($fieldCode, $allowEmpty=true) {
         return new Uniqueness(array(
+            "allowEmpty" => $allowEmpty,
             'message' => sprintf($this->getTemplate('uniqueness'), $this->label($fieldCode))
         ));
     }

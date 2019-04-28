@@ -13,6 +13,10 @@ class TbProductMemo extends BaseModel
     }
 
     public function getRules() {
-        return ['name_cn' => $this->getValidatorFactory()->presenceOfMultiple('mingcheng') ];
+        $factory = $this->getValidatorFactory();
+        return [
+            'name_cn' => [$factory->presenceOfMultiple('mingcheng'), $factory->uniqueness('mingcheng',false)],
+            'name_en' => $factory->uniqueness('mingcheng')
+        ];
     }
 }
