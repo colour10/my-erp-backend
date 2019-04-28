@@ -1,10 +1,12 @@
 <?php
+
 namespace Asa\Erp;
 
 use Gregwar\Image\Image;
 use PHPExcel;
 
-class Util {
+class Util
+{
     /**
      * 格式化为目录树
      * @param $result 结果集
@@ -30,7 +32,7 @@ class Util {
                         'label' => $v['name'],
                         'memo' => $v['memo'],
                         'level' => $level,
-                        'children' =>[]
+                        'children' => [],
                     ];
                 } else {
                     $tree[] = [
@@ -67,12 +69,12 @@ class Util {
                 // 数据合并
                 $tree[] = [
                     'id' => $v['id'],
-                    'label' => str_repeat($str_repeat, $level).$v['name'],
+                    'label' => str_repeat($str_repeat, $level) . $v['name'],
                     'memo' => $v['memo'],
                     'level' => $level,
                 ];
                 // 继续寻找
-                $tree = array_merge($tree, self::format_tree_single_array($result, $v['id'], $level+1));
+                $tree = array_merge($tree, self::format_tree_single_array($result, $v['id'], $level + 1));
             }
         }
         // 返回
@@ -88,7 +90,7 @@ class Util {
     {
         // 逻辑
         // 如果有逗号，就分割
-        if (strpos($str,',') !== false) {
+        if (strpos($str, ',') !== false) {
             $arr = explode(',', $str);
         } else {
             $arr = [$str];
@@ -118,7 +120,7 @@ class Util {
      * @param int $length 处理后的位数，默认是6位
      * @return bool|string
      */
-    public static function cover_position($str, $length=6)
+    public static function cover_position($str, $length = 6)
     {
         // 逻辑
         $len = strlen($str);
@@ -179,7 +181,8 @@ class Util {
     /**
      * 根据查询到的一个结果集，获取指定列，并生成数组
      */
-    public static function recordListColumn($list, $column) {
+    public static function recordListColumn($list, $column)
+    {
         $array = [];
         foreach ($list as $key => $value) {
             $array[] = $value->$column;
@@ -190,80 +193,83 @@ class Util {
     /**
      * 根据查询到的一个结果集，指定两列，生成哈希表
      */
-    public static function recordToHashtable($list, $columnKey, $columnValue='') {
+    public static function recordToHashtable($list, $columnKey, $columnValue = '')
+    {
         $array = [];
         foreach ($list as $key => $value) {
-            $array[$value->$columnKey] = $columnValue==''? $value : $value->$columnValue;
+            $array[$value->$columnKey] = $columnValue == '' ? $value : $value->$columnValue;
         }
         return $array;
     }
 
-    public static function getAuthResourse() {
+    public static function getAuthResourse()
+    {
         return [
-            ["user","modifypassword"],
-            ["warehouseuser","page"],
-            ["user","page"],
-            ["product","page"],
-            ["group","page"],
-            ['group','getpermissions'],
-            ["department","single"],
-            ["department","departments"],
-            ["brand","page"],
-            ["common","list"],
-            ["common","loadname"],
-            ["brandgroup","page"],
-            ["brandgroupchild","page"],
-            ["brandgroupchildproperty","page"],
-            ["ageseason","page"],
-            ["colortemplate","page"],
-            ["sizetop","page"],
-            ["sizecontent","page"],
-            ["ulnarinch","page"],
-            ["material","page"],
-            ["warehouse","page"],
-            ["country","page"],
-            ["saleport","page"],
-            ["supplier","page"],
-            ["order","page"],
-            ["order","loadorder"],
-            ["confirmorder","loadorder"],
-            ["confirmorder","page"],
-            ["warehousing","page"],
-            ["warehousing","load"],
-            ["requisition","page"],
-            ["requisition","load"],
-            ["requisition","confirmout"],
-            ["requisition","confirmin"],
-            ["productstock","search"],
-            ["permission","tree"],
-            ["user","saleportlist"],
-            ["sales","page"],
-            ["sales","loadsale"],
-            ["product","getproperties"],
-            ["product","picture"],
-            ["product","getcolorgrouplist"],
-            ["product","codelist"],
-            ["product","search"],
-            ['aliases','page'],
-            ['series','page'],
-            ['warehouse','userlist'],
-            ['series2','page'],
+            ["user", "modifypassword"],
+            ["warehouseuser", "page"],
+            ["user", "page"],
+            ["product", "page"],
+            ["group", "page"],
+            ['group', 'getpermissions'],
+            ["department", "single"],
+            ["department", "departments"],
+            ["brand", "page"],
+            ["common", "list"],
+            ["common", "loadname"],
+            ["brandgroup", "page"],
+            ["brandgroupchild", "page"],
+            ["brandgroupchildproperty", "page"],
+            ["ageseason", "page"],
+            ["colortemplate", "page"],
+            ["sizetop", "page"],
+            ["sizecontent", "page"],
+            ["ulnarinch", "page"],
+            ["material", "page"],
+            ["warehouse", "page"],
+            ["country", "page"],
+            ["saleport", "page"],
+            ["supplier", "page"],
+            ["order", "page"],
+            ["order", "loadorder"],
+            ["confirmorder", "loadorder"],
+            ["confirmorder", "page"],
+            ["warehousing", "page"],
+            ["warehousing", "load"],
+            ["requisition", "page"],
+            ["requisition", "load"],
+            ["requisition", "confirmout"],
+            ["requisition", "confirmin"],
+            ["productstock", "search"],
+            ["permission", "tree"],
+            ["user", "saleportlist"],
+            ["sales", "page"],
+            ["sales", "loadsale"],
+            ["product", "getproperties"],
+            ["product", "picture"],
+            ["product", "getcolorgrouplist"],
+            ["product", "codelist"],
+            ["product", "search"],
+            ['aliases', 'page'],
+            ['series', 'page'],
+            ['warehouse', 'userlist'],
+            ['series2', 'page'],
             ['productmemo', 'page'],
             ['companyinvoice', 'page'],
-            ['supplierbank','page'],
-            ['supplierinvoice','page'],
+            ['supplierbank', 'page'],
+            ['supplierinvoice', 'page'],
             ['currency', 'page'],
-            ['company', 'info']
+            ['company', 'info'],
         ];
     }
 
-    public static function getPublicResourse() {
+    public static function getPublicResourse()
+    {
         return [
             ["index", 'index'],
             ['login', 'login'],
-            ["login","logout"],
+            ["login", "logout"],
             ['login', 'checklogin'],
-            ['common', 'systemlanguage']
+            ['common', 'systemlanguage'],
         ];
     }
 
@@ -283,7 +289,7 @@ class Util {
             // 开始处理
             Image::open($filepath)
                 ->resize($resize, $resize)
-                ->save(dirname($filepath).'/'.$pathinfo['basename'].'_'.$resize.'x'.$resize.'.'.$pathinfo['extension']);
+                ->save(dirname($filepath) . '/' . $pathinfo['basename'] . '_' . $resize . 'x' . $resize . '.' . $pathinfo['extension']);
         }
     }
 
@@ -300,8 +306,8 @@ class Util {
     {
         // 逻辑
         // 首先创建所需的文件夹
-        $imgPath = APP_PATH.'/public/upload/'.$pictureSaveFolder;
-        if(!file_exists($imgPath)) {
+        $imgPath = APP_PATH . '/public/upload/' . $pictureSaveFolder;
+        if (!file_exists($imgPath)) {
             mkdir($imgPath);
         }
 
@@ -324,13 +330,13 @@ class Util {
                 $filename = $drawing->getIndexedFilename();
 
                 // jpeg后缀名处理
-                $imgName = substr($filename,0,strrpos($filename,'.')-1);
-                $imgType = @end(explode(".",$filename));
+                $imgName = substr($filename, 0, strrpos($filename, '.') - 1);
+                $imgType = @end(explode(".", $filename));
                 // 如果扩展名是jpeg，则修改为jpg
                 if ($imgType == 'jpeg') {
-                    $img = $imgName.'.jpg';
+                    $img = $imgName . '.jpg';
                 } else {
-                    $img = $imgName.'.'.$imgType;
+                    $img = $imgName . '.' . $imgType;
                 }
 
                 // 把图片保存在服务器中
@@ -340,7 +346,7 @@ class Util {
                     $drawing->getImageResource()
                 );
                 $imageContents = ob_get_contents();
-                file_put_contents($imgPath.'/'.$img, $imageContents); //把文件保存到本地
+                file_put_contents($imgPath . '/' . $img, $imageContents); //把文件保存到本地
                 ob_end_clean();
 
                 // 获取当前单元格位置，便于后续操作
@@ -357,17 +363,17 @@ class Util {
                 // 类似于：zip:///data/www/xxx/bdac99339.xlsx#xl/media/image2.jpg
                 $filename = $drawing->getPath();
                 // 文件后缀
-                $imgType = @end(explode(".",$filename));
+                $imgType = @end(explode(".", $filename));
                 // 文件名部分
-                $imgName = md5(time().mt_rand(100,999).uniqid());
+                $imgName = md5(time() . mt_rand(100, 999) . uniqid());
                 // 如果扩展名是jpeg，则修改为jpg
                 if ($imgType == 'jpeg') {
-                    $img = $imgName.'.jpg';
+                    $img = $imgName . '.jpg';
                 } else {
-                    $img = $imgName.'.'.$imgType;
+                    $img = $imgName . '.' . $imgType;
                 }
                 // 即将要复制到的文件路径
-                copy($filename, $imgPath.'/'.$img);
+                copy($filename, $imgPath . '/' . $img);
 
                 // 获取当前单元格位置，便于后续操作
                 $XY = $drawing->getCoordinates();
@@ -381,7 +387,6 @@ class Util {
         // 返回去掉首行excel标题的数组
         return self::unsetFirstArray($datas->toArray());
     }
-
 
 
     /**
@@ -414,14 +419,14 @@ class Util {
      * @return string
      * @throws \PHPExcel_Exception
      */
-    public static function excelExport($title = array(), $data = array(), $fileName = '', $savePath = './', $isDown = true)
+    public static function excelExport($title = [], $data = [], $fileName = '', $savePath = './', $isDown = true)
     {
         // 逻辑
         // 初始化
         $obj = new PHPExcel();
 
         // 横向单元格标识
-        $cellName = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ');
+        $cellName = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AL', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ'];
 
         // 设置sheet名称，默认为sheet1
         $obj->getActiveSheet()->setTitle('sheet1');
@@ -513,5 +518,22 @@ class Util {
 
         // 返回文件名
         return $savePath . $fileName . '.xls';
+    }
+
+    /**
+     * 判断数据是否为合法的json字符串
+     * @param $data
+     * @param bool $assoc
+     * @return bool
+     */
+    public static function is_json($data, $assoc = false)
+    {
+        // 逻辑
+        // 因为json_decode里面放的只要是非string类型就会报错，这个需要加个@强制屏蔽，否则将无法进行下面的验证
+        $data = @json_decode($data, $assoc);
+        if (($data && (is_object($data))) || (is_array($data) && !empty($data))) {
+            return true;
+        }
+        return false;
     }
 }
