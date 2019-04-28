@@ -1,62 +1,80 @@
 /* here you can put your own css to customize and override the theme */
 .Recommend_products_content .thumbnail {
-    border:none;
+    border: none;
 }
+
 .Recommend_products_content h3 {
     font-size: 1.15em;
     padding-top: 10px;
     padding-bottom: 4px;
 }
+
 .Recommend_products_content h3 a {
     color: #3e4d5c;
 }
+
 .Recommend_products_content h3 a:hover {
     text-decoration: none;
 }
+
 .sale-product h2 {
-    margin-bottom:0.5em;
+    margin-bottom: 0.5em;
 }
+
 .borderTopNone {
-    border-top:none;
+    border-top: none;
 }
+
 .price-availability-block .availability {
-    margin-top:16px;
+    margin-top: 16px;
 }
+
 .price-availability-block .price strong {
     font-size: 35px;
 }
+
 .del-goods {
     cursor: pointer;
 }
+
 .goods-page-price strong em, .goods-page-total strong em, .checkout-price strong em, .checkout-total strong em {
     font-style: normal;
 }
+
 .footer .text-left, .footer .text-right {
-    text-align:center;
+    text-align: center;
 }
+
 .paymethod label {
     cursor: pointer;
 }
+
 #paymethod2 {
-    margin-left:0.5em;
+    margin-left: 0.5em;
 }
+
 .product-number {
-    font-size:21px;
+    font-size: 21px;
 }
+
 .h1-title, .main h1 {
     font-size: 2em;
     margin-top: 0;
 }
+
 .h1-title span {
     font-size: 0.5em;
     margin-top: 1em;
 }
+
 #table-address a {
     cursor: pointer;
 }
+
 #table-address th {
     background: #ebecf0;
 }
+
 table .t-default {
     display: block;
     width: 80px;
@@ -68,20 +86,23 @@ table .t-default {
     background: #ffd6cc;
     color: #f30;
 }
+
 .label-address {
-    margin-bottom:0.8em;
+    margin-bottom: 0.8em;
     cursor: pointer;
 }
+
 .label-address input {
     vertical-align: middle;
 }
+
 .label-address input[type=checkbox], .label-address input[type=radio] {
-    margin:0;
+    margin: 0;
 }
 
 /* 订单列表 Start */
 .margin10 {
-    margin:10px 0;
+    margin: 10px 0;
 }
 
 .border {
@@ -112,7 +133,7 @@ table .t-default {
     line-height: 1
 }
 
-.order-table td,.order-table th {
+.order-table td, .order-table th {
     padding-top: 10px;
     padding-bottom: 10px
 }
@@ -123,66 +144,122 @@ table .t-default {
 
 .order-table td {
     vertical-align: middle;
-    font-size:0.6em;
+    font-size: 0.6em;
 }
+
 .order-table-title {
     background: #f1f1f1;
 }
+
 .w80 {
-    width:40px;
-    height:auto;
+    width: 40px;
+    height: auto;
+    margin: 0 auto;
+    display: block;
 }
+
 .text-left {
-    text-align: left!important;
+    text-align: left !important;
 }
+
 .product-name {
-    margin-left:0.2em;
+    margin-left: 0.2em;
 }
+
 .font-normal {
     font-style: normal;
 }
+
 button {
     cursor: pointer;
 }
+
 /* 订单列表 End */
+.table-order th, .table-order td {
+    text-align: center;
+}
+
+.table-w30 {
+    width: 100%;
+    text-align: center;
+}
+
+.red {
+    color: red;
+}
+
+.width30 {
+    width: 30%;
+}
+
+#send_price input {
+    width: 100px;
+    text-align: right;
+}
+
+.shopping-total strong span, .checkout-total-block strong span {
+    font-size: 21px;
+}
+
+.shopping-total em, .checkout-total-block em {
+    float: none;
+    top: 0;
+}
+
+.table-order > tbody > tr > td, .table-order > tbody > tr > th, .table-order > tfoot > tr > td, .table-order > tfoot > tr > th, .table-order > thead > tr > td, .table-order > thead > tr > th {
+    vertical-align: middle;
+}
+
 .footer-text-left {
     text-align: center !important;
 }
+
 .goods-data th, .checkout-page th {
     font-size: 1em;
 }
+
 .margin-left-20 {
     margin-left: 0.8em !important;
 }
+
 .goods-page-price strong, .goods-page-total strong, .checkout-price strong, .checkout-total strong {
-    font-size:1.2em;
+    font-size: 1.2em;
 }
+
 .goods-page-price strong span, .goods-page-total strong span, .checkout-price strong span, .checkout-total strong span {
     font-size: 1em;
 }
-@media (min-width:768px) {
+
+@media (min-width: 768px) {
     .footer .text-left, .footer-text-left {
         text-align: left !important;
     }
+
     .footer .text-right {
         text-align: right;
     }
+
     .goods-data th, .checkout-page th {
         font-size: 1.4em;
     }
+
     .order-table td {
-        font-size:1.1em;
+        font-size: 1.1em;
     }
+
     .w80 {
-        width:80px;
-        height:auto;
+        width: 80px;
+        height: auto;
     }
+
     .margin-left-20 {
         margin-left: 20px !important;
     }
+
     .goods-page-price strong, .goods-page-total strong, .checkout-price strong, .checkout-total strong {
-        font-size:21px;
+        font-size: 21px;
     }
+
     .goods-page-price strong span, .goods-page-total strong span, .checkout-price strong span, .checkout-total strong span {
         font-size: 17px;
     }

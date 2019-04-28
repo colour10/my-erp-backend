@@ -88,17 +88,23 @@
                                                 <div class="form-group">
                                                     <label for="reciver_name">收件人姓名 <span
                                                                 class="require">*</span></label>
-                                                    <input type="text" id="reciver_name" class="form-control">
+                                                    <input type="text" id="username" class="form-control">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="reciver_phone">收件人电话 <span
                                                                 class="require">*</span></label>
-                                                    <input type="text" id="reciver_phone" class="form-control">
+                                                    <input type="text" id="mobile" class="form-control">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="reciver_address">收件人地址 <span
                                                                 class="require">*</span></label>
-                                                    <input type="text" id="reciver_address" class="form-control">
+                                                    <input type="text" id="address" class="form-control">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="smart_address">智能解析地址</label>
+                                                    <textarea type="text" id="smart-address"
+                                                              class="form-control" onchange="smart()"></textarea><br>
+                                                    <p>注：粘贴地址后，鼠标点击空白处，即可自动解析。</p>
                                                 </div>
                                                 <?php
                                             } else {
@@ -278,6 +284,8 @@
     </div>
 </div>
 
+<script src="/shop/assets/custom/arealist.js"></script>
+<script src="/shop/assets/custom/addressparse.js"></script>
 <?php echo $this->view->getPartial('layouts/_footer'); ?>
 
 <script>
@@ -290,10 +298,10 @@
             async: true,
             dataType: 'json',
             data: {
-                'reciver_name': $('#reciver_name').val(),
-                'reciver_phone': $('#reciver_phone').val(),
+                'reciver_name': $('#username').val(),
+                'reciver_phone': $('#mobile').val(),
                 // 'reciver_no':$('#reciver_no').val(),
-                'reciver_address': $('#reciver_address').val(),
+                'reciver_address': $('#address').val(),
                 'address_id': $("input[name='address_id']:checked").val(),
                 'pay_style': $("input[name='pay_style']:checked").val(),
             },

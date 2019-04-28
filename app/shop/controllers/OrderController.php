@@ -2,11 +2,16 @@
 
 namespace Multiple\Shop\Controllers;
 
+use Asa\Erp\TbColortemplate;
+use Asa\Erp\TbCompany;
 use Asa\Erp\TbMemberAddress;
 use Asa\Erp\TbProductSearch;
+use Asa\Erp\TbProductstock;
 use Asa\Erp\TbShoporder;
 use Asa\Erp\TbShoporderCommon;
 use Asa\Erp\TbBuycar;
+use Asa\Erp\TbSizecontent;
+use Asa\Erp\Util;
 use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
 
 /**
@@ -85,101 +90,123 @@ class OrderController extends AdminController
             $this->db->begin();
 
             // 首先判断是否有库存，如果没有库存就不能下单
-            // 因为下单的时候是按照尺码，颜色分别下单的，这个时候需要汇总统计
-            // 声明一个新数组来保存最终统计的变量
-            $stock = [];
+            // 因为下单的时候是按照尺码下单的，这个时候需要分别统计
+            // 首先取出销售端口，查库存用
+            // 在取出库存之前，首先获取销售端口
+            $company = TbCompany::findFirstById($rs['companyid']);
+            $saleport = $company->shopSaleport;
+            $array = Util::recordListColumn($saleport->saleportWarehouses, 'warehouseid');
+
+
             // 遍历
+            // 多语言字段
+            $name = $this->getlangfield('name');
+            $content = $this->getlangfield('content');
+            // 并取出当前尺码的实际库存
             foreach ($_POST['data'] as $k => $item) {
-                if (!isset($stock[$item['product_id']])) {
-                    $stock[$item['product_id']] = [
-                        'id' => $item['product_id'],
-                        'number' => $item['number'],
-                    ];
-                } else {
-                    $stock[$item['product_id']]['number'] += $item['number'];
+                // 产品模型
+                $productModel = TbProductSearch::findFirstById($item['product_id']);
+                // 尺码模型
+                $sizecontentModel = TbSizecontent::findFirstById($item['size_id']);
+                // 如果商品不存在，那么就回滚报错
+                if (!$productModel) {
+                    // 回滚
+                    $this->db->rollback();
+                    $msg = $this->getValidateMessage('product', 'template', 'notexist');
+                    return $this->error([$msg]);
                 }
+                // 如果尺码不存在，也回滚报错
+                if (!$sizecontentModel) {
+                    // 回滚
+                    $this->db->rollback();
+                    $msg = $this->getValidateMessage('sizecontent', 'template', 'notexist');
+                    return $this->error([$msg]);
+                }
+                // 组装库存数据列表
+                $stockModel = TbProductstock::sum([
+                    sprintf("warehouseid in (%s) and defective_level=0 and productid = %s and sizecontentid = %s", implode(',', $array), $productModel->productid, $item['size_id']),
+                    "group" => 'productid, sizecontentid',
+                    "column" => 'number',
+                ]);
+                // 如果库存信息存在
+                if ($stockModel) {
+                    $stock = $stockModel->toArray();
+                    $stocknumber = $stock[0]['sumatory'];
+                } else {
+                    $stocknumber = 0;
+                }
+                // 把实际库存数量放回原来的数组
+                $_POST['data'][$k]['stocknumber'] = $stocknumber;
+                // 尺码名称也放进去
+                $_POST['data'][$k]['size_name'] = $sizecontentModel->$content;
+                // 颜色也放进去
+                $_POST['data'][$k]['color_id'] = $productModel->color;
+                // 颜色描述默认为空
+                $color_name = '';
+                if ($productModel->color) {
+                    $colorids = explode(',', $productModel->color);
+                    $colornames = [];
+                    foreach ($colorids as $colorid) {
+                        $colorModel = TbColortemplate::findFirstById($colorid);
+                        if ($colorModel) {
+                            $colorname = $colorModel->$name;
+                        } else {
+                            $colorname = '';
+                        }
+                        $colornames[] = $colorname;
+                    }
+                    // 合并为字符串
+                    $color_name = implode(',', $colornames);
+                }
+                $_POST['data'][$k]['color_name'] = $color_name;
+                // 产品模型也放进去
+                $_POST['data'][$k]['product'] = $productModel->toArray();
             }
+
 
             // 接着判断库存够不够
             // 生成订单的时候验证库存，同时付款的时候也要再检查一次
-            foreach ($stock as $item) {
-                // 取出数据库中的库存进行对比
-                $product = TbProductSearch::findFirstById($item['id']);
-                if ($product->number < $item['number']) {
-                    // 回滚
-                    $this->db->rollback();
-                    $msg = $this->getValidateMessage('out-of-stock');
-                    return $this->error([$msg]);
-                }
-            }
-
-            // 这个逻辑感觉不太合理，先注释掉，有的时候客户忘记了付款，直接删除掉会让客户感觉到困惑
-            // // 查找该会员下面未支付的订单
-            // $order = TbShoporderCommon::findFirst(
-            //     "member_id = ".$rs['id'].' and order_status=1'
-            // );
-
-            // // 如果存在，就删除
-            // if($order) {
-            //     $product = TbShoporder::find(
-            //         "order_commonid = ".$order->toArray()['id']
-            //     );
-            //     foreach($product as $record){
-            //         if (!$record->delete()) {
-            //             // 回滚
-            //             $this->db->rollback();
-            //             $msg = $this->getValidateMessage('orderdetail', 'db', 'delete-failed');
-            //             return $this->error([$msg]);
-            //         }
-            //     }
-            //     if (!$order->delete()) {
-            //         // 回滚
-            //         $this->db->rollback();
-            //         $msg = $this->getValidateMessage('order', 'db', 'delete-failed');
-            //         return $this->error([$msg]);
-            //     }
-            // }
-
             // 重新写入订单主表
             // 为了防止篡改，只接收传过来的商品id，价格什么的统一由后台进行计算
             // 声明变量用来保存订单
             // 商品总价格
             $total_price = 0;
             // 运费，默认为0
-            $freight_price = 0;
+            $send_price = $_POST['send_price'];
             // 最终成交价格
             $final_price = 0;
             // 购物车一维数组
             $buycars = [];
-            // 遍历获取
             foreach ($_POST['data'] as $k => $item) {
-                // 商品价格重新从数据库提取，不能从页面直接拿过来
-                $product = TbProductSearch::findFirstById($item['product_id']);
-                // 如果商品不存在，那么就回滚报错
-                if (!$product) {
+                // 挨个库存进行对比
+                if ($item['number'] > $item['stocknumber']) {
                     // 回滚
                     $this->db->rollback();
-                    $msg = $this->getValidateMessage('order', 'db', 'add-failed');
+                    $msg = $this->getValidateMessage('out-of-stock');
                     return $this->error([$msg]);
                 }
-                // 存在就计算总金额
-                $total_price += $product->realprice;
+                // 然后计算总金额
                 // 然后把新的从数据库查询出来的数据装进post数组里
-                $_POST['data'][$k]['product_total_price'] = $product->realprice * $item['number'];
-                $_POST['data'][$k]['product'] = $product->toArray();
-                // 购物车
+                $_POST['data'][$k]['total_price'] = $item['product']['realprice'] * $item['number'];
+                // 重新计算总金额
+                $total_price += $item['product']['realprice'] * $item['number'];
+                // 把购物车订单也组合起来
                 $buycars[] = $item['id'];
             }
 
             // 最终成交价格=商品总价格+运费
-            $final_price = $total_price + $freight_price;
+            $final_price = $total_price + $send_price;
+
 
             // 开始添加订单主表
+            // 默认订单有效期为1个小时
+            $now = time();
             $model_common = new TbShoporderCommon();
             $model_common->total_price = $total_price;
-            $model_common->send_price = $freight_price;
+            $model_common->send_price = $send_price;
             $model_common->final_price = $final_price;
-            $model_common->create_time = date("Y-m-d H:i:s");
+            $model_common->create_time = date("Y-m-d H:i:s", $now);
+            $model_common->expire_time = date("Y-m-d H:i:s", $now + 3600);
             $model_common->member_id = $rs['id'];
             // 订单号
             $model_common->order_no = $this->generate_trade_no();
@@ -190,16 +217,19 @@ class OrderController extends AdminController
                 return $this->error($model_common);
             }
 
+
             // 接着添加订单详情表
             $data_common = [];
             foreach ($_POST['data'] as $key => $value) {
                 $data_common = [
                     'order_commonid' => $model_common->id,
                     'product_id' => $value['product_id'],
-                    'product_name' => $value['product_name'],
+                    'product_name' => $value['product']['productname'],
                     'price' => $value['product']['realprice'],
                     'number' => $value['number'],
-                    'total_price' => $value['product_total_price'],
+                    'total_price' => $value['total_price'],
+                    'picture' => $value['product']['picture'],
+                    'picture2' => $value['product']['picture2'],
                     'color_id' => $value['color_id'],
                     'color_name' => $value['color_name'],
                     'size_id' => $value['size_id'],
@@ -214,9 +244,10 @@ class OrderController extends AdminController
                 }
             }
 
+
             // 然后把原来的购物车删除
-            foreach ($buycars as $buycar) {
-                $model = TbBuycar::findFirstById($buycar);
+            foreach ($buycars as $buycarid) {
+                $model = TbBuycar::findFirstById($buycarid);
                 if (!$model) {
                     // 回滚
                     $this->db->rollback();
@@ -225,6 +256,23 @@ class OrderController extends AdminController
                     return $this->error([$msg]);
                 }
                 if (!$model->delete()) {
+                    // 回滚
+                    $this->db->rollback();
+                    // 取出错误信息
+                    return $this->error($model);
+                }
+            }
+
+
+            // 商品表执行减库存操作
+            // 分别减库存
+            foreach ($_POST['data'] as $item) {
+                // 产品库存模型
+                $model = TbProductSearch::findFirstById($item['product_id']);
+                // 做减法
+                // 本来应该检测是否超卖的，但是上一步已经验证有库存，所以最终值不会小于0
+                $model->number -= $item['number'];
+                if (!$model->save()) {
                     // 回滚
                     $this->db->rollback();
                     // 取出错误信息
