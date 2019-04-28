@@ -15,4 +15,17 @@ class BrandrateController extends AdminController {
 
         $this->setModelName('Asa\\Erp\\TbBrandRate');
     }
+
+    function getrateAction() {
+        $rate = TbBrandRate::findFirst(
+            sprintf("brandid=%d and ageseasonid=%d and brandgroupid=%d", $_POST['brandid'], $_POST['ageseason'], $_POST['brandgroupid'])
+        );
+
+        if($rate!=false) {
+            return $this->success($rate->rate);
+        }
+        else {
+            return $this->success("");
+        }
+    }
 }

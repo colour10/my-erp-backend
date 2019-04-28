@@ -27,7 +27,7 @@ class ProductController extends CadminController {
 
         $products = [];
         $colors = [];
-        $keys = ["brandid", "brandgroupid", "childbrand", "productsize", "countries", "productparst", "producttemplate", "laststoragedate", "series", "ulnarinch", "factoryprice", "factorypricecurrency", "nationalpricecurrency", "nationalprice", "memo", "wordprice", "wordpricecurrency", "gender", "spring", "summer", "fall", "winter", "ageseason", "sizetopid", "sizecontentids", "productmemoids"];
+        $keys = ["brandid", "brandgroupid", "childbrand", "productsize", "countries", "productparst", "producttemplate", "laststoragedate", "series", "ulnarinch", "factoryprice", "factorypricecurrency", "nationalpricecurrency", "nationalprice", "memo", "wordprice", "wordpricecurrency", "gender", "spring", "summer", "fall", "winter", "ageseason", "sizetopid", "sizecontentids", "productmemoids", "nationalfactorypricecurrency", "nationalfactoryprice"];
 
         $this->db->begin();
         foreach($params['colors'] as $row){
@@ -90,7 +90,7 @@ class ProductController extends CadminController {
 
         $products = [];
         $colors = [];
-        $keys = ["wordcode_1","wordcode_2","wordcode_3","wordcode_4","brandcolor","picture","picture2","brandid", "brandgroupid", "childbrand", "productsize", "countries", "productparst", "producttemplate", "laststoragedate", "series", "ulnarinch", "factoryprice", "factorypricecurrency", "nationalpricecurrency", "nationalprice", "memo", "wordprice", "wordpricecurrency", "gender", "spring", "summer", "fall", "winter", "ageseason", "sizetopid", "sizecontentids", "productmemoids"];
+        $keys = ["wordcode_1","wordcode_2","wordcode_3","wordcode_4","brandcolor","picture","picture2","brandid", "brandgroupid", "childbrand", "productsize", "countries", "productparst", "producttemplate", "laststoragedate", "series", "ulnarinch", "factoryprice", "factorypricecurrency", "nationalpricecurrency", "nationalprice", "memo", "wordprice", "wordpricecurrency", "gender", "spring", "summer", "fall", "winter", "ageseason", "sizetopid", "sizecontentids", "productmemoids", "nationalfactorypricecurrency", "nationalfactoryprice"];
 
         
         $product = TbProduct::findFirstById($params['form']['id']);
