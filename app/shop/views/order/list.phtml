@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 
-<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
-<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if IE 8]>
+<html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
 <html lang="en">
 <!--<![endif]-->
@@ -63,26 +65,34 @@
                         <div class="table-wrapper-responsive">
                             <table class="order-table">
                                 <tbody class="order-table-header">
-                                    <tr>
-                                        <th class="goods-page-description">宝贝</th>
-                                        <th class="goods-page-price">单价</th>
-                                        <th class="goods-page-product-number">数量</th>
-                                        <th class="goods-page-size">实付款</th>
-                                        <th class="goods-page-quantity">交易状态</th>
-                                    </tr>
+                                <tr>
+                                    <th class="goods-page-description">宝贝</th>
+                                    <th class="goods-page-price">单价</th>
+                                    <th class="goods-page-product-number">数量</th>
+                                    <th class="goods-page-size">实付款</th>
+                                    <th class="goods-page-quantity">交易状态</th>
+                                </tr>
                                 </tbody>
                             </table>
 
-                            <?php foreach ($page->items as $order) { ?>
-                                <div class="margin10 border">
-                                    <table class="order-table">
+                            <?php if (count($page->items) > 0) { ?>
+                                <?php foreach ($page->items as $order) { ?>
+                                    <div class="margin10 border">
+                                        <table class="order-table">
 
-                                        <tbody class="order-table-title">
+                                            <tbody class="order-table-title">
                                             <tr>
                                                 <td colspan="5" class="text-left">
                                                     <span class="margin-left-20">
                                                         <?php echo date('Y-m-d', strtotime($order['create_time'])); ?>　
                                                         <a href="/order/detail/<?php echo $order['id']; ?>">订单号：<?php echo $order['order_no']; ?></a>　
+
+                                                        <?php if ($order['order_status'] == '1') { ?>
+                                                            <span data-expiretime="<?php echo $order['expire_time']; ?>"
+                                                                  data-id="<?php echo $order['id']; ?>"
+                                                                  class="remainTime"></span>
+                                                        <?php } ?>
+
 
                                                         <?php if ($order['order_status'] == '2' || $order['order_status'] == '3') { ?>
                                                             总付款金额：<?php echo $this->currency . $order['final_price']; ?>
@@ -91,48 +101,72 @@
                                                         <?php if ($order['order_status'] == '1') { ?>
                                                             <em class="pull-right font-normal">
                                                                 <a href="/order/detail/<?php echo $order['id']; ?>">去支付</a>
-                                                                <a style="cursor: pointer" onclick="cancle_order(<?php echo $order['id']; ?>);return false;">取消订单</a>
+                                                                <a style="cursor: pointer"
+                                                                   onclick="cancle_order(<?php echo $order['id']; ?>);return false;">取消订单</a>
                                                             </em>
                                                         <?php } else if ($order['order_status'] == '2') { ?>
                                                             <em class="pull-right font-normal">
-                                                                <a style="cursor: pointer" onclick="refund_order(<?php echo $order['id']; ?>);return false;">申请退款</a>
+                                                                <a style="cursor: pointer"
+                                                                   onclick="refund_order(<?php echo $order['id']; ?>);return false;">申请退款</a>
+                                                            </em>
+                                                        <?php } else if ($order['order_status'] == '4' && $order['expire_time']) { ?>
+                                                            <em class="pull-right font-normal">
+                                                                未在规定时间内支付，订单已失效！
                                                             </em>
                                                         <?php } ?>
                                                     </span>
                                                 </td>
                                             </tr>
-                                        </tbody>
+                                            </tbody>
 
-                                        <?php foreach ($order['orderdetails'] as $orderdetail) { ?>
-                                        <tbody>
-                                            <tr>
-                                                <td class="text-left">
-                                                    <span class="margin-left-20"><a href="/product/detail/<?php echo $orderdetail['product_detail_id']; ?>"><img class="w80" src="<?php echo $orderdetail['picture']; ?>" alt="<?php echo $orderdetail['product_name']; ?>"></a></span>
+                                            <?php foreach ($order['orderdetails'] as $orderdetail) { ?>
+                                                <tbody>
+                                                <tr>
+                                                    <td class="text-left">
+                                                    <span class="margin-left-20"><a
+                                                                href="/product/detail/<?php echo $orderdetail['product_detail_id']; ?>"><img
+                                                                    class="w80"
+                                                                    src="<?php echo $orderdetail['picture']; ?>"
+                                                                    alt="<?php echo $orderdetail['product_name']; ?>"></a></span>
 
-                                                    <a class="product-name" href="/product/detail/<?php echo $orderdetail['product_detail_id']; ?>"><?php echo $orderdetail['product_name']; ?></a>
-                                                </td>
-                                                <td class="goods-page-price"><strong><span><?php echo $this->currency; ?></span><?php echo $orderdetail['price']; ?></strong></td>
-                                                <td class="product-number"><?php echo $orderdetail['number']; ?></td>
-                                                <td class="goods-page-total"><strong><span><?php echo $this->currency; ?></span><em><?php echo $orderdetail['payment_amount']; ?></em></strong></td>
-                                                <td class="product-number"><?php echo $order['order_status_desc'];?></td>
-                                            </tr>
-                                        </tbody>
-                                        <?php } ?>
+                                                        <a class="product-name"
+                                                           href="/product/detail/<?php echo $orderdetail['product_detail_id']; ?>"><?php echo $orderdetail['product_name']; ?></a>
+                                                    </td>
+                                                    <td class="goods-page-price">
+                                                        <strong><span><?php echo $this->currency; ?></span><?php echo $orderdetail['price']; ?>
+                                                        </strong></td>
+                                                    <td class="product-number"><?php echo $orderdetail['number']; ?></td>
+                                                    <td class="goods-page-total">
+                                                        <strong><span><?php echo $this->currency; ?></span><em><?php echo $orderdetail['payment_amount']; ?></em></strong>
+                                                    </td>
+                                                    <td class="product-number"><?php echo $order['order_status_desc']; ?></td>
+                                                </tr>
+                                                </tbody>
+                                            <?php } ?>
 
-                                    </table>
-                                </div>
+                                        </table>
+                                    </div>
+                                <?php } ?>
+                            <?php } else { ?>
+                                <p class="text-center order-null">您的订单列表空空如也！</p>
                             <?php } ?>
 
 
                             <!-- BEGIN PAGINATOR -->
-                            <?php if($page->total_pages > 1) { ?>
+                            <?php if ($page->total_pages > 1) { ?>
                                 <div class="page_margin pull-right">
                                     <ul class="pagination ">
-                                        <li class="<?php echo $page->current <= 1?'disabled':''; ?>"><a href="<?php echo $this->url->get('order/list', array('page' => $page->before)); ?>">&laquo;</a></li>
+                                        <li class="<?php echo $page->current <= 1 ? 'disabled' : ''; ?>"><a
+                                                    href="<?php echo $this->url->get('order/list', ['page' => $page->before]); ?>">&laquo;</a>
+                                        </li>
                                         <?php for ($i = 1; $i <= $page->total_pages; $i++) { ?>
-                                            <li class="<?php echo $page->current == $i?'active':''; ?>"><a href="<?php echo $this->url->get('order/list', array('page' => $i)); ?>"><?php echo $i; ?></a></li>
+                                            <li class="<?php echo $page->current == $i ? 'active' : ''; ?>"><a
+                                                        href="<?php echo $this->url->get('order/list', ['page' => $i]); ?>"><?php echo $i; ?></a>
+                                            </li>
                                         <?php } ?>
-                                        <li class="<?php echo $page->current >= $page->total_pages?'disabled':''; ?>"><a href="<?php echo $this->url->get('order/list', array('page' => $page->next));?>">&raquo;</a></li>
+                                        <li class="<?php echo $page->current >= $page->total_pages ? 'disabled' : ''; ?>">
+                                            <a href="<?php echo $this->url->get('order/list', ['page' => $page->next]); ?>">&raquo;</a>
+                                        </li>
                                     </ul>
                                 </div>
                             <?php } ?>
@@ -156,6 +190,54 @@
 <!-- BEGIN PRE-FOOTER -->
 <?php echo $this->view->getPartial('layouts/_footer') ?>
 <!-- END FOOTER -->
+
+<script>
+    //支付剩余时间倒计时
+    $(function () {
+        // 定义当前时间
+        var now = new Date();
+        // 首先判断有几个是需要轮询的订单，也就是状态为待付款的
+        $('.remainTime').each(function () {
+            // 单独统计每个订单的有效期
+            let end = new Date($(this).attr('data-expiretime'));
+            // 两个时间相减,得到的是毫秒ms
+            let result = Math.floor(end - now) / 1000;
+            // 取出当前对象
+            let _this = $(this);
+            // 定时器调度对象
+            let interval = setInterval(function () {
+                if (result > 1) {
+                    result = result - 1;
+                    // 计算出相差天数
+                    let days = Math.floor(result / (24 * 3600));
+                    // 计算出小时数
+                    let leave1 = result % (24 * 3600);    //计算天数后剩余的毫秒数
+                    let hours = Math.floor(leave1 / 3600);
+                    //计算相差分钟数
+                    let leave2 = leave1 % 3600;        //计算小时数后剩余的毫秒数
+                    let minutes = Math.floor(leave2 / 60);
+                    //计算相差秒数
+                    let leave3 = leave2 % 60;      //计算分钟数后剩余的毫秒数
+                    let seconds = Math.round(leave3);
+                    // 写入dom
+                    _this.html("支付剩余时间：" + days + "天" + hours + "时" + minutes + "分" + seconds + "秒");
+                } else {
+                    // 这里可以添加倒计时结束后需要执行的事件
+                    _this.html("未在规定时间内支付，订单已失效！");
+                    window.clearInterval(interval);
+                    // Todo订单失效后的一些列操作：更改订单状态的同时回库存
+                    // ajax取消订单
+                    $.post('/order/cancle/' + _this.attr('data-id'), {}, function (response) {
+                        // 如果没有错误，就删除右侧节点
+                        if (response.messages.length == 0) {
+                            _this.next().remove();
+                        }
+                    }, 'json');
+                }
+            }, 1000);
+        });
+    });
+</script>
 
 </body>
 <!-- END BODY -->

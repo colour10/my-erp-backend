@@ -113,7 +113,7 @@ function delheadergoods(obj, id) {
 }
 
 /**
- * 取消指定id的订单
+ * 主动取消指定id的订单
  * @param id
  */
 function cancle_order(id) {
@@ -123,7 +123,7 @@ function cancle_order(id) {
         btn: ['是', '否'],
         yes: function (index) {
             // ajax取消订单
-            $.post('/order/cancle/' + id, {}, function (response) {
+            $.post('/order/cancle/' + id + '/1', {}, function (response) {
                 // 判断是否有错误
                 if (response.messages.length > 0) {
                     layer.open({

@@ -451,20 +451,21 @@ class OrderController extends AdminController
                     return $this->error($order);
                 }
 
+                // 支付成功减库存逻辑已经放在加入订单逻辑中了，所以这个逻辑暂时取消
                 // 如果支付成功，则减库存，但是对tb_product_search减库存不太好，需要对原表进行操作，这里为了演示，就用tb_product_search表做测试好了
                 // 分别减库存
-                foreach ($stock as $product) {
-                    $model = TbProductSearch::findFirstById($product['id']);
-                    // 做减法
-                    // 本来应该检测是否超卖的，但是上一步已经验证有库存，所以最终值不会小于0
-                    $model->number -= $product['number'];
-                    if (!$model->save()) {
-                        // 回滚
-                        $this->db->rollback();
-                        // 取出错误信息
-                        return $this->error($model);
-                    }
-                }
+                // foreach ($stock as $product) {
+                //     $model = TbProductSearch::findFirstById($product['id']);
+                //     // 做减法
+                //     // 本来应该检测是否超卖的，但是上一步已经验证有库存，所以最终值不会小于0
+                //     $model->number -= $product['number'];
+                //     if (!$model->save()) {
+                //         // 回滚
+                //         $this->db->rollback();
+                //         // 取出错误信息
+                //         return $this->error($model);
+                //     }
+                // }
 
                 // 提交事务
                 $this->db->commit();
@@ -636,6 +637,7 @@ class OrderController extends AdminController
                 }
                 // 赋值
                 $id = $params[0];
+
                 // 查找订单是否存在，订单要求为未付款状态
                 $order = TbShoporderCommon::findFirst("member_id=" . $rs['id'] . " and id=" . $id . " and order_status=1");
                 if (!$order) {
@@ -643,15 +645,44 @@ class OrderController extends AdminController
                     $msg = $this->getValidateMessage('order', 'template', 'notexist');
                     return $this->error([$msg]);
                 }
+
+                // 判断有没有传递第二个参数，如果有则说明是主动取消的订单
+                if (isset($params[1])) {
+                    $expire_time = NULL;
+                } else {
+                    $expire_time = $order->expire_time;
+                }
+
+                // 取出每个订单下面具体商品信息
+                $shoporders = $order->shoporder;
+
+                // 开启事务处理，因为涉及到库存变化
+                $this->db->begin();
                 // 变更状态
                 $data = [
                     'order_status' => '4',
+                    'expire_time' => $expire_time,
                 ];
                 if (!$order->save($data)) {
+                    // 回滚
+                    $this->db->rollback();
                     // 报错
                     $msg = $this->getValidateMessage('order', 'db', 'save-failed');
                     return $this->error([$msg]);
                 }
+                // 锁定库存还原
+                foreach ($shoporders as $shoporder) {
+                    // 执行写入
+                    $sql = "UPDATE tb_product_search SET number = number + " . $shoporder->number . " WHERE id=" . $shoporder->product_id;
+                    if (!$this->db->execute($sql)) {
+                        // 回滚
+                        $this->db->rollback();
+                        $msg = $this->getValidateMessage('order', 'db', 'save-failed');
+                        return $this->error([$msg]);
+                    }
+                }
+                // 事务提交
+                $this->db->commit();
                 // 最终返回成功
                 return $this->success();
             } else {

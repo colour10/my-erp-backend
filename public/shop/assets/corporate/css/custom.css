@@ -184,6 +184,11 @@ button {
     text-align: center;
 }
 
+.order-null {
+    line-height: 3em;
+    height: 3em;
+}
+
 .red {
     color: red;
 }
