@@ -77,14 +77,15 @@ class AdminController extends BaseController
 
         $keyword = $this->request->get("keyword", "trim");
         $keywords = [];
-        foreach ($fieldTypes as $key=>$value) {            
+        foreach ($fieldTypes as $key=>$value) {     
             if ($fieldTypes[$key] == Column::TYPE_INTEGER || $fieldTypes[$key] == Column::TYPE_BIGINTEGER ) {
-                if(isset($_REQUEST[$key]) && $_REQUEST[$key]!="" ) {
-                    $array[] = sprintf("%s=%d", $key, $this->request->get($key));
+
+                if(isset($_REQUEST[$key]) && $_REQUEST[$key]!=="" ) {
+                    $array[] = sprintf("%s=%d", $key, $_REQUEST[$key]);
                 }
             } else { //($fieldTypes[$key] == Column::TYPE_CHAR || $fieldTypes[$key] == Column::TYPE_VARCHAR) {
                 if(isset($_REQUEST[$key]) && $_REQUEST[$key]!="" ) {
-                    $array[] = sprintf("%s='%s'", $key, addslashes($this->request->get($key)));
+                    $array[] = sprintf("%s='%s'", $key, addslashes($_REQUEST[$key]));
                 }
                 $keywords[] = sprintf("%s like '%%%s%%'", $key, addslashes($keyword));
             }
@@ -286,5 +287,15 @@ class AdminController extends BaseController
 
     function before_page() {
 
+    }
+
+    function injectParam($name, $value, $method='POST') {
+        $_REQUEST[$name] = $value;
+        if($method=='POST') {
+            $_POST[$name] = $value;
+        }
+        else {
+            $_GET[$name] = $value;
+        }
     }
 }
