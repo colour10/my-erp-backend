@@ -32,7 +32,7 @@ return array(
     "menu-2-1-7" => "商品尺寸",
     "menu-2-13" => "商品别名",
     "kuanshi" => "款式",
-    "menu-2-1-10" => "附带配件",
+    "qubanma" => "去半码",
     "fuzhuma" => "辅助码",
     "shengxiaoshijian" => "生效时间",
     "lishihuilv" => "历史汇率",
