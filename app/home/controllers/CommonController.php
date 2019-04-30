@@ -205,7 +205,7 @@ class CommonController extends BaseController
             "material" => ["model"=>'Asa\Erp\TbMaterial',"company"=>false, "orderby"=>"name_en asc"],
             "materialnote" => ["model"=>'Asa\Erp\TbMaterialnote',"company"=>false, "orderby"=>"displayindex asc"],
             "productinnards" => ["model"=>'Asa\Erp\TbProductinnards',"company"=>false],
-            "productparts" => ["model"=>'Asa\Erp\TbProductparts',"company"=>false],
+            "property" => ["model"=>'Asa\Erp\TbProperty',"company"=>false, "orderby"=>"displayindex asc"],
             "producttemplate" => ["model"=>'Asa\Erp\TbProducttemplate',"company"=>false],
             //"series2" => ["model"=>'Asa\Erp\TbSeries2',"company"=>false],
             "series" => ["model"=>'Asa\Erp\TbSeries',"company"=>false],

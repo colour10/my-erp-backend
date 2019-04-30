@@ -68,13 +68,7 @@ class BrandgroupController extends ZadminController
             foreach ($targets as $targetId) {
                 foreach($result as $row) {
                     $property = new TbBrandgroupchildProperty();
-                    $property->name_cn = $row->name_cn;
-                    $property->name_en = $row->name_en;
-                    $property->name_hk = $row->name_hk;
-                    $property->name_fr = $row->name_fr;
-                    $property->name_it = $row->name_it;
-                    $property->name_sp = $row->name_sp;
-                    $property->name_de = $row->name_de;
+                    $property->propertyid = $row->propertyid;
                     $property->brandgroupchildid = $targetId;
                     $property->displayindex = $row->displayindex;
                     if($property->create()==false) {

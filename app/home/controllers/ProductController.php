@@ -40,6 +40,7 @@ class ProductController extends CadminController {
             $product->wordcode_3 = $row['wordcode_3'];
             $product->wordcode_4 = $row['wordcode_4'];
             $product->brandcolor = $row['brandcolor'];
+            $product->colorname = $row['colorname'];
             $product->picture = $row['picture'];
             $product->picture2 = $row['picture2'];
 
@@ -90,7 +91,7 @@ class ProductController extends CadminController {
 
         $products = [];
         $colors = [];
-        $keys = ["wordcode_1","wordcode_2","wordcode_3","wordcode_4","brandcolor","picture","picture2","brandid", "brandgroupid", "childbrand", "productsize", "countries", "productparst", "laststoragedate", "series", "ulnarinch", "factoryprice", "factorypricecurrency", "nationalpricecurrency", "nationalprice", "memo", "wordprice", "wordpricecurrency", "gender", "spring", "summer", "fall", "winter", "ageseason", "sizetopid", "sizecontentids", "productmemoids", "nationalfactorypricecurrency", "nationalfactoryprice"];
+        $keys = ["colorname", "wordcode_1","wordcode_2","wordcode_3","wordcode_4","brandcolor","picture","picture2","brandid", "brandgroupid", "childbrand", "productsize", "countries", "productparst", "laststoragedate", "series", "ulnarinch", "factoryprice", "factorypricecurrency", "nationalpricecurrency", "nationalprice", "memo", "wordprice", "wordpricecurrency", "gender", "spring", "summer", "fall", "winter", "ageseason", "sizetopid", "sizecontentids", "productmemoids", "nationalfactorypricecurrency", "nationalfactoryprice"];
 
         
         $product = TbProduct::findFirstById($params['form']['id']);
