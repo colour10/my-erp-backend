@@ -140,6 +140,7 @@ class ProductController extends CadminController {
                     $data[] = $row->id.",".$row->brandcolor;
                 }
 
+                
                 $product_group = implode('|', $data);
 
                 //逐个更新，绑定关系
