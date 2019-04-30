@@ -14,4 +14,8 @@ class ColortemplateController extends ZadminController {
 
 	    $this->setModelName('Asa\\Erp\\TbColortemplate');
     }
+
+    function before_page() {
+        $this->injectParam('__orderby', "code asc");
+    }
 }

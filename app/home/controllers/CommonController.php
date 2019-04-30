@@ -199,7 +199,7 @@ class CommonController extends BaseController
             "brandgroup" => ["model"=>'Asa\Erp\TbBrandgroup',"company"=>false, "orderby"=>"displayindex asc"],
             "brand" => ["model"=>'Asa\Erp\TbBrand',"company"=>false],
             "brandgroupchild" => ["model"=>'Asa\Erp\TbBrandgroupchild',"company"=>false, "orderby"=>"displayindex asc"],
-            "colortemplate" => ["model"=>'Asa\Erp\TbColortemplate',"company"=>false],
+            "colortemplate" => ["model"=>'Asa\Erp\TbColortemplate',"company"=>false, "orderby"=>"code asc"],
             "country" => ["model"=>'Asa\Erp\TbCountry',"company"=>false, "orderby"=>"name_en asc"],
             //"materialnote" => ["model"=>'Asa\Erp\TbMaterialnote',"company"=>false],
             "material" => ["model"=>'Asa\Erp\TbMaterial',"company"=>false, "orderby"=>"name_en asc"],

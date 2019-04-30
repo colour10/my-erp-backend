@@ -14,8 +14,8 @@ class TbMaterial extends BaseModel
 
     public function getRules() {
         return [
-            'name_cn' => $this->getValidatorFactory()->presenceOfMultiple('mingcheng'),
-            'code' => $this->getValidatorFactory()->presenceOf('caizhidaima') 
+            'name_cn' => $this->getValidatorFactory()->presenceOfMultiple('mingcheng')
+            //'code' => $this->getValidatorFactory()->presenceOf('caizhidaima') 
         ];
     }
 }
