@@ -136,13 +136,16 @@ class TbProduct extends BaseCompanyModel
      * @param  [type] $wordcode_4 [description]
      * @return [type]             [description]
      */
-    function cloneByColor($brandcolor, $wordcode_1, $wordcode_2, $wordcode_3, $wordcode_4) {
+    function cloneByColor($row) {
         $product = new TbProduct();
-        $product->brandcolor = $brandcolor;
-        $product->wordcode_1 = $wordcode_1;
-        $product->wordcode_2 = $wordcode_2;
-        $product->wordcode_3 = $wordcode_3;
-        $product->wordcode_4 = $wordcode_4;
+        $product->brandcolor = $row['brandcolor'];
+        $product->wordcode_1 = $row['wordcode_1'];
+        $product->wordcode_2 = $row['wordcode_2'];
+        $product->wordcode_3 = $row['wordcode_3'];
+        $product->wordcode_4 = $row['wordcode_4'];
+        $product->colorname = $row['colorname'];
+        $product->picture = $row['picture'];
+        $product->picture2 = $row['picture2'];
         $product->productname = $this->productname;
         $product->wordprice = $this->wordprice;
         $product->wordpricecurrency = $this->wordpricecurrency;
@@ -156,7 +159,7 @@ class TbProduct extends BaseCompanyModel
         $product->countries = $this->countries;
         $product->material = $this->material;
         $product->producttemplate = $this->producttemplate;
-        $product->season = $this->season;
+        $product->ageseason = $this->ageseason;
         //$product->laststoragedate = $this->laststoragedate;
         $product->aliases = $this->aliases;
         $product->series = $this->series;
@@ -164,16 +167,18 @@ class TbProduct extends BaseCompanyModel
         $product->ulnarinch = $this->ulnarinch;
         $product->factoryprice = $this->factoryprice;
         $product->factorypricecurrency = $this->factorypricecurrency;
-        $product->retailprice = $this->retailprice;
-        $product->retailpricecurrency = $this->retailpricecurrency;
+        $product->nationalfactoryprice = $this->nationalfactoryprice;
+        $product->nationalfactorypricecurrency = $this->nationalfactorypricecurrency;
+        $product->nationalprice = $this->nationalprice;
+        $product->nationalpricecurrency = $this->nationalpricecurrency;
         $product->product_group = "";
         $product->nationalprice = $this->nationalprice;
-        $product->ulnarinch_memo = $this->ulnarinch_memo;
+        //$product->ulnarinch_memo = $this->ulnarinch_memo;
         $product->sizetopid = $this->sizetopid;
         $product->companyid = $this->companyid;
         $product->adduserid = $this->getDI()->get("currentUser");
         if($product->create()==false) {
-            throw new Exception("#1002#复制商品失败#");
+            throw new Exception("/1002/复制商品失败/");
         }
 
         return $product;

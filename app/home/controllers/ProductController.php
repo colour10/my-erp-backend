@@ -239,22 +239,29 @@ class ProductController extends CadminController {
                 //先解绑颜色组
                 $product->cancelBindColor();   
 
-                $products = [$product];
-                $data = [$product->id.",".$product->brandcolor];
+                $products = [];
+                $data = [];//[$product->id.",".$product->brandcolor];
                 //处理新增的记录
-                foreach ($form['list'] as &$row) {
-                    //当前的产品信息已经添加过了。
-                    if($row['id']==$product->id) {
-                        continue;
-                    }
-
+                foreach ($form['list'] as &$row) {                   
                     if($row['id']=='') {                        
-                        $product_else = $product->cloneByColor($row['brandcolor'], $row['wordcode_1'], $row['wordcode_2'], $row['wordcode_3'], $row['wordcode_4']);
+                        $product_else = $product->cloneByColor($row);
                     }
                     else {
                         $product_else = TbProduct::findFirstById($row['id']);
                         if($product_else==false) {
                             throw new \Exception("#1002#绑定的商品不存在#");
+                        }
+
+                        $product_else->brandcolor = $row['brandcolor'];
+                        $product_else->wordcode_1 = $row['wordcode_1'];
+                        $product_else->wordcode_2 = $row['wordcode_2'];
+                        $product_else->wordcode_3 = $row['wordcode_3'];
+                        $product_else->wordcode_4 = $row['wordcode_4'];
+                        $product_else->colorname = $row['colorname'];
+                        $product_else->picture = $row['picture'];
+                        $product_else->picture2 = $row['picture2'];
+                        if($product_else->update()==false) {
+                            throw new \Exception("/1002/更新失败/");
                         }
                     }
                     $products[] = $product_else;

@@ -24,14 +24,6 @@ class BrandgroupchildpropertyController extends ZadminController {
         return $this->success($result->toArray());
     }
 
-    function before_add() {
-        $max_displayindex = TbBrandgroupchildProperty::maximum([
-            sprintf("brandgroupchildid=%d", $_POST['brandgroupchildid']),
-            "column" => "displayindex"
-        ]);
-        $_POST['displayindex'] = $max_displayindex+1;
-    }
-
     function upAction() {
         $properry = TbBrandgroupchildProperty::findFirstById($_POST['id']);
         if($properry!=false) {
