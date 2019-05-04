@@ -43,7 +43,7 @@ return array(
     "menu-2-1-19" => "商品尺码描述",
     "yinhangmingcheng" => "银行名称",
     "gaojichaxun" => "高级查询",
-    "menu-2-2-2" => "成本计算管理",
+    "wenjianming" => "文件名",
     "yinhangdizhi" => "银行地址",
     "menu-2-3-1" => "仓库管理",
     "menu-2-3-2" => "销售端口管理",
@@ -515,7 +515,7 @@ return array(
     "beilv" => "倍率",
     "xitongmoren" => "系统默认",
     "dangqianshijian" => "当前时间",
-    "jiagedingyi" => "价格定义",
+    "shangpin" => "商品",
 
 
 

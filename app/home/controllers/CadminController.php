@@ -14,7 +14,7 @@ class CadminController extends AdminController {
     }
 
     function before_add() {
-        $_POST['companyid'] = $this->companyid;
+        $this->injectParam("companyid", $this->companyid);
     }
 
     function before_edit($row) {
@@ -29,8 +29,8 @@ class CadminController extends AdminController {
         }
     }
 
-    function before_page() {
-        $_POST['companyid'] = $this->companyid;
+    function before_page() {        
+        $this->injectParam("companyid", $this->companyid);
     }
 /*
 	function loadAction() {

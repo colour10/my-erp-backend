@@ -14,7 +14,7 @@ class StaticReader implements InjectionAwareInterface {
             return $language['list'][$source][$key];
         }
         else {
-            throw new Exception("/1001/数据源不存在/");
+            throw new Exception("/1001/数据源不存在{$source}/");
         }
     }
 
@@ -25,7 +25,7 @@ class StaticReader implements InjectionAwareInterface {
             return $language[$key];
         }
         else {
-            throw new Exception("/1001/数据源不存在/");
+            throw new Exception("/1001/数据源不存在{$key}/");
         }
     }
 
