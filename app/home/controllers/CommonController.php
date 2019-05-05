@@ -225,7 +225,7 @@ class CommonController extends BaseController
             //"templatemanage" => ["model"=>'Asa\Erp\TbTemplatemanage',"company"=>false],
             "ulnarinch" => ["model"=>'Asa\Erp\TbUlnarinch',"company"=>false, "orderby"=>"displayindex asc"],
             "currency" => ["model"=>'Asa\Erp\TbCurrency',"company"=>false, "orderby"=>"code asc"],
-            "price" => ["model"=>'Asa\Erp\TbPrice',"company"=>false],
+            "price" => ["model"=>'Asa\Erp\TbPrice',"company"=>false, "orderby"=>"displayindex asc"],
             "saletype" => ["model"=>'Asa\Erp\TbSaleType',"company"=>false, "orderby"=>"displayindex asc"],
         ];
         $table = $this->dispatcher->getParam("table");

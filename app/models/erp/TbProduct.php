@@ -245,7 +245,9 @@ class TbProduct extends BaseCompanyModel
         $company = $user['company'];
 
         $result = [];
+
         foreach($prices as $row) {
+            //echo "5";
             $setting = $row->getPriceSetting($this->brandid, $this->brandgroupid, $this->childbrand, $this->ageseason, $this->series);
 
             if($setting!=false) {
@@ -253,12 +255,14 @@ class TbProduct extends BaseCompanyModel
                 //echo $price;exit;
                 if($value==false) {
                     //没有设置汇率
+                    //echo "2";
                     continue;
                 }
                 $autoprice = $setting->getPriceValue($value);
                 if(isset($hashTable[$row->id]) && $hashTable[$row->id]->price>0) {
                     $price = TbExchangeRate::convert($company->id, $hashTable[$row->id]->currencyid, $company->currencyid, $hashTable[$row->id]->price);
                     if($price==false) {
+                        //echo "0";
                         continue;
                     }
                 }
@@ -268,7 +272,7 @@ class TbProduct extends BaseCompanyModel
 
                 $result[] = [
                     'id' => $row->id,
-                    'name' => $row->getName(),
+                    'name' => $row->name,
                     'currencyid' => $company->currencyid,
                     'discount' => $setting->discount,
                     'autoprice' => $autoprice,
