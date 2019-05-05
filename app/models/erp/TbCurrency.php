@@ -11,4 +11,8 @@ class TbCurrency extends BaseModel
         parent::initialize();
         $this->setSource('tb_currency');
     }
+
+    function delete() {
+        throw new \Exception("/1003/币种信息不允许删除/");
+    }
 }

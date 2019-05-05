@@ -21,6 +21,21 @@ class TbBrand extends BaseModel
                 'alias' => 'country'
             ]
         );
+
+        //
+        $this->hasMany(
+            "id",
+            "\Asa\Erp\TbProduct",
+            "brandid",
+            [
+                'alias' => 'products',
+                'foreignKey' => [
+                    // 关联字段存在性验证
+                    'action' => Relation::ACTION_RESTRICT,
+                    "message"    => "/1003/品牌已经使用，不能删除/"
+                ],
+            ]
+        );
     }
 
     public function getRules() {

@@ -23,7 +23,21 @@ class TbSizetop extends BaseModel
                 'foreignKey' => [
                     // 关联字段存在性验证
                     'action' => Relation::ACTION_RESTRICT,
-                    "message"    => $this->getValidateMessage('hasmany-foreign-message', 'sizecontent'),
+                    "message"    => "/1003/尺码组已经使用，不能删除/",
+                ],
+            ]
+        );
+
+        $this->hasMany(
+            "id",
+            "\Asa\Erp\TbProduct",
+            "sizetopid",
+            [
+                'alias' => 'products',
+                'foreignKey' => [
+                    // 关联字段存在性验证
+                    'action' => Relation::ACTION_RESTRICT,
+                    "message"    => "/1003/尺码组已经使用，不能删除/"
                 ],
             ]
         );
