@@ -536,4 +536,50 @@ class Util
         }
         return false;
     }
+
+
+    /**
+     * 针对配置文件的多维数组转成一维关联数组，每个键名之间默认用.分割
+     * @param array $array 待处理的多维数组
+     * @param string $key 原来的键值，需要做保留处理
+     * @param string $separator 每个键名之间的分隔符，默认是.号
+     * @return array
+     */
+    public static function multiarray_to_assocarray(array $array, $key = '', $separator = '|')
+    {
+        // 逻辑
+        $return = [];
+        // 遍历
+        foreach ($array as $k => $item) {
+            // 判断是否为空决定放不放分隔符
+            $current_key = $key == '' ? $k : $key . $separator . $k;
+            // 如果仍是数组，则执行自身
+            if (is_array($item)) {
+                // 把$k键值也要保留并且传递过去，采用相加合并数组，因为要保留数字键名，不可用array_merge
+                $return += self::multiarray_to_assocarray($item, $current_key, $separator);
+            } else {
+                // 非数组则直接输出即可
+                $return[$current_key] = $item;
+            }
+        }
+        // 返回
+        return $return;
+    }
+
+    /**
+     * 多维数组转成一维简单数组
+     * @param array $array 待处理的多维数组
+     * @return array
+     */
+    public static function multiarray_to_simplearray(array $array)
+    {
+        // 逻辑
+        $return = [];
+        $assocarray = self::multiarray_to_assocarray($array);
+        foreach ($assocarray as $k => $item) {
+            $return[] = $k . '|' . $item;
+        }
+        return $return;
+    }
+
 }

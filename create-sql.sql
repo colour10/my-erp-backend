@@ -1491,6 +1491,26 @@ CREATE TABLE `tb_shoporder_common` (
                                      PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='支付订单主表';
 
+
+/* 语言配置表 */
+
+DROP TABLE IF EXISTS `tb_language`;
+
+CREATE TABLE `tb_language` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `code` text COMMENT '代号',
+  `name_cn` text COMMENT '中文名称',
+  `name_en` text COMMENT '英文名称',
+  `name_hk` text COMMENT '粤语名称',
+  `name_fr` text COMMENT '法语名称',
+  `name_it` text COMMENT '意大利语名称',
+  `name_sp` text COMMENT '西班牙语名称',
+  `name_de` text COMMENT '德语名称',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='语言配置表';
+
+
+
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
