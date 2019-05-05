@@ -67,14 +67,20 @@ class BrandgroupController extends ZadminController
             $targets = explode(",", $_POST['target']);
             foreach ($targets as $targetId) {
                 foreach($result as $row) {
-                    $property = new TbBrandgroupchildProperty();
-                    $property->propertyid = $row->propertyid;
-                    $property->brandgroupchildid = $targetId;
-                    $property->displayindex = $row->displayindex;
-                    if($property->create()==false) {
-                        $this->db->rollback();
-                        return $this->error($property);
-                    }
+                    $property = TbBrandgroupchildProperty::findFirst(
+                        sprintf("brandgroupchildid=%d and propertyid=%d", $targetId, $row->propertyid)
+                    );
+
+                    if($property==false) {
+                        $property = new TbBrandgroupchildProperty();
+                        $property->propertyid = $row->propertyid;
+                        $property->brandgroupchildid = $targetId;
+                        $property->displayindex = $row->displayindex;
+                        if($property->create()==false) {
+                            $this->db->rollback();
+                            return $this->error($property);
+                        }
+                    }                    
                 }           
             }
 
