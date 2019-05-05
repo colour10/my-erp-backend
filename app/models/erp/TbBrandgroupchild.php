@@ -37,7 +37,7 @@ class TbBrandgroupchild extends BaseModel
                 'foreignKey' => [
                     // 关联字段存在性验证
                     'action' => Relation::ACTION_RESTRICT,
-                    "message"    => "#1003#子类已经在商品信息中使用#",
+                    "message"    => "/1003/子类已经在商品信息中使用/",
                 ],
             ]
         );
@@ -52,7 +52,7 @@ class TbBrandgroupchild extends BaseModel
                 'foreignKey' => [
                     // 关联字段存在性验证
                     'action' => Relation::ACTION_RESTRICT,
-                    "message"    => "#1003#子类已经设置了属性#",
+                    "message"    => "/1003/子类已经设置了属性/",
                 ],
             ]
         );

@@ -27,7 +27,7 @@ class TbBrandgroup extends BaseModel
                 'foreignKey' => [
                     // 关联字段存在性验证
                     'action' => Relation::ACTION_RESTRICT,
-                    "message"    => $this->getValidateMessage('hasmany-foreign-message', 'child-product-group'),
+                    "message"    => "/1003/品类数据已经使用，不允许删除/",
                 ],
             ]
         );

@@ -26,4 +26,8 @@ class TbAgeseason extends BaseModel
         $array['fullname'] = $fullname;
         return $array;
     }
+
+    function delete() {
+        throw new \Exception("/1003/款式年代数据不允许删除/");
+    }
 }

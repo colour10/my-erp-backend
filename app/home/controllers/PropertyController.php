@@ -14,4 +14,8 @@ class PropertyController extends AdminController {
 
 	    $this->setModelName('Asa\\Erp\\TbProperty');
     }
+
+    function before_page() {
+        $_POST["__orderby"] = "displayindex asc";
+    }
 }
