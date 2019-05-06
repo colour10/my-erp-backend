@@ -79,4 +79,17 @@ class ExchangerateController extends CadminController {
 
         return $this->success($result->toArray());
     }
+
+    function getrateAction() {
+        $result = TbExchangeRate::findFirst([
+            sprintf("companyid=%d and currency_from=%d and currency_to=%d and status=0", $this->companyid, $_POST['currency_from'], $_POST['currency_to'])
+        ]);
+
+        if($result!=false) {
+            return $this->success($result->rate);
+        }
+        else {
+            return $this->success();
+        }
+    }
 }
