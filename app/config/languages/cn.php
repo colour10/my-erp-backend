@@ -688,8 +688,8 @@ return array(
         ),
         
         "bussinesstype" => array(
-            "1" => array("id"=>"1", "style"=>"color:red", "name"=>"期货"),
-            "2" => array("id"=>"2", "style"=>"", "name"=>"现货"),
+            "1" => "期货",
+            "2" => "现货",
         ),
         
         "formtype" => array(
