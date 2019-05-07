@@ -65,19 +65,6 @@ class Module implements ModuleDefinitionInterface
         });
 
         $config = $di->get("config");
-        $di->setShared('language', function () use ($config, $di) {
-            $auth = $di->get("auth");
-
-            $language = $config->language;
-            if($auth && isset($auth['language']) && $auth['language']!="" && preg_match("#^[a-z]{2}$#", $auth['language'])) {
-                $language = $auth['language'];
-            }
-
-            //$system_language = new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
-            $lang = new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
-            $lang->lang = $language;
-            return $lang;
-        });
 
         //访问静态列表数据的资源
         $di->setShared('staticReader', function () use ($config, $di) {

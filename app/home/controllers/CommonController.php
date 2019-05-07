@@ -18,67 +18,37 @@ class CommonController extends BaseController
     public function indexAction()
     {
     }
-
-    function currencyAction()
-    {
-        header('Access-Control-Allow-Origin:*');
-        $lang = $this->language;
-
-        echo json_encode((array)$lang["currency"]);
-    }
-
-    function languageAction()
-    {
-        $config = $this->config;
-        echo json_encode((array)$config["languages"]);
-    }
     
     function systemlanguageAction()
     {
         $config = $this->config;
-        $lang = $this->language;
         $auth = $this->auth;
+
+        $language = $config->language;
+        if(isset($_GET['language']) && preg_match("#^[a-z]{2}$#", $_GET['language'])) {
+            $language = $_GET['language'];
+        }
+        else if($auth && isset($auth['language']) && $auth['language']!="" && preg_match("#^[a-z]{2}$#", $auth['language'])) {
+            $language = $auth['language'];
+        }
+
+        $this->session->set('language', $language);
+
+        $lang = new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
+        $lang->lang = $language;
 
         
         $lang["_image_url_prex"] = $config->file_prex;
         $lang["languages"] = $config->languages;
-
-        //$lang['lang'] = $language;
-        
-        //$lang["gender"] = $config->gender;
         
         $lang["_datetime"] = date("Y-m-d H:i:s");
         $lang["_date"] = date("Y-m-d");
         
-
-        
-        //var_dump($auth);
-        
         echo sprintf("\$ASAL = %s", json_encode((array)$lang), JSON_OBJECT_AS_ARRAY );
-    }
-
-    function labelAction()
-    {
-        $config = $this->config;
-        $lang = $this->language;
-        $auth = $this->auth;
-
-        
-        $lang["_image_url_prex"] = $config->file_prex;
-        $lang["languages"] = $config->languages;
-
-        //$lang['lang'] = $language;
-        
-        //$lang["gender"] = $config->gender;
-        
-        $lang["_datetime"] = date("Y-m-d H:i:s");
-        $lang["_date"] = date("Y-m-d");        
-        return $this->success($lang);
     }
 
     function settingAction() {
         $config = $this->config;
-        $lang = $this->language;
         $auth = $this->auth;
 
         $setting = [];

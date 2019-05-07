@@ -16,7 +16,6 @@
     <!-- 引入组件库 -->
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
     <script src="/js/jquery.min.js"></script>
-    <script src="/common/systemlanguage?<?=$__sytem_time?>"></script>
     
   </head>
 
@@ -321,6 +320,17 @@ body .el-select-dropdown__wrap {max-height:500px;}
     <router-view></router-view>
   </div>
 
-<script src="/js/asa.js?<?=$__sytem_time?>"></script>
+<script type="text/javascript">      
+      $(document).ready(function(){
+        console.log(localStorage)
+        let language = ""
+        if(localStorage && localStorage.language) {
+          language = localStorage.language
+        }
+        $.getScript("/common/systemlanguage?language="+language, function(){
+          $.getScript("/js/asa.js");
+        })
+      })
+    </script>
   </body>
 </html>

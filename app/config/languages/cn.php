@@ -585,11 +585,8 @@ return array (
   'hasmany-foreign-message' => '正在使用，不能删除',
   'belongsto-foreign-message' => '记录不存在',
   'model-delete-message' => '请先登录',
-  "lingshoubi" => "零售比",
-  "cankaobeilv" => "参考倍率",
-  "dingdanguanli" => "订单管理",
-  "rukudanguanli" => "入库单管理",
-  "dingdanguanli" => "订单管理",
+  "yingwendizhi" => "英文地址",
+  "kehuleixing" => "客户类型",
 
   'template' => 
   array (
@@ -739,10 +736,10 @@ return array (
       0 => '合格',
       1 => '残次品',
     ),
-    'customtype' => 
-    array (
-      0 => '个人',
-      1 => '企业',
-    ),
+
+    "customtype" => [
+      "0" => "个人",
+      "1" => "企业"
+    ]
   ),
 );

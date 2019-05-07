@@ -20,8 +20,5 @@ class TbPermission extends BaseModel
     {
         parent::initialize();
         $this->setSource('tb_permission');
-
-        // 设置当前语言
-        $this->setValidateLanguage($this->getLanguage()['lang']);
     }
 }

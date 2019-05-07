@@ -1,23 +1,13 @@
 <?php
 namespace Asa\Erp;
 use Phalcon\Mvc\Model\Message as Message;
-use Asa\Erp\Behavior\AsaBehabior;
 use Phalcon\Db\Column;
 use Phalcon\Validation;
 
 class BaseModel extends \Phalcon\Mvc\Model {
-
-    // 1表示删除
-    const FG_DELETED = '1';
-    // 0表示未删除
-    const FG_NOT_DELETED = '0';
-
-    private $validate_language;
-
     protected $validatorFactory;
     
     public function initialize() {
-        //$this->addBehavior(new AsaBehabior());
         $this->useDynamicUpdate(true);
     }
 
@@ -37,38 +27,7 @@ class BaseModel extends \Phalcon\Mvc\Model {
     function getSearchBaseCondition() {
         return [];
     }
-        
-    function getLanguage() {
-        return $this->getDI()->get("language");
-    }
     
-    function setValidateLanguage($language) {
-        $this->validate_language = $language;  
-        //echo $this->validate_language."===";
-    }
-    
-    function getLanguageColumns() {
-        return array();   
-    }
-    
-    function getColumnName($name) {
-        $language_columns = $this->getLanguageColumns();
-
-        //var_dump( $this->validate_language);
-        $language = $this->validate_language;
-        if($language=="") {
-            $language = $this->getLanguage();
-            $language = $language['lang'];
-        }
-
-        if(in_array($name, $language_columns)) {
-            return sprintf("%s_%s", addslashes($name), $language);
-        }   
-        else {
-            return $name;   
-        }
-    }
-
     /**
      * 多语言版本配置读取函数
      * @param $template languages下面语言文件字段的名称，如template模块下面的uniqueness

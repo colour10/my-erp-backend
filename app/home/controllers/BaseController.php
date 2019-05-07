@@ -95,7 +95,7 @@ class BaseController extends Controller
         // 逻辑
         // 定义变量
         // 取出当前语言版本
-        $language = $this->getDI()->get('language');
+        $language = $this->session->get('language');
         // 拼接变量
         // 判断是否需要取出模块部分来展示
         $human_name = $language->$field_name;

@@ -40,6 +40,9 @@ class LoginController extends Controller
                 echo json_encode(['code' => '200', 'messages' => ["登录失败。用户名或密码错误。"]]);
             }
         }
+        else {
+            header("location:/");
+        }
     }
 
     function logoutAction() {

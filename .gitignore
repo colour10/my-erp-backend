@@ -15,3 +15,9 @@ public/upload/
 public/js/async.min.js
 vendor/
 app/shop/controllers/TestController.php
+app/config/languages/de.php
+app/config/languages/en.php
+app/config/languages/fr.php
+app/config/languages/hk.php
+app/config/languages/it.php
+app/config/languages/sp.php
