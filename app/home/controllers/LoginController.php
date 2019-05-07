@@ -29,7 +29,8 @@ class LoginController extends Controller
                     'saleportids' => $user->saleportids,
                     'company' => $user->company,
                     'actions' => $group->getActionList()->toArray(),
-                    'permissions' => $group->getPermissionList()->toArray()
+                    'permissions' => $group->getPermissionList()->toArray(),
+                    "language" => $_POST['language']
                 ));
                 //Forward to the 'invoices' controller if the user is valid
                 //header("location:/");

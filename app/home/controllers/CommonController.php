@@ -38,9 +38,12 @@ class CommonController extends BaseController
         $config = $this->config;
         $lang = $this->language;
         $auth = $this->auth;
+
         
         $lang["_image_url_prex"] = $config->file_prex;
         $lang["languages"] = $config->languages;
+
+        //$lang['lang'] = $language;
         
         //$lang["gender"] = $config->gender;
         
@@ -52,6 +55,25 @@ class CommonController extends BaseController
         //var_dump($auth);
         
         echo sprintf("\$ASAL = %s", json_encode((array)$lang), JSON_OBJECT_AS_ARRAY );
+    }
+
+    function labelAction()
+    {
+        $config = $this->config;
+        $lang = $this->language;
+        $auth = $this->auth;
+
+        
+        $lang["_image_url_prex"] = $config->file_prex;
+        $lang["languages"] = $config->languages;
+
+        //$lang['lang'] = $language;
+        
+        //$lang["gender"] = $config->gender;
+        
+        $lang["_datetime"] = date("Y-m-d H:i:s");
+        $lang["_date"] = date("Y-m-d");        
+        return $this->success($lang);
     }
 
     function settingAction() {
