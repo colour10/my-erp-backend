@@ -537,7 +537,6 @@ class Util
         return false;
     }
 
-
     /**
      * 针对配置文件的多维数组转成一维关联数组，每个键名之间默认用.分割
      * @param array $array 待处理的多维数组
@@ -579,6 +578,39 @@ class Util
         foreach ($assocarray as $k => $item) {
             $return[] = $k . '|' . $item;
         }
+        return $return;
+    }
+
+    /**
+     * 一维关联数组转成多维关联数组
+     * @param array $array
+     * @return array
+     */
+    public static function simplearray_to_multiarray(array $array)
+    {
+        $return = [];
+        foreach ($array as $key => $item) {
+            // 判断是否有|，如果有就切割
+            if (strpos($item, '|') !== false) {
+                // 开始遍历
+                $rpos = strrpos($item, '|');
+                $left = substr($item, 0, $rpos);
+                $right = substr($item, $rpos + 1);
+                // 分隔left
+                $keys = explode('|', $left);
+                $current_str = '';
+                foreach ($keys as $j => $key) {
+                    // 依次生成当前的元素
+                    // 当前循环元素
+                    $current_str .= '[' . "'$key'" . ']';
+                }
+                // 使用神器eval进行智能拼接
+                eval("\$return $current_str = \$right;");
+            } else {
+                $return[$key] = $item;
+            }
+        }
+        // 返回
         return $return;
     }
 

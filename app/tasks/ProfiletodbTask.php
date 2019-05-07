@@ -49,12 +49,22 @@ class ProfiletodbTask extends \Phalcon\CLI\Task
                         // 报错
                         return json_encode(['code' => '200', 'messages' => ['ERROR']]);
                     }
+                } else {
+                    // 如果找到了，但是当前的记录为null，并且当配置文件不为空， 那么就覆盖
+                    if (empty($model->$name) && !empty($value)) {
+                        $model->$name = $value;
+                        if (!$model->save()) {
+                            $this->db->rollback();
+                            // 报错
+                            return json_encode(['code' => '200', 'messages' => ['ERROR']]);
+                        }
+                    }
                 }
             }
         }
         // 提交
         $this->db->commit();
         // 返回成功
-        echo json_encode(['code' => '200', 'messages' => ['SUCCESS']]);
+        echo json_encode(['code' => '200', 'messages' => ['SUCCESS']]) . PHP_EOL;
     }
 }
