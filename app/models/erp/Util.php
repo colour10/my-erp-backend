@@ -4,6 +4,7 @@ namespace Asa\Erp;
 
 use Gregwar\Image\Image;
 use PHPExcel;
+use ZipArchive;
 
 class Util
 {
@@ -612,6 +613,61 @@ class Util
         }
         // 返回
         return $return;
+    }
+
+    /**
+     * 文件批量打包导出，并通过浏览器下载
+     * 前台参考演示模板路径：/app/shop/views/temp/exportfiles.phtml
+     *
+     * 调用方法：(仅供参考，因为考虑到有可能导出文件列表较多，所以用post传输)
+     * if ($this->request->isPost()) {
+     * // 获得文件列表
+     * $json_files = $this->request->get('files');
+     * // 开始导出
+     * Util::exportFiles($json_files);
+     * }
+     *
+     * @param $json_files 一个前台经过JSON.stringify处理过的json字符串，需要转成数组遍历
+     */
+    public static function exportFiles($json_files)
+    {
+        // 逻辑
+        // 如果是json，则把传过来的json字符串转成数组
+        if (Util::is_json($json_files)) {
+            $files = json_decode($json_files, true);
+        }
+
+        // 判断是否需要转成绝对路径，如果不是绝对路径，那么就进行转换
+        if (strpos($json_files, APP_PATH) === false) {
+            foreach ($files as $k => $file) {
+                $files[$k] = APP_PATH . '/public/' . $file;
+            }
+        }
+
+        // 定义一个压缩文件名
+        $zipname = APP_PATH . "/public/tempExportFiles.zip";
+        // 执行压缩逻辑
+        $zip = new ZipArchive();
+        $res = $zip->open($zipname, ZipArchive::CREATE);
+        if ($res === TRUE) {
+            foreach ($files as $file) {
+                //这里直接用原文件的名字进行打包，也可以直接命名，需要注意如果文件名字一样会导致后面文件覆盖前面的文件，所以建议重新命名
+                $new_filename = substr($file, strrpos($file, '/') + 1);
+                $zip->addFile($file, $new_filename);
+            }
+            //关闭文件
+            $zip->close();
+            //这里是下载zip文件
+            header("Content-Type: application/zip");
+            header("Content-Transfer-Encoding: Binary");
+
+            header("Content-Length: " . filesize($zipname));
+            header("Content-Disposition: attachment; filename=\"" . basename($zipname) . "\"");
+
+            readfile($zipname);
+            exit;
+        }
+
     }
 
 }
