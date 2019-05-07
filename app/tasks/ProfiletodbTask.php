@@ -18,7 +18,8 @@ class ProfiletodbTask extends \Phalcon\CLI\Task
         // 逻辑
         // 启用事务处理
         $this->db->begin();
-        $languages = ['cn', 'en', 'hk', 'fr', 'it', 'sp', 'de'];
+        // $languages = ['cn', 'en', 'hk', 'fr', 'it', 'sp', 'de'];
+        $languages = ['cn'];
         // 遍历文件
         foreach ($languages as $language) {
             // 语言字段
@@ -49,17 +50,20 @@ class ProfiletodbTask extends \Phalcon\CLI\Task
                         // 报错
                         return json_encode(['code' => '200', 'messages' => ['ERROR']]);
                     }
-                } else {
-                    // 如果找到了，但是当前的记录为null，并且当配置文件不为空， 那么就覆盖
-                    if (empty($model->$name) && !empty($value)) {
-                        $model->$name = $value;
-                        if (!$model->save()) {
-                            $this->db->rollback();
-                            // 报错
-                            return json_encode(['code' => '200', 'messages' => ['ERROR']]);
-                        }
-                    }
                 }
+
+                // 取消更新逻辑
+                // else {
+                //     // 如果找到了，但是当前的记录为null，并且当配置文件不为空， 那么就覆盖
+                //     if (empty($model->$name) && !empty($value)) {
+                //         $model->$name = $value;
+                //         if (!$model->save()) {
+                //             $this->db->rollback();
+                //             // 报错
+                //             return json_encode(['code' => '200', 'messages' => ['ERROR']]);
+                //         }
+                //     }
+                // }
             }
         }
         // 提交
