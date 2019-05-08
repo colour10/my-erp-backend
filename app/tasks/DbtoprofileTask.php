@@ -20,7 +20,9 @@ class DbtoprofileTask extends \Phalcon\CLI\Task
         $datas = TbLanguage::find();
         // 当前语言配置文件内容
         $profiles = [];
-        $languages = ['cn', 'en', 'hk', 'fr', 'it', 'sp', 'de'];
+        // $languages = ['cn', 'en', 'hk', 'fr', 'it', 'sp', 'de'];
+        // 中文配置文件不覆盖
+        $languages = ['en', 'hk', 'fr', 'it', 'sp', 'de'];
         // 遍历文件
         foreach ($languages as $language) {
             // 语言字段
