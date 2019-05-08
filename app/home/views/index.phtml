@@ -320,16 +320,45 @@ body .el-select-dropdown__wrap {max-height:500px;}
     <router-view></router-view>
   </div>
 
-<script type="text/javascript">      
+<div id="load" style="position:relative;margin:auto;text-align:center;top:200px;">
+      <el-progress type="circle" :percentage="pencent" v-show="isShow"></el-progress>
+    </div>
+
+    <script type="text/javascript">      
       $(document).ready(function(){
         console.log(localStorage)
         let language = ""
         if(localStorage && localStorage.language) {
           language = localStorage.language
         }
-        $.getScript("/common/systemlanguage?language="+language, function(){
-          $.getScript("/js/asa.js");
-        })
+
+        let o = new Vue({
+          data:function(){
+            return {
+              isShow:true,
+              pencent:0
+            }
+          },
+          mounted:function(){
+            let self = this
+            let handler = setInterval(function(){
+              if(self.pencent<=95) {                
+                self.pencent = self.pencent + Math.floor(Math.random()*10)%2+1
+              }
+            }, 330)
+
+            $.getScript("/common/systemlanguage?language="+language, function(){
+                $.getScript("/js/asa.js", function(){
+                  self.pencent = 100;
+                  clearInterval(handler)
+                  setTimeout(function(){
+                    self.isShow = false;
+                  }, 500)                  
+                });
+              })
+          }
+        }).$mount("#load")
+        
       })
     </script>
   </body>
