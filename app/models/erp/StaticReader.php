@@ -9,7 +9,8 @@ class StaticReader implements InjectionAwareInterface {
 
     function get($source, $key) {
         $language = $this->getDI()->get("session")->get("language");
-
+        $lang = new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
+        
         if(isset($language['list'][$source])) {
             return $language['list'][$source][$key];
         }
@@ -20,9 +21,9 @@ class StaticReader implements InjectionAwareInterface {
 
     function label($key) {
         $language = $this->getDI()->get("session")->get("language");
-
-        if(isset($language[$key])) {
-            return $language[$key];
+        $lang = new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
+        if(isset($lang[$key])) {
+            return $lang[$key];
         }
         else {
             throw new Exception("/1001/数据源不存在{$key}/");

@@ -32,6 +32,8 @@ class LoginController extends Controller
                     'permissions' => $group->getPermissionList()->toArray(),
                     "language" => $_POST['language']
                 ));
+
+                $this->session->set('language', $_POST['language']);
                 //Forward to the 'invoices' controller if the user is valid
                 //header("location:/");
                 echo json_encode(['code' => '200', 'auth' =>$this->session->get('user'), "session_id" => $this->session->getId(), 'messages' => []]);

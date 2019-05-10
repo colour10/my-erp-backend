@@ -667,7 +667,15 @@ class Util
             readfile($zipname);
             exit;
         }
-
     }
 
+    public static function filterIds($ids) {
+        $array = explode(",", $ids);
+
+        $result = [];
+        foreach($array as $row) {
+            $result[] = (int)$row;
+        }
+        return implode(",", $result);
+    }
 }

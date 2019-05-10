@@ -587,6 +587,15 @@ return array (
   'model-delete-message' => '请先登录',
   "yingwendizhi" => "英文地址",
   "kehuleixing" => "客户类型",
+  "quedingshanchu" => "确定删除吗？",
+  "lingshoubi" => "零售比",
+  "cankaobeilv" => "参考倍率",
+  "qiye" => "企业",
+  "shouhuoren" => "收货人",
+  "dingdanguanli" => "订单管理",
+  "xinjiandingdan" => "新建订单",
+  "dingdan" => "订单",
+  "rukudanguanli" => "入库单管理",
 
   'template' => 
   array (

@@ -11,13 +11,11 @@ use Asa\Erp\TbProduct;
  */
 class OrderController extends BaseController
 {
-    protected $permission_msg;
     public function initialize()
     {
         parent::initialize();
-        // 权限提示
-        $this->permission_msg = $this->getValidateMessage('order-gurd-alert-message');
     }
+    
     public function pageAction() {
         $result = TbOrder::find(
             sprintf("companyid=%d", $this->companyid)
