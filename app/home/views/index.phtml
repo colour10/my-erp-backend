@@ -339,12 +339,10 @@ body .el-select-dropdown__wrap {max-height:500px;}
 }
 </style>
 <body>
-
-  <div id="app">    
-    <router-view></router-view>
-  </div>
-
-<div id="load" style="position:relative;margin:auto;text-align:center;top:200px;">
+  <div id="app">
+        <router-view></router-view>
+    </div>
+    <div id="load" style="position:relative;margin:auto;text-align:center;top:200px;">
       <el-progress type="circle" :percentage="pencent" v-show="isShow"></el-progress>
     </div>
 
@@ -355,6 +353,16 @@ body .el-select-dropdown__wrap {max-height:500px;}
         if(localStorage && localStorage.language) {
           language = localStorage.language
         }
+        //language = "cn"
+        function loadLabel(language){
+            var head= document.getElementsByTagName('head')[0];
+            var script= document.createElement('script');
+            script.type= 'text/javascript';
+            script.src= 'http://erp.localhost.com/common/systemlanguage?language=' + language;
+            head.appendChild(script);
+        }
+
+        loadLabel(language)
 
         let o = new Vue({
           data:function(){
@@ -368,22 +376,21 @@ body .el-select-dropdown__wrap {max-height:500px;}
             let handler = setInterval(function(){
               if(self.pencent<=95) {                
                 self.pencent = self.pencent + Math.floor(Math.random()*10)%2+1
+
+                if(window.ASAP && window.$ASAL) {
+                    self.pencent = 100;
+                    clearInterval(handler)
+                    setTimeout(function(){
+                      self.isShow = false;
+                    }, 500)  
+                }
               }
             }, 330)
-
-            $.getScript("/common/systemlanguage?language="+language, function(){
-                $.getScript("/js/asa.js", function(){
-                  self.pencent = 100;
-                  clearInterval(handler)
-                  setTimeout(function(){
-                    self.isShow = false;
-                  }, 500)                  
-                });
-              })
           }
         }).$mount("#load")
         
       })
     </script>
-  </body>
+    <script type="text/javascript" src="/js/asa.js"></script>
+</body>
 </html>
