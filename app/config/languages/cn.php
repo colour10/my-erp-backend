@@ -597,6 +597,10 @@ return array (
   "dingdan" => "订单",
   "rukudanguanli" => "入库单管理",
 
+  	// 新增配置项
+	'salesdate-required' => '销售时间条件不能为空',
+    'datetime-invalid' => '时间格式不正确',
+
   'template' => 
   array (
     'uniqueness' => '%s不能重复',
@@ -750,8 +754,5 @@ return array (
       "0" => "个人",
       "1" => "企业"
     ],
-	// 新增配置项
-	'salesdate-required' => '销售时间条件不能为空',
-    'datetime-invalid' => '时间格式不正确',
   ),
 );
