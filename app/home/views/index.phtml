@@ -357,19 +357,20 @@ body .el-select-dropdown__wrap {max-height:500px;}
           },
           mounted:function(){
             let self = this
+
             let handler = setInterval(function(){
               if(self.pencent<=95) {                
-                self.pencent = self.pencent + Math.floor(Math.random()*10)%2+1
-
-                $.getScript("/js/asa.js?_"+Date.now(), function(){
-                  self.pencent = 100;
-                  clearInterval(handler)
-                  setTimeout(function(){
-                    self.isShow = false;
-                  }, 500)  
-                });
+                self.pencent = self.pencent + Math.floor(Math.random()*10)%2+1                
               }
             }, 330)
+
+            $.getScript("/js/asa.js?_"+Date.now(), function(){
+              self.pencent = 100;
+              clearInterval(handler)
+              setTimeout(function(){
+                self.isShow = false;
+              }, 500)  
+            });
           }
         }).$mount("#load")
         
