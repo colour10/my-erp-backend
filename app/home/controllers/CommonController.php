@@ -25,8 +25,8 @@ class CommonController extends BaseController
         $auth = $this->auth;
 
         $language = $config->language;
-        if(isset($_GET['language']) && preg_match("#^[a-z]{2}$#", $_GET['language'])) {
-            $language = $_GET['language'];
+        if(isset($_POST['language']) && preg_match("#^[a-z]{2}$#", $_POST['language'])) {
+            $language = $_POST['language'];
         }
         else if($auth && isset($auth['language']) && $auth['language']!="" && preg_match("#^[a-z]{2}$#", $auth['language'])) {
             $language = $auth['language'];
@@ -44,7 +44,8 @@ class CommonController extends BaseController
         $lang["_datetime"] = date("Y-m-d H:i:s");
         $lang["_date"] = date("Y-m-d");
         
-        echo sprintf("\$ASAL = %s", json_encode((array)$lang), JSON_OBJECT_AS_ARRAY );
+        //echo sprintf("\$ASAL = %s", json_encode((array)$lang), JSON_OBJECT_AS_ARRAY );
+        return $this->success($lang);
     }
 
     function settingAction() {

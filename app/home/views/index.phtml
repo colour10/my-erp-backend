@@ -348,22 +348,6 @@ body .el-select-dropdown__wrap {max-height:500px;}
 
     <script type="text/javascript">      
       $(document).ready(function(){
-        console.log(localStorage)
-        let language = ""
-        if(localStorage && localStorage.language) {
-          language = localStorage.language
-        }
-        //language = "cn"
-        function loadLabel(language){
-            var head= document.getElementsByTagName('head')[0];
-            var script= document.createElement('script');
-            script.type= 'text/javascript';
-            script.src= '/common/systemlanguage?language=' + language;
-            head.appendChild(script);
-        }
-
-        loadLabel(language)
-
         let o = new Vue({
           data:function(){
             return {
@@ -377,7 +361,7 @@ body .el-select-dropdown__wrap {max-height:500px;}
               if(self.pencent<=95) {                
                 self.pencent = self.pencent + Math.floor(Math.random()*10)%2+1
 
-                if(window.ASAP && window.$ASAL) {
+                if(window.ASAP) {
                     self.pencent = 100;
                     clearInterval(handler)
                     setTimeout(function(){
