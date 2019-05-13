@@ -361,13 +361,13 @@ body .el-select-dropdown__wrap {max-height:500px;}
               if(self.pencent<=95) {                
                 self.pencent = self.pencent + Math.floor(Math.random()*10)%2+1
 
-                if(window.ASAP) {
-                    self.pencent = 100;
-                    clearInterval(handler)
-                    setTimeout(function(){
-                      self.isShow = false;
-                    }, 500)  
-                }
+                $.getScript("/js/asa.js?_"+Date.now(), function(){
+                  self.pencent = 100;
+                  clearInterval(handler)
+                  setTimeout(function(){
+                    self.isShow = false;
+                  }, 500)  
+                });
               }
             }, 330)
           }
@@ -375,6 +375,5 @@ body .el-select-dropdown__wrap {max-height:500px;}
         
       })
     </script>
-    <script type="text/javascript" src="/js/asa.js?_=<?=$__sytem_time?>"></script>
 </body>
 </html>
