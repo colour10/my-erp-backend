@@ -749,6 +749,9 @@ return array (
     "customtype" => [
       "0" => "个人",
       "1" => "企业"
-    ]
+    ],
+	// 新增配置项
+	'salesdate-required' => '销售时间条件不能为空',
+    'datetime-invalid' => '时间格式不正确',
   ),
 );
