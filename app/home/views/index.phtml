@@ -20,7 +20,7 @@
   </head>
 
   <style>
-   .el-header {
+  .el-header {
     background-color: #B3C0D1;
     color: #333;
     line-height: 60px;
@@ -266,8 +266,8 @@
   padding:0px;
 }
 
-.product .el-tabs .el-table td, .product .el-table th {
-  padding:12px 0px;
+.product .el-tabs .el-table td, .product .el-tabs .el-table th {
+  padding:0px 0px;
 }
 
 .product img {padding:0px;margin:0px;display: block;}
@@ -283,9 +283,19 @@
   z-index: 10;
   width:calc(100% - 30px);
 }
+#nav {
+  margin:0px;
+  top:60px;
+  padding: 8px 2px;
+  position:fixed;
+  z-index: 10;
+  width:calc(100% - 30px);
+  background: white;
+  border-bottom: 1px solid #eeeeee
+}
 
 .el-container {
-  padding-top:5px;
+  padding-top:50px;
 }
 
 #app .el-dialog__body {
@@ -313,6 +323,20 @@ body .el-select-dropdown__wrap {max-height:500px;}
 
 #app button.trimhalf {padding:7px 10px;}
 
+.fade-transform-leave-active,
+.fade-transform-enter-active {
+  transition: all .5s;
+}
+
+.fade-transform-enter {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.fade-transform-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
 </style>
 <body>
 
