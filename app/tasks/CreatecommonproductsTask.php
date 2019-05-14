@@ -2,6 +2,7 @@
 
 use Asa\Erp\TbCompany;
 use Asa\Erp\TbProduct;
+use Asa\Erp\TbUser;
 use Asa\Erp\Util;
 
 /**
@@ -48,16 +49,26 @@ class CreatecommonproductsTask extends \Phalcon\CLI\Task
         }
 
         // 寻找是否存在名为“虚拟公司”的公司
-        $companyModel = TbCompany::findFirst("name_cn='虚拟公司'");
-        if (!$companyModel) {
+        if (!$companyModel = TbCompany::findFirst("name_cn='虚拟公司'")) {
             $companyModel = new TbCompany();
-            $companyModel->create([
+            if (!$companyModel->create([
                 'name_cn' => '虚拟公司',
-            ]);
+            ])) {
+                $this->db->rollback();
+                return json_encode(['code' => '200', 'messages' => ['ERROR']]);
+            }
         }
 
         // 取出虚拟公司ID
         $companyid = $companyModel->id;
+
+        // 建立一个管理员并关联上虚拟公司id
+        if (!$userModel = TbUser::findFirst("login_name='VirtualCorporation'")) {
+            if (!$this->db->execute("INSERT INTO tb_user(`login_name`, `password`, `companyid`, `real_name`) VALUES('VirtualCorporation', md5('VirtualCorporation'), $companyid, '虚拟公司管理员')")) {
+                $this->db->rollback();
+                return json_encode(['code' => '200', 'messages' => ['ERROR']]);
+            }
+        }
 
         // 转成一维数组
         $combime = [];
