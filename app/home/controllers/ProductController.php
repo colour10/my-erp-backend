@@ -72,6 +72,7 @@ class ProductController extends CadminController {
             }
         }
 
+        $output = [];
         $product_group = implode('|', $colors);
         //逐个更新，绑定关系
         foreach($products as $row) {
@@ -79,10 +80,11 @@ class ProductController extends CadminController {
             if($row->update()==false) {
                 throw new \Exception("/1002/更新product_group字段失败/");
             }
+            $output[] = $row->toArray();
         }
 
         $this->db->commit();
-        return $this->success();
+        return $this->success($output);
     }
 
     function editAction() {
@@ -175,8 +177,33 @@ class ProductController extends CadminController {
             $where = array(
                 sprintf("companyid=%d", $this->companyid)
             );
-            if(isset($_POST["productname"]) && trim($_POST["productname"])!="") {
-                $where[] = sprintf("productname like '%%%s%%'", addslashes($_POST["productname"]));
+
+            if(isset($_POST["wordcode_1"]) && trim($_POST["wordcode_1"])!="") {
+                $where[] = sprintf("wordcode_1='%s'", addslashes($_POST["wordcode_1"]));
+            }
+
+            if(isset($_POST["wordcode_2"]) && trim($_POST["wordcode_2"])!="") {
+                $where[] = sprintf("wordcode_2='%s'", addslashes($_POST["wordcode_2"]));
+            }
+
+            if(isset($_POST["wordcode_3"]) && trim($_POST["wordcode_3"])!="") {
+                $where[] = sprintf("wordcode_3='%s'", addslashes($_POST["wordcode_3"]));
+            }
+
+            if(isset($_POST["wordcode_4"]) && trim($_POST["wordcode_4"])!="") {
+                $where[] = sprintf("wordcode_4='%s'", addslashes($_POST["wordcode_4"]));
+            }
+
+            if(isset($_POST["brandid"]) && trim($_POST["brandid"])!="") {
+                $where[] = sprintf("brandid=%d", $_POST["brandid"]);
+            }
+
+            if(isset($_POST["brandgroupid"]) && trim($_POST["brandgroupid"])!="") {
+                $where[] = sprintf("brandgroupid=%d", $_POST["brandgroupid"]);
+            }
+
+            if(isset($_POST["childbrand"]) && trim($_POST["childbrand"])!="") {
+                $where[] = sprintf("childbrand=%d", $_POST["childbrand"]);
             }
             
             $result = TbProduct::find([

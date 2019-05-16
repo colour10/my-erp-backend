@@ -22,6 +22,7 @@ class OrderController extends BaseController
         );
         echo $this->success($result->toArray());
     }
+
     /**
      * 订单保存
      */
@@ -30,22 +31,18 @@ class OrderController extends BaseController
         // 判断是否有params参数提交过来
         $params = $this->request->get('params');
         if (!$params) {
-            $msg = $this->getValidateMessage('order-params', 'template', 'required');
-            return $this->error([$msg]);
+            throw new \Exception("/1001/参数错误/");
         }
+
         // 转换成数组
         $submitData = json_decode($params, true);
-        // 订单主表中，开始验证必填字段
-        // 年代id、供货商id为必填项
-        // // 判断订单是否有数据
-        // // 订单数据可以为空，暂时注释
-        // if (count($submitData['list']) == '0') {
-        //     return $this->error(['order list is empty']);
-        // }
+
         // 判断是否有订单号，分别进行
         $orderid = $submitData['form']['id'];
         // 采用事务处理
         $this->db->begin();
+        $form = $submitData['form'];
+
         // 判断逻辑
         if ($orderid) {
             // 有订单号就修改
@@ -55,13 +52,26 @@ class OrderController extends BaseController
                 sprintf("id=%d and companyid=%d", $orderid, $this->companyid)
             );
             if(!$order || $order->status!=1) {
-                exit;
+                throw new \Exception("/1001/订单不存在/");
             }
-            // 开始更新
-            foreach ($submitData['form'] as $k => $item) {
-                // 把里面的参数转成post参数传递过去
-                $order->$k = $item;
-            }
+
+            $order->bookingid = $form['bookingid'];
+            $order->linkmanid = $form['linkmanid'];
+            $order->bussinesstype = $form['bussinesstype'];
+            $order->supplierid = $form['supplierid'];
+            $order->finalsupplierid = $form['finalsupplierid'];
+            $order->ageseason = $form['ageseason'];
+            $order->seasontype = $form['seasontype'];
+            $order->bookingorderno = $form['bookingorderno'];
+            $order->makedate = $form['makedate'];
+            $order->currency = $form['currency'];
+            $order->discount = $form['discount'];
+            $order->taxrebate = $form['taxrebate'];
+            $order->property = $form['property'];
+            $order->memo = $form['memo'];
+            $order->orderdate = $form['orderdate'];
+            $order->status = $form['status'];
+
             // 判断是否成功
             if (!$order->save()) {
                 $this->db->rollback();
@@ -71,13 +81,26 @@ class OrderController extends BaseController
         }
         else {
             // 没有订单号就新增
-            $order = new TbOrder();
-            foreach ($submitData['form'] as $k => $item) {
-                $order->$k = $item;
-            }
+            $order = new TbOrder();            
+            $order->bookingid = $form['bookingid'];
+            $order->linkmanid = $form['linkmanid'];
+            $order->bussinesstype = $form['bussinesstype'];
+            $order->supplierid = $form['supplierid'];
+            $order->finalsupplierid = $form['finalsupplierid'];
+            $order->ageseason = $form['ageseason'];
+            $order->seasontype = $form['seasontype'];
+            $order->bookingorderno = $form['bookingorderno'];
+            $order->makedate = $form['makedate'];
+            $order->currency = $form['currency'];
+            $order->discount = $form['discount'];
+            $order->taxrebate = $form['taxrebate'];
+            $order->property = $form['property'];
+            $order->memo = $form['memo'];
+            $order->orderdate = $form['orderdate'];
+            $order->status = $form['status'];
             // 添加制单人及制单日期
             $order->makestaff = $this->currentUser;
-            $order->makedate = date('Y-m-d H:i:s');
+            $order->maketime = date('Y-m-d H:i:s');
             $order->companyid = $this->companyid;
             // 生成订单号
             $order->orderno = sprintf(
@@ -101,28 +124,38 @@ class OrderController extends BaseController
         $detail_id_array = [];
         foreach ($submitData['list'] as $k => $item) {
             // 使用模型更新
-            $data = [
-                'productid' => $item['productid'],
-                'sizecontentid' => $item['sizecontentid'],
-                'number' => $item['number'],
-                'companyid' => $this->companyid,
-                'price' => TbProduct::getInstance($item['productid'])->retailprice,
-                'createdate' => date("Y-m-d H:i:s"),
-                'orderid' => $order->id
-            ];
-            if(isset($item['id']) && $item['id']!='') {
-                $data['id'] = $item['id'];
-                $detailRet = $order->updateDetail($data);
+            $detail = TbOrderdetails::findFirst(
+                sprintf("companyid=%d and orderid=%d and productid=%d and sizecontentid=%d", $this->companyid, $order->id, $item['productid'], $item['sizecontentid'])
+            );
+            if($detail!=false) {
+                $detail->number = $item['number'];
+                $detail->discount = $item['discount'];
+                $detail->price = TbProduct::getInstance($item['productid'])->factoryprice;
+                $detail->currencyid = TbProduct::getInstance($item['productid'])->factorypricecurrency;
+                if($detail->update()==false) {
+                    $this->db->rollback();
+                    throw new \Exception("/1002/更新订单明细失败/");                    
+                }
             }
             else {
-                $detailRet = $order->addDetail($data);
+                $detail = new TbOrderdetails();
+                $detail->productid = $item['productid'];
+                $detail->sizecontentid = $item['sizecontentid'];
+                $detail->number = $item['number'];
+                $detail->discount = $item['discount'];
+                $detail->companyid = $this->companyid;
+                $detail->price = TbProduct::getInstance($item['productid'])->factoryprice;
+                $detail->currencyid = TbProduct::getInstance($item['productid'])->factorypricecurrency;
+                $detail->createdate = date("Y-m-d H:i:s");
+                $detail->orderid = $order->id;
+                $detail->orderbrandid= 0;
+                if($detail->create()==false) {
+                    $this->db->rollback();
+                    throw new \Exception("/1002/添加订单明细失败/");                    
+                }
             }
-            if ($detailRet===false) {
-                $this->db->rollback();
-                $msg = $this->getValidateMessage('orderdetail', 'db', 'add-failed');
-                return $this->error([$msg]);
-            }
-            $detail_id_array[] = $detailRet->id;
+
+            $detail_id_array[] = $detail->id;
         }
         //清除不存在的详情id
         if(count($detail_id_array)>0) {
@@ -139,6 +172,7 @@ class OrderController extends BaseController
         // 最终成功返回，原来的数据还要保留，再加上订单详情之中每个商品的名称也要放进去
         echo $this->success($order->getOrderDetail());
     }
+
     /**
      * 读取订单信息，必须传一个id参数，代表订单编号
      * @return false|string
@@ -149,11 +183,13 @@ class OrderController extends BaseController
         $order = TbOrder::findFirst(
             sprintf("id=%d and companyid=%d", $_REQUEST["id"], $this->companyid)
         );
+
         // 判断订单是否存在
         if ($order!=false) {
             echo $this->success($order->getOrderDetail());
         }
     }
+
     /**
      * 订单删除
      * @return false|string
@@ -171,32 +207,7 @@ class OrderController extends BaseController
         else {
         }
     }
-    /**
-     * 订单审核
-     * @return [type] [description]
-     */
-    public function confirmAction() {
-        $orderid = (int)$_POST['id'];
-        // 根据orderid查询出当前订单以及订单详情的所有信息
-        $order = TbOrder::findFirstById($orderid);
-        if($order!=false && $order->companyid==$this->companyid) {
-            $order->status = $_POST['status']=="3" ? 3: 1;
-            $this->doTableAction($order,"update");
-        }
-    }
-    /**
-     * 订单取消审核，如果订单上的明细已经生成入库单，则不能取消审核
-     * @return [type] [description]
-     */
-    public function cancelAction() {
-        $orderid = (int)$_POST['id'];
-        // 根据orderid查询出当前订单以及订单详情的所有信息
-        $order = TbOrder::findFirstById($orderid);
-        if($order!=false && $order->companyid==$this->companyid) {
-            $order->status = 2;
-            $this->doTableAction($order,"update");
-        }
-    }
+
     /**
      * 订单完结
      * @return [type] [description]
@@ -211,20 +222,14 @@ class OrderController extends BaseController
         }
     }
 
-   /**
-    * 订单修改,订单提交审核之后，只能修改部分字段信息
-    * @return [type] [description]
-    */
-/*   private function modifyAction() {
-       $orderid = (int)$_POST['id'];
-       // 根据orderid查询出当前订单以及订单详情的所有信息
-       $order = TbOrder::findFirstById($orderid);
-       if($order!=false && $order->companyid==$this->companyid) {
-           //定义可以修改的字段名
-           $columns = array();
-           //如果需求需要，可以在这里比较修改前后的数据变化，并留痕
-           //如果不需要，直接按照定义的字段范围更新数据
-           $this->doTableAction($order,"update");
-       }
-   }*/
+    /**
+     * 
+     */
+    function searchdetailAction() {
+        $details = TbOrderdetails::find(
+            sprintf("companyid=%d and orderbrandid=0", $this->companyid)
+        );
+
+        return $this->success($details->toArray());
+    }
 }

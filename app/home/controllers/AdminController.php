@@ -230,6 +230,7 @@ class AdminController extends BaseController
                 foreach ($fields as $name) {
                     if (isset($_POST[$name])) {
                         $row->$name = $_POST[$name];
+                        //echo $name."<>";
                     }
                 }
 

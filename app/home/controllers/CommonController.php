@@ -194,6 +194,7 @@ class CommonController extends BaseController
             "salesdetails" => ["model"=>'Asa\Erp\TbSalesdetails',"company"=>true],
             "sales" => ["model"=>'Asa\Erp\TbSales',"company"=>true],
             "supplier" => ["model"=>'Asa\Erp\TbSupplier',"company"=>true],
+            "supplierlinkman" => ["model"=>'Asa\Erp\TbSupplierLinkman',"company"=>true],
             "user" => ["model"=>'Asa\Erp\TbUser',"company"=>true],
             "warehouse" => ["model"=>'Asa\Erp\TbWarehouse',"company"=>true],
             "warehouse_user" => ["model"=>'Asa\Erp\TbWarehouseUser',"company"=>true],
