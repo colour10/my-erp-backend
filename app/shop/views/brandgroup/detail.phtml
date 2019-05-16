@@ -75,7 +75,7 @@
                                     <th>名称</th>
                                     <th>国际码</th>
                                     <th>价格</th>
-                                    <th colspan="<?php echo $max_sum_sizecontents; ?>">库存详情</th>
+                                    <th colspan="<?php echo $max_sum_sizecontents + 1; ?>">库存详情</th>
                                     <th>操作</th>
                                 </tr>
 
@@ -102,6 +102,7 @@
                                         <td rowspan="3">
                                             <?php echo $this->currency; ?><?php echo $item['realprice']; ?>
                                         </td>
+                                        <td>尺码组：</td>
                                         <?php if ($item['sum_sizecontents'] > 0) { ?>
                                             <?php foreach ($item['sizecontents'] as $sizecontent) { ?>
                                                 <td><?php echo $sizecontent['sizecontentname']; ?></td>
@@ -123,7 +124,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-
+                                        <td>库存数：</td>
                                         <?php if ($item['sum_sizecontents'] > 0) { ?>
                                             <?php foreach ($item['sizecontents'] as $sizecontent) { ?>
                                                 <td><?php echo $sizecontent['sumatory']; ?></td>
@@ -136,6 +137,7 @@
 
                                     </tr>
                                     <tr>
+                                        <td>订购数：</td>
                                         <?php if ($item['sum_sizecontents'] > 0) { ?>
                                             <?php foreach ($item['sizecontents'] as $sizecontent) { ?>
                                                 <td><input class="table-w30"

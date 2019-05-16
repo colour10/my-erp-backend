@@ -699,4 +699,24 @@ class Util
         }
         return ($second1 - $second2) / 86400;
     }
+
+    /**
+     * 获取当前数组最大值的键名
+     * @param array $array
+     * @return mixed
+     */
+    public static function getArrayMaxKey(array $array)
+    {
+        // 逻辑
+        // 先取出最大值
+        // 如果数组为空，那么就为null
+        if (!$array) {
+            return null;
+        }
+        $max = max($array);
+        // 翻转数组，键名键值互换
+        $flip = array_flip($array);
+        // 最终返回
+        return $flip[$max];
+    }
 }

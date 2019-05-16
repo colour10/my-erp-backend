@@ -1,5 +1,5 @@
 <?php
-return array (
+return [
   'system_name' => 'ERP管理系统',
   'lang' => 'cn',
   'language' => '简体中文',
@@ -618,162 +618,163 @@ return array (
   "piliangxuanze" => "批量选择",
   "piliangxuanze" => "批量选择",
 
-  	// 新增配置项
-	'salesdate-required' => '销售时间条件不能为空',
+    // 新增配置项
+    'salesdate-required' => '销售时间条件不能为空',
     'datetime-invalid' => '时间格式不正确',
+    'date-required' => '请选择日期',
 
-  'template' => 
-  array (
-    'uniqueness' => '%s不能重复',
-    'required' => '%s不能为空',
-    'numericality' => '%s必须是数字',
-    'invalid' => '%s不合法',
-    'digit' => '%s必须是整数',
-    'hasmany-foreign-message' => '正在使用，不能删除，因为有%s正在使用它',
-    'belongsto-foreign-message' => '%s上不存在',
-    'notexist' => '%s不存在',
-  ),
-  'db' => 
-  array (
-    'add-failed' => '%s添加失败',
-    'save-failed' => '%s保存失败',
-    'edit-failed' => '%s编辑失败',
-    'delete-failed' => '%s删除失败',
-    'add-success' => '%s添加成功',
-    'save-success' => '%s保存成功',
-    'edit-success' => '%s编辑成功',
-    'delete-success' => '%s删除成功',
-  ),
-  'list' => 
-  array (
-    'gender' => 
-    array (
-      '1' => '男士',
-      '2' => '女士',
-      '3' => '中性',
-      '4' => '男童',
-      '5' => '女童',
-      '6' => '儿童',
-    ),
-    'gender2' => 
-    array (
-      1 => '男',
-      0 => '女',
-    ),
-    'season' => 
-    array (
-      1 => '春季',
-      2 => '夏季',
-      3 => '秋季',
-      4 => '冬季',
-      5 => '四季',
-    ),
-    'bussinesstype' => 
-    array (
-      1 => '期货',
-      2 => '现货',
-    ),
-    'formtype' => 
-    array (
-      1 => '男款',
-      2 => '女款',
-      3 => '男/女款',
-    ),
-    'orderproperty' => 
-    array (
-      1 => '自采',
-      2 => '代销',
-    ),
-    'pickingtype' => 
-    array (
-      1 => '自提',
-      2 => '快递',
-      3 => '店铺直发',
-    ),
-    'expresspaidtype' => 
-    array (
-      1 => '预付',
-      2 => '到付',
-      3 => '第三方付费',
-    ),
-    'transporttype' => 
-    array (
-      1 => 'BY AIR',
-      2 => '快递',
-    ),
-    'paytype' => 
-    array (
-      1 => 'T/T',
-      2 => 'L/C',
-    ),
-    'salestatus' => 
-    array (
-      0 => '预售',
-      1 => '已售',
-      2 => '作废',
-    ),
-    'ordertatus' => 
-    array (
-      1 => '保存',
-      2 => '待审核',
-      3 => '审核',
-      4 => '作废',
-    ),
-    'requisitiontype' => 
-    array (
-      1 => '统一调出',
-      2 => '统一调入',
-      3 => '一对一调拨',
-    ),
-    'requisitionstatus' => 
-    array (
-      1 => '出库拒绝',
-      2 => '出库待确认',
-      3 => '在途',
-      4 => '入库拒绝',
-      5 => '完成',
-    ),
-    'warehouserole' => 
-    array (
-      1 => '管理员',
-      2 => '销售',
-    ),
-    'suppliertype' => 
-    array (
-      0 => '供货商',
-      1 => '物流',
-      2 => '客户',
-      3 => '其他',
-    ),
-    'paymenttype' => 
-    array (
-      1 => '定金',
-      2 => '货款',
-    ),
-    'pricetype' => 
-    array (
-      1 => '零售价',
-      2 => '批发价',
-      3 => '电商价',
-      4 => '期货价',
-      5 => '折扣价',
-      6 => '清仓价',
-    ),
-    'pricefilter' => 
-    array (
-      1 => '个位取整',
-      2 => '十位取整',
-      3 => '不取整',
-    ),
-    'defectivelevel' => 
-    array (
-      0 => '合格',
-      1 => '残次品',
-    ),
+    'template' =>
+        [
+            'uniqueness' => '%s不能重复',
+            'required' => '%s不能为空',
+            'numericality' => '%s必须是数字',
+            'invalid' => '%s不合法',
+            'digit' => '%s必须是整数',
+            'hasmany-foreign-message' => '正在使用，不能删除，因为有%s正在使用它',
+            'belongsto-foreign-message' => '%s上不存在',
+            'notexist' => '%s不存在',
+        ],
+    'db' =>
+        [
+            'add-failed' => '%s添加失败',
+            'save-failed' => '%s保存失败',
+            'edit-failed' => '%s编辑失败',
+            'delete-failed' => '%s删除失败',
+            'add-success' => '%s添加成功',
+            'save-success' => '%s保存成功',
+            'edit-success' => '%s编辑成功',
+            'delete-success' => '%s删除成功',
+        ],
+    'list' =>
+        [
+            'gender' =>
+                [
+                    '1' => '男士',
+                    '2' => '女士',
+                    '3' => '中性',
+                    '4' => '男童',
+                    '5' => '女童',
+                    '6' => '儿童',
+                ],
+            'gender2' =>
+                [
+                    1 => '男',
+                    0 => '女',
+                ],
+            'season' =>
+                [
+                    1 => '春季',
+                    2 => '夏季',
+                    3 => '秋季',
+                    4 => '冬季',
+                    5 => '四季',
+                ],
+            'bussinesstype' =>
+                [
+                    1 => '期货',
+                    2 => '现货',
+                ],
+            'formtype' =>
+                [
+                    1 => '男款',
+                    2 => '女款',
+                    3 => '男/女款',
+                ],
+            'orderproperty' =>
+                [
+                    1 => '自采',
+                    2 => '代销',
+                ],
+            'pickingtype' =>
+                [
+                    1 => '自提',
+                    2 => '快递',
+                    3 => '店铺直发',
+                ],
+            'expresspaidtype' =>
+                [
+                    1 => '预付',
+                    2 => '到付',
+                    3 => '第三方付费',
+                ],
+            'transporttype' =>
+                [
+                    1 => 'BY AIR',
+                    2 => '快递',
+                ],
+            'paytype' =>
+                [
+                    1 => 'T/T',
+                    2 => 'L/C',
+                ],
+            'salestatus' =>
+                [
+                    0 => '预售',
+                    1 => '已售',
+                    2 => '作废',
+                ],
+            'ordertatus' =>
+                [
+                    1 => '保存',
+                    2 => '待审核',
+                    3 => '审核',
+                    4 => '作废',
+                ],
+            'requisitiontype' =>
+                [
+                    1 => '统一调出',
+                    2 => '统一调入',
+                    3 => '一对一调拨',
+                ],
+            'requisitionstatus' =>
+                [
+                    1 => '出库拒绝',
+                    2 => '出库待确认',
+                    3 => '在途',
+                    4 => '入库拒绝',
+                    5 => '完成',
+                ],
+            'warehouserole' =>
+                [
+                    1 => '管理员',
+                    2 => '销售',
+                ],
+            'suppliertype' =>
+                [
+                    0 => '供货商',
+                    1 => '物流',
+                    2 => '客户',
+                    3 => '其他',
+                ],
+            'paymenttype' =>
+                [
+                    1 => '定金',
+                    2 => '货款',
+                ],
+            'pricetype' =>
+                [
+                    1 => '零售价',
+                    2 => '批发价',
+                    3 => '电商价',
+                    4 => '期货价',
+                    5 => '折扣价',
+                    6 => '清仓价',
+                ],
+            'pricefilter' =>
+                [
+                    1 => '个位取整',
+                    2 => '十位取整',
+                    3 => '不取整',
+                ],
+            'defectivelevel' =>
+                [
+                    0 => '合格',
+                    1 => '残次品',
+                ],
 
-    "customtype" => [
-      "0" => "个人",
-      "1" => "企业"
-    ],
-  ),
-);
+            "customtype" => [
+                "0" => "个人",
+                "1" => "企业",
+            ],
+        ],
+];
