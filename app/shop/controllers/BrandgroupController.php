@@ -46,7 +46,6 @@ class BrandgroupController extends AdminController
         }
     }
 
-
     /**
      * 获取当前主分类产品列表
      */
@@ -186,13 +185,39 @@ class BrandgroupController extends AdminController
 
 
     /**
-     * 获取主品牌列表
+     * 获取前5个主品牌列表
      * @return array
      */
     public function catesAction()
     {
         // 逻辑
+        // 判断是否超出了6个，如果超过了6个，那么取前5个，最后一个放more
         $list = TbBrandgroup::find();
+        if (count($list) > 6) {
+            $list = TbBrandgroup::find([
+                'limit' => '5',
+            ]);
+        }
+
+        // 语言字段重新设计
+        $list_array = $list->toArray();
+        foreach ($list_array as $k => $item) {
+            $list_array[$k]['name'] = $item[$this->getlangfield('name')];
+        }
+        // 返回
+        return $list_array;
+    }
+
+    /**
+     * 获取所有的主品牌列表
+     * @return array
+     */
+    public function allfirstcatesAction()
+    {
+        // 逻辑
+        // 判断是否超出了6个，如果超过了6个，那么取前5个，最后一个放more
+        $list = TbBrandgroup::find();
+
         // 语言字段重新设计
         $list_array = $list->toArray();
         foreach ($list_array as $k => $item) {
