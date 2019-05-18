@@ -101,7 +101,6 @@ class OrderController extends AdminController
             // 遍历
             // 多语言字段
             $name = $this->getlangfield('name');
-            $content = $this->getlangfield('content');
             // 并取出当前尺码的实际库存
             foreach ($_POST['data'] as $k => $item) {
                 // 产品模型
@@ -138,7 +137,7 @@ class OrderController extends AdminController
                 // 把实际库存数量放回原来的数组
                 $_POST['data'][$k]['stocknumber'] = $stocknumber;
                 // 尺码名称也放进去
-                $_POST['data'][$k]['size_name'] = $sizecontentModel->$content;
+                $_POST['data'][$k]['size_name'] = $sizecontentModel->name;
                 // 颜色也放进去
                 $_POST['data'][$k]['color_id'] = $productModel->color;
                 // 颜色描述默认为空
@@ -161,6 +160,8 @@ class OrderController extends AdminController
                 $_POST['data'][$k]['color_name'] = $color_name;
                 // 产品模型也放进去
                 $_POST['data'][$k]['product'] = $productModel->toArray();
+                // 产品价格
+                $_POST['data'][$k]['product']['realprice'] = $productModel->product->wordprice;
             }
 
 
