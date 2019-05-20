@@ -10,7 +10,7 @@ class TbConfirmorder extends BaseModel
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('td_confirmorder');
+        $this->setSource('tb_confirmorder');
         
         // 订单-订单详情，一对多
         $this->hasMany(

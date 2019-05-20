@@ -43,16 +43,23 @@ class OrderbrandController extends AdminController {
             if(!$order) {
                 throw new \Exception("/1001/品牌订单不存在/");
             }
+            else {
+                if($order->status!=1) {
+                    throw new \Exception("/1001/品牌订单不允许修改/");
+                }
+            }
 
             $order->supplierid = $form['supplierid'];
             $order->finalsupplierid = $form['finalsupplierid'];
             $order->ageseason = $form['ageseason'];
             $order->seasontype = $form['seasontype'];
             $order->foreignorderno = $form['foreignorderno'];
-            $order->discount = $form['discount'];
+            //$order->discount = $form['discount'];
             $order->taxrebate = $form['taxrebate'];
             $order->memo = $form['memo'];
             $order->brandid = $form['brandid'];
+            $order->discountbrand = $form['discountbrand'];
+            $order->bussinesstype = $form['bussinesstype'];
 
             // 判断是否成功
             if (!$order->save()) {
@@ -69,14 +76,18 @@ class OrderbrandController extends AdminController {
             $order->ageseason = $form['ageseason'];
             $order->seasontype = $form['seasontype'];
             $order->foreignorderno = $form['foreignorderno'];
-            $order->discount = $form['discount'];
+            //$order->discount = $form['discount'];
             $order->taxrebate = $form['taxrebate'];
             $order->memo = $form['memo'];
             $order->brandid = $form['brandid'];
+            $order->discountbrand = $form['discountbrand'];
+            $order->bussinesstype = $form['bussinesstype'];
+            
             // 添加制单人及制单日期
             $order->makestaff = $this->currentUser;
             $order->maketime = date('Y-m-d H:i:s');
             $order->companyid = $this->companyid;
+            $order->status = 1;
             // 生成订单号
             $order->orderno = sprintf(
                 "B%s%s%s",
@@ -144,6 +155,88 @@ class OrderbrandController extends AdminController {
         // 判断订单是否存在
         if ($order!=false) {
             echo $this->success($order->getOrderDetail());
+        }
+    }
+
+    function confirmAction() {
+        // 判断是否有params参数提交过来
+        $params = $this->request->get('params');
+        if (!$params) {
+            throw new \Exception("/1001/参数错误/");
+        }
+
+        // 转换成数组
+        $submitData = json_decode($params, true);
+
+        // 判断是否有订单号，分别进行
+        $orderbrandid = $submitData['form']['id'];
+        // 采用事务处理
+        $this->db->begin();
+        $form = $submitData['form'];
+
+        // 判断逻辑
+        if ($orderbrandid) {
+            $orderbrand = TbOrderBrand::findFirst(
+                sprintf("id=%d and companyid=%d", $orderbrandid, $this->companyid)
+            );
+
+            if(!$orderbrand) {
+                throw new \Exception("/1001/订单不存在/");
+            }
+            $orderbrand->discountbrand = $form['discountbrand'];
+            $orderbrand->confirmstaff = $this->currentUser;
+            $orderbrand->confirmdate = date('Y-m-d');
+            $orderbrand->status = 2;
+
+            // 判断是否成功
+            if(!$orderbrand->save()) {
+                $this->db->rollback();
+
+                // 验证类错误给出提示
+                return $this->error($orderbrand);
+            }
+
+            $detail_id_array = [];
+            foreach ($submitData['list'] as $k => $item) {
+                // 使用模型更新
+                $detail = TbOrderdetails::findFirst(
+                    sprintf("companyid=%d and orderid=%d and productid=%d and sizecontentid=%d", $this->companyid, $item['orderid'], $item['productid'], $item['sizecontentid'])
+                );
+                
+                if($detail!=false && $detail->orderbrandid==$orderbrand->id) {
+                    $detail->confirm_number = $item['number'];
+                    $detail->discountbrand = $item['discountbrand'];
+                    $detail->status = 1;
+                    if($detail->update()==false) {
+                        $this->db->rollback();
+                        throw new Exception("/1001/订单详情确认数量失败/");
+                    }
+                }   
+                else {
+                    $this->db->rollback();
+                    throw new \Exception("/1001/订单详情不存在/");
+                }   
+            }
+
+            //清除不存在的详情id
+            if(count($detail_id_array)>0) {
+                $details = TbOrderdetails::find(
+                    sprintf("orderbrandid=%d and number=0", $orderbrand->id)
+                );
+                foreach($details as $detail) {
+                    $detail->status = 1;
+                    if($detail->update()==false) {
+                        $this->db->rollback();
+                        throw new \Exception("/1002/订单详情确认数量失败/");                    
+                    }
+                }
+            }
+
+            // 提交事务
+            $this->db->commit();
+
+            // 最终成功返回，原来的数据还要保留，再加上订单详情之中每个商品的名称也要放进去
+            echo $this->success($orderbrand->toArray());
         }
     }
 }

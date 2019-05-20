@@ -71,6 +71,9 @@ class OrderController extends BaseController
             $order->memo = $form['memo'];
             $order->orderdate = $form['orderdate'];
             $order->status = $form['status'];
+            $order->total = $form['total'];
+            $order->genders = $form['genders'];
+            $order->brands = $form['brands'];
 
             // 判断是否成功
             if (!$order->save()) {
@@ -98,6 +101,10 @@ class OrderController extends BaseController
             $order->memo = $form['memo'];
             $order->orderdate = $form['orderdate'];
             $order->status = $form['status'];
+            $order->total = $form['total'];
+            $order->genders = $form['genders'];
+            $order->brands = $form['brands'];
+
             // 添加制单人及制单日期
             $order->makestaff = $this->currentUser;
             $order->maketime = date('Y-m-d H:i:s');
