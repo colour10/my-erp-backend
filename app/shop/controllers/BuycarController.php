@@ -279,6 +279,9 @@ class BuycarController extends AdminController
                     }
                 }
 
+                // 获取当前productid实际价格
+                $realprice = $productModel->product->wordprice;
+
 
                 // 因为是批量添加，所以需要循环检查，而且必须开启事务处理机制
                 // 采用事务处理
@@ -292,19 +295,17 @@ class BuycarController extends AdminController
 
                     // 设置当前语言字段
                     $name = $this->getlangfield('name');
-                    $content = $this->getlangfield('content');
-
 
                     // 如果无此商品，则把该商品添加到新购物车
                     if (!$cars) {
                         $model = new TbBuycar;
                         $model->product_id = $post['product_id'];
                         $model->product_name = $productModel->productname;
-                        $model->price = $productModel->realprice;
+                        $model->price = $realprice;
                         $model->picture = $productModel->picture;
                         $model->picture2 = $productModel->picture2;
                         $model->number = Intval($sizecontentnumber);
-                        $model->total_price = round($productModel->realprice * Intval($sizecontentnumber), 2);
+                        $model->total_price = round($realprice * Intval($sizecontentnumber), 2);
 
                         // 写入color_id
                         $model->color_id = $productModel->color;
@@ -328,7 +329,7 @@ class BuycarController extends AdminController
 
                         $model->color_name = $color_name;
                         $model->size_id = $sizecontentid;
-                        $model->size_name = TbSizecontent::findFirstById($sizecontentid)->$content;
+                        $model->size_name = TbSizecontent::findFirstById($sizecontentid)->name;
                         $model->member_id = $rs['id'];
                         $res = $model->save();
                         if (!$res) {
@@ -339,7 +340,7 @@ class BuycarController extends AdminController
                         // 有则更新数量
                     } else {
                         $cars->number = $cars->number + Intval($sizecontentnumber);
-                        $cars->total_price = sprintf($cars->total_price + sprintf("%.2f", $productModel->realprice * Intval($sizecontentnumber)));
+                        $cars->total_price = sprintf($cars->total_price + sprintf("%.2f", $realprice * Intval($sizecontentnumber)));
                         $res = $cars->save();
                         if (!$res) {
                             // 回滚

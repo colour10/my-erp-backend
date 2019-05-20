@@ -46,7 +46,6 @@ class BrandgroupController extends AdminController
         }
     }
 
-
     /**
      * 获取当前主分类产品列表
      */
@@ -72,6 +71,7 @@ class BrandgroupController extends AdminController
         $currentPage = $this->request->getQuery("page", "int", 1);
         // 取出数据
         $brandGroup = TbBrandgroup::findFirstById($id);
+
         // 定义一个变量用来存储结果
         $brandGroup_ids = [];
         // 寻找下面的子品类id
@@ -89,10 +89,12 @@ class BrandgroupController extends AdminController
         ]);
 
         // 加工数据
-        // 尺码多语言字段
-        $contentname = $this->getlangfield('content');
+        // 名称多语言字段
+        $name = $this->getlangfield('name');
+
         // 在取出库存之前，首先获取销售端口
         $company = TbCompany::findFirstById($member['companyid']);
+        // 获取销售端口
         $saleport = $company->shopSaleport;
         $array = Util::recordListColumn($saleport->saleportWarehouses, 'warehouseid');
         if (count($array) == 0) {
@@ -106,8 +108,11 @@ class BrandgroupController extends AdminController
             $productModel = TbProduct::findFirstById($item->productid);
             if ($productModel) {
                 $wordcode = $productModel->wordcode_1 . $productModel->wordcode_2 . $productModel->wordcode_3 . $productModel->wordcode_4;
+                // 价格
+                $realprice = $productModel->wordprice;
             } else {
                 $wordcode = '';
+                $realprice = 0;
             }
             if ($item->sizetopid) {
                 $sizecontents = TbProductstock::sum([
@@ -125,6 +130,8 @@ class BrandgroupController extends AdminController
             $products[$k]['sizecontents'] = $sizecontents;
             // 国际码赋值
             $products[$k]['wordcode'] = $wordcode;
+            // 价格
+            $products[$k]['realprice'] = $realprice;
         }
 
         // 重新遍历，把尺码名称填写进去
@@ -135,7 +142,7 @@ class BrandgroupController extends AdminController
             foreach ($product['sizecontents'] as $key => $item) {
                 $TbSizecontentModel = TbSizecontent::findFirstById($item['sizecontentid']);
                 if ($TbSizecontentModel) {
-                    $sizecontentname = $TbSizecontentModel->$contentname;
+                    $sizecontentname = $TbSizecontentModel->name;
                 } else {
                     $sizecontentname = '';
                 }
@@ -171,7 +178,6 @@ class BrandgroupController extends AdminController
         $page = $paginator->getPaginate();
 
         // 定义面包屑导航
-        $name = $this->getlangfield('name');
         $breadcrumb = '<li><a href="/">首页</a></li><li class="active">' . $brandGroup->$name . '</li>';
 
         // 推送给模板
@@ -186,13 +192,39 @@ class BrandgroupController extends AdminController
 
 
     /**
-     * 获取主品牌列表
+     * 获取前5个主品牌列表
      * @return array
      */
     public function catesAction()
     {
         // 逻辑
+        // 判断是否超出了6个，如果超过了6个，那么取前5个，最后一个放more
         $list = TbBrandgroup::find();
+        if (count($list) > 6) {
+            $list = TbBrandgroup::find([
+                'limit' => '5',
+            ]);
+        }
+
+        // 语言字段重新设计
+        $list_array = $list->toArray();
+        foreach ($list_array as $k => $item) {
+            $list_array[$k]['name'] = $item[$this->getlangfield('name')];
+        }
+        // 返回
+        return $list_array;
+    }
+
+    /**
+     * 获取所有的主品牌列表
+     * @return array
+     */
+    public function allfirstcatesAction()
+    {
+        // 逻辑
+        // 判断是否超出了6个，如果超过了6个，那么取前5个，最后一个放more
+        $list = TbBrandgroup::find();
+
         // 语言字段重新设计
         $list_array = $list->toArray();
         foreach ($list_array as $k => $item) {

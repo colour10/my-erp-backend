@@ -2,6 +2,7 @@
 
 namespace Multiple\Shop\Controllers;
 
+use Asa\Erp\TbProduct;
 use Asa\Erp\TbProductSearch;
 use Phalcon\Paginator\Adapter\Model as PaginatorModel;
 
@@ -27,10 +28,19 @@ class IndexController extends AdminController
         }
 
         // 最新促销，需要从当前域名绑定的公司提取资料
-        $productlist = TbProductSearch::find("companyid={$this->currentCompany}")->toArray();
+        if (!$productlist = TbProductSearch::find("companyid={$this->currentCompany}")) {
+            $productlist = [];
+        }
+
+        //  还缺少价格，现在进行补充，暂时用product表中的国际零售价代替（需要修改）
+        $productlist_array = $productlist->toArray();
+        foreach ($productlist as $k => $product) {
+            $productlist_array[$k]['realprice'] = $product->product->wordprice;
+        }
+
         // 分配到模板
         $this->view->setVars([
-            'productlist' => $productlist,
+            'productlist' => $productlist_array,
         ]);
     }
 
@@ -55,16 +65,16 @@ class IndexController extends AdminController
 
         // 取出结果
         $productlist = TbProductSearch::find([
-            'conditions' => 'productname like :keyword: AND companyid = '.$this->currentCompany,
-            'bind' => ['keyword' => '%'.$keyword.'%'],
+            'conditions' => 'productname like :keyword: AND companyid = ' . $this->currentCompany,
+            'bind' => ['keyword' => '%' . $keyword . '%'],
         ]);
 
         // 创建分页对象
         $paginator = new PaginatorModel(
             [
-                "data"  => $productlist,
+                "data" => $productlist,
                 "limit" => 10,
-                "page"  => $currentPage,
+                "page" => $currentPage,
             ]
         );
 

@@ -4,6 +4,7 @@ namespace Multiple\Shop\Controllers;
 
 use Asa\Erp\TbBrandgroup;
 use Asa\Erp\TbBrandgroupchild;
+use Asa\Erp\TbProduct;
 use Asa\Erp\TbSizecontent;
 use Asa\Erp\TbProductSearch;
 use Asa\Erp\TbColortemplate;
@@ -13,8 +14,10 @@ use Asa\Erp\TbColortemplate;
  * Class ProductController
  * @package Multiple\Shop\Controllers
  */
-class ProductController extends AdminController {
-    public function initialize() {
+class ProductController extends AdminController
+{
+    public function initialize()
+    {
         $this->setModelName('Asa\\Erp\\TbProductSearch');
     }
 
@@ -40,22 +43,24 @@ class ProductController extends AdminController {
         // 赋值
         $id = $params[0];
         // 取出数据
-        $product = TbProductSearch::findFirst("productid=$id AND companyid=".$this->currentCompany);
-
         // 如果不存在，就跳转到404
-        if (!$product) {
+        if (!$product = TbProductSearch::findFirst("productid=$id AND companyid=" . $this->currentCompany)) {
             return $this->dispatcher->forward([
                 'controller' => 'error',
                 'action' => 'error404',
             ]);
         }
+
+        // 商品价格
+        $realprice = $this->getRealPrice($id);
+
         // 尺码组颜色需要修改为js调用方式，状态：待修改
         // 尺码组加入多语言字段content
         $name = $this->getlangfield('name');
         $content = $this->getlangfield('content');
         // 尺码组
         if ($product->sizetopid) {
-            $sizecontents_arr = TbSizecontent::find("topid=".$product->sizetopid)->toArray();
+            $sizecontents_arr = TbSizecontent::find("topid=" . $product->sizetopid)->toArray();
             foreach ($sizecontents_arr as $k => $sizecontent) {
                 $sizecontents_arr[$k]['content'] = $sizecontent[$content];
             }
@@ -79,18 +84,36 @@ class ProductController extends AdminController {
         $brandgroup = TbBrandgroup::findFirstById($product->brandgroupid);
         $brandgroupchild = TbBrandgroupchild::findFirstById($product->childbrand);
         $name = $this->getlangfield('name');
-        $breadcrumb = '<li><a href="/">首页</a></li><li><a href="/brandgroup/detail/'.$product->brandgroupid.'">'.$brandgroup->$name.'</a></li><li><a href="/childproductgroup/detail/'.$product->childbrand.'">'.$brandgroupchild->$name.'</a></li>';
+        $breadcrumb = '<li><a href="/">首页</a></li><li><a href="/brandgroup/detail/' . $product->brandgroupid . '">' . $brandgroup->$name . '</a></li><li><a href="/childproductgroup/detail/' . $product->childbrand . '">' . $brandgroupchild->$name . '</a></li>';
 
         // 推送给模板
         $this->view->setVars([
             'product' => $product,
             'sizecontents' => $sizecontents_arr,
             'colors' => $colors_arr,
-            'price' => $product->price,
-            'realprice' => $product->realprice,
+            // 'price' => $product->price,
+            'realprice' => $realprice,
             'id' => $id,
             'breadcrumb' => $breadcrumb,
             'number' => $product->number,
         ]);
+    }
+
+
+    /**
+     * 获取当前productid的价格
+     * @param $productid
+     * @return string
+     */
+    public function getRealPrice($productid)
+    {
+        // 逻辑
+        if (!$productModel = TbProduct::findFirstById($productid)) {
+            $realprice = '0';
+        } else {
+            $realprice = $productModel->wordprice;
+        }
+        // 返回价格
+        return $realprice;
     }
 }

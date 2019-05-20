@@ -23,7 +23,7 @@ class Module implements ModuleDefinitionInterface
 
         $loader->registerNamespaces(
             [
-                "Multiple\\Shop\\Controllers" => "../app/shop/controllers/"
+                "Multiple\\Shop\\Controllers" => "../app/shop/controllers/",
             ]
         );
 
@@ -77,10 +77,16 @@ class Module implements ModuleDefinitionInterface
             return new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
         });
 
-        // 取出所有的主分类
+        // 取出前5个主分类
         $brandGroup = new BrandgroupController();
         $di->setShared('cates', function () use ($brandGroup) {
             $cates = $brandGroup->catesAction();
+            return $cates;
+        });
+
+        // 取出所有的主分类
+        $di->setShared('allfirstcates', function () use ($brandGroup) {
+            $cates = $brandGroup->allfirstcatesAction();
             return $cates;
         });
 

@@ -9,9 +9,11 @@ use Asa\Erp\TbCompany;
  * Class CompanyController
  * @package Multiple\Shop\Controllers
  */
-class CompanyController extends AdminController {
-    public function initialize() {
-	    $this->setModelName('Asa\\Erp\\TbCompany');
+class CompanyController extends AdminController
+{
+    public function initialize()
+    {
+        $this->setModelName('Asa\\Erp\\TbCompany');
     }
 
     /**
@@ -30,8 +32,7 @@ class CompanyController extends AdminController {
             $company = TbCompany::findFirstById($companyid);
             // 如果需要判断域名是否已经绑定的话，需要先看看company模型当中的host字段是否为空，如果为空，则默认用主shop域名访问；否则就用里面写好的域名，但是还要在index.php动态添加新的跳转规则，可能会破坏之前的完整性，待商榷...
             // 然后返回结果
-            $name = $this->getlangfield('name');
-            return ['company' => $company, 'webtitle' => $company->$name];
+            return ['company' => $company, 'webtitle' => $company->name];
         }
     }
 }

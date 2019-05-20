@@ -95,11 +95,31 @@
         <!-- BEGIN NAVIGATION -->
         <div class="header-navigation">
             <ul>
-
                 <?php foreach ($this->cates as $cate) { ?>
                     <li>
-                        <a href="/brandgroup/detail/<?php echo $cate['id']; ?>"><?php echo $cate['name_cn']; ?></a>
+                        <a href="/brandgroup/detail/<?php echo $cate['id']; ?>"><?php echo $cate['name']; ?></a>
                     </li>
+                <?php } ?>
+
+                <?php if (count($this->cates) == '5') { ?>
+                    <!--更多分类 Start-->
+                    <li class="dropdown active">
+                        <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="javascript:;">
+                            >>更多
+
+                        </a>
+
+
+                        <ul class="dropdown-menu pre-scrollable">
+                            <?php foreach ($this->allfirstcates as $cate) { ?>
+                                <li>
+                                    <a href="/brandgroup/detail/<?php echo $cate['id']; ?>"><?php echo $cate['name']; ?></a>
+                                </li>
+                            <?php } ?>
+                        </ul>
+
+                    </li>
+                    <!--更多分类 End-->
                 <?php } ?>
 
                 <!-- BEGIN TOP SEARCH -->
