@@ -5,6 +5,7 @@ use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
 use Asa\Erp\TbOrderBrand;
 use Asa\Erp\TbOrderdetails;
+use Asa\Erp\Util;
 
 /**
  * 品牌订单
@@ -237,6 +238,26 @@ class OrderbrandController extends AdminController {
 
             // 最终成功返回，原来的数据还要保留，再加上订单详情之中每个商品的名称也要放进去
             echo $this->success($orderbrand->toArray());
+        }
+    }
+
+    function searchdetailAction() {
+        //首先检索出来确认订单id
+        $orders = TbOrderBrand::find(
+            sprintf("companyid=%d and supplierid=%d and ageseason=%d and status=2", $this->companyid, $_POST['supplierid'], $_POST['ageseason'])
+        );
+
+        $array = Util::recordListColumn($orders, 'id');
+        //print_r($array);
+        if(count($array)>0) {
+            $details = TbOrderdetails::find(
+                sprintf("orderbrandid in(%s)", implode(",", $array))
+            );
+
+            return $this->success( $details->toArray() );
+        }
+        else {
+            return $this->success( [] );
         }
     }
 }
