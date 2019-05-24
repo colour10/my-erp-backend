@@ -170,6 +170,11 @@ class OrderController extends BaseController
                 sprintf("orderid=%d and id not in(%s)", $order->id, implode(",", $detail_id_array))
             );
             foreach($details as $detail) {
+                if($detail->orderbrandid>0) {
+                    //已经确认过的订单明细不能删除
+                    $this->db->rollback();
+                    throw new \Exception("/1001/不能删除已经加入外部订单的订单明细/");
+                }
                 $detail->delete();
             }
         }
@@ -205,13 +210,37 @@ class OrderController extends BaseController
     {
         // 根据orderid查询出当前订单以及订单详情的所有信息
         $order = TbOrder::findFirst(
-            sprintf("id=%d and companyid=%d", $_GET["id"], $this->companyid)
+            sprintf("id=%d and companyid=%d", $_POST["id"], $this->companyid)
         );
         // 判断订单是否存在
-        if ($order!=false && (int)$order->status==1) {
-            $this->doTableAction($order,"delete");
+        if ($order!=false) {
+            $this->db->begin();
+            $orderdetails = $order->orderdetails;
+            foreach ($orderdetails as $detail) {
+                if($detail->orderbrandid>0) {
+                    //已经加入外部订单的订单明细不能删除
+                    $this->db->rollback();
+                    throw new \Exception("/1001/不能删除已经加入外部订单的订单明细/");
+                }
+
+                if($detail->delete()==false) {
+                    $this->db->rollback();
+                    throw new \Exception("/1001/删除订单明细失败。/");
+                }
+            }
+
+            if($order->delete()==false) {
+                $this->db->rollback();
+                    throw new \Exception("/1001/订单不能删除/");
+            }
+
+            $this->db->commit();
+
+            return $this->success();
         }
         else {
+            throw new \Exception("/1001/订单不存在/");
+            
         }
     }
 

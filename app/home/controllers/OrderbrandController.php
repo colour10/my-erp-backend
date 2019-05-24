@@ -260,4 +260,45 @@ class OrderbrandController extends AdminController {
             return $this->success( [] );
         }
     }
+
+    public function deleteAction()
+    {
+        // 根据orderid查询出当前订单以及订单详情的所有信息
+        $order = TbOrderBrand::findFirst(
+            sprintf("id=%d and companyid=%d", $_POST["id"], $this->companyid)
+        );
+        // 判断订单是否存在
+        if ($order!=false) {
+            $this->db->begin();
+            $orderdetails = $order->orderdetails;
+            foreach ($orderdetails as $detail) {
+                if($detail->shipping_number>0) {
+                    //已经发货的订单明细不能删除
+                    $this->db->rollback();
+                    throw new \Exception("/1001/不能删除已经发过货的外部订单明细/");
+                }
+
+                $detail->confirm_number = 0;
+                $detail->orderbrandid = 0;
+                $detail->discountbrand = 0;
+                if($detail->update()==false) {
+                    $this->db->rollback();
+                    throw new \Exception("/1001/删除外部订单明细失败。/");
+                }
+            }
+
+            if($order->delete()==false) {
+                $this->db->rollback();
+                    throw new \Exception("/1001/外部订单不能删除/");
+            }
+
+            $this->db->commit();
+
+            return $this->success();
+        }
+        else {
+            throw new \Exception("/1001/订单不存在/");
+            
+        }
+    }
 }
