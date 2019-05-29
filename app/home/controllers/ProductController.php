@@ -91,18 +91,19 @@ class ProductController extends CadminController {
         $params = json_decode($_POST["params"], true);
         //print_r($params);
 
-        $products = [];
-        $colors = [];
-        $keys = ["", "","","","","","","","brandid", "brandgroupid", "childbrand", "productsize", "countries", "productparst", "laststoragedate", "series", "ulnarinch", "factoryprice", "factorypricecurrency", "nationalpricecurrency", "nationalprice", "memo", "wordprice", "wordpricecurrency", "gender", "spring", "summer", "fall", "winter", "ageseason", "sizetopid", "sizecontentids", "productmemoids", "nationalfactorypricecurrency", "nationalfactoryprice","saletypeid"];
-
-        
         $product = TbProduct::findFirstById($params['form']['id']);
         if($product!=false && $product->companyid==$this->companyid) {
             $this->db->begin();
             //更新同款多色
-            $products = TbProduct::find(
-                sprintf("product_group='%s'", $product->product_group)
-            );
+            if($product->product_group=="") {
+                $products =[$product];
+            }
+            else {
+                $products = TbProduct::find(
+                    sprintf("product_group='%s'", $product->product_group)
+                );
+            }
+            
 
             //生成绑定的颜色组的字符串
             $data = [];
@@ -156,16 +157,18 @@ class ProductController extends CadminController {
                 $data[] = $row->id.",".$row->brandcolor;
             }
 
-            
-            $product_group = implode('|', $data);
+            if(count($products)>1) {
+                $product_group = implode('|', $data);
 
-            //逐个更新，绑定关系
-            foreach($products as $row) {
-                $row->product_group = $product_group;
-                if($row->update()==false) {
-                    throw new \Exception("#1002#更新product_group字段失败#");
+                //逐个更新，绑定关系
+                foreach($products as $row) {
+                    $row->product_group = $product_group;
+                    if($row->update()==false) {
+                        throw new \Exception("#1002#更新product_group字段失败#");
+                    }
                 }
             }
+            
 
             $this->db->commit();
             return $this->success();
@@ -286,14 +289,38 @@ class ProductController extends CadminController {
                     if($row['id']=='') {                        
                         $product_else = $product->cloneByColor($row);
                     }
-                    else if($row['id']==$product->id) {
-                        $product_else = $product;
-                    }
                     else {
                         $product_else = TbProduct::findFirstById($row['id']);
                         if($product_else==false) {
                             throw new \Exception("#1002#绑定的商品不存在#");
                         }
+
+                        $product_else->brandid = $product->brandid;
+                        $product_else->brandgroupid = $product->brandgroupid;
+                        $product_else->childbrand = $product->childbrand;
+                        $product_else->countries = $product->countries;
+                        $product_else->series = $product->series;
+                        $product_else->ulnarinch = $product->ulnarinch;
+                        $product_else->factoryprice = $product->factoryprice;
+                        $product_else->factorypricecurrency = $product->factorypricecurrency;
+                        $product_else->nationalpricecurrency = $product->nationalpricecurrency;
+                        $product_else->nationalprice = $product->nationalprice;
+                        $product_else->memo = $product->memo;
+                        $product_else->wordprice = $product->wordprice;
+                        $product_else->wordpricecurrency = $product->wordpricecurrency;
+                        $product_else->gender = $product->gender;
+                        $product_else->spring = $product->spring;
+                        $product_else->summer = $product->summer;
+                        $product_else->fall = $product->fall;
+                        $product_else->winter = $product->winter;
+                        $product_else->ageseason = $product->ageseason;
+                        $product_else->sizetopid = $product->sizetopid;
+                        $product_else->sizecontentids = $product->sizecontentids;
+                        $product_else->productmemoids = $product->productmemoids;
+                        $product_else->nationalfactorypricecurrency = $product->nationalfactorypricecurrency;
+                        $product_else->nationalfactoryprice = $product->nationalfactoryprice;
+                        $product_else->saletypeid = $product->saletypeid;
+                        
                     }
 
                     $product_else->brandcolor = $row['brandcolor'];
@@ -304,24 +331,32 @@ class ProductController extends CadminController {
                     $product_else->colorname = $row['colorname'];
                     $product_else->picture = $row['picture'];
                     $product_else->picture2 = $row['picture2'];
-                    if($product_else->update()==false) {
-                        throw new \Exception("/1002/更新失败/");
-                    }
 
                     $products[] = $product_else;
                     $data[] = $product_else->id.",".$product_else->brandcolor;
                 }
 
-                $product_group = implode('|', $data);
+                if(count($data)==1) {
+                    $product_group = "";
+                }
+                else {
+                    $product_group = implode('|', $data);
+                }
+                
                 //逐个更新，绑定关系
                 foreach($products as $row) {
                     $row->product_group = $product_group;
+
                     if($row->update()==false) {
                         throw new \Exception("#1002#更新product_group字段失败#");
                     }
+
+                    $row->syncMaterial($product);
                 }
 
                 $this->db->commit();
+
+                $product = TbProduct::findFirstById($form['productid']);
                 return $this->success(["list"=>$product->getColorGroupList(), "form"=>$product->toArray()]);
             }
             catch(\Exception $e) {

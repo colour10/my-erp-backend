@@ -66,6 +66,18 @@ class TbProduct extends BaseCompanyModel
                 ],
             ]
         );
+
+        $this->hasMany(
+            "id",
+            "\Asa\Erp\TbProductMaterial",
+            "productid",
+            [
+                'alias' => 'productMaterial',
+                'foreignKey' => [
+                    // 关联字段存在性验证
+                    'action' => Relation::ACTION_CASCADE                ],
+            ]
+        );
     }
 
     public static function getInstance($productid) {
@@ -111,9 +123,10 @@ class TbProduct extends BaseCompanyModel
      * @return [type] [description]
      */
     function cancelBindColor() {
-        $db = $this->getDI()->get('db');
-
-        $db->begin();
+        if($this->product_group=="") {
+            return ;
+        }
+        
         $products = TbProduct::find(
             sprintf("product_group='%s'", addslashes($this->product_group))
         );
@@ -124,7 +137,6 @@ class TbProduct extends BaseCompanyModel
                 throw new Exception("#1002#解绑定同款不同色关系失败#");
             }
         }
-        return $db->commit();
     }
 
     /**
@@ -188,6 +200,26 @@ class TbProduct extends BaseCompanyModel
         }
 
         return $product;
+    }
+
+    function syncMaterial($product) {
+        foreach($this->productMaterial as $row) {
+            if($row->delete()==false) {
+                throw new \Exception("/1001/更新商品材质信息失败/");
+            }
+        }
+
+        $materials = $product->productMaterial;
+        foreach($materials as $material) {
+            $productMaterial = new TbProductMaterial();
+            $productMaterial->productid = $this->id;
+            $productMaterial->materialid = $material->materialid;
+            $productMaterial->materialnoteid = $material->materialnoteid;
+            $productMaterial->percent = $material->percent;
+            if($productMaterial->save()==false) {
+                throw new \Exception("/1001/添加商品材质信息失败/");
+            }
+        }
     }
 
     /**
