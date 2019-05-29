@@ -92,16 +92,16 @@ class RequisitionController extends BaseController {
     }
 
     function loadAction() {
-        $result = TbRequisitionDetail::find(
-            sprintf("requisitionid=%d", $_POST['requisitionid'])
+        $requisition = TbRequisition::findFirst(
+            sprintf("id=%d and companyid=%d", $_POST['id'], $this->companyid)
         );
-        //print_r($result->toArray());
-        $array = [];
-        foreach($result as $row) {
-            $productstock = $row->outProductstock;
-            $array[] = array_merge($productstock->toArray(), $row->toArray());
+
+        if($requisition!=false) {
+            echo $this->success($requisition->getDetail());
         }
-        echo $this->success($array);
+        else {
+            throw new \Exception("/1001/调拨单不存在/");
+        }
     }
 
     /**
@@ -119,7 +119,7 @@ class RequisitionController extends BaseController {
 
         if($requisition!=false) {            
             if($requisition->doOut($submitData['list'])) {
-                echo $this->success($requisition->toArray());
+                echo $this->success($requisition->getDetail());
             }
             else {
                 echo $this->error(['fail']);
@@ -142,7 +142,7 @@ class RequisitionController extends BaseController {
 
         if($requisition!=false) {            
             if($requisition->doIn($submitData['list'])) {
-                echo $this->success($requisition->toArray());
+                echo $this->success($requisition->getDetail());
             }
             else {
                 echo $this->error(['fail']);

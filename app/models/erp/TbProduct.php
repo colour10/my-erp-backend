@@ -175,8 +175,14 @@ class TbProduct extends BaseCompanyModel
         $product->nationalprice = $this->nationalprice;
         //$product->ulnarinch_memo = $this->ulnarinch_memo;
         $product->sizetopid = $this->sizetopid;
+        $product->sizecontentids = $this->sizecontentids;
+        $product->spring = $this->spring;
+        $product->summer = $this->summer;
+        $product->fall = $this->fall;
+        $product->winter = $this->winter;
         $product->companyid = $this->companyid;
-        $product->adduserid = $this->getDI()->get("currentUser");
+        $product->makestaff = $this->getDI()->get("currentUser");
+        $product->maketime = date("Y-m-d H:i:s");
         if($product->create()==false) {
             throw new Exception("/1002/复制商品失败/");
         }

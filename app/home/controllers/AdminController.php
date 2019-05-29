@@ -150,7 +150,7 @@ class AdminController extends BaseController
         
         $data = [];
         foreach($pageObject->items as $row) {
-            $data[] = $row->toArray();
+            $data[] = $this->recordToArray($row);
         }
 
         $pageinfo = [
@@ -288,6 +288,10 @@ class AdminController extends BaseController
 
     function before_page() {
 
+    }
+
+    function recordToArray($row) {
+        return $row->toArray();
     }
 
     function injectParam($name, $value, $method='POST') {

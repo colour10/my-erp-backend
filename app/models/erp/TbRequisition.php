@@ -247,4 +247,21 @@ class TbRequisition extends BaseCompanyModel
         $db->commit();
         return true;
     } 
+
+    function getDetail() {
+        $result = TbRequisitionDetail::find(
+            sprintf("requisitionid=%d", $this->id)
+        );
+        //print_r($result->toArray());
+        $array = [];
+        foreach($result as $row) {
+            $productstock = $row->outProductstock;
+            $array[] = array_merge($productstock->toArray(), $row->toArray());
+        }
+        
+        return [
+            "form" => $this->toArray(),
+            "list" => $array
+        ];
+    }
 }

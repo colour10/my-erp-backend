@@ -6,6 +6,7 @@ use Phalcon\Mvc\View;
 use Asa\Erp\TbOrderBrand;
 use Asa\Erp\TbOrderdetails;
 use Asa\Erp\Util;
+use Asa\Erp\TbCode;
 
 /**
  * 品牌订单
@@ -90,12 +91,7 @@ class OrderbrandController extends AdminController {
             $order->companyid = $this->companyid;
             $order->status = 1;
             // 生成订单号
-            $order->orderno = sprintf(
-                "B%s%s%s",
-                substr("000000".$this->companyid, -6),
-                date('YmdHis'),
-                mt_rand(1000, 9999)
-            );
+            $order->orderno = TbCode::getCode($this->companyid, "BB", date("y"));
             if($order->create() === false) {
                 //返回失败信息
                 $this->db->rollback();

@@ -7,6 +7,7 @@ use Asa\Erp\TbShipping;
 use Asa\Erp\TbShippingDetail;
 use Asa\Erp\TbOrderdetails;
 use Asa\Erp\Util;
+use Asa\Erp\TbCode;
 
 /**
  * 发货单主表
@@ -78,12 +79,7 @@ class ShippingController extends AdminController {
         $shipping->maketime = date('Y-m-d H:i:s');
         $shipping->companyid = $this->companyid;
         // 生成订单号
-        $shipping->orderno = sprintf(
-            "S%s%s%s",
-            substr("000000".$this->companyid, -6),
-            date('YmdHis'),
-            mt_rand(1000, 9999)
-        );
+        $shipping->orderno = TbCode::getCode($this->companyid, "SO", date("y"));
         if($shipping->create() === false) {
             //返回失败信息
             $this->db->rollback();

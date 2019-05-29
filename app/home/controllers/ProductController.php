@@ -273,24 +273,28 @@ class ProductController extends CadminController {
                     if($row['id']=='') {                        
                         $product_else = $product->cloneByColor($row);
                     }
+                    else if($row['id']==$product->id) {
+                        $product_else = $product;
+                    }
                     else {
                         $product_else = TbProduct::findFirstById($row['id']);
                         if($product_else==false) {
                             throw new \Exception("#1002#绑定的商品不存在#");
                         }
-
-                        $product_else->brandcolor = $row['brandcolor'];
-                        $product_else->wordcode_1 = $row['wordcode_1'];
-                        $product_else->wordcode_2 = $row['wordcode_2'];
-                        $product_else->wordcode_3 = $row['wordcode_3'];
-                        $product_else->wordcode_4 = $row['wordcode_4'];
-                        $product_else->colorname = $row['colorname'];
-                        $product_else->picture = $row['picture'];
-                        $product_else->picture2 = $row['picture2'];
-                        if($product_else->update()==false) {
-                            throw new \Exception("/1002/更新失败/");
-                        }
                     }
+
+                    $product_else->brandcolor = $row['brandcolor'];
+                    $product_else->wordcode_1 = $row['wordcode_1'];
+                    $product_else->wordcode_2 = $row['wordcode_2'];
+                    $product_else->wordcode_3 = $row['wordcode_3'];
+                    $product_else->wordcode_4 = $row['wordcode_4'];
+                    $product_else->colorname = $row['colorname'];
+                    $product_else->picture = $row['picture'];
+                    $product_else->picture2 = $row['picture2'];
+                    if($product_else->update()==false) {
+                        throw new \Exception("/1002/更新失败/");
+                    }
+
                     $products[] = $product_else;
                     $data[] = $product_else->id.",".$product_else->brandcolor;
                 }

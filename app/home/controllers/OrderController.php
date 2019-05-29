@@ -6,6 +6,8 @@ use Asa\Erp\Util;
 use Phalcon\Mvc\Controller;
 use Asa\Erp\TbOrder;
 use Asa\Erp\TbProduct;
+use Asa\Erp\TbCode;
+
 /**
  * 订单主表
  */
@@ -110,12 +112,8 @@ class OrderController extends BaseController
             $order->maketime = date('Y-m-d H:i:s');
             $order->companyid = $this->companyid;
             // 生成订单号
-            $order->orderno = sprintf(
-                "D%s%s%s",
-                substr("000000".$this->companyid, -6),
-                date('YmdHis'),
-                mt_rand(1000, 9999)
-            );
+
+            $order->orderno = TbCode::getCode($this->companyid, "CB", date("y"));
             if($order->create() === false) {
                 //返回失败信息
                 $this->db->rollback();
