@@ -93,67 +93,80 @@ class ProductController extends CadminController {
 
         $products = [];
         $colors = [];
-        $keys = ["colorname", "wordcode_1","wordcode_2","wordcode_3","wordcode_4","brandcolor","picture","picture2","brandid", "brandgroupid", "childbrand", "productsize", "countries", "productparst", "laststoragedate", "series", "ulnarinch", "factoryprice", "factorypricecurrency", "nationalpricecurrency", "nationalprice", "memo", "wordprice", "wordpricecurrency", "gender", "spring", "summer", "fall", "winter", "ageseason", "sizetopid", "sizecontentids", "productmemoids", "nationalfactorypricecurrency", "nationalfactoryprice","saletypeid"];
+        $keys = ["", "","","","","","","","brandid", "brandgroupid", "childbrand", "productsize", "countries", "productparst", "laststoragedate", "series", "ulnarinch", "factoryprice", "factorypricecurrency", "nationalpricecurrency", "nationalprice", "memo", "wordprice", "wordpricecurrency", "gender", "spring", "summer", "fall", "winter", "ageseason", "sizetopid", "sizecontentids", "productmemoids", "nationalfactorypricecurrency", "nationalfactoryprice","saletypeid"];
 
         
         $product = TbProduct::findFirstById($params['form']['id']);
         if($product!=false && $product->companyid==$this->companyid) {
-            //检查是否更新了色系
-            $isChange = $params['form']['brandcolor']==$product->brandcolor;
-
-            foreach($keys as $key) {
-                $product->$key = $params['form'][$key];
-            }
-
             $this->db->begin();
-            if($product->update()==false) {
-                $this->db->rollback();
-                return $this->error($product);
-            }
-
-            //更新材质信息
-            if(is_array($params["materials"])) {
-                foreach($params['materials'] as $row) {
-                    if(isset($row['id']) && $row['id']>0) {
-                        $productMaterial = TbProductMaterial::findFirstById($row['id']);
-                    }
-                    else {
-                        $productMaterial = new TbProductMaterial();
-                        $productMaterial->productid = $product->id;
-                    }
-                    $productMaterial->materialid = $row["materialid"];
-                    $productMaterial->materialnoteid = $row["materialnoteid"];
-                    $productMaterial->percent = $row["percent"];
-                    if($productMaterial->save()==false) {
-                        $this->db->rollback();
-                        return $this->error($productMaterial);
-                    }
-                }
-            }
-            
             //更新同款多色
-            if($isChange) {
-                $products = TbProduct::find(
-                    sprintf("product_group='%s'", $product->product_group)
-                );
+            $products = TbProduct::find(
+                sprintf("product_group='%s'", $product->product_group)
+            );
 
-                //生成绑定的颜色组的字符串
-                $data = [];
-                foreach($products as $row) {
-                    $data[] = $row->id.",".$row->brandcolor;
+            //生成绑定的颜色组的字符串
+            $data = [];
+            foreach($products as $row) {
+                if($row->id==$product->id) {
+                    $row->colorname = $params['form']["colorname"];
+                    $row->wordcode_1 = $params['form']["wordcode_1"];
+                    $row->wordcode_2 = $params['form']["wordcode_2"];
+                    $row->wordcode_3 = $params['form']["wordcode_3"];
+                    $row->wordcode_4 = $params['form']["wordcode_4"];
+                    $row->brandcolor = $params['form']["brandcolor"];
+                    $row->picture2 = $params['form']["picture2"];
+                    $row->laststoragedate = $params['form']["laststoragedate"];
+                }
+                
+                $row->brandid = $params['form']["brandid"];
+                $row->brandgroupid = $params['form']["brandgroupid"];
+                $row->childbrand = $params['form']["childbrand"];
+                $row->productsize = $params['form']["productsize"];
+                $row->countries = $params['form']["countries"];
+                $row->productparst = $params['form']["productparst"];
+                $row->series = $params['form']["series"];
+                $row->ulnarinch = $params['form']["ulnarinch"];
+                $row->factoryprice = $params['form']["factoryprice"];
+                $row->factorypricecurrency = $params['form']["factorypricecurrency"];
+                $row->nationalpricecurrency = $params['form']["nationalpricecurrency"];
+                $row->nationalprice = $params['form']["nationalprice"];
+                $row->memo = $params['form']["memo"];
+                $row->wordprice = $params['form']["wordprice"];
+                $row->wordpricecurrency = $params['form']["wordpricecurrency"];
+                $row->gender = $params['form']["gender"];
+                $row->spring = $params['form']["spring"];
+                $row->summer = $params['form']["summer"];
+                $row->fall = $params['form']["fall"];
+                $row->winter = $params['form']["winter"];
+                $row->ageseason = $params['form']["ageseason"];
+                $row->sizetopid = $params['form']["sizetopid"];
+                $row->sizecontentids = $params['form']["sizecontentids"];
+                $row->productmemoids = $params['form']["productmemoids"];
+                $row->nationalfactorypricecurrency = $params['form']["nationalfactorypricecurrency"];
+                $row->nationalfactoryprice = $params['form']["nationalfactoryprice"];
+                $row->saletypeid = $params['form']["saletypeid"];
+
+                if($row->update()==false) {
+                    $this->db->rollback();
+                    return $this->error($row);
                 }
 
-                
-                $product_group = implode('|', $data);
+                $row->updateMaterial($params["materials"]);
 
-                //逐个更新，绑定关系
-                foreach($products as $row) {
-                    $row->product_group = $product_group;
-                    if($row->update()==false) {
-                        throw new \Exception("#1002#更新product_group字段失败#");
-                    }
+                $data[] = $row->id.",".$row->brandcolor;
+            }
+
+            
+            $product_group = implode('|', $data);
+
+            //逐个更新，绑定关系
+            foreach($products as $row) {
+                $row->product_group = $product_group;
+                if($row->update()==false) {
+                    throw new \Exception("#1002#更新product_group字段失败#");
                 }
             }
+
             $this->db->commit();
             return $this->success();
         }

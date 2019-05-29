@@ -311,4 +311,26 @@ class TbProduct extends BaseCompanyModel
         $productPrice->updatetime = date("Y-m-d H:i:s");
         return $productPrice->save();
     }
+
+    function updateMaterial($materials) {
+        $rows = TbProductMaterial::find(
+            sprintf("productid=%d", $this->id)
+        );
+        foreach($rows as $row) {
+            if($row->delete()==false) {
+                throw new \Exception("/1001/更新商品材质信息失败/");
+            }
+        }
+
+        foreach($materials as $row) {
+            $productMaterial = new TbProductMaterial();
+            $productMaterial->productid = $this->id;
+            $productMaterial->materialid = $row["materialid"];
+            $productMaterial->materialnoteid = $row["materialnoteid"];
+            $productMaterial->percent = $row["percent"];
+            if($productMaterial->save()==false) {
+                throw new \Exception("/1001/添加商品材质信息失败/");
+            }
+        }
+    }
 }
