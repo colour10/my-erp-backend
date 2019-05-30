@@ -252,7 +252,7 @@ class TbProduct extends BaseCompanyModel
             return static::findByIdString($ids,'id');
         }
         else {
-            return [];
+            return [$this];
         }
     }
 
