@@ -162,19 +162,26 @@ class OrderController extends BaseController
 
             $detail_id_array[] = $detail->id;
         }
+
         //清除不存在的详情id
         if(count($detail_id_array)>0) {
             $details = TbOrderdetails::find(
                 sprintf("orderid=%d and id not in(%s)", $order->id, implode(",", $detail_id_array))
             );
-            foreach($details as $detail) {
-                if($detail->orderbrandid>0) {
-                    //已经确认过的订单明细不能删除
-                    $this->db->rollback();
-                    throw new \Exception("/1001/不能删除已经加入外部订单的订单明细/");
-                }
-                $detail->delete();
+        }
+        else {
+            $details = TbOrderdetails::find(
+                sprintf("orderid=%d", $order->id)
+            );
+        }
+        
+        foreach($details as $detail) {
+            if($detail->orderbrandid>0) {
+                //已经确认过的订单明细不能删除
+                $this->db->rollback();
+                throw new \Exception("/1001/不能删除已经加入外部订单的订单明细/");
             }
+            $detail->delete();
         }
 
         // 提交事务

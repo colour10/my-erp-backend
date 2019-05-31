@@ -284,10 +284,12 @@ class TbProduct extends BaseCompanyModel
 
         $result = [];
 
+        //年代季节是多选，获得最新的年代季节id
+        $temparr = explode(",", $this->ageseason);
+        $ageseasonid = $temparr[0];
+        
         foreach($prices as $row) {
-            //echo "5";
-            $setting = $row->getPriceSetting($this->brandid, $this->brandgroupid, $this->childbrand, $this->ageseason, $this->series);
-
+            $setting = TbPriceSetting::getPriceSetting($this->brandid, $this->brandgroupid, $this->childbrand, $ageseasonid, $row->id);
             if($setting!=false) {
                 $value = TbExchangeRate::convert($company->id, $this->wordpricecurrency, $company->currencyid, $this->wordprice);
                 //echo $price;exit;
@@ -296,25 +298,38 @@ class TbProduct extends BaseCompanyModel
                     //echo "2";
                     continue;
                 }
-                $autoprice = $setting->getPriceValue($value);
+
+                $autoprice = $setting->getPriceValue($value["number"]);
+
+                $is_special = "0";
                 if(isset($hashTable[$row->id]) && $hashTable[$row->id]->price>0) {
                     $price = TbExchangeRate::convert($company->id, $hashTable[$row->id]->currencyid, $company->currencyid, $hashTable[$row->id]->price);
                     if($price==false) {
                         //echo "0";
                         continue;
                     }
+                    $is_special = 1;
+                    $price = $price["number"];
                 }
                 else {
                     $price = $autoprice;
                 }
+
+                //计算Cost+
+                $factoryprice = $this->factoryprice*$value["rate"];
+                $costplus = round(($price-$factoryprice)/$factoryprice,2)*100;
 
                 $result[] = [
                     'id' => $row->id,
                     'name' => $row->name,
                     'currencyid' => $company->currencyid,
                     'discount' => $setting->discount,
+                    'filter' => $setting->filter,
                     'autoprice' => $autoprice,
-                    'price' => $price
+                    'price' => $price*1,
+                    "is_special"  => $is_special,
+                    "rate" => $value["rate"],
+                    "costplus" => $costplus
                 ];
             }
         }

@@ -51,4 +51,12 @@ class PricesettingController extends AdminController {
         $seriesid = $this->request->getPost("seriesid", "int", 0);
         return sprintf("%012d%012d%012d%012d%012d", $brandid, $brandgroupid, $brandgroupchildid, $ageseasonid, $seriesid);
     }
+
+    function loadAction() {
+        $result = TbPriceSetting::find([
+            sprintf("companyid=%d and (brandid=%d or brandid=0) and (ageseasonid=%d or ageseasonid=0)", $this->companyid, $_POST['brandid'], $_POST['ageseasonid']),
+            "order" => "id desc"
+        ]);
+        return $this->success($result->toArray());
+    }
 }

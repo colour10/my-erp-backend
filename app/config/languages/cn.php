@@ -610,9 +610,10 @@ return [
   "xinjianxiaoshoudan" => "新建销售单",
   "xinjiandiaobodan" => "新建调拨单",
   "diaobodan" => "调拨单",
-  "fahuodan" => "发货单",
-  "fahuodan" => "发货单",
-  "fahuodan" => "发货单",
+  "shezhi" => "设置",
+  "xishuxianzhikuan" => "系数(限制款)",
+  "shuaxin" => "刷新",
+  "costplus" => "Cost+",
 
     // 新增配置项
     'salesdate-required' => '销售时间条件不能为空',
