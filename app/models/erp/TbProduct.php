@@ -289,7 +289,7 @@ class TbProduct extends BaseCompanyModel
         $ageseasonid = $temparr[0];
         
         foreach($prices as $row) {
-            $setting = TbPriceSetting::getPriceSetting($this->brandid, $ageseasonid, 0, $this->childbrand, $row->id);
+            $setting = TbPriceSetting::getPriceSetting($this->brandid, $ageseasonid, $this->ishot, $this->childbrand, $row->id);
             if($setting!=false) {
                 $value = TbExchangeRate::convert($company->id, $this->wordpricecurrency, $company->currencyid, $this->wordprice);
                 //echo $price;exit;
