@@ -25,7 +25,7 @@ class TbExchangeRate extends BaseModel
         }
 
         if($from==$to) {
-            return ["number"=>$number, "rate"=>1];
+            return ["number"=>round($number,2), "rate"=>1];
         }
 
         if(!preg_match("#^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$#",$datetime)) {
