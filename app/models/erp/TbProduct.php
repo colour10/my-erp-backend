@@ -289,7 +289,7 @@ class TbProduct extends BaseCompanyModel
         $ageseasonid = $temparr[0];
         
         foreach($prices as $row) {
-            $setting = TbPriceSetting::getPriceSetting($this->brandid, $this->brandgroupid, $this->childbrand, $ageseasonid, $row->id);
+            $setting = TbPriceSetting::getPriceSetting($this->brandid, $ageseasonid, 0, $this->childbrand, $row->id);
             if($setting!=false) {
                 $value = TbExchangeRate::convert($company->id, $this->wordpricecurrency, $company->currencyid, $this->wordprice);
                 //echo $price;exit;
@@ -299,7 +299,7 @@ class TbProduct extends BaseCompanyModel
                     continue;
                 }
 
-                $autoprice = $setting->getPriceValue($value["number"]);
+                $autoprice = $row->getPriceValue($value["number"]*$setting->discount);
 
                 $is_special = "0";
                 if(isset($hashTable[$row->id]) && $hashTable[$row->id]->price>0) {
@@ -324,7 +324,7 @@ class TbProduct extends BaseCompanyModel
                     'name' => $row->name,
                     'currencyid' => $company->currencyid,
                     'discount' => $setting->discount,
-                    'filter' => $setting->filter,
+                    'filter' => $row->filter,
                     'autoprice' => $autoprice,
                     'price' => $price*1,
                     "is_special"  => $is_special,

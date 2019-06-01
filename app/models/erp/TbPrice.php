@@ -44,4 +44,42 @@ class TbPrice extends BaseModel
             'currencyid' => [$factory->presenceOf('bizhong'), $factory->digit('bizhong')]
         ];
     }
+
+    /**
+     * 取整，1=个位；2=十位；3=不取整
+     * @param  [type] $value [description]
+     * @return [type]        [description]
+     */
+    function getPriceValue($value) {
+        if($this->filter==1) {
+            //echo $result.'='.$this->myRound($result);
+            return $this->myRound($value);
+        }
+        elseif($this->filter==2) {
+            //echo $result.'='.$this->myRound($result)."==".$this->filter."|";
+            return $this->myRound(floor($value/10))*10;
+        }
+        else {
+            return $value;
+        }
+    }
+
+    /**
+     * 个位取整
+     * @param  [type] $value [description]
+     * @return [type]        [description]
+     */
+    private function myRound($value) {
+        $result = floor($value);
+        $num = $result%10;
+        if($num>=8) {
+            return $result +10-$num;
+        }
+        elseif($num<2) {
+            return $result-$num;
+        }
+        else {
+            return $result-$num+5;
+        }
+    }
 }

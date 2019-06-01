@@ -614,6 +614,7 @@ return [
   "xishuxianzhikuan" => "系数(限制款)",
   "shuaxin" => "刷新",
   "costplus" => "Cost+",
+  "maoli" => "毛利",
 
     // 新增配置项
     'salesdate-required' => '销售时间条件不能为空',
