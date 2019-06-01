@@ -27,7 +27,7 @@ class ProductController extends CadminController {
 
         $products = [];
         $colors = [];
-        $keys = ["brandid", "brandgroupid", "childbrand", "productsize", "countries", "productparst", "laststoragedate", "series", "ulnarinch", "factoryprice", "factorypricecurrency", "nationalpricecurrency", "nationalprice", "memo", "wordprice", "wordpricecurrency", "gender", "spring", "summer", "fall", "winter", "ageseason", "sizetopid", "sizecontentids", "productmemoids", "nationalfactorypricecurrency", "nationalfactoryprice","saletypeid"];
+        $keys = ["brandid", "brandgroupid", "childbrand", "productsize", "countries", "productparst", "laststoragedate", "series", "ulnarinch", "factoryprice", "factorypricecurrency", "nationalpricecurrency", "nationalprice", "memo", "wordprice", "wordpricecurrency", "gender", "spring", "summer", "fall", "winter", "ageseason", "sizetopid", "sizecontentids", "productmemoids", "nationalfactorypricecurrency", "nationalfactoryprice","saletypeid","ishot"];
 
         $this->db->begin();
         foreach($params['colors'] as $row){
@@ -146,6 +146,7 @@ class ProductController extends CadminController {
                 $row->nationalfactorypricecurrency = $params['form']["nationalfactorypricecurrency"];
                 $row->nationalfactoryprice = $params['form']["nationalfactoryprice"];
                 $row->saletypeid = $params['form']["saletypeid"];
+                $row->ishot = $params['form']["ishot"];
 
                 if($row->update()==false) {
                     $this->db->rollback();
@@ -319,8 +320,7 @@ class ProductController extends CadminController {
                         $product_else->productmemoids = $product->productmemoids;
                         $product_else->nationalfactorypricecurrency = $product->nationalfactorypricecurrency;
                         $product_else->nationalfactoryprice = $product->nationalfactoryprice;
-                        $product_else->saletypeid = $product->saletypeid;
-                        
+                        $product_else->saletypeid = $product->saletypeid;   
                     }
 
                     $product_else->brandcolor = $row['brandcolor'];

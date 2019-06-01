@@ -615,6 +615,7 @@ return [
   "shuaxin" => "刷新",
   "costplus" => "Cost+",
   "maoli" => "毛利",
+  "xianliangkuan" => "限量款",
 
     // 新增配置项
     'salesdate-required' => '销售时间条件不能为空',
@@ -756,7 +757,7 @@ return [
                     3 => '电商价',
                     4 => '期货价',
                     5 => '折扣价',
-                    6 => '清仓价',
+                    6 => '清仓价'
                 ],
             'pricefilter' =>
                 [
