@@ -317,7 +317,7 @@ class TbProduct extends BaseCompanyModel
 
                 //计算Cost+
                 $factoryprice = $this->factoryprice*$value["rate"];
-                $costplus = round(($price-$factoryprice)/$factoryprice,2)*100;
+                $costplus = round(($price-$factoryprice)*100/$factoryprice,0);
 
                 $result[] = [
                     'id' => $row->id,

@@ -47,7 +47,7 @@ class TbExchangeRate extends BaseModel
         }
         else {
             return [
-                "number" => $exchange->rate*$number,
+                "number" => round($exchange->rate*$number,2),
                 "rate" => $exchange->rate
             ];
         }
