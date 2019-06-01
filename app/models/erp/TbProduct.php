@@ -299,7 +299,7 @@ class TbProduct extends BaseCompanyModel
                     continue;
                 }
 
-                $autoprice = round($row->getPriceValue($value["number"]*$setting->discount), 2);
+                $autoprice = $row->getPriceValue($value["number"]*$setting->discount);
 
                 $is_special = "0";
                 if(isset($hashTable[$row->id]) && $hashTable[$row->id]->price>0) {

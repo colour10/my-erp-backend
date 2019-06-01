@@ -60,7 +60,7 @@ class TbPrice extends BaseModel
             return $this->myRound(floor($value/10))*10;
         }
         else {
-            return $value;
+            return round($value,0);
         }
     }
 
