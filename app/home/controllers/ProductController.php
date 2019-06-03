@@ -115,6 +115,7 @@ class ProductController extends CadminController {
                     $row->wordcode_3 = $params['form']["wordcode_3"];
                     $row->wordcode_4 = $params['form']["wordcode_4"];
                     $row->brandcolor = $params['form']["brandcolor"];
+                    $row->picture = $params['form']["picture"];
                     $row->picture2 = $params['form']["picture2"];
                     $row->laststoragedate = $params['form']["laststoragedate"];
                 }

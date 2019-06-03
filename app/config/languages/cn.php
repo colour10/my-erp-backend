@@ -44,7 +44,7 @@ return [
   'yinhangdizhi' => '银行地址',
   'menu-2-3-1' => '仓库管理',
   'menu-2-3-2' => '销售端口管理',
-  'menu-2-3-3' => '国际及地区信息维护',
+  'menu-2-3-3' => '国家及地区信息维护',
   'menu-2-3-4' => '费用名称',
   'fenhangmingcheng' => '分行名称',
   'menu-2-3-6' => '销售性质',
@@ -616,6 +616,7 @@ return [
   "costplus" => "Cost+",
   "maoli" => "毛利",
   "xianliangkuan" => "限量款",
+  "guojiquhao" => "国际区号",
 
     // 新增配置项
     'salesdate-required' => '销售时间条件不能为空',
