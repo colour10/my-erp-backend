@@ -617,6 +617,7 @@ return [
   "maoli" => "毛利",
   "xianliangkuan" => "限量款",
   "guojiquhao" => "国际区号",
+  "fahuodanruku" => "发货单入库",
 
     // 新增配置项
     'salesdate-required' => '销售时间条件不能为空',
