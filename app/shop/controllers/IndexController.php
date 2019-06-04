@@ -2,7 +2,6 @@
 
 namespace Multiple\Shop\Controllers;
 
-use Asa\Erp\TbProduct;
 use Asa\Erp\TbProductSearch;
 use Phalcon\Paginator\Adapter\Model as PaginatorModel;
 
@@ -19,12 +18,9 @@ class IndexController extends AdminController
     public function indexAction()
     {
         // 逻辑
-        // 判断是否登录
-        if (!$this->session->get('member')) {
-            return $this->dispatcher->forward([
-                'controller' => 'login',
-                'action' => 'index',
-            ]);
+        // 验证是否登录
+        if (!$member = $this->member) {
+            return $this->response->redirect('/login');
         }
 
         // 最新促销，需要从当前域名绑定的公司提取资料
@@ -50,12 +46,9 @@ class IndexController extends AdminController
     public function searchAction()
     {
         // 逻辑
-        // 判断是否登录
-        if (!$this->session->get('member')) {
-            return $this->dispatcher->forward([
-                'controller' => 'login',
-                'action' => 'index',
-            ]);
+        // 验证是否登录
+        if (!$member = $this->member) {
+            return $this->response->redirect('/login');
         }
 
         // 外部搜索内容
@@ -86,19 +79,5 @@ class IndexController extends AdminController
             'page' => $page,
             'keyword' => $keyword,
         ]);
-    }
-
-    /**
-     * 判断是否登录，并拿到当前用户模型
-     * @return false|string
-     */
-    public function isloginAction()
-    {
-        // 判断是否登录，判断member
-        if ($this->session->get('member')) {
-            return $this->session->get('member');
-        } else {
-            return false;
-        }
     }
 }

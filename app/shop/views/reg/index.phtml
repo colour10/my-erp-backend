@@ -10,7 +10,7 @@
 <!-- Head BEGIN -->
 <head>
     <meta charset="utf-8">
-    <title><?php echo $this->obj->getValidateMessage('add-new-address'); ?></title>
+    <title><?php echo $this->obj->getValidateMessage('register'); ?></title>
 
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -53,68 +53,67 @@
     <div class="container">
         <ul class="breadcrumb">
             <li><a href="/"><?php echo $this->obj->getValidateMessage('shouye'); ?></a></li>
-            <li class="active"><?php echo $this->obj->getValidateMessage('address-list'); ?></li>
+            <li class="active"><?php echo $this->obj->getValidateMessage('register'); ?></li>
         </ul>
         <!-- BEGIN SIDEBAR & CONTENT -->
         <div class="row margin-bottom-40">
 
-            <?php echo $this->view->getPartial('layouts/_member_sidebar') ?>
+            <!-- BEGIN SIDEBAR -->
+            <div class="sidebar col-md-3 col-sm-3">
+                <ul class="list-group margin-bottom-25 sidebar-menu">
+                    <li class="list-group-item clearfix"><a href="javascript:void(0);"><i class="fa fa-angle-right"></i>
+                            <?php echo $this->obj->getValidateMessage('register'); ?></a></li>
+                </ul>
+            </div>
+            <!-- END SIDEBAR -->
 
             <!-- BEGIN CONTENT -->
             <div class="col-md-9 col-sm-9">
-                <h1 class="h1-title"><?php echo $this->obj->getValidateMessage('add-new-address'); ?></h1>
+                <h1 class="h1-title"><?php echo $this->obj->getValidateMessage('register'); ?></h1>
                 <div class="content-form-page">
                     <div class="row">
                         <div class="col-md-7 col-sm-7">
                             <form class="form-horizontal form-without-legend" role="form">
 
                                 <div class="form-group">
-                                    <label for="username"
-                                           class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('shouhuoren'); ?>
-                                        <span
-                                                class="require">*</span></label>
+                                    <label for="name"
+                                           class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('yonghuming'); ?>
+                                        <span class="require">*</span></label>
                                     <div class="col-lg-8">
-                                        <input type="text" class="form-control" id="username">
+                                        <input type="name" class="form-control" id="name">
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="mobile"
-                                           class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('mobile'); ?>
+                                    <label for="password"
+                                           class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('password'); ?>
                                         <span
                                                 class="require">*</span></label>
                                     <div class="col-lg-8">
-                                        <input type="text" class="form-control" id="mobile">
+                                        <input type="password" class="form-control" id="password">
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="address"
-                                           class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('dizhi'); ?>
+                                    <label for="repeat-password"
+                                           class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('repeat-password'); ?>
                                         <span
                                                 class="require">*</span></label>
                                     <div class="col-lg-8">
-                                        <input type="text" class="form-control" id="address">
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="smart-address"
-                                           class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('address-resolution'); ?></label>
-                                    <div class="col-lg-8">
-                                        <textarea name="" id="smart-address" cols="43" rows="10"
-                                                  onchange="smart()"></textarea><br>
-                                        <p><?php echo $this->obj->getValidateMessage('address-resolution-rule'); ?></p>
+                                        <input type="password" class="form-control" id="repeat-password">
                                     </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-lg-8 col-md-offset-4 padding-left-0 padding-top-20">
-                                        <button type="submit" class="btn btn-primary" id="button-address-add"
-                                                onclick="address_add();return false;"><?php echo $this->obj->getValidateMessage('button-add'); ?>
+                                        <button type="submit" class="btn btn-primary" id="button-reg"
+                                                onclick="reg();return false;"><?php echo $this->obj->getValidateMessage('queren'); ?>
                                         </button>
                                     </div>
                                 </div>
+
+                                <input type="hidden" id="email" name="email" value="<?php echo $email; ?>">
+                                <input type="hidden" id="c" name="c" value="<?php echo $c; ?>">
 
                             </form>
                         </div>
@@ -128,30 +127,30 @@
     </div>
 </div>
 
-<script src="/shop/assets/custom/arealist.js"></script>
-<script src="/shop/assets/custom/addressparse.js"></script>
 <?php echo $this->view->getPartial('layouts/_footer'); ?>
 
 <script>
     /**
-     * 添加地址
+     * 注册新用户
      * @returns {boolean}
      */
-    function address_add() {
+    function reg() {
         // ajax提交
         $.ajax({
             type: "post",
-            url: "/memberaddress/add",
+            url: "/reg",
             async: true,
             dataType: 'json',
             data: {
-                'username': $('#username').val(),
-                'mobile': $('#mobile').val(),
-                'address': $('#address').val(),
+                'name': $('#name').val(),
+                'password': $('#password').val(),
+                'repeat_password': $('#repeat-password').val(),
+                'email': $('#email').val(),
+                'c': $('#c').val(),
             },
             beforeSend: function () {
                 // 禁用按钮防止重复提交
-                $("#button-address-add").attr({disabled: "disabled"});
+                $("#button-reg").attr({disabled: "disabled"});
             },
             success: function (response) {
                 // 判断是否有错误
@@ -169,12 +168,12 @@
                     });
                     // 3秒后跳转
                     setTimeout(function () {
-                        window.location.href = '/memberaddress';
+                        window.location.href = '/login';
                     }, 1000);
                 }
             },
             complete: function () {
-                $("#button-address-add").removeAttr("disabled");
+                $("#button-reg").removeAttr("disabled");
             },
         });
         // 禁止自动跳转

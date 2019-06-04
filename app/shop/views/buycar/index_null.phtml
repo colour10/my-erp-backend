@@ -9,7 +9,7 @@
 <!-- Head BEGIN -->
 <head>
   <meta charset="utf-8">
-  <title>购物车</title>
+  <title><?php echo $this->obj->getValidateMessage('buycar'); ?></title>
 
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -57,7 +57,7 @@
         <div class="row margin-bottom-40">
           <!-- BEGIN CONTENT -->
           <div class="col-md-12 col-sm-12">
-            <h1>购物车</h1>
+            <h1><?php echo $this->obj->getValidateMessage('buycar'); ?></h1>
             <div class="shopping-cart-page">
               <div class="shopping-cart-data clearfix">
                 <p>您的购物车空空如也!</p>

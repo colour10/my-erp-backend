@@ -70,13 +70,13 @@
                         <div class="col-col-md-12 col-sm-12 col-xs-12">
                             <table class="table table-responsive table-hover table-bordered table-order">
                                 <tr>
-                                    <th>主图</th>
-                                    <th>附图</th>
-                                    <th>名称</th>
-                                    <th>国际码</th>
-                                    <th>价格</th>
-                                    <th colspan="<?php echo $max_sum_sizecontents + 1; ?>">库存详情</th>
-                                    <th>操作</th>
+                                    <th><?php echo $this->obj->getValidateMessage('zhutu'); ?></th>
+                                    <th><?php echo $this->obj->getValidateMessage('futu'); ?></th>
+                                    <th><?php echo $this->obj->getValidateMessage('mingcheng'); ?></th>
+                                    <th><?php echo $this->obj->getValidateMessage('guojima'); ?></th>
+                                    <th><?php echo $this->obj->getValidateMessage('jiage'); ?></th>
+                                    <th colspan="<?php echo $max_sum_sizecontents + 1; ?>"><?php echo $this->obj->getValidateMessage('kucun'); ?></th>
+                                    <th><?php echo $this->obj->getValidateMessage('caozuo'); ?></th>
                                 </tr>
 
                                 <?php foreach ($page->items as $item) { ?>
@@ -102,54 +102,63 @@
                                         <td rowspan="3">
                                             <?php echo $this->currency; ?><?php echo $item['realprice']; ?>
                                         </td>
-                                        <td>尺码组：</td>
-                                        <?php if ($item['sum_sizecontents'] > 0) { ?>
-                                            <?php foreach ($item['sizecontents'] as $sizecontent) { ?>
-                                                <td><?php echo $sizecontent['sizecontentname']; ?></td>
-                                            <?php } ?>
-                                        <?php } else { ?>
-                                            <?php for ($i = 0; $i < $max_sum_sizecontents; $i++) { ?>
-                                                <td>&nbsp;</td>
-                                            <?php } ?>
+                                        <td style="width: 8%;"><?php echo $this->obj->getValidateMessage('chimazu'); ?></td>
+
+                                        <!-- 尺码组有数据就填充 Start -->
+                                        <?php foreach ($item['sizecontents'] as $sizecontent) { ?>
+                                            <td><?php echo $sizecontent['sizecontentname']; ?></td>
                                         <?php } ?>
+                                        <!-- 尺码组有数据就填充 End -->
+
+                                        <!-- 尺码组没有数据就补充空格 Start -->
+                                        <?php for ($i = 0; $i < $max_sum_sizecontents - $item['sum_sizecontents']; $i++) { ?>
+                                            <td></td>
+                                        <?php } ?>
+                                        <!-- 尺码组没有数据就补充空格 End -->
+
                                         <td rowspan="3">
                                             <?php if ($item['sum_sizecontents'] > 0) { ?>
                                                 <button class="btn btn-primary" type="submit"
                                                         onclick="addbuycar(this, <?php echo $item['id'] ?>);return false;">
-                                                    加入购物车
+                                                    <?php echo $this->obj->getValidateMessage('add-to-cart'); ?>
                                                 </button>
                                             <?php } else { ?>
-                                                <span class="red">不可操作</span>
+                                                <span class="red"><?php echo $this->obj->getValidateMessage('inoperable'); ?></span>
                                             <?php } ?>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td>库存数：</td>
-                                        <?php if ($item['sum_sizecontents'] > 0) { ?>
-                                            <?php foreach ($item['sizecontents'] as $sizecontent) { ?>
-                                                <td><?php echo $sizecontent['sumatory']; ?></td>
-                                            <?php } ?>
-                                        <?php } else { ?>
-                                            <?php for ($i = 0; $i < $max_sum_sizecontents; $i++) { ?>
-                                                <td>&nbsp;</td>
-                                            <?php } ?>
-                                        <?php } ?>
 
-                                    </tr>
                                     <tr>
-                                        <td>订购数：</td>
-                                        <?php if ($item['sum_sizecontents'] > 0) { ?>
-                                            <?php foreach ($item['sizecontents'] as $sizecontent) { ?>
-                                                <td><input class="table-w30"
-                                                           data-id="<?php echo $sizecontent['sizecontentid']; ?>"
-                                                           type="text"/>
-                                                </td>
-                                            <?php } ?>
-                                        <?php } else { ?>
-                                            <?php for ($i = 0; $i < $max_sum_sizecontents; $i++) { ?>
-                                                <td>&nbsp;</td>
-                                            <?php } ?>
+                                        <td><?php echo $this->obj->getValidateMessage('kucunshuliang'); ?></td>
+                                        <!-- 库存数量有数据就填充 Start -->
+                                        <?php foreach ($item['sizecontents'] as $sizecontent) { ?>
+                                            <td><?php echo $sizecontent['sumatory']; ?></td>
                                         <?php } ?>
+                                        <!-- 库存数量有数据就填充 End -->
+
+                                        <!-- 库存数量没有数据就补充空格 Start -->
+                                        <?php for ($i = 0; $i < $max_sum_sizecontents - $item['sum_sizecontents']; $i++) { ?>
+                                            <td></td>
+                                        <?php } ?>
+                                        <!-- 库存数量没有数据就补充空格 End -->
+                                    </tr>
+
+                                    <tr>
+                                        <td><?php echo $this->obj->getValidateMessage('dinggoushuliang'); ?></td>
+                                        <!-- 订购数量有数据就填充 Start -->
+                                        <?php foreach ($item['sizecontents'] as $sizecontent) { ?>
+                                            <td><input class="table-w30"
+                                                       data-id="<?php echo $sizecontent['sizecontentid']; ?>"
+                                                       type="text"/>
+                                            </td>
+                                        <?php } ?>
+                                        <!-- 库存数量有数据就填充 End -->
+
+                                        <!-- 库存数量没有数据就补充空格 Start -->
+                                        <?php for ($i = 0; $i < $max_sum_sizecontents - $item['sum_sizecontents']; $i++) { ?>
+                                            <td></td>
+                                        <?php } ?>
+                                        <!-- 库存数量没有数据就补充空格 End -->
                                     </tr>
 
 
@@ -161,7 +170,7 @@
 
 
                     <?php } else { ?>
-                        <div class="col-md-12 col-sm-12 col-xs-12">当前分类暂无商品</div>
+                        <div class="col-md-12 col-sm-12 col-xs-12"><?php echo $this->obj->getValidateMessage('no-products'); ?></div>
                     <?php } ?>
 
                 </div>
@@ -197,6 +206,62 @@
 </div>
 
 <?php echo $this->view->getPartial('layouts/_footer'); ?>
+
+<script>
+    /**
+     * 加入购物车函数
+     * @param obj 当前节点
+     * @param id 操作id
+     * @returns {boolean}
+     */
+    function addbuycar(obj, id) {
+        // 首先拿到所有的尺码input值
+        var objParent = $(obj).parent().parent();
+        var inputParent = objParent.next().next();
+        var inputs = inputParent.find('input');
+        // 保存最后的参数数组
+        var sizecontentids = [];
+        // 遍历获取值
+        inputs.each(function () {
+            sizecontentids[$(this).attr('data-id')] = $(this).val();
+        });
+
+        // ajax提交
+        $.ajax({
+            type: "post",
+            url: "/buycar/add",
+            async: true,
+            dataType: 'json',
+            data: {
+                'sizecontentids': sizecontentids,
+                'product_id': id,
+            },
+            success: function (result) {
+                // 判断是否有错误
+                if (result.messages.length > 0) {
+                    layer.open({
+                        content: result.messages[0],
+                        btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>"
+                    });
+                } else {
+                    // 提示
+                    layer.open({
+                        content: "<?php echo $this->obj->getValidateMessage('success'); ?>",
+                        btn: "<?php echo $this->obj->getValidateMessage('please-wait'); ?>",
+                        time: 3, // 3秒后自动跳转
+                    });
+                    // 3秒后跳转
+                    setTimeout(function () {
+                        window.location.href = '/buycar';
+                    }, 1000);
+                }
+            }
+        });
+
+        // 禁止后续操作
+        return false;
+    }
+</script>
 
 </body>
 <!-- END BODY -->

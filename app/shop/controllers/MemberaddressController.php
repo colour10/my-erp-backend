@@ -20,33 +20,15 @@ class MemberaddressController extends AdminController
     }
 
     /**
-     * 单条地址展示
-     * @return false|string
+     * 列表页，必须登录才能访问
      */
-    public function showAction()
+    public function indexAction()
     {
-        // 逻辑
-        if (!$member = $this->session->get('member')) {
-            $msg = $this->getValidateMessage('model-delete-message');
-            return $this->error([$msg]);
+        // 验证是否登录
+        if (!$member = $this->member) {
+            return $this->response->redirect('/login');
         }
-
-        // 参数检测
-        $params = $this->dispatcher->getParams();
-        if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
-            $msg = $this->getValidateMessage('params-invalid');
-            return $this->error([$msg]);
-        }
-        // 赋值
-        $id = $params[0];
-        $address = TbMemberAddress::findFirst("id=".$id." and member_id=".$member['id']);
-        // 判断是否存在
-        if (!$address) {
-            $msg = $this->getValidateMessage('address-doesnot-exist');
-            return $this->error([$msg]);
-        }
-        // 否则即存在，返回
-        return $this->success($address->toArray());
+        parent::indexAction();
     }
 
 
@@ -57,7 +39,8 @@ class MemberaddressController extends AdminController
     public function addAction()
     {
         // 逻辑
-        if ($this->request->isPost() && $member = $this->session->get('member')) {
+        // 如果是post提交
+        if ($this->request->isPost() && $member = $this->member) {
             // 接收参数并过滤
             $member_id = $member['id'];
             $name = $this->request->get('username', 'string');
@@ -67,20 +50,17 @@ class MemberaddressController extends AdminController
             $is_default = '0';
             // 不能为空
             if (!$name || !$tel || !$address) {
-                $msg = $this->getValidateMessage('fill-out-required-fields');
-                return $this->error([$msg]);
+                return $this->error($this->getValidateMessage('fill-out-required-fields'));
             }
             // 验证手机号
             if (!preg_match("/^1[34578]\d{9}$/", $tel)) {
-                $msg = $this->getValidateMessage('mobile-invalid');
-                return $this->error([$msg]);
+                return $this->error($this->getValidateMessage('mobile-invalid'));
             }
             // 验证之前是否地址有重复
             // 要求memberid、username、address三者唯一
-            $model = TbMemberAddress::findFirst("member_id = ".$member['id']." and name = '".$name."' and address = '".$address."'");
+            $model = TbMemberAddress::findFirst("member_id = " . $member['id'] . " and name = '" . $name . "' and address = '" . $address . "'");
             if ($model) {
-                $msg = $this->getValidateMessage('address-exist');
-                return $this->error([$msg]);
+                return $this->error($this->getValidateMessage('address-exist'));
             }
             // 如果不存在，开始执行写入逻辑
             $tbmemberaddress = new TbMemberAddress();
@@ -91,6 +71,14 @@ class MemberaddressController extends AdminController
             return $this->success();
         }
 
+        // 如果是get请求
+        if (!$member = $this->member) {
+            return $this->response->redirect('/login');
+        }
+        // 把对象传递过去，用作错误提示
+        $this->view->setVars([
+
+        ]);
     }
 
 
@@ -101,14 +89,9 @@ class MemberaddressController extends AdminController
     public function editAction()
     {
         // 逻辑
-        if ($this->request->isPost() && $member = $this->session->get('member')) {
-            // 参数检测
-            $params = $this->dispatcher->getParams();
-            if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
-                $msg = $this->getValidateMessage('params-invalid');
-                return $this->error([$msg]);
-            }
+        if ($this->request->isPost() && $member = $this->member) {
             // 赋值
+            $params = $this->dispatcher->getParams();
             $id = $params[0];
             $name = $this->request->get('username', 'string');
             $tel = $this->request->get('mobile', 'int');
@@ -125,34 +108,41 @@ class MemberaddressController extends AdminController
                 return $this->error([$msg]);
             }
 
-            // 判断是否存在
-            $model = TbMemberAddress::findFirst("id=".$id." and member_id=".$member['id']);
-            // 如果不存在
-            if (!$model) {
-                $msg = $this->getValidateMessage('address-doesnot-exist');
-                return $this->error([$msg]);
+            // 验证地址是否存在
+            $addressModel = $this->checkIfExistsAddress();
+            if (is_string($addressModel)) {
+                return $this->error($addressModel);
             }
 
             // 但是修改的时候不能和已经保存的其他地址重复
-            $exists = TbMemberAddress::findFirst("id!=".$id." and member_id=".$member['id']." and name = '".$name."' and tel = '".$tel."' and address = '".$address."'");
+            $address = $addressModel->address;
+            $exists = TbMemberAddress::findFirst("id!=" . $id . " and member_id=" . $member['id'] . " and name = '" . $name . "' and tel = '" . $tel . "' and address = '" . $address . "'");
             if ($exists) {
-                $msg = $this->getValidateMessage('address-exist');
-                return $this->error([$msg]);
+                return $this->error($this->getValidateMessage('address-exist'));
             }
 
             // 开始修改
-            if (!$model->save(compact('name', 'tel', 'address'))) {
-                return $this->error($model);
+            if (!$addressModel->save(compact('name', 'tel', 'address'))) {
+                return $this->error($addressModel);
             }
 
             // 最终成功
             return $this->success();
         }
         // 赋值
-        $address = $this->showAction();
-        $address_arr = json_decode($address, true);
+        $address = $this->checkIfExistsAddress();
+
+        // 如果是字符串，说明是错误提示，那么就直接返回
+        if (is_string($address)) {
+            // 传递错误
+            $this->view->setVars([
+                'title' => $this->getValidateMessage('make-an-error'),
+                'message' => $address,
+            ]);
+            return $this->view->pick('error/error');
+        }
         $this->view->setVars([
-            'address' => $address_arr,
+            'address' => $address->toArray(),
         ]);
     }
 
@@ -164,32 +154,19 @@ class MemberaddressController extends AdminController
     public function delAction()
     {
         // 逻辑
-        if ($this->request->isPost()) {
-            // 必须有member
-            if ($member = $this->session->get('member')) {
-                // 参数检测
-                $params = $this->dispatcher->getParams();
-                if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
-                    $msg = $this->getValidateMessage('params-invalid');
-                    return $this->error([$msg]);
-                }
-                // 赋值
-                $id = $params[0];
-                // 查找是否存在该地址
-                $address = TbMemberAddress::findFirst("id=".$id." and member_id=".$member['id']);
-                // 如果不存在
-                if (!$address) {
-                    $msg = $this->getValidateMessage('address-doesnot-exist');
-                    return $this->error([$msg]);
-                }
-                // 执行删除
-                if (!$address->delete()) {
-                    $msg = $this->getValidateMessage('address', 'db', 'delete-failed');
-                    return $this->error([$msg]);
-                }
-                // 最终成功
-                return $this->success();
+        if ($this->request->isPost() && $member = $this->member) {
+            // 验证地址是否存在
+            $addressModel = $this->checkIfExistsAddress();
+            if (is_string($addressModel)) {
+                return $this->error($addressModel);
             }
+
+            // 执行删除
+            if (!$addressModel->delete()) {
+                return $this->error($this->getValidateMessage('address', 'db', 'delete-failed'));
+            }
+            // 最终成功
+            return $this->success();
         }
     }
 
@@ -200,57 +177,73 @@ class MemberaddressController extends AdminController
     public function setdefaultAction()
     {
         // 逻辑
-        if ($this->request->isPost()) {
-            // 必须有member
-            if ($member = $this->session->get('member')) {
-                // 参数检测
-                $params = $this->dispatcher->getParams();
-                if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
-                    $msg = $this->getValidateMessage('params-invalid');
-                    return $this->error([$msg]);
-                }
-                // 赋值
-                $id = $params[0];
-                // 查找是否存在该地址
-                $current_address = TbMemberAddress::findFirst("id=".$id." and member_id=".$member['id']);
-                // 如果不存在
-                if (!$current_address) {
-                    $msg = $this->getValidateMessage('address-doesnot-exist');
-                    return $this->error([$msg]);
-                }
-                // 执行默认写入操作
-                // 但同时要把其他的地址设置为非默认
-                // 采用事务处理机制
-                $this->db->begin();
+        if ($this->request->isPost() && $member = $this->member) {
+            // 验证地址是否存在
+            $addressModel = $this->checkIfExistsAddress();
+            if (is_string($addressModel)) {
+                return $this->error($addressModel);
+            }
 
-                // 逻辑
-                $addresses = TbMemberAddress::find("member_id=".$member['id']);
-                foreach ($addresses as $address) {
-                    // 非默认
-                    $is_default = '0';
-                    if (!$address->save(compact('is_default'))) {
-                        // 回滚
-                        $this->db->rollback();
-                        $msg = $this->getValidateMessage('address', 'db', 'save-failed');
-                        return $this->error([$msg]);
-                    }
-                }
-                // 把当前地址改为默认
-                $is_default = '1';
-                if (!$current_address->save(compact('is_default'))) {
+            // 执行默认写入操作
+            // 但同时要把其他的地址设置为非默认
+            // 采用事务处理机制
+            $this->db->begin();
+
+            // 逻辑
+            $addresses = TbMemberAddress::find("member_id=" . $member['id']);
+            foreach ($addresses as $address) {
+                // 非默认
+                $is_default = '0';
+                if (!$address->save(compact('is_default'))) {
                     // 回滚
                     $this->db->rollback();
-                    $msg = $this->getValidateMessage('address', 'db', 'save-failed');
-                    return $this->error([$msg]);
+                    return $this->error($this->getValidateMessage('address', 'db', 'save-failed'));
                 }
-
-                // 提交事务
-                $this->db->commit();
-
-                // 最终成功
-                return $this->success();
             }
+            // 把当前地址改为默认
+            $is_default = '1';
+            if (!$addressModel->save(compact('is_default'))) {
+                // 回滚
+                $this->db->rollback();
+                return $this->error($this->getValidateMessage('address', 'db', 'save-failed'));
+            }
+
+            // 提交事务
+            $this->db->commit();
+
+            // 最终成功
+            return $this->success();
         }
+    }
+
+
+    /**
+     * 检查地址是否合法
+     * @return array|string
+     */
+    private function checkIfExistsAddress()
+    {
+        // 逻辑
+        // 参数检测
+        $params = $this->dispatcher->getParams();
+        if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
+            return $this->getValidateMessage('params-error');
+        }
+
+        // 查找地址是否存在
+        $address = TbMemberAddress::findFirst([
+            "id = :id: and member_id = :member_id:",
+            'bind' => [
+                'id' => $params[0],
+                'member_id' => $this->member['id'],
+            ],
+        ]);
+        // 判断是否存在
+        if (!$address) {
+            return $this->getValidateMessage('address-doesnot-exist');
+        }
+        // 返回地址对象
+        return $address;
     }
 
 }

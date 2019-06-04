@@ -10,7 +10,7 @@
 <!-- Head BEGIN -->
 <head>
     <meta charset="utf-8">
-    <title>会员中心</title>
+    <title><?php echo $this->obj->getValidateMessage('member-center'); ?></title>
 
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -52,8 +52,8 @@
 <div class="main">
     <div class="container">
         <ul class="breadcrumb">
-            <li><a href="/">首页</a></li>
-            <li class="active">会员中心</li>
+            <li><a href="/"><?php echo $this->obj->getValidateMessage('shouye'); ?></a></li>
+            <li class="active"><?php echo $this->obj->getValidateMessage('member-center'); ?></li>
         </ul>
         <!-- BEGIN SIDEBAR & CONTENT -->
         <div class="row margin-bottom-40">
@@ -62,11 +62,12 @@
 
             <!-- BEGIN CONTENT -->
             <div class="col-md-9 col-sm-9">
-                <h1>会员中心</h1>
+                <h1><?php echo $this->obj->getValidateMessage('member-center'); ?></h1>
                 <div class="content-form-page">
                     <div class="row">
                         <div class="col-md-7 col-sm-7">
-                            <p>尊敬的<?php echo $member['name']; ?>，您好，欢迎光临！</p>
+                            <p><?php echo $this->obj->getValidateMessage('dear'); ?><?php echo $member['name']; ?>
+                                ，<?php echo $this->obj->getValidateMessage('welcome-to'); ?></p>
                         </div>
                     </div>
                 </div>

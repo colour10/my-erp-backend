@@ -11,7 +11,7 @@
 <!-- Head BEGIN -->
 <head>
     <meta charset="utf-8">
-    <title>订单列表</title>
+    <title><?php echo $this->obj->getValidateMessage('menu-5-1'); ?></title>
 
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -59,18 +59,18 @@
         <div class="row margin-bottom-40">
             <!-- BEGIN CONTENT -->
             <div class="col-md-12 col-sm-12">
-                <h1>订单列表</h1>
+                <h1><?php echo $this->obj->getValidateMessage('menu-5-1'); ?></h1>
                 <div class="goods-page">
                     <div class="goods-data clearfix">
                         <div class="table-wrapper-responsive">
                             <table class="order-table">
                                 <tbody class="order-table-header">
                                 <tr>
-                                    <th class="goods-page-description">宝贝</th>
-                                    <th class="goods-page-price">单价</th>
-                                    <th class="goods-page-product-number">数量</th>
-                                    <th class="goods-page-size">实付款</th>
-                                    <th class="goods-page-quantity">交易状态</th>
+                                    <th class="goods-page-description"><?php echo $this->obj->getValidateMessage('shangpin'); ?></th>
+                                    <th class="goods-page-price"><?php echo $this->obj->getValidateMessage('danjia'); ?></th>
+                                    <th class="goods-page-product-number"><?php echo $this->obj->getValidateMessage('number'); ?></th>
+                                    <th class="goods-page-size"><?php echo $this->obj->getValidateMessage('chengjiaozongjia'); ?></th>
+                                    <th class="goods-page-quantity"><?php echo $this->obj->getValidateMessage('zhuangtai'); ?></th>
                                 </tr>
                                 </tbody>
                             </table>
@@ -85,7 +85,7 @@
                                                 <td colspan="5" class="text-left">
                                                     <span class="margin-left-20">
                                                         <?php echo date('Y-m-d', strtotime($order['create_time'])); ?>　
-                                                        <a href="/order/detail/<?php echo $order['id']; ?>">订单号：<?php echo $order['order_no']; ?></a>　
+                                                        <a href="/order/detail/<?php echo $order['id']; ?>"><?php echo $this->obj->getValidateMessage('dingdanhao'); ?>：<?php echo $order['order_no']; ?></a>　
 
                                                         <?php if ($order['order_status'] == '1') { ?>
                                                             <span data-expiretime="<?php echo $order['expire_time']; ?>"
@@ -95,23 +95,23 @@
 
 
                                                         <?php if ($order['order_status'] == '2' || $order['order_status'] == '3') { ?>
-                                                            总付款金额：<?php echo $this->currency . $order['final_price']; ?>
+                                                            <?php echo $this->obj->getValidateMessage('chengjiaozongjia'); ?>：<?php echo $this->currency . $order['final_price']; ?>
                                                         <?php } ?>
 
                                                         <?php if ($order['order_status'] == '1') { ?>
                                                             <em class="pull-right font-normal">
-                                                                <a href="/order/detail/<?php echo $order['id']; ?>">去支付</a>
+                                                                <a href="/order/detail/<?php echo $order['id']; ?>"><?php echo $this->obj->getValidateMessage('to-pay'); ?></a>
                                                                 <a style="cursor: pointer"
-                                                                   onclick="cancle_order(<?php echo $order['id']; ?>);return false;">取消订单</a>
+                                                                   onclick="cancle_order(<?php echo $order['id']; ?>);return false;"><?php echo $this->obj->getValidateMessage('order-cancel'); ?></a>
                                                             </em>
                                                         <?php } else if ($order['order_status'] == '2') { ?>
                                                             <em class="pull-right font-normal">
                                                                 <a style="cursor: pointer"
-                                                                   onclick="refund_order(<?php echo $order['id']; ?>);return false;">申请退款</a>
+                                                                   onclick="refund_order(<?php echo $order['id']; ?>);return false;"><?php echo $this->obj->getValidateMessage('apply-for-refund'); ?></a>
                                                             </em>
                                                         <?php } else if ($order['order_status'] == '4' && $order['expire_time']) { ?>
                                                             <em class="pull-right font-normal">
-                                                                未在规定时间内支付，订单已失效！
+                                                                <?php echo $this->obj->getValidateMessage('order-failure'); ?>
                                                             </em>
                                                         <?php } ?>
                                                     </span>
@@ -148,7 +148,7 @@
                                     </div>
                                 <?php } ?>
                             <?php } else { ?>
-                                <p class="text-center order-null">您的订单列表空空如也！</p>
+                                <p class="text-center order-null"><?php echo $this->obj->getValidateMessage('order-empty'); ?></p>
                             <?php } ?>
 
 
@@ -220,10 +220,10 @@
                     let leave3 = leave2 % 60;      //计算分钟数后剩余的毫秒数
                     let seconds = Math.round(leave3);
                     // 写入dom
-                    _this.html("支付剩余时间：" + days + "天" + hours + "时" + minutes + "分" + seconds + "秒");
+                    _this.html("<?php echo $this->obj->getValidateMessage('remain-time'); ?>：" + days + "<?php echo $this->obj->getValidateMessage('days'); ?>" + hours + "<?php echo $this->obj->getValidateMessage('hours'); ?>" + minutes + "<?php echo $this->obj->getValidateMessage('minutes'); ?>" + seconds + "<?php echo $this->obj->getValidateMessage('seconds'); ?>");
                 } else {
                     // 这里可以添加倒计时结束后需要执行的事件
-                    _this.html("未在规定时间内支付，订单已失效！");
+                    _this.html("<?php echo $this->obj->getValidateMessage('order-failure'); ?>");
                     window.clearInterval(interval);
                     // Todo订单失效后的一些列操作：更改订单状态的同时回库存
                     // ajax取消订单
@@ -237,6 +237,82 @@
             }, 1000);
         });
     });
+
+
+    /**
+     * 指定id的订单申请退款
+     * @param id
+     */
+    function refund_order(id) {
+        // 询问框
+        layer.open({
+            content: "<?php echo $this->obj->getValidateMessage('confirm-apply-refund'); ?>",
+            btn: ["<?php echo $this->obj->getValidateMessage('yes'); ?>", "<?php echo $this->obj->getValidateMessage('no'); ?>"],
+            yes: function (index) {
+                // ajax取消订单
+                $.post('/order/refund/' + id, {}, function (response) {
+                    // 判断是否有错误
+                    if (response.messages.length > 0) {
+                        layer.open({
+                            content: response.messages[0],
+                            btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>"
+                        });
+                    } else {
+                        //提示
+                        layer.open({
+                            content: "<?php echo $this->obj->getValidateMessage('success'); ?>",
+                            btn: "<?php echo $this->obj->getValidateMessage('please-wait'); ?>",
+                            time: 3, // 3秒后自动跳转
+                        });
+                        // 1秒后跳转
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1000);
+                    }
+                }, 'json');
+                // 关闭弹出层
+                layer.close(index);
+            }
+        });
+    }
+
+
+    /**
+     * 主动取消指定id的订单
+     * @param id
+     */
+    function cancle_order(id) {
+        // 询问框
+        layer.open({
+            content: "<?php echo $this->obj->getValidateMessage('confirm-cancle-order'); ?>",
+            btn: ["<?php echo $this->obj->getValidateMessage('yes'); ?>", "<?php echo $this->obj->getValidateMessage('no'); ?>"],
+            yes: function (index) {
+                // ajax取消订单
+                $.post('/order/cancle/' + id + '/1', {}, function (response) {
+                    // 判断是否有错误
+                    if (response.messages.length > 0) {
+                        layer.open({
+                            content: response.messages[0],
+                            btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>"
+                        });
+                    } else {
+                        //提示
+                        layer.open({
+                            content: "<?php echo $this->obj->getValidateMessage('success'); ?>",
+                            btn: "<?php echo $this->obj->getValidateMessage('please-wait'); ?>",
+                            time: 3, // 3秒后自动跳转
+                        });
+                        // 1秒后跳转
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1000);
+                    }
+                }, 'json');
+                // 关闭弹出层
+                layer.close(index);
+            }
+        });
+    }
 </script>
 
 </body>

@@ -10,8 +10,10 @@ Like: www.facebook.com/keenthemes
 Purchase: http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes
 License: You must have a valid license purchased only from themeforest (the above link) in order to legally use the theme for your project.
 -->
-<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
-<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if IE 8]>
+<html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
 <html lang="en">
 <!--<![endif]-->
@@ -19,7 +21,7 @@ License: You must have a valid license purchased only from themeforest (the abov
 <!-- Head BEGIN -->
 <head>
     <meta charset="utf-8">
-    <title>登录页</title>
+    <title><?php echo $this->obj->getValidateMessage('denglu'); ?>页</title>
 
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -39,7 +41,8 @@ License: You must have a valid license purchased only from themeforest (the abov
     <link href="/shop/assets/plugins/fancybox/source/jquery.fancybox.css" rel="stylesheet">
     <link href="/shop/assets/plugins/owl.carousel//shop/assets/owl.carousel.css" rel="stylesheet">
     <link href="/shop/assets/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css">
-    <link href="/shop/assets/plugins/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css"><!-- for slider-range -->
+    <link href="/shop/assets/plugins/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css">
+    <!-- for slider-range -->
     <link href="/shop/assets/plugins/rateit/src/rateit.css" rel="stylesheet" type="text/css">
     <!-- Page level plugin styles END -->
 
@@ -73,27 +76,34 @@ License: You must have a valid license purchased only from themeforest (the abov
 
         <!-- BEGIN CONTENT -->
         <div class="col-md-9 col-sm-9">
-            <h1>登录</h1>
+            <h1><?php echo $this->obj->getValidateMessage('denglu'); ?></h1>
             <div class="content-form-page">
                 <div class="row">
                     <div class="col-md-7 col-sm-7">
                         <form class="form-horizontal form-without-legend" role="form" action="" method="post">
                             <div class="form-group">
-                                <label for="login_name" class="col-lg-4 control-label">用户名 <span class="require">*</span></label>
+                                <label for="login_name"
+                                       class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('yonghuming'); ?>
+                                    <span
+                                            class="require">*</span></label>
                                 <div class="col-lg-8">
                                     <input type="text" class="form-control" id="login_name" name="login_name">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="password" class="col-lg-4 control-label">密码 <span class="require">*</span></label>
+                                <label for="password"
+                                       class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('password'); ?>
+                                    <span
+                                            class="require">*</span></label>
                                 <div class="col-lg-8">
-                                    <input type="password" class="form-control" id="password" name ="password">
+                                    <input type="password" class="form-control" id="password" name="password">
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-lg-8 col-md-offset-4 padding-left-0 padding-top-20">
-                                    <button type="button" class="btn btn-primary" id="btn-login">登录</button>
+                                    <button type="button" class="btn btn-primary"
+                                            id="btn-login"><?php echo $this->obj->getValidateMessage('denglu'); ?></button>
                                 </div>
                             </div>
                         </form>
@@ -114,32 +124,33 @@ License: You must have a valid license purchased only from themeforest (the abov
 <!-- END FOOTER -->
 
 <script type="text/javascript">
-    $("#btn-login").click(function(){
+    $("#btn-login").click(function () {
         $.ajax({
-            type:"post",
-            url:"/login/login",
-            async:true,
-            dataType:'json',
-            data:{
-                'login_name' : $("#login_name").val(),
-                'password' : $("#password").val(),
+            type: "post",
+            url: "/login/login",
+            async: true,
+            dataType: 'json',
+            data: {
+                'login_name': $("#login_name").val(),
+                'password': $("#password").val(),
             },
-            success:function(result) {
+            success: function (result) {
+                console.log(result);
                 // 判断是否有错误
-                if(result.messages.length > 0) {
+                if (result.messages.length > 0) {
                     layer.open({
                         content: result.messages[0],
-                        btn: '我知道了'
+                        btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>"
                     });
                 } else {
                     //提示
                     layer.open({
-                        content: '登录成功',
-                        btn: '2秒后自动跳转',
-                        time: 2, //2秒后自动跳转
+                        content: "<?php echo $this->obj->getValidateMessage('success'); ?>",
+                        btn: "<?php echo $this->obj->getValidateMessage('please-wait'); ?>",
+                        time: 3, // 3秒后自动跳转
                     });
                     // 3秒后跳转
-                    setTimeout(function() {
+                    setTimeout(function () {
                         window.location.href = '/';
                     }, 1000);
                 }

@@ -11,7 +11,7 @@
 <!-- Head BEGIN -->
 <head>
     <meta charset="utf-8">
-    <title>购物车</title>
+    <title><?php echo $this->obj->getValidateMessage('buycar'); ?></title>
 
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -59,7 +59,7 @@
         <div class="row margin-bottom-40">
             <!-- BEGIN CONTENT -->
             <div class="col-md-12 col-sm-12">
-                <h1>购物车</h1>
+                <h1><?php echo $this->obj->getValidateMessage('buycar'); ?></h1>
                 <?php if (isset($lists)) { ?>
                     <div class="goods-page">
                         <div class="goods-data clearfix">
@@ -67,13 +67,14 @@
                                 <table summary="Shopping cart" id="table-buycar">
                                     <thead>
                                     <tr>
-                                        <th class="goods-page-image">图片</th>
-                                        <th class="goods-page-description width30">商品名称</th>
-                                        <th class="goods-page-size">商品尺寸</th>
-                                        <th class="goods-page-color">库存</th>
-                                        <th class="goods-page-quantity">数量</th>
-                                        <th class="goods-page-price">单价</th>
-                                        <th class="goods-page-total" colspan="2">总价</th>
+                                        <th class="goods-page-image"><?php echo $this->obj->getValidateMessage('tupian'); ?></th>
+                                        <th class="goods-page-description width30"><?php echo $this->obj->getValidateMessage('mingcheng'); ?></th>
+                                        <th class="goods-page-size"><?php echo $this->obj->getValidateMessage('shangpinchicun'); ?></th>
+                                        <th class="goods-page-color"><?php echo $this->obj->getValidateMessage('kucun'); ?></th>
+                                        <th class="goods-page-quantity"><?php echo $this->obj->getValidateMessage('shuliang'); ?></th>
+                                        <th class="goods-page-price"><?php echo $this->obj->getValidateMessage('danjia'); ?></th>
+                                        <th class="goods-page-total"
+                                            colspan="2"><?php echo $this->obj->getValidateMessage('zongjia'); ?></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -129,12 +130,12 @@
                             <div class="shopping-total">
                                 <ul>
                                     <li>
-                                        <em>商品总价</em>
+                                        <em><?php echo $this->obj->getValidateMessage('dingdanzongjia'); ?></em>
                                         <strong class="price"
                                                 id="total_price"><span><?php echo $this->currency; ?></span><em><?php echo $lists['total']['totalprice']; ?></em></strong>
                                     </li>
                                     <li>
-                                        <em>运费</em>
+                                        <em><?php echo $this->obj->getValidateMessage('freight'); ?></em>
                                         <strong class="price"
                                                 id="send_price"><span><?php echo $this->currency; ?></span> <em><input
                                                         type="text" name="send_price"
@@ -142,17 +143,20 @@
                                                         oninput="value=value.replace(/[^\d.]/g,'')"></em></strong>
                                     </li>
                                     <li class="shopping-total-price">
-                                        <em>总计</em>
+                                        <em><?php echo $this->obj->getValidateMessage('chengjiaozongjia'); ?></em>
                                         <strong class="price"
                                                 id="final_price"><span><?php echo $this->currency; ?></span><em><?php echo $lists['total']['finalprice']; ?></em></strong>
                                     </li>
                                 </ul>
                             </div>
                         </div>
-                        <button class="btn btn-default" type="submit" id="continue">继续购物 <i
+                        <button class="btn btn-default" type="submit"
+                                id="continue"><?php echo $this->obj->getValidateMessage('continue'); ?> <i
                                     class="fa fa-shopping-cart"></i>
                         </button>
-                        <button class="btn btn-primary" type="button" id="btn-checkout">去结算 <i class="fa fa-check"></i>
+                        <button class="btn btn-primary" type="button"
+                                id="btn-checkout"><?php echo $this->obj->getValidateMessage('dingdanjiesuan'); ?> <i
+                                    class="fa fa-check"></i>
                         </button>
                     </div>
                 <?php } ?>
@@ -246,11 +250,12 @@
     // 当获得焦点时
     var old_send_price = 0;
     var new_send_price = 0;
-    $("input[name='send_price']").focus(function () {
+    var input_send_price = $("input[name='send_price']");
+    input_send_price.focus(function () {
         old_send_price = $(this).val();
     });
     // 当失去焦点时
-    $("input[name='send_price']").blur(function () {
+    input_send_price.blur(function () {
         new_send_price = $(this).val();
         if (old_send_price != new_send_price) {
             // 这个时候商品的总额啥的就不用变化了
@@ -271,7 +276,7 @@
         total_price = Number(total_price);
         $('#total_price').find('em').html(total_price.toFixed(2));
         // 运费
-        send_price = Number($("input[name='send_price']").val());
+        send_price = Number(input_send_price.val());
         // 订单总额
         var final_price = Number(total_price + send_price).toFixed(2);
         $('#final_price').find('em').html(final_price);
@@ -306,13 +311,13 @@
                 if (result.messages.length > 0) {
                     layer.open({
                         content: result.messages[0],
-                        btn: '我知道了'
+                        btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>"
                     });
                 } else {
                     //提示
                     layer.open({
-                        content: '生成订单成功',
-                        btn: '2秒后自动跳转',
+                        content: "<?php echo $this->obj->getValidateMessage('success'); ?>",
+                        btn: "<?php echo $this->obj->getValidateMessage('please-wait'); ?>",
                         time: 2, //2秒后自动跳转
                     });
                     // 1秒后跳转
@@ -342,7 +347,7 @@
                 // 有错误信息，失败了
                 layer.open({
                     content: response.messages[0],
-                    btn: '我知道了'
+                    btn: "<?php echo $this->obj->getValidateMessage('success'); ?>",
                 });
             } else {
                 // 没有错误信息，成功

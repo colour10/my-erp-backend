@@ -96,7 +96,9 @@
 
                         <div class="product-page-content">
                             <ul id="myTab" class="nav nav-tabs">
-                                <li class="active"><a href="#Description" data-toggle="tab">商品详情</a></li>
+                                <li class="active"><a href="#Description"
+                                                      data-toggle="tab"><?php echo $this->obj->obj->getValidateMessage('product-description'); ?></a>
+                                </li>
                             </ul>
                             <div id="myTabContent" class="tab-content">
                                 <div class="tab-pane fade in active" id="Description">
@@ -129,6 +131,8 @@
         // var color_name = '';
         // var size_id = $("#product_size").val();
         var size_id = $('#product_size option:selected').val();
+        var product_quantity = $("#product-quantity");
+        var price = $("#price");
         // var size_name = '';
         // $("#product_color option").each(function(){
         // 	if(color_id == $("#product_color").val()){
@@ -147,9 +151,9 @@
             async: true,
             dataType: 'json',
             data: {
-                'number': $("#product-quantity").val(),
-                'price': $("#price").html(),
-                'total_price': $("#product-quantity").val() * $("#price").html(),
+                'number': product_quantity.val(),
+                'price': price.html(),
+                'total_price': product_quantity.val() * price.html(),
                 // 取商品标题
                 'product_name': $('h1').html(),
                 'product_id': $("#product_id").attr("attr-id"),
@@ -165,15 +169,15 @@
                 if (!result.auth) {
                     layer.open({
                         content: result.messages[0],
-                        btn: '我知道了'
+                        btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>"
                     });
                 } else {
                     // return false;
                     //提示
                     layer.open({
-                        content: '成功添加到购物车',
-                        btn: "2秒后自动关闭",
-                        time: 2, //2秒后自动关闭
+                        content: "<?php echo $this->obj->getValidateMessage('success'); ?>",
+                        btn: "<?php echo $this->obj->getValidateMessage('please-wait'); ?>",
+                        time: 3, // 3秒后自动关闭
                     });
                     // 3秒后跳转
                     setTimeout(function () {

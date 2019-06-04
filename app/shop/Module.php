@@ -2,7 +2,8 @@
 
 namespace Multiple\Shop;
 
-use Multiple\Shop\Controllers\IndexController;
+use Asa\Erp\StaticReader;
+use Multiple\Shop\Controllers\AdminController;
 use Phalcon\Loader;
 use Phalcon\Mvc\View;
 use Phalcon\DiInterface;
@@ -60,6 +61,7 @@ class Module implements ModuleDefinitionInterface
 
         // 主域名
         $config = $di->get("config");
+        $session = $di->get('session');
         $di->setShared('main_host', function () use ($config) {
             $main_host = $config['app']['main_host'];
             return $main_host;
@@ -103,12 +105,6 @@ class Module implements ModuleDefinitionInterface
             return $cates;
         });
 
-        // 判断是否登录
-        $di->setShared('islogin', function () {
-            $index = new IndexController();
-            return $index->isloginAction();
-        });
-
         // 获取当前域名及所属公司的模型
         $tbcompany = new CompanyController();
         $di->setShared('host', function () use ($tbcompany) {
@@ -117,10 +113,12 @@ class Module implements ModuleDefinitionInterface
         });
 
         // 为了使用共享model数据，需要注册currentCompany
-        $di->setShared('currentCompany', function () use ($tbcompany) {
-            $result = $tbcompany->gethost();
-            if ($result) {
-                return $result['company']->id;
+        $di->setShared('currentCompany', function () use ($session) {
+            if ($session->has("member")) {
+                $member = $session->get("member");
+                return $member["companyid"];
+            } else {
+                return "";
             }
         });
 
@@ -128,5 +126,33 @@ class Module implements ModuleDefinitionInterface
         $di->setShared('currency', function () {
             return "$";
         });
+
+        // 默认联系邮箱
+        $di->setShared('contactEmail', function () {
+            return "806316776@qq.com";
+        });
+
+        // 登录用户信息
+        $di->setShared('member', function () use ($di, $session) {
+            if ($session->has("member")) {
+                $member = $session->get("member");
+                return $member;
+            } else {
+                return [];
+            }
+        });
+
+        // 访问静态列表数据的资源
+        $di->setShared('staticReader', function () use ($di) {
+            $reader = new StaticReader();
+            $reader->setDI($di);
+            return $reader;
+        });
+
+        // 主控制器模型
+        $di->setShared('obj', function () {
+            return new AdminController();
+        });
+
     }
 }

@@ -11,7 +11,7 @@
 <!-- Head BEGIN -->
 <head>
     <meta charset="utf-8">
-    <title>订单结算</title>
+    <title><?php echo $this->obj->getValidateMessage('dingdanjiesuan'); ?></title>
 
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -48,13 +48,13 @@
 <!-- Body BEGIN -->
 <body class="ecommerce">
 
-<?php echo $this->view->getPartial('layouts/_header') ?>
+<?php echo $this->obj->view->getPartial('layouts/_header') ?>
 
 <div class="main">
     <div class="container">
         <ul class="breadcrumb">
-            <li><a href="/">首页</a></li>
-            <li class="active">订单结算</li>
+            <li><a href="/"><?php echo $this->obj->getValidateMessage('shouye'); ?></a></li>
+            <li class="active"><?php echo $this->obj->getValidateMessage('dingdanjiesuan'); ?></li>
         </ul>
         <!-- BEGIN SIDEBAR & CONTENT -->
         <div class="row margin-bottom-40">
@@ -74,7 +74,8 @@
                                     <h2 class="panel-title">
                                         <a data-toggle="collapse" data-parent="#checkout-page" href="#checkout-content"
                                            class="accordion-toggle">
-                                            Step 1: 填写您的收货信息
+                                            Step
+                                            1: <?php echo $this->obj->getValidateMessage('please-fill-in-your-address'); ?>
                                         </a>
                                     </h2>
                                 </div>
@@ -85,27 +86,35 @@
                                             <?php
                                             if (count($data['addresses']) == '0') {
                                                 ?>
+
                                                 <div class="form-group">
-                                                    <label for="reciver_name">收件人姓名 <span
+                                                    <label for="reciver_name"><?php echo $this->obj->getValidateMessage('shouhuoren'); ?>
+                                                        <span
                                                                 class="require">*</span></label>
                                                     <input type="text" id="username" class="form-control">
                                                 </div>
+
                                                 <div class="form-group">
-                                                    <label for="reciver_phone">收件人电话 <span
+                                                    <label for="reciver_phone"><?php echo $this->obj->getValidateMessage('mobile'); ?>
+                                                        <span
                                                                 class="require">*</span></label>
                                                     <input type="text" id="mobile" class="form-control">
                                                 </div>
+
                                                 <div class="form-group">
-                                                    <label for="reciver_address">收件人地址 <span
+                                                    <label for="reciver_address"><?php echo $this->obj->getValidateMessage('address'); ?>
+                                                        <span
                                                                 class="require">*</span></label>
                                                     <input type="text" id="address" class="form-control">
                                                 </div>
+
                                                 <div class="form-group">
-                                                    <label for="smart_address">智能解析地址</label>
+                                                    <label for="smart_address"><?php echo $this->obj->getValidateMessage('address-resolution'); ?></label>
                                                     <textarea type="text" id="smart-address"
                                                               class="form-control" onchange="smart()"></textarea><br>
-                                                    <p>注：粘贴地址后，鼠标点击空白处，即可自动解析。</p>
+                                                    <p><?php echo $this->obj->getValidateMessage('address-resolution-rule'); ?></p>
                                                 </div>
+
                                                 <?php
                                             } else {
                                                 foreach ($data['addresses'] as $address) {
@@ -117,7 +126,7 @@
                                                                 value="<?php echo $address['id'] ?>"<?php if ($address['is_default']) {
                                                             echo 'checked="checked"';
                                                         } ?>> <?php echo $address['name'] . ' ' . $address['tel'] . ' ' . $address['address']; ?><?php if ($address['is_default']) {
-                                                            echo ' [默认地址]';
+                                                            echo ' [' . $this->obj->getValidateMessage('default-address') . ']';
                                                         } ?></label>
                                                     <br>
                                                     <?php
@@ -128,7 +137,7 @@
                                             <button class="btn btn-primary pull-right" type="submit"
                                                     data-toggle="collapse" data-parent="#checkout-page"
                                                     data-target="#payment-address-content" id="button-payment-address">
-                                                继续
+                                                <?php echo $this->obj->getValidateMessage('continue'); ?>
                                             </button>
 
                                         </div>
@@ -143,7 +152,8 @@
                                     <h2 class="panel-title">
                                         <a data-toggle="collapse" data-parent="#checkout-page"
                                            href="#payment-address-content" class="accordion-toggle">
-                                            Step 2: 选择支付方式
+                                            Step
+                                            2: <?php echo $this->obj->getValidateMessage('choose-payment-method'); ?>
                                         </a>
                                     </h2>
                                 </div>
@@ -153,14 +163,17 @@
                                             <div class="form-group paymethod">
                                                 <label for="paymethod1"><input type="radio" id="paymethod1" class=""
                                                                                name="pay_style" value="1"
-                                                                               checked="checked"> 微信</label>
+                                                                               checked="checked">
+                                                    <?php echo $this->obj->getValidateMessage('weixin'); ?></label>
 
                                                 <label for="paymethod2"><input type="radio" id="paymethod2" class=""
-                                                                               name="pay_style" value="2"> 支付宝</label>
+                                                                               name="pay_style" value="2">
+                                                    <?php echo $this->obj->getValidateMessage('alipay'); ?></label>
 
                                                 <button class="btn btn-primary  pull-right" type="submit"
                                                         data-toggle="collapse" data-parent="#checkout-page"
-                                                        data-target="#confirm-content" id="button-payment-address">继续
+                                                        data-target="#confirm-content"
+                                                        id="button-payment-address"><?php echo $this->obj->getValidateMessage('continue'); ?>
                                                 </button>
 
                                             </div>
@@ -179,7 +192,7 @@
                                     <h2 class="panel-title">
                                         <a data-toggle="collapse" data-parent="#checkout-page" href="#confirm-content"
                                            class="accordion-toggle">
-                                            Step 3: 结算
+                                            Step 3: <?php echo $this->obj->getValidateMessage('menu-8'); ?>
                                         </a>
                                     </h2>
                                 </div>
@@ -192,13 +205,13 @@
                                         <div class="table-wrapper-responsive">
                                             <table>
                                                 <tr>
-                                                    <th class="checkout-image">图片</th>
-                                                    <th class="checkout-description">商品名称</th>
-                                                    <th class="checkout-model">颜色</th>
-                                                    <th class="checkout-model">尺寸</th>
-                                                    <th class="checkout-quantity">价格</th>
-                                                    <th class="checkout-price">数量</th>
-                                                    <th class="checkout-price">总价</th>
+                                                    <th class="checkout-image"><?php echo $this->obj->getValidateMessage('tupian'); ?></th>
+                                                    <th class="checkout-description"><?php echo $this->obj->getValidateMessage('shangpinmingcheng'); ?></th>
+                                                    <th class="checkout-model"><?php echo $this->obj->getValidateMessage('yanse'); ?></th>
+                                                    <th class="checkout-model"><?php echo $this->obj->getValidateMessage('menu-2-1-7'); ?></th>
+                                                    <th class="checkout-quantity"><?php echo $this->obj->getValidateMessage('jiage'); ?></th>
+                                                    <th class="checkout-price"><?php echo $this->obj->getValidateMessage('shuliang'); ?></th>
+                                                    <th class="checkout-price"><?php echo $this->obj->getValidateMessage('zongjia'); ?></th>
                                                 </tr>
                                                 <?php foreach ($data['product'] as $k => $v) { ?>
                                                     <tr>
@@ -214,11 +227,11 @@
                                                         </td>
                                                         <td class="checkout-model"><?php echo $v['color_name']; ?></td>
                                                         <td class="checkout-model"><?php echo $v['size_name']; ?></td>
-                                                        <td class="checkout-quantity"><?php echo $this->currency . $v['price']; ?></td>
+                                                        <td class="checkout-quantity"><?php echo $this->obj->currency . $v['price']; ?></td>
                                                         <td class="checkout-price">
                                                             <strong><?php echo $v['number']; ?></strong></td>
                                                         <td class="checkout-total">
-                                                            <strong><span><?php echo $this->currency; ?></span><?php echo $v['total_price']; ?>
+                                                            <strong><span><?php echo $this->obj->currency; ?></span><?php echo $v['total_price']; ?>
                                                             </strong></td>
                                                     </tr>
                                                 <?php } ?>
@@ -228,42 +241,42 @@
                                         <div class="checkout-total-block">
                                             <ul>
                                                 <li>
-                                                    <em>商品总计</em>
-                                                    <strong class="price"><span><?php echo $this->currency; ?></span><?php echo $data['common']['total_price']; ?>
+                                                    <em><?php echo $this->obj->getValidateMessage('zongjia'); ?></em>
+                                                    <strong class="price"><span><?php echo $this->obj->currency; ?></span><?php echo $data['common']['total_price']; ?>
                                                     </strong>
                                                 </li>
                                                 <li>
-                                                    <em>运费</em>
-                                                    <strong class="price"><span><?php echo $this->currency; ?></span><?php echo $data['common']['send_price']; ?>
+                                                    <em><?php echo $this->obj->getValidateMessage('freight'); ?></em>
+                                                    <strong class="price"><span><?php echo $this->obj->currency; ?></span><?php echo $data['common']['send_price']; ?>
                                                     </strong>
                                                 </li>
                                                 <li class="checkout-total-price">
-                                                    <em>成交价</em>
-                                                    <strong class="price"><span><?php echo $this->currency; ?></span><?php echo $data['common']['final_price']; ?>
+                                                    <em><?php echo $this->obj->getValidateMessage('chengjiaozongjia'); ?></em>
+                                                    <strong class="price"><span><?php echo $this->obj->currency; ?></span><?php echo $data['common']['final_price']; ?>
                                                     </strong>
                                                 </li>
                                             </ul>
                                         </div>
                                         <div class="clearfix"></div>
                                         <?php if ($data['common']['order_status'] == '2') { ?>
-                                            <span class="pull-right">订单已支付未完成</span>
+                                            <span class="pull-right"><?php echo $this->obj->getValidateMessage('payment-not-completed'); ?></span>
                                         <?php } else if ($data['common']['order_status'] == '3') { ?>
-                                            <span class="pull-right">订单已完成</span>
+                                            <span class="pull-right"><?php echo $this->obj->getValidateMessage('completed'); ?></span>
                                         <?php } else if ($data['common']['order_status'] == '4') { ?>
-                                            <span class="pull-right">订单已取消</span>
+                                            <span class="pull-right"><?php echo $this->obj->getValidateMessage('cancelled'); ?></span>
                                         <?php } else if ($data['common']['order_status'] == '5') { ?>
-                                            <span class="pull-right">订单退款中</span>
+                                            <span class="pull-right"><?php echo $this->obj->getValidateMessage('refunding'); ?></span>
                                         <?php } else if ($data['common']['order_status'] == '6') { ?>
-                                            <span class="pull-right">订单已退款</span>
+                                            <span class="pull-right"><?php echo $this->obj->getValidateMessage('refunded'); ?></span>
                                         <?php } else { ?>
                                             <button class="btn btn-primary pull-right" type="button" id="button-confirm"
                                                     onclick="payment_order(<?php echo $data['common']['id']; ?>);return false;">
-                                                支付
+                                                <?php echo $this->obj->getValidateMessage('pay'); ?>
                                             </button>
                                             <button type="button" class="btn btn-default pull-right margin-right-20"
                                                     id="button-cancle"
                                                     onclick="cancle_order(<?php echo $data['common']['id']; ?>);return false;">
-                                                取消
+                                                <?php echo $this->obj->getValidateMessage('button-cancel'); ?>
                                             </button>
                                         <?php } ?>
                                     </div>
@@ -272,7 +285,7 @@
                         </div>
                         <!-- END CONFIRM -->
                     <?php } else { ?>
-                        <p>订单不存在</p>
+                        <p><?php echo $this->obj->getValidateMessage('order', 'template', 'notexist'); ?></p>
                     <?php } ?>
 
                 </div>
@@ -286,7 +299,7 @@
 
 <script src="/shop/assets/custom/arealist.js"></script>
 <script src="/shop/assets/custom/addressparse.js"></script>
-<?php echo $this->view->getPartial('layouts/_footer'); ?>
+<?php echo $this->obj->view->getPartial('layouts/_footer'); ?>
 
 <script>
     // 订单支付逻辑
@@ -314,13 +327,13 @@
                 if (response.messages.length > 0) {
                     layer.open({
                         content: response.messages[0],
-                        btn: '我知道了'
+                        btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>"
                     });
                 } else {
                     //提示
                     layer.open({
-                        content: '付款成功',
-                        btn: '3秒后自动跳转',
+                        content: "<?php echo $this->obj->getValidateMessage('success'); ?>",
+                        btn: "<?php echo $this->obj->getValidateMessage('please-wait'); ?>",
                         time: 3, // 3秒后自动跳转
                     });
                     // 3秒后跳转

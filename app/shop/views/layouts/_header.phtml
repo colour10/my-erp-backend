@@ -27,17 +27,17 @@
             <div class="col-md-6 col-sm-6 additional-nav">
                 <ul class="list-unstyled list-inline pull-right">
                     <li><?php if ($this->session->get('member')) {
-                            echo '欢迎 ' . $this->session->get('member')['login_name'];
+                            echo $this->obj->getValidateMessage('welcome') . ' ' . $this->session->get('member')['name'];
                         } ?></li>
-                    <li><a href="/member">个人资料</a></li>
-                    <li><a href="/buycar">购物车</a></li>
-                    <li><a href="/order/list">我的订单</a></li>
+                    <li><a href="/member"><?php echo $this->obj->getValidateMessage('jibenziliao'); ?></a></li>
+                    <li><a href="/buycar"><?php echo $this->obj->getValidateMessage('buycar'); ?></a></li>
+                    <li><a href="/order/list"><?php echo $this->obj->getValidateMessage('my-order'); ?></a></li>
                     <li <?php if ($this->session->get('member')) {
                         echo "style='display:none;'";
-                    } ?>><a href="/login/index">登录</a></li>
+                    } ?>><a href="/login/index"><?php echo $this->obj->getValidateMessage('denglu'); ?></a></li>
                     <li <?php if (!$this->session->get('member')) {
                         echo "style='display:none;'";
-                    } ?>><a href="/login/logout">退出</a></li>
+                    } ?>><a href="/login/logout"><?php echo $this->obj->getValidateMessage('tuichu'); ?></a></li>
                 </ul>
             </div>
             <!-- END TOP BAR MENU -->
@@ -80,11 +80,12 @@
                                 </li>
                             <?php } ?>
                         <?php } else { ?>
-                            <li>你的购物车空空如也</li>
+                            <li><?php echo $this->obj->getValidateMessage('buycar-empty'); ?></li>
                         <?php } ?>
                     </ul>
                     <div class="text-right">
-                        <a href="/buycar/index" class="btn btn-default">查看购物车</a>
+                        <a href="/buycar/index"
+                           class="btn btn-default"><?php echo $this->obj->getValidateMessage('view-buycar'); ?></a>
                         <!--<a href="/order/index" class="btn btn-primary">去结算</a>-->
                     </div>
                 </div>
@@ -105,7 +106,7 @@
                     <!--更多分类 Start-->
                     <li class="dropdown active">
                         <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="javascript:;">
-                            >>更多
+                            >><?php echo $this->obj->getValidateMessage('more'); ?>
 
                         </a>
 
