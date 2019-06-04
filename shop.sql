@@ -1,5 +1,4 @@
 /* 此sql为附带商城相关表 */
- */
 /* 购物车表 */
 
 DROP TABLE IF EXISTS `tb_buycar`;

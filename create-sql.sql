@@ -2073,12 +2073,12 @@ CREATE TABLE `tb_product_lastmodify` (
   `brandid` int(11) unsigned NOT NULL COMMENT '品牌id',
   `brandcolor` int(11) unsigned NOT NULL COMMENT '色系id',
   `colorname` varchar(200) NULL COMMENT '品牌颜色名称',
+  `wordcode_3` varchar(200) NULL COMMENT '国际码颜色',
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
   KEY `companyid` (`companyid`),
   KEY `brandid` (`brandid`),
-  KEY `brandcolor` (`brandcolor`),
-  UNIQUE KEY `companyid_brandid_brandcolor` (`companyid`,`brandid`,`brandcolor`)
+  KEY `brandcolor` (`brandcolor`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='品牌色系最后更新记录表';
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
