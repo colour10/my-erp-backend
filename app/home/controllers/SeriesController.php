@@ -14,4 +14,8 @@ class SeriesController extends ZadminController {
 
 	    $this->setModelName('Asa\\Erp\\TbSeries');
     }
+
+    function before_page() {
+        $_POST["__orderby"] = "displayindex asc";
+    }
 }
