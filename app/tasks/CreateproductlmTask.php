@@ -18,7 +18,7 @@ class CreateproductlmTask extends \Phalcon\CLI\Task
         // 逻辑
         // 使用原生sql查询
         $sql = "SELECT t.*
-FROM (select * from temp_tb_product order by maketime desc limit 1000000000000000000) t
+FROM (select * from tb_product order by maketime desc limit 1000000000000000000) t
 GROUP BY t.brandid,t.brandcolor,t.companyid";
         $product = new TbProduct();
         // 结果集
