@@ -223,6 +223,7 @@ class CommonController extends BaseController
             "currency" => ["model"=>'Asa\Erp\TbCurrency',"company"=>false, "orderby"=>"code asc"],
             "price" => ["model"=>'Asa\Erp\TbPrice',"company"=>false, "orderby"=>"displayindex asc"],
             "saletype" => ["model"=>'Asa\Erp\TbSaleType',"company"=>false, "orderby"=>"displayindex asc"],
+            "producttype" => ["model"=>'Asa\Erp\TbProductType',"company"=>false, "orderby"=>"displayindex asc"],
         ];
         $table = $this->dispatcher->getParam("table");
         $model = $maps[$table];
