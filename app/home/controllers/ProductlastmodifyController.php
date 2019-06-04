@@ -16,21 +16,20 @@ class ProductlastmodifyController extends AdminController
 
 
     /**
-     * 根据companyid、brandid、wordcode_3查询对应的颜色规格列表
+     * 根据companyid、brandid查询对应的颜色规格列表
      * @return false|string
      */
     public function loadAction()
     {
         // 逻辑
         if ($this->request->isPost()) {
-            // 根据companyid、brandid、wordcode_3获取一个列表
+            // 根据companyid、brandid获取一个列表
             $datas = TbProductLastmodify::find([
-                "companyid = :companyid: AND brandid = :brandid: AND wordcode_3 = :wordcode_3:",
+                "companyid = :companyid: AND brandid = :brandid:",
                 'bind' => [
                     // 如果不传companyid，则默认为当前用户所属companyid
                     'companyid' => $this->request->get('companyid') ?: $this->currentCompany,
                     'brandid' => $this->request->get('brandid'),
-                    'wordcode_3' => $this->request->get('wordcode_3'),
                 ],
             ]);
             // 返回

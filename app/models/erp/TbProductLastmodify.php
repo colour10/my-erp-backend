@@ -25,19 +25,19 @@ class TbProductLastmodify extends BaseModel
     public static function add($companyid, $brandid, $wordcode_3, $brandcolor, $colorname)
     {
         // 逻辑
-        // 这里要求companyid、brandid、brandcolor、wordcode_3具有唯一性
+        // 这里要求companyid、brandid、wordcode_3具有唯一性
         // 操作逻辑：存在则修改，不存在则新增
         if ($model = TbProductLastmodify::findFirst([
-            "companyid = :companyid: AND brandid = :brandid: AND wordcode_3 = :wordcode_3: AND brandcolor = :brandcolor:",
+            "companyid = :companyid: AND brandid = :brandid: AND wordcode_3 = :wordcode_3:",
             'bind' => [
                 'companyid' => $companyid,
                 'brandid' => $brandid,
                 'wordcode_3' => $wordcode_3,
-                'brandcolor' => $brandcolor,
             ],
         ])) {
             // 存在则修改
             $data = [
+                'brandcolor' => $brandcolor,
                 'colorname' => $colorname,
                 'updated_at' => date('Y-m-d H:i:s'),
             ];

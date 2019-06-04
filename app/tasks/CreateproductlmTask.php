@@ -12,7 +12,7 @@ class CreateproductlmTask extends \Phalcon\CLI\Task
 {
     /**
      * 生成逻辑
-     * companyid、brandid、wordcode_3、brandcolor唯一
+     * companyid、brandid、wordcode_3唯一
      */
     public function mainAction()
     {
@@ -20,7 +20,7 @@ class CreateproductlmTask extends \Phalcon\CLI\Task
         // 使用原生sql查询
         $sql = "SELECT t.*
 FROM (select * from tb_product order by maketime desc limit 1000000000000000000) t
-GROUP BY t.companyid,t.brandid,t.wordcode_3,t.brandcolor";
+GROUP BY t.companyid,t.brandid,t.wordcode_3";
         $product = new TbProduct();
         // 结果集
         $datas = new Resultset(null, $product, $product->getReadConnection()->query($sql));
