@@ -4,7 +4,6 @@ namespace Multiple\Shop\Controllers;
 
 use Phalcon\Mvc\Controller;
 use Phalcon\Db\Column;
-use Phalcon\Mvc\Model\Message;
 
 class AdminController extends Controller
 {
@@ -50,7 +49,7 @@ class AdminController extends Controller
         $primaryKeys = $metaData->getPrimaryKeyAttributes($model);
         $fieldTypes = $metaData->getDataTypes($model);
 
-        $array = array();
+        $array = [];
 
         foreach ($primaryKeys as $key) {
             if ($fieldTypes[$key] == Column::TYPE_INTEGER || $fieldTypes[$key] == Column::TYPE_BIGINTEGER || $fieldTypes[$key] == Column::TYPE_MEDIUMINTEGER || $fieldTypes[$key] == Column::TYPE_SMALLINTEGER || $fieldTypes[$key] == Column::TYPE_TINYINTEGER) {
@@ -66,7 +65,7 @@ class AdminController extends Controller
     public function indexAction()
     {
         $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
-        $result = $findFirst->invokeArgs(null, array());
+        $result = $findFirst->invokeArgs(null, []);
 
         $this->view->setVar("result", $result->toArray());
     }
@@ -111,7 +110,7 @@ class AdminController extends Controller
                 }
             }
 
-            $result = array("code" => 200, "messages" => array());
+            $result = ["code" => 200, "messages" => []];
             if ($row->create() === false) {
                 $messages = $row->getMessages();
 
@@ -131,9 +130,8 @@ class AdminController extends Controller
     function doEdit()
     {
         if ($this->request->isPost()) {
-            //�������ݿ�
             $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
-            $row = $findFirst->invokeArgs(null, array($this->getCondition()));
+            $row = $findFirst->invokeArgs(null, [$this->getCondition()]);
 
             if ($row != false) {
                 $fields = $this->getAttributes();
@@ -143,7 +141,7 @@ class AdminController extends Controller
                     }
                 }
 
-                $result = array("code" => 200, "messages" => array());
+                $result = ["code" => 200, "messages" => []];
                 if ($row->save() === false) {
                     $messages = $row->getMessages();
 
@@ -155,9 +153,8 @@ class AdminController extends Controller
                 $this->view->disable();
             }
         } else {
-            //�����ݿ��в������ݣ�����ģ��
             $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
-            $info = $findFirst->invokeArgs(null, array($this->getCondition()));
+            $info = $findFirst->invokeArgs(null, [$this->getCondition()]);
 
             if ($info != false) {
                 $this->view->setVar("info", $info);
@@ -168,9 +165,9 @@ class AdminController extends Controller
     function doDelete()
     {
         $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
-        $row = $findFirst->invokeArgs(null, array($this->getCondition()));
+        $row = $findFirst->invokeArgs(null, [$this->getCondition()]);
 
-        $result = array("code" => 200, "messages" => array());
+        $result = ["code" => 200, "messages" => []];
         if ($row != false) {
             if ($row->delete() == false) {
                 $messages = $row->getMessages();
@@ -201,11 +198,21 @@ class AdminController extends Controller
      * 返回正确的json信息
      * @param array $data 如果有数据返回，那么就填充数据
      * @param string $code 状态码，默认是200
-     * @return false|string
+     * @param array $messages 错误信息
+     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
      */
-    public function success($data = [], $code = '200')
+    public function success($data = [], $code = '200', array $messages = [])
     {
-        return json_encode(['code' => $code, 'messages' => [], 'data' => $data]);
+        // 设置json头
+        $this->response->setContentType('application/json', 'UTF-8');
+        // 预处理
+        $return = [
+            'code' => $code,
+            'messages' => $messages,
+            'data' => $data,
+        ];
+        // 返回json信息
+        return $this->response->setJsonContent($return);
     }
 
 
@@ -217,6 +224,8 @@ class AdminController extends Controller
      */
     public function error($messages = [], $code = '200')
     {
+        // 设置json头
+        $this->response->setContentType('application/json', 'UTF-8');
         if ($messages instanceof Model === true) {
             $array = [];
             foreach ($messages->getMessages() as $message) {
@@ -227,15 +236,18 @@ class AdminController extends Controller
         } else {
             $array = $messages;
         }
-
-        return json_encode(['code' => $code, 'messages' => $array]);
+        // 返回json信息
+        return $this->response->setJsonContent([
+            'code' => $code,
+            'messages' => $array,
+        ]);
     }
 
     /**
      * 多语言版本配置读取函数
-     * @param $field_name 验证字段的提示名称，比如cn.php中上面的自定义变量名system_name
-     * @param $module_name 模块名称，比如cn.php中的template
-     * @param $module_rule 模块验证规则，比如cn.php中的template模块下面的uniqueness
+     * @param string $field_name 验证字段的提示名称，比如cn.php中上面的自定义变量名system_name
+     * @param string $module_name 模块名称，比如cn.php中的template
+     * @param string $module_rule 模块验证规则，比如cn.php中的template模块下面的uniqueness
      * @return string
      */
     public function getValidateMessage($field_name, $module_name = '', $module_rule = '')

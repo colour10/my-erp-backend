@@ -18,29 +18,24 @@ use Asa\Erp\Util;
  */
 class BuycarController extends AdminController
 {
-
-    public function initialize()
-    {
-
-    }
-
-
     /**
      * 购物车首页
      */
     public function indexAction()
     {
-        if (!$rs = $this->session->get('member')) {
-            return $this->dispatcher->forward([
-                'controller' => 'login',
-                'action' => 'index',
-            ]);
+        // 验证是否登录
+        if (!$member = $this->member) {
+            return $this->response->redirect('/login');
         }
+
         // 开始调用购物车列表
         $lists = $this->getListsAction();
-
+        // 传递参数
         if (count($lists['items']) > 0) {
-            $this->view->setVars(compact('lists'));
+            $this->view->setVars([
+                'lists' => $lists,
+
+            ]);
         } else {
             // 否则就直接转发到空购物车
             return $this->dispatcher->forward([
@@ -64,14 +59,13 @@ class BuycarController extends AdminController
      */
     function getListAction()
     {
-        if ($rs = $this->session->get('member')) {
+        if ($rs = $this->member) {
             // 当前登录用户id
-            $member_id = $this->session->get('member')['id'];
+            $member_id = $rs['id'];
             // 当前登录用户的购物车模型
             $cars = TbBuycar::find('member_id=' . $member_id);
 
             if (!$cars->toArray()) {
-                // return false;
                 // 返回空数据
                 return json_encode(['code' => '200', 'auth' => [], 'messages' => []]);
             }
@@ -95,7 +89,8 @@ class BuycarController extends AdminController
                 $cars_arr['items'][$k]['member'] = $car->member->toArray();
                 $temp_product = $car->product->toArray();
                 $temp_num = $car->number;
-                $totalprice += $car->total_price;
+                // 价格采用高精度计算
+                $totalprice = bcadd($totalprice, $car->total_price, 2);
                 $totalnum += $temp_num;
             }
             // 默认运费为0
@@ -107,8 +102,8 @@ class BuycarController extends AdminController
                 'freightprice' => $freightprice,
                 // 订单总数量
                 'totalnum' => $totalnum,
-                // 订单总金额（合计金额+运费）
-                'finalprice' => round($totalprice + $freightprice, 2),
+                // 订单总金额（合计金额+运费，采用高精度计算）
+                'finalprice' => bcadd($totalprice, $freightprice, 2),
             ];
             return json_encode(['code' => '200', 'auth' => $cars_arr, 'messages' => []]);
         } else {
@@ -123,9 +118,9 @@ class BuycarController extends AdminController
     // 渲染用
     function getListsAction()
     {
-        if ($rs = $this->session->get('member')) {
+        if ($rs = $this->member) {
             // 当前登录用户id
-            $member_id = $this->session->get('member')['id'];
+            $member_id = $rs['id'];
             // 当前登录用户的购物车模型
             $cars = TbBuycar::find('member_id=' . $member_id);
 
@@ -184,7 +179,8 @@ class BuycarController extends AdminController
                 $cars_arr['items'][$k]['member'] = $car->member->toArray();
                 $temp_product = $car->product->toArray();
                 $temp_num = $car->number;
-                $totalprice += $car->total_price;
+                // 采用高精度计算
+                $totalprice = bcadd($totalprice, $car->total_price, 2);
                 $totalnum += $temp_num;
             }
             // 默认运费为0
@@ -196,8 +192,8 @@ class BuycarController extends AdminController
                 'freightprice' => $freightprice,
                 // 订单总数量
                 'totalnum' => $totalnum,
-                // 订单总金额（合计金额+运费）
-                'finalprice' => round($totalprice + $freightprice, 2),
+                // 订单总金额（合计金额+运费，采用高精度计算）
+                'finalprice' => bcadd($totalprice, $freightprice, 2),
             ];
             // 返回
             return $cars_arr;
@@ -210,15 +206,17 @@ class BuycarController extends AdminController
         }
     }
 
+
     /**
      * 添加到购物车
-     * @return bool|void
+     * @return array|false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|string|void
      */
     public function addAction()
     {
         // 如果是post提交
         if ($this->request->isPost()) {
-            if ($rs = $this->session->get('member')) {
+            // 是否登录
+            if ($rs = $this->member) {
                 // 取出post数据
                 $post = $this->request->getPost();
                 // 尺码留空的数据删除
@@ -231,8 +229,7 @@ class BuycarController extends AdminController
 
                 // 如果数据为空，则提示不能提交
                 if (count($post['sizecontentids']) == '0') {
-                    $msg = $this->getValidateMessage('order', 'template', 'required');
-                    return $this->error([$msg]);
+                    return $this->error($this->getValidateMessage('order', 'template', 'required'));
                 }
 
 
@@ -240,8 +237,7 @@ class BuycarController extends AdminController
                 // 如果不存在则报严重错误
                 $productModel = TbProductSearch::findFirstById($post['product_id']);
                 if (!$productModel) {
-                    $msg = $this->getValidateMessage('product', 'template', 'notexist');
-                    return $this->error($msg);
+                    return $this->error($this->getValidateMessage('product', 'template', 'notexist'));
                 }
 
 
@@ -255,11 +251,12 @@ class BuycarController extends AdminController
                 }
 
 
-                // 组装库存数据列表
+                // 组装库存数据列表，采用悲观锁
                 $sizecontents = TbProductstock::sum([
                     sprintf("warehouseid in (%s) and defective_level=0 and productid = %s", implode(',', $array), $productModel->productid),
                     "group" => 'productid, sizecontentid',
                     "column" => 'number',
+                    "for_update" => true,
                 ]);
                 if ($sizecontents) {
                     $sizecontents = $sizecontents->toArray();
@@ -274,8 +271,7 @@ class BuycarController extends AdminController
                 // 查找库存是否充足，如果库存不足禁止加入购物车
                 foreach ($post['sizecontentids'] as $sizecontentid => $sizecontentnumber) {
                     if ($sizecontentnumber > $return_sizecontents[$sizecontentid]['sumatory']) {
-                        $msg = $this->getValidateMessage('out-of-stock');
-                        return $this->error([$msg]);
+                        return $this->error($this->getValidateMessage('out-of-stock'));
                     }
                 }
 
@@ -355,7 +351,9 @@ class BuycarController extends AdminController
 
                 // 返回提交成功
                 return $this->success();
-
+            } else {
+                // 报错
+                return $this->error($this->getValidateMessage('model-delete-message'));
             }
         }
     }
@@ -367,33 +365,37 @@ class BuycarController extends AdminController
     public function deletecarAction()
     {
         // 逻辑
-        // 判断是否登录
-        if (!$this->session->get('member')) {
-            return $this->dispatcher->forward([
-                'controller' => 'login',
-                'action' => 'index',
-            ]);
-        }
         // 过滤
-        $params = $this->dispatcher->getParams();
-        if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
-            exit('Params error!');
-        }
-        // 赋值
-        $id = $params[0];
+        if ($this->request->isPost()) {
+            // 是否登录
+            if ($rs = $this->member) {
+                $params = $this->dispatcher->getParams();
+                if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
+                    // 传递错误
+                    $this->view->setVars([
+                        'title' => $this->getValidateMessage('make-an-error'),
+                        'message' => $this->getValidateMessage('params-error'),
+                    ]);
+                    return $this->view->pick('error/error');
+                }
+                // 赋值
+                $id = $params[0];
 
-        // 判断购物车表是否有这个id
-        $buycar = TbBuycar::findFirstById($id);
-        if (!$buycar) {
-            $msg = $this->getValidateMessage('buycar', 'template', 'notexist');
-            return $this->error([$msg]);
+                // 判断购物车表是否有这个id
+                $buycar = TbBuycar::findFirstById($id);
+                if (!$buycar) {
+                    return $this->error($this->getValidateMessage('buycar', 'template', 'notexist'));
+                }
+                // 开始删除
+                if (!$buycar->delete()) {
+                    return $this->error($this->getValidateMessage('buycar', 'db', 'delete-failed'));
+                }
+                // 成功返回
+                return $this->success();
+            } else {
+                // 报错
+                return $this->error($this->getValidateMessage('model-delete-message'));
+            }
         }
-        // 开始删除
-        if (!$buycar->delete()) {
-            $msg = $this->getValidateMessage('buycar', 'db', 'delete-failed');
-            return $this->error([$msg]);
-        }
-        // 成功返回
-        return $this->success();
     }
 }

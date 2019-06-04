@@ -10,6 +10,7 @@ use Asa\Erp\TbProductstock;
 use Asa\Erp\TbSizecontent;
 use Asa\Erp\Util;
 use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
+use phpDocumentor\Reflection\Types\Self_;
 
 /**
  * 品类操作类
@@ -18,7 +19,9 @@ use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
  */
 class BrandgroupController extends AdminController
 {
-
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         $this->setModelName('Asa\\Erp\\TbBrandgroup');
@@ -53,17 +56,18 @@ class BrandgroupController extends AdminController
     {
         // 逻辑
         // 判断是否登录
-        if (!$member = $this->session->get('member')) {
-            return $this->dispatcher->forward([
-                'controller' => 'login',
-                'action' => 'index',
-            ]);
+        if (!$member = $this->member) {
+            return $this->response->redirect('/login');
         }
-
         // 先过滤
         $params = $this->dispatcher->getParams();
         if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
-            exit('Params error!');
+            // 传递错误
+            $this->view->setVars([
+                'title' => $this->getValidateMessage('make-an-error'),
+                'message' => $this->getValidateMessage('params-error'),
+            ]);
+            return $this->view->pick('error/error');
         }
         // 赋值
         $id = $params[0];
@@ -178,9 +182,10 @@ class BrandgroupController extends AdminController
         $page = $paginator->getPaginate();
 
         // 定义面包屑导航
-        $breadcrumb = '<li><a href="/">首页</a></li><li class="active">' . $brandGroup->$name . '</li>';
+        $breadcrumb = '<li><a href="/">' . $this->getValidateMessage('shouye') . '</a></li><li class="active">' . $brandGroup->$name . '</li>';
 
         // 推送给模板
+        // 再加上当前object对象
         $this->view->setVars([
             'page' => $page,
             'id' => $id,

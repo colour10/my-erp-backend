@@ -10,7 +10,7 @@
 <!-- Head BEGIN -->
 <head>
     <meta charset="utf-8">
-    <title>地址管理</title>
+    <title><?php echo $this->obj->getValidateMessage('address-list'); ?></title>
 
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -52,8 +52,8 @@
 <div class="main">
     <div class="container">
         <ul class="breadcrumb">
-            <li><a href="/">首页</a></li>
-            <li class="active">地址管理</li>
+            <li><a href="/"><?php echo $this->obj->getValidateMessage('shouye'); ?></a></li>
+            <li class="active"><?php echo $this->obj->getValidateMessage('address-list'); ?></li>
         </ul>
         <!-- BEGIN SIDEBAR & CONTENT -->
         <div class="row margin-bottom-40">
@@ -62,17 +62,19 @@
 
             <!-- BEGIN CONTENT -->
             <div class="col-md-9 col-sm-9">
-                <h1 class="h1-title"><span class="pull-right"><a href="/memberaddress/add">添加新地址</a></span>地址管理</h1>
+                <h1 class="h1-title"><span class="pull-right"><a
+                                href="/memberaddress/add"><?php echo $this->obj->getValidateMessage('add-new-address'); ?></a></span><?php echo $this->obj->getValidateMessage('address-list'); ?>
+                </h1>
                 <div class="content-form-page">
                     <div class="row">
                         <div class="col-md-12">
                             <table id="table-address" class="table table-bordered table-hover" style="width:100%">
                                 <tr>
-                                    <th>收货人</th>
-                                    <th>详细地址</th>
-                                    <th>联系方式</th>
-                                    <th>操作</th>
-                                    <th>设置默认</th>
+                                    <th><?php echo $this->obj->getValidateMessage('shouhuoren'); ?></th>
+                                    <th><?php echo $this->obj->getValidateMessage('address'); ?></th>
+                                    <th><?php echo $this->obj->getValidateMessage('mobile'); ?></th>
+                                    <th><?php echo $this->obj->getValidateMessage('caozuo'); ?></th>
+                                    <th><?php echo $this->obj->getValidateMessage('set-default'); ?></th>
                                 </tr>
                                 <?php
                                 if (count($result) > 0) {
@@ -85,15 +87,16 @@
                                             <td>
                                                 <a class="t-change"
                                                    href="/memberaddress/edit/<?php echo $address['id']; ?>"
-                                                   target="_self">修改</a>
+                                                   target="_self"><?php echo $this->obj->getValidateMessage('button-modify'); ?></a>
                                                 <span class="t-line">|</span>
                                                 <a onclick="address_del(<?php echo $address['id']; ?>);return false;"><span
-                                                            class="t-delete">删除</span></a></td>
+                                                            class="t-delete"><?php echo $this->obj->getValidateMessage('button-delete'); ?></span></a>
+                                            </td>
                                             <td>
                                                 <?php if ($address['is_default']) { ?>
-                                                    <span class="t-default">默认地址</span>
+                                                    <span class="t-default"><?php echo $this->obj->getValidateMessage('default-address'); ?></span>
                                                 <?php } else { ?>
-                                                    <a onclick="address_set_default(<?php echo $address['id']; ?>);return false;">设为默认</a>
+                                                    <a onclick="address_set_default(<?php echo $address['id']; ?>);return false;"><?php echo $this->obj->getValidateMessage('set-default'); ?></a>
                                                 <?php } ?>
 
                                             </td>
@@ -101,7 +104,7 @@
                                     <?php } ?>
                                 <?php } else { ?>
                                     <tr>
-                                        <td colspan="5">您没有保存任何收货地址</td>
+                                        <td colspan="5"><?php echo $this->obj->getValidateMessage('no-saving-addresses'); ?></td>
                                     </tr>
                                 <?php } ?>
                             </table>
@@ -116,6 +119,83 @@
 </div>
 
 <?php echo $this->view->getPartial('layouts/_footer'); ?>
+
+<script>
+    /**
+     * 地址设置为默认
+     * @returns {boolean}
+     */
+    function address_set_default(id) {
+        // 询问框
+        layer.open({
+            content: "<?php echo $this->obj->getValidateMessage('confirm-default-adress'); ?>",
+            btn: ["<?php echo $this->obj->getValidateMessage('yes'); ?>", "<?php echo $this->obj->getValidateMessage('no'); ?>"],
+            yes: function (index) {
+                // ajax提交
+                $.post('/memberaddress/setdefault/' + id, {}, function (response) {
+                    // 判断是否有错误
+                    if (response.messages.length > 0) {
+                        layer.open({
+                            content: response.messages[0],
+                            btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>"
+                        });
+                    } else {
+                        //提示
+                        layer.open({
+                            content: "<?php echo $this->obj->getValidateMessage('success'); ?>",
+                            btn: "<?php echo $this->obj->getValidateMessage('please-wait'); ?>",
+                            time: 3, // 3秒后自动跳转
+                        });
+                        // 3秒后跳转
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1000);
+                    }
+                }, 'json');
+                // 关闭弹出层
+                layer.close(index);
+            }
+        });
+    }
+
+
+    /**
+     * 删除地址
+     * @returns {boolean}
+     */
+    function address_del(id) {
+        // 询问框
+        layer.open({
+            content: "<?php echo $this->obj->getValidateMessage('confirm-delete-adress'); ?>",
+            btn: ["<?php echo $this->obj->getValidateMessage('yes'); ?>", "<?php echo $this->obj->getValidateMessage('no'); ?>"],
+            yes: function (index) {
+                // ajax提交
+                $.post('/memberaddress/del/' + id, {}, function (response) {
+                    // 判断是否有错误
+                    if (response.messages.length > 0) {
+                        layer.open({
+                            content: response.messages[0],
+                            btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>"
+                        });
+                    } else {
+                        //提示
+                        layer.open({
+                            content: "<?php echo $this->obj->getValidateMessage('success'); ?>",
+                            btn: "<?php echo $this->obj->getValidateMessage('please-wait'); ?>",
+                            time: 3, // 3秒后自动跳转
+                        });
+                        // 3秒后跳转
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1000);
+                    }
+                }, 'json');
+                // 关闭弹出层
+                layer.close(index);
+            }
+        });
+    }
+</script>
 
 </body>
 <!-- END BODY -->

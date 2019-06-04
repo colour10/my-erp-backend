@@ -21,10 +21,18 @@ use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
  */
 class OrderController extends AdminController
 {
-
-    public function initialize()
+    /**
+     * 关闭index控制器
+     */
+    public function indexAction()
     {
-
+        // 逻辑
+        // 传递错误
+        $this->view->setVars([
+            'title' => $this->getValidateMessage('make-an-error'),
+            'message' => $this->getValidateMessage('404-not-found'),
+        ]);
+        return $this->view->pick('error/error');
     }
 
     /**
@@ -32,16 +40,26 @@ class OrderController extends AdminController
      */
     public function detailAction()
     {
+        // 验证是否登录
+        if (!$member = $this->member) {
+            return $this->response->redirect('/login');
+        }
+
         // 先过滤
         $params = $this->dispatcher->getParams();
         if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
-            exit('Params error!');
+            // 传递错误
+            $this->view->setVars([
+                'title' => $this->getValidateMessage('make-an-error'),
+                'message' => $this->getValidateMessage('params-error'),
+            ]);
+            return $this->view->pick('error/error');
         }
         // 赋值
         $id = $params[0];
 
         // 判断是否登录
-        if ($rs = $this->session->get('member')) {
+        if ($rs = $this->member) {
             $order = TbShoporderCommon::findFirst(
                 "member_id = " . $rs['id'] . ' and id=' . $id
             );
@@ -84,213 +102,212 @@ class OrderController extends AdminController
     public function addOrderAction()
     {
         // 逻辑
-        if ($rs = $this->session->get('member')) {
-            // 因为逻辑涉及到操作多个表，所以务必使用事务处理，以保证完整性
-            // 采用事务处理
-            $this->db->begin();
+        if ($this->request->isPost()) {
+            // 判断是否登录
+            if ($rs = $this->member) {
+                // 因为逻辑涉及到操作多个表，所以务必使用事务处理，以保证完整性
+                // 采用事务处理
+                $this->db->begin();
 
-            // 首先判断是否有库存，如果没有库存就不能下单
-            // 因为下单的时候是按照尺码下单的，这个时候需要分别统计
-            // 首先取出销售端口，查库存用
-            // 在取出库存之前，首先获取销售端口
-            $company = TbCompany::findFirstById($rs['companyid']);
-            $saleport = $company->shopSaleport;
-            $array = Util::recordListColumn($saleport->saleportWarehouses, 'warehouseid');
+                // 首先判断是否有库存，如果没有库存就不能下单
+                // 因为下单的时候是按照尺码下单的，这个时候需要分别统计
+                // 首先取出销售端口，查库存用
+                // 在取出库存之前，首先获取销售端口
+                $company = TbCompany::findFirstById($rs['companyid']);
+                $saleport = $company->shopSaleport;
+                $array = Util::recordListColumn($saleport->saleportWarehouses, 'warehouseid');
 
 
-            // 遍历
-            // 多语言字段
-            $name = $this->getlangfield('name');
-            // 并取出当前尺码的实际库存
-            foreach ($_POST['data'] as $k => $item) {
-                // 产品模型
-                $productModel = TbProductSearch::findFirstById($item['product_id']);
-                // 尺码模型
-                $sizecontentModel = TbSizecontent::findFirstById($item['size_id']);
-                // 如果商品不存在，那么就回滚报错
-                if (!$productModel) {
-                    // 回滚
-                    $this->db->rollback();
-                    $msg = $this->getValidateMessage('product', 'template', 'notexist');
-                    return $this->error([$msg]);
-                }
-                // 如果尺码不存在，也回滚报错
-                if (!$sizecontentModel) {
-                    // 回滚
-                    $this->db->rollback();
-                    $msg = $this->getValidateMessage('sizecontent', 'template', 'notexist');
-                    return $this->error([$msg]);
-                }
-                // 组装库存数据列表
-                $stockModel = TbProductstock::sum([
-                    sprintf("warehouseid in (%s) and defective_level=0 and productid = %s and sizecontentid = %s", implode(',', $array), $productModel->productid, $item['size_id']),
-                    "group" => 'productid, sizecontentid',
-                    "column" => 'number',
-                ]);
-                // 如果库存信息存在
-                if ($stockModel) {
-                    $stock = $stockModel->toArray();
-                    $stocknumber = $stock[0]['sumatory'];
-                } else {
-                    $stocknumber = 0;
-                }
-                // 把实际库存数量放回原来的数组
-                $_POST['data'][$k]['stocknumber'] = $stocknumber;
-                // 尺码名称也放进去
-                $_POST['data'][$k]['size_name'] = $sizecontentModel->name;
-                // 颜色也放进去
-                $_POST['data'][$k]['color_id'] = $productModel->color;
-                // 颜色描述默认为空
-                $color_name = '';
-                if ($productModel->color) {
-                    $colorids = explode(',', $productModel->color);
-                    $colornames = [];
-                    foreach ($colorids as $colorid) {
-                        $colorModel = TbColortemplate::findFirstById($colorid);
-                        if ($colorModel) {
-                            $colorname = $colorModel->$name;
-                        } else {
-                            $colorname = '';
-                        }
-                        $colornames[] = $colorname;
+                // 遍历
+                // 多语言字段
+                $name = $this->getlangfield('name');
+                // 并取出当前尺码的实际库存
+                foreach ($_POST['data'] as $k => $item) {
+                    // 产品模型
+                    $productModel = TbProductSearch::findFirstById($item['product_id']);
+                    // 尺码模型
+                    $sizecontentModel = TbSizecontent::findFirstById($item['size_id']);
+                    // 如果商品不存在，那么就回滚报错
+                    if (!$productModel) {
+                        // 回滚
+                        $this->db->rollback();
+                        return $this->error($this->getValidateMessage('product', 'template', 'notexist'));
                     }
-                    // 合并为字符串
-                    $color_name = implode(',', $colornames);
+                    // 如果尺码不存在，也回滚报错
+                    if (!$sizecontentModel) {
+                        // 回滚
+                        $this->db->rollback();
+                        return $this->error($this->getValidateMessage('sizecontent', 'template', 'notexist'));
+                    }
+                    // 组装库存数据列表
+                    $stockModel = TbProductstock::sum([
+                        sprintf("warehouseid in (%s) and defective_level=0 and productid = %s and sizecontentid = %s", implode(',', $array), $productModel->productid, $item['size_id']),
+                        "group" => 'productid, sizecontentid',
+                        "column" => 'number',
+                    ]);
+                    // 如果库存信息存在
+                    if ($stockModel) {
+                        $stock = $stockModel->toArray();
+                        $stocknumber = $stock[0]['sumatory'];
+                    } else {
+                        $stocknumber = 0;
+                    }
+                    // 把实际库存数量放回原来的数组
+                    $_POST['data'][$k]['stocknumber'] = $stocknumber;
+                    // 尺码名称也放进去
+                    $_POST['data'][$k]['size_name'] = $sizecontentModel->name;
+                    // 颜色也放进去
+                    $_POST['data'][$k]['color_id'] = $productModel->color;
+                    // 颜色描述默认为空
+                    $color_name = '';
+                    if ($productModel->color) {
+                        $colorids = explode(',', $productModel->color);
+                        $colornames = [];
+                        foreach ($colorids as $colorid) {
+                            $colorModel = TbColortemplate::findFirstById($colorid);
+                            if ($colorModel) {
+                                $colorname = $colorModel->$name;
+                            } else {
+                                $colorname = '';
+                            }
+                            $colornames[] = $colorname;
+                        }
+                        // 合并为字符串
+                        $color_name = implode(',', $colornames);
+                    }
+                    $_POST['data'][$k]['color_name'] = $color_name;
+                    // 产品模型也放进去
+                    $_POST['data'][$k]['product'] = $productModel->toArray();
+                    // 产品价格
+                    $_POST['data'][$k]['product']['realprice'] = $productModel->product->wordprice;
                 }
-                $_POST['data'][$k]['color_name'] = $color_name;
-                // 产品模型也放进去
-                $_POST['data'][$k]['product'] = $productModel->toArray();
-                // 产品价格
-                $_POST['data'][$k]['product']['realprice'] = $productModel->product->wordprice;
-            }
 
 
-            // 接着判断库存够不够
-            // 生成订单的时候验证库存，同时付款的时候也要再检查一次
-            // 重新写入订单主表
-            // 为了防止篡改，只接收传过来的商品id，价格什么的统一由后台进行计算
-            // 声明变量用来保存订单
-            // 商品总价格
-            $total_price = 0;
-            // 运费，默认为0
-            $send_price = $_POST['send_price'];
-            // 最终成交价格
-            $final_price = 0;
-            // 购物车一维数组
-            $buycars = [];
-            foreach ($_POST['data'] as $k => $item) {
-                // 挨个库存进行对比
-                if ($item['number'] > $item['stocknumber']) {
-                    // 回滚
-                    $this->db->rollback();
-                    $msg = $this->getValidateMessage('out-of-stock');
-                    return $this->error([$msg]);
+                // 接着判断库存够不够
+                // 生成订单的时候验证库存，同时付款的时候也要再检查一次
+                // 重新写入订单主表
+                // 为了防止篡改，只接收传过来的商品id，价格什么的统一由后台进行计算
+                // 声明变量用来保存订单
+                // 商品总价格
+                $total_price = 0;
+                // 运费，默认为0
+                $send_price = $_POST['send_price'];
+                // 购物车一维数组
+                $buycars = [];
+                foreach ($_POST['data'] as $k => $item) {
+                    // 挨个库存进行对比
+                    if ($item['number'] > $item['stocknumber']) {
+                        // 回滚
+                        $this->db->rollback();
+                        return $this->error($this->getValidateMessage('out-of-stock'));
+                    }
+                    // 然后计算总金额
+                    // 然后把新的从数据库查询出来的数据装进post数组里
+                    $_POST['data'][$k]['total_price'] = $item['product']['realprice'] * $item['number'];
+                    // 重新计算总金额，采用高精度计算
+                    $total_price = bcadd($total_price, $item['product']['realprice'] * $item['number'], 2);
+                    // 把购物车订单也组合起来
+                    $buycars[] = $item['id'];
                 }
-                // 然后计算总金额
-                // 然后把新的从数据库查询出来的数据装进post数组里
-                $_POST['data'][$k]['total_price'] = $item['product']['realprice'] * $item['number'];
-                // 重新计算总金额
-                $total_price += $item['product']['realprice'] * $item['number'];
-                // 把购物车订单也组合起来
-                $buycars[] = $item['id'];
-            }
 
-            // 最终成交价格=商品总价格+运费
-            $final_price = $total_price + $send_price;
+                // 最终成交价格=商品总价格+运费，采用高精度计算
+                $final_price = bcadd($total_price, $send_price, 2);
 
 
-            // 开始添加订单主表
-            // 默认订单有效期为1个小时
-            $now = time();
-            $model_common = new TbShoporderCommon();
-            $model_common->total_price = $total_price;
-            $model_common->send_price = $send_price;
-            $model_common->final_price = $final_price;
-            $model_common->create_time = date("Y-m-d H:i:s", $now);
-            $model_common->expire_time = date("Y-m-d H:i:s", $now + 3600);
-            $model_common->member_id = $rs['id'];
-            // 订单号
-            $model_common->order_no = $this->generate_trade_no();
-            if (!$model_common->save()) {
-                // 回滚
-                $this->db->rollback();
-                // 取出错误信息
-                return $this->error($model_common);
-            }
-
-
-            // 接着添加订单详情表
-            $data_common = [];
-            foreach ($_POST['data'] as $key => $value) {
-                $data_common = [
-                    'order_commonid' => $model_common->id,
-                    'product_id' => $value['product_id'],
-                    'product_name' => $value['product']['productname'],
-                    'price' => $value['product']['realprice'],
-                    'number' => $value['number'],
-                    'total_price' => $value['total_price'],
-                    'picture' => $value['product']['picture'],
-                    'picture2' => $value['product']['picture2'],
-                    'color_id' => $value['color_id'],
-                    'color_name' => $value['color_name'],
-                    'size_id' => $value['size_id'],
-                    'size_name' => $value['size_name'],
-                ];
-                $shoporderdetail = new TbShoporder;
-                if (!$shoporderdetail->create($data_common)) {
-                    // 回滚
-                    $this->db->rollback();
-                    // 取出错误信息
-                    return $this->error($shoporderdetail);
-                }
-            }
-
-
-            // 然后把原来的购物车删除
-            foreach ($buycars as $buycarid) {
-                $model = TbBuycar::findFirstById($buycarid);
-                if (!$model) {
-                    // 回滚
-                    $this->db->rollback();
-                    // 取出错误信息
-                    $msg = $this->getValidateMessage('buycar', 'template', 'notexist');
-                    return $this->error([$msg]);
-                }
-                if (!$model->delete()) {
+                // 开始添加订单主表
+                // 默认订单有效期为1个小时
+                $now = time();
+                $model_common = new TbShoporderCommon();
+                $model_common->total_price = $total_price;
+                $model_common->send_price = $send_price;
+                $model_common->final_price = $final_price;
+                $model_common->create_time = date("Y-m-d H:i:s", $now);
+                $model_common->expire_time = date("Y-m-d H:i:s", $now + 3600);
+                $model_common->member_id = $rs['id'];
+                // 订单号
+                $model_common->order_no = $this->generate_trade_no();
+                if (!$model_common->save()) {
                     // 回滚
                     $this->db->rollback();
                     // 取出错误信息
-                    return $this->error($model);
+                    return $this->error($model_common);
                 }
-            }
 
 
-            // 商品表执行减库存操作
-            // 分别减库存
-            foreach ($_POST['data'] as $item) {
-                // 产品库存模型
-                $model = TbProductSearch::findFirstById($item['product_id']);
-                // 做减法
-                // 本来应该检测是否超卖的，但是上一步已经验证有库存，所以最终值不会小于0
-                $model->number -= $item['number'];
-                if (!$model->save()) {
-                    // 回滚
-                    $this->db->rollback();
-                    // 取出错误信息
-                    return $this->error($model);
+                // 接着添加订单详情表
+                $data_common = [];
+                foreach ($_POST['data'] as $key => $value) {
+                    $data_common = [
+                        'order_commonid' => $model_common->id,
+                        'product_id' => $value['product_id'],
+                        'product_name' => $value['product']['productname'],
+                        'price' => $value['product']['realprice'],
+                        'number' => $value['number'],
+                        'total_price' => $value['total_price'],
+                        'picture' => $value['product']['picture'],
+                        'picture2' => $value['product']['picture2'],
+                        'color_id' => $value['color_id'],
+                        'color_name' => $value['color_name'],
+                        'size_id' => $value['size_id'],
+                        'size_name' => $value['size_name'],
+                    ];
+                    $shoporderdetail = new TbShoporder;
+                    if (!$shoporderdetail->create($data_common)) {
+                        // 回滚
+                        $this->db->rollback();
+                        // 取出错误信息
+                        return $this->error($shoporderdetail);
+                    }
                 }
+
+
+                // 然后把原来的购物车删除
+                foreach ($buycars as $buycarid) {
+                    $model = TbBuycar::findFirstById($buycarid);
+                    if (!$model) {
+                        // 回滚
+                        $this->db->rollback();
+                        // 取出错误信息
+                        return $this->error($this->getValidateMessage('buycar', 'template', 'notexist'));
+                    }
+                    if (!$model->delete()) {
+                        // 回滚
+                        $this->db->rollback();
+                        // 取出错误信息
+                        return $this->error($model);
+                    }
+                }
+
+
+                // 商品表执行减库存操作
+                // 分别减库存
+                foreach ($_POST['data'] as $item) {
+                    // 产品库存模型，采用悲观锁
+                    $model = TbProductSearch::findFirst([
+                        'conditions' => 'id=' . $item['product_id'],
+                        'for_update' => true,
+                    ]);
+                    // 做减法
+                    // 本来应该检测是否超卖的，但是上一步已经验证有库存，所以最终值不会小于0
+                    $model->number -= $item['number'];
+                    if (!$model->save()) {
+                        // 回滚
+                        $this->db->rollback();
+                        // 取出错误信息
+                        return $this->error($model);
+                    }
+                }
+
+                // 提交事务
+                $this->db->commit();
+
+                // 返回提交成功，并且返回新订单的ID
+                return $this->success($model_common->id);
+
+            } else {
+                // 返回错误信息
+                return $this->error($this->getValidateMessage('model-delete-message'));
             }
-
-            // 提交事务
-            $this->db->commit();
-
-            // 返回提交成功，并且返回新订单的ID
-            return $this->success($model_common->id);
-
-        } else {
-            // 返回错误信息
-            $msg = $this->getValidateMessage('model-delete-message');
-            return $this->error([$msg]);
         }
     }
 
@@ -302,8 +319,9 @@ class OrderController extends AdminController
     public function confirmAction()
     {
         // 逻辑
+        // 如果是post请求
         if ($this->request->isPost()) {
-            if ($rs = $this->session->get('member')) {
+            if ($rs = $this->member) {
                 // 判断是否有传过来参数id，如果有就针对针对单个订单进行支付，否则就针对所有未支付的订单进行支付
                 // 初始化一个变量
                 $id = '';
@@ -335,8 +353,7 @@ class OrderController extends AdminController
                     // 回滚
                     $this->db->rollback();
                     // 取出错误信息
-                    $msg = $this->getValidateMessage('payment-failed');
-                    return $this->error([$msg]);
+                    return $this->error($this->getValidateMessage('payment-failed'));
                 }
 
                 // 存在则付款
@@ -364,14 +381,12 @@ class OrderController extends AdminController
                         // 回滚
                         $this->db->rollback();
                         // 取出错误信息
-                        $msg = $this->getValidateMessage('product', 'template', 'notexist');
-                        return $this->error([$msg]);
+                        return $this->error($this->getValidateMessage('product', 'template', 'notexist'));
                     }
                     if ($model->number < $item['number']) {
                         // 回滚
                         $this->db->rollback();
-                        $msg = $this->getValidateMessage('out-of-stock');
-                        return $this->error([$msg]);
+                        return $this->error($this->getValidateMessage('out-of-stock'));
                     }
                 }
 
@@ -381,8 +396,7 @@ class OrderController extends AdminController
                     // 回滚
                     $this->db->rollback();
                     // 取出错误信息
-                    $msg = $this->getValidateMessage('payment-failed');
-                    return $this->error([$msg]);
+                    return $this->error($this->getValidateMessage('payment-failed'));
                 }
 
                 // 付款成功，开始执行数据库写入操作
@@ -394,8 +408,7 @@ class OrderController extends AdminController
                         // 回滚
                         $this->db->rollback();
                         // 取出错误信息
-                        $msg = $this->getValidateMessage('address-doesnot-exist');
-                        return $this->error([$msg]);
+                        return $this->error($this->getValidateMessage('address-doesnot-exist'));
                     }
                     // 赋值
                     $order->reciver_name = $addressModel->name;
@@ -410,15 +423,13 @@ class OrderController extends AdminController
                     if (!$_POST['reciver_name'] || !$_POST['reciver_phone'] || !$_POST['reciver_address']) {
                         // 回滚
                         $this->db->rollback();
-                        $msg = $this->getValidateMessage('fill-out-required-fields');
-                        return $this->error([$msg]);
+                        return $this->error($this->getValidateMessage('fill-out-required-fields'));
                     }
                     // 验证手机号
                     if (!preg_match("/^1[34578]\d{9}$/", $_POST['reciver_phone'])) {
                         // 回滚
                         $this->db->rollback();
-                        $msg = $this->getValidateMessage('mobile-invalid');
-                        return $this->error([$msg]);
+                        return $this->error($this->getValidateMessage('mobile-invalid'));
                     }
 
                     // 开始插入
@@ -473,6 +484,9 @@ class OrderController extends AdminController
 
                 // 返回成功信息
                 return $this->success();
+            } else {
+                // 返回错误信息
+                return $this->error($this->getValidateMessage('model-delete-message'));
             }
         }
     }
@@ -484,12 +498,9 @@ class OrderController extends AdminController
     public function listAction()
     {
         // 逻辑
-        // 判断是否登录
-        if (!$member = $this->session->get('member')) {
-            return $this->dispatcher->forward([
-                'controller' => 'login',
-                'action' => 'index',
-            ]);
+        // 验证是否登录
+        if (!$member = $this->member) {
+            return $this->response->redirect('/login');
         }
 
         // 分页
@@ -590,7 +601,7 @@ class OrderController extends AdminController
 
     /**
      * 取出支付状态
-     * @param $paystatus tb_shoporder_common中order_status的值
+     * @param string $paystatus tb_shoporder_common中order_status的值
      * @return string 支付状态说明
      */
     public function paystatus($paystatus)
@@ -598,25 +609,25 @@ class OrderController extends AdminController
         // 逻辑
         switch ($paystatus) {
             case '1':
-                $paystatus_desc = '未支付';
+                $paystatus_desc = $this->getValidateMessage('unpaid');
                 break;
             case '2':
-                $paystatus_desc = '已支付未完成';
+                $paystatus_desc = $this->getValidateMessage('payment-not-completed');
                 break;
             case '3':
-                $paystatus_desc = '已完成';
+                $paystatus_desc = $this->getValidateMessage('completed');
                 break;
             case '4':
-                $paystatus_desc = '已取消';
+                $paystatus_desc = $this->getValidateMessage('cancelled');
                 break;
             case '5':
-                $paystatus_desc = '退款中';
+                $paystatus_desc = $this->getValidateMessage('refunding');
                 break;
             case '6':
-                $paystatus_desc = '已退款';
+                $paystatus_desc = $this->getValidateMessage('refunded');
                 break;
             default:
-                $paystatus_desc = '未支付';
+                $paystatus_desc = $this->getValidateMessage('unpaid');
         }
         // 返回
         return $paystatus_desc;
@@ -631,10 +642,15 @@ class OrderController extends AdminController
         // 逻辑
         // 先过滤
         if ($this->request->isPost()) {
-            if ($rs = $this->session->get('member')) {
+            if ($rs = $this->member) {
                 $params = $this->dispatcher->getParams();
                 if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
-                    exit('Params error!');
+                    // 传递错误
+                    $this->view->setVars([
+                        'title' => $this->getValidateMessage('make-an-error'),
+                        'message' => $this->getValidateMessage('params-error'),
+                    ]);
+                    return $this->view->pick('error/error');
                 }
                 // 赋值
                 $id = $params[0];
@@ -643,8 +659,7 @@ class OrderController extends AdminController
                 $order = TbShoporderCommon::findFirst("member_id=" . $rs['id'] . " and id=" . $id . " and order_status=1");
                 if (!$order) {
                     // 取出错误信息
-                    $msg = $this->getValidateMessage('order', 'template', 'notexist');
-                    return $this->error([$msg]);
+                    return $this->error($this->getValidateMessage('order', 'template', 'notexist'));
                 }
 
                 // 判断有没有传递第二个参数，如果有则说明是主动取消的订单
@@ -668,18 +683,27 @@ class OrderController extends AdminController
                     // 回滚
                     $this->db->rollback();
                     // 报错
-                    $msg = $this->getValidateMessage('order', 'db', 'save-failed');
-                    return $this->error([$msg]);
+                    return $this->error($this->getValidateMessage('order', 'db', 'save-failed'));
                 }
                 // 锁定库存还原
                 foreach ($shoporders as $shoporder) {
-                    // 执行写入
-                    $sql = "UPDATE tb_product_search SET number = number + " . $shoporder->number . " WHERE id=" . $shoporder->product_id;
-                    if (!$this->db->execute($sql)) {
+                    // 执行写入，为了安全，这里采用悲观锁进行处理
+                    $productSearchModel = TbProductSearch::findFirst([
+                        'conditions' => 'id=' . $shoporder->product_id,
+                        'for_update' => true,
+                    ]);
+                    // 商品不存在回滚
+                    if (!$productSearchModel) {
                         // 回滚
                         $this->db->rollback();
-                        $msg = $this->getValidateMessage('order', 'db', 'save-failed');
-                        return $this->error([$msg]);
+                        return $this->error($this->getValidateMessage('product-doesnot-exist'));
+                    }
+                    // 开始还原
+                    $productSearchModel->number += $shoporder->number;
+                    if (!$productSearchModel->save()) {
+                        // 回滚
+                        $this->db->rollback();
+                        return $this->error($this->getValidateMessage('order', 'db', 'save-failed'));
                     }
                 }
                 // 事务提交
@@ -688,8 +712,7 @@ class OrderController extends AdminController
                 return $this->success();
             } else {
                 // 报错
-                $msg = $this->getValidateMessage('model-delete-message');
-                return $this->error([$msg]);
+                return $this->error($this->getValidateMessage('model-delete-message'));
             }
         }
     }
@@ -703,10 +726,16 @@ class OrderController extends AdminController
         // 逻辑
         // 先过滤
         if ($this->request->isPost()) {
-            if ($rs = $this->session->get('member')) {
+            // 是否登录
+            if ($rs = $this->member) {
                 $params = $this->dispatcher->getParams();
                 if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
-                    exit('Params error!');
+                    // 传递错误
+                    $this->view->setVars([
+                        'title' => $this->getValidateMessage('make-an-error'),
+                        'message' => $this->getValidateMessage('params-error'),
+                    ]);
+                    return $this->view->pick('error/error');
                 }
                 // 赋值
                 $id = $params[0];
@@ -720,8 +749,7 @@ class OrderController extends AdminController
                     // 回滚
                     $this->db->rollback();
                     // 取出错误信息
-                    $msg = $this->getValidateMessage('order', 'template', 'notexist');
-                    return $this->error([$msg]);
+                    return $this->error($this->getValidateMessage('order', 'template', 'notexist'));
                 }
 
                 // 取出每个订单下面具体商品信息
@@ -733,15 +761,25 @@ class OrderController extends AdminController
                 if ($refund_result['result_code'] == 'SUCCESS') {
                     // 变更状态为已退款
                     $order_status = '6';
-                    // 如果是已退款，还得还原库存
+                    // 如果是已退款，还得还原库存，还原库存同样采用悲观锁处理
                     foreach ($shoporders as $shoporder) {
-                        // 执行写入
-                        $sql = "UPDATE tb_product_search SET number = number + " . $shoporder->number . " WHERE id=" . $shoporder->product_id;
-                        if (!$this->db->execute($sql)) {
+                        // 执行写入，为了安全，这里采用悲观锁进行处理
+                        $productSearchModel = TbProductSearch::findFirst([
+                            'conditions' => 'id=' . $shoporder->product_id,
+                            'for_update' => true,
+                        ]);
+                        // 商品不存在回滚
+                        if (!$productSearchModel) {
                             // 回滚
                             $this->db->rollback();
-                            $msg = $this->getValidateMessage('order', 'db', 'save-failed');
-                            return $this->error([$msg]);
+                            return $this->error($this->getValidateMessage('product-doesnot-exist'));
+                        }
+                        // 开始还原
+                        $productSearchModel->number += $shoporder->number;
+                        if (!$productSearchModel->save()) {
+                            // 回滚
+                            $this->db->rollback();
+                            return $this->error($this->getValidateMessage('order', 'db', 'save-failed'));
                         }
                     }
                 } else {
@@ -753,8 +791,7 @@ class OrderController extends AdminController
                     // 回滚
                     $this->db->rollback();
                     // 报错
-                    $msg = $this->getValidateMessage('order', 'db', 'save-failed');
-                    return $this->error([$msg]);
+                    return $this->error($this->getValidateMessage('order', 'db', 'save-failed'));
                 }
 
                 // 提交事务
@@ -764,8 +801,7 @@ class OrderController extends AdminController
                 return $this->success();
             } else {
                 // 报错
-                $msg = $this->getValidateMessage('model-delete-message');
-                return $this->error([$msg]);
+                return $this->error($this->getValidateMessage('model-delete-message'));
             }
         }
     }

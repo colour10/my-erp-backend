@@ -1,9 +1,15 @@
 <!-- BEGIN SIDEBAR -->
 <div class="sidebar col-md-3 col-sm-3">
     <ul class="list-group margin-bottom-25 sidebar-menu">
-        <li class="list-group-item clearfix"><a href="/member"><i class="fa fa-angle-right"></i> 默认首页</a></li>
-        <li class="list-group-item clearfix"><a href="/member/resetpassword"><i class="fa fa-angle-right"></i> 密码重置</a></li>
-        <li class="list-group-item clearfix"><a href="/memberaddress"><i class="fa fa-angle-right"></i> 地址管理</a></li>
+        <li class="list-group-item clearfix"><a href="/member"><i
+                        class="fa fa-angle-right"></i> <?php echo $this->obj->getValidateMessage('shouye'); ?></a></li>
+        <li class="list-group-item clearfix"><a href="/member/resetpassword"><i
+                        class="fa fa-angle-right"></i> <?php echo $this->obj->getValidateMessage('reset-password'); ?>
+            </a>
+        </li>
+        <li class="list-group-item clearfix"><a href="/memberaddress"><i
+                        class="fa fa-angle-right"></i> <?php echo $this->obj->getValidateMessage('address-list'); ?></a>
+        </li>
     </ul>
 </div>
 <!-- END SIDEBAR -->

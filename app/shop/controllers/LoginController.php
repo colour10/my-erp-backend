@@ -18,37 +18,42 @@ class LoginController extends AdminController
      */
     public function initialize()
     {
-    	
+
     }
 
     /**
-     * 登录页面
+     * 登录首页
+     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|void
      */
-	public function indexAction()
+    public function indexAction()
     {
-    	
+        // 如果已经登录，则直接跳转到首页
+        if ($this->member) {
+            return $this->response->redirect('/');
+        }
     }
 
     /**
      * 会员登录逻辑
      * @return false|string
      */
-     function loginAction()
+    public function loginAction()
     {
         // 采用post接收
-        if($this->request->isPost()) {
+        if ($this->request->isPost()) {
             // 接收变量
             $username = $this->request->get('login_name');
             $password = $this->request->get('password');
 
             // 验证合法性
             if (!$username || !$password) {
-                return $this->error(['用户名或密码不能为空']);
+                return $this->error($this->getValidateMessage('fill-out-required-fields'));
             }
 
             // 查找记录
+            // 我们规定，用户名，昵称或者邮箱都可以登录
             $rs = TbMember::findFirst([
-                "name = :username: and password = :password:",
+                "(name = :username: or login_name = :username: or email = :username:) and password = :password:",
                 'bind' => [
                     'username' => $username,
                     'password' => md5($password),
@@ -56,27 +61,23 @@ class LoginController extends AdminController
             ]);
 
             // 分别返回
-            if($rs){
+            if ($rs) {
                 $this->session->set('member', $rs->toArray());
-                return json_encode(['code' => '200', 'auth' =>$this->session->get('member'), 'messages' => []]);
+                return json_encode(['code' => '200', 'auth' => $this->session->get('member'), 'messages' => []]);
             } else {
-                return $this->error(['登录失败，用户名或密码错误！']);
+                return $this->error($this->getValidateMessage('login-failed'));
             }
         }
     }
 
     /**
      * 退出登录
-     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
      */
-    function logoutAction()
+    public function logoutAction()
     {
+        // 退出登录则清除session
         $this->session->destroy();
-        return $this->dispatcher->forward([
-            'controller' => 'login',
-            'action' => 'index',
-        ]);
+        return $this->response->redirect('/login');
     }
-    
- 
+
 }

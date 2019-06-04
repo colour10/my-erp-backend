@@ -22,7 +22,7 @@ class CompanyController extends AdminController
     public function gethost()
     {
         // 判断之前必须登录，否则域名很有可能不受程序的控制
-        $login_result = $this->islogin;
+        $login_result = $this->member;
         if (!$login_result) {
             // 未登录返回假
             return false;

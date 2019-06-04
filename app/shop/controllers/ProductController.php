@@ -16,6 +16,9 @@ use Asa\Erp\TbColortemplate;
  */
 class ProductController extends AdminController
 {
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         $this->setModelName('Asa\\Erp\\TbProductSearch');
@@ -27,28 +30,31 @@ class ProductController extends AdminController
     public function detailAction()
     {
         // 逻辑
-        // 判断是否登录
-        if (!$this->session->get('member')) {
-            return $this->dispatcher->forward([
-                'controller' => 'login',
-                'action' => 'index',
-            ]);
+        if (!$this->member) {
+            return $this->response->redirect('/login');
         }
 
         // 先过滤
         $params = $this->dispatcher->getParams();
         if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
-            exit('Params error!');
+            // 传递错误
+            $this->view->setVars([
+                'title' => $this->getValidateMessage('make-an-error'),
+                'message' => $this->getValidateMessage('params-error'),
+            ]);
+            return $this->view->pick('error/error');
         }
         // 赋值
         $id = $params[0];
         // 取出数据
-        // 如果不存在，就跳转到404
+        // 如果不存在，就跳转到错误页面
         if (!$product = TbProductSearch::findFirst("productid=$id AND companyid=" . $this->currentCompany)) {
-            return $this->dispatcher->forward([
-                'controller' => 'error',
-                'action' => 'error404',
+            // 传递错误
+            $this->view->setVars([
+                'title' => $this->getValidateMessage('make-an-error'),
+                'message' => $this->getValidateMessage('product-doesnot-exist'),
             ]);
+            return $this->view->pick('error/error');
         }
 
         // 商品价格
@@ -84,7 +90,7 @@ class ProductController extends AdminController
         $brandgroup = TbBrandgroup::findFirstById($product->brandgroupid);
         $brandgroupchild = TbBrandgroupchild::findFirstById($product->childbrand);
         $name = $this->getlangfield('name');
-        $breadcrumb = '<li><a href="/">首页</a></li><li><a href="/brandgroup/detail/' . $product->brandgroupid . '">' . $brandgroup->$name . '</a></li><li><a href="/childproductgroup/detail/' . $product->childbrand . '">' . $brandgroupchild->$name . '</a></li>';
+        $breadcrumb = '<li><a href="/">' . $this->getValidateMessage('shouye') . '</a></li><li><a href="/brandgroup/detail/' . $product->brandgroupid . '">' . $brandgroup->$name . '</a></li><li><a href="/childproductgroup/detail/' . $product->childbrand . '">' . $brandgroupchild->$name . '</a></li>';
 
         // 推送给模板
         $this->view->setVars([

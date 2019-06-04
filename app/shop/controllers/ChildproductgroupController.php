@@ -17,7 +17,9 @@ use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
  */
 class ChildproductgroupController extends AdminController
 {
-
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         $this->setModelName('Asa\\Erp\\TbBrandgroupchild');
@@ -30,18 +32,20 @@ class ChildproductgroupController extends AdminController
     public function detailAction()
     {
         // 逻辑
-        // 判断是否登录
-        if (!$member = $this->session->get('member')) {
-            return $this->dispatcher->forward([
-                'controller' => 'login',
-                'action' => 'index',
-            ]);
+        // 验证是否登录
+        if (!$member = $this->member) {
+            return $this->response->redirect('/login');
         }
 
         // 先过滤
         $params = $this->dispatcher->getParams();
         if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
-            exit('Params error!');
+            // 传递错误
+            $this->view->setVars([
+                'title' => $this->getValidateMessage('make-an-error'),
+                'message' => $this->getValidateMessage('params-error'),
+            ]);
+            return $this->view->pick('error/error');
         }
 
         // 赋值
@@ -49,19 +53,19 @@ class ChildproductgroupController extends AdminController
 
         // 取出子品类
         $childbrand = TbBrandgroupchild::findFirstById($id);
-        // 如果模型不存在，则返回404
+        // 如果模型不存在，则给出错误提示
         if (!$childbrand) {
-            return $this->dispatcher->forward([
-                'controller' => 'error',
-                'action' => 'error404',
+            // 传递错误
+            $this->view->setVars([
+                'title' => $this->getValidateMessage('make-an-error'),
+                'message' => $this->getValidateMessage('brandgroupchild-doesnot-exist'),
             ]);
+            return $this->view->pick('error/error');
         }
         // 子品类名称
         // 多语言字段
         // 名称
         $name = $this->getlangfield('name');
-        // 尺码
-        $contentname = $this->getlangfield('content');
         $childbrandname = $childbrand->$name;
 
         // 主品类名称
@@ -75,7 +79,13 @@ class ChildproductgroupController extends AdminController
         $currentPage = $this->request->getQuery("page", "int", 1);
         // 取出数据，只展示当前公司下面的产品
         // 从tb_product_search中查询
-        $productsModel = TbProductSearch::find("childbrand=$id AND companyid={$this->currentCompany}");
+        $productsModel = TbProductSearch::find([
+            "childbrand = :childbrand: AND companyid = :companyid:",
+            'bind' => [
+                'childbrand' => $id,
+                'companyid' => $this->currentCompany,
+            ],
+        ]);
 
 
         // 加工数据
@@ -94,8 +104,11 @@ class ChildproductgroupController extends AdminController
             $productModel = TbProduct::findFirstById($item->productid);
             if ($productModel) {
                 $wordcode = $productModel->wordcode_1 . $productModel->wordcode_2 . $productModel->wordcode_3 . $productModel->wordcode_4;
+                // 价格
+                $realprice = $productModel->wordprice;
             } else {
                 $wordcode = '';
+                $realprice = 0;
             }
             if ($item->sizetopid) {
                 $sizecontents = TbProductstock::sum([
@@ -113,6 +126,8 @@ class ChildproductgroupController extends AdminController
             $products[$k]['sizecontents'] = $sizecontents;
             // 国际码赋值
             $products[$k]['wordcode'] = $wordcode;
+            // 价格
+            $products[$k]['realprice'] = $realprice;
         }
 
         // 重新遍历，把尺码名称填写进去
@@ -123,7 +138,7 @@ class ChildproductgroupController extends AdminController
             foreach ($product['sizecontents'] as $key => $item) {
                 $TbSizecontentModel = TbSizecontent::findFirstById($item['sizecontentid']);
                 if ($TbSizecontentModel) {
-                    $sizecontentname = $TbSizecontentModel->$contentname;
+                    $sizecontentname = $TbSizecontentModel->name;
                 } else {
                     $sizecontentname = '';
                 }
@@ -162,7 +177,7 @@ class ChildproductgroupController extends AdminController
         $page = $paginator->getPaginate();
 
         // 定义面包屑导航
-        $breadcrumb = '<li><a href="/">首页</a></li><li><a href="/brandgroup/detail/' . $brandgroupid . '">' . $brandgroupname . '</a></li><li class="active">' . $childbrandname . '</li>';
+        $breadcrumb = '<li><a href="/">' . $this->getValidateMessage('shouye') . '</a></li><li><a href="/brandgroup/detail/' . $brandgroupid . '">' . $brandgroupname . '</a></li><li class="active">' . $childbrandname . '</li>';
 
         // 推送给模板
         $this->view->setVars([
@@ -171,6 +186,7 @@ class ChildproductgroupController extends AdminController
             'breadcrumb' => $breadcrumb,
             'title' => $childbrandname,
             'max_sum_sizecontents' => $max_sum_sizecontents,
+
         ]);
     }
 }

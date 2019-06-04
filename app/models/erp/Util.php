@@ -719,4 +719,27 @@ class Util
         // 最终返回
         return $flip[$max];
     }
+
+    /**
+     * 加密、解密字符串
+     * ENCODE为加密，DECODE为解密
+     * @param string $string 待处理字符串
+     * @param string $action 操作，ENCODE|DECODE
+     * @return string
+     * @global array $pwServer
+     * @global string $db_hash
+     */
+    public static function strCode($string, $action = 'ENCODE')
+    {
+        $action != 'ENCODE' && $string = base64_decode($string);
+        $code = '';
+        $key = substr(md5($_SERVER['HTTP_USER_AGENT']), 8, 18);
+        $keyLen = strlen($key);
+        $strLen = strlen($string);
+        for ($i = 0; $i < $strLen; $i++) {
+            $k = $i % $keyLen;
+            $code .= $string[$i] ^ $key[$k];
+        }
+        return ($action != 'DECODE' ? base64_encode($code) : $code);
+    }
 }

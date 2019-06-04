@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <!--[if IE 8]>
 <html lang="en" class="ie8 no-js"> <![endif]-->
 <!--[if IE 9]>
@@ -10,7 +11,7 @@
 <!-- Head BEGIN -->
 <head>
     <meta charset="utf-8">
-    <title><?php echo $this->obj->getValidateMessage('member-center'); ?></title>
+    <title><?php echo $title; ?></title>
 
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -27,16 +28,14 @@
     <!-- Global styles END -->
 
     <!-- Page level plugin styles START -->
-    <link href="/shop/assets/pages/css/animate.css" rel="stylesheet">
     <link href="/shop/assets/plugins/fancybox/source/jquery.fancybox.css" rel="stylesheet">
     <link href="/shop/assets/plugins/owl.carousel/assets/owl.carousel.css" rel="stylesheet">
     <!-- Page level plugin styles END -->
 
     <!-- Theme styles START -->
     <link href="/shop/assets/pages/css/components.css" rel="stylesheet">
-    <link href="/shop/assets/pages/css/slider.css" rel="stylesheet">
-    <link href="/shop/assets/pages/css/style-shop.css" rel="stylesheet" type="text/css">
     <link href="/shop/assets/corporate/css/style.css" rel="stylesheet">
+    <link href="/shop/assets/pages/css/style-shop.css" rel="stylesheet" type="text/css">
     <link href="/shop/assets/corporate/css/style-responsive.css" rel="stylesheet">
     <link href="/shop/assets/corporate/css/themes/red.css" rel="stylesheet" id="style-color">
     <link href="/shop/assets/corporate/css/custom.css" rel="stylesheet">
@@ -45,30 +44,25 @@
 <!-- Head END -->
 
 <!-- Body BEGIN -->
-<body class="corporate">
+<body class="ecommerce">
 
+<!-- BEGIN TOP BAR -->
+<!-- END TOP BAR -->
+
+<!-- BEGIN HEADER -->
 <?php echo $this->view->getPartial('layouts/_header') ?>
+<!-- Header END -->
 
 <div class="main">
     <div class="container">
-        <ul class="breadcrumb">
-            <li><a href="/"><?php echo $this->obj->getValidateMessage('shouye'); ?></a></li>
-            <li class="active"><?php echo $this->obj->getValidateMessage('member-center'); ?></li>
-        </ul>
         <!-- BEGIN SIDEBAR & CONTENT -->
         <div class="row margin-bottom-40">
-
-            <?php echo $this->view->getPartial('layouts/_member_sidebar') ?>
-
             <!-- BEGIN CONTENT -->
-            <div class="col-md-9 col-sm-9">
-                <h1><?php echo $this->obj->getValidateMessage('member-center'); ?></h1>
-                <div class="content-form-page">
-                    <div class="row">
-                        <div class="col-md-7 col-sm-7">
-                            <p><?php echo $this->obj->getValidateMessage('dear'); ?><?php echo $member['name']; ?>
-                                ，<?php echo $this->obj->getValidateMessage('welcome-to'); ?></p>
-                        </div>
+            <div class="col-md-12 col-sm-12">
+                <h1><?php echo $title; ?></h1>
+                <div class="shopping-cart-page">
+                    <div class="shopping-cart-data clearfix">
+                        <p><?php echo $message; ?></p>
                     </div>
                 </div>
             </div>
@@ -78,7 +72,9 @@
     </div>
 </div>
 
-<?php echo $this->view->getPartial('layouts/_footer'); ?>
+<!-- BEGIN PRE-FOOTER -->
+<?php echo $this->view->getPartial('layouts/_footer') ?>
+<!-- END PRE-FOOTER -->
 
 </body>
 <!-- END BODY -->
