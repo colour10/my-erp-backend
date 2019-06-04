@@ -11,6 +11,7 @@ class ProductlastmodifyController extends AdminController
 {
     public function initialize()
     {
+        parent::initialize();
         $this->setModelName('Asa\\Erp\\TbProductLastmodify');
     }
 

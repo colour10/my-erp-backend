@@ -47,6 +47,7 @@ class ProductController extends CadminController {
             foreach($keys as $key) {
                 $product->$key = $params['form'][$key];
             }
+
             if($product->create()==false) {
                 $this->db->rollback();
                 return $this->error($product);
@@ -70,6 +71,8 @@ class ProductController extends CadminController {
                 $products[] = $product;
                 $colors[] = $product->id.",".$product->brandcolor;
             }
+
+            $product->syncBrandSugest();        
         }
 
         $output = [];
@@ -157,17 +160,20 @@ class ProductController extends CadminController {
                 $row->updateMaterial($params["materials"]);
 
                 $data[] = $row->id.",".$row->brandcolor;
+
+                //更新颜色提示数据                    
+                $row->syncBrandSugest(); 
             }
 
             if(count($products)>1) {
                 $product_group = implode('|', $data);
 
                 //逐个更新，绑定关系
-                foreach($products as $row) {
+                foreach($products as $row) {                    
                     $row->product_group = $product_group;
                     if($row->update()==false) {
                         throw new \Exception("#1002#更新product_group字段失败#");
-                    }
+                    }                    
                 }
             }
             
@@ -277,7 +283,7 @@ class ProductController extends CadminController {
         $form = json_decode($_POST["params"], true);
         
         $product = TbProduct::findFirstById($form['productid']);
-        if($product!=false) {
+        if($product!=false && $product->companyid==$this->companyid) {
             try {
                 $this->db->begin();
 
