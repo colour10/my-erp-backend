@@ -18,20 +18,20 @@ class TbPriceSetting extends BaseModel
         $this->setSource('tb_price_setting');
     }
 
-    public static function getPriceSetting($brandid, $ageseasonid, $ishot, $brandgroupchildid, $priceid) {
+    public static function getPriceSetting($brandid, $ageseasonid, $producttypeid, $brandgroupchildid, $priceid) {
         $di = \Phalcon\DI::getDefault();
 
         return static::findFirst([
             sprintf(
-                "companyid=%d and brandid=%d and ageseasonid=%d and ishot=%d and (brandgroupchildid=%d or brandgroupchildid=0) and priceid=%d and discount>0", 
+                "companyid=%d and brandid=%d and ageseasonid=%d and (producttypeid=%d or producttypeid=0) and (brandgroupchildid=%d or brandgroupchildid=0) and priceid=%d and discount>0", 
                 $di->get("currentCompany"),
                 $brandid,
                 $ageseasonid,
-                $ishot,
+                $producttypeid,
                 $brandgroupchildid,
                 $priceid
             ),
-            "order" => "brandgroupchildid desc"
+            "order" => "brandgroupchildid desc,producttypeid desc"
         ]);
     }
 }

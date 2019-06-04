@@ -215,7 +215,7 @@ class CommonController extends BaseController
             "property" => ["model"=>'Asa\Erp\TbProperty',"company"=>false, "orderby"=>"displayindex asc"],
             "producttemplate" => ["model"=>'Asa\Erp\TbProducttemplate',"company"=>false],
             //"series2" => ["model"=>'Asa\Erp\TbSeries2',"company"=>false],
-            "series" => ["model"=>'Asa\Erp\TbSeries',"company"=>false],
+            "series" => ["model"=>'Asa\Erp\TbSeries',"company"=>false, "orderby"=>"displayindex asc"],
             "sizecontent" => ["model"=>'Asa\Erp\TbSizecontent',"company"=>false],
             "sizetop" => ["model"=>'Asa\Erp\TbSizetop',"company"=>false],
             //"templatemanage" => ["model"=>'Asa\Erp\TbTemplatemanage',"company"=>false],
@@ -223,6 +223,7 @@ class CommonController extends BaseController
             "currency" => ["model"=>'Asa\Erp\TbCurrency',"company"=>false, "orderby"=>"code asc"],
             "price" => ["model"=>'Asa\Erp\TbPrice',"company"=>false, "orderby"=>"displayindex asc"],
             "saletype" => ["model"=>'Asa\Erp\TbSaleType',"company"=>false, "orderby"=>"displayindex asc"],
+            "producttype" => ["model"=>'Asa\Erp\TbProductType',"company"=>false, "orderby"=>"displayindex asc"],
         ];
         $table = $this->dispatcher->getParam("table");
         $model = $maps[$table];

@@ -36,7 +36,7 @@ class PricesettingController extends AdminController {
     function loadAction() {
         $result = TbPriceSetting::find([
             sprintf("companyid=%d and (brandid=%d or brandid=0) and (ageseasonid=%d or ageseasonid=0) and discount>0", $this->companyid, $_POST['brandid'], $_POST['ageseasonid']),
-            "order" => "brandgroupchildid asc,ishot asc"
+            "order" => "brandgroupchildid asc,producttypeid asc"
         ]);
         return $this->success($result->toArray());
     }
@@ -49,11 +49,11 @@ class PricesettingController extends AdminController {
         foreach($submitData['list'] as $row) {
             $setting = TbPriceSetting::findFirst(
                 sprintf(
-                    "companyid=%d and brandid=%d and ageseasonid=%d and ishot=%d and brandgroupchildid=%d and priceid=%d",
+                    "companyid=%d and brandid=%d and ageseasonid=%d and producttypeid=%d and brandgroupchildid=%d and priceid=%d",
                     $this->companyid,
                     $submitData["brandid"],
                     $submitData["ageseasonid"],
-                    $submitData["ishot"],
+                    $submitData["producttypeid"],
                     $row["brandgroupchildid"],
                     $row["priceid"]
                 )
@@ -65,7 +65,7 @@ class PricesettingController extends AdminController {
             }
             $setting->brandid = $submitData["brandid"];
             $setting->ageseasonid = $submitData["ageseasonid"];
-            $setting->ishot = $submitData["ishot"];
+            $setting->producttypeid = $submitData["producttypeid"];
             $setting->brandgroupchildid = $row["brandgroupchildid"];
             $setting->priceid = $row["priceid"];
             $setting->discount = $row["discount"];

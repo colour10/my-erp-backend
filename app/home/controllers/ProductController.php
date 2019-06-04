@@ -27,7 +27,7 @@ class ProductController extends CadminController {
 
         $products = [];
         $colors = [];
-        $keys = ["brandid", "brandgroupid", "childbrand", "productsize", "countries", "productparst", "laststoragedate", "series", "ulnarinch", "factoryprice", "factorypricecurrency", "nationalpricecurrency", "nationalprice", "memo", "wordprice", "wordpricecurrency", "gender", "spring", "summer", "fall", "winter", "ageseason", "sizetopid", "sizecontentids", "productmemoids", "nationalfactorypricecurrency", "nationalfactoryprice","saletypeid","ishot"];
+        $keys = ["brandid", "brandgroupid", "childbrand", "productsize", "countries", "productparst", "laststoragedate", "series", "ulnarinch", "factoryprice", "factorypricecurrency", "nationalpricecurrency", "nationalprice", "memo", "wordprice", "wordpricecurrency", "gender", "spring", "summer", "fall", "winter", "ageseason", "sizetopid", "sizecontentids", "productmemoids", "nationalfactorypricecurrency", "nationalfactoryprice","saletypeid","producttypeid"];
 
         $this->db->begin();
         foreach($params['colors'] as $row){
@@ -118,6 +118,7 @@ class ProductController extends CadminController {
                     $row->picture = $params['form']["picture"];
                     $row->picture2 = $params['form']["picture2"];
                     $row->laststoragedate = $params['form']["laststoragedate"];
+                    $row->producttypeid = $params['form']["producttypeid"];
                 }
                 
                 $row->brandid = $params['form']["brandid"];
@@ -147,7 +148,6 @@ class ProductController extends CadminController {
                 $row->nationalfactorypricecurrency = $params['form']["nationalfactorypricecurrency"];
                 $row->nationalfactoryprice = $params['form']["nationalfactoryprice"];
                 $row->saletypeid = $params['form']["saletypeid"];
-                $row->ishot = $params['form']["ishot"];
 
                 if($row->update()==false) {
                     $this->db->rollback();
