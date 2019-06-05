@@ -89,7 +89,7 @@ class ExchangerateController extends CadminController {
             return $this->success($result->rate);
         }
         else {
-            return $this->success();
+            return $this->success("");
         }
     }
 }

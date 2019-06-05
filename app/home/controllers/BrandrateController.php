@@ -53,4 +53,9 @@ class BrandrateController extends AdminController {
     function before_page() {
         $this->injectParam('__orderby', "ageseasonid desc");
     }
+
+    function before_edit($row) {
+        $_POST["modifytime"] = date("Y-m-d H:i:s");
+        $_POST["modifystaff"] = $this->currentUser;
+    }
 }
