@@ -13,21 +13,59 @@ class TbAgeseason extends BaseModel
         $this->setSource('tb_ageseason');
     }
 
-    public function getRules() {
+    public function getRules()
+    {
         return [
             'name' => $this->getValidatorFactory()->year('nianfen'),
-            'sessionmark' => $this->getValidatorFactory()->presenceOf('fabuji') 
+            'sessionmark' => $this->getValidatorFactory()->presenceOf('fabuji'),
         ];
     }
 
-    public function toArrayPipe() {
+    public function toArrayPipe()
+    {
         $fullname = sprintf("%s%s", $this->sessionmark, $this->name);
         $array = $this->toArray();
         $array['fullname'] = $fullname;
         return $array;
     }
 
-    function delete() {
+    function delete()
+    {
         throw new \Exception("/1003/款式年代数据不允许删除/");
+    }
+
+
+    /**
+     * 取出当前时间的上一个年代季节
+     * @param string $mark 季节
+     * @param string $name 年份
+     * @return bool|\Phalcon\Mvc\Model\Resultset|\Phalcon\Mvc\Phalcon\Mvc\Model
+     */
+    public static function getPrevAgeseason($mark, $name)
+    {
+        // 逻辑
+        // 验证季节
+        switch ($mark) {
+            // 如果输入月份为下半年，季节变，年份不变
+            case "FW":
+                $prevMark = 'SS';
+                $prevName = $name;
+                break;
+            // 如果输入年代为上半年，季节变，年份变-1
+            case "SS":
+                $prevMark = 'FW';
+                $prevName = $name - 1;
+                break;
+            default:
+                $prevMark = 'SS';
+                $prevName = $name;
+                break;
+        }
+        // 开始查找对应的id
+        if ($model = TbAgeseason::findFirst("sessionmark='$prevMark' and name='$prevName'")) {
+            return $model->id;
+        } else {
+            return false;
+        }
     }
 }
