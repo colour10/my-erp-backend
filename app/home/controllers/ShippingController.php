@@ -353,40 +353,89 @@ class ShippingController extends AdminController {
     }
 
     function warehousingAction() {
-        // 根据orderid查询出当前订单以及订单详情的所有信息
-        $shipping = TbShipping::findFirst(
-            sprintf("id=%d and companyid=%d", $_POST["id"], $this->companyid)
-        );
-        
-        // 判断订单是否存在
-        if ($shipping!=false) {
-            $this->db->begin();
-            $details = $shipping->shippingDetail;
-            foreach ($details as $detail) {
-                if($detail->orderbrandid>0) {
-                    //已经加入外部订单的订单明细不能删除
-                    $this->db->rollback();
-                    throw new \Exception("/1001/不能删除已经加入外部订单的订单明细/");
-                }
+        // 判断是否有params参数提交过来
+        $params = $this->request->get('params');
+        if (!$params) {
+            throw new \Exception("/1001/参数错误/");
+        }
 
-                if($detail->delete()==false) {
-                    $this->db->rollback();
-                    throw new \Exception("/1001/删除订单明细失败。/");
-                }
+        // 转换成数组
+        $submitData = json_decode($params, true);
+
+        // 判断是否有订单号，分别进行
+        $id = $submitData['form']['id'];
+        // 采用事务处理
+        $this->db->begin();
+        $form = $submitData['form'];
+
+        // 判断逻辑
+        if ($id) {
+            $shipping = TbShipping::findFirst(
+                sprintf("id=%d and companyid=%d", $id, $this->companyid)
+            );
+
+            if(!$shipping) {
+                throw new \Exception("/1001/订单不存在/");
             }
+            $shipping->warehousingstaff = $this->currentUser;
+            $shipping->warehousingtime = date('Y-m-d H:i:s');
+            $shipping->status = 2;
 
-            if($shipping->delete()==false) {
+            // 判断是否成功
+            if(!$shipping->save()) {
                 $this->db->rollback();
-                    throw new \Exception("/1001/订单不能删除/");
+
+                // 验证类错误给出提示
+                return $this->error($shipping);
             }
 
+            $detail_id_array = [];
+            foreach ($submitData['list'] as $k => $item) {
+                // 使用模型更新
+                if($item['id']>0) {
+                    $detail = TbShippingDetail::findFirstById($item['id']);
+
+                    if($detail==false || $detail->shippingid!=$shipping->id) {
+                        $this->db->rollback();
+                        throw new Exception("/1001/入库单详情错误/");
+                    }
+                }
+                else {
+                    $detail = new TbShippingDetail();
+                    $detail->companyid = $this->companyid;
+                }
+                
+                $detail->warehousingnumber = $item['number'];
+
+                
+                if($detail->save()==false) {
+                    $this->db->rollback();
+                    throw new Exception("/1001/入库单详情入库数量更新失败/");
+                }  
+
+                $detail_id_array[] = $detail->id;
+            }
+
+            //清除不存在的详情id
+            if(count($detail_id_array)>0) {
+                $details = TbShippingDetail::find(
+                    sprintf("shippingid=%d and id not in(%s)", $shipping->id, implode(',', $detail_id_array))
+                );
+                foreach($details as $detail) {
+                    $detail->warehousingnumber = 0;
+                    $detail->shippingid = 0;
+                    if($detail->update()==false) {
+                        $this->db->rollback();
+                        throw new \Exception("/1002/入库单详情确认数量失败/");                    
+                    }
+                }
+            }
+
+            // 提交事务
             $this->db->commit();
 
-            return $this->success();
-        }
-        else {
-            throw new \Exception("/1001/订单不存在/");
-            
+            // 最终成功返回，原来的数据还要保留，再加上订单详情之中每个商品的名称也要放进去
+            echo $this->success();
         }
     }
 }
