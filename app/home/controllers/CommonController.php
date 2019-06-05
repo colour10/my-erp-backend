@@ -201,7 +201,7 @@ class CommonController extends BaseController
             "warehouse_user" => ["model"=>'Asa\Erp\TbWarehouseUser',"company"=>true],
             "warehousingdetails" => ["model"=>'Asa\Erp\TbWarehousingdetails',"company"=>true],
             "warehousing" => ["model"=>'Asa\Erp\TbWarehousing',"company"=>true],
-            "ageseason" => ["model"=>'Asa\Erp\TbAgeseason',"company"=>false, "orderby"=>"name desc,sessionmark desc"],
+            "ageseason" => ["model"=>'Asa\Erp\TbAgeseason',"company"=>false, "orderby"=>"name desc,sessionmark asc"],
             //"aliases" => ["model"=>'Asa\Erp\TbAliases',"company"=>false],
             "brandgroup" => ["model"=>'Asa\Erp\TbBrandgroup',"company"=>false, "orderby"=>"displayindex asc"],
             "brand" => ["model"=>'Asa\Erp\TbBrand',"company"=>false],

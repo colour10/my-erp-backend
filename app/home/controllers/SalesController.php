@@ -9,6 +9,8 @@ use Asa\Erp\TbCompany;
 use Asa\Erp\Util;
 use Asa\Erp\TbSalesdetails;
 use Asa\Erp\TbProductstock;
+use Asa\Erp\TbCode;
+
 
 /**
  * 销售单主表
@@ -104,12 +106,7 @@ class SalesController extends BaseController
             $sale->makestaff = $this->currentUser;
             $sale->makedate = date('Y-m-d H:i:s');
             // 生成订单号
-            $sale->orderno = sprintf(
-                "S%s%s%s",
-                substr("000000".$this->companyid, -6),
-                date('YmdHis'),
-                mt_rand(1000, 9999)
-            );
+            $sale->orderno = TbCode::getCode($this->companyid, "S", date("y"));
 
             if($sale->create()==false) {
                 $this->db->rollback();
