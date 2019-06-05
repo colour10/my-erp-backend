@@ -2081,6 +2081,22 @@ CREATE TABLE `tb_product_lastmodify` (
   KEY `brandcolor` (`brandcolor`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='品牌色系最后更新记录表';
 
+
+DROP TABLE IF EXISTS `tb_product_type`;
+
+CREATE TABLE `tb_product_type` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `name_cn` varchar(100) DEFAULT NULL COMMENT '中文名称',
+  `name_en` varchar(100) DEFAULT NULL COMMENT '英文名称',
+  `name_hk` varchar(100) DEFAULT NULL COMMENT '粤语名称',
+  `name_fr` varchar(100) DEFAULT NULL COMMENT '法语名称',
+  `name_it` varchar(100) DEFAULT NULL COMMENT '意大利语名称',
+  `name_sp` varchar(100) DEFAULT NULL COMMENT '西班牙语名称',
+  `name_de` varchar(100) DEFAULT NULL COMMENT '德语名称',
+  `displayindex` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品属性表';
+
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
