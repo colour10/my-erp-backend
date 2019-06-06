@@ -8,6 +8,7 @@ use Asa\Erp\TbShippingDetail;
 use Asa\Erp\TbOrderdetails;
 use Asa\Erp\Util;
 use Asa\Erp\TbCode;
+use Asa\Erp\TbProductstock;
 
 /**
  * 发货单主表
@@ -100,7 +101,7 @@ class ShippingController extends AdminController {
             $detail->shippingid= $shipping->id;
             if($detail->create()==false) {
                 $this->db->rollback();
-                throw new \Exception("/1002/添加订单明细失败/");
+                throw new \Exception("/110115/添加订单明细失败/");
             }
 
             //更新订单中的已发货数量
@@ -129,7 +130,11 @@ class ShippingController extends AdminController {
 
         $shipping = TbShipping::findFirstById($form['id']);
         if($shipping==false || $shipping->companyid!=$this->companyid) {
-            throw new \Exception("/1001/发货单不存在。/");
+            throw new \Exception("/110102/发货单不存在。/");
+        }
+
+        if($shipping->status==2) {
+            throw new \Exception("/110101/发货单已经入库，不能修改。/");
         }
 
         $shipping->supplierid = $form["supplierid"];
@@ -193,7 +198,7 @@ class ShippingController extends AdminController {
 
                 if($detail->update()==false) {
                     $this->db->rollback();
-                    throw new \Exception("/1002/更新发货单明细失败/");
+                    throw new \Exception("/110103/更新发货单明细失败/");
                 }
 
                 $detail_id_array[] = $detail->id;
@@ -211,7 +216,7 @@ class ShippingController extends AdminController {
                 $detail->shippingid= $shipping->id;
                 if($detail->create()==false) {
                     $this->db->rollback();
-                    throw new \Exception("/1002/添加订单明细失败/");
+                    throw new \Exception("/110104/添加订单明细失败/");
                 }
 
                 if($detail->orderdetailsid>0) {
@@ -247,7 +252,7 @@ class ShippingController extends AdminController {
 
             if($detail->delete()==false) {
                 $this->db->rollback();
-                throw new \Exception("/1002/发货单明细删除失败/");
+                throw new \Exception("/110105/发货单明细删除失败/");
             }
         }
 
@@ -280,36 +285,7 @@ class ShippingController extends AdminController {
 
         // 判断订单是否存在
         if ($shipping!=false) {
-
-            $details = $shipping->shippingDetail;
-
-            //找出出库单中涉及到的订单的产品，并查询这些产品的订单明细
-            $array = [];
-            $hash = [];
-            foreach($details as $row) {   
-                $key = sprintf("%s-%s", $row->productid, $row->orderid);
-                $hash[$key] = 1; 
-            }
-
-            foreach($hash as $key=>$value) {
-                $temp = explode('-', $key);
-                $array[] = sprintf("(orderid=%d and productid=%d)", $temp[1], $temp[0]);
-            }
-
-            if(count($array)>0) {
-                $orderdetails_list = TbOrderdetails::find(
-                    implode(" or ", $array)
-                )->toArray();
-            }
-            else {
-                $orderdetails_list = [];
-            }
-
-            $result = [
-                "form" => $shipping->toArray(),
-                "list" => $details->toArray(),
-                "orderdetails_list" => $orderdetails_list
-            ];
+            //echo $this->success($shipping->getDetail(isset($_POST["type"]) && $_POST["type"]=='shipping'));
             echo $this->success($shipping->getDetail());
         }
     }
@@ -328,18 +304,18 @@ class ShippingController extends AdminController {
                 if($detail->orderbrandid>0) {
                     //已经加入外部订单的订单明细不能删除
                     $this->db->rollback();
-                    throw new \Exception("/1001/不能删除已经加入外部订单的订单明细/");
+                    throw new \Exception("/110106/不能删除已经加入外部订单的订单明细/");
                 }
 
                 if($detail->delete()==false) {
                     $this->db->rollback();
-                    throw new \Exception("/1001/删除订单明细失败。/");
+                    throw new \Exception("/110107/删除订单明细失败。/");
                 }
             }
 
             if($shipping->delete()==false) {
                 $this->db->rollback();
-                    throw new \Exception("/1001/订单不能删除/");
+                    throw new \Exception("/110108/订单不能删除/");
             }
 
             $this->db->commit();
@@ -347,7 +323,7 @@ class ShippingController extends AdminController {
             return $this->success();
         }
         else {
-            throw new \Exception("/1001/订单不存在/");
+            throw new \Exception("/110109/订单不存在/");
             
         }
     }
@@ -375,7 +351,7 @@ class ShippingController extends AdminController {
             );
 
             if(!$shipping) {
-                throw new \Exception("/1001/订单不存在/");
+                throw new \Exception("/110111/发货单不存在/");
             }
             $shipping->warehousingstaff = $this->currentUser;
             $shipping->warehousingtime = date('Y-m-d H:i:s');
@@ -397,12 +373,13 @@ class ShippingController extends AdminController {
 
                     if($detail==false || $detail->shippingid!=$shipping->id) {
                         $this->db->rollback();
-                        throw new Exception("/1001/入库单详情错误/");
+                        throw new \Exception("/110112/入库单详情错误/");
                     }
                 }
                 else {
                     $detail = new TbShippingDetail();
                     $detail->companyid = $this->companyid;
+                    $detail->number = 0;
                 }
                 
                 $detail->warehousingnumber = $item['number'];
@@ -410,8 +387,14 @@ class ShippingController extends AdminController {
                 
                 if($detail->save()==false) {
                     $this->db->rollback();
-                    throw new Exception("/1001/入库单详情入库数量更新失败/");
+                    throw new \Exception("/110113/入库单详情入库数量更新失败/");
                 }  
+
+                //增加库存
+                if($detail->warehousingnumber>0) {
+                    $productStock = $detail->getProductStock();
+                    $productStock->addStock($detail->warehousingnumber, TbProductstock::WAREHOSING, $detail->id);
+                }                
 
                 $detail_id_array[] = $detail->id;
             }
@@ -426,7 +409,7 @@ class ShippingController extends AdminController {
                     $detail->shippingid = 0;
                     if($detail->update()==false) {
                         $this->db->rollback();
-                        throw new \Exception("/1002/入库单详情确认数量失败/");                    
+                        throw new \Exception("/110114/入库单详情确认数量失败/");                    
                     }
                 }
             }
@@ -437,5 +420,50 @@ class ShippingController extends AdminController {
             // 最终成功返回，原来的数据还要保留，再加上订单详情之中每个商品的名称也要放进去
             echo $this->success();
         }
+    }
+
+    /**
+     * 取消入库
+     * @return [type] [description]
+     */
+    function cancelAction() {
+        $shipping = TbShipping::findFirst(
+            sprintf("id=%d and companyid=%d", $_POST['id'], $this->companyid)
+        );
+
+        if($shipping==false) {
+            throw new \Exception("/110111/发货单不存在/");
+        }
+
+        $this->db->begin();
+
+        $shipping->status = 1;
+        $shipping->warehousingstaff = $this->currentUser;
+        $shipping->warehousingtime = date('Y-m-d H:i:s');
+        if($shipping->save()==false) {
+            throw new \Exception("/101115/发货单取消入库失败。/");
+        }
+
+        foreach($shipping->shippingDetail as $detail) {
+            //减掉库存
+            if($detail->warehousingnumber>0) {
+                $productStock = $detail->getProductStock();
+                if($productStock->number>=$detail->warehousingnumber) {
+                    $productStock->reduceStock($detail->warehousingnumber, TbProductstock::WAREHOSING, $detail->id);
+                }    
+                else {
+                    throw new \Exception("/101117/库存不足，不能取消。/");
+                }            
+            }  
+
+            $detail->warehousingnumber = 0;
+            if($detail->save()==false) {
+                $this->db->rollback();
+                throw new \Exception("/101116/发货单明细取消入库失败。/");
+            } 
+        }
+
+        $this->db->commit();
+        return $this->success();
     }
 }

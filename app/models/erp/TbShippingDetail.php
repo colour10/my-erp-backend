@@ -46,7 +46,10 @@ class TbShippingDetail extends BaseModel
     }
 
     public function getProductStock() {
-        $orderdetails = $this->orderdetails;
+        $companyid = $this->getDI()->get("currentCompany");
+        if($companyid<=0) {
+            throw new \Exception("/1001/数据错误。/");
+        }
 
         //默认自采
         $property = 1;
@@ -57,7 +60,7 @@ class TbShippingDetail extends BaseModel
         $goods = TbGoods::findFirst(
             sprintf(
                 "companyid=%d and productid=%d and sizecontentid=%d and defective_level=0 and property=%d", 
-                $this->companyid, 
+                $companyid, 
                 $this->productid, 
                 $this->sizecontentid, 
                 $property
@@ -67,7 +70,7 @@ class TbShippingDetail extends BaseModel
         if($goods==false) {
             //创建一个新的
             $goods = new TbGoods();
-            $goods->companyid = $this->companyid;
+            $goods->companyid = $companyid;
             $goods->productid = $this->productid;
             $goods->sizecontentid = $this->sizecontentid;
             $goods->property = $property;
@@ -76,22 +79,27 @@ class TbShippingDetail extends BaseModel
             $goods->change_staff = $this->getDI()->get("currentUser");
             $goods->price = $this->price;
             if($goods->create()===false) {
-                throw new Exception("/1001/创建商品条目失败/");
+                throw new Exception("/110201/创建商品条目失败/");
             }
         }
 
         $warehouseid = $this->shipping->warehouseid;
-        $productstock = TbProductstock::findFirst(
-            sprintf("companyid=%d and warehouseid=%d and goodsid=%d", $this->companyid, $warehouseid, $goods->id)
-        );
+        if($warehouseid>0) {
+            $productstock = TbProductstock::findFirst(
+                sprintf("companyid=%d and warehouseid=%d and goodsid=%d", $companyid, $warehouseid, $goods->id)
+            );
 
-        if($productstock==false) {
-            //创建库存记录
-            $productstock = TbProductstock::initStock([
-                "goods" => $goods,
-                "warehouseid" => $warehouseid
-            ]);
+            if($productstock==false) {
+                //创建库存记录
+                $productstock = TbProductstock::initStock([
+                    "goods" => $goods,
+                    "warehouseid" => $warehouseid
+                ]);
+            }
+            return $productstock;
         }
-        return $productstock;
+        else {
+            throw new \Exception("/110202/数据错误，仓库不能为空。/");
+        }
     }
 }

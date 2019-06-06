@@ -22,15 +22,20 @@ class TbShipping extends BaseModel
         );
     }
 
-    function getDetail() {
+    function getDetail($onlyOrder=false) {
         $details = $this->shippingDetail;
 
         //找出出库单中涉及到的订单的产品，并查询这些产品的订单明细
         $array = [];
         $hash = [];
+        $shipping_list = [];
         foreach($details as $row) {   
+            if($onlyOrder && $row->orderid<=0) {
+                continue;
+            }
             $key = sprintf("%s-%s", $row->productid, $row->orderid);
             $hash[$key] = 1; 
+            $shipping_list[] = $row->toArray();
         }
 
         foreach($hash as $key=>$value) {
@@ -49,7 +54,7 @@ class TbShipping extends BaseModel
 
         return [
             "form" => $this->toArray(),
-            "list" => $details->toArray(),
+            "list" => $shipping_list,
             "orderdetails_list" => $orderdetails_list
         ];
     }
