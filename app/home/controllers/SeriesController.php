@@ -8,7 +8,7 @@ use Asa\Erp\TbSeries;
 /**
  * 品牌系列，品牌相关数据
  */
-class SeriesController extends ZadminController {
+class SeriesController extends CadminController {
     public function initialize() {
 	    parent::initialize();
 
@@ -17,5 +17,11 @@ class SeriesController extends ZadminController {
 
     function before_page() {
         $_POST["__orderby"] = "displayindex asc";
+        $_POST["name_en"] = strtoupper($_POST["name_en"]);
+    }
+
+   function before_add() {
+        $_POST["name_en"] = strtoupper($_POST["name_en"]);
+        $_POST["companyid"] = $this->companyid;
     }
 }

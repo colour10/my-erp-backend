@@ -54,7 +54,6 @@ class ShippingController extends AdminController {
         $shipping->total = $form["total"];
         $shipping->exchangerate = $form["exchangerate"];
         $shipping->paydate = $form["paydate"];
-        $shipping->dd_company = $form["dd_company"];
         $shipping->apickingdate = $form["apickingdate"];
         $shipping->flightno = $form["flightno"];
         $shipping->flightdate = $form["flightdate"];
@@ -148,7 +147,6 @@ class ShippingController extends AdminController {
         $shipping->total = $form["total"];
         $shipping->exchangerate = $form["exchangerate"];
         $shipping->paydate = $form["paydate"];
-        $shipping->dd_company = $form["dd_company"];
         $shipping->apickingdate = $form["apickingdate"];
         $shipping->flightno = $form["flightno"];
         $shipping->flightdate = $form["flightdate"];

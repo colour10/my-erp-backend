@@ -268,19 +268,16 @@ class TbProduct extends BaseCompanyModel
     }
 
     function getPriceList() {
-        $prices = TbPrice::find(
-            sprintf("companyid=%d", $this->companyid)
-        );
+        $prices = TbPrice::find([
+            sprintf("companyid=%d", $this->companyid),
+            "order" => "displayindex asc"
+        ]);
 
         //特殊设置的价格
         $specialPrices = TbProductPrice::find(
             sprintf("productid=%d", $this->id)
         );
         $hashTable = Util::recordToHashtable($specialPrices, 'priceid');
-
-        //获得用户的本币设置
-        $user = $this->getDI()->get("auth");
-        $company = $user['company'];
 
         $result = [];
 
@@ -291,7 +288,7 @@ class TbProduct extends BaseCompanyModel
         foreach($prices as $row) {
             $setting = TbPriceSetting::getPriceSetting($this->brandid, $ageseasonid, $this->producttypeid, $this->childbrand, $row->id);
             if($setting!=false) {
-                $value = TbExchangeRate::convert($company->id, $this->wordpricecurrency, $company->currencyid, $this->wordprice);
+                $value = TbExchangeRate::convert($this->companyid, $this->wordpricecurrency, $row->currencyid, $this->wordprice);
                 //echo $price;exit;
                 if($value==false) {
                     //没有设置汇率
@@ -303,7 +300,7 @@ class TbProduct extends BaseCompanyModel
 
                 $is_special = "0";
                 if(isset($hashTable[$row->id]) && $hashTable[$row->id]->price>0) {
-                    $price = TbExchangeRate::convert($company->id, $hashTable[$row->id]->currencyid, $company->currencyid, $hashTable[$row->id]->price);
+                    $price = TbExchangeRate::convert($this->companyid, $hashTable[$row->id]->currencyid, $row->currencyid, $hashTable[$row->id]->price);
                     if($price==false) {
                         //echo "0";
                         continue;
@@ -322,7 +319,7 @@ class TbProduct extends BaseCompanyModel
                 $result[] = [
                     'id' => $row->id,
                     'name' => $row->name,
-                    'currencyid' => $company->currencyid,
+                    'currencyid' => $row->currencyid,
                     'discount' => $setting->discount,
                     'filter' => $row->filter,
                     'autoprice' => $autoprice,
