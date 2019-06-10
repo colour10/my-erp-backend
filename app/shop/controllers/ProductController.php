@@ -38,11 +38,7 @@ class ProductController extends AdminController
         $params = $this->dispatcher->getParams();
         if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
             // 传递错误
-            $this->view->setVars([
-                'title' => $this->getValidateMessage('make-an-error'),
-                'message' => $this->getValidateMessage('params-error'),
-            ]);
-            return $this->view->pick('error/error');
+            return $this->renderError();
         }
         // 赋值
         $id = $params[0];
@@ -50,11 +46,7 @@ class ProductController extends AdminController
         // 如果不存在，就跳转到错误页面
         if (!$product = TbProductSearch::findFirst("productid=$id AND companyid=" . $this->currentCompany)) {
             // 传递错误
-            $this->view->setVars([
-                'title' => $this->getValidateMessage('make-an-error'),
-                'message' => $this->getValidateMessage('product-doesnot-exist'),
-            ]);
-            return $this->view->pick('error/error');
+            return $this->renderError('make-an-error','product-doesnot-exist');
         }
 
         // 商品价格

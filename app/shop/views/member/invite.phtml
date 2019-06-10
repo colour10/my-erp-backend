@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<!--[if IE 8]>
+<html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+
+<!-- Head BEGIN -->
+<head>
+    <meta charset="utf-8">
+    <title><?php echo $this->obj->getValidateMessage('invitation-registration'); ?></title>
+
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <meta content="Metronic Shop UI description" name="description">
+    <meta content="Metronic Shop UI keywords" name="keywords">
+    <meta content="keenthemes" name="author">
+
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <!-- Global styles START -->
+    <link href="/shop/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/shop/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Global styles END -->
+
+    <!-- Page level plugin styles START -->
+    <link href="/shop/assets/pages/css/animate.css" rel="stylesheet">
+    <link href="/shop/assets/plugins/fancybox/source/jquery.fancybox.css" rel="stylesheet">
+    <link href="/shop/assets/plugins/owl.carousel/assets/owl.carousel.css" rel="stylesheet">
+    <!-- Page level plugin styles END -->
+
+    <!-- Theme styles START -->
+    <link href="/shop/assets/pages/css/components.css" rel="stylesheet">
+    <link href="/shop/assets/pages/css/slider.css" rel="stylesheet">
+    <link href="/shop/assets/pages/css/style-shop.css" rel="stylesheet" type="text/css">
+    <link href="/shop/assets/corporate/css/style.css" rel="stylesheet">
+    <link href="/shop/assets/corporate/css/style-responsive.css" rel="stylesheet">
+    <link href="/shop/assets/corporate/css/themes/red.css" rel="stylesheet" id="style-color">
+    <link href="/shop/assets/corporate/css/custom.css" rel="stylesheet">
+    <!-- Theme styles END -->
+</head>
+<!-- Head END -->
+
+<!-- Body BEGIN -->
+<body class="corporate">
+
+<?php echo $this->view->getPartial('layouts/_header') ?>
+
+<div class="main">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="/"><?php echo $this->obj->getValidateMessage('shouye'); ?></a></li>
+            <li class="active"><?php echo $this->obj->getValidateMessage('invitation-registration'); ?></li>
+        </ul>
+        <!-- BEGIN SIDEBAR & CONTENT -->
+        <div class="row margin-bottom-40">
+
+            <?php echo $this->view->getPartial('layouts/_member_sidebar') ?>
+
+            <!-- BEGIN CONTENT -->
+            <div class="col-md-9 col-sm-9">
+                <h1 class="h1-title"><?php echo $this->obj->getValidateMessage('invitation-registration'); ?></h1>
+                <div class="content-form-page">
+                    <div class="row">
+                        <div class="col-md-7 col-sm-7">
+                            <form class="form-horizontal form-without-legend" role="form">
+
+                                <div class="form-group">
+                                    <label for="company"
+                                           class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('company'); ?>
+                                        <span class="require">*</span></label>
+                                    <div class="col-lg-8">
+                                        <select name="companyid" id="companyid">
+                                            <option value="">== 请选择 ==</option>
+                                            <?php foreach ($this->allcompany as $company) { ?>
+                                                <option value="<?php echo $company['id']; ?>"><?php echo $company['name']; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="email"
+                                           class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('email'); ?>
+                                        <span class="require">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input type="email" class="form-control" id="email">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="username"
+                                           class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('yonghuming'); ?>
+                                        <span
+                                                class="require">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input type="text" class="form-control" id="username"><span
+                                                class="require">(注：默认密码：用户名+123)</span>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-8 col-md-offset-4 padding-left-0 padding-top-20">
+                                        <button type="submit" class="btn btn-primary" id="button-invite"
+                                                onclick="invite();return false;"><?php echo $this->obj->getValidateMessage('queren'); ?>
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- END CONTENT -->
+        </div>
+        <!-- END SIDEBAR & CONTENT -->
+    </div>
+</div>
+
+<!-- loading -->
+<div class="modal fade" id="loading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop='static'>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel"><?php echo $this->obj->getValidateMessage('tishi'); ?></h4>
+            </div>
+            <div class="modal-body">
+                <?php echo $this->obj->getValidateMessage('please-wait'); ?>
+                <span id="result"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php echo $this->view->getPartial('layouts/_footer'); ?>
+
+<script>
+    /**
+     * 邀请注册
+     * @returns {boolean}
+     */
+    function invite() {
+        // ajax提交
+        $.ajax({
+            type: "post",
+            url: "/member/invite",
+            async: true,
+            dataType: 'json',
+            data: {
+                'email': $('#email').val(),
+                'username': $('#username').val(),
+                'companyid': $('#companyid').val(),
+            },
+            beforeSend: function () {
+                // modal示
+                $('#loading').modal('show');
+                // 禁用按钮防止重复提交
+                $("#button-invite").attr({disabled: "disabled"});
+            },
+            success: function (response) {
+                // 判断是否有错误
+                if (response.messages.length > 0) {
+                    layer.open({
+                        content: response.messages[0],
+                        btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>"
+                    });
+                } else {
+                    //提示
+                    layer.open({
+                        content: "<?php echo $this->obj->getValidateMessage('success'); ?>",
+                        btn: "<?php echo $this->obj->getValidateMessage('please-wait'); ?>",
+                        time: 3, // 3秒后自动跳转
+                    });
+                    // 3秒后跳转
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 1000);
+                }
+            },
+            complete: function () {
+                $('#loading').modal('hide');
+                $("#button-invite").removeAttr("disabled");
+            },
+        });
+        // 禁止自动跳转
+        return false;
+    }
+</script>
+
+</body>
+<!-- END BODY -->
+</html>

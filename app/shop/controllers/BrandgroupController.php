@@ -63,11 +63,7 @@ class BrandgroupController extends AdminController
         $params = $this->dispatcher->getParams();
         if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
             // 传递错误
-            $this->view->setVars([
-                'title' => $this->getValidateMessage('make-an-error'),
-                'message' => $this->getValidateMessage('params-error'),
-            ]);
-            return $this->view->pick('error/error');
+            return $this->renderError();
         }
         // 赋值
         $id = $params[0];
@@ -100,9 +96,10 @@ class BrandgroupController extends AdminController
         $company = TbCompany::findFirstById($member['companyid']);
         // 获取销售端口
         $saleport = $company->shopSaleport;
-        $array = Util::recordListColumn($saleport->saleportWarehouses, 'warehouseid');
-        if (count($array) == 0) {
-            return $array;
+        if ($saleport) {
+            $array = Util::recordListColumn($saleport->saleportWarehouses, 'warehouseid');
+        } else {
+            $array = [];
         }
 
         // 需要拿到每个商品下面所有的尺码，库存数
@@ -119,13 +116,17 @@ class BrandgroupController extends AdminController
                 $realprice = 0;
             }
             if ($item->sizetopid) {
-                $sizecontents = TbProductstock::sum([
-                    sprintf("warehouseid in (%s) and defective_level=0 and productid = %s", implode(',', $array), $item->productid),
-                    "group" => 'productid, sizecontentid',
-                    "column" => 'number',
-                ]);
-                if ($sizecontents) {
-                    $sizecontents = $sizecontents->toArray();
+                if ($array) {
+                    $sizecontents = TbProductstock::sum([
+                        sprintf("warehouseid in (%s) and defective_level=0 and productid = %s", implode(',', $array), $item->productid),
+                        "group" => 'productid, sizecontentid',
+                        "column" => 'number',
+                    ]);
+                    if ($sizecontents) {
+                        $sizecontents = $sizecontents->toArray();
+                    }
+                } else {
+                    $sizecontents = [];
                 }
             } else {
                 $sizecontents = [];
@@ -156,18 +157,23 @@ class BrandgroupController extends AdminController
 
         // 使用冒泡排序算法得出当前最大sum_sizecontents值
         $count = count($products);
-        for ($i = 0; $i < $count - 1; $i++) {
-            for ($j = 0; $j < $count - $i - 1; $j++) {
-                if ($products[$j]['sum_sizecontents'] > $products[$j + 1]['sum_sizecontents']) {
-                    $temp = $products[$j];
-                    $products[$j] = $products[$j + 1];
-                    $products[$j + 1] = $temp;
+        // 必须有数据才进行排序
+        if ($count) {
+            for ($i = 0; $i < $count - 1; $i++) {
+                for ($j = 0; $j < $count - $i - 1; $j++) {
+                    if ($products[$j]['sum_sizecontents'] > $products[$j + 1]['sum_sizecontents']) {
+                        $temp = $products[$j];
+                        $products[$j] = $products[$j + 1];
+                        $products[$j + 1] = $temp;
+                    }
                 }
             }
+            // 得出最大尺码组的值，最后需要传递给模板
+            $max_sum_sizecontents = $products[$count - 1]['sum_sizecontents'];
+        } else {
+            // 得出最大尺码组的值，最后需要传递给模板
+            $max_sum_sizecontents = '';
         }
-
-        // 得出最大尺码组的值，最后需要传递给模板
-        $max_sum_sizecontents = $products[$count - 1]['sum_sizecontents'];
 
         // 创建分页对象，使用数组分页
         $paginator = new PaginatorArray(

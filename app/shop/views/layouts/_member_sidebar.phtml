@@ -10,6 +10,16 @@
         <li class="list-group-item clearfix"><a href="/memberaddress"><i
                         class="fa fa-angle-right"></i> <?php echo $this->obj->getValidateMessage('address-list'); ?></a>
         </li>
+        <?php if ($this->isadmin) { ?>
+            <li class="list-group-item clearfix"><a href="/member/invite"><i
+                            class="fa fa-angle-right"></i> <?php echo $this->obj->getValidateMessage('invitation-registration'); ?>
+                </a>
+            </li>
+            <li class="list-group-item clearfix"><a href="/member/invitelist"><i
+                            class="fa fa-angle-right"></i> <?php echo $this->obj->getValidateMessage('invitation-registration-list'); ?>
+                </a>
+            </li>
+        <?php } ?>
     </ul>
 </div>
 <!-- END SIDEBAR -->

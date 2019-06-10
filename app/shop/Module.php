@@ -3,6 +3,7 @@
 namespace Multiple\Shop;
 
 use Asa\Erp\StaticReader;
+use Asa\Erp\TbCompany;
 use Multiple\Shop\Controllers\AdminController;
 use Phalcon\Loader;
 use Phalcon\Mvc\View;
@@ -12,6 +13,8 @@ use Phalcon\Mvc\ModuleDefinitionInterface;
 use Multiple\Shop\Controllers\BrandgroupController;
 use Multiple\Shop\Controllers\BuycarController;
 use Multiple\Shop\Controllers\CompanyController;
+use PHPMailer\PHPMailer\PHPMailer;
+use Phalcon\Queue\Beanstalk;
 
 class Module implements ModuleDefinitionInterface
 {
@@ -63,8 +66,12 @@ class Module implements ModuleDefinitionInterface
         $config = $di->get("config");
         $session = $di->get('session');
         $di->setShared('main_host', function () use ($config) {
-            $main_host = $config['app']['main_host'];
-            return $main_host;
+            return $config['app']['main_host'];
+        });
+
+        // 商城域名
+        $di->setShared('shop_host', function () use ($config) {
+            return $config['app']['shop_host'];
         });
 
         // 图片域名
@@ -112,6 +119,12 @@ class Module implements ModuleDefinitionInterface
             return $host;
         });
 
+        // 获取所有公司列表
+        $di->setShared('allcompany', function () {
+            $datas = TbCompany::find()->toArray();
+            return $datas;
+        });
+
         // 为了使用共享model数据，需要注册currentCompany
         $di->setShared('currentCompany', function () use ($session) {
             if ($session->has("member")) {
@@ -152,6 +165,32 @@ class Module implements ModuleDefinitionInterface
         // 主控制器模型
         $di->setShared('obj', function () {
             return new AdminController();
+        });
+
+        // 判断是否为管理员
+        $di->setShared('isadmin', function () use ($tbcompany) {
+            return $tbcompany->isadmin();
+        });
+
+        // 取出虚拟公司
+        $di->setShared('supercoid', function () use ($tbcompany) {
+            return $tbcompany->getSuperCoId();
+        });
+
+        // phpmainer
+        $di->setShared('phpmailer', function () {
+            return new PHPMailer();
+        });
+
+        // 队列
+        $di->setShared('queue', function () {
+            // 连接到队列
+            return new Beanstalk(
+                [
+                    "host" => "localhost",
+                    "port" => "11300",
+                ]
+            );
         });
 
     }

@@ -41,11 +41,7 @@ class ChildproductgroupController extends AdminController
         $params = $this->dispatcher->getParams();
         if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
             // 传递错误
-            $this->view->setVars([
-                'title' => $this->getValidateMessage('make-an-error'),
-                'message' => $this->getValidateMessage('params-error'),
-            ]);
-            return $this->view->pick('error/error');
+            return $this->renderError();
         }
 
         // 赋值
@@ -56,11 +52,7 @@ class ChildproductgroupController extends AdminController
         // 如果模型不存在，则给出错误提示
         if (!$childbrand) {
             // 传递错误
-            $this->view->setVars([
-                'title' => $this->getValidateMessage('make-an-error'),
-                'message' => $this->getValidateMessage('brandgroupchild-doesnot-exist'),
-            ]);
-            return $this->view->pick('error/error');
+            return $this->renderError('make-an-error','brandgroupchild-doesnot-exist');
         }
         // 子品类名称
         // 多语言字段
@@ -92,9 +84,10 @@ class ChildproductgroupController extends AdminController
         // 在取出库存之前，首先获取销售端口
         $company = TbCompany::findFirstById($member['companyid']);
         $saleport = $company->shopSaleport;
-        $array = Util::recordListColumn($saleport->saleportWarehouses, 'warehouseid');
-        if (count($array) == 0) {
-            return $array;
+        if ($saleport) {
+            $array = Util::recordListColumn($saleport->saleportWarehouses, 'warehouseid');
+        } else {
+            $array = [];
         }
 
         // 需要拿到每个商品下面所有的尺码，库存数
@@ -111,13 +104,17 @@ class ChildproductgroupController extends AdminController
                 $realprice = 0;
             }
             if ($item->sizetopid) {
-                $sizecontents = TbProductstock::sum([
-                    sprintf("warehouseid in (%s) and defective_level=0 and productid = %s", implode(',', $array), $item->productid),
-                    "group" => 'productid, sizecontentid',
-                    "column" => 'number',
-                ]);
-                if ($sizecontents) {
-                    $sizecontents = $sizecontents->toArray();
+                if ($array) {
+                    $sizecontents = TbProductstock::sum([
+                        sprintf("warehouseid in (%s) and defective_level=0 and productid = %s", implode(',', $array), $item->productid),
+                        "group" => 'productid, sizecontentid',
+                        "column" => 'number',
+                    ]);
+                    if ($sizecontents) {
+                        $sizecontents = $sizecontents->toArray();
+                    }
+                } else {
+                    $sizecontents = [];
                 }
             } else {
                 $sizecontents = [];
