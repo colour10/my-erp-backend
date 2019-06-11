@@ -31,9 +31,6 @@ use Asa\Erp\Util;
  */
 class StatisticsController extends AdminController
 {
-    // 欧元id
-    protected static $eurid = false;
-
     /**
      * 验证是否登录，否则退出
      */
@@ -42,29 +39,8 @@ class StatisticsController extends AdminController
         // 取出登录公司信息
         if (!$this->currentCompany) {
             // 取出错误信息
-            $msg = $this->getValidateMessage('model-delete-message');
-            echo $this->error($msg);
-            exit;
+            return $this->renderError('make-an-error', 'model-delete-message');
         }
-    }
-
-    /**
-     * 使用单例模式获取欧元ID
-     * @return bool|int
-     */
-    public static function getEurInstance()
-    {
-        // 逻辑
-        if (self::$eurid === false) {
-            $currency = TbCurrency::findFirst("name_cn='欧元'");
-            if ($currency) {
-                self::$eurid = $currency->id;
-            } else {
-                self::$eurid = 0;
-            }
-        }
-        // 返回
-        return self::$eurid;
     }
 
     /**
@@ -1203,7 +1179,7 @@ class StatisticsController extends AdminController
     {
         // 逻辑
         // 先取出欧元
-        if ($id = self::getEurInstance()) {
+        if ($id = $this->eur) {
             // 再去tb_exchange_rate找对应的货币转换比例，如果找得到
             // 如果传入的货币是欧元，那么就直接返回
             if ($currencyid == $id) {

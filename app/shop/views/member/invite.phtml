@@ -73,7 +73,7 @@
                                            class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('company'); ?>
                                         <span class="require">*</span></label>
                                     <div class="col-lg-8">
-                                        <select name="companyid" id="companyid">
+                                        <select name="companyid" id="companyid" class="form-control">
                                             <option value="">== 请选择 ==</option>
                                             <?php foreach ($this->allcompany as $company) { ?>
                                                 <option value="<?php echo $company['id']; ?>"><?php echo $company['name']; ?></option>
@@ -122,7 +122,7 @@
     </div>
 </div>
 
-<!-- loading -->
+<!-- loading，暂时没用上 -->
 <div class="modal fade" id="loading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop='static'>
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -145,6 +145,7 @@
      * @returns {boolean}
      */
     function invite() {
+        var button = $("#button-invite");
         // ajax提交
         $.ajax({
             type: "post",
@@ -157,10 +158,16 @@
                 'companyid': $('#companyid').val(),
             },
             beforeSend: function () {
-                // modal示
-                $('#loading').modal('show');
+                // 更改文字
+                button.html("<?php echo $this->obj->getValidateMessage('please-wait'); ?>");
                 // 禁用按钮防止重复提交
-                $("#button-invite").attr({disabled: "disabled"});
+                button.attr({disabled: "disabled"});
+            },
+            complete: function () {
+                // 更改文字
+                button.html("<?php echo $this->obj->getValidateMessage('queren'); ?>");
+                // 恢复提交
+                button.removeAttr("disabled");
             },
             success: function (response) {
                 // 判断是否有错误
@@ -181,10 +188,6 @@
                         window.location.reload();
                     }, 1000);
                 }
-            },
-            complete: function () {
-                $('#loading').modal('hide');
-                $("#button-invite").removeAttr("disabled");
             },
         });
         // 禁止自动跳转

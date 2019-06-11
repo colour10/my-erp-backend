@@ -4,6 +4,7 @@ namespace Multiple\Shop;
 
 use Asa\Erp\StaticReader;
 use Asa\Erp\TbCompany;
+use Asa\Erp\TbCurrency;
 use Multiple\Shop\Controllers\AdminController;
 use Phalcon\Loader;
 use Phalcon\Mvc\View;
@@ -184,13 +185,32 @@ class Module implements ModuleDefinitionInterface
 
         // 队列
         $di->setShared('queue', function () {
+            // 屏蔽错误，防止Beanstalk服务没有启动引起报错
+            ini_set('display_errors', 'off');
+            error_reporting(0);
             // 连接到队列
-            return new Beanstalk(
+            $beanstalk = new Beanstalk(
                 [
                     "host" => "localhost",
                     "port" => "11300",
                 ]
             );
+            try {
+                $beanstalk->connect();
+            } catch (\Exception $e) {
+                // 如果没有连接，返回否
+                return false;
+            }
+        });
+
+        // 取出欧元
+        $di->setShared('eur', function () {
+            $currency = TbCurrency::findFirst("name_cn='欧元'");
+            if ($currency) {
+                return $currency->id;
+            } else {
+                return 0;
+            }
         });
 
     }

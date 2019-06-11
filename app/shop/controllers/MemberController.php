@@ -135,15 +135,19 @@ class MemberController extends AdminController
                 }
 
                 // 自动发送一个注册邮件，使用队列进行处理
-                $this->queue->choose('my_tube');
-                $this->queue->put(Util::sendEmail($email, $this->getValidateMessage('notice-for-success-register'), $this->outputhtml($username, $password)), [
-                    // 任务优先级
-                    'priority' => 250,
-                    // 延迟时间
-                    'delay' => 10,
-                    // 运行时间
-                    'ttr' => 3600,
-                ]);
+                // 如果队列服务成功开启，则执行，否则不执行
+                if ($this->queue) {
+                    $this->queue->choose('my_tube');
+                    $this->queue->put(Util::sendEmail($email, $this->getValidateMessage('notice-for-success-register'), $this->outputhtml($username, $password)), [
+                        // 任务优先级
+                        'priority' => 250,
+                        // 延迟时间
+                        'delay' => 10,
+                        // 运行时间
+                        'ttr' => 3600,
+                    ]);
+                }
+
 
                 // 最终返回成功
                 return $this->success();

@@ -46,7 +46,7 @@ class ProductController extends AdminController
         // 如果不存在，就跳转到错误页面
         if (!$product = TbProductSearch::findFirst("productid=$id AND companyid=" . $this->currentCompany)) {
             // 传递错误
-            return $this->renderError('make-an-error','product-doesnot-exist');
+            return $this->renderError('make-an-error', 'product-doesnot-exist');
         }
 
         // 商品价格
