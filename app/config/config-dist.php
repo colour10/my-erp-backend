@@ -50,13 +50,19 @@ return [
 
     //email发信设置，注册成功后发送邮件
     'email_config' => [
-        'secure' => 'ssl',     //链接加密方式 Options: "", "ssl" or "tls"; 为空时, 端口一般是25; ssl , 端口一般为 465 ;
-        'host' => 'smtp.qq.com',     //SMTP 服务器
+        'secure' => 'ssl',     //链接加密方式 Options: "", "ssl" or "tls"; 为空时, 端口一般是25; ssl , 端口一般为 465;
+        'host' => 'smtp.exmail.qq.com',     //SMTP 服务器
         'port' => '465',    //SMTP 端口, 一般为25, QQ为465或587
-        'username' => '请填写你自己的', //邮箱帐号
-        'psw' => '请填写你自己的', //邮箱密码 QQ使用SMTP授权码 uwrfbgqqfodjfaea
-        'From' => '请填写你自己的', //发件人地址
-        'FromName' => '请填写你自己的', //发件人姓名
+        'username' => 'custom@liuzongyang.com', //邮箱帐号
+        'psw' => 'Nokia3720c', //邮箱密码 QQ使用SMTP授权码 uwrfbgqqfodjfaea
+        'From' => 'custom@liuzongyang.com', //发件人地址
+        'FromName' => 'custom@liuzongyang.com', //发件人姓名
+    ],
+
+    //aliyun-cdn相关
+    'alibabacloud' => [
+        'accessKeyId' => 'LTAIIrjLY7GB0wjf',
+        'accessKeySecret' => 'j0GsvvgK0TzFUnha1Q8wPSF1jCH2BY',
     ],
 
 ];

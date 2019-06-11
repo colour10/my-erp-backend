@@ -2,6 +2,9 @@
 
 namespace Asa\Erp;
 
+use AlibabaCloud\Client\AlibabaCloud;
+use AlibabaCloud\Client\Exception\ClientException;
+use AlibabaCloud\Client\Exception\ServerException;
 use Gregwar\Image\Image;
 use PHPExcel;
 use PHPMailer\PHPMailer\PHPMailer;
@@ -820,6 +823,87 @@ class Util
         } else {
             return false;
         }
+    }
+
+    /**
+     * 手动刷新阿里云cdn缓存
+     * @param string|array $path 文件列表，里面的链接必须是完整的路径（包含http://或者https://）
+     * @return mixed
+     * @throws ClientException
+     */
+    public static function refreshAliyunCdnCaches($path)
+    {
+        // 逻辑
+        // 配置文件初始化
+        $config = require APP_PATH . '/app/config/config.php';
+        $alibabacloud = $config['alibabacloud'];
+        $accessKeyId = $alibabacloud['accessKeyId'];
+        $accessKeySecret = $alibabacloud['accessKeySecret'];
+
+        // 参数列表
+        // 文件列表必须有值
+        if (empty($path)) {
+            return false;
+        }
+        // 判断是文件夹还是文件，如果每个链接后面都有/则为目录，否则为文件
+        if (is_array($path)) {
+            $type = Util::isFileOrDirectory($path[0]);
+            // api中要求每个链接地址用"\n"或者"\r\n"分割
+            $path = implode("\n", $path);
+        } else {
+            $type = Util::isFileOrDirectory($path);
+        }
+
+        // 首先关闭错误提示
+        ini_set('display_errors', 'off');
+        error_reporting(0);
+
+        // api
+        AlibabaCloud::accessKeyClient($accessKeyId, $accessKeySecret)
+            ->regionId('cn-hangzhou')// replace regionId as you need
+            ->asDefaultClient();
+
+        try {
+            $result = AlibabaCloud::rpc()
+                ->product('Cdn')
+                // ->scheme('https') // https | http
+                ->version('2018-05-10')
+                ->action('RefreshObjectCaches')
+                ->method('POST')
+                ->options([
+                    'query' => [
+                        'ObjectPath' => $path,
+                        'ObjectType' => $type,
+                    ],
+                ])
+                ->request();
+            if ($result = $result->toArray()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (ClientException $e) {
+            return false;
+        } catch (ServerException $e) {
+            return false;
+        }
+    }
+
+    /**
+     * 判断一个网络路径是文件还是文件夹，如果最后一个字符是/，那么就是文件夹，否则就是文件
+     * @param string|array $path 文件路径
+     * @return string
+     */
+    public static function isFileOrDirectory($path)
+    {
+        // 逻辑
+        if (substr($path, -1, 1) === '/') {
+            $type = 'Directory';
+        } else {
+            $type = 'File';
+        }
+        // 返回
+        return $type;
     }
 
 }

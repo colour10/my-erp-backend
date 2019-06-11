@@ -70,6 +70,11 @@ class Module implements ModuleDefinitionInterface
             return $config['app']['main_host'];
         });
 
+        // 配置文件
+        $di->setShared('config', function () use ($config) {
+            return $config->toArray();
+        });
+
         // 商城域名
         $di->setShared('shop_host', function () use ($config) {
             return $config['app']['shop_host'];
@@ -183,7 +188,7 @@ class Module implements ModuleDefinitionInterface
             return new PHPMailer();
         });
 
-        // 队列
+        // 队列，但是依赖于系统服务beanstalk是否开启
         $di->setShared('queue', function () {
             // 屏蔽错误，防止Beanstalk服务没有启动引起报错
             ini_set('display_errors', 'off');
@@ -196,7 +201,9 @@ class Module implements ModuleDefinitionInterface
                 ]
             );
             try {
-                $beanstalk->connect();
+                if ($beanstalk->connect()) {
+                    return $beanstalk;
+                }
             } catch (\Exception $e) {
                 // 如果没有连接，返回否
                 return false;
