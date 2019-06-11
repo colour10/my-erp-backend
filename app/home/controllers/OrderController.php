@@ -75,7 +75,7 @@ class OrderController extends BaseController
             $order->status = $form['status'];
             $order->total = $form['total'];
             $order->genders = $form['genders'];
-            $order->brands = $form['brands'];
+            $order->brandids = $form['brandids'];
 
             // 判断是否成功
             if (!$order->save()) {
@@ -105,7 +105,7 @@ class OrderController extends BaseController
             $order->status = $form['status'];
             $order->total = $form['total'];
             $order->genders = $form['genders'];
-            $order->brands = $form['brands'];
+            $order->brandids = $form['brandids'];
 
             // 添加制单人及制单日期
             $order->makestaff = $this->currentUser;
@@ -272,5 +272,44 @@ class OrderController extends BaseController
         );
 
         return $this->success($details->toArray());
+    }
+
+    /**
+     * 品牌订单导入订单的时候调用
+     * @return [type] [description]
+     */
+    function importAction() {
+        $conditions = [
+            sprintf("companyid=%d", $this->companyid)
+        ];
+
+        if(isset($_POST['ageseasonid']) && $_POST['ageseasonid']>0) {
+            $conditions[] = sprintf("ageseasonid=%d", $_POST['ageseasonid']);
+        }
+
+        if(isset($_POST['supplierid']) && $_POST['supplierid']>0) {
+            $conditions[] = sprintf("supplierid=%d", $_POST['supplierid']);
+        }
+
+        if(isset($_POST['brandid']) && $_POST['brandid']>0) {
+            $conditions[] = sprintf("(brandids='%d' or brandids like '%%,%s%%' or brandids like '%%%s,%%')", $_POST['supplierid'], $_POST['supplierid'], $_POST['supplierid']);
+        }
+
+        $orders = TbOrder::find(
+            implode(" and ", $conditions)
+        );
+
+        //查询订单明细
+        $array = \Asa\Erp\Util::recordListColumn($orders, "id");
+        if(count($array)>0) {
+            $details = TbOrderdetails::find([
+                sprintf("orderid in (%s)", implode(",", $array)),
+                "order" => "productid, orderid"
+            ])->toArray();
+        }
+        else {
+            $details = [];
+        }
+        return $this->success(["orders"=>$orders->toArray(), "details"=>$details]);
     }
 }
