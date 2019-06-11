@@ -845,6 +845,10 @@ class Util
         if (empty($path)) {
             return false;
         }
+        // path必须是文件或者数组格式
+        if (!is_string($path) && !is_array($path)) {
+            return false;
+        }
         // 判断是文件夹还是文件，如果每个链接后面都有/则为目录，否则为文件
         if (is_array($path)) {
             $type = Util::isFileOrDirectory($path[0]);
