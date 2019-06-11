@@ -631,7 +631,7 @@ return [
     "piliangfenpei" => "批量分配",
     "fenpei" => "分配",
     "piliangchongzhi" => "批量重置",
-    "shangpinshuxing" => "商品属性",
+    "qxzjghs" => "请先增加供货商！",
     "shangpinshuxing" => "商品属性",
     "shangpinshuxing" => "商品属性",
     "shangpinshuxing" => "商品属性",
