@@ -4,6 +4,7 @@ namespace Multiple\Shop\Controllers;
 
 use Phalcon\Mvc\Controller;
 use Phalcon\Db\Column;
+use Phalcon\Mvc\Model;
 
 class AdminController extends Controller
 {
@@ -203,16 +204,8 @@ class AdminController extends Controller
      */
     public function success($data = [], $code = '200', array $messages = [])
     {
-        // 设置json头
-        $this->response->setContentType('application/json', 'UTF-8');
-        // 预处理
-        $return = [
-            'code' => $code,
-            'messages' => $messages,
-            'data' => $data,
-        ];
-        // 返回json信息
-        return $this->response->setJsonContent($return);
+        // 逻辑
+        return json_encode(['code' => $code, 'messages' => [], 'data' => $data]);
     }
 
 
@@ -224,8 +217,6 @@ class AdminController extends Controller
      */
     public function error($messages = [], $code = '200')
     {
-        // 设置json头
-        $this->response->setContentType('application/json', 'UTF-8');
         if ($messages instanceof Model === true) {
             $array = [];
             foreach ($messages->getMessages() as $message) {
@@ -236,11 +227,8 @@ class AdminController extends Controller
         } else {
             $array = $messages;
         }
-        // 返回json信息
-        return $this->response->setJsonContent([
-            'code' => $code,
-            'messages' => $array,
-        ]);
+        // 返回
+        return json_encode(['code' => $code, 'messages' => $array]);
     }
 
     /**
@@ -264,5 +252,19 @@ class AdminController extends Controller
         }
         // 否则就展示模块和信息组合后的结果
         return sprintf($language->$module_name[$module_rule], $human_name);
+    }
+
+    /*
+     * 为模板传递错误信息
+     */
+    public function renderError($title = 'make-an-error', $message = 'params-error')
+    {
+        // 逻辑
+        // 传递错误
+        $this->view->setVars([
+            'title' => $this->getValidateMessage($title),
+            'message' => $this->getValidateMessage($message),
+        ]);
+        return $this->view->pick('error/error');
     }
 }

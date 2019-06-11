@@ -3,6 +3,8 @@
 namespace Multiple\Shop\Controllers;
 
 use Asa\Erp\TbCompany;
+use Asa\Erp\TbMember;
+use Asa\Erp\TbUser;
 
 /**
  * 公司操作类
@@ -35,4 +37,53 @@ class CompanyController extends AdminController
             return ['company' => $company, 'webtitle' => $company->name];
         }
     }
+
+    /**
+     * 是否管理员用户
+     * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|string
+     */
+    public function isadmin()
+    {
+        // 逻辑
+        if (!$companyid = $this->getSuperCoId()) {
+            return false;
+        }
+
+        // 顺便创建一个虚拟公司的用户
+        if (!$memberModel = TbMember::findFirst("login_name='VirtualCorporation'")) {
+            if (!$this->db->execute("INSERT INTO tb_member(`name`,`login_name`, `password`, `companyid`) VALUES('VirtualCorporation', 'VirtualCorporation', md5('VirtualCorporation'), $companyid)")) {
+                return false;
+            }
+        }
+
+        // 判断是否是超级用户
+        if ($this->currentCompany == $companyid) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 取出虚拟公司的id
+     * @return bool|\Phalcon\Mvc\Model\Resultset|\Phalcon\Mvc\Phalcon\Mvc\Model
+     */
+    public function getSuperCoId()
+    {
+        // 逻辑
+        // 寻找是否存在名为“虚拟公司”的公司
+        if (!$companyModel = TbCompany::findFirst("name='虚拟公司'")) {
+            $companyModel = new TbCompany();
+            if (!$companyModel->create([
+                'name' => '虚拟公司',
+            ])) {
+                return false;
+            }
+        }
+
+        // 赋值
+        return $companyModel->id;
+    }
+
+
 }

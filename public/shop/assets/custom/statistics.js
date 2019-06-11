@@ -45,10 +45,6 @@ function ajax(type = 'post', url = '', fd, successFunctionName) {
             layer.close(index);
         },
         success: function (result) {
-            // 打印返回值
-            console.log('==== 打印结果 Start ====');
-            console.log(result);
-            console.log('==== 打印结果 End ====');
             // 判断逻辑
             // 判断是否有错误
             if (result.messages.length > 0) {
@@ -174,6 +170,7 @@ function DatePicker(beginSelector, endSelector) {
 
 // 日期赋值
 DatePicker("#start_salesdate", "#end_salesdate");
+DatePicker("#start_stockdate", "#end_stockdate");
 
 // 选择按钮统一封装方法
 // 当第一次点击之后，生成总的节点，从而节约性能

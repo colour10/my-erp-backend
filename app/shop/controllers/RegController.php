@@ -70,11 +70,7 @@ class RegController extends AdminController
         // get模板请求
         // 不能处于登录状态
         if ($this->member) {
-            $this->view->setVars([
-                'title' => $this->getValidateMessage('tips'),
-                'message' => $this->getValidateMessage('login-status-cannot-signup'),
-            ]);
-            return $this->view->pick('error/error');
+            return $this->renderError('tips', 'login-status-cannot-signup');
         }
 
         // 开始验证参数
@@ -86,11 +82,7 @@ class RegController extends AdminController
         // 如果是字符串，则说明出错了，那么就用模板返回
         if (is_string($result)) {
             // 传递错误
-            $this->view->setVars([
-                'title' => $this->getValidateMessage('make-an-error'),
-                'message' => $result,
-            ]);
-            return $this->view->pick('error/error');
+            return $this->renderError('make-an-error', $result);
         }
 
         // 模板赋值

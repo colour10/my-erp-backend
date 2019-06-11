@@ -65,7 +65,7 @@
                 <!-- BEGIN PRODUCT LIST -->
                 <div class="child_product_list row product-list">
 
-                    <?php if (count($page->items) > 0) { ?>
+                    <?php if (isset($page) && count($page->items) > 0) { ?>
                         <!-- PRODUCT ITEM START -->
                         <div class="col-col-md-12 col-sm-12 col-xs-12">
                             <table class="table table-responsive table-hover table-bordered table-order">
@@ -177,7 +177,7 @@
                 <!-- END PRODUCT LIST -->
 
                 <!-- BEGIN PAGINATOR -->
-                <?php if ($page->total_pages > 1) { ?>
+                <?php if (isset($page) && isset($id) && $page->total_pages > 1) { ?>
                     <div class="page_margin pull-right">
                         <ul class="pagination ">
                             <li class="<?php echo $page->current <= 1 ? 'disabled' : ''; ?>"><a

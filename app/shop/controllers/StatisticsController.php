@@ -19,6 +19,7 @@ use Asa\Erp\TbSalesReceive;
 use Asa\Erp\TbSeries;
 use Asa\Erp\TbSizecontent;
 use Asa\Erp\TbUser;
+use Asa\Erp\TbWarehouse;
 use Asa\Erp\TbWarehousing;
 use Asa\Erp\TbWarehousingdetails;
 use Asa\Erp\Util;
@@ -30,9 +31,6 @@ use Asa\Erp\Util;
  */
 class StatisticsController extends AdminController
 {
-    // 欧元id
-    protected static $eurid = false;
-
     /**
      * 验证是否登录，否则退出
      */
@@ -41,29 +39,8 @@ class StatisticsController extends AdminController
         // 取出登录公司信息
         if (!$this->currentCompany) {
             // 取出错误信息
-            $msg = $this->getValidateMessage('model-delete-message');
-            echo $this->error([$msg]);
-            exit;
+            return $this->renderError('make-an-error', 'model-delete-message');
         }
-    }
-
-    /**
-     * 使用单例模式获取欧元ID
-     * @return bool|int
-     */
-    public static function getEurInstance()
-    {
-        // 逻辑
-        if (self::$eurid === false) {
-            $currency = TbCurrency::findFirst("name_cn='欧元'");
-            if ($currency) {
-                self::$eurid = $currency->id;
-            } else {
-                self::$eurid = 0;
-            }
-        }
-        // 返回
-        return self::$eurid;
     }
 
     /**
@@ -387,6 +364,8 @@ class StatisticsController extends AdminController
             // 按照productid进行汇总
             $return_group_sales = $this->getGroupArray($return_sales, 'productid', ['productid', 'productname', 'sellnumber', 'brandid', 'brandname', 'brandfilename', 'brandgroupid', 'brandgroupname', 'ageseasonid', 'ageseasonname', 'wordcode', 'sum_price', 'sum_realprice'], ['sellnumber', 'sum_price', 'sum_realprice']);
 
+            // return $this->success($return_group_sales);
+
             // 3、入库表根据搜索条件进行预处理
             // 需要过滤品牌、品类、仓库、年代、性别、到货时间
             $warehousings = $this->getWarehousings($start_stockdate, $end_stockdate);
@@ -622,12 +601,74 @@ class StatisticsController extends AdminController
     }
 
     /**
+     * 库存余额查询
+     */
+    public function stockbalanceAction()
+    {
+        // 逻辑
+        // 取出登录公司信息
+        // 赋值
+        $companyid = $this->currentCompany;
+
+        // 获取全部参数
+        $params = $this->request->get();
+
+        // 截止日期
+        $end_stockdate = $this->request->get('end_stockdate');
+        if (!$end_stockdate) {
+            // 取出错误信息
+            $msg = $this->getValidateMessage('date-required');
+            return $this->error([$msg]);
+        }
+        $end_stockdate = date('Y-m-d', strtotime($end_stockdate) + 86400);
+
+        // 库存模型，这个是主表，所有的查询条件都以这个为基准
+        // 初始化TbProductstock查询条件
+        $conditions = "defective_level = 0 and companyid = $companyid and create_time <= :end_stockdate:";
+        $stocks = TbProductstock::find([
+            $conditions,
+            'bind' => [
+                'end_stockdate' => $end_stockdate,
+            ],
+        ]);
+
+        // 转成数组
+        $stocks = $stocks->toArray();
+
+        // 添加必须的字段和参数
+        // 继续
+        foreach ($stocks as $k => $stock) {
+            // 商品模型
+            $productModel = TbProduct::findFirstById($stock['productid']);
+            // 添加属性
+            $info = $productModel->toArray();
+            unset($info['id']);
+            // 重新赋值
+            // 把stock的值也赋值进去
+            foreach ($stock as $key => $value) {
+                $info[$key] = $value;
+            }
+            $stocks[$k] = $info;
+        }
+
+        // 集中处理条件过滤
+        $where = $this->getArraySearchAttributes($params, ['ageseasonid'], ['spring', 'summer', 'fall', 'winter'], [], ['property', 'brandid', 'warehouseid', 'brandgroupid', 'brandproperty']);
+        // 获取结果集
+        $return_stocks = $this->getArraySearchValues($stocks, $where);
+        // 按照productid分组
+        // 按照productid进行汇总
+        $return_group_stocks = $this->getGroupArray($return_stocks, 'productid', ['productid', 'productname', 'brandid', 'brandname', 'brandgroupid', 'brandgroupname', 'sum_price', 'sum_realprice', 'warehouseid'], ['sellnumber', 'sum_price', 'sum_realprice']);
+        // 返回
+        return $this->success($return_group_stocks);
+    }
+
+    /**
      * 根据销售日期查出销售信息及其他关联信息
-     * @param null $start_salesdate 起始销售日期
-     * @param null $end_salesdate 截止销售日期
+     * @param string $start_salesdate 起始销售日期
+     * @param string $end_salesdate 截止销售日期
      * @return mixed
      */
-    public function getSales($start_salesdate = null, $end_salesdate = null)
+    public function getSales($start_salesdate, $end_salesdate)
     {
         // 使用构造器进行查询
         $builder = $this->modelsManager->createBuilder();
@@ -695,11 +736,11 @@ class StatisticsController extends AdminController
 
     /**
      * 获取指定时间段的入库记录及所有相关信息
-     * @param null $start_stockdate 起始日期
-     * @param null $end_stockdate 截止日期
+     * @param string $start_stockdate 起始日期
+     * @param string $end_stockdate 截止日期
      * @return array
      */
-    public function getWarehousings($start_stockdate = null, $end_stockdate = null)
+    public function getWarehousings($start_stockdate = '', $end_stockdate = '')
     {
         // 逻辑
         // 开始查询入库表
@@ -789,6 +830,26 @@ class StatisticsController extends AdminController
         }
         // 最终返回
         return $return;
+    }
+
+    /**
+     * 获取截止某个时间节点的库存状况
+     * @param string $end_stockdate 截止日期
+     * @return string|array
+     */
+    public function getStocks($end_stockdate = '')
+    {
+        // 逻辑
+        // 参数列表
+        $params = $this->request->get();
+        $end_stockdate = $this->request->get('end_stockdate');
+        if (!$end_stockdate) {
+            // 取出错误信息
+            return $this->getValidateMessage('date-required');
+        }
+        // 取输入日期之后的那一天作为截止日
+        $end_stockdate = date('Y-m-d', strtotime($end_stockdate) + 86400);
+        // 继续做
     }
 
     /**
@@ -1118,7 +1179,7 @@ class StatisticsController extends AdminController
     {
         // 逻辑
         // 先取出欧元
-        if ($id = self::getEurInstance()) {
+        if ($id = $this->eur) {
             // 再去tb_exchange_rate找对应的货币转换比例，如果找得到
             // 如果传入的货币是欧元，那么就直接返回
             if ($currencyid == $id) {
@@ -1358,6 +1419,21 @@ class StatisticsController extends AdminController
         return $this->success($datas->toArray());
     }
 
+    /**
+     * 查询仓库
+     * @return false|string
+     */
+    public function warehouseidlistAction()
+    {
+        // 逻辑
+        // 转换成name字段显示
+        $datas = TbWarehouse::find([
+            "condition" => "id = " . $this->currentCompany,
+            'columns' => "id, name",
+        ]);
+        // 返回数据
+        return $this->success($datas->toArray());
+    }
 
 }
 

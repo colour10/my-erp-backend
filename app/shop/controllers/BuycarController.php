@@ -372,11 +372,7 @@ class BuycarController extends AdminController
                 $params = $this->dispatcher->getParams();
                 if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
                     // 传递错误
-                    $this->view->setVars([
-                        'title' => $this->getValidateMessage('make-an-error'),
-                        'message' => $this->getValidateMessage('params-error'),
-                    ]);
-                    return $this->view->pick('error/error');
+                    return $this->renderError();
                 }
                 // 赋值
                 $id = $params[0];

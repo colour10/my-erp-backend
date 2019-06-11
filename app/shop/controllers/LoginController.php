@@ -44,6 +44,7 @@ class LoginController extends AdminController
             // 接收变量
             $username = $this->request->get('login_name');
             $password = $this->request->get('password');
+            $language = $this->request->get('language');
 
             // 验证合法性
             if (!$username || !$password) {
@@ -62,6 +63,9 @@ class LoginController extends AdminController
 
             // 分别返回
             if ($rs) {
+                // 加入session
+                $language = $language ?: 'cn';
+                $this->session->set('language', $language);
                 $this->session->set('member', $rs->toArray());
                 return json_encode(['code' => '200', 'auth' => $this->session->get('member'), 'messages' => []]);
             } else {

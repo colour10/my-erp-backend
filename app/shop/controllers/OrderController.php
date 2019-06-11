@@ -28,11 +28,7 @@ class OrderController extends AdminController
     {
         // 逻辑
         // 传递错误
-        $this->view->setVars([
-            'title' => $this->getValidateMessage('make-an-error'),
-            'message' => $this->getValidateMessage('404-not-found'),
-        ]);
-        return $this->view->pick('error/error');
+        return $this->renderError('make-an-error', '404-not-found');
     }
 
     /**
@@ -49,11 +45,7 @@ class OrderController extends AdminController
         $params = $this->dispatcher->getParams();
         if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
             // 传递错误
-            $this->view->setVars([
-                'title' => $this->getValidateMessage('make-an-error'),
-                'message' => $this->getValidateMessage('params-error'),
-            ]);
-            return $this->view->pick('error/error');
+            return $this->renderError();
         }
         // 赋值
         $id = $params[0];
@@ -507,10 +499,7 @@ class OrderController extends AdminController
         $currentPage = $this->request->getQuery("page", "int", 1);
 
         // 找到所有的主订单列表，并且按照创建时间倒叙排列
-        $orders = TbShoporderCommon::find([
-            'member_id' => $member['id'],
-            'order' => 'create_time desc',
-        ]);
+        $orders = TbShoporderCommon::find("member_id = " . $member['id'] . " order by create_time desc");
 
         // 整合子订单
         $orders_array = $orders->toArray();
@@ -646,11 +635,7 @@ class OrderController extends AdminController
                 $params = $this->dispatcher->getParams();
                 if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
                     // 传递错误
-                    $this->view->setVars([
-                        'title' => $this->getValidateMessage('make-an-error'),
-                        'message' => $this->getValidateMessage('params-error'),
-                    ]);
-                    return $this->view->pick('error/error');
+                    return $this->renderError();
                 }
                 // 赋值
                 $id = $params[0];
@@ -731,11 +716,7 @@ class OrderController extends AdminController
                 $params = $this->dispatcher->getParams();
                 if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
                     // 传递错误
-                    $this->view->setVars([
-                        'title' => $this->getValidateMessage('make-an-error'),
-                        'message' => $this->getValidateMessage('params-error'),
-                    ]);
-                    return $this->view->pick('error/error');
+                    return $this->renderError();
                 }
                 // 赋值
                 $id = $params[0];

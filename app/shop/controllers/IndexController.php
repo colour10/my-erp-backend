@@ -3,7 +3,7 @@
 namespace Multiple\Shop\Controllers;
 
 use Asa\Erp\TbProductSearch;
-use Phalcon\Paginator\Adapter\Model as PaginatorModel;
+use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
 
 /**
  * 首页控制器类
@@ -23,12 +23,12 @@ class IndexController extends AdminController
             return $this->response->redirect('/login');
         }
 
-        // 最新促销，需要从当前域名绑定的公司提取资料
-        if (!$productlist = TbProductSearch::find("companyid={$this->currentCompany}")) {
+        // 最新促销，需要从当前域名绑定的公司提取资料，默认取出12个
+        if (!$productlist = TbProductSearch::find("companyid={$this->currentCompany} limit 12")) {
             $productlist = [];
         }
 
-        //  还缺少价格，现在进行补充，暂时用product表中的国际零售价代替（需要修改）
+        // 还缺少价格，现在进行补充，暂时用product表中的国际零售价代替（需要修改）
         $productlist_array = $productlist->toArray();
         foreach ($productlist as $k => $product) {
             $productlist_array[$k]['realprice'] = $product->product->wordprice;
@@ -62,11 +62,17 @@ class IndexController extends AdminController
             'bind' => ['keyword' => '%' . $keyword . '%'],
         ]);
 
+        // 还缺少价格，现在进行补充，暂时用product表中的国际零售价代替（需要修改）
+        $productlist_array = $productlist->toArray();
+        foreach ($productlist as $k => $product) {
+            $productlist_array[$k]['realprice'] = $product->product->wordprice;
+        }
+
         // 创建分页对象
-        $paginator = new PaginatorModel(
+        $paginator = new PaginatorArray(
             [
-                "data" => $productlist,
-                "limit" => 10,
+                "data" => $productlist_array,
+                "limit" => 1,
                 "page" => $currentPage,
             ]
         );

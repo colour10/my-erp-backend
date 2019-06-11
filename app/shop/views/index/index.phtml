@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 
-<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
-<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if IE 8]>
+<html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
 <html lang="en">
 <!--<![endif]-->
@@ -63,10 +65,12 @@
             <div class="item carousel-item-four active">
                 <div class="container">
                     <div class="carousel-position-four text-center">
-                        <h2 class="margin-bottom-20 animate-delay carousel-title-v3 border-bottom-title text-uppercase" data-animation="animated fadeInDown">
+                        <h2 class="margin-bottom-20 animate-delay carousel-title-v3 border-bottom-title text-uppercase"
+                            data-animation="animated fadeInDown">
                             Tones of <br/><span class="color-red-v2">Shop UI Features</span><br/> designed
                         </h2>
-                        <p class="carousel-subtitle-v2" data-animation="animated fadeInUp">Lorem ipsum dolor sit amet constectetuer diam <br/>
+                        <p class="carousel-subtitle-v2" data-animation="animated fadeInUp">Lorem ipsum dolor sit amet
+                            constectetuer diam <br/>
                             adipiscing elit euismod ut laoreet dolore.</p>
                     </div>
                 </div>
@@ -87,7 +91,9 @@
                         </p>
                         <a class="carousel-btn" href="#" data-animation="animated fadeInUp">See More Details</a>
                     </div>
-                    <img class="carousel-position-five animate-delay hidden-sm hidden-xs" src="/shop/assets/pages/img/shop-slider/slide2/price.png" alt="Price" data-animation="animated zoomIn">
+                    <img class="carousel-position-five animate-delay hidden-sm hidden-xs"
+                         src="/shop/assets/pages/img/shop-slider/slide2/price.png" alt="Price"
+                         data-animation="animated zoomIn">
                 </div>
             </div>
 
@@ -95,7 +101,8 @@
             <div class="item carousel-item-six">
                 <div class="container">
                     <div class="carousel-position-four text-center">
-                                <span class="carousel-subtitle-v3 margin-bottom-15" data-animation="animated fadeInDown">
+                                <span class="carousel-subtitle-v3 margin-bottom-15"
+                                      data-animation="animated fadeInDown">
                                     Full Admin &amp; Frontend
                                 </span>
                         <p class="carousel-subtitle-v4" data-animation="animated fadeInDown">
@@ -125,10 +132,12 @@
         </div>
 
         <!-- Controls -->
-        <a class="left carousel-control carousel-control-shop" href="#carousel-example-generic" role="button" data-slide="prev">
+        <a class="left carousel-control carousel-control-shop" href="#carousel-example-generic" role="button"
+           data-slide="prev">
             <i class="fa fa-angle-left" aria-hidden="true"></i>
         </a>
-        <a class="right carousel-control carousel-control-shop" href="#carousel-example-generic" role="button" data-slide="next">
+        <a class="right carousel-control carousel-control-shop" href="#carousel-example-generic" role="button"
+           data-slide="next">
             <i class="fa fa-angle-right" aria-hidden="true"></i>
         </a>
     </div>
@@ -141,24 +150,34 @@
         <div class="row margin-bottom-40">
             <!-- BEGIN SALE PRODUCT -->
             <div class="col-md-12 sale-product">
-                <h2>最新促销</h2>
+                <h2><?php echo $this->obj->getValidateMessage('latest-promotion'); ?></h2>
                 <div class="owl-carousel owl-carousel5">
 
-                    <?php foreach ($productlist as $item) { ?>
-                        <div>
-                            <div class="product-item">
-                                <div class="pi-img-wrapper">
-                                    <img src="<?php echo $this->file_prex.$item['picture']; ?>" class="img-responsive" alt="<?php echo $item['productname']; ?>">
-                                    <div>
-                                        <a href="<?php echo $this->file_prex.$item['picture']; ?>" class="btn btn-default fancybox-button">Zoom</a>
+                    <?php
+                    if (isset($productlist)) {
+                        foreach ($productlist as $item) {
+                            ?>
+                            <div>
+                                <div class="product-item">
+                                    <div class="pi-img-wrapper">
+                                        <img src="<?php echo $this->file_prex . $item['picture']; ?>"
+                                             class="img-responsive" alt="<?php echo $item['productname']; ?>">
+                                        <div>
+                                            <a href="<?php echo $this->file_prex . $item['picture']; ?>"
+                                               class="btn btn-default fancybox-button">Zoom</a>
+                                        </div>
                                     </div>
+                                    <h3>
+                                        <a href="/product/detail/<?php echo $item['productid']; ?>"><?php echo $item['productname']; ?></a>
+                                    </h3>
+                                    <div class="pi-price"><?php echo $this->currency; ?><?php echo $item['realprice']; ?></div>
+                                    <div class="sticker sticker-sale"></div>
                                 </div>
-                                <h3><a href="/product/detail/<?php echo $item['productid']; ?>"><?php echo $item['productname']; ?></a></h3>
-                                <div class="pi-price"><?php echo $this->currency; ?><?php echo $item['realprice']; ?></div>
-                                <div class="sticker sticker-sale"></div>
                             </div>
-                        </div>
-                    <? } ?>
+                            <?
+                        }
+                    }
+                    ?>
 
                 </div>
             </div>

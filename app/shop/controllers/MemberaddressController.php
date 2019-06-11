@@ -28,7 +28,10 @@ class MemberaddressController extends AdminController
         if (!$member = $this->member) {
             return $this->response->redirect('/login');
         }
-        parent::indexAction();
+
+        // 取出当前登录用户的地址列表
+        $result = TbMemberAddress::find("member_id = " . $member['id']);
+        $this->view->setVar("result", $result->toArray());
     }
 
 
@@ -75,10 +78,6 @@ class MemberaddressController extends AdminController
         if (!$member = $this->member) {
             return $this->response->redirect('/login');
         }
-        // 把对象传递过去，用作错误提示
-        $this->view->setVars([
-
-        ]);
     }
 
 
@@ -135,11 +134,7 @@ class MemberaddressController extends AdminController
         // 如果是字符串，说明是错误提示，那么就直接返回
         if (is_string($address)) {
             // 传递错误
-            $this->view->setVars([
-                'title' => $this->getValidateMessage('make-an-error'),
-                'message' => $address,
-            ]);
-            return $this->view->pick('error/error');
+            return $this->renderError('make-an-error',$address);
         }
         $this->view->setVars([
             'address' => $address->toArray(),
