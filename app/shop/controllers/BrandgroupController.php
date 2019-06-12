@@ -206,16 +206,12 @@ class BrandgroupController extends AdminController
      * 获取前5个主品牌列表
      * @return array
      */
-    public function catesAction()
+    public function frontcatesAction()
     {
         // 逻辑
-        // 判断是否超出了6个，如果超过了6个，那么取前5个，最后一个放more
-        $list = TbBrandgroup::find();
-        if (count($list) > 6) {
-            $list = TbBrandgroup::find([
-                'limit' => '5',
-            ]);
-        }
+        $list = TbBrandgroup::find([
+            'limit' => '5',
+        ]);
 
         // 语言字段重新设计
         $list_array = $list->toArray();
@@ -224,6 +220,35 @@ class BrandgroupController extends AdminController
         }
         // 返回
         return $list_array;
+    }
+
+    /**
+     * 获取从第6条记录开始的所有记录
+     * @return array
+     */
+    public function leftcatesAction()
+    {
+        // 逻辑
+        // 判断是否超出了6个，如果超过了6个，那么取前5个，最后一个放more
+        $list = TbBrandgroup::find();
+        $count = count($list);
+        $leftlist = [];
+        if ($count > 5) {
+            // 剩下多少条
+            $number = $count - 5;
+            // 取出5条之后的记录，单独放置
+            $leftlist = TbBrandgroup::find([
+                'limit' => ['number' => $number, 'offset' => 6],
+            ]);
+            // 语言字段重新设计
+            $leftlist = $leftlist->toArray();
+            foreach ($leftlist as $k => $item) {
+                $leftlist[$k]['name'] = $item[$this->getlangfield('name')];
+            }
+        }
+
+        // 返回
+        return $leftlist;
     }
 
     /**
