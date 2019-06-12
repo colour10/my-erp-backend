@@ -94,8 +94,14 @@ class Module implements ModuleDefinitionInterface
 
         // 取出前5个主分类
         $brandGroup = new BrandgroupController();
-        $di->setShared('cates', function () use ($brandGroup) {
-            $cates = $brandGroup->catesAction();
+        $di->setShared('frontcates', function () use ($brandGroup) {
+            $cates = $brandGroup->frontcatesAction();
+            return $cates;
+        });
+
+        // 取出从第6条开始剩下的主分类
+        $di->setShared('leftcates', function () use ($brandGroup) {
+            $cates = $brandGroup->leftcatesAction();
             return $cates;
         });
 

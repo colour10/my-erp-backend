@@ -96,13 +96,13 @@
         <!-- BEGIN NAVIGATION -->
         <div class="header-navigation">
             <ul>
-                <?php foreach ($this->cates as $cate) { ?>
+                <?php foreach ($this->frontcates as $cate) { ?>
                     <li>
                         <a href="/brandgroup/detail/<?php echo $cate['id']; ?>"><?php echo $cate['name']; ?></a>
                     </li>
                 <?php } ?>
 
-                <?php if (count($this->cates) == '5') { ?>
+                <?php if (count($this->leftcates) > 0) { ?>
                     <!--更多分类 Start-->
                     <li class="dropdown active">
                         <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="javascript:;">
@@ -112,7 +112,7 @@
 
 
                         <ul class="dropdown-menu pre-scrollable">
-                            <?php foreach ($this->allfirstcates as $cate) { ?>
+                            <?php foreach ($this->leftcates as $cate) { ?>
                                 <li>
                                     <a href="/brandgroup/detail/<?php echo $cate['id']; ?>"><?php echo $cate['name']; ?></a>
                                 </li>
