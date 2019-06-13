@@ -43,6 +43,7 @@ class ProductController extends CadminController {
             $product->colorname = $row['colorname'];
             $product->picture = $row['picture'];
             $product->picture2 = $row['picture2'];
+            $product->wordcode = $row['wordcode_1'].$row['wordcode_2'].$row['wordcode_3'];
 
             foreach($keys as $key) {
                 $product->$key = $params['form'][$key];
@@ -122,8 +123,9 @@ class ProductController extends CadminController {
                     $row->picture2 = $params['form']["picture2"];
                     $row->laststoragedate = $params['form']["laststoragedate"];
                     $row->producttypeid = $params['form']["producttypeid"];
+                    $row->wordcode = $params['form']['wordcode_1'].$params['form']['wordcode_2'].$params['form']['wordcode_3'];
                 }
-                
+
                 $row->brandid = $params['form']["brandid"];
                 $row->brandgroupid = $params['form']["brandgroupid"];
                 $row->childbrand = $params['form']["childbrand"];
@@ -237,6 +239,71 @@ class ProductController extends CadminController {
             
             return $this->success($result->toArray());
         }        
+    }
+
+    private function isInclude($name, $ids) {
+
+        $array = explode(",", $ids);
+
+        $result = [];
+        foreach($array as $id) {
+            $result[] = sprintf("%s=%d", addslashes($name), $id);
+        }
+
+        return "(".implode(" or ", $result).")";
+    }
+
+    //字段是多选
+    private function isMatch($name, $ids) {
+        $array = explode(",", $ids);
+
+        $filterName = addslashes($name);
+        $result = [];
+        foreach($array as $id) {
+            $result[] = sprintf("%s=%d or %s like '%d,%%' or %s like '%%,%d,%%' or %s like '%%,%s'", $filterName, $id, $filterName, $id, $filterName, $id, $filterName, $id);
+        }
+
+        return "(".implode(" or ", $result).")";
+    }
+
+    function getSearchCondition() {
+        $where = array(
+            sprintf("companyid=%d", $this->companyid)
+        );
+
+        if(isset($_POST["wordcode"]) && trim($_POST["wordcode"])!="") {
+            $where[] = sprintf("wordcode like '%%%s%%'", addslashes(strtoupper($_POST["wordcode"])));
+        }
+
+        $names = ['brandid', 'brandgroupid', 'childbrand', 'brandcolor', 'saletypeid', 'producttypeid','gender'];
+        foreach ($names as $name) {
+            if(isset($_POST[$name]) && preg_match("#^\d+(,\d+)*$#", $_POST[$name])) {
+                $where[] = $this->isInclude($name, $_POST[$name]);
+            }
+        }
+
+        $names = ['ulnarinch', 'productsize', 'countries', 'ageseason', 'productparst', 'series', 'productmemoids'];
+        foreach ($names as $name) {
+            if(isset($_POST[$name]) && preg_match("#^\d+(,\d+)*$#", $_POST[$name])) {
+                $where[] = $this->isMatch($name, $_POST[$name]);
+            }
+        }
+
+        if(isset($_POST["season"]) && preg_match("#^\d+(,\d+)*$#", $_POST["season"])) {            
+            $columns = [
+                "1" => "spring",
+                "2" => "summer",
+                "3" => "fall",
+                "4" => "winter"
+            ];
+            $array = explode(',', $_POST["season"]);
+            foreach($array as $value) {
+                $where[] = sprintf("%s=1", $columns[$value]);
+            }            
+        }        
+
+        //echo implode(' and ', $where);
+        return implode(' and ', $where);
     }
 
     /**

@@ -183,16 +183,10 @@
 
     .formx .el-input__inner {width:130px;}
     .formx .el-input-group {width:130px;}
-    .formx .el-input-group--prepend .el-input-group__prepend .el-input__inner {
-        width:60px;
-        padding:0px 5px;
-    }
-    .formx .el-input-group--prepend .el-input__inner {
-        width:69px;
-    }
-    .formx .el-date-editor.el-input, .el-date-editor.el-input__inner {
-        width:80px
-    }
+    .formx .el-input-group--prepend .el-input-group__prepend .el-input__inner { width:60px; padding:0px 5px;}
+    .formx .el-input-group--prepend .el-input__inner { width:69px; }
+    .formx .el-date-editor.el-input, .el-date-editor.el-input__inner { width:80px }
+    .formx .productcurrency .el-input__inner { padding:0px 2px; }
 
     .searchform .searchitem .el-form-item__content {
       width:100%;
@@ -278,16 +272,11 @@
   }
 
 
-.product .el-table td, .product .el-table th {
-  padding:0px;
-}
-
-.product .el-tabs .el-table td, .product .el-tabs .el-table th {
-  padding:0px 0px;
-}
-
+.product .el-table td, .product .el-table th { padding:0px; }
+.product .el-tabs .el-table td, .product .el-tabs .el-table th { padding:0px 0px; }
 .product img {padding:0px;margin:0px;display: block;}
 .product td.picture .cell {padding-left:0px}
+.product .el-table th div .el-input {display:block; line-height:25px;}
 
 .supermini .el-checkbox__label {
     font-size: 14px
@@ -371,6 +360,9 @@ body .el-select-dropdown__wrap {max-height:500px;}
 .sizecontent .sumcolumn .inputsum .el-input__inner{color:yellow; background: #CD9B9B}
 
 .inputtable .el-table__body .el-table__row .el-input__inner { padding:0 5px; }
+
+.el-select-dropdown .option1 span {color:#67C23A;}
+.el-select-dropdown .option2 span {color:#F56C6C;}
 </style>
 <body>
   <div id="app">
@@ -382,7 +374,7 @@ body .el-select-dropdown__wrap {max-height:500px;}
 
     <script type="text/javascript">      
       $(document).ready(function(){
-        var version = '1003'
+        var version = '1004'
         let o = new Vue({
           data:function(){
             return {
