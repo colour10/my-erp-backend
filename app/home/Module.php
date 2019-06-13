@@ -8,6 +8,7 @@ use Phalcon\DiInterface;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 use Phalcon\Events\Manager as EventsManager;
+use Phalcon\Text;
 use SecurityPlugin;
 use ExceptionPlugin;
 
@@ -30,7 +31,7 @@ class Module implements ModuleDefinitionInterface
 
         $loader->registerNamespaces(
             [
-                "Multiple\\Home\\Controllers" => "../app/home/controllers/"
+                "Multiple\\Home\\Controllers" => "../app/home/controllers/",
             ]
         );
 
@@ -41,26 +42,47 @@ class Module implements ModuleDefinitionInterface
      * 注册自定义服务
      */
     public function registerServices(DiInterface $di)
-    {        
-        $di->set('dispatcher', function () {    
+    {
+        $di->set('dispatcher', function () {
             // Create an events manager
             $eventsManager = new EventsManager();
-        
+
+            // 添加一个监听beforeDispatch事件，判断执行的控制器或者动作是否存在，这个动作是最先执行的
+            $eventsManager->attach("dispatch:beforeDispatch", function ($event, $dispatcher) {
+                // 获取当前controller的名称
+                $controllerName = $dispatcher->getControllerName();
+                // Controller首字母大写
+                $upperControllerName = Text::camelize($controllerName);
+                // Controller路径补全
+                $controller = "Multiple\\Home\\Controllers\\" . $upperControllerName . "Controller";
+                // 获取当前action的名称
+                $actionName = $dispatcher->getActionName();
+                // action名称补全
+                $action = $actionName . "Action";
+
+                // 判断这个controller中是否含有这个action
+                // 如果controller不存在，或者action不存在，那么就直接跳转到首页
+                if (!get_class_methods($controller) || !in_array($action, get_class_methods($controller))) {
+                    header("location:/");
+                    exit;
+                }
+            });
+
             // Listen for events produced in the dispatcher using the Security plugin
             $eventsManager->attach('dispatch:beforeExecuteRoute', new SecurityPlugin);
-        
+
             // Handle exceptions and not-found exceptions using NotFoundPlugin
             //$eventsManager->attach('dispatch:beforeException', new NotFoundPlugin);
             //
             $eventsManager->attach('dispatch:beforeException', new ExceptionPlugin);
-        
+
             $dispatcher = new Dispatcher();
-            
+
             $dispatcher->setDefaultNamespace("Multiple\\Home\\Controllers");
-        
+
             // Assign the events manager to the dispatcher
             $dispatcher->setEventsManager($eventsManager);
-        
+
             return $dispatcher;
         });
 
@@ -94,7 +116,7 @@ class Module implements ModuleDefinitionInterface
                 return "";
             }
         });
-        
+
         $di->setShared('auth', function () use ($config, $di) {
             $session = $di->get('session');
             if ($session->has("user")) {
@@ -119,31 +141,31 @@ class Module implements ModuleDefinitionInterface
             }
         );
 
-        $di->set("acl", function() use($config, $di) {
+        $di->set("acl", function () use ($config, $di) {
             $session = $di->get('session');
             $acl = $session->get("acl");
-            if(!$acl) {
-                $acl = new AclList();  
+            if (!$acl) {
+                $acl = new AclList();
                 $acl->setDefaultAction(Acl::DENY);
-                
+
                 $guest = "Guest";
                 $acl->addRole($guest);
-                
+
                 //所有人都可以访问的资源
                 $resources = Util::getPublicResourse();
-                
-                foreach($resources as $resource) {
+
+                foreach ($resources as $resource) {
                     $acl->addResource($resource[0], $resource[1]);
-                    $acl->allow($guest, $resource[0], $resource[1]);           
+                    $acl->allow($guest, $resource[0], $resource[1]);
                 }
 
                 //只要是登录的用户就可以访问的资源
                 $loginUser = "LoginUser";
                 $acl->addRole($loginUser, $guest);
                 $resources = Util::getAuthResourse();
-                foreach($resources as $resource) {
+                foreach ($resources as $resource) {
                     $acl->addResource($resource[0], $resource[1]);
-                    $acl->allow($loginUser, $resource[0], $resource[1]);          
+                    $acl->allow($loginUser, $resource[0], $resource[1]);
                 }
 
                 //定义所有私有资源
@@ -151,18 +173,18 @@ class Module implements ModuleDefinitionInterface
                 foreach ($resources as $resource) {
                     $acl->addResource($resource->controller, $resource->action);
                 }
-                
+
                 $user = "User";
                 $acl->addRole($user, $loginUser);
 
                 $auth = $di->get("auth");
-                if($auth) { 
+                if ($auth) {
                     foreach ($auth['actions'] as $resource) {
-                        $acl->allow($user, $resource['controller'], $resource['action']);      
+                        $acl->allow($user, $resource['controller'], $resource['action']);
                     }
                     //print_r($auth['actions']);
                     $session->set("acl", $acl);
-                } 
+                }
             }
 
             return $acl;
