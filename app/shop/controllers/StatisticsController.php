@@ -163,14 +163,33 @@ class StatisticsController extends AdminController
                 if (!empty($val)) {
                     // 如果里面有concat字段，那么就进行特殊处理
                     if ($field == 'wordcode') {
+                        // 国际码
                         $andWhereCondition = $concat_wordcode;
+                    } else if ($field == 'brandid') {
+                        // 品牌
+                        $andWhereCondition = 'p.brandid';
+                    } else if ($field == 'saleportid') {
+                        // 销售端口
+                        $andWhereCondition = 's.saleportid';
+                    } else if ($field == 'brandgroupid') {
+                        // 品类
+                        $andWhereCondition = 'p.brandgroupid';
+                    } else if ($field == 'departmentid') {
+                        // 部门
+                        $andWhereCondition = 'u.departmentid';
                     } else if ($field == 'ageseasonid') {
+                        // 年代季节
                         $andWhereCondition = 'p.ageseason';
+                    } else if ($field == 'memberid') {
+                        // 会员
+                        $andWhereCondition = 's.memberid';
                     } else if ($field == 'genderid') {
+                        // 性别
                         $andWhereCondition = 'p.gender';
                     } else {
                         $andWhereCondition = $field;
                     }
+
                     // 判断是否为多选，如果是多选则设定为orWhere
                     if (Util::is_json($val)) {
                         $array = json_decode($val, true);
@@ -242,7 +261,6 @@ class StatisticsController extends AdminController
             $query = $builder->getQuery();
             // 查出结果
             $result = $query->execute()->toArray();
-
 
             // 4、汇总统计
             // 首先声明一个新数组用来保存最终的结果
@@ -602,6 +620,7 @@ class StatisticsController extends AdminController
 
     /**
      * 库存余额查询
+     * 目前缺少一个入库时间字段StorageTime,暂时用change_time代替
      */
     public function stockbalanceAction()
     {
@@ -622,26 +641,27 @@ class StatisticsController extends AdminController
         }
         $end_stockdate = date('Y-m-d', strtotime($end_stockdate) + 86400);
 
-        // 库存模型，这个是主表，所有的查询条件都以这个为基准
-        // 初始化TbProductstock查询条件
-        $conditions = "defective_level = 0 and companyid = $companyid and create_time <= :end_stockdate:";
-        $stocks = TbProductstock::find([
-            $conditions,
-            'bind' => [
-                'end_stockdate' => $end_stockdate,
-            ],
-        ]);
-
-        // 转成数组
-        $stocks = $stocks->toArray();
+        // 取出库存
+        $stocks = $this->getStocksByStockdate($end_stockdate);
 
         // 添加必须的字段和参数
+        $name = $this->getlangfield('name');
         // 继续
         foreach ($stocks as $k => $stock) {
             // 商品模型
             $productModel = TbProduct::findFirstById($stock['productid']);
             // 添加属性
             $info = $productModel->toArray();
+            // 添加brandname和brandgroupname
+            $brandModel = TbBrand::findFirstById($productModel->brandid);
+            $info['brandname'] = $productModel->brandid && $brandModel ? $brandModel->$name : '';
+            $brandgroupModel = TbBrandgroup::findFirstById($productModel->brandgroupid);
+            $info['brandgroupname'] = $productModel->brandgroupid && $brandgroupModel ? $brandgroupModel->$name : '';
+            // 添加价格
+            $info['sum_realprice'] = round($info['wordprice'] * $stock['number'], 2);
+            // 添加仓库名称
+            $warehouseModel = TbWarehouse::findFirstById($stock['warehouseid']);
+            $info['warehousename'] = $warehouseModel ? $warehouseModel->name : '';
             unset($info['id']);
             // 重新赋值
             // 把stock的值也赋值进去
@@ -651,15 +671,63 @@ class StatisticsController extends AdminController
             $stocks[$k] = $info;
         }
 
+        // // 集中处理条件过滤
+        // $where = $this->getArraySearchAttributes($params, ['ageseasonid'], ['spring', 'summer', 'fall', 'winter'], [], ['property', 'brandid', 'warehouseid', 'brandgroupid', 'brandproperty']);
+        // // 获取结果集
+        // $return_stocks = $this->getArraySearchValues($stocks, $where);
+        //
+        // return $this->success($return_stocks);
+        //
+        // // 按照productid分组
+        // // 按照productid进行汇总
+        // $return_group_stocks = $this->getGroupArray($return_stocks, 'warehouseid', ['number', 'sum_realprice', 'warehouseid'], ['number', 'sum_realprice']);
+        // // 接下来按照
+        // // 返回
+        // return $this->success($return_group_stocks);
+
+
         // 集中处理条件过滤
         $where = $this->getArraySearchAttributes($params, ['ageseasonid'], ['spring', 'summer', 'fall', 'winter'], [], ['property', 'brandid', 'warehouseid', 'brandgroupid', 'brandproperty']);
         // 获取结果集
         $return_stocks = $this->getArraySearchValues($stocks, $where);
-        // 按照productid分组
-        // 按照productid进行汇总
-        $return_group_stocks = $this->getGroupArray($return_stocks, 'productid', ['productid', 'productname', 'brandid', 'brandname', 'brandgroupid', 'brandgroupname', 'sum_price', 'sum_realprice', 'warehouseid'], ['sellnumber', 'sum_price', 'sum_realprice']);
+
+        // 最终数据
+        // return $this->success($return_stocks);
+
+        // 开始处理分组
+        // 初始化数据
+        $groupby = 'productid';
+        $groupbyname = 'productname';
+        if (isset($params['groupby']) && $params['groupby']) {
+            switch ($params['groupby']) {
+                // 1-品类
+                case 'brandgroupid':
+                    $groupby = 'brandgroupid';
+                    $groupbyname = "brandgroupname";
+                    break;
+                // 2-品牌
+                case 'brandid':
+                    $groupby = 'brandid';
+                    $groupbyname = "brandname";
+                    break;
+                // 3-仓库
+                case 'warehouseid':
+                    $groupby = 'warehouseid';
+                    $groupbyname = 'warehousename';
+                    break;
+                // 否则就按照productid汇总
+                default:
+                    $groupby = 'productid';
+                    $groupbyname = 'productname';
+            }
+        }
+
+        // 按照groupby分组
+        $return_stocks = $this->getGroupArray($return_stocks, $groupby, [$groupby, $groupbyname, 'sum_realprice', 'number'], ['number', 'sum_realprice']);
+
+
         // 返回
-        return $this->success($return_group_stocks);
+        return $this->success($return_stocks);
     }
 
     /**
@@ -743,6 +811,7 @@ class StatisticsController extends AdminController
     public function getWarehousings($start_stockdate = '', $end_stockdate = '')
     {
         // 逻辑
+        // 因为需要用到一个算法函数getProductStock，所以没有用连表查询
         // 开始查询入库表
         $stocks = TbWarehousing::find([
             "companyid = $this->currentCompany and entrydate between :start_stockdate: and :end_stockdate:",
@@ -834,22 +903,26 @@ class StatisticsController extends AdminController
 
     /**
      * 获取截止某个时间节点的库存状况
-     * @param string $end_stockdate 截止日期
+     * @param string $end_stockdate 截止日期，这个对应原来的数据表有个StorageTime字段，现在缺少这个字段，暂时用
      * @return string|array
      */
-    public function getStocks($end_stockdate = '')
+    public function getStocksByStockdate($end_stockdate)
     {
         // 逻辑
         // 参数列表
-        $params = $this->request->get();
-        $end_stockdate = $this->request->get('end_stockdate');
-        if (!$end_stockdate) {
-            // 取出错误信息
-            return $this->getValidateMessage('date-required');
-        }
         // 取输入日期之后的那一天作为截止日
         $end_stockdate = date('Y-m-d', strtotime($end_stockdate) + 86400);
-        // 继续做
+        // 库存模型，这个是主表，所有的查询条件都以这个为基准
+        // 初始化TbProductstock查询条件
+        $conditions = "defective_level = 0 and companyid = $this->currentCompany and change_time <= :end_stockdate:";
+        $stocks = TbProductstock::find([
+            $conditions,
+            'bind' => [
+                'end_stockdate' => $end_stockdate,
+            ],
+        ]);
+        // 获取数据
+        return $stocks->toArray();
     }
 
     /**
@@ -960,6 +1033,7 @@ class StatisticsController extends AdminController
      * @return array
      */
     public function getGroupArray(array $datas, $groupby, array $mustBeDisplayFields = [], array $totalFields = [], array $concatFields = [])
+
     {
         // 逻辑
         $return = [];
@@ -1010,7 +1084,7 @@ class StatisticsController extends AdminController
             $modelResult = $model::findFirstById($id);
             if (!$modelResult) {
                 // 跳出当前循环
-                break;
+                continue;
             }
             if (empty($displayFields)) {
                 $return[] = $modelResult->toArray();

@@ -14,7 +14,7 @@ class Util
 {
     /**
      * 格式化为目录树
-     * @param $result 结果集
+     * @param array $result 结果集
      * @param int $pid 上级id
      * @param int $level 上级等级
      * @return array
@@ -57,7 +57,7 @@ class Util
 
     /**
      * 格式化为目录树-一维数组
-     * @param $result 结果集
+     * @param array $result 结果集
      * @param int $pid 上级id
      * @param int $level 上级等级
      * @return array
@@ -908,6 +908,16 @@ class Util
         }
         // 返回
         return $type;
+    }
+
+    /**
+     * 递归创建文件夹
+     * @param $dir
+     * @return bool
+     */
+    public static function Directory($dir)
+    {
+        return is_dir($dir) or self::Directory(dirname($dir)) and mkdir($dir, 0777);
     }
 
 }

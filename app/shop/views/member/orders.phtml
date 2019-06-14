@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<!--[if IE 8]>
+<html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+
+<!-- Head BEGIN -->
+<head>
+    <meta charset="utf-8">
+    <title><?php echo $this->obj->getValidateMessage('menu-5-1') . '(' . $this->obj->getValidateMessage('change-jiezhishijian') . ')'; ?></title>
+
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <meta content="Metronic Shop UI description" name="description">
+    <meta content="Metronic Shop UI keywords" name="keywords">
+    <meta content="keenthemes" name="author">
+
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <!-- Global styles START -->
+    <link href="/shop/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/shop/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Global styles END -->
+
+    <!-- Page level plugin styles START -->
+    <link href="/shop/assets/pages/css/animate.css" rel="stylesheet">
+    <link href="/shop/assets/plugins/fancybox/source/jquery.fancybox.css" rel="stylesheet">
+    <link href="/shop/assets/plugins/owl.carousel/assets/owl.carousel.css" rel="stylesheet">
+    <!-- Page level plugin styles END -->
+
+    <!-- Theme styles START -->
+    <link href="/shop/assets/pages/css/components.css" rel="stylesheet">
+    <link href="/shop/assets/pages/css/slider.css" rel="stylesheet">
+    <link href="/shop/assets/pages/css/style-shop.css" rel="stylesheet" type="text/css">
+    <link href="/shop/assets/corporate/css/style.css" rel="stylesheet">
+    <link href="/shop/assets/corporate/css/style-responsive.css" rel="stylesheet">
+    <link href="/shop/assets/corporate/css/themes/red.css" rel="stylesheet" id="style-color">
+    <!-- 日期控件 -->
+    <link href="/shop/assets/static/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="/shop/assets/corporate/css/custom.css" rel="stylesheet">
+    <!-- Theme styles END -->
+    <style>
+        .goods-data table, .checkout-page table {
+            font-size: 12px;
+        }
+    </style>
+</head>
+<!-- Head END -->
+
+<!-- Body BEGIN -->
+<body class="corporate">
+
+<?php echo $this->view->getPartial('layouts/_header') ?>
+
+<div class="main">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="/"><?php echo $this->obj->getValidateMessage('shouye'); ?></a></li>
+            <li class="active"><?php echo $this->obj->getValidateMessage('menu-5-1') . '(' . $this->obj->getValidateMessage('change-jiezhishijian') . ')'; ?></li>
+        </ul>
+        <!-- BEGIN SIDEBAR & CONTENT -->
+        <div class="row margin-bottom-40">
+
+            <?php echo $this->view->getPartial('layouts/_member_sidebar') ?>
+
+            <!-- BEGIN CONTENT -->
+            <div class="col-md-9 col-sm-9">
+                <h1 class="h1-title"><?php echo $this->obj->getValidateMessage('menu-5-1') . '(' . $this->obj->getValidateMessage('change-jiezhishijian') . ')'; ?></h1>
+                <div class="goods-page">
+                    <div class="goods-data clearfix">
+                        <div class="table-wrapper-responsive">
+                            <table class="order-table">
+                                <tbody class="order-table-header">
+                                <tr>
+                                    <th class="goods-page-description"><?php echo $this->obj->getValidateMessage('shangpin'); ?></th>
+                                    <th class="goods-page-price"><?php echo $this->obj->getValidateMessage('danjia'); ?></th>
+                                    <th class="goods-page-product-number"><?php echo $this->obj->getValidateMessage('number'); ?></th>
+                                    <th class="goods-page-quantity"><?php echo $this->obj->getValidateMessage('jiezhishijian'); ?></th>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                            <?php if (isset($page) && count($page->items) > 0) { ?>
+                                <?php foreach ($page->items as $order) { ?>
+                                    <div class="margin10 border">
+                                        <table class="order-table">
+
+                                            <tbody class="order-table-title">
+                                            <tr>
+                                                <td colspan="4" class="text-left">
+                                                    <span class="margin-left-20">
+                                                        <?php echo date('Y-m-d', strtotime($order['create_time'])); ?>　
+                                                        <a href="/order/detail/<?php echo $order['id']; ?>"><?php echo $this->obj->getValidateMessage('dingdanhao'); ?>：<?php echo $order['order_no']; ?></a>　
+
+                                                            <span data-expiretime="<?php echo $order['expire_time']; ?>"
+                                                                  data-id="<?php echo $order['id']; ?>"
+                                                                  class="remainTime"></span>
+
+                                                    </span>
+
+
+                                                    <em class="pull-right font-normal">
+                                                        <a data-orderno="<?php echo $order['order_no']; ?>"
+                                                           data-id="<?php echo $order['id']; ?>"
+                                                           data-expiretime="<?php echo $order['expire_time']; ?>"
+                                                           onclick="getorder(this);"><?php echo $this->obj->getValidateMessage('change-jiezhishijian'); ?></a>
+                                                    </em>
+
+                                                </td>
+                                            </tr>
+                                            </tbody>
+
+                                            <?php foreach ($order['orderdetails'] as $orderdetail) { ?>
+                                                <tbody>
+                                                <tr>
+                                                    <td class="text-left">
+                                                    <span class="margin-left-20"><a
+                                                                href="/product/detail/<?php echo $orderdetail['product_detail_id']; ?>"><img
+                                                                    class="w80"
+                                                                    src="<?php echo $orderdetail['picture']; ?>"
+                                                                    alt="<?php echo $orderdetail['product_name']; ?>"></a></span>
+
+                                                        <a class="product-name"
+                                                           href="/product/detail/<?php echo $orderdetail['product_detail_id']; ?>"><?php echo $orderdetail['product_name']; ?></a>
+                                                    </td>
+                                                    <td class="goods-page-price">
+                                                        <strong><span><?php echo $this->currency; ?></span><?php echo $orderdetail['price']; ?>
+                                                        </strong></td>
+                                                    <td class="product-number"><?php echo $orderdetail['number']; ?></td>
+                                                    <td class="product-number"><?php echo $order['expire_time']; ?></td>
+                                                </tr>
+                                                </tbody>
+                                            <?php } ?>
+
+                                        </table>
+                                    </div>
+                                <?php } ?>
+                            <?php } else { ?>
+                                <p class="text-center order-null"><?php echo $this->obj->getValidateMessage('order-empty'); ?></p>
+                            <?php } ?>
+
+
+                            <!-- BEGIN PAGINATOR -->
+                            <?php if (isset($page) && $page->total_pages > 1) { ?>
+                                <div class="page_margin pull-right">
+                                    <ul class="pagination ">
+                                        <li class="<?php echo $page->current <= 1 ? 'disabled' : ''; ?>"><a
+                                                    href="<?php echo $this->url->get('order/list', ['page' => $page->before]); ?>">&laquo;</a>
+                                        </li>
+                                        <?php for ($i = 1; $i <= $page->total_pages; $i++) { ?>
+                                            <li class="<?php echo $page->current == $i ? 'active' : ''; ?>"><a
+                                                        href="<?php echo $this->url->get('order/list', ['page' => $i]); ?>"><?php echo $i; ?></a>
+                                            </li>
+                                        <?php } ?>
+                                        <li class="<?php echo $page->current >= $page->total_pages ? 'disabled' : ''; ?>">
+                                            <a href="<?php echo $this->url->get('order/list', ['page' => $page->next]); ?>">&raquo;</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            <?php } ?>
+                            <!-- END PAGINATOR -->
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <!-- END CONTENT -->
+        </div>
+        <!-- END SIDEBAR & CONTENT -->
+    </div>
+</div>
+
+<!-- 修改过期时间 Start -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop='static'>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"
+                    id="myModalLabel"><?php echo $this->obj->getValidateMessage('change-jiezhishijian'); ?></h4>
+            </div>
+            <div class="modal-body">
+                <form id="changeform" method="post">
+
+                    <input type="hidden" id="modal-id">
+
+                    <div class="form-group">
+                        <label><?php echo $this->obj->getValidateMessage('dingdanhao'); ?>：<span
+                                    id="modal-orderno"></span></label>
+                        <div class='input-group date' id='modal_expire_time'>
+                            <input type='text' class="form-control" readonly name="modal_expire_time"/>
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="text-right">
+                        <span id="returnMessage" class="glyphicon"> </span>
+                        <button type="button" class="btn btn-default right"
+                                data-dismiss="modal"><?php echo $this->obj->getValidateMessage('cancel'); ?></button>
+                        <button id="submitBtn" type="button" class="btn btn-primary"
+                                onclick="updatetime();return false;"><?php echo $this->obj->getValidateMessage('button-submit'); ?>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 修改过期时间 End -->
+
+<?php echo $this->view->getPartial('layouts/_footer'); ?>
+
+<!-- 日期控件js -->
+<script src="/shop/assets/custom/bootstrap-datetimepicker.min.js"></script>
+<script src="/shop/assets/custom/bootstrap-datetimepicker.zh-CN.js"></script>
+
+<script>
+    // 获取当前订单信息
+    function getorder(obj) {
+        // 开始赋值
+        $('#modal-orderno').html($(obj).attr('data-orderno'));
+        $('#modal-id').val($(obj).attr('data-id'));
+        $('input[name="modal_expire_time"]').val($(obj).attr('data-expiretime'));
+        $('#myModal').modal('show');
+    }
+
+    // 选择日期
+    $('#modal_expire_time').datetimepicker({
+        language: "zh-CN",
+        format: 'yyyy-mm-dd hh:ii:ss',
+        autoclose: true,
+        startView: 0,
+        clearBtn: true,
+        todayBtn: false,
+    });
+
+    // 更改订单截止时间
+    function updatetime() {
+        // ajax提交
+        $.ajax({
+            type: 'post',
+            url: '/order/updatetime',
+            data: {
+                'id': $('#modal-id').val(),
+                'expire_time': $('input[name="modal_expire_time"]').val()
+            },
+            timeout: 999999,
+            dataType: 'json',
+            success: function (result) {
+                // 判断是否有错误
+                if (result.messages.length > 0) {
+                    layer.open({
+                        content: result.messages[0],
+                        btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>"
+                    });
+                } else {
+                    //提示
+                    layer.open({
+                        content: "<?php echo $this->obj->getValidateMessage('success'); ?>",
+                        btn: "<?php echo $this->obj->getValidateMessage('please-wait'); ?>",
+                        time: 3, // 3秒后自动跳转
+                    });
+                    // 1秒后跳转
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 1000);
+                }
+            },
+            // 如果出错了
+            error: function () {
+                layer.open({
+                    content: "<?php echo $this->obj->getValidateMessage('system-error'); ?>",
+                    btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>"
+                });
+            }
+        });
+        // 禁止跳转
+        return false;
+    }
+</script>
+
+</body>
+<!-- END BODY -->
+</html>

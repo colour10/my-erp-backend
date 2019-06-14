@@ -58,7 +58,7 @@
 }
 
 .h1-title, .main h1 {
-    font-size: 2em;
+    font-size: 1.5em;
     margin-top: 0;
 }
 
@@ -245,11 +245,11 @@ button {
     }
 
     .goods-data th, .checkout-page th {
-        font-size: 1.4em;
+        font-size: 1.2em;
     }
 
     .order-table td {
-        font-size: 1.1em;
+        font-size: 1em;
     }
 
     .w80 {
@@ -262,7 +262,7 @@ button {
     }
 
     .goods-page-price strong, .goods-page-total strong, .checkout-price strong, .checkout-total strong {
-        font-size: 21px;
+        font-size: 1.2em;
     }
 
     .goods-page-price strong span, .goods-page-total strong span, .checkout-price strong span, .checkout-total strong span {

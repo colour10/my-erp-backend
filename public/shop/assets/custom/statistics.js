@@ -38,12 +38,6 @@ function ajax(type = 'post', url = '', fd, successFunctionName) {
         // processData只对post有效
         processData: false,
         contentType: false,
-        beforeSend: function () {
-            index = layer.open({type: 2});
-        },
-        complete: function () {
-            layer.close(index);
-        },
         success: function (result) {
             // 判断逻辑
             // 判断是否有错误

@@ -6,6 +6,7 @@ use Asa\Erp\StaticReader;
 use Asa\Erp\TbCompany;
 use Asa\Erp\TbCurrency;
 use Multiple\Shop\Controllers\AdminController;
+use Phalcon\Events\Manager as EventsManager;
 use Phalcon\Loader;
 use Phalcon\Mvc\View;
 use Phalcon\DiInterface;
@@ -14,6 +15,7 @@ use Phalcon\Mvc\ModuleDefinitionInterface;
 use Multiple\Shop\Controllers\BrandgroupController;
 use Multiple\Shop\Controllers\BuycarController;
 use Multiple\Shop\Controllers\CompanyController;
+use Phalcon\Text;
 use PHPMailer\PHPMailer\PHPMailer;
 use Phalcon\Queue\Beanstalk;
 
@@ -46,8 +48,36 @@ class Module implements ModuleDefinitionInterface
             function () {
                 $dispatcher = new Dispatcher();
 
+                // Create an events manager
+                $eventsManager = new EventsManager();
+
+                // 添加一个监听beforeDispatch事件，判断执行的控制器或者动作是否存在，这个动作是最先执行的
+                $eventsManager->attach("dispatch:beforeDispatch", function ($event, $dispatcher) {
+                    // 获取当前controller的名称
+                    $controllerName = $dispatcher->getControllerName();
+                    // Controller首字母大写
+                    $upperControllerName = Text::camelize($controllerName);
+                    // Controller路径补全
+                    $controller = "Multiple\\Shop\\Controllers\\" . $upperControllerName . "Controller";
+                    // 获取当前action的名称
+                    $actionName = $dispatcher->getActionName();
+                    // action名称补全
+                    $action = $actionName . "Action";
+
+                    // 判断这个controller中是否含有这个action
+                    // 如果controller不存在，或者action不存在，那么就直接跳转到首页
+                    if (!get_class_methods($controller) || !in_array($action, get_class_methods($controller))) {
+                        header("location:/");
+                        exit;
+                    }
+                });
+
                 $dispatcher->setDefaultNamespace("Multiple\\Shop\\Controllers");
 
+                // Assign the events manager to the dispatcher
+                $dispatcher->setEventsManager($eventsManager);
+
+                // 返回
                 return $dispatcher;
             }
         );
