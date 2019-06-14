@@ -47,6 +47,10 @@
         .goods-data table, .checkout-page table {
             font-size: 12px;
         }
+
+        .getorder {
+            cursor: pointer;
+        }
     </style>
 </head>
 <!-- Head END -->
@@ -104,7 +108,8 @@
 
 
                                                     <em class="pull-right font-normal">
-                                                        <a data-orderno="<?php echo $order['order_no']; ?>"
+                                                        <a class="getorder"
+                                                           data-orderno="<?php echo $order['order_no']; ?>"
                                                            data-id="<?php echo $order['id']; ?>"
                                                            data-expiretime="<?php echo $order['expire_time']; ?>"
                                                            onclick="getorder(this);"><?php echo $this->obj->getValidateMessage('change-jiezhishijian'); ?></a>
