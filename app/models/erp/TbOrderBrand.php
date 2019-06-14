@@ -13,10 +13,10 @@ class TbOrderBrand extends BaseModel
 
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbOrderdetails",
+            "\Asa\Erp\TbOrderBrandDetail",
             "orderbrandid",
             [
-                'alias' => 'orderdetails'
+                'alias' => 'orderbranddetail'
             ]
         );
     }

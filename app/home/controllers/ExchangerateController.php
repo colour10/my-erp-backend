@@ -7,6 +7,7 @@ use Asa\Erp\TbExchangeRate;
 
 /**
  * 汇率表
+ * ErrorCode:1103
  */
 class ExchangerateController extends CadminController {
     public function initialize() {
@@ -45,7 +46,7 @@ class ExchangerateController extends CadminController {
             throw new \Exception("/1001/数据非法/");
         }
         else if($row->rate == $_POST['rate']) {
-            throw new \Exception("/1102/不需要更改/");
+            throw new \Exception("/110301/不需要更改/");
         }
 
         $this->db->begin();
@@ -53,7 +54,7 @@ class ExchangerateController extends CadminController {
         $row->status = 1;
         if($row->update()==false) {
             $this->db->rollback();
-            throw new \Exception("/1001/更新汇率失败/");
+            throw new \Exception("/110302/更新汇率失败/");
         }
 
         $newRecord = new TbExchangeRate();
@@ -65,7 +66,7 @@ class ExchangerateController extends CadminController {
         $newRecord->rate =  $_POST['rate'];
         if($newRecord->create()==false) {
             $this->db->rollback();
-            throw new \Exception("/1001/创建新汇率失败/");
+            throw new \Exception("/110303/创建新汇率失败/");
         }
         $this->db->commit();
         return $this->success();

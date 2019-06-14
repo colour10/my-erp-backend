@@ -12,6 +12,7 @@ use Asa\Erp\TbProductstock;
 
 /**
  * 发货单主表
+ * ErrorCode:1101
  */
 class ShippingController extends AdminController {
     public function initialize() {

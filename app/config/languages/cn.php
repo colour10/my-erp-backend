@@ -634,11 +634,11 @@ return [
     "qxzjghs" => "请先增加供货商！",
     "zongjianshu" => "总件数",
     "lingshouzongjia" => "零售总价",
-    "shangpinshuxing" => "商品属性",
-    "shangpinshuxing" => "商品属性",
-    "shangpinshuxing" => "商品属性",
-    "shangpinshuxing" => "商品属性",
-    "shangpinshuxing" => "商品属性",
+    "tip-tongyige" => "同一个供货商的两个品牌订单不能同时编辑。",
+    "edu" => "额度",
+    "shengyuedu" => "剩余额度",
+    "dinghuoshuliang" => "订货数量",
+    "fenpeishuliang" => "分配数量",
     "shangpinshuxing" => "商品属性",
 
     // 新增配置项

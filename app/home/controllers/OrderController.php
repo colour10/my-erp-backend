@@ -287,8 +287,8 @@ class OrderController extends BaseController
             $conditions[] = sprintf("ageseason=%d", $_POST['ageseasonid']);
         }
 
-        if(isset($_POST['supplierid']) && $_POST['supplierid']>0) {
-            $conditions[] = sprintf("supplierid=%d", $_POST['supplierid']);
+        if(isset($_POST['bookingid']) && $_POST['bookingid']!="") {
+            $conditions[] = sprintf("bookingid in (%s)", $_POST['bookingid']);
         }
 
         if(isset($_POST['brandid']) && $_POST['brandid']>0) {

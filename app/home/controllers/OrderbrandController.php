@@ -3,19 +3,90 @@ namespace Multiple\Home\Controllers;
 
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
+use Asa\Erp\TbSupplier;
+use Asa\Erp\TbOrder;
 use Asa\Erp\TbOrderBrand;
+use Asa\Erp\TbOrderBrandDetail;
 use Asa\Erp\TbOrderdetails;
 use Asa\Erp\Util;
 use Asa\Erp\TbCode;
 
 /**
  * 品牌订单
+ * ErrorCode:1102
  */
 class OrderbrandController extends AdminController {
     public function initialize() {
 	    parent::initialize();
 
 	    $this->setModelName('Asa\\Erp\\TbOrderBrand');
+    }
+
+    function addAction(){
+        // 判断是否有params参数提交过来
+        $params = $this->request->get('params');
+        if (!$params) {
+            throw new \Exception("/1001/参数错误/");
+        }
+
+        // 转换成数组
+        $submitData = json_decode($params, true);
+
+        $this->db->begin();
+        foreach($submitData['suppliers'] as $supplier) {
+            $orderBrand = new TbOrderBrand();
+            $orderBrand->supplierid = $supplier['id'];
+            $orderBrand->discount = $supplier['discount'];
+            // 添加制单人及制单日期
+            $orderBrand->makestaff = $this->currentUser;
+            $orderBrand->maketime = date('Y-m-d H:i:s');
+            $orderBrand->companyid = $this->companyid;
+            $orderBrand->status = 1;
+            $orderBrand->orderno = TbCode::getCode($this->companyid, "BB", date("y"));
+            if($orderBrand->create() === false) {
+                //返回失败信息
+                $this->db->rollback();
+                return $this->error($orderBrand);
+            }
+
+            foreach($submitData['list'] as $row) {
+                if($row['supplierid']==$supplier['id']) {
+                    $detail = new TbOrderBrandDetail();
+                    $detail->orderbrandid = $orderBrand->id;
+                    $detail->productid = $row["productid"];
+                    $detail->sizecontentid = $row["sizecontentid"];
+                    $detail->orderid = $row["orderid"];
+                    $detail->orderdetailid = $row["orderdetailid"];
+                    $detail->number = $row["number"];
+                    $detail->createdate = date("Y-m-d H:i:s");
+                    $detail->companyid = $this->companyid;
+                    if($detail->create() === false) {
+                        //返回失败信息
+                        $this->db->rollback();
+                        return $this->error($detail);
+                    }
+
+                    $orderDetail = TbOrderdetails::findFirstById($row["orderdetailid"]);
+                    if($orderDetail!=false) {
+                        $orderDetail->brand_number = $orderDetail->brand_number + $row["number"];
+                        if($orderDetail->update() === false) {
+                            //返回失败信息
+                            $this->db->rollback();
+                            return $this->error($detail);
+                        }                        
+                    }
+                    else {
+                        throw new \Exception("/110201/客户订单明细不存在。/");
+                    }
+                }
+            }
+        }
+
+        // 提交事务
+        $this->db->commit();
+
+        // 最终成功返回，原来的数据还要保留，再加上订单详情之中每个商品的名称也要放进去
+        echo $this->success();
     }
 
     function saveAction() {
@@ -142,17 +213,54 @@ class OrderbrandController extends AdminController {
         echo $this->success($order->toArray());
     }
 
-    public function loadorderAction()
+    public function loadAction()
     {
         // 根据orderid查询出当前订单以及订单详情的所有信息
-        $order = TbOrderBrand::findFirst(
-            sprintf("id=%d and companyid=%d", $_REQUEST["id"], $this->companyid)
+        $orderbrands = TbOrderBrand::find(
+            sprintf("id in (%s) and companyid=%d", addslashes($_POST["ids"]), $this->companyid)
         );
 
-        // 判断订单是否存在
-        if ($order!=false) {
-            echo $this->success($order->getOrderDetail());
+        $result = [
+            "orderbrands" => $orderbrands->toArray(),//品牌订单信息
+            "orders" => [],//客户订单列表
+            "details" => [],//客户订单明细
+            "list" => [] //品牌订单明细
+        ];
+
+        $array = [];
+        $supplierids = [];
+        foreach ($orderbrands as $orderbrand) {
+            foreach($orderbrand->orderbranddetail as $detail) {
+                $result['list'][] = $detail->toArray();
+
+                $array[$detail->orderid] = 1;                
+            }
+
+            $supplierids[$orderbrand->supplierid] = 1;
         }
+
+        if(count($array)>0) {
+            $orders = TbOrder::find(
+                sprintf("id in (%s)", implode(",", array_keys($array)))
+            );
+
+            $result['orders'] = $orders->toArray();
+            foreach($orders as $order) {
+                foreach($order->orderdetails as $detail) {
+                    $result['details'][] = $detail->toArray();
+                }
+            }
+        }
+
+        if(count($supplierids)>0) {
+            $suppliers = TbSupplier::find(
+                sprintf("id in (%s)", implode(",", array_keys($supplierids)))
+            );
+
+            $result['suppliers'] = $suppliers->toArray();
+        }
+
+        echo $this->success($result);
     }
 
     function confirmAction() {
