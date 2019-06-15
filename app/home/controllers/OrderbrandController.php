@@ -34,52 +34,167 @@ class OrderbrandController extends AdminController {
 
         $this->db->begin();
         foreach($submitData['suppliers'] as $supplier) {
-            $orderBrand = new TbOrderBrand();
-            $orderBrand->supplierid = $supplier['id'];
-            $orderBrand->discount = $supplier['discount'];
-            // 添加制单人及制单日期
-            $orderBrand->makestaff = $this->currentUser;
-            $orderBrand->maketime = date('Y-m-d H:i:s');
-            $orderBrand->companyid = $this->companyid;
-            $orderBrand->status = 1;
-            $orderBrand->orderno = TbCode::getCode($this->companyid, "BB", date("y"));
-            if($orderBrand->create() === false) {
-                //返回失败信息
-                $this->db->rollback();
-                return $this->error($orderBrand);
-            }
+            if($supplier["orderbrandid"]>0) {
+                //更新
+                $orderBrand = TbOrderBrand::findFirstById($supplier["orderbrandid"]);
+                if($orderBrand==false || $orderBrand->companyid!=$this->companyid) {
+                    throw new \Exception("/110201/客户订单不存在。/");
+                }
 
-            foreach($submitData['list'] as $row) {
-                if($row['supplierid']==$supplier['id']) {
-                    $detail = new TbOrderBrandDetail();
-                    $detail->orderbrandid = $orderBrand->id;
-                    $detail->productid = $row["productid"];
-                    $detail->sizecontentid = $row["sizecontentid"];
-                    $detail->orderid = $row["orderid"];
-                    $detail->orderdetailid = $row["orderdetailid"];
-                    $detail->number = $row["number"];
-                    $detail->createdate = date("Y-m-d H:i:s");
-                    $detail->companyid = $this->companyid;
-                    if($detail->create() === false) {
-                        //返回失败信息
-                        $this->db->rollback();
-                        return $this->error($detail);
+                $orderBrand->discount = $supplier['discount'];
+                $orderBrand->foreignorderno = $supplier['foreignorderno'];
+                $orderBrand->finalsupplierid = $supplier['finalsupplierid'];
+                $orderBrand->memo = $supplier['memo'];
+                $orderBrand->quantum = $supplier['quantum'];
+                $orderBrand->taxrebate = $supplier['taxrebate'];
+                $orderBrand->currency = $submitData['form']['currency'];
+                $orderBrand->bussinesstype = $submitData['form']['bussinesstype'];
+                $orderBrand->ageseason = $submitData['form']['ageseason'];
+                $orderBrand->seasontype = $submitData['form']['seasontype'];
+                $orderBrand->brandid = $supplier['brandid'];
+                if($orderBrand->update() === false) {
+                    //返回失败信息
+                    $this->db->rollback();
+                    return $this->error($orderBrand);
+                }
+
+                //更新明细数据
+                $change = [];
+                $detail_id_array = [];
+                foreach($submitData['list'] as $row) {
+                    if($row['supplierid']==$supplier['supplierid']) {
+                        if($row["id"]>0) {
+                            $detail = TbOrderBrandDetail::findFirst($row['id']);
+                            if($detail==false) {
+                                throw new \Exception("/110203/客户订单明细数据不存在。/");
+                            }
+
+                            $change[$detail->orderdetailid] = isset($change[$detail->orderdetailid]) ? $change[$detail->orderdetailid] + $row['number'] - $detail->number : $row['number'] - $detail->number;
+                            $detail->number = $row["number"];
+                            $detail->discount = $row["discount"];
+                            if($detail->update()==false) {
+                                $this->db->rollback();
+                                return $this->error($detail);
+                            }
+                        }
+                        else {
+                            //新增明细条目
+                            $detail = new TbOrderBrandDetail();
+                            $detail->orderbrandid = $orderBrand->id;
+                            $detail->productid = $row["productid"];
+                            $detail->sizecontentid = $row["sizecontentid"];
+                            $detail->orderid = $row["orderid"];
+                            $detail->orderdetailid = $row["orderdetailid"];
+                            $detail->number = $row["number"];
+                            $detail->discount = $row["discount"];
+                            $detail->createdate = date("Y-m-d H:i:s");
+                            $detail->companyid = $this->companyid;
+                            if($detail->create() === false) {
+                                //返回失败信息
+                                $this->db->rollback();
+                                return $this->error($detail);
+                            }
+
+                            $change[$detail->orderdetailid] = isset($change[$detail->orderdetailid]) ? $change[$detail->orderdetailid] + $row['number'] : $row['number'];                            
+                        }
+
+                        $detail_id_array[] = $detail->id;                        
                     }
+                }
 
-                    $orderDetail = TbOrderdetails::findFirstById($row["orderdetailid"]);
+                //删除那些不在列表中的明细数据
+                if(count($detail_id_array)>0) {
+                    $deleteDetails = TbOrderBrandDetail::find(
+                        sprintf('orderbrandid=%d and id not in (%s)', $orderBrand->id, implode(",", $detail_id_array))
+                    );
+
+                    foreach($deleteDetails  as $detail) {
+                        $change[$detail->orderdetailid] = isset($change[$detail->orderdetailid]) ? $change[$detail->orderdetailid] - $detail->number : $detail->number *-1; 
+                        if($detail->delete()==false) {
+                            $this->db->rollback();
+                            throw new \Exception("/110204/删除客户订单明细失败/");                            
+                        }
+                    }
+                }                
+
+
+                //更新订单明细中的，brand_number 字段
+                foreach($change as $orderdetailid=>$number) {
+                    $orderDetail = TbOrderdetails::findFirstById($orderdetailid);
                     if($orderDetail!=false) {
-                        $orderDetail->brand_number = $orderDetail->brand_number + $row["number"];
+                        $orderDetail->brand_number = $orderDetail->brand_number + $number;
                         if($orderDetail->update() === false) {
                             //返回失败信息
                             $this->db->rollback();
-                            return $this->error($detail);
+                            return $this->error($orderDetail);
                         }                        
                     }
                     else {
-                        throw new \Exception("/110201/客户订单明细不存在。/");
+                        throw new \Exception("/110202/客户订单明细不存在。/");
+                    }
+                }                
+            }
+            else {
+                //新增
+                $orderBrand = new TbOrderBrand();
+                $orderBrand->supplierid = $supplier['id'];
+                $orderBrand->discount = $supplier['discount'];
+                $orderBrand->foreignorderno = $supplier['foreignorderno'];
+                $orderBrand->finalsupplierid = $supplier['finalsupplierid'];
+                $orderBrand->memo = $supplier['memo'];
+                $orderBrand->quantum = $supplier['quantum'];
+                $orderBrand->taxrebate = $supplier['taxrebate'];
+                $orderBrand->currency = $submitData['form']['currency'];
+                $orderBrand->bussinesstype = $submitData['form']['bussinesstype'];
+                $orderBrand->ageseason = $submitData['form']['ageseason'];
+                $orderBrand->seasontype = $submitData['form']['seasontype'];
+                $orderBrand->brandid = $supplier['brandid'];
+
+                // 添加制单人及制单日期
+                $orderBrand->makestaff = $this->currentUser;
+                $orderBrand->maketime = date('Y-m-d H:i:s');
+                $orderBrand->companyid = $this->companyid;
+                $orderBrand->status = 1;
+                $orderBrand->orderno = TbCode::getCode($this->companyid, "BB", date("y"));
+                if($orderBrand->create() === false) {
+                    //返回失败信息
+                    $this->db->rollback();
+                    return $this->error($orderBrand);
+                }
+
+                foreach($submitData['list'] as $row) {
+                    if($row['supplierid']==$supplier['id']) {
+                        $detail = new TbOrderBrandDetail();
+                        $detail->orderbrandid = $orderBrand->id;
+                        $detail->productid = $row["productid"];
+                        $detail->sizecontentid = $row["sizecontentid"];
+                        $detail->orderid = $row["orderid"];
+                        $detail->orderdetailid = $row["orderdetailid"];
+                        $detail->number = $row["number"];
+                        $detail->createdate = date("Y-m-d H:i:s");
+                        $detail->companyid = $this->companyid;
+                        if($detail->create() === false) {
+                            //返回失败信息
+                            $this->db->rollback();
+                            return $this->error($detail);
+                        }
+
+                        $orderDetail = TbOrderdetails::findFirstById($row["orderdetailid"]);
+                        if($orderDetail!=false) {
+                            $orderDetail->brand_number = $orderDetail->brand_number + $row["number"];
+                            if($orderDetail->update() === false) {
+                                //返回失败信息
+                                $this->db->rollback();
+                                return $this->error($orderDetail);
+                            }                        
+                        }
+                        else {
+                            throw new \Exception("/110202/客户订单明细不存在。/");
+                        }
                     }
                 }
             }
+            
         }
 
         // 提交事务

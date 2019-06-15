@@ -597,7 +597,7 @@ return [
     "shengchengquerendan" => "生成确认单",
     "querendan" => "确认单",
     "waibudingdan" => "品牌订单",
-    "shengchengwaibudingdan" => "新建品牌订单",
+    "shengchengwaibudingdan" => "品牌订单编辑",
     "querenwaibudingdan" => "确认品牌订单",
     "fahuo" => "发货",
     "chuchangjiaheji" => "出厂价合计",
