@@ -715,6 +715,8 @@ return [
     'login-by-click-link' => '您可以点击以下链接进行登录',
     'notice-for-success-register' => '注册成功通知',
     'latest-promotion' => '最新促销',
+    'change-jiezhishijian' => '更改截止时间',
+    'system-error' => '程序内部错误',
 
     'template' =>
         [

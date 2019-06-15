@@ -4,9 +4,9 @@ namespace Multiple\Shop\Controllers;
 
 use Asa\Erp\TbCompany;
 use Asa\Erp\TbMember;
-use Asa\Erp\TbMemberAddress;
-use Asa\Erp\Util;
-use Phalcon\Queue\Beanstalk;
+use Asa\Erp\TbProductSearch;
+use Asa\Erp\TbShoporderCommon;
+use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
 
 /**
  * 会员操作类
@@ -137,13 +137,14 @@ class MemberController extends AdminController
                 // 自动发送一个注册邮件，使用队列进行处理
                 // 如果队列服务成功开启，则执行，否则不执行
                 if ($this->queue) {
-                    $this->queue->choose('my_tube');
-                    $this->queue->put(Util::sendEmail($email, $this->getValidateMessage('notice-for-success-register'), $this->outputhtml($username, $password)), [
+                    $this->queue->choose('my_sendemail_tube');
+                    // 只把必要的参数传递给队列即可，剩下的逻辑交给Beanstalk吧。
+                    $this->queue->put(json_encode([$email, $this->getValidateMessage('notice-for-success-register'), $this->outputhtml($username, $password)]), [
                         // 任务优先级
                         'priority' => 250,
-                        // 延迟时间
+                        // 延迟时间，表示将job放入ready队列需要等待的秒数，10代表10秒
                         'delay' => 10,
-                        // 运行时间
+                        // 运行时间，表示允许一个worker执行该job的秒数。这个时间将从一个worker 获取一个job开始计算
                         'ttr' => 3600,
                     ]);
                 }
@@ -217,6 +218,66 @@ EOT;
         // 传送给模板
         $this->view->setVars([
             'result' => $result_array,
+        ]);
+    }
+
+    public function ordersAction()
+    {
+        // 逻辑
+        // get请求，判断是否登录
+        // 还要必须为虚拟公司的用户才行
+        if (!$member = $this->member) {
+            return $this->response->redirect('/login');
+        } else {
+            if (!$this->isadmin) {
+                // 传递错误
+                return $this->renderError('make-an-error', '404-not-found');
+            }
+        }
+
+        // 分页
+        $currentPage = $this->request->getQuery("page", "int", 1);
+
+        // 找到所有的主订单列表，并且按照创建时间倒叙排列
+        $orders = TbShoporderCommon::find("member_id = " . $member['id'] . " AND order_status = 1 order by create_time desc");
+
+        // 整合子订单
+        $orders_array = $orders->toArray();
+        foreach ($orders as $k => $order) {
+            $orders_array[$k]['orderdetails'] = $order->shoporder->toArray();
+            // 子订单加入额外信息
+            foreach ($orders_array[$k]['orderdetails'] as $key => $value) {
+                $model = TbProductSearch::findFirstById($value['product_id']);
+                // 封面图
+                $orders_array[$k]['orderdetails'][$key]['picture'] = $this->file_prex . $model->picture;
+                // id
+                $orders_array[$k]['orderdetails'][$key]['product_detail_id'] = $model->productid;
+                // 付款情况
+                // 如果是1或4，则是未付款
+                if ($order->order_status == '1' || $order->order_status == '4') {
+                    $orders_array[$k]['orderdetails'][$key]['payment_amount'] = '0.00';
+                } else {
+                    $orders_array[$k]['orderdetails'][$key]['payment_amount'] = $value['total_price'];
+                }
+            }
+        }
+
+        // 创建分页对象，使用数组分页
+        $paginator = new PaginatorArray(
+            [
+                "data" => $orders_array,
+                "limit" => 5,
+                "page" => $currentPage,
+            ]
+        );
+
+        // 展示分页
+        $page = $paginator->getPaginate();
+
+        // 分配给模板
+        $this->view->setVars([
+            'orders' => $orders_array,
+            'page' => $page,
         ]);
     }
 }

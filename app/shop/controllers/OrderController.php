@@ -109,7 +109,6 @@ class OrderController extends AdminController
                 $saleport = $company->shopSaleport;
                 $array = Util::recordListColumn($saleport->saleportWarehouses, 'warehouseid');
 
-
                 // 遍历
                 // 多语言字段
                 $name = $this->getlangfield('name');
@@ -292,6 +291,20 @@ class OrderController extends AdminController
 
                 // 提交事务
                 $this->db->commit();
+
+                // 把这个新订单推送到队列中
+                if ($this->queue) {
+                    $this->queue->choose('my_checkorder_tube');
+                    // 只把必要的参数传递给队列即可，剩下的逻辑交给Beanstalk吧。
+                    $this->queue->put($model_common->id, [
+                        // 任务优先级
+                        'priority' => 250,
+                        // 延迟时间，表示将job放入ready队列需要等待的秒数，10代表10秒
+                        'delay' => 10,
+                        // 运行时间，表示允许一个worker执行该job的秒数。这个时间将从一个worker 获取一个job开始计算
+                        'ttr' => 3600,
+                    ]);
+                }
 
                 // 返回提交成功，并且返回新订单的ID
                 return $this->success($model_common->id);
@@ -783,6 +796,43 @@ class OrderController extends AdminController
             } else {
                 // 报错
                 return $this->error($this->getValidateMessage('model-delete-message'));
+            }
+        }
+    }
+
+    /**
+     * 更改未支付订单的截止时间
+     * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|string
+     */
+    public function updatetimeAction()
+    {
+        // 逻辑
+        // 必须为管理员，而且是post请求
+        if ($member = $this->member && $this->isadmin && $this->request->isPost()) {
+            // 赋值
+            $id = $this->request->get('id');
+            $expire_time = $this->request->get('expire_time');
+
+            // 取出参数
+            if (!$id || !$expire_time) {
+                return $this->error($this->getValidateMessage('params-error'));
+            }
+
+            // 取出订单
+            if (!$model = TbShoporderCommon::findFirst([
+                "id = :id: AND order_status = 1",
+                'bind' => [
+                    'id' => $id,
+                ],
+            ])) {
+                return $this->error($this->getValidateMessage('order', 'template', 'notexist'));
+            }
+
+            // 开始更改截止时间
+            if (!$model->save(compact('expire_time'))) {
+                return $this->error($this->getValidateMessage('order', 'db', 'save-failed'));
+            } else {
+                return $this->success();
             }
         }
     }
