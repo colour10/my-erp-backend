@@ -34,4 +34,11 @@ class TbOrderBrand extends BaseModel
 
         return $data;
     }
+
+    function getDetailList() {
+        return TbOrderBrandDetail::find([
+            sprintf("orderbrandid=%d", $this->id),
+            "order" => "productid asc"
+        ]);
+    }
 }

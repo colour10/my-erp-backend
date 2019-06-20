@@ -47,10 +47,15 @@ class OrderbrandController extends AdminController {
                 $orderBrand->memo = $supplier['memo'];
                 $orderBrand->quantum = $supplier['quantum'];
                 $orderBrand->taxrebate = $supplier['taxrebate'];
+                $orderBrand->total_number = $supplier['total_number'];
+                $orderBrand->total_price = $supplier['total_price'];
+                $orderBrand->total_discount_price = $supplier['total_discount_price'];
+
                 $orderBrand->currency = $submitData['form']['currency'];
                 $orderBrand->bussinesstype = $submitData['form']['bussinesstype'];
                 $orderBrand->ageseason = $submitData['form']['ageseason'];
                 $orderBrand->seasontype = $submitData['form']['seasontype'];
+                $orderBrand->currency = $submitData['form']['currency'];
                 $orderBrand->brandid = $supplier['brandid'];
                 if($orderBrand->update() === false) {
                     //返回失败信息
@@ -137,17 +142,22 @@ class OrderbrandController extends AdminController {
             else {
                 //新增
                 $orderBrand = new TbOrderBrand();
-                $orderBrand->supplierid = $supplier['id'];
+                $orderBrand->supplierid = $supplier['supplierid'];
                 $orderBrand->discount = $supplier['discount'];
                 $orderBrand->foreignorderno = $supplier['foreignorderno'];
                 $orderBrand->finalsupplierid = $supplier['finalsupplierid'];
                 $orderBrand->memo = $supplier['memo'];
                 $orderBrand->quantum = $supplier['quantum'];
                 $orderBrand->taxrebate = $supplier['taxrebate'];
+                $orderBrand->total_number = $supplier['total_number'];
+                $orderBrand->total_price = $supplier['total_price'];
+                $orderBrand->total_discount_price = $supplier['total_discount_price'];
+
                 $orderBrand->currency = $submitData['form']['currency'];
                 $orderBrand->bussinesstype = $submitData['form']['bussinesstype'];
                 $orderBrand->ageseason = $submitData['form']['ageseason'];
                 $orderBrand->seasontype = $submitData['form']['seasontype'];
+                $orderBrand->currency = $submitData['form']['currency'];
                 $orderBrand->brandid = $supplier['brandid'];
 
                 // 添加制单人及制单日期
@@ -163,7 +173,7 @@ class OrderbrandController extends AdminController {
                 }
 
                 foreach($submitData['list'] as $row) {
-                    if($row['supplierid']==$supplier['id']) {
+                    if($row['supplierid']==$supplier['supplierid']) {
                         $detail = new TbOrderBrandDetail();
                         $detail->orderbrandid = $orderBrand->id;
                         $detail->productid = $row["productid"];
@@ -345,7 +355,7 @@ class OrderbrandController extends AdminController {
         $array = [];
         $supplierids = [];
         foreach ($orderbrands as $orderbrand) {
-            foreach($orderbrand->orderbranddetail as $detail) {
+            foreach($orderbrand->getDetailList() as $detail) {
                 $result['list'][] = $detail->toArray();
 
                 $array[$detail->orderid] = 1;                
@@ -361,7 +371,7 @@ class OrderbrandController extends AdminController {
 
             $result['orders'] = $orders->toArray();
             foreach($orders as $order) {
-                foreach($order->orderdetails as $detail) {
+                foreach($order->getDetailList() as $detail) {
                     $result['details'][] = $detail->toArray();
                 }
             }
@@ -401,9 +411,11 @@ class OrderbrandController extends AdminController {
             );
 
             if(!$orderbrand) {
-                throw new \Exception("/1001/订单不存在/");
+                throw new \Exception("/11020301/品牌订单不存在/");
             }
-            $orderbrand->discountbrand = $form['discountbrand'];
+            else if($orderbrand->status==2) {
+                throw new \Exception("/11020302/品牌订单已经确认过了，不能重复确认。/");
+            }
             $orderbrand->confirmstaff = $this->currentUser;
             $orderbrand->confirmdate = date('Y-m-d');
             $orderbrand->status = 2;
@@ -416,40 +428,22 @@ class OrderbrandController extends AdminController {
                 return $this->error($orderbrand);
             }
 
-            $detail_id_array = [];
             foreach ($submitData['list'] as $k => $item) {
                 // 使用模型更新
-                $detail = TbOrderdetails::findFirst(
-                    sprintf("companyid=%d and orderid=%d and productid=%d and sizecontentid=%d", $this->companyid, $item['orderid'], $item['productid'], $item['sizecontentid'])
-                );
+                $detail = TbOrderBrandDetail::findFirstById($item["id"]);
                 
                 if($detail!=false && $detail->orderbrandid==$orderbrand->id) {
                     $detail->confirm_number = $item['number'];
-                    $detail->discountbrand = $item['discountbrand'];
-                    $detail->status = 1;
+                    $detail->status = 2;
                     if($detail->update()==false) {
                         $this->db->rollback();
-                        throw new Exception("/1001/订单详情确认数量失败/");
+                        throw new Exception("/11020303/品牌订单确认数量更新失败/");
                     }
                 }   
                 else {
                     $this->db->rollback();
-                    throw new \Exception("/1001/订单详情不存在/");
+                    throw new \Exception("/11020304/品牌订单详情不存在/");
                 }   
-            }
-
-            //清除不存在的详情id
-            if(count($detail_id_array)>0) {
-                $details = TbOrderdetails::find(
-                    sprintf("orderbrandid=%d and number=0", $orderbrand->id)
-                );
-                foreach($details as $detail) {
-                    $detail->status = 1;
-                    if($detail->update()==false) {
-                        $this->db->rollback();
-                        throw new \Exception("/1002/订单详情确认数量失败/");                    
-                    }
-                }
             }
 
             // 提交事务
@@ -460,7 +454,7 @@ class OrderbrandController extends AdminController {
         }
     }
 
-    function searchdetailAction() {
+    function searchorderAction() {
         //首先检索出来确认订单id
         $orders = TbOrderBrand::find(
             sprintf("companyid=%d and supplierid=%d and ageseason=%d and status=2", $this->companyid, $_POST['supplierid'], $_POST['ageseason'])
@@ -469,11 +463,11 @@ class OrderbrandController extends AdminController {
         $array = Util::recordListColumn($orders, 'id');
         //print_r($array);
         if(count($array)>0) {
-            $details = TbOrderdetails::find(
+            $details = TbOrderBrandDetail::find(
                 sprintf("orderbrandid in(%s)", implode(",", $array))
             );
 
-            return $this->success( $details->toArray() );
+            return $this->success( ["orderbrands"=>$orders->toArray(), "orderbranddetails"=>$details->toArray()] );
         }
         else {
             return $this->success( [] );
@@ -489,26 +483,36 @@ class OrderbrandController extends AdminController {
         // 判断订单是否存在
         if ($order!=false) {
             $this->db->begin();
-            $orderdetails = $order->orderdetails;
-            foreach ($orderdetails as $detail) {
-                if($detail->shipping_number>0) {
-                    //已经发货的订单明细不能删除
+
+            foreach ($order->orderbranddetail as $detail) {
+                if($detail->confirm_number>0) {
+                    //已经确认的订单明细不能删除
                     $this->db->rollback();
-                    throw new \Exception("/1001/不能删除已经发过货的外部订单明细/");
+                    throw new \Exception("/11020301/不能删除已经确认的品牌订单明细/");
                 }
 
-                $detail->confirm_number = 0;
-                $detail->orderbrandid = 0;
-                $detail->discountbrand = 0;
-                if($detail->update()==false) {
+                if($detail->delete()==false) {
                     $this->db->rollback();
-                    throw new \Exception("/1001/删除外部订单明细失败。/");
+                    throw new \Exception("/11020302/删除品牌订单明细失败。/");
+                }
+
+                $orderDetail = TbOrderdetails::findFirstById($detail->orderdetailid);
+                if($orderDetail!=false) {
+                    $orderDetail->brand_number = $orderDetail->brand_number - $detail->number;
+                    if($orderDetail->update() === false) {
+                        //返回失败信息
+                        $this->db->rollback();
+                        return $this->error($orderDetail);
+                    }                        
+                }
+                else {
+                    throw new \Exception("/11020303/客户订单明细不存在。/");
                 }
             }
 
             if($order->delete()==false) {
                 $this->db->rollback();
-                    throw new \Exception("/1001/外部订单不能删除/");
+                    throw new \Exception("/11020304/删除品牌订单失败/");
             }
 
             $this->db->commit();
@@ -516,7 +520,49 @@ class OrderbrandController extends AdminController {
             return $this->success();
         }
         else {
-            throw new \Exception("/1001/订单不存在/");
+            throw new \Exception("/11020305/品牌订单不存在/");
+            
+        }
+    }
+
+    /*
+     * 取消品牌订单的确认操作
+     */
+    public function cancelAction() {
+        $order = TbOrderBrand::findFirst(
+            sprintf("id=%d and companyid=%d", $_POST["id"], $this->companyid)
+        );
+        // 判断订单是否存在
+        if ($order!=false) {
+            
+
+            $this->db->begin();
+            $order->status = 1;
+            if($order->update()==false) {
+                $this->db->rollback();
+                throw new \Exception("/11020402/更新客户订单状态失败/");
+            }
+
+            foreach ($order->orderbranddetail as $detail) {
+                if($detail->shipping_number>0) {
+                    throw new \Exception("/11020401/已经发货的订单不能取消确认。/");
+                }
+
+                $detail->confirm_number = 0;
+                $detail->status = 1;
+
+                if($detail->update()==false) {
+                    $this->db->rollback();
+                    throw new \Exception("/11020403/更新客户订单明细失败/");
+                }
+            }
+
+            $this->db->commit();
+
+            return $this->success();
+        }
+        else {
+            throw new \Exception("/11020404/品牌订单不存在/");
             
         }
     }

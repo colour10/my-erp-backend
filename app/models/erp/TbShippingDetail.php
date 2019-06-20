@@ -79,6 +79,7 @@ class TbShippingDetail extends BaseModel
             $goods->change_staff = $this->getDI()->get("currentUser");
             $goods->price = $this->price;
             if($goods->create()===false) {
+                $goods->debug();exit;
                 throw new Exception("/110201/创建商品条目失败/");
             }
         }

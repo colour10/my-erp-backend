@@ -26,36 +26,32 @@ class TbShipping extends BaseModel
         $details = $this->shippingDetail;
 
         //找出出库单中涉及到的订单的产品，并查询这些产品的订单明细
-        $array = [];
         $hash = [];
-        $shipping_list = [];
-        foreach($details as $row) {   
-            if($onlyOrder && $row->orderid<=0) {
-                continue;
-            }
-            $key = sprintf("%s-%s", $row->productid, $row->orderid);
-            $hash[$key] = 1; 
-            $shipping_list[] = $row->toArray();
+        foreach($details as $row) { 
+            $hash[$row->orderbrandid] = 1; 
         }
 
-        foreach($hash as $key=>$value) {
-            $temp = explode('-', $key);
-            $array[] = sprintf("(orderid=%d and productid=%d)", $temp[1], $temp[0]);
-        }
-
-        if(count($array)>0) {
-            $orderdetails_list = TbOrderdetails::find(
-                implode(" or ", $array)
+        $id_array = array_keys($hash);
+        if(count($id_array)>0) {
+            $orderbrands = TbOrderBrand::find(
+                sprintf("id in (%s)", implode(",", $id_array))
             )->toArray();
+
+            $orderbranddetails = TbOrderBrandDetail::find([
+                sprintf("orderbrandid in (%s)", implode(",", $id_array)),
+                "order" => "productid asc"
+            ])->toArray();
         }
         else {
-            $orderdetails_list = [];
+            $orderbrands = [];
+            $orderbranddetails = [];
         }
 
         return [
             "form" => $this->toArray(),
-            "list" => $shipping_list,
-            "orderdetails_list" => $orderdetails_list
+            "shippingdetails" => $details->toArray(),
+            "orderbrands" => $orderbrands,
+            "orderbranddetails" => $orderbranddetails
         ];
     }
 }

@@ -639,6 +639,17 @@ return [
     "shengyuedu" => "剩余额度",
     "dinghuoshuliang" => "订货数量",
     "fenpeishuliang" => "分配数量",
+    "fuzhi" => "复制",
+    "confirm-ruku" => "确定要进行入库操作吗？",
+    "tip-jiagebunengweikong" => "请设置价格。",
+    "quxiaoqueren" => "取消确认",
+    "tip-quxiaoqueren" => "是否要取消？",
+    "tip-queren" => "是否确认？",
+    "shangpinshuxing" => "商品属性",
+    "shangpinshuxing" => "商品属性",
+    "shangpinshuxing" => "商品属性",
+    "shangpinshuxing" => "商品属性",
+    "shangpinshuxing" => "商品属性",
     "shangpinshuxing" => "商品属性",
 
     // 新增配置项

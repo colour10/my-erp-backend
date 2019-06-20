@@ -9,6 +9,8 @@ use Asa\Erp\TbOrderdetails;
 use Asa\Erp\Util;
 use Asa\Erp\TbCode;
 use Asa\Erp\TbProductstock;
+use Asa\Erp\TbOrderBrandDetail;
+
 
 /**
  * 发货单主表
@@ -35,95 +37,223 @@ class ShippingController extends AdminController {
         $submitData = json_decode($params, true);
         $form = $submitData['form'];
 
-        if($form['id']>0) {
-            return $this->editShipping($submitData);
-        }
-
         // 采用事务处理
         $this->db->begin();
         
-
-        $shipping = new TbShipping();            
-        $shipping->supplierid = $form["supplierid"];
-        $shipping->finalsupplierid = $form["finalsupplierid"];
-        $shipping->ageseason = $form["ageseason"];
-        $shipping->seasontype = $form["seasontype"];
-        $shipping->property = $form["property"];
-        $shipping->currency = $form["currency"];
-        $shipping->bussinesstype = $form["bussinesstype"];
-        $shipping->warehouseid = $form["warehouseid"];
-        $shipping->total = $form["total"];
-        $shipping->exchangerate = $form["exchangerate"];
-        $shipping->paydate = $form["paydate"];
-        $shipping->apickingdate = $form["apickingdate"];
-        $shipping->flightno = $form["flightno"];
-        $shipping->flightdate = $form["flightdate"];
-        $shipping->mblno = $form["mblno"];
-        $shipping->hblno = $form["hblno"];
-        $shipping->dispatchport = $form["dispatchport"];
-        $shipping->deliveryport = $form["deliveryport"];
-        $shipping->box_number = $form["box_number"];
-        $shipping->weight = $form["weight"];
-        $shipping->volume = $form["volume"];
-        $shipping->chargedweight = $form["chargedweight"];
-        $shipping->transcompany = $form["transcompany"];
-        $shipping->invoiceno = $form["invoiceno"];
-        $shipping->aarrivaldate = $form["aarrivaldate"];
-        $shipping->buyerid = $form["buyerid"];
-        $shipping->sellerid = $form["sellerid"];
-        $shipping->transporttype = $form["transporttype"];
-        $shipping->paytype = $form["paytype"];
-        $shipping->estimatedate = $form["estimatedate"];
-
-        // 添加制单人及制单日期
-        $shipping->makestaff = $this->currentUser;
-        $shipping->maketime = date('Y-m-d H:i:s');
-        $shipping->companyid = $this->companyid;
-        // 生成订单号
-        $shipping->orderno = TbCode::getCode($this->companyid, "SO", date("y"));
-        if($shipping->create() === false) {
-            //返回失败信息
-            $this->db->rollback();
-            return $this->error($shipping);
-        }
-
-        // 开始写入订单详情表
-        foreach ($submitData['list'] as $k => $item) {
-            $detail = new TbShippingDetail();
-            $detail->productid = $item['productid'];
-            $detail->sizecontentid = $item['sizecontentid'];
-            $detail->number = $item['number'];
-            $detail->discount = $item['discount'];
-            $detail->price = $item['price'];
-            $detail->createdate = date("Y-m-d H:i:s");
-            $detail->orderdetailsid = $item['orderdetailsid'];
-            $detail->orderid = $item['orderid'];
-            $detail->shippingid= $shipping->id;
-            if($detail->create()==false) {
-                $this->db->rollback();
-                throw new \Exception("/110115/添加订单明细失败/");
+        if($form['id']>0) {
+            $shipping = TbShipping::findFirstById($form['id']);
+            if($shipping==false || $shipping->companyid!=$this->companyid) {
+                throw new \Exception("/11010101/发货单不存在。/");
             }
 
-            //更新订单中的已发货数量
-            if($item['orderdetailsid']>0) {
-                $orderDetail = TbOrderdetails::findFirstById($item['orderdetailsid']);
-                if($orderDetail!=false) {
-                    $orderDetail->shipping_number = $orderDetail->shipping_number + $detail->number;
+            if($shipping->status==2) {
+                throw new \Exception("/11010102/发货单已经入库，不能修改。/");
+            }
 
-                    if($orderDetail->update()==false) {
+            $shipping->supplierid = $form["supplierid"];
+            $shipping->finalsupplierid = $form["finalsupplierid"];
+            $shipping->ageseason = $form["ageseason"];
+            $shipping->seasontype = $form["seasontype"];
+            $shipping->property = $form["property"];
+            $shipping->currency = $form["currency"];
+            $shipping->bussinesstype = $form["bussinesstype"];
+            $shipping->warehouseid = $form["warehouseid"];
+            $shipping->total = $form["total"];
+            $shipping->exchangerate = $form["exchangerate"];
+            $shipping->paydate = $form["paydate"];
+            $shipping->apickingdate = $form["apickingdate"];
+            $shipping->flightno = $form["flightno"];
+            $shipping->flightdate = $form["flightdate"];
+            $shipping->mblno = $form["mblno"];
+            $shipping->hblno = $form["hblno"];
+            $shipping->dispatchport = $form["dispatchport"];
+            $shipping->deliveryport = $form["deliveryport"];
+            $shipping->box_number = $form["box_number"];
+            $shipping->weight = $form["weight"];
+            $shipping->volume = $form["volume"];
+            $shipping->chargedweight = $form["chargedweight"];
+            $shipping->transcompany = $form["transcompany"];
+            $shipping->invoiceno = $form["invoiceno"];
+            $shipping->aarrivaldate = $form["aarrivaldate"];
+            $shipping->buyerid = $form["buyerid"];
+            $shipping->sellerid = $form["sellerid"];
+            $shipping->transporttype = $form["transporttype"];
+            $shipping->paytype = $form["paytype"];
+            $shipping->estimatedate = $form["estimatedate"];
+
+            if($shipping->update() === false) {
+                //返回失败信息
+                $this->db->rollback();
+                return $this->error($shipping);
+            }
+
+            // 开始写入订单详情表
+            $change = [];
+            $detail_id_array = [];
+            foreach ($submitData['list'] as $k => $item) {
+                if($item["id"]>0) {
+                    $detail = TbShippingDetail::findFirstById($item["id"]);
+                    if($detail==false) {
+                        throw new \Exception("/11010103/发货单明细数据不存在。/");
+                    }
+
+                    $change[$detail->orderbranddetailid] = isset($change[$detail->orderbranddetailid]) ? $change[$detail->orderbranddetailid] + $item['number'] - $detail->number : $item['number'] - $detail->number;
+
+                    $detail->discount = $item['discount'];
+                    $detail->number = $item['number'];
+                    if($detail->update()==false) {
                         $this->db->rollback();
-                        return $this->error($orderDetail);
+                        throw new \Exception("/11010104/更新发货单明细失败/");
+                    }                
+                }
+                else {
+                    $detail = new TbShippingDetail();
+                    $detail->productid = $item['productid'];
+                    $detail->sizecontentid = $item['sizecontentid'];
+                    $detail->number = $item['number'];
+                    $detail->discount = $item['discount'];
+                    $detail->price = $item['price'];
+                    $detail->createdate = date("Y-m-d H:i:s");
+                    $detail->orderdetailid = $item['orderdetailid'];
+                    $detail->orderid = $item['orderid'];
+                    $detail->orderbranddetailid = $item['orderbranddetailid'];
+                    $detail->orderbrandid = $item['orderbrandid'];
+                    $detail->shippingid= $shipping->id;
+                    if($detail->create()==false) {
+                        $this->db->rollback();
+                        throw new \Exception("/11010105/添加发货单明细失败/");
+                    }
+
+                    $change[$detail->orderbranddetailid] = isset($change[$detail->orderbranddetailid]) ? $change[$detail->orderbranddetailid] + $item['number'] : $item['number'];  
+                }
+
+                $detail_id_array[] = $detail->id;
+            }
+
+            //删除那些不在列表中的明细数据
+            if(count($detail_id_array)>0) {
+                $deleteDetails = TbShippingDetail::find(
+                    sprintf('shippingid=%d and id not in (%s)', $shipping->id, implode(",", $detail_id_array))
+                );
+
+                foreach($deleteDetails  as $detail) {
+                    $change[$detail->orderbranddetailid] = isset($change[$detail->orderbranddetailid]) ? $change[$detail->orderbranddetailid] - $detail->number : $detail->number *-1; 
+                    if($detail->delete()==false) {
+                        $this->db->rollback();
+                        throw new \Exception("/11010106/删除发货单明细失败/");                            
                     }
                 }
-            }    
+            }                
+
+
+            //更新订单明细中的，brand_number 字段
+            foreach($change as $orderbranddetailid=>$number) {
+                $orderDetail = TbOrderBrandDetail::findFirstById($orderbranddetailid);
+                if($orderDetail!=false) {
+                    $orderDetail->shipping_number = $orderDetail->shipping_number + $number;
+                    if($orderDetail->update() === false) {
+                        //返回失败信息
+                        $this->db->rollback();
+                        throw new \Exception("/11010107/更新客户端订单明细失败/"); 
+                    }                        
+                }
+                else {
+                    throw new \Exception("/11010108/客户端订单明细不存在。/");
+                }
+            }   
         }
+        else {
+            $shipping = new TbShipping();            
+            $shipping->supplierid = $form["supplierid"];
+            $shipping->finalsupplierid = $form["finalsupplierid"];
+            $shipping->ageseason = $form["ageseason"];
+            $shipping->seasontype = $form["seasontype"];
+            $shipping->property = $form["property"];
+            $shipping->currency = $form["currency"];
+            $shipping->bussinesstype = $form["bussinesstype"];
+            $shipping->warehouseid = $form["warehouseid"];
+            $shipping->total = $form["total"];
+            $shipping->exchangerate = $form["exchangerate"];
+            $shipping->paydate = $form["paydate"];
+            $shipping->apickingdate = $form["apickingdate"];
+            $shipping->flightno = $form["flightno"];
+            $shipping->flightdate = $form["flightdate"];
+            $shipping->mblno = $form["mblno"];
+            $shipping->hblno = $form["hblno"];
+            $shipping->dispatchport = $form["dispatchport"];
+            $shipping->deliveryport = $form["deliveryport"];
+            $shipping->box_number = $form["box_number"];
+            $shipping->weight = $form["weight"];
+            $shipping->volume = $form["volume"];
+            $shipping->chargedweight = $form["chargedweight"];
+            $shipping->transcompany = $form["transcompany"];
+            $shipping->invoiceno = $form["invoiceno"];
+            $shipping->aarrivaldate = $form["aarrivaldate"];
+            $shipping->buyerid = $form["buyerid"];
+            $shipping->sellerid = $form["sellerid"];
+            $shipping->transporttype = $form["transporttype"];
+            $shipping->paytype = $form["paytype"];
+            $shipping->estimatedate = $form["estimatedate"];
+
+            // 添加制单人及制单日期
+            $shipping->makestaff = $this->currentUser;
+            $shipping->maketime = date('Y-m-d H:i:s');
+            $shipping->companyid = $this->companyid;
+            // 生成订单号
+            $shipping->orderno = TbCode::getCode($this->companyid, "SO", date("y"));
+            if($shipping->create() === false) {
+                //返回失败信息
+                $this->db->rollback();
+                return $this->error($shipping);
+            }
+
+            // 开始写入订单详情表
+            $change = [];
+            foreach ($submitData['list'] as $k => $item) {
+                $detail = new TbShippingDetail();
+                $detail->productid = $item['productid'];
+                $detail->sizecontentid = $item['sizecontentid'];
+                $detail->number = $item['number'];
+                $detail->discount = $item['discount'];
+                $detail->price = $item['price'];
+                $detail->createdate = date("Y-m-d H:i:s");
+                $detail->orderdetailid = $item['orderdetailid'];
+                $detail->orderid = $item['orderid'];
+                $detail->orderbranddetailid = $item['orderbranddetailid'];
+                $detail->orderbrandid = $item['orderbrandid'];
+                $detail->shippingid= $shipping->id;
+                if($detail->create()==false) {
+                    $this->db->rollback();
+                    throw new \Exception("/11010109/添加发货单明细失败/");
+                }
+
+                $change[$detail->orderbranddetailid] = isset($change[$detail->orderbranddetailid]) ? $change[$detail->orderbranddetailid] + $item['number'] : $item['number'];
+            } 
+
+            //更新订单明细中的，brand_number 字段
+            foreach($change as $orderbranddetailid=>$number) {
+                $orderDetail = TbOrderBrandDetail::findFirstById($orderbranddetailid);
+                if($orderDetail!=false) {
+                    $orderDetail->shipping_number = $orderDetail->shipping_number + $number;
+                    if($orderDetail->update() === false) {
+                        //返回失败信息
+                        $this->db->rollback();
+                        throw new \Exception("/11010110/更新客户端订单明细失败/"); 
+                    }                        
+                }
+                else {
+                    throw new \Exception("/11010111/客户端订单明细不存在。/");
+                }
+            }   
+        }
+                         
 
         // 提交事务
         $this->db->commit();
         return $this->success($shipping->getDetail());
     }
 
-    private function editShipping($submitData) {
+   /* private function editShipping($submitData) {
         // 采用事务处理
         $this->db->begin();
         $form = $submitData['form'];
@@ -275,7 +405,7 @@ class ShippingController extends AdminController {
         // 提交事务
         $this->db->commit();
         return $this->success($shipping->getDetail());
-    }
+    }*/
 
     function loadAction() {
         $shipping = TbShipping::findFirst(
@@ -364,7 +494,6 @@ class ShippingController extends AdminController {
                 return $this->error($shipping);
             }
 
-            $detail_id_array = [];
             foreach ($submitData['list'] as $k => $item) {
                 // 使用模型更新
                 if($item['id']>0) {
@@ -379,6 +508,16 @@ class ShippingController extends AdminController {
                     $detail = new TbShippingDetail();
                     $detail->companyid = $this->companyid;
                     $detail->number = 0;
+                    $detail->productid = $item['productid'];
+                    $detail->sizecontentid = $item['sizecontentid'];
+                    $detail->price = $item['price'];
+                    $detail->discount = $item['discount'];
+                    $detail->createdate = date('Y-m-d H:i:s');
+                    $detail->shippingid = $shipping->id;
+                    $detail->orderid = 0;
+                    $detail->orderdetailid = 0;
+                    $detail->orderbrandid = 0;
+                    $detail->orderbranddetailid = 0;
                 }
                 
                 $detail->warehousingnumber = $item['number'];
@@ -393,23 +532,6 @@ class ShippingController extends AdminController {
                 if($detail->warehousingnumber>0) {
                     $productStock = $detail->getProductStock();
                     $productStock->addStock($detail->warehousingnumber, TbProductstock::WAREHOSING, $detail->id);
-                }                
-
-                $detail_id_array[] = $detail->id;
-            }
-
-            //清除不存在的详情id
-            if(count($detail_id_array)>0) {
-                $details = TbShippingDetail::find(
-                    sprintf("shippingid=%d and id not in(%s)", $shipping->id, implode(',', $detail_id_array))
-                );
-                foreach($details as $detail) {
-                    $detail->warehousingnumber = 0;
-                    $detail->shippingid = 0;
-                    if($detail->update()==false) {
-                        $this->db->rollback();
-                        throw new \Exception("/110114/入库单详情确认数量失败/");                    
-                    }
                 }
             }
 
@@ -456,10 +578,19 @@ class ShippingController extends AdminController {
             }  
 
             $detail->warehousingnumber = 0;
-            if($detail->save()==false) {
-                $this->db->rollback();
-                throw new \Exception("/101116/发货单明细取消入库失败。/");
-            } 
+
+            if($detail->orderid==0) {
+                if($detail->delete()==false) {
+                    $this->db->rollback();
+                    throw new \Exception("/101116/删除发货单明细失败。/");
+                } 
+            }
+            else {
+                if($detail->save()==false) {
+                    $this->db->rollback();
+                    throw new \Exception("/101116/发货单明细取消入库失败。/");
+                } 
+            }            
         }
 
         $this->db->commit();

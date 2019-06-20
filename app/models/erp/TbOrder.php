@@ -89,4 +89,11 @@ class TbOrder extends BaseModel
 
         return $data;
     }
+
+    function getDetailList() {
+        return TbOrderdetails::find([
+            sprintf("orderid=%d", $this->id),
+            "order" => "productid asc"
+        ]);
+    }
 }
