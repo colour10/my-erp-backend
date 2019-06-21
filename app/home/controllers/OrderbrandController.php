@@ -22,6 +22,29 @@ class OrderbrandController extends AdminController {
 	    $this->setModelName('Asa\\Erp\\TbOrderBrand');
     }
 
+    function getSearchCondition() {
+        $where = array(
+            sprintf("companyid=%d", $this->companyid)
+        );
+
+        $names = ['orderno', 'memo'];
+        foreach ($names as $name) {
+            if(isset($_POST[$name]) && trim($_POST[$name])!="") {
+                $where[] = sprintf("%s like '%%%s%%'", $name, addslashes(strtoupper($_POST[$name])));
+            }
+        }
+        
+
+        $names = ['brandid', 'ageseason', 'supplierid', 'seasontype', 'bussinesstype', 'property'];
+        foreach ($names as $name) {
+            if(isset($_POST[$name]) && preg_match("#^\d+(,\d+)*$#", $_POST[$name])) {
+                $where[] = \Asa\Erp\Sql::isInclude($name, $_POST[$name]);
+            }
+        }
+
+        return implode(' and ', $where);
+    }
+
     function addAction(){
         // 判断是否有params参数提交过来
         $params = $this->request->get('params');
@@ -349,6 +372,7 @@ class OrderbrandController extends AdminController {
             "orderbrands" => $orderbrands->toArray(),//品牌订单信息
             "orders" => [],//客户订单列表
             "details" => [],//客户订单明细
+            "suppliers" => [],
             "list" => [] //品牌订单明细
         ];
 
@@ -361,7 +385,9 @@ class OrderbrandController extends AdminController {
                 $array[$detail->orderid] = 1;                
             }
 
-            $supplierids[$orderbrand->supplierid] = 1;
+            if($orderbrand->supplierid>0) {
+                $supplierids[$orderbrand->supplierid] = 1;
+            }            
         }
 
         if(count($array)>0) {
@@ -376,8 +402,9 @@ class OrderbrandController extends AdminController {
                 }
             }
         }
-
+        
         if(count($supplierids)>0) {
+            //print_r($supplierids);
             $suppliers = TbSupplier::find(
                 sprintf("id in (%s)", implode(",", array_keys($supplierids)))
             );
@@ -562,8 +589,7 @@ class OrderbrandController extends AdminController {
             return $this->success();
         }
         else {
-            throw new \Exception("/11020404/品牌订单不存在/");
-            
+            throw new \Exception("/11020404/品牌订单不存在/");            
         }
     }
 }

@@ -645,8 +645,8 @@ return [
     "quxiaoqueren" => "取消确认",
     "tip-quxiaoqueren" => "是否要取消？",
     "tip-queren" => "是否确认？",
-    "shangpinshuxing" => "商品属性",
-    "shangpinshuxing" => "商品属性",
+    "fahuoriqi" => "发货日期",
+    "tip-pinpai" => "请先选择品牌",
     "shangpinshuxing" => "商品属性",
     "shangpinshuxing" => "商品属性",
     "shangpinshuxing" => "商品属性",
@@ -882,5 +882,10 @@ return [
                 "2" => "个人",
                 "1" => "企业",
             ],
+
+            "shippingstatus" => [
+                "1" => "在途",
+                "2" => "入库",
+            ]
         ],
 ];

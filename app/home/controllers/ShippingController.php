@@ -26,6 +26,29 @@ class ShippingController extends AdminController {
     function addAction(){}
     function editAction(){}
 
+    function getSearchCondition() {
+        $where = array(
+            sprintf("companyid=%d", $this->companyid)
+        );
+
+        $names = ['orderno', 'memo'];
+        foreach ($names as $name) {
+            if(isset($_POST[$name]) && trim($_POST[$name])!="") {
+                $where[] = sprintf("%s like '%%%s%%'", $name, addslashes(strtoupper($_POST[$name])));
+            }
+        }
+        
+
+        $names = ['warehouseid', 'ageseason', 'supplierid', 'seasontype', 'bussinesstype', 'property', 'status'];
+        foreach ($names as $name) {
+            if(isset($_POST[$name]) && preg_match("#^\d+(,\d+)*$#", $_POST[$name])) {
+                $where[] = \Asa\Erp\Sql::isInclude($name, $_POST[$name]);
+            }
+        }
+
+        return implode(' and ', $where);
+    }
+
     function saveAction() {
         // 判断是否有params参数提交过来
         $params = $this->request->get('params');

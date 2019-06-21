@@ -235,35 +235,38 @@ class ProductController extends CadminController {
             $result = TbProduct::find([
                 implode(" and ", $where),
                 "order" => "id desc"
-            ]);    
+            ]);
+
+            $page = $this->request->getPost("page", "int", 1);
+            $pageSize = $this->request->getPost("pageSize", "int", 20);
+
+            $paginator = new \Phalcon\Paginator\Adapter\Model(
+                [
+                    "data"  => $result,
+                    "limit" => $pageSize,
+                    "page"  => $page,
+                ]
+            );
+
+            // Get the paginated results
+            $pageObject = $paginator->getPaginate();
+        
             
-            return $this->success($result->toArray());
+            $data = [];
+            foreach($pageObject->items as $row) {
+                $data[] = $row->toArray();
+            }
+
+            $pageinfo = [
+                //"previous"      => $pageObject->previous,
+                "current"       => $pageObject->current,
+                "totalPages"    => $pageObject->total_pages,
+                //"next"          => $pageObject->next,
+                "total"    => $pageObject->total_items,
+                "pageSize"     => $pageSize
+            ];
+            echo $this->reportJson(array("data"=>$data, "pagination" => $pageinfo),200,[]); 
         }        
-    }
-
-    private function isInclude($name, $ids) {
-
-        $array = explode(",", $ids);
-
-        $result = [];
-        foreach($array as $id) {
-            $result[] = sprintf("%s=%d", addslashes($name), $id);
-        }
-
-        return "(".implode(" or ", $result).")";
-    }
-
-    //字段是多选
-    private function isMatch($name, $ids) {
-        $array = explode(",", $ids);
-
-        $filterName = addslashes($name);
-        $result = [];
-        foreach($array as $id) {
-            $result[] = sprintf("%s=%d or %s like '%d,%%' or %s like '%%,%d,%%' or %s like '%%,%s'", $filterName, $id, $filterName, $id, $filterName, $id, $filterName, $id);
-        }
-
-        return "(".implode(" or ", $result).")";
     }
 
     function getSearchCondition() {
@@ -278,14 +281,14 @@ class ProductController extends CadminController {
         $names = ['brandid', 'brandgroupid', 'childbrand', 'brandcolor', 'saletypeid', 'producttypeid','gender'];
         foreach ($names as $name) {
             if(isset($_POST[$name]) && preg_match("#^\d+(,\d+)*$#", $_POST[$name])) {
-                $where[] = $this->isInclude($name, $_POST[$name]);
+                $where[] = \Asa\Erp\Sql::isInclude($name, $_POST[$name]);
             }
         }
 
         $names = ['ulnarinch', 'productsize', 'countries', 'ageseason', 'productparst', 'series', 'productmemoids'];
         foreach ($names as $name) {
             if(isset($_POST[$name]) && preg_match("#^\d+(,\d+)*$#", $_POST[$name])) {
-                $where[] = $this->isMatch($name, $_POST[$name]);
+                $where[] = \Asa\Erp\Sql::isMatch($name, $_POST[$name]);
             }
         }
 

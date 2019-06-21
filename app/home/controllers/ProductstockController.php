@@ -22,6 +22,8 @@ class ProductstockController extends BaseController {
         if(isset($_POST["warehouseid"]) && $_POST["warehouseid"]>0) {
             $conditions[] = sprintf("warehouseid=%d", $_POST["warehouseid"]);
         }
+
+        $conditions[] = "number>0";
         $result = TbProductstock::find(
             implode(" and ", $conditions)
         );
