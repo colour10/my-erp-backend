@@ -47,9 +47,8 @@ class ConsumecheckorderTask extends Task
             // $logger->notice('Waiting for a checkorder job... CTRL+C to abort.' . PHP_EOL . PHP_EOL);
             // 获取任务
             $job = $queue->reserve();
-            if (!$job) {
-                $logger->notice('Invalid checkorder job found. Not processing.' . PHP_EOL);
-            } else {
+            // 如果有任务则进行处理
+            if ($job) {
                 $job_id = $job->getId();
                 // 防止日志过大，暂时注释
                 // $logger->notice('Processing checkorder job ' . $job_id . PHP_EOL);

@@ -239,7 +239,7 @@ EOT;
         $currentPage = $this->request->getQuery("page", "int", 1);
 
         // 找到所有的主订单列表，并且按照创建时间倒叙排列
-        $orders = TbShoporderCommon::find("member_id = " . $member['id'] . " AND order_status = 1 order by create_time desc");
+        $orders = TbShoporderCommon::find("order_status = 1 order by create_time desc");
 
         // 整合子订单
         $orders_array = $orders->toArray();

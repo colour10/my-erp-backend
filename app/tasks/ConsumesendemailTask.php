@@ -45,10 +45,8 @@ class ConsumesendemailTask extends Task
             // $logger->notice('Waiting for a sendmail job... CTRL+C to abort.' . PHP_EOL . PHP_EOL);
             // 获取任务
             $job = $queue->reserve();
-            // 如果不存在，则报错
-            if (!$job) {
-                $logger->notice('Invalid job found. Not processing.' . PHP_EOL);
-            } else {
+            // 如果有任务，则进行处理
+            if ($job) {
                 // 存在则继续处理
                 $job_id = $job->getId();
                 // 防止日志过大，暂时注释
