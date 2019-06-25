@@ -27,7 +27,7 @@ class ProductController extends CadminController {
 
         $products = [];
         $colors = [];
-        $keys = ["brandid", "brandgroupid", "childbrand", "productsize", "countries", "productparst", "laststoragedate", "series", "ulnarinch", "factoryprice", "factorypricecurrency", "nationalpricecurrency", "nationalprice", "memo", "wordprice", "wordpricecurrency", "gender", "spring", "summer", "fall", "winter", "ageseason", "sizetopid", "sizecontentids", "productmemoids", "nationalfactorypricecurrency", "nationalfactoryprice","saletypeid","producttypeid"];
+        $keys = ["brandid", "brandgroupid", "childbrand", "productsize", "countries", "productparst", "laststoragedate", "series", "ulnarinch", "factoryprice", "factorypricecurrency", "nationalpricecurrency", "nationalprice", "memo", "wordprice", "wordpricecurrency", "gender", "spring", "summer", "fall", "winter", "ageseason", "sizetopid", "sizecontentids", "productmemoids", "nationalfactorypricecurrency", "nationalfactoryprice","saletypeid","producttypeid", "winterproofingid"];
 
         $this->db->begin();
         foreach($params['colors'] as $row){
@@ -73,7 +73,7 @@ class ProductController extends CadminController {
                 $colors[] = $product->id.",".$product->brandcolor;
             }
 
-            $product->syncBrandSugest();        
+            $product->syncBrandSugest();
         }
 
         $output = [];
@@ -107,7 +107,7 @@ class ProductController extends CadminController {
                     sprintf("product_group='%s'", $product->product_group)
                 );
             }
-            
+
 
             //生成绑定的颜色组的字符串
             $data = [];
@@ -153,6 +153,7 @@ class ProductController extends CadminController {
                 $row->nationalfactorypricecurrency = $params['form']["nationalfactorypricecurrency"];
                 $row->nationalfactoryprice = $params['form']["nationalfactoryprice"];
                 $row->saletypeid = $params['form']["saletypeid"];
+                $row->winterproofingid = $params['form']["winterproofingid"];
 
                 if($row->update()==false) {
                     $this->db->rollback();
@@ -163,22 +164,22 @@ class ProductController extends CadminController {
 
                 $data[] = $row->id.",".$row->brandcolor;
 
-                //更新颜色提示数据                    
-                $row->syncBrandSugest(); 
+                //更新颜色提示数据
+                $row->syncBrandSugest();
             }
 
             if(count($products)>1) {
                 $product_group = implode('|', $data);
 
                 //逐个更新，绑定关系
-                foreach($products as $row) {                    
+                foreach($products as $row) {
                     $row->product_group = $product_group;
                     if($row->update()==false) {
                         throw new \Exception("#1002#更新product_group字段失败#");
-                    }                    
+                    }
                 }
             }
-            
+
 
             $this->db->commit();
             return $this->success();
@@ -197,27 +198,15 @@ class ProductController extends CadminController {
     function before_page() {
         $_POST["__orderby"] = "id desc";
     }
-    
+
     function searchAction() {
         if($this->request->isPost()) {
             $where = array(
                 sprintf("companyid=%d", $this->companyid)
             );
 
-            if(isset($_POST["wordcode_1"]) && trim($_POST["wordcode_1"])!="") {
-                $where[] = sprintf("wordcode_1='%s'", addslashes($_POST["wordcode_1"]));
-            }
-
-            if(isset($_POST["wordcode_2"]) && trim($_POST["wordcode_2"])!="") {
-                $where[] = sprintf("wordcode_2='%s'", addslashes($_POST["wordcode_2"]));
-            }
-
-            if(isset($_POST["wordcode_3"]) && trim($_POST["wordcode_3"])!="") {
-                $where[] = sprintf("wordcode_3='%s'", addslashes($_POST["wordcode_3"]));
-            }
-
-            if(isset($_POST["wordcode_4"]) && trim($_POST["wordcode_4"])!="") {
-                $where[] = sprintf("wordcode_4='%s'", addslashes($_POST["wordcode_4"]));
+            if(isset($_POST["wordcode"]) && trim($_POST["wordcode"])!="") {
+                $where[] = sprintf("wordcode like '%%%s%%'", addslashes($_POST["wordcode"]));
             }
 
             if(isset($_POST["brandid"]) && trim($_POST["brandid"])!="") {
@@ -231,7 +220,14 @@ class ProductController extends CadminController {
             if(isset($_POST["childbrand"]) && trim($_POST["childbrand"])!="") {
                 $where[] = sprintf("childbrand=%d", $_POST["childbrand"]);
             }
-            
+
+            $names = ['countries', 'ageseason'];
+            foreach ($names as $name) {
+                if(isset($_POST[$name]) && preg_match("#^\d+(,\d+)*$#", $_POST[$name])) {
+                    $where[] = \Asa\Erp\Sql::isMatch($name, $_POST[$name]);
+                }
+            }
+
             $result = TbProduct::find([
                 implode(" and ", $where),
                 "order" => "id desc"
@@ -250,8 +246,8 @@ class ProductController extends CadminController {
 
             // Get the paginated results
             $pageObject = $paginator->getPaginate();
-        
-            
+
+
             $data = [];
             foreach($pageObject->items as $row) {
                 $data[] = $row->toArray();
@@ -265,8 +261,8 @@ class ProductController extends CadminController {
                 "total"    => $pageObject->total_items,
                 "pageSize"     => $pageSize
             ];
-            echo $this->reportJson(array("data"=>$data, "pagination" => $pageinfo),200,[]); 
-        }        
+            echo $this->reportJson(array("data"=>$data, "pagination" => $pageinfo),200,[]);
+        }
     }
 
     function getSearchCondition() {
@@ -292,7 +288,7 @@ class ProductController extends CadminController {
             }
         }
 
-        if(isset($_POST["season"]) && preg_match("#^\d+(,\d+)*$#", $_POST["season"])) {            
+        if(isset($_POST["season"]) && preg_match("#^\d+(,\d+)*$#", $_POST["season"])) {
             $columns = [
                 "1" => "spring",
                 "2" => "summer",
@@ -302,8 +298,8 @@ class ProductController extends CadminController {
             $array = explode(',', $_POST["season"]);
             foreach($array as $value) {
                 $where[] = sprintf("%s=1", $columns[$value]);
-            }            
-        }        
+            }
+        }
 
         //echo implode(' and ', $where);
         return implode(' and ', $where);
@@ -351,20 +347,20 @@ class ProductController extends CadminController {
      */
     function savecolorgroupAction() {
         $form = json_decode($_POST["params"], true);
-        
+
         $product = TbProduct::findFirstById($form['productid']);
         if($product!=false && $product->companyid==$this->companyid) {
             try {
                 $this->db->begin();
 
                 //先解绑颜色组
-                $product->cancelBindColor();   
+                $product->cancelBindColor();
 
                 $products = [];
                 $data = [];//[$product->id.",".$product->brandcolor];
                 //处理新增的记录
-                foreach ($form['list'] as &$row) {                   
-                    if($row['id']=='') {                        
+                foreach ($form['list'] as &$row) {
+                    if($row['id']=='') {
                         $product_else = $product->cloneByColor($row);
                     }
                     else {
@@ -397,7 +393,7 @@ class ProductController extends CadminController {
                         $product_else->productmemoids = $product->productmemoids;
                         $product_else->nationalfactorypricecurrency = $product->nationalfactorypricecurrency;
                         $product_else->nationalfactoryprice = $product->nationalfactoryprice;
-                        $product_else->saletypeid = $product->saletypeid;   
+                        $product_else->saletypeid = $product->saletypeid;
                     }
 
                     $product_else->brandcolor = $row['brandcolor'];
@@ -419,7 +415,7 @@ class ProductController extends CadminController {
                 else {
                     $product_group = implode('|', $data);
                 }
-                
+
                 //逐个更新，绑定关系
                 foreach($products as $row) {
                     $row->product_group = $product_group;
@@ -499,7 +495,7 @@ class ProductController extends CadminController {
                         $object = new  TbProductSizeProperty();
                         $object->productid = $id;
                         $object->sizecontentid = $match[1];
-                        $object->propertyid = $match[2];                        
+                        $object->propertyid = $match[2];
                     }
                     $object->content = $row;
                     if($object->save()==false) {
@@ -554,7 +550,7 @@ class ProductController extends CadminController {
             else {
                 return $this->error("/1002/设置产品价格失败/");
             }
-            
+
         }
         else {
             return $this->error("#1001#产品数据不存在#");

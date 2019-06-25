@@ -9,7 +9,7 @@
     <script src="https://unpkg.com/vue@2.6.9/dist/vue.js"></script>
     <script src="https://unpkg.com/vuex@3.1.0/dist/vuex.js"></script>
     <script src="https://unpkg.com/vue-router@3.0.4/dist/vue-router.js"></script>
-    
+
 
     <!-- 引入样式 -->
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
@@ -19,7 +19,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
     <script src="https://unpkg.com/vue-chartjs/dist/vue-chartjs.min.js"></script>
-    
+
   </head>
 <style>
       body{font-family: Arial,sans-serif;}
@@ -28,18 +28,18 @@
     color: #333;
     line-height: 60px;
   }
-  
+
   .el-footer{
     clear: both;
     display: block;
-    text-align: center;    
+    text-align: center;
     margin: 0px auto;
     bottom: 0px;
   }
 
   .el-aside {
     color: #333;
-  }  
+  }
 
 
   .bg-purple-dark {
@@ -59,12 +59,12 @@
     padding: 10px 0;
     background-color: #f9fafc;
   }
-  
+
   .el-menu-item a {
     color:white;
-    text-decoration : none  
+    text-decoration : none
   }
-  
+
   #ell{margin:5px;}
 
 
@@ -75,15 +75,15 @@
     .user-form  .width2 .el-input-group {
         width:200px;
     }
-    
+
     .user-form .width1 .el-input__inner {
         width:510px;
     }
-    
+
     .user-form .width1 .el-textarea__inner {
         width:510px;
     }
-    
+
     .user-form .width2 .el-date-editor.el-input, .el-date-editor.el-input__inner {
         width:150px
     }
@@ -135,7 +135,7 @@
         width:60px;
     }
 
-    
+
     /*  */
     .order-form .wordcode .el-form-item__content {
         width:440px;
@@ -376,9 +376,9 @@ body .el-select-dropdown__wrap {max-height:500px;}
       <el-progress type="circle" :percentage="pencent" v-show="isShow"></el-progress>
     </div>
 
-    <script type="text/javascript">      
+    <script type="text/javascript">
       $(document).ready(function(){
-        var version = '1007'
+        var version = '1008'
         let o = new Vue({
           data:function(){
             return {
@@ -390,21 +390,21 @@ body .el-select-dropdown__wrap {max-height:500px;}
             let self = this
 
             let handler = setInterval(function(){
-              if(self.pencent<=95) {                
-                self.pencent = self.pencent + Math.floor(Math.random()*10)%2+1                
+              if(self.pencent<=95) {
+                self.pencent = self.pencent + Math.floor(Math.random()*10)%2+1
               }
             }, 330)
 
-            $.getScript("/js/asa-" + version + ".js", function(){
+            $.getScript("/dist/asa-" + version + ".js", function(){
               self.pencent = 100;
               clearInterval(handler)
               setTimeout(function(){
                 self.isShow = false;
-              }, 500)  
+              }, 500)
             });
           }
         }).$mount("#load")
-        
+
       })
     </script>
 </body>

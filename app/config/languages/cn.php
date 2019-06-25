@@ -342,7 +342,7 @@ return [
     'qq' => 'QQ',
     'shengri' => '生日',
     'shouji' => '手机',
-    'gonghuodanwei' => '供货单位',
+    'gonghuodanwei' => '发货商',
     'daohuocangku' => '到货仓库',
     'fahuodanhao' => '发货单号',
     'niandaijijie' => '年代季节',
