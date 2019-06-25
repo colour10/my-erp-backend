@@ -68,4 +68,6 @@ CREATE TABLE `tb_shoporder` (
 
 /* `tb_product_search` 更改key为primary key */
 ALTER TABLE `tb_product_search` DROP INDEX `id`, ADD PRIMARY KEY (`id`);
+/* `tb_product_search` 增加一个字段brandid */
+ALTER TABLE `tb_product_search` ADD `brandid` INT UNSIGNED NULL COMMENT '品牌id' AFTER `sizetopid`;
 

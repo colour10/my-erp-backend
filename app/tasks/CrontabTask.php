@@ -2,6 +2,7 @@
 /*
  * php cli task
  */
+
 use Asa\Erp\TbProduct;
 use Asa\Erp\TbCompany;
 use Asa\Erp\TbProductSearch;
@@ -9,14 +10,15 @@ use Asa\Erp\Util;
 
 class CrontabTask extends \Phalcon\CLI\Task
 {
-    public function mainAction() {
+    public function mainAction()
+    {
         $db = $this->db;
         $update = 0;
         $insert = 0;
 
         $companyList = TbCompany::find();
-        foreach($companyList as $company) {
-            if($company->saleportid>0) {
+        foreach ($companyList as $company) {
+            if ($company->saleportid > 0) {
                 //获得公司的对应自营店铺的销售端口对象。然后查询这个销售端口的商品数据及库存数据
                 $saleport = $company->shopSaleport;
 
@@ -37,13 +39,15 @@ class CrontabTask extends \Phalcon\CLI\Task
 
 
                 //print_r($hashmap);
-                foreach($products as $product ){
-                    if(in_array($product->id, $exist_product_id_array)) {
+                foreach ($products as $product) {
+                    if (in_array($product->id, $exist_product_id_array)) {
                         //更新
                         $sql = sprintf(
-                            "UPDATE tb_product_search SET productname='%s', number=%d, sizetopid=%d, brandgroupid=%d, childbrand=%d, picture='%s', picture2='%s' WHERE companyid=%d and productid=%d",
+                            "UPDATE tb_product_search SET productname='%s', number=%d, brandid=%d,sizetopid=%d, brandgroupid=%d, childbrand=%d, picture='%s', picture2='%s' WHERE companyid=%d and productid=%d",
                             addslashes($product->productname),
                             $hashmap[$product->id],
+                            // 添加品牌id
+                            $product->brandid,
                             $product->sizetopid,
                             $product->brandgroupid,
                             $product->childbrand,
@@ -53,13 +57,14 @@ class CrontabTask extends \Phalcon\CLI\Task
                             $product->id
                         );
                         $db->execute($sql);
-                    }
-                    else {
+                    } else {
                         //新增
                         $sql = sprintf(
-                            "INSERT INTO tb_product_search SET productname='%s', number=%d, sizetopid=%d, brandgroupid=%d, childbrand=%d, picture='%s', picture2='%s', companyid=%d, productid=%d",
+                            "INSERT INTO tb_product_search SET productname='%s', number=%d, brandid=%d,sizetopid=%d, brandgroupid=%d, childbrand=%d, picture='%s', picture2='%s', companyid=%d, productid=%d",
                             addslashes($product->productname),
                             $hashmap[$product->id],
+                            // 添加品牌id
+                            $product->brandid,
                             $product->sizetopid,
                             $product->brandgroupid,
                             $product->childbrand,

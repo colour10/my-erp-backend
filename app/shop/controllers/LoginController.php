@@ -65,7 +65,7 @@ class LoginController extends AdminController
             if ($rs) {
                 // 加入session
                 $language = $language ?: 'cn';
-                $this->session->set('language', $language);
+                $this->session->set('lang', $language);
                 $this->session->set('member', $rs->toArray());
                 return json_encode(['code' => '200', 'auth' => $this->session->get('member'), 'messages' => []]);
             } else {
