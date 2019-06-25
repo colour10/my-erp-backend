@@ -74,14 +74,19 @@
                                            class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('company'); ?>
                                         <span class="require">*</span></label>
                                     <div class="col-lg-8">
-                                        <select name="companyid" id="companyid" class="form-control">
-                                            <option value="">
-                                                == <?php echo $this->obj->getValidateMessage('qingxuanze'); ?> ==
-                                            </option>
-                                            <?php foreach ($this->allcompany as $company) { ?>
-                                                <option value="<?php echo $company['id']; ?>"><?php echo $company['name']; ?></option>
-                                            <?php } ?>
-                                        </select>
+                                        <?php if ($this->isadmin) { ?>
+                                            <select name="companyid" id="companyid" class="form-control">
+                                                <option value="">
+                                                    == <?php echo $this->obj->getValidateMessage('qingxuanze'); ?> ==
+                                                </option>
+                                                <?php foreach ($this->allcompany as $company) { ?>
+                                                    <option value="<?php echo $company['id']; ?>"><?php echo $company['name']; ?></option>
+                                                <?php } ?>
+                                            </select>
+                                        <? } else { ?>
+                                            <input type="text" class="form-control" id="companyid" readonly
+                                                   value="<?php echo $this->host['company']->name; ?>">
+                                        <? } ?>
                                     </div>
                                 </div>
 
@@ -101,7 +106,7 @@
                                                 class="require">*</span></label>
                                     <div class="col-lg-8">
                                         <input type="text" class="form-control" id="username"><span
-                                                class="require">(<?php echo $this->obj->getValidateMessage('yonghuming'); ?>：<?php echo $this->obj->getValidateMessage('default-password'); ?>：<?php echo $this->obj->getValidateMessage('yonghuming'); ?>+123)</span>
+                                                class="require">(<?php echo $this->obj->getValidateMessage('beizhu'); ?>：<?php echo $this->obj->getValidateMessage('default-password'); ?>：<?php echo $this->obj->getValidateMessage('yonghuming'); ?>+123)</span>
                                     </div>
                                 </div>
 

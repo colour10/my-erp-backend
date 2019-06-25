@@ -10,7 +10,7 @@
         <li class="list-group-item clearfix"><a href="/memberaddress"><i
                         class="fa fa-angle-right"></i> <?php echo $this->obj->getValidateMessage('address-list'); ?></a>
         </li>
-        <?php if ($this->isadmin) { ?>
+        <?php if ($this->member['membertype']) { ?>
             <li class="list-group-item clearfix"><a href="/member/invite"><i
                             class="fa fa-angle-right"></i> <?php echo $this->obj->getValidateMessage('invitation-registration'); ?>
                 </a>

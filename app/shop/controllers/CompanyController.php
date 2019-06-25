@@ -85,5 +85,13 @@ class CompanyController extends AdminController
         return $companyModel->id;
     }
 
+    /**
+     *
+     */
+    public function iscu()
+    {
+        // 逻辑
+    }
+
 
 }

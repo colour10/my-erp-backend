@@ -268,12 +268,13 @@ class BuycarController extends AdminController
                 }
 
 
-                // 查找库存是否充足，如果库存不足禁止加入购物车
-                foreach ($post['sizecontentids'] as $sizecontentid => $sizecontentnumber) {
-                    if ($sizecontentnumber > $return_sizecontents[$sizecontentid]['sumatory']) {
-                        return $this->error($this->getValidateMessage('out-of-stock'));
-                    }
-                }
+                // // 加入购物车不受库存限制，只有下单的时候才检查库存
+                // // 查找库存是否充足，如果库存不足禁止加入购物车
+                // foreach ($post['sizecontentids'] as $sizecontentid => $sizecontentnumber) {
+                //     if ($sizecontentnumber > $return_sizecontents[$sizecontentid]['sumatory']) {
+                //         return $this->error($this->getValidateMessage('out-of-stock'));
+                //     }
+                // }
 
                 // 获取当前productid实际价格
                 $realprice = $productModel->product->wordprice;
