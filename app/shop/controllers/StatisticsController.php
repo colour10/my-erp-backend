@@ -5,11 +5,14 @@ namespace Multiple\Shop\Controllers;
 use Asa\Erp\TbAgeseason;
 use Asa\Erp\TbBrand;
 use Asa\Erp\TbBrandgroup;
+use Asa\Erp\TbConfirmorder;
+use Asa\Erp\TbConfirmorderdetails;
 use Asa\Erp\TbCurrency;
 use Asa\Erp\TbDepartment;
 use Asa\Erp\TbExchangeRate;
 use Asa\Erp\TbGoods;
 use Asa\Erp\TbMember;
+use Asa\Erp\TbOrderdetails;
 use Asa\Erp\TbProduct;
 use Asa\Erp\TbProductstock;
 use Asa\Erp\TbSaleport;
@@ -316,7 +319,7 @@ class StatisticsController extends AdminController
                 } else {
                     // 否则就累计，采用高精度计算
                     $return_array['items'][$item[$groupbyStr]]['sum_number'] += $item['number'];
-                    $return_array['items'][$item[$groupbyStr]]['sum_realprice'] = bcadd($return_array['items'][$item[$groupbyStr]]['sum_realprice'], $item['sum_realprice'], 2);
+                    $return_array['items'][$item[$groupbyStr]]['sum_realprice'] += $item['sum_realprice'];
                 }
                 // 添加点击之后的内页数据，直接放在新的details字段中即可。
                 $return_array['items'][$item[$groupbyStr]]['details'][] = $item;
@@ -357,8 +360,10 @@ class StatisticsController extends AdminController
             // 获取全部参数
             $params = $this->request->get();
             // 如果没有传入起始销售时间和终止销售时间，那么就默认为昨天一整天的数据
-            $start_salesdate = $this->request->get('start_salesdate') ?: date('Y-m-d', time() - 86400);
-            $end_salesdate = $this->request->get('end_salesdate') ?: date('Y-m-d', time() + 86400);
+            $start_salesdate = $this->request->get('start_salesdate');
+            $end_salesdate = $this->request->get('end_salesdate');
+            $start_salesdate = $start_salesdate ? date('Y-m-d', strtotime($params['start_salesdate']) - 86400) : date('Y-m-d', time() - 86400);
+            $end_salesdate = $end_salesdate ? date('Y-m-d', strtotime($params['end_salesdate']) + 86400) : date('Y-m-d', time() + 86400);
             // 入库日期
             $start_stockdate = $this->request->get('start_stockdate') ? date('Y-m-d', strtotime($params['start_stockdate']) - 86400) : date('Y-m-d', strtotime('0001-01-01 00:00:00'));
             $end_stockdate = $this->request->get('end_stockdate') ? date('Y-m-d', strtotime($params['end_stockdate']) + 86400) : date('Y-m-d', time() + 86400);
@@ -381,8 +386,6 @@ class StatisticsController extends AdminController
             $return_sales = $this->getArraySearchValues($sales, $where);
             // 按照productid进行汇总
             $return_group_sales = $this->getGroupArray($return_sales, 'productid', ['productid', 'productname', 'sellnumber', 'brandid', 'brandname', 'brandfilename', 'brandgroupid', 'brandgroupname', 'ageseasonid', 'ageseasonname', 'wordcode', 'sum_price', 'sum_realprice'], ['sellnumber', 'sum_price', 'sum_realprice']);
-
-            // return $this->success($return_group_sales);
 
             // 3、入库表根据搜索条件进行预处理
             // 需要过滤品牌、品类、仓库、年代、性别、到货时间
@@ -592,17 +595,17 @@ class StatisticsController extends AdminController
                     'sum_realprice' => $item['sum_realprice'],
                 ];
             } else {
-                // 否则就累计，价格用高精度进行累计
+                // 否则就累计
                 $return['items'][$item[$groupby]]['sum_number'] += $item['number'];
                 $return['items'][$item[$groupby]]['sum_sellnumber'] += $item['sellnumber'];
-                $return['items'][$item[$groupby]]['sum_realprice'] = bcadd($return['items'][$item[$groupby]]['sum_realprice'], $item['sum_realprice'], 2);
+                $return['items'][$item[$groupby]]['sum_realprice'] += $item['sum_realprice'];
             }
             // 处理完了之后，增加百分比
             $return['items'][$item[$groupby]]['rate'] = round($return['items'][$item[$groupby]]['sum_sellnumber'] / $return['items'][$item[$groupby]]['sum_number'], 2);
             // 计数器累计
             $total_number += $return['items'][$item[$groupby]]['sum_number'];
             $total_sellnumber += $return['items'][$item[$groupby]]['sum_sellnumber'];
-            $total_realprice = bcadd($total_realprice, $return['items'][$item[$groupby]]['sum_realprice'], 2);
+            $total_realprice += $return['items'][$item[$groupby]]['sum_realprice'];
             $total_rate = round($total_sellnumber / $total_number, 2);
         }
 
@@ -618,20 +621,17 @@ class StatisticsController extends AdminController
         return $this->success($return);
     }
 
+
     /**
      * 库存余额查询
      * 目前缺少一个入库时间字段StorageTime,暂时用change_time代替
+     * @return array|false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|string
      */
     public function stockbalanceAction()
     {
         // 逻辑
-        // 取出登录公司信息
-        // 赋值
-        $companyid = $this->currentCompany;
-
         // 获取全部参数
         $params = $this->request->get();
-
         // 截止日期
         $end_stockdate = $this->request->get('end_stockdate');
         if (!$end_stockdate) {
@@ -640,61 +640,10 @@ class StatisticsController extends AdminController
             return $this->error([$msg]);
         }
         $end_stockdate = date('Y-m-d', strtotime($end_stockdate) + 86400);
+        $end_warehousing = date('Y-m-d', strtotime($end_stockdate) - 86400);
 
-        // 取出库存
-        $stocks = $this->getStocksByStockdate($end_stockdate);
-
-        // 添加必须的字段和参数
-        $name = $this->getlangfield('name');
-        // 继续
-        foreach ($stocks as $k => $stock) {
-            // 商品模型
-            $productModel = TbProduct::findFirstById($stock['productid']);
-            // 添加属性
-            $info = $productModel->toArray();
-            // 添加brandname和brandgroupname
-            $brandModel = TbBrand::findFirstById($productModel->brandid);
-            $info['brandname'] = $productModel->brandid && $brandModel ? $brandModel->$name : '';
-            $brandgroupModel = TbBrandgroup::findFirstById($productModel->brandgroupid);
-            $info['brandgroupname'] = $productModel->brandgroupid && $brandgroupModel ? $brandgroupModel->$name : '';
-            // 添加价格
-            $info['sum_realprice'] = round($info['wordprice'] * $stock['number'], 2);
-            // 添加仓库名称
-            $warehouseModel = TbWarehouse::findFirstById($stock['warehouseid']);
-            $info['warehousename'] = $warehouseModel ? $warehouseModel->name : '';
-            unset($info['id']);
-            // 重新赋值
-            // 把stock的值也赋值进去
-            foreach ($stock as $key => $value) {
-                $info[$key] = $value;
-            }
-            $stocks[$k] = $info;
-        }
-
-        // // 集中处理条件过滤
-        // $where = $this->getArraySearchAttributes($params, ['ageseasonid'], ['spring', 'summer', 'fall', 'winter'], [], ['property', 'brandid', 'warehouseid', 'brandgroupid', 'brandproperty']);
-        // // 获取结果集
-        // $return_stocks = $this->getArraySearchValues($stocks, $where);
-        //
-        // return $this->success($return_stocks);
-        //
-        // // 按照productid分组
-        // // 按照productid进行汇总
-        // $return_group_stocks = $this->getGroupArray($return_stocks, 'warehouseid', ['number', 'sum_realprice', 'warehouseid'], ['number', 'sum_realprice']);
-        // // 接下来按照
-        // // 返回
-        // return $this->success($return_group_stocks);
-
-
-        // 集中处理条件过滤
-        $where = $this->getArraySearchAttributes($params, ['ageseasonid'], ['spring', 'summer', 'fall', 'winter'], [], ['property', 'brandid', 'warehouseid', 'brandgroupid', 'brandproperty']);
-        // 获取结果集
-        $return_stocks = $this->getArraySearchValues($stocks, $where);
-
-        // 最终数据
-        // return $this->success($return_stocks);
-
-        // 开始处理分组
+        // 1、确定分组字段
+        // 处理分组
         // 初始化数据
         $groupby = 'productid';
         $groupbyname = 'productname';
@@ -722,12 +671,178 @@ class StatisticsController extends AdminController
             }
         }
 
-        // 按照groupby分组
-        $return_stocks = $this->getGroupArray($return_stocks, $groupby, [$groupby, $groupbyname, 'sum_realprice', 'number'], ['number', 'sum_realprice']);
+        // 2、取出库存
+        // 如果库存不存在，则返回空
+        if (!$stocks = $this->getStocks($end_stockdate)) {
+            return $this->success();
+        }
+        // 性别、季节、年代、品牌、品类、仓库条件过滤
+        $where = $this->getArraySearchAttributes($params, ['ageseasonid'], ['spring', 'summer', 'fall', 'winter'], [], ['property', 'brandid', 'warehouseid', 'brandgroupid', 'genderid']);
+        // 获取结果集
+        $return_stocks = $this->getArraySearchValues($stocks, $where);
+        // 按照$groupby进行汇总，其中productid要统计个数
+        $return_group_stocks = $this->getGroupArray($return_stocks, $groupby, [$groupby, $groupbyname, 'stocknumber', 'sum_realprice', 'productid'], ['stocknumber', 'sum_realprice'], ['productid', 'sizecontentstock', 'sizecontentname']);
 
+        // 3、获取入库结果集
+        $warehosings = $this->getWarehousings('', $end_warehousing);
+        // 获取结果集
+        $return_warehosings = $this->getArraySearchValues($warehosings, $where);
+        // 按照$groupby进行汇总
+        $return_group_warehosings = $this->getGroupArray($return_warehosings, $groupby, [$groupby, $groupbyname, 'wnumber', 'productid'], ['wnumber'], ['productid']);
+
+        // 4、获取销售结果集
+        $sales = $this->getSales('', $end_warehousing);
+        // 获取结果集
+        $return_sales = $this->getArraySearchValues($sales, $where);
+        // 按照$groupby进行汇总
+        $return_group_sales = $this->getGroupArray($return_sales, $groupby, [$groupby, $groupbyname, 'sellnumber', 'productid'], ['sellnumber'], ['productid']);
+
+        // 5、统计
+        $temp = $this->getTwoArrayMergeByKey($return_group_stocks, $return_group_sales);
+
+        $return_arr = $this->getTwoArrayMergeByKey($temp, $return_group_warehosings);
+
+        // 补全details中缺乏的字段
+        $details = [];
+        foreach ($return_arr as $v) {
+            foreach ($v['details'] as $detail) {
+                $details[] = $detail;
+            }
+        }
+        $details_keys = $this->getUniqueMultiArrayKeys($details);
+        foreach ($return_arr as $k => $v) {
+            foreach ($v['details'] as $index => $details) {
+                foreach ($details_keys as $key) {
+                    if (!isset($return_arr[$k]['details'][$index][$key])) {
+                        $return_arr[$k]['details'][$index][$key] = 0;
+                    }
+                }
+                // 增加库销比
+                $return_arr[$k]['details'][$index]['rate'] = empty($return_arr[$k]['details'][$index]['stocknumber']) ? 0 : round($return_arr[$k]['details'][$index]['sellnumber'] / $return_arr[$k]['details'][$index]['stocknumber'], 2);
+            }
+        }
+
+        // 最终数据处理，把缺少的字段全部补齐
+        $keys = $this->getUniqueMultiArrayKeys($return_arr);
+        $return_arr = $this->fillMissingMultiArrayFields($keys, $return_arr);
+
+        // 6、保存最终分组变量
+        $return = [];
+        // 在外面统计总数量、总结算金额、库销比、
+        // 库存款数
+        $total_productid = 0;
+        // 库存件数
+        $total_stocknumber = 0;
+        // 销售合计
+        $total_sellnumber = 0;
+        // 进货合计
+        $total_wnumber = 0;
+        // 库存余额
+        $total_realprice = 0;
+        // 库销比
+        $total_rate = 0;
+        $return['items'] = $return_arr;
+        foreach ($return['items'] as $k => $item) {
+            // 每个分组元素统计库销比
+            $return['items'][$k]['rate'] = empty($item['stocknumber']) ? 0 : round($item['sellnumber'] / $item['stocknumber'], 2);
+            // 计数器累计
+            // 库存款数
+            $total_productid += $return['items'][$item[$groupby]]['productid_count'];
+            // 库存件数
+            $total_stocknumber += $return['items'][$item[$groupby]]['stocknumber'];
+            // 销售合计
+            $total_sellnumber += $return['items'][$item[$groupby]]['sellnumber'];
+            // 进货合计
+            $total_wnumber += $return['items'][$item[$groupby]]['wnumber'];
+            // 库存余额
+            $total_realprice += $return['items'][$item[$groupby]]['sum_realprice'];
+            // 库销比
+            $total_rate = round($total_sellnumber / $total_stocknumber, 2);
+        }
+
+        // 补充total数组
+        $return['total'] = [
+            'total_productid' => $total_productid,
+            'total_stocknumber' => $total_stocknumber,
+            'total_sellnumber' => $total_sellnumber,
+            'total_wnumber' => $total_wnumber,
+            'total_realprice' => $total_realprice,
+            'total_rate' => $total_rate,
+        ];
+        // 如果没有选择汇总，那么就把productid进行整合
+        if ($groupby == 'productid') {
+            $return['items'] = [
+                '0' => [
+                    'productid_count' => $total_productid,
+                    'stocknumber' => $total_stocknumber,
+                    'sum_realprice' => $total_realprice,
+                    'sellnumber' => $total_sellnumber,
+                    'wnumber' => $total_wnumber,
+                    'rate' => $total_rate,
+                ],
+            ];
+        }
+
+        // 7、最终返回
+        return $this->success($return);
+    }
+
+
+    /**
+     * 获取一个二维数组下面所有的key，去除重复值之后的，待优化
+     * @param array $array 二维数组
+     * @return array
+     */
+    public function getUniqueMultiArrayKeys(array $array)
+    {
+        // 逻辑
+        $return = [];
+        if (empty($field)) {
+            foreach (array_values($array) as $v) {
+                $return += $v;
+            }
+        }
 
         // 返回
-        return $this->success($return_stocks);
+        return array_keys($return);
+    }
+
+    /**
+     * 取出用逗号分隔的元素个数
+     * @param string $str 待处理字符串
+     * @return int
+     */
+    public function getCountByComma($str)
+    {
+        // 逻辑
+        $array = explode(',', $str);
+        return count($array);
+    }
+
+    /**
+     * 根据$keys把缺失的字段补齐
+     * @param array $keys 字段数据
+     * @param array $array 待处理的数据
+     * @return array
+     */
+    public function fillMissingMultiArrayFields(array $keys, array $array)
+    {
+        // 逻辑
+        foreach ($keys as $key) {
+            foreach ($array as $k => $v) {
+                if (!isset($array[$k][$key])) {
+                    // 如果字段名含有number，那么就补充0
+                    if (strpos($key, 'number') !== false) {
+                        $array[$k][$key] = 0;
+                    } else {
+                        // 否则就补充空值
+                        $array[$k][$key] = '';
+                    }
+                }
+            }
+        }
+        // 返回
+        return $array;
     }
 
     /**
@@ -756,6 +871,8 @@ class StatisticsController extends AdminController
             ->join(TbBrand::class, 'p.brandid = b.id', 'b')
             // 加入品类表tb_brandgroup，简写为bg
             ->join(TbBrandgroup::class, 'p.brandgroupid = bg.id', 'bg')
+            // 加入仓库表tb_warehouse，简写为wh
+            ->join(TbWarehouse::class, 's.warehouseid = wh.id', 'wh')
             ->columns("
                     s.id as salesid,
                     s.status,
@@ -764,6 +881,7 @@ class StatisticsController extends AdminController
                     s.discount,
                     s.saleportid,
                     s.warehouseid,
+                    wh.name as warehousename,
                     sd.id as salesdetailsid,
                     sd.productstockid,
                     sd.number as sellnumber,
@@ -774,16 +892,16 @@ class StatisticsController extends AdminController
                     p.picture as productpicture,
                     p.gender as genderid,
                     p.brandid,
-                    concat(p.wordcode_1,p.wordcode_2,wordcode_3,wordcode_4) as wordcode,
+                    concat(p.wordcode_1,p.wordcode_2,p.wordcode_3,p.wordcode_4) as wordcode,
                     b.$name as brandname,
                     b.filename as brandfilename,
                     p.brandgroupid,
                     bg.$name as brandgroupname,
                     p.ageseason as ageseasonid,
                     g.price,
-                    (g.price * s.discount) as realprice,
-                    (g.price * sd.number) as sum_price,
-                    (g.price * s.discount * sd.number) as sum_realprice
+                    round(g.price * s.discount,2) as realprice,
+                    round(g.price * sd.number,2) as sum_price,
+                    round(g.price * s.discount * sd.number,2) as sum_realprice
             ");
         // 默认必须的查询条件
         $builder->where("s.status <> 2 and s.companyid = $this->currentCompany and s.makedate between :start_salesdate: and :end_salesdate:", [
@@ -808,121 +926,145 @@ class StatisticsController extends AdminController
      * @param string $end_stockdate 截止日期
      * @return array
      */
-    public function getWarehousings($start_stockdate = '', $end_stockdate = '')
+    public function getWarehousings($start_stockdate = '0000-00-00', $end_stockdate = '')
     {
         // 逻辑
-        // 因为需要用到一个算法函数getProductStock，所以没有用连表查询
-        // 开始查询入库表
-        $stocks = TbWarehousing::find([
-            "companyid = $this->currentCompany and entrydate between :start_stockdate: and :end_stockdate:",
-            'bind' => [
-                'start_stockdate' => $start_stockdate,
-                'end_stockdate' => $end_stockdate,
-            ],
-        ]);
-        // 取出订单id列表
-        $ids = [];
-        foreach ($stocks as $stock) {
-            $ids[] = $stock->id;
+        if (!$this->currentCompany) {
+            return [];
         }
-        $ids = implode(',', $ids);
-        // 把入库详情表信息展示出来
-        $stockdetails = TbWarehousingdetails::find(
-            "warehousingid in ({$ids})"
-        );
-        // 继续
-        $return = $stockdetails->toArray();
+        // 使用构造器进行查询
+        $builder = $this->modelsManager->createBuilder();
+        // 多语言字段
         $name = $this->getlangfield('name');
-        foreach ($stockdetails as $k => $v) {
-            // 临时变量
-            $detail = $v->getProductStock()->toArray();
-            // 然后取出名称、国际码、年代季节
-            // 商品模型
-            $productModel = TbProduct::findFirstById($detail['productid']);
-            // 判断产品模型是否存在
-            if ($productModel) {
-                // 产品名称
-                $detail['productname'] = $productModel->productname;
-                // 产品图片
-                $detail['productpicture'] = $productModel->picture;
-                // 国际码
-                $detail['wordcode'] = $productModel->wordcode_1 . $productModel->wordcode_2 . $productModel->wordcode_3 . $productModel->wordcode_4;
-                // 品牌id
-                $detail['brandid'] = $productModel->brandid;
-                // 品牌名称
-                $brand = TbBrand::findFirstById($detail['brandid']);
-                if (!$brand) {
-                    $detail['brandname'] = '';
-                } else {
-                    $detail['brandname'] = $brand->$name;
-                }
-                // 品牌图片
-                $detail['brandfilename'] = $brand->filename;
-                // 品类id
-                $detail['brandgroupid'] = $productModel->brandgroupid;
-                // 品类名称
-                $brandgroup = TbBrandgroup::findFirstById($detail['brandgroupid']);
-                if (!$brandgroup) {
-                    $detail['brandgroupname'] = '';
-                } else {
-                    $detail['brandgroupname'] = $brandgroup->$name;
-                }
-            } else {
-                // 产品名称
-                $detail['productname'] = '';
-                // 国际码
-                $detail['wordcode'] = '';
-                // 品牌id
-                $detail['brandid'] = '';
-                // 品牌名称
-                $detail['brandname'] = '';
-                // 品牌图片
-                $detail['brandfilename'] = '';
-                // 品类id
-                $detail['brandgroupid'] = '';
-                // 品类名称
-                $detail['brandgroupname'] = '';
-            }
-            // 年代季节
-            $detail['ageseasonid'] = $productModel->ageseason;
-            // 年代季节名称
-            $detail['ageseasonname'] = $this->getCommasValues(TbAgeseason::class, $detail['ageseasonid'], ['sessionmark', 'name']);
-            // 入库日期
-            $detail['entrydate'] = $v->warehousing->entrydate;
-            // 删除没用的无需显示
-            $unsets = ['create_time', 'create_stuff', 'change_time', 'change_stuff', 'defective_level', 'property'];
-            foreach ($unsets as $unset) {
-                unset($detail[$unset]);
-            }
-            // 重新赋值
-            $return[$k] = $detail;
+        // 主表为入库表tb_warehousing，简写为w
+        $builder->from(['w' => TbWarehousing::class])
+            // 加入入库详情表tb_warehousingdetails，简写为wd
+            ->join(TbWarehousingdetails::class, 'wd.warehousingid = w.id', 'wd')
+            // 加入仓库表tb_warehouse，简写为wh
+            ->join(TbWarehouse::class, 'w.warehouseid = wh.id', 'wh')
+            // 加入订单详情表tb_orderdetails，简写为od
+            ->join(TbOrderdetails::class, 'wd.orderdetailsid = od.id', 'od')
+            // 加入商品表tb_product，简写为p
+            ->join(TbProduct::class, 'od.productid = p.id', 'p')
+            // 加入品牌表tb_brand，简写为b
+            ->join(TbBrand::class, 'p.brandid = b.id', 'b')
+            // 加入品类表tb_brandgroup，简写为bg
+            ->join(TbBrandgroup::class, 'p.brandgroupid = bg.id', 'bg')
+            ->columns("
+                    w.id as wid,
+                    w.companyid,
+                    w.warehouseid,
+                    wh.name as warehousename,
+                    w.entrydate,
+                    wd.id as wdid,
+                    wd.number as wnumber,
+                    od.productid,
+                    p.productname,
+                    p.picture as productpicture,
+                    p.spring,
+                    p.summer,
+                    p.fall,
+                    p.winter,
+                    p.ageseason as ageseasonid,
+                    p.gender as genderid,
+                    concat(p.wordcode_1,p.wordcode_2,p.wordcode_3,p.wordcode_4) as wordcode,
+                    b.id as brandid,
+                    b.$name as brandname,
+                    b.filename as brandfilename,
+                    bg.id as brandgroupid,
+                    bg.$name as brandgroupname
+            ");
+        // 默认必须的查询条件
+        $builder->where("w.entrydate between :start_salesdate: and :end_salesdate: and w.companyid = $this->currentCompany", [
+            'start_salesdate' => $start_stockdate,
+            'end_salesdate' => $end_stockdate,
+        ]);
+        // 获取查询对象
+        $query = $builder->getQuery();
+        // 查出结果
+        $return = $query->execute()->toArray();
+        // 把年代季节写入进去
+        foreach ($return as $k => $v) {
+            $return[$k]['ageseasonname'] = $this->getCommasValues(TbAgeseason::class, $v['ageseasonid'], ['sessionmark', 'name']);
         }
         // 最终返回
         return $return;
     }
+
 
     /**
      * 获取截止某个时间节点的库存状况
      * @param string $end_stockdate 截止日期，这个对应原来的数据表有个StorageTime字段，现在缺少这个字段，暂时用
      * @return string|array
      */
-    public function getStocksByStockdate($end_stockdate)
+    public function getStocks($end_stockdate)
     {
         // 逻辑
-        // 参数列表
-        // 取输入日期之后的那一天作为截止日
-        $end_stockdate = date('Y-m-d', strtotime($end_stockdate) + 86400);
-        // 库存模型，这个是主表，所有的查询条件都以这个为基准
-        // 初始化TbProductstock查询条件
-        $conditions = "defective_level = 0 and companyid = $this->currentCompany and change_time <= :end_stockdate:";
-        $stocks = TbProductstock::find([
-            $conditions,
-            'bind' => [
-                'end_stockdate' => $end_stockdate,
-            ],
+        if (!$this->currentCompany) {
+            return [];
+        }
+        // 使用构造器进行查询
+        $builder = $this->modelsManager->createBuilder();
+        // 多语言字段
+        $name = $this->getlangfield('name');
+        // 先定义国际码库存尺码详情，这里要用到2次
+        $concat_sizecontent = "concat(sc.name,'×',ps.number)";
+        // 主表为库存表tb_productstock，简写为ps
+        $builder->from(['ps' => TbProductstock::class])
+            // 加入仓库表tb_warehouse，简写为wh
+            ->join(TbWarehouse::class, 'ps.warehouseid = wh.id', 'wh')
+            // 加入商品表tb_product，简写为p
+            ->join(TbProduct::class, 'ps.productid = p.id', 'p')
+            // 加入品牌表tb_brand，简写为b
+            ->join(TbBrand::class, 'p.brandid = b.id', 'b')
+            // 加入品类表tb_brandgroup，简写为bg
+            ->join(TbBrandgroup::class, 'p.brandgroupid = bg.id', 'bg')
+            // 加入尺码明细表tb_sizecontent，简写为sc
+            ->join(TbSizecontent::class, 'ps.sizecontentid = sc.id', 'sc')
+            ->columns("
+                    ps.id as psid,
+                    ps.companyid,
+                    ps.warehouseid,
+                    ps.change_time,
+                    ps.property,
+                    ps.number as stocknumber,
+                    ps.sizecontentid,
+                    ps.goodsid,
+                    sc.name as sizecontentname,
+                    $concat_sizecontent as sizecontentstock,
+                    wh.name as warehousename,
+                    p.id as productid,
+                    p.productname,
+                    p.picture as productpicture,
+                    p.spring,
+                    p.summer,
+                    p.fall,
+                    p.winter,
+                    p.ageseason as ageseasonid,
+                    p.gender as genderid, 
+                    p.wordprice,
+                    concat(p.wordcode_1,p.wordcode_2,p.wordcode_3,p.wordcode_4) as wordcode,
+                    b.id as brandid,
+                    b.$name as brandname,
+                    b.filename as brandfilename,
+                    bg.id as brandgroupid,
+                    bg.$name as brandgroupname,
+                    round(p.wordprice * ps.number,2) as sum_realprice
+            ");
+        // 默认必须的查询条件
+        $builder->where("ps.defective_level = 0 and ps.companyid = $this->currentCompany and ps.change_time <= :end_stockdate:", [
+            'end_stockdate' => $end_stockdate,
         ]);
-        // 获取数据
-        return $stocks->toArray();
+        // 获取查询对象
+        $query = $builder->getQuery();
+        // 查出结果
+        $return = $query->execute()->toArray();
+        // 把年代季节写入进去
+        foreach ($return as $k => $v) {
+            $return[$k]['ageseasonname'] = $this->getCommasValues(TbAgeseason::class, $v['ageseasonid'], ['sessionmark', 'name']);
+        }
+        // 最终返回
+        return $return;
     }
 
     /**
@@ -997,6 +1139,61 @@ class StatisticsController extends AdminController
     }
 
     /**
+     * 修改数组中的key值
+     * @param array $datas 待处理的数组
+     * @param array $beforeFields 待修改的keys列表
+     * @param array $afterFields 修改后的keys列表，里面每个元素都和$beforeFields的位置相对应
+     * @return array
+     */
+    public function changeArrayKeys(array $datas, array $beforeFields, array $afterFields)
+    {
+        // 逻辑
+        foreach ($datas as $k => $v) {
+            foreach ($beforeFields as $key => $field) {
+                if (isset($datas[$field])) {
+                    $datas[$afterFields[$key]] = $v;
+                    // 删除原来的值
+                    unset($datas[$field]);
+                }
+            }
+
+        }
+        // 返回
+        return $datas;
+    }
+
+
+    /**
+     * 获取统计后的新数组
+     * @param array $datas 数组结果集
+     * @param array $totalFields 需要累计做加法的字段数组
+     * @param string $count 是否需要统计个数，默认1，需要统计
+     * @return array
+     */
+    public function getSumArray(array $datas, array $totalFields = [], $count = '1')
+    {
+        // 逻辑
+        // 值初始化
+        $return = [];
+        foreach ($totalFields as $field) {
+            $return[$field] = 0;
+        }
+        // 循环累计
+        foreach ($datas as $k => $data) {
+            // 数组类型进行累计，使用高精度计算
+            foreach ($totalFields as $field) {
+                $return[$field] += $data[$field];
+            }
+        }
+        // 加入数量
+        if ($count) {
+            $return['count'] = count($datas);
+        }
+        // 返回
+        return $return;
+    }
+
+    /**
      * 获取最终查询的结果
      * @param array $datas 结果集
      * @param string $where 查询条件
@@ -1023,20 +1220,23 @@ class StatisticsController extends AdminController
         }
     }
 
+
     /**
      * 以$groupby字段作为分组条件，并把二维数组合并为一维数组
      * @param array $datas 二维数组
      * @param string $groupby 分组字段
      * @param array $mustBeDisplayFields 所有需要展示的字段数组
      * @param array $totalFields 需要累计做加法的字段数组
-     * @param array $concatFields 需要合并的字段数组
+     * @param array $concatFields 需要合并的字段数组，默认返回值用逗号隔开，里面可以放一级数组和二级数组
+     * @param string $secondGroupBy 每个一级数组details下面的groupby字段，默认是productid
      * @return array
      */
-    public function getGroupArray(array $datas, $groupby, array $mustBeDisplayFields = [], array $totalFields = [], array $concatFields = [])
-
+    public function getGroupArray(array $datas, $groupby, array $mustBeDisplayFields = [], array $totalFields = [], array $concatFields = [], $secondGroupBy = 'productid')
     {
         // 逻辑
         $return = [];
+        $details = [];
+        // 一级数组组装数据
         foreach ($datas as $k => $data) {
             if (!isset($return[$data[$groupby]])) {
                 // 必显字段压入新数组
@@ -1044,17 +1244,55 @@ class StatisticsController extends AdminController
                     $return[$data[$groupby]][$displayField] = $data[$displayField];
                 }
             } else {
-                // 数组类型进行累计，使用高精度计算
+                // 数组类型进行累计
                 foreach ($totalFields as $field) {
-                    $return[$data[$groupby]][$field] = bcadd($return[$data[$groupby]][$field], $data[$field], 2);
+                    $return[$data[$groupby]][$field] += $data[$field];
                 }
-                // 需要合并的字段如果存在了，那就直接用逗号连接起来
-                foreach ($concatFields as $concatField) {
-                    if (!empty($data[$concatField])) {
+            }
+            // 需要合并的字段如果存在了，那就直接用逗号连接起来
+            foreach ($concatFields as $concatField) {
+                // 需要判断是否存在这个concat字段，如果存在就汇总
+                if (isset($return[$data[$groupby]][$concatField])) {
+                    if (strpos($return[$data[$groupby]][$concatField], $data[$concatField]) === false) {
                         $return[$data[$groupby]][$concatField] .= ',' . $data[$concatField];
+                    }
+                    // 统计里面的元素个数
+                    $return[$data[$groupby]][$concatField . '_count'] = $this->getCountByComma($return[$data[$groupby]][$concatField]);
+                }
+            }
+
+            // 详情页，处理二级处理的组装数据
+            if (!isset($return[$data[$groupby]]['details'][$data[$secondGroupBy]])) {
+                // 先把所有数据都压进去
+                $return[$data[$groupby]]['details'][$data[$secondGroupBy]] = $data;
+            } else {
+                // 上一步压入完毕之后，开始处理汇总
+                // total字段类型进行累计
+                foreach ($totalFields as $field) {
+                    // 字段存在，则汇总，否则忽略
+                    if (!isset($return[$data[$groupby]]['details'][$data[$secondGroupBy]][$field])) {
+                        $return[$data[$groupby]]['details'][$data[$secondGroupBy]][$field] = $data[$field];
+                    } else {
+                        $return[$data[$groupby]]['details'][$data[$secondGroupBy]][$field] += $data[$field];
+                    }
+                }
+
+                // concat字段类型进行合并
+                foreach ($concatFields as $concatField) {
+                    // 字段存在，则汇总，否则忽略
+                    if (isset($return[$data[$groupby]]['details'][$data[$secondGroupBy]][$concatField])) {
+                        // 判断是否已经添加进了，如果已经添加了，那么就不需要重复添加，进行去重处理
+                        if (strpos($return[$data[$groupby]]['details'][$data[$secondGroupBy]][$concatField], $data[$concatField]) === false) {
+                            $return[$data[$groupby]]['details'][$data[$secondGroupBy]][$concatField] .= ',' . $data[$concatField];
+                        }
+                    } else {
+                        $return[$data[$groupby]]['details'][$data[$secondGroupBy]][$concatField] = $data[$concatField];
                     }
                 }
             }
+
+            // 补充details缺乏的字段
+
         }
         // 返回
         return $return;
@@ -1127,8 +1365,12 @@ class StatisticsController extends AdminController
                 // 不存在就添加
                 $return[$k] = $v;
             } else {
-                // 存在就合并
-                $return[$k] = $return[$k] + $v;
+                // 如果键名是details，就递归
+                if (isset($return[$k]['details'])) {
+                    $return[$k]['details'] = $this->getTwoArrayMergeByKey($array1[$k]['details'], $array2[$k]['details']);
+                }
+                // 数组合并
+                $return[$k] += $v;
             }
         }
         // 最终返回
@@ -1149,7 +1391,7 @@ class StatisticsController extends AdminController
         // 首先去掉默认的key值，全部初始化
         $SmallArrayKeys = $this->getMultiArrayKeys($SmallArray);
 
-        // 求出两个数组之间的差集
+        // 求出两个数组之间的差集，返回值是数组的key
         $diff = $this->getMultiArrayDiff($BigArray, $SmallArray, $fieldname);
 
         // 定义一个初始变量来保存差集的数据，这个是要批量复制的
@@ -1159,6 +1401,7 @@ class StatisticsController extends AdminController
                 $temp[$key] = '';
             }
         }
+
         // 把差集给第二个数组补齐
         foreach ($diff as $id) {
             $temp[$fieldname] = $id;
@@ -1327,9 +1570,12 @@ class StatisticsController extends AdminController
             $datas = json_decode($this->request->get('datas'), true);
 
             // 去掉details
-            foreach ($datas['items'] as $k => $v) {
-                unset($datas['items'][$k]['details']);
+            if (isset($datas['items'])) {
+                foreach ($datas['items'] as $k => $v) {
+                    unset($datas['items'][$k]['details']);
+                }
             }
+
             // 把total数组追加到列表末尾
             $datas['items'][] = [
                 'id' => '合计',

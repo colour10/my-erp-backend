@@ -3,6 +3,9 @@ $(function () {
     // 取出当前地址栏的相对地址
     var relativepath = GetUrlRelativePath();
 
+    // 二级下拉菜单
+    $('[data-submenu]').submenupicker();
+
     // 取出主域名
     if (!window.localStorage.getItem('main_host')) {
         window.localStorage.setItem('main_host', getmainhost());
@@ -20,6 +23,26 @@ $(function () {
         Layout.initImageZoom();
         Layout.initTouchspin();
     }
+
+    // 头部导航切换
+    $('.sexcate').each(function () {
+        var _this = $(this);
+        var tab = _this.find('a');
+        var tabc = $('.childcates');
+        // 显示第一条信息
+        tab.eq(0).addClass('nav-current');
+        tabc.eq(0).show();
+        tab.each(function (index) {
+            $(this).mouseover(function () {
+                for (var i = 0; i < tab.length; i++) {
+                    tabc.eq(i).hide();
+                    tab.eq(i).removeClass('nav-current');
+                }
+                tab.eq(index).addClass('nav-current');
+                tabc.eq(index).show();
+            });
+        });
+    });
 });
 
 /**

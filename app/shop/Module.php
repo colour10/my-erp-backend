@@ -3,8 +3,10 @@
 namespace Multiple\Shop;
 
 use Asa\Erp\StaticReader;
+use Asa\Erp\TbBrand;
 use Asa\Erp\TbCompany;
 use Asa\Erp\TbCurrency;
+use Asa\Erp\TbProduct;
 use Multiple\Shop\Controllers\AdminController;
 use Phalcon\Events\Manager as EventsManager;
 use Phalcon\Loader;
@@ -96,6 +98,8 @@ class Module implements ModuleDefinitionInterface
         // 主域名
         $config = $di->get("config");
         $session = $di->get('session');
+        $language = $session->get('lang') ?: $config->language;
+        $admin = new AdminController();
         $di->setShared('main_host', function () use ($config) {
             return $config['app']['main_host'];
         });
@@ -117,9 +121,14 @@ class Module implements ModuleDefinitionInterface
         });
 
         // 为了使用共享model数据，需要注册language
-        $di->setShared('language', function () use ($config, $di) {
-            $language = $config->language;
+        $di->setShared('language', function () use ($language) {
             return new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
+        });
+
+        // language转换成数组
+        $di->setShared('languageArr', function () use ($language) {
+            $language = new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
+            return $language->toArray();
         });
 
         // 取出前5个主分类
@@ -254,6 +263,66 @@ class Module implements ModuleDefinitionInterface
             } else {
                 return 0;
             }
+        });
+
+        // 取出女性品牌
+        $di->setShared('girlbrands', function () use ($admin) {
+            $name = $admin->getlangfield('name');
+            $products = TbProduct::find([
+                'conditions' => 'gender = 0',
+                'columns' => "brandid",
+            ]);
+            // 品牌id列表
+            $brandids = array_unique(array_column($products->toArray(), 'brandid'));
+            // 把品牌名称进行整合
+            $return = [];
+            foreach ($brandids as $k => $id) {
+                $return[] = [
+                    'id' => $id,
+                    'name' => TbBrand::findFirstById($id)->$name,
+                ];
+            }
+            return $return;
+        });
+
+        // 取出男性品牌
+        $di->setShared('boybrands', function () use ($admin) {
+            $name = $admin->getlangfield('name');
+            $products = TbProduct::find([
+                'conditions' => 'gender = 1',
+                'columns' => "brandid",
+            ]);
+            // 品牌id列表
+            $brandids = array_unique(array_column($products->toArray(), 'brandid'));
+            // 把品牌名称进行整合
+            $return = [];
+            foreach ($brandids as $k => $id) {
+                $return[] = [
+                    'id' => $id,
+                    'name' => TbBrand::findFirstById($id)->$name,
+                ];
+            }
+            return $return;
+        });
+
+        // 取出儿童品牌
+        $di->setShared('childbrands', function () use ($admin) {
+            $name = $admin->getlangfield('name');
+            $products = TbProduct::find([
+                'conditions' => 'gender = 2',
+                'columns' => "brandid",
+            ]);
+            // 品牌id列表
+            $brandids = array_unique(array_column($products->toArray(), 'brandid'));
+            // 把品牌名称进行整合
+            $return = [];
+            foreach ($brandids as $k => $id) {
+                $return[] = [
+                    'id' => $id,
+                    'name' => TbBrand::findFirstById($id)->$name,
+                ];
+            }
+            return $return;
         });
 
     }

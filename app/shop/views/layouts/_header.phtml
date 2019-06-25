@@ -95,54 +95,95 @@
 
         <!-- BEGIN NAVIGATION -->
         <div class="header-navigation">
-            <ul>
-                <?php foreach ($this->frontcates as $cate) { ?>
-                    <li>
-                        <a href="/brandgroup/detail/<?php echo $cate['id']; ?>"><?php echo $cate['name']; ?></a>
-                    </li>
-                <?php } ?>
 
-                <?php if (count($this->leftcates) > 0) { ?>
-                    <!--更多分类 Start-->
-                    <li class="dropdown active">
-                        <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="javascript:;">
-                            >><?php echo $this->obj->getValidateMessage('more'); ?>
+            <ul class="menu">
 
-                        </a>
+                <li class="dropdown">
+                    <a href="javascript:void(0);"
+                       class="text-muted dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                       aria-expanded="false"><?php echo $this->language['list']['gender']['1']; ?></a>
 
+                    <ul class="dropdown-menu">
+                        <?php foreach ($this->allcates as $cate) { ?>
+                            <li>
+                                <a href="/brandgroup/detail/<?php echo $cate['id']; ?>"><?php echo $cate['name']; ?></a>
+                            </li>
+                        <?php } ?>
 
-                        <ul class="dropdown-menu pre-scrollable">
-                            <?php foreach ($this->leftcates as $cate) { ?>
-                                <li>
-                                    <a href="/brandgroup/detail/<?php echo $cate['id']; ?>"><?php echo $cate['name']; ?></a>
-                                </li>
-                            <?php } ?>
-                        </ul>
-
-                    </li>
-                    <!--更多分类 End-->
-                <?php } ?>
-
-                <!-- BEGIN TOP SEARCH -->
-                <li class="menu-search" style="float: right;">
-                    <span class="sep"></span>
-                    <i class="fa fa-search search-btn"></i>
-                    <div class="search-box">
-                        <form action="/index/search">
-                            <div class="input-group">
-                                <input type="text" placeholder="Search" class="form-control" name="keyword">
-                                <span class="input-group-btn">
-                                <button class="btn btn-primary" type="submit">Search</button>
-                            </span>
-                            </div>
-                        </form>
-                    </div>
+                        <li class="dropdown-submenu">
+                            <a href="javascript:void(0);" data-toggle="dropdown" aria-haspopup="true"
+                               aria-expanded="false"><?php echo $this->obj->getValidateMessage('pinpai'); ?> <i
+                                        class="fa fa-angle-right"></i></a>
+                            <ul class="dropdown-menu">
+                                <?php foreach ($this->girlbrands as $brand) { ?>
+                                    <li>
+                                        <a href="/brand/detail/<?php echo $brand['id']; ?>"><?php echo $brand['name']; ?></a>
+                                    </li>
+                                <?php } ?>
+                            </ul>
+                        </li>
+                    </ul>
                 </li>
-                <!-- END TOP SEARCH -->
+
+
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" data-target="#"
+                       href="javascript:;"><?php echo $this->language['list']['gender']['2']; ?></a>
+
+                    <ul class="dropdown-menu">
+                        <?php foreach ($this->allcates as $cate) { ?>
+                            <li>
+                                <a href="/brandgroup/detail/<?php echo $cate['id']; ?>"><?php echo $cate['name']; ?></a>
+                            </li>
+                        <?php } ?>
+
+                        <li class="dropdown-submenu">
+                            <a href="javascript:void(0);" data-toggle="dropdown" aria-haspopup="true"
+                               aria-expanded="false"><?php echo $this->obj->getValidateMessage('pinpai'); ?> <i
+                                        class="fa fa-angle-right"></i></a>
+                            <ul class="dropdown-menu">
+                                <?php foreach ($this->boybrands as $brand) { ?>
+                                    <li>
+                                        <a href="/brand/detail/<?php echo $brand['id']; ?>"><?php echo $brand['name']; ?></a>
+                                    </li>
+                                <?php } ?>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+
+
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" data-target="#"
+                       href="javascript:;"><?php echo $this->language['list']['gender']['6']; ?></a>
+
+                    <ul class="dropdown-menu">
+                        <?php foreach ($this->allcates as $cate) { ?>
+                            <li>
+                                <a href="/brandgroup/detail/<?php echo $cate['id']; ?>"><?php echo $cate['name']; ?></a>
+                            </li>
+                        <?php } ?>
+
+                        <li class="dropdown-submenu">
+                            <a href="javascript:void(0);" data-toggle="dropdown" aria-haspopup="true"
+                               aria-expanded="false"><?php echo $this->obj->getValidateMessage('pinpai'); ?> <i
+                                        class="fa fa-angle-right"></i></a>
+                            <ul class="dropdown-menu">
+                                <?php foreach ($this->childbrands as $brand) { ?>
+                                    <li>
+                                        <a href="/brand/detail/<?php echo $brand['id']; ?>"><?php echo $brand['name']; ?></a>
+                                    </li>
+                                <?php } ?>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
             </ul>
+
         </div>
-        <!-- END NAVIGATION -->
+
     </div>
+    <!-- END NAVIGATION -->
 </div>
 <!-- Header END -->
 
