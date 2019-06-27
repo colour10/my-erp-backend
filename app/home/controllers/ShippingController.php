@@ -37,7 +37,7 @@ class ShippingController extends AdminController {
                 $where[] = sprintf("%s like '%%%s%%'", $name, addslashes(strtoupper($_POST[$name])));
             }
         }
-        
+
 
         $names = ['warehouseid', 'ageseason', 'supplierid', 'seasontype', 'bussinesstype', 'property', 'status'];
         foreach ($names as $name) {
@@ -62,7 +62,7 @@ class ShippingController extends AdminController {
 
         // 采用事务处理
         $this->db->begin();
-        
+
         if($form['id']>0) {
             $shipping = TbShipping::findFirstById($form['id']);
             if($shipping==false || $shipping->companyid!=$this->companyid) {
@@ -127,7 +127,7 @@ class ShippingController extends AdminController {
                     if($detail->update()==false) {
                         $this->db->rollback();
                         throw new \Exception("/11010104/更新发货单明细失败/");
-                    }                
+                    }
                 }
                 else {
                     $detail = new TbShippingDetail();
@@ -147,7 +147,7 @@ class ShippingController extends AdminController {
                         throw new \Exception("/11010105/添加发货单明细失败/");
                     }
 
-                    $change[$detail->orderbranddetailid] = isset($change[$detail->orderbranddetailid]) ? $change[$detail->orderbranddetailid] + $item['number'] : $item['number'];  
+                    $change[$detail->orderbranddetailid] = isset($change[$detail->orderbranddetailid]) ? $change[$detail->orderbranddetailid] + $item['number'] : $item['number'];
                 }
 
                 $detail_id_array[] = $detail->id;
@@ -160,13 +160,13 @@ class ShippingController extends AdminController {
                 );
 
                 foreach($deleteDetails  as $detail) {
-                    $change[$detail->orderbranddetailid] = isset($change[$detail->orderbranddetailid]) ? $change[$detail->orderbranddetailid] - $detail->number : $detail->number *-1; 
+                    $change[$detail->orderbranddetailid] = isset($change[$detail->orderbranddetailid]) ? $change[$detail->orderbranddetailid] - $detail->number : $detail->number *-1;
                     if($detail->delete()==false) {
                         $this->db->rollback();
-                        throw new \Exception("/11010106/删除发货单明细失败/");                            
+                        throw new \Exception("/11010106/删除发货单明细失败/");
                     }
                 }
-            }                
+            }
 
 
             //更新订单明细中的，brand_number 字段
@@ -177,16 +177,16 @@ class ShippingController extends AdminController {
                     if($orderDetail->update() === false) {
                         //返回失败信息
                         $this->db->rollback();
-                        throw new \Exception("/11010107/更新客户端订单明细失败/"); 
-                    }                        
+                        throw new \Exception("/11010107/更新客户端订单明细失败/");
+                    }
                 }
                 else {
                     throw new \Exception("/11010108/客户端订单明细不存在。/");
                 }
-            }   
+            }
         }
         else {
-            $shipping = new TbShipping();            
+            $shipping = new TbShipping();
             $shipping->supplierid = $form["supplierid"];
             $shipping->finalsupplierid = $form["finalsupplierid"];
             $shipping->ageseason = $form["ageseason"];
@@ -251,7 +251,7 @@ class ShippingController extends AdminController {
                 }
 
                 $change[$detail->orderbranddetailid] = isset($change[$detail->orderbranddetailid]) ? $change[$detail->orderbranddetailid] + $item['number'] : $item['number'];
-            } 
+            }
 
             //更新订单明细中的，brand_number 字段
             foreach($change as $orderbranddetailid=>$number) {
@@ -261,15 +261,15 @@ class ShippingController extends AdminController {
                     if($orderDetail->update() === false) {
                         //返回失败信息
                         $this->db->rollback();
-                        throw new \Exception("/11010110/更新客户端订单明细失败/"); 
-                    }                        
+                        throw new \Exception("/11010110/更新客户端订单明细失败/");
+                    }
                 }
                 else {
                     throw new \Exception("/11010111/客户端订单明细不存在。/");
                 }
-            }   
+            }
         }
-                         
+
 
         // 提交事务
         $this->db->commit();
@@ -342,7 +342,7 @@ class ShippingController extends AdminController {
                         $orderDetailNumberArray[$detail->orderdetailsid] = 0;
                     }
                     $orderDetailNumberArray[$detail->orderdetailsid] += $item['number']-$detail->number;
-                }                
+                }
 
                 $detail->number = $item['number'];
                 $detail->discount = $item['discount'];
@@ -450,24 +450,39 @@ class ShippingController extends AdminController {
         );
         // 判断订单是否存在
         if ($shipping!=false) {
+            if($shipping->status==2) {
+                throw new \Exception("/11010701/已经入库的发货单不能删除。/");
+            }
+
             $this->db->begin();
             $details = $shipping->shippingDetail;
             foreach ($details as $detail) {
-                if($detail->orderbrandid>0) {
-                    //已经加入外部订单的订单明细不能删除
-                    $this->db->rollback();
-                    throw new \Exception("/110106/不能删除已经加入外部订单的订单明细/");
+                //更新品牌订单明细中的发货数量
+                if($detail->orderbranddetailid>0) {
+                    $orderbranddetail = TbOrderBrandDetail::findFirstById($detail->orderbranddetailid);
+                    if($orderbranddetail!=false) {
+                        $orderbranddetail->shipping_number = $orderbranddetail->shipping_number - $detail->number;
+                        if($orderbranddetail->update() === false) {
+                            //返回失败信息
+                            $this->db->rollback();
+                            throw new \Exception("/11010702/更新品牌订单明细失败。/");
+                        }
+                    }
+                    else {
+                        throw new \Exception("/11010703/客户订单明细不存在。/");
+                    }
                 }
+
 
                 if($detail->delete()==false) {
                     $this->db->rollback();
-                    throw new \Exception("/110107/删除订单明细失败。/");
+                    throw new \Exception("/11010704/删除订单明细失败。/");
                 }
             }
 
             if($shipping->delete()==false) {
                 $this->db->rollback();
-                    throw new \Exception("/110108/订单不能删除/");
+                throw new \Exception("/11010705/发货单删除失败。/");
             }
 
             $this->db->commit();
@@ -475,8 +490,7 @@ class ShippingController extends AdminController {
             return $this->success();
         }
         else {
-            throw new \Exception("/110109/订单不存在/");
-            
+            throw new \Exception("/11010706/发货单不存在。/");
         }
     }
 
@@ -542,14 +556,14 @@ class ShippingController extends AdminController {
                     $detail->orderbrandid = 0;
                     $detail->orderbranddetailid = 0;
                 }
-                
+
                 $detail->warehousingnumber = $item['number'];
 
-                
+
                 if($detail->save()==false) {
                     $this->db->rollback();
                     throw new \Exception("/110113/入库单详情入库数量更新失败/");
-                }  
+                }
 
                 //增加库存
                 if($detail->warehousingnumber>0) {
@@ -594,11 +608,11 @@ class ShippingController extends AdminController {
                 $productStock = $detail->getProductStock();
                 if($productStock->number>=$detail->warehousingnumber) {
                     $productStock->reduceStock($detail->warehousingnumber, TbProductstock::WAREHOSING, $detail->id);
-                }    
+                }
                 else {
                     throw new \Exception("/101117/库存不足，不能取消。/");
-                }            
-            }  
+                }
+            }
 
             $detail->warehousingnumber = 0;
 
@@ -606,14 +620,14 @@ class ShippingController extends AdminController {
                 if($detail->delete()==false) {
                     $this->db->rollback();
                     throw new \Exception("/101116/删除发货单明细失败。/");
-                } 
+                }
             }
             else {
                 if($detail->save()==false) {
                     $this->db->rollback();
                     throw new \Exception("/101116/发货单明细取消入库失败。/");
-                } 
-            }            
+                }
+            }
         }
 
         $this->db->commit();

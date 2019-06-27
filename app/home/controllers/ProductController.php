@@ -48,6 +48,8 @@ class ProductController extends CadminController {
             foreach($keys as $key) {
                 $product->$key = $params['form'][$key];
             }
+            $product->factorypricecurrency = $params['form']["wordpricecurrency"];
+            $product->nationalfactorypricecurrency = $params['form']["nationalpricecurrency"];
 
             if($product->create()==false) {
                 $this->db->rollback();
@@ -135,7 +137,7 @@ class ProductController extends CadminController {
                 $row->series = $params['form']["series"];
                 $row->ulnarinch = $params['form']["ulnarinch"];
                 $row->factoryprice = $params['form']["factoryprice"];
-                $row->factorypricecurrency = $params['form']["factorypricecurrency"];
+                $row->factorypricecurrency = $params['form']["wordpricecurrency"];
                 $row->nationalpricecurrency = $params['form']["nationalpricecurrency"];
                 $row->nationalprice = $params['form']["nationalprice"];
                 $row->memo = $params['form']["memo"];
@@ -150,7 +152,7 @@ class ProductController extends CadminController {
                 $row->sizetopid = $params['form']["sizetopid"];
                 $row->sizecontentids = $params['form']["sizecontentids"];
                 $row->productmemoids = $params['form']["productmemoids"];
-                $row->nationalfactorypricecurrency = $params['form']["nationalfactorypricecurrency"];
+                $row->nationalfactorypricecurrency = $params['form']["nationalpricecurrency"];
                 $row->nationalfactoryprice = $params['form']["nationalfactoryprice"];
                 $row->saletypeid = $params['form']["saletypeid"];
                 $row->winterproofingid = $params['form']["winterproofingid"];
@@ -404,6 +406,7 @@ class ProductController extends CadminController {
                     $product_else->colorname = $row['colorname'];
                     $product_else->picture = $row['picture'];
                     $product_else->picture2 = $row['picture2'];
+                    $product_else->wordcode = $row['wordcode_1'].$row['wordcode_2'].$row['wordcode_3'];
 
                     $products[] = $product_else;
                     $data[] = $product_else->id.",".$product_else->brandcolor;
@@ -425,6 +428,7 @@ class ProductController extends CadminController {
                     }
 
                     $row->syncMaterial($product);
+                    $row->syncBrandSugest();
                 }
 
                 $this->db->commit();

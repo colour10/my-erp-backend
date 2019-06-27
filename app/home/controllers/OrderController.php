@@ -17,7 +17,7 @@ class OrderController extends BaseController
     {
         parent::initialize();
     }
-    
+
     public function pageAction() {
         $params = [$this->getSearchCondition()];
         $params["order"] = "id desc";
@@ -37,7 +37,7 @@ class OrderController extends BaseController
 
         // Get the paginated results
         $pageObject = $paginator->getPaginate();
-        
+
         $data = [];
         foreach($pageObject->items as $row) {
             $data[] = $row->toArray();
@@ -51,7 +51,7 @@ class OrderController extends BaseController
             "total"    => $pageObject->total_items,
             "pageSize"     => $pageSize
         ];
-        echo $this->reportJson(array("data"=>$data, "pagination" => $pageinfo),200,[]);        
+        echo $this->reportJson(array("data"=>$data, "pagination" => $pageinfo),200,[]);
     }
 
     function getSearchCondition() {
@@ -143,7 +143,7 @@ class OrderController extends BaseController
         }
         else {
             // 没有订单号就新增
-            $order = new TbOrder();            
+            $order = new TbOrder();
             $order->bookingid = $form['bookingid'];
             $order->linkmanid = $form['linkmanid'];
             $order->bussinesstype = $form['bussinesstype'];
@@ -186,34 +186,40 @@ class OrderController extends BaseController
         $detail_id_array = [];
         foreach ($submitData['list'] as $k => $item) {
             // 使用模型更新
+            //
+            $product = TbProduct::getInstance($item['productid']);
+
             $detail = TbOrderdetails::findFirst(
                 sprintf("companyid=%d and orderid=%d and productid=%d and sizecontentid=%d", $this->companyid, $order->id, $item['productid'], $item['sizecontentid'])
             );
             if($detail!=false) {
                 $detail->number = $item['number'];
                 $detail->discount = $item['discount'];
-                $detail->price = TbProduct::getInstance($item['productid'])->factoryprice;
-                $detail->currencyid = TbProduct::getInstance($item['productid'])->factorypricecurrency;
+                $detail->factoryprice = $product->factoryprice;
+                $detail->currencyid = $product->factorypricecurrency;
+                $detail->wordprice = $product->wordprice;
                 if($detail->update()==false) {
                     $this->db->rollback();
-                    throw new \Exception("/1002/更新订单明细失败/");                    
+                    throw new \Exception("/1002/更新订单明细失败/");
                 }
             }
             else {
+
                 $detail = new TbOrderdetails();
                 $detail->productid = $item['productid'];
                 $detail->sizecontentid = $item['sizecontentid'];
                 $detail->number = $item['number'];
                 $detail->discount = $item['discount'];
                 $detail->companyid = $this->companyid;
-                $detail->price = TbProduct::getInstance($item['productid'])->factoryprice;
-                $detail->currencyid = TbProduct::getInstance($item['productid'])->factorypricecurrency;
+                $detail->factoryprice = $product->factoryprice;
+                $detail->currencyid = $product->factorypricecurrency;
+                $detail->wordprice = $product->wordprice;
                 $detail->createdate = date("Y-m-d H:i:s");
                 $detail->orderid = $order->id;
                 $detail->orderbrandid= 0;
                 if($detail->create()==false) {
                     $this->db->rollback();
-                    throw new \Exception("/1002/添加订单明细失败/");                    
+                    throw new \Exception("/1002/添加订单明细失败/");
                 }
             }
 
@@ -231,7 +237,7 @@ class OrderController extends BaseController
                 sprintf("orderid=%d", $order->id)
             );
         }
-        
+
         foreach($details as $detail) {
             if($detail->orderbrandid>0) {
                 //已经确认过的订单明细不能删除
@@ -302,7 +308,7 @@ class OrderController extends BaseController
         }
         else {
             throw new \Exception("/1001/订单不存在/");
-            
+
         }
     }
 
@@ -321,7 +327,7 @@ class OrderController extends BaseController
     }
 
     /**
-     * 
+     *
      */
     function searchdetailAction() {
         $details = TbOrderdetails::find(

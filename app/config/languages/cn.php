@@ -647,8 +647,8 @@ return [
     "tip-queren" => "是否确认？",
     "fahuoriqi" => "发货日期",
     "tip-pinpai" => "请先选择品牌",
-    "shangpinshuxing" => "商品属性",
-    "shangpinshuxing" => "商品属性",
+    "queding" => "确定",
+    "jiaoyan" => "校验",
     "shangpinshuxing" => "商品属性",
     "shangpinshuxing" => "商品属性",
 
