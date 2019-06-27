@@ -728,6 +728,7 @@ return [
     'latest-promotion' => '最新促销',
     'change-jiezhishijian' => '更改截止时间',
     'system-error' => '程序内部错误',
+    'search' => '搜索',
 
     'template' =>
         [
@@ -886,6 +887,6 @@ return [
             "shippingstatus" => [
                 "1" => "在途",
                 "2" => "入库",
-            ]
+            ],
         ],
 ];

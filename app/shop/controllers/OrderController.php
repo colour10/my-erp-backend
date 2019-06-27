@@ -64,9 +64,8 @@ class OrderController extends AdminController
                 $data = json_decode(json_encode($data), true);
                 // 给商品加入封面图和id
                 foreach ($data['product'] as $k => $item) {
-                    $product = TbProductSearch::findFirstById($item['product_id']);
-                    $data['product'][$k]['picture'] = $this->file_prex . $product->picture;
-                    $data['product'][$k]['product_detail_id'] = $product->productid;
+                    $data['product'][$k]['picture'] = $this->file_prex . $item['picture'];
+                    $data['product'][$k]['product_detail_id'] = $item['product_id'];
                 }
             } else {
                 // 如果没有符合条件的订单，那么就赋值为空数组
@@ -522,11 +521,10 @@ class OrderController extends AdminController
             $orders_array[$k]['order_status_desc'] = $this->paystatus($order->order_status);
             // 子订单加入额外信息
             foreach ($orders_array[$k]['orderdetails'] as $key => $value) {
-                $model = TbProductSearch::findFirstById($value['product_id']);
                 // 封面图
-                $orders_array[$k]['orderdetails'][$key]['picture'] = $this->file_prex . $model->picture;
+                $orders_array[$k]['orderdetails'][$key]['picture'] = $this->file_prex . $value['picture'];
                 // id
-                $orders_array[$k]['orderdetails'][$key]['product_detail_id'] = $model->productid;
+                $orders_array[$k]['orderdetails'][$key]['product_detail_id'] = $value['product_id'];
                 // 付款情况
                 // 如果是1或4，则是未付款
                 if ($order->order_status == '1' || $order->order_status == '4') {
@@ -808,7 +806,7 @@ class OrderController extends AdminController
     {
         // 逻辑
         // 必须为管理员，而且是post请求
-        if ($member = $this->member && $this->isadmin && $this->request->isPost()) {
+        if ($member = $this->member && $this->member['membertype'] && $this->request->isPost()) {
             // 赋值
             $id = $this->request->get('id');
             $expire_time = $this->request->get('expire_time');

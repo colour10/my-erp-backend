@@ -178,6 +178,25 @@
                         </li>
                     </ul>
                 </li>
+
+                <!-- BEGIN TOP SEARCH -->
+                <li class="menu-search" style="float: right;">
+                    <span class="sep"></span>
+                    <i class="fa fa-search search-btn"></i>
+                    <div class="search-box">
+                        <form action="/index/search">
+                            <div class="input-group">
+                                <input type="text" placeholder="<?php echo $this->obj->getValidateMessage('search'); ?>"
+                                       class="form-control" name="keyword">
+                                <span class="input-group-btn">
+                                <button class="btn btn-primary"
+                                        type="submit"><?php echo $this->obj->getValidateMessage('search'); ?></button>
+                            </span>
+                            </div>
+                        </form>
+                    </div>
+                </li>
+                <!-- END TOP SEARCH -->
             </ul>
 
         </div>

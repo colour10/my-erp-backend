@@ -84,6 +84,9 @@ class MemberController extends AdminController
 
     /**
      * 邀请注册
+     * 邀请注册的逻辑：
+     * 1、超级用户邀请的用户，必须指定某个公司，且该公司自动成为这个公司的管理员
+     * 2、普通用户邀请必须是公司管理员才行，邀请的用户默认是普通用户，不能再次邀请
      * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|string
      * @throws \PHPMailer\PHPMailer\Exception
      */
@@ -93,10 +96,17 @@ class MemberController extends AdminController
         if ($this->request->isPost()) {
             // 是否登录
             if ($member = $this->member) {
-                // 需要接受邮箱，用户名三个选项
+                // 需要接受邮箱，用户名两个选项，公司名称暂时用session的，也就是邀请人只能隶属于本公司
                 $email = $this->request->get('email');
                 $username = $this->request->get('username');
-                $companyid = $this->request->get('companyid');
+                // 对于companyid的判断，如果当前登录用户是超级用户，那么companyid就是传过来的$this->request->get('companyid')，如果是普通的公司管理员，那么就是当前用户登录的companyid
+                if ($this->isadmin) {
+                    $companyid = $this->request->get('companyid');
+                    $membertype = '1';
+                } else {
+                    $companyid = $this->currentCompany;
+                    $membertype = '0';
+                }
 
                 // 判断全部填写了
                 if (!$email || !$username || !$companyid) {
@@ -126,6 +136,7 @@ class MemberController extends AdminController
                     'login_name' => $username,
                     'password' => $bcrypt_password,
                     'companyid' => $companyid,
+                    'membertype' => $membertype,
                     // 添加邀请人
                     'invoteuser' => $member['id'],
                 ];
@@ -159,13 +170,16 @@ class MemberController extends AdminController
         }
 
         // get请求，判断是否登录
-        // 还要必须为虚拟公司的用户才行
+        // 还要必须公司用户才行
         if (!$member = $this->member) {
             return $this->response->redirect('/login');
         } else {
-            if (!$this->isadmin) {
+            if (!$member['membertype']) {
                 // 传递错误
                 return $this->renderError('make-an-error', '404-not-found');
+            } else {
+                // 把当前公司模型传递进去
+                $this->view->setVars(['host' => $this->host]);
             }
         }
     }
@@ -207,29 +221,31 @@ EOT;
     public function invitelistAction()
     {
         // 逻辑
-        if ($this->member['companyid'] != $this->supercoid) {
+        // 判断是否为公司用户，如果是个人用户则报错
+        if ($member = $this->member && $this->member['membertype'] > 0) {
+            $result = TbMember::find("invoteuser=" . $this->member['id']);
+            $result_array = $result->toArray();
+            foreach ($result->toArray() as $k => $v) {
+                $result_array[$k]['companyname'] = ($company = TbCompany::findFirstById($this->member['companyid'])) ? $company->name : '';
+            }
+            // 传送给模板
+            $this->view->setVars([
+                'result' => $result_array,
+            ]);
+        } else {
             return $this->renderError('make-an-error', '404-not-found');
         }
-        $result = TbMember::find("invoteuser=" . $this->member['id']);
-        $result_array = $result->toArray();
-        foreach ($result->toArray() as $k => $v) {
-            $result_array[$k]['companyname'] = ($company = TbCompany::findFirstById($this->member['companyid'])) ? $company->name : '';
-        }
-        // 传送给模板
-        $this->view->setVars([
-            'result' => $result_array,
-        ]);
     }
 
     public function ordersAction()
     {
         // 逻辑
         // get请求，判断是否登录
-        // 还要必须为虚拟公司的用户才行
+        // 还要必须公司用户才行
         if (!$member = $this->member) {
             return $this->response->redirect('/login');
         } else {
-            if (!$this->isadmin) {
+            if (!$member['membertype']) {
                 // 传递错误
                 return $this->renderError('make-an-error', '404-not-found');
             }
@@ -247,11 +263,10 @@ EOT;
             $orders_array[$k]['orderdetails'] = $order->shoporder->toArray();
             // 子订单加入额外信息
             foreach ($orders_array[$k]['orderdetails'] as $key => $value) {
-                $model = TbProductSearch::findFirstById($value['product_id']);
                 // 封面图
-                $orders_array[$k]['orderdetails'][$key]['picture'] = $this->file_prex . $model->picture;
+                $orders_array[$k]['orderdetails'][$key]['picture'] = $this->file_prex . $value['picture'];
                 // id
-                $orders_array[$k]['orderdetails'][$key]['product_detail_id'] = $model->productid;
+                $orders_array[$k]['orderdetails'][$key]['product_detail_id'] = $value['product_id'];
                 // 付款情况
                 // 如果是1或4，则是未付款
                 if ($order->order_status == '1' || $order->order_status == '4') {

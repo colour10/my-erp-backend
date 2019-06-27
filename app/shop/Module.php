@@ -98,7 +98,7 @@ class Module implements ModuleDefinitionInterface
         // 主域名
         $config = $di->get("config");
         $session = $di->get('session');
-        $language = $session->get('lang') ?: $config->language;
+        $language = $session->get('language') ?: $config->language;
         $admin = new AdminController();
         $di->setShared('main_host', function () use ($config) {
             return $config['app']['main_host'];
@@ -218,7 +218,7 @@ class Module implements ModuleDefinitionInterface
             return new AdminController();
         });
 
-        // 判断是否为管理员
+        // 判断是否为管理员，这个是总管理员
         $di->setShared('isadmin', function () use ($tbcompany) {
             return $tbcompany->isadmin();
         });
@@ -226,6 +226,11 @@ class Module implements ModuleDefinitionInterface
         // 取出虚拟公司
         $di->setShared('supercoid', function () use ($tbcompany) {
             return $tbcompany->getSuperCoId();
+        });
+
+        // 判断是否为公司用户，也就是每个公司下面的管理员
+        $di->setShared('iscu', function () use ($tbcompany) {
+            return $tbcompany->isadmin();
         });
 
         // phpmainer
