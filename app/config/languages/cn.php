@@ -729,6 +729,8 @@ return [
     'change-jiezhishijian' => '更改截止时间',
     'system-error' => '程序内部错误',
     'search' => '搜索',
+    'gongsi' => '公司',
+    'guojia' => '国家',
 
     'template' =>
         [
