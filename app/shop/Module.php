@@ -44,10 +44,16 @@ class Module implements ModuleDefinitionInterface
      */
     public function registerServices(DiInterface $di)
     {
+        // 常用的一些参数
+        $config = $di->get("config");
+        $session = $di->get('session');
+        $language = $session->get('language') ?: $config->language;
+        $admin = new AdminController();
+
         // Registering a dispatcher
         $di->set(
             "dispatcher",
-            function () {
+            function () use ($config) {
                 $dispatcher = new Dispatcher();
 
                 // Create an events manager
@@ -74,6 +80,36 @@ class Module implements ModuleDefinitionInterface
                     }
                 });
 
+
+                // 如果是非开发模式，存在异常就用友好提示抛出
+                $eventsManager->attach("dispatch:beforeException", function ($event, $dispatcher, $exception) use ($config) {
+                    //非开发模式,拦截异常并处理
+                    if ($config->mode != 'develop') {
+                        switch ($exception->getCode()) {
+                            //控制器或动作不存在的时候
+                            case Dispatcher::EXCEPTION_HANDLER_NOT_FOUND:
+                            case Dispatcher::EXCEPTION_ACTION_NOT_FOUND:
+                                $dispatcher->forward(
+                                    [
+                                        'controller' => 'error',
+                                        'action' => 'show404',
+                                    ]
+                                );
+                                break;
+                            default:
+                                $dispatcher->forward(
+                                    [
+                                        'controller' => 'error',
+                                        'action' => 'show500',
+                                    ]
+                                );
+
+                        }
+                        return false;
+                    }
+                });
+
+                // 设置默认命名空间
                 $dispatcher->setDefaultNamespace("Multiple\\Shop\\Controllers");
 
                 // Assign the events manager to the dispatcher
@@ -96,10 +132,6 @@ class Module implements ModuleDefinitionInterface
         );
 
         // 主域名
-        $config = $di->get("config");
-        $session = $di->get('session');
-        $language = $session->get('language') ?: $config->language;
-        $admin = new AdminController();
         $di->setShared('main_host', function () use ($config) {
             return $config['app']['main_host'];
         });
@@ -214,8 +246,8 @@ class Module implements ModuleDefinitionInterface
         });
 
         // 主控制器模型
-        $di->setShared('obj', function () {
-            return new AdminController();
+        $di->setShared('obj', function () use ($admin) {
+            return $admin;
         });
 
         // 判断是否为管理员，这个是总管理员
@@ -223,7 +255,7 @@ class Module implements ModuleDefinitionInterface
             return $tbcompany->isadmin();
         });
 
-        // 取出虚拟公司
+        // 取出虚拟公司id
         $di->setShared('supercoid', function () use ($tbcompany) {
             return $tbcompany->getSuperCoId();
         });

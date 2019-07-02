@@ -920,4 +920,51 @@ class Util
         return is_dir($dir) or self::Directory(dirname($dir)) and mkdir($dir, 0777);
     }
 
+    /**
+     * 根据ID逗号分隔符查出对应的文字项，给出友好提示
+     * @param string $model 模型字符串，比如TbProduct::class
+     * @param string $ids id列表，每个id之间以逗号分隔
+     * @param array $displayFields 要显示的字段
+     * @return array|string
+     */
+    public static function getCommasValues($model, $ids, array $displayFields = [])
+    {
+        // 逻辑
+        // 如果$ids值为0或者空，那么就返回空
+        if (empty($ids)) {
+            return '';
+        }
+        // 首先把$ids按照逗号进行切割
+        $ids_array = explode(',', $ids);
+        // 保存最终的返回值
+        $return = [];
+        // 开始循环
+        foreach ($ids_array as $id) {
+            // 如果模型为空
+            $modelResult = $model::findFirstById($id);
+            if (!$modelResult) {
+                // 跳出当前循环
+                continue;
+            }
+            if (empty($displayFields)) {
+                $return[] = $modelResult->toArray();
+            } else {
+                // 循环字段显示
+                // 如果$displayFields有值，那么每次循环过后都保存到一个临时变量中
+                $temp = '';
+                foreach ($displayFields as $field) {
+                    $temp .= $modelResult->$field;
+                }
+                // 赋值
+                $return[] = $temp;
+            }
+        }
+        // 根据传入的字段返回结果
+        if (empty($displayFields)) {
+            return $return;
+        } else {
+            return implode(',', $return);
+        }
+    }
+
 }

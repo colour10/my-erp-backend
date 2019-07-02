@@ -12,10 +12,27 @@ use Phalcon\Mvc\Controller;
 class ErrorController extends Controller
 {
     /**
-     * 404页面
+     * 自定义错误页面
      * @return string
      */
     public function errorAction()
     {
+
+    }
+
+    /**
+     * 404 not found
+     */
+    public function show404Action()
+    {
+
+    }
+
+    /**
+     * 500服务器错误
+     */
+    public function show500Action()
+    {
+
     }
 }
