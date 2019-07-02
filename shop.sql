@@ -17,7 +17,9 @@ CREATE TABLE `tb_buycar`
     `total_price`  decimal(9, 2)    NOT NULL COMMENT '总价格',
     `picture`      varchar(255)              DEFAULT NULL COMMENT '商品主图',
     `picture2`     varchar(255)              DEFAULT NULL COMMENT '商品附图',
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    KEY `product_id` (`product_id`),
+    KEY `member_id` (`member_id`)
 ) engine = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='购物车';
 
@@ -42,7 +44,10 @@ CREATE TABLE `tb_shoporder_common`
     `create_time`     datetime         DEFAULT NULL COMMENT '创建时间',
     `expire_time`     datetime         DEFAULT NULL COMMENT '库存锁定截止时间，默认为1个小时',
     `pay_time`        datetime         DEFAULT NULL COMMENT '支付时间',
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    KEY `member_id` (`member_id`),
+    KEY `order_status` (`order_status`),
+    KEY `pay_style` (`pay_style`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='支付订单主表';
 
@@ -65,7 +70,10 @@ CREATE TABLE `tb_shoporder`
     `color_name`     varchar(64)  DEFAULT NULL COMMENT '颜色名称',
     `size_id`        int(10) UNSIGNED NOT NULL COMMENT '规格id',
     `size_name`      varchar(64)      NOT NULL COMMENT '规格名称',
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    KEY `product_id` (`product_id`),
+    KEY `order_commonid` (`order_commonid`),
+    KEY `size_id` (`size_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='支付订单详情表';
 
