@@ -73,7 +73,7 @@ class RequisitionController extends BaseController {
                         "requisitionid" => $requisition->id
                     ];
                     $result = $requisition->addDetal($data);
-                    if($result!==true) {
+                    if($result===false) {
                         $this->db->rollback();
                         return $this->error($result);
                     }
@@ -82,8 +82,8 @@ class RequisitionController extends BaseController {
                     $this->db->rollback();
                     return $this->error(["operate_fail"]);
                 }
-            }            
-        }        
+            }
+        }
 
         // 提交事务
         $this->db->commit();
@@ -117,13 +117,13 @@ class RequisitionController extends BaseController {
 
         //print_r($submitData);
 
-        if($requisition!=false) {            
+        if($requisition!=false) {
             if($requisition->doOut($submitData['list'])) {
                 echo $this->success($requisition->getDetail());
             }
             else {
                 echo $this->error(['fail']);
-            }            
+            }
         }
     }
 
@@ -140,13 +140,13 @@ class RequisitionController extends BaseController {
 
         //print_r($submitData);
 
-        if($requisition!=false) {            
+        if($requisition!=false) {
             if($requisition->doIn($submitData['list'])) {
                 echo $this->success($requisition->getDetail());
             }
             else {
                 echo $this->error(['fail']);
-            }            
+            }
         }
     }
 }

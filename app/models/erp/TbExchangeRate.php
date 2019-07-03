@@ -3,6 +3,7 @@ namespace Asa\Erp;
 
 /**
  * 汇率表
+ ErrorCode 1105
  */
 class TbExchangeRate extends BaseModel
 {
@@ -29,7 +30,7 @@ class TbExchangeRate extends BaseModel
         }
 
         if(!preg_match("#^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$#",$datetime)) {
-            throw new \Exception("/1001/时间格式不合法/");
+            throw new \Exception("/11050101/时间格式不合法/");
         }
         $exchange = static::findFirst(
             sprintf(
@@ -39,11 +40,11 @@ class TbExchangeRate extends BaseModel
                 $to,
                 $datetime,
                 $datetime
-            )            
+            )
         );
 
         if($exchange==false) {
-            return false;
+            throw new \Exception("/11050102/请先设置汇率。/");
         }
         else {
             return [

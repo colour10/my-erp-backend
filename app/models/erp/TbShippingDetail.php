@@ -59,10 +59,10 @@ class TbShippingDetail extends BaseModel
 
         $goods = TbGoods::findFirst(
             sprintf(
-                "companyid=%d and productid=%d and sizecontentid=%d and defective_level=0 and property=%d", 
-                $companyid, 
-                $this->productid, 
-                $this->sizecontentid, 
+                "companyid=%d and productid=%d and sizecontentid=%d and defective_level=0 and property=%d",
+                $companyid,
+                $this->productid,
+                $this->sizecontentid,
                 $property
             )
         );
@@ -102,5 +102,10 @@ class TbShippingDetail extends BaseModel
         else {
             throw new \Exception("/110202/数据错误，仓库不能为空。/");
         }
+    }
+
+    public function getCost($currencyid) {
+        //摊销费用计算
+        return TbExchangeRate::convert($this->companyid, $this->currencyid, $currencyid, $this->warehousingnumber*$this->price);
     }
 }

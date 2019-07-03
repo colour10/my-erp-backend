@@ -649,8 +649,23 @@ return [
     "tip-pinpai" => "请先选择品牌",
     "queding" => "确定",
     "jiaoyan" => "校验",
-    "shangpinshuxing" => "商品属性",
-    "shangpinshuxing" => "商品属性",
+    "tip-bunengshanchu" => "客户订单已经设置过数据，不能删除。",
+    "zaitushuliang" => "在途数量",
+    "suodingshuliang" => "锁定数量",
+    "feiyongmingcheng" => "费用名称",
+    "feiyongguanli" => "费用管理",
+    "shifoutanxiao" => "是否摊销",
+    "tanxiaofangshi" => "摊销方式",
+    "zaitushuliang" => "在途数量",
+    "zaitushuliang" => "在途数量",
+    "zaitushuliang" => "在途数量",
+    "zaitushuliang" => "在途数量",
+    "zaitushuliang" => "在途数量",
+    "zaitushuliang" => "在途数量",
+    "zaitushuliang" => "在途数量",
+    "zaitushuliang" => "在途数量",
+    "zaitushuliang" => "在途数量",
+    "zaitushuliang" => "在途数量",
 
     // 新增配置项
     'salesdate-required' => '销售时间条件不能为空',
@@ -728,7 +743,6 @@ return [
     'latest-promotion' => '最新促销',
     'change-jiezhishijian' => '更改截止时间',
     'system-error' => '程序内部错误',
-    'search' => '搜索',
 
     'template' =>
         [
@@ -851,6 +865,7 @@ return [
                     4 => '供货商',
                     1 => '物流',
                     2 => '客户',
+                    5 => '品牌方',
                     3 => '其他',
                 ],
             'paymenttype' =>
@@ -888,5 +903,10 @@ return [
                 "1" => "在途",
                 "2" => "入库",
             ],
+
+            "amortizetype" => [
+                "1" => "按数量摊销",
+                "2" => "按金额摊销",
+            ]
         ],
 ];

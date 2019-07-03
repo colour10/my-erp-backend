@@ -14,6 +14,9 @@ class TbProductstock extends BaseCompanyModel
     const REQUISITION_OUT = 3; //调拨出库
     const WAREHOSING = 4; //入库
     const DEFECTIVE = 5; //残次品入库
+    const REQUISITION_PRE_IN = 6; //在途，入库
+    const REQUISITION_PRE_IN_CANCEL = 7; //
+    const REQUISITION_IN_EXECUTE = 8;
 
 
     public function initialize()
@@ -61,6 +64,179 @@ class TbProductstock extends BaseCompanyModel
         );
     }
 
+    private function addProductstockLog($old_number, $number, $change_type, $relationid) {
+        $log = new TbProductstockLog();
+        $log->warehouseid = $this->warehouseid;
+        $log->productstockid = $this->id;
+        $log->number_before = $old_number;
+        $log->number_after = $number;
+        $log->change_type = $change_type;
+        $log->change_time = date("Y-m-d H:i:s");
+        $log->relationid = $relationid;
+        $log->companyid = $this->companyid;
+        $log->change_stuff = $this->getDI()->get('currentUser');
+        return $log->create();
+    }
+
+    /**
+     * 预入库，调拨单出库的时候调用
+     */
+    function preAddStock($number, $change_type, $relationid) {
+        $db = $this->getDI()->get('db');
+
+        $db->begin();
+        $old_number = $this->number;
+
+        $this->number = $this->number+$number;
+        $this->shipping_number = $this->shipping_number + $number;
+        $this->change_time = date("Y-m-d H:i:s");
+        $this->change_stuff = $this->getDI()->get('currentUser');
+        if($this->update()) {
+            //更新库存成功，记录操作日志
+            if($this->addProductstockLog($old_number, $this->number, $change_type, $relationid)===false) {
+                $db->rollback();
+                return false;
+            }
+        }
+        else {
+            $db->rollback();
+            return false;
+        }
+        $db->commit();
+        return $this;
+    }
+
+    /**
+     * 预出库，锁定库存
+     */
+    function preReduceStock($number, $change_type, $relationid) {
+        $db = $this->getDI()->get('db');
+
+        $db->begin();
+        $this->reserve_number = $this->reserve_number + $number;
+        $this->change_time = date("Y-m-d H:i:s");
+        $this->change_stuff = $this->getDI()->get('currentUser');
+        if($this->update()) {
+            //更新库存成功，记录操作日志
+            if($this->addProductstockLog($this->number, $this->number, $change_type, $relationid)===false) {
+                $db->rollback();
+                return false;
+            }
+        }
+        else {
+            $db->rollback();
+            return false;
+        }
+        $db->commit();
+        return $this;
+    }
+
+    /**
+     * 预入库库存转入库库存
+     */
+    function preAddStockExecute($number, $change_type, $relationid) {
+        $db = $this->getDI()->get('db');
+
+        $db->begin();
+        $this->shipping_number = $this->shipping_number - $number;
+        $this->change_time = date("Y-m-d H:i:s");
+        $this->change_stuff = $this->getDI()->get('currentUser');
+        if($this->update()) {
+            //更新库存成功，记录操作日志
+            if($this->addProductstockLog($this->number, $this->number, $change_type, $relationid)===false) {
+                $db->rollback();
+                return false;
+            }
+        }
+        else {
+            $db->rollback();
+            return false;
+        }
+        $db->commit();
+        return $this;
+    }
+
+    /**
+     * 预出库库存出库
+     */
+    function preReduceStockExecute($number, $change_type, $relationid) {
+        $db = $this->getDI()->get('db');
+
+        $db->begin();
+        $old_number = $this->number;
+
+        $this->number = $this->number - $number;
+        $this->reserve_number = $this->reserve_number - $number;
+        $this->change_time = date("Y-m-d H:i:s");
+        $this->change_stuff = $this->getDI()->get('currentUser');
+        if($this->update()) {
+            //更新库存成功，记录操作日志
+            if($this->addProductstockLog($old_number, $this->number, $change_type, $relationid)===false) {
+                $db->rollback();
+                return false;
+            }
+        }
+        else {
+            $db->rollback();
+            return false;
+        }
+        $db->commit();
+        return $this;
+    }
+
+    /**
+     * 预入库库存取消
+     */
+    function preAddStockCancel($number, $change_type, $relationid) {
+        $db = $this->getDI()->get('db');
+
+        $db->begin();
+        $old_number = $this->number;
+
+        $this->number = $this->number-$number;
+        $this->shipping_number = $this->shipping_number - $number;
+        $this->change_time = date("Y-m-d H:i:s");
+        $this->change_stuff = $this->getDI()->get('currentUser');
+        if($this->update()) {
+            //更新库存成功，记录操作日志
+            if($this->addProductstockLog($old_number, $this->number, $change_type, $relationid)===false) {
+                $db->rollback();
+                return false;
+            }
+        }
+        else {
+            $db->rollback();
+            return false;
+        }
+        $db->commit();
+        return $this;
+    }
+
+    /**
+     * 预出库库存取消
+     */
+    function preReduceStockCancel($number, $change_type, $relationid) {
+        $db = $this->getDI()->get('db');
+
+        $db->begin();
+        $this->reserve_number = $this->reserve_number - $number;
+        $this->change_time = date("Y-m-d H:i:s");
+        $this->change_stuff = $this->getDI()->get('currentUser');
+        if($this->update()) {
+            //更新库存成功，记录操作日志
+            if($this->addProductstockLog($this->number, $this->number, $change_type, $relationid)===false) {
+                $db->rollback();
+                return false;
+            }
+        }
+        else {
+            $db->rollback();
+            return false;
+        }
+        $db->commit();
+        return $this;
+    }
+
     function addStock($number, $change_type, $relationid) {
         if($number>0) {
             return $this->changeStock($number, $change_type, $relationid);
@@ -71,7 +247,7 @@ class TbProductstock extends BaseCompanyModel
     }
 
     function reduceStock($number, $change_type, $relationid) {
-        if($number>0) {
+        if($number>0 && $number<=$this->number-$this->shipping_number) {
             return $this->changeStock(-1*abs($number), $change_type, $relationid);
         }
         else {
@@ -92,7 +268,7 @@ class TbProductstock extends BaseCompanyModel
         $this->change_time = date("Y-m-d H:i:s");
         $this->change_stuff = $this->getDI()->get('currentUser');
         if($this->update()) {
-            //更新库存成功，记录操作日志            
+            //更新库存成功，记录操作日志
             $log = new TbProductstockLog();
             $log->warehouseid = $this->warehouseid;
             $log->productstockid = $this->id;
@@ -133,7 +309,7 @@ class TbProductstock extends BaseCompanyModel
         $productStock->warehouseid = $stock_info['warehouseid'];
         if(isset($stock_info['goods'])) {
             $goods = $stock_info['goods'];
-            $productStock->goodsid = $goods->id; 
+            $productStock->goodsid = $goods->id;
             $productStock->productid = $goods->productid;
             $productStock->sizecontentid = $goods->sizecontentid;
             $productStock->property = $goods->property;

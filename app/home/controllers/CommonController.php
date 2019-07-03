@@ -18,7 +18,7 @@ class CommonController extends BaseController
     public function indexAction()
     {
     }
-    
+
     function systemlanguageAction()
     {
         $config = $this->config;
@@ -37,13 +37,13 @@ class CommonController extends BaseController
         $lang = new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
         $lang->lang = $language;
 
-        
+
         $lang["_image_url_prex"] = $config->file_prex;
         $lang["languages"] = $config->languages;
-        
+
         $lang["_datetime"] = date("Y-m-d H:i:s");
         $lang["_date"] = date("Y-m-d");
-        
+
         //echo sprintf("\$ASAL = %s", json_encode((array)$lang), JSON_OBJECT_AS_ARRAY );
         return $this->success($lang);
     }
@@ -60,29 +60,29 @@ class CommonController extends BaseController
         }
         return $this->success($setting);
     }
-    
+
     function uploadAction() {
         $result = array(
             "code" => 200,
             "files" => array()
         );
-        
+
         $files = $result['files'];
         if ($this->request->hasFiles()) {
             $path = $this->config->upload_dir . $_GET["category"] ."/";
             if(!is_dir($path)) {
-                mkdir($path);   
+                mkdir($path);
             }
-            
+
             // Print the real file names and sizes
-            foreach ($this->request->getUploadedFiles() as $file) {                
+            foreach ($this->request->getUploadedFiles() as $file) {
                 $filename = sprintf(
                     "%s/%s.%s",
                     $_GET["category"],
                     md5(sprintf("%s_%s_%s", $_GET["category"], time(), rand(1,1000000))),
                     strtolower($file->getExtension())
                 );
-                
+
                 // Move the file into the application
                 $file->moveTo($this->config->upload_dir . $filename);
                 $files[$file->getName()] = $filename;
@@ -92,11 +92,11 @@ class CommonController extends BaseController
                     Util::convertPics($this->config->upload_dir . $filename, ['40', '150']);
                 }
             }
-            
+
             $result["files"] = $files;
         }
-        
-        echo json_encode($result);        
+
+        echo json_encode($result);
     }
 
     function loadnameAction() {
@@ -146,7 +146,7 @@ class CommonController extends BaseController
                 $findByIdString = new \ReflectionMethod($services[$service_name]['table'], $method);
                 $result = $findByIdString->invokeArgs(null, [$idstring, $key]);
 
-                
+
                 foreach($result as $row) {
                     $line = [];
                     if(count($services[$service_name]['columns'])>0) {
@@ -225,25 +225,26 @@ class CommonController extends BaseController
             "saletype" => ["model"=>'Asa\Erp\TbSaleType',"company"=>false, "orderby"=>"displayindex asc"],
             "producttype" => ["model"=>'Asa\Erp\TbProductType',"company"=>false, "orderby"=>"displayindex asc"],
             "winterproofing" => ["model"=>'Asa\Erp\TbWinterproofing',"company"=>false, "orderby"=>"displayindex asc"],
+            "feename" => ["model"=>'Asa\Erp\TbFeename',"company"=>false, "orderby"=>"displayindex asc"],
         ];
         $table = $this->dispatcher->getParam("table");
         $model = $maps[$table];
 
         if($model) {
             $where = call_user_func_array($model['model'].'::getSearchCondition', [$_REQUEST]);
-        
+
             $params = [$where];
             if(isset($model['orderby'])) {
                 $params['order'] = $model['orderby'];
             }
-            $result = call_user_func_array($model['model'].'::find',[$params]);              
-            
-            $list = array();
-            foreach($result as $row) { 
-                 $list[] = $row->toArrayPipe();
-            }   
+            $result = call_user_func_array($model['model'].'::find',[$params]);
 
-            echo $this->reportJson(array("data"=>$list) ); 
+            $list = array();
+            foreach($result as $row) {
+                 $list[] = $row->toArrayPipe();
+            }
+
+            echo $this->reportJson(array("data"=>$list) );
         }
         else {
             echo $this->error(["error"]);
