@@ -2,6 +2,7 @@
 
 namespace Multiple\Home;
 
+use Multiple\Home\Controllers\CompanyController;
 use Phalcon\Loader;
 use Phalcon\Mvc\View;
 use Phalcon\DiInterface;
@@ -189,5 +190,16 @@ class Module implements ModuleDefinitionInterface
 
             return $acl;
         });
+
+        // 增加一个超级管理员用的模板，为了防止和之前的冲突，这里用了mview做区分
+        $di->set(
+            "mview",
+            function () {
+                $view = new View();
+                $view->setViewsDir('../app/home/mviews/'); // 定义视图层目录
+                $view->setLayoutsDir('layouts/');     // 定义布局文件目录
+                return $view;
+            }
+        );
     }
 }

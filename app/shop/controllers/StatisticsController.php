@@ -276,10 +276,8 @@ class StatisticsController extends AdminController
             $total_realprice = array_sum(array_column($result, 'sum_realprice'));
             // 销售单回款模型
             $receives = $this->getSaleReceives();
-
             // 把销售单回款数据合并到销售单中
             $result = $this->getTwoArrayMergeByOneField($result, $receives, 'salesid');
-
             // 分组并添加每个组下面的元素列表
             foreach ($result as $k => $item) {
                 // 销售单状态判定
@@ -1235,7 +1233,6 @@ class StatisticsController extends AdminController
     {
         // 逻辑
         $return = [];
-        $details = [];
         // 一级数组组装数据
         foreach ($datas as $k => $data) {
             if (!isset($return[$data[$groupby]])) {
@@ -1251,47 +1248,49 @@ class StatisticsController extends AdminController
             }
             // 需要合并的字段如果存在了，那就直接用逗号连接起来
             foreach ($concatFields as $concatField) {
-                // 需要判断是否存在这个concat字段，如果存在就汇总
-                if (isset($return[$data[$groupby]][$concatField])) {
-                    if (strpos($return[$data[$groupby]][$concatField], $data[$concatField]) === false) {
-                        $return[$data[$groupby]][$concatField] .= ',' . $data[$concatField];
+                // 需要判断是否存在这个concat字段，如果存在就汇总，并且不能为空
+                if (!empty($data[$concatField])) {
+                    if (isset($return[$data[$groupby]][$concatField])) {
+                        if (strpos($return[$data[$groupby]][$concatField], $data[$concatField]) === false) {
+                            $return[$data[$groupby]][$concatField] .= ',' . $data[$concatField];
+                        }
+                        // 统计里面的元素个数
+                        $return[$data[$groupby]][$concatField . '_count'] = $this->getCountByComma($return[$data[$groupby]][$concatField]);
                     }
-                    // 统计里面的元素个数
-                    $return[$data[$groupby]][$concatField . '_count'] = $this->getCountByComma($return[$data[$groupby]][$concatField]);
                 }
             }
 
             // 详情页，处理二级处理的组装数据
-            if (!isset($return[$data[$groupby]]['details'][$data[$secondGroupBy]])) {
-                // 先把所有数据都压进去
-                $return[$data[$groupby]]['details'][$data[$secondGroupBy]] = $data;
-            } else {
-                // 上一步压入完毕之后，开始处理汇总
-                // total字段类型进行累计
-                foreach ($totalFields as $field) {
-                    // 字段存在，则汇总，否则忽略
-                    if (!isset($return[$data[$groupby]]['details'][$data[$secondGroupBy]][$field])) {
-                        $return[$data[$groupby]]['details'][$data[$secondGroupBy]][$field] = $data[$field];
-                    } else {
-                        $return[$data[$groupby]]['details'][$data[$secondGroupBy]][$field] += $data[$field];
-                    }
-                }
-
-                // concat字段类型进行合并
-                foreach ($concatFields as $concatField) {
-                    // 字段存在，则汇总，否则忽略
-                    if (isset($return[$data[$groupby]]['details'][$data[$secondGroupBy]][$concatField])) {
-                        // 判断是否已经添加进了，如果已经添加了，那么就不需要重复添加，进行去重处理
-                        if (strpos($return[$data[$groupby]]['details'][$data[$secondGroupBy]][$concatField], $data[$concatField]) === false) {
-                            $return[$data[$groupby]]['details'][$data[$secondGroupBy]][$concatField] .= ',' . $data[$concatField];
+            if (!empty($secondGroupBy)) {
+                if (!isset($return[$data[$groupby]]['details'][$data[$secondGroupBy]])) {
+                    // 先把所有数据都压进去
+                    $return[$data[$groupby]]['details'][$data[$secondGroupBy]] = $data;
+                } else {
+                    // 上一步压入完毕之后，开始处理汇总
+                    // total字段类型进行累计
+                    foreach ($totalFields as $field) {
+                        // 字段存在，则汇总，否则忽略
+                        if (!isset($return[$data[$groupby]]['details'][$data[$secondGroupBy]][$field])) {
+                            $return[$data[$groupby]]['details'][$data[$secondGroupBy]][$field] = $data[$field];
+                        } else {
+                            $return[$data[$groupby]]['details'][$data[$secondGroupBy]][$field] += $data[$field];
                         }
-                    } else {
-                        $return[$data[$groupby]]['details'][$data[$secondGroupBy]][$concatField] = $data[$concatField];
+                    }
+
+                    // concat字段类型进行合并
+                    foreach ($concatFields as $concatField) {
+                        // 字段存在，则汇总，否则忽略
+                        if (isset($return[$data[$groupby]]['details'][$data[$secondGroupBy]][$concatField])) {
+                            // 判断是否已经添加进了，如果已经添加了，那么就不需要重复添加，进行去重处理
+                            if (strpos($return[$data[$groupby]]['details'][$data[$secondGroupBy]][$concatField], $data[$concatField]) === false) {
+                                $return[$data[$groupby]]['details'][$data[$secondGroupBy]][$concatField] .= ',' . $data[$concatField];
+                            }
+                        } else {
+                            $return[$data[$groupby]]['details'][$data[$secondGroupBy]][$concatField] = $data[$concatField];
+                        }
                     }
                 }
             }
-
-            // 补充details缺乏的字段
 
         }
         // 返回
@@ -1552,7 +1551,7 @@ class StatisticsController extends AdminController
             $return[$k]['receive_is_back'] = empty($return[$k]['receive_amount']) ? '否' : '是';
         }
         // 开始汇总
-        $return_array = $this->getGroupArray($return, 'salesid', ['salesid', 'receive_amount', 'receive_memo', 'receive_maketime', 'receive_is_back'], ['receive_amount'], ['receive_memo']);
+        $return_array = $this->getGroupArray($return, 'salesid', ['salesid', 'receive_amount', 'receive_memo', 'receive_maketime', 'receive_is_back'], ['receive_amount'], ['receive_memo'], '');
         // 返回
         return $return_array;
     }
