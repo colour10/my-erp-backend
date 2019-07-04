@@ -14,4 +14,9 @@ class ShippingfeeController extends CadminController {
 
 	    $this->setModelName('Asa\\Erp\\TbShippingFee');
     }
+
+    function before_add() {
+        $_POST['makestaff'] = $this->currentUser;
+        $_POST['maketime'] = date("Y-m-d H:i:s");
+    }
 }

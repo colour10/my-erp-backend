@@ -447,17 +447,6 @@ class ShippingController extends AdminController {
         }
 
         foreach($shipping->shippingDetail as $detail) {
-            //减掉库存
-            if($detail->warehousingnumber>0) {
-                $productStock = $detail->getProductStock();
-                if($productStock->number>=$detail->warehousingnumber) {
-                    $productStock->reduceStock($detail->warehousingnumber, TbProductstock::WAREHOSING, $detail->id);
-                }
-                else {
-                    throw new \Exception("/101117/库存不足，不能取消。/");
-                }
-            }
-
             $detail->warehousingnumber = 0;
 
             if($detail->orderid==0) {
@@ -642,10 +631,8 @@ class ShippingController extends AdminController {
             //减掉库存
             if($detail->warehousingnumber>0) {
                 $productStock = $detail->getProductStock();
-                if($productStock->number>=$detail->warehousingnumber) {
-                    $productStock->reduceStock($detail->warehousingnumber, TbProductstock::WAREHOSING, $detail->id);
-                }
-                else {
+                $ret = $productStock->reduceStock($detail->warehousingnumber, TbProductstock::WAREHOSING, $detail->id);
+                if($ret===false) {
                     throw new \Exception("/11011306/库存不足，不能取消。/");
                 }
             }

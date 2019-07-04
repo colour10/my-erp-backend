@@ -355,7 +355,7 @@ class OrderController extends BaseController
         }
 
         if(isset($_POST['brandid']) && $_POST['brandid']>0) {
-            $conditions[] = sprintf("(brandids='%d' or brandids like '%%,%s%%' or brandids like '%%%s,%%')", $_POST['supplierid'], $_POST['supplierid'], $_POST['supplierid']);
+            $conditions[] = sprintf("(brandids='%d' or brandids like '%%,%s%%' or brandids like '%%%s,%%')", $_POST['brandid'], $_POST['brandid'], $_POST['brandid']);
         }
 
         $orders = TbOrder::find(
