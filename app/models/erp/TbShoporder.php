@@ -1,104 +1,456 @@
 <?php
+
 namespace Asa\Erp;
-use Phalcon\Validation;
-use Phalcon\Validation\Validator\Between;
-use Phalcon\Validation\Validator\Uniqueness;
-use Phalcon\Mvc\Model\Relation;
 
 /**
- * 商品表
+ * 附带ERP商城订单详情表
+ * Class TbShoporder
+ * @package Asa\Erp
  */
 class TbShoporder extends BaseModel
 {
-	
-	public $id;
-	
-	public $ordershop_commomid;
 
-	public $product_id;
-	
-	public $product_name;
-	
-	public $price;
- 	
- 	public $number;
- 	
- 	public $total_price;
- 	
- 	public $color_id;
- 	
- 	public $color_name;
- 	
- 	public $size_id;
- 	
- 	public $size_name;
-	
-	
+    /**
+     *
+     * @var integer
+     */
+    protected $id;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $product_id;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $order_commonid;
+
+    /**
+     *
+     * @var string
+     */
+    protected $product_name;
+
+    /**
+     *
+     * @var double
+     */
+    protected $price;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $number;
+
+    /**
+     *
+     * @var double
+     */
+    protected $total_price;
+
+    /**
+     *
+     * @var string
+     */
+    protected $picture;
+
+    /**
+     *
+     * @var string
+     */
+    protected $picture2;
+
+    /**
+     *
+     * @var string
+     */
+    protected $color_id;
+
+    /**
+     *
+     * @var string
+     */
+    protected $color_name;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $size_id;
+
+    /**
+     *
+     * @var string
+     */
+    protected $size_name;
+
+    /**
+     * Method to set the value of field id
+     *
+     * @param integer $id
+     * @return $this
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field product_id
+     *
+     * @param integer $product_id
+     * @return $this
+     */
+    public function setProductId($product_id)
+    {
+        $this->product_id = $product_id;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field order_commonid
+     *
+     * @param integer $order_commonid
+     * @return $this
+     */
+    public function setOrderCommonid($order_commonid)
+    {
+        $this->order_commonid = $order_commonid;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field product_name
+     *
+     * @param string $product_name
+     * @return $this
+     */
+    public function setProductName($product_name)
+    {
+        $this->product_name = $product_name;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field price
+     *
+     * @param double $price
+     * @return $this
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field number
+     *
+     * @param integer $number
+     * @return $this
+     */
+    public function setNumber($number)
+    {
+        $this->number = $number;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field total_price
+     *
+     * @param double $total_price
+     * @return $this
+     */
+    public function setTotalPrice($total_price)
+    {
+        $this->total_price = $total_price;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field picture
+     *
+     * @param string $picture
+     * @return $this
+     */
+    public function setPicture($picture)
+    {
+        $this->picture = $picture;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field picture2
+     *
+     * @param string $picture2
+     * @return $this
+     */
+    public function setPicture2($picture2)
+    {
+        $this->picture2 = $picture2;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field color_id
+     *
+     * @param string $color_id
+     * @return $this
+     */
+    public function setColorId($color_id)
+    {
+        $this->color_id = $color_id;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field color_name
+     *
+     * @param string $color_name
+     * @return $this
+     */
+    public function setColorName($color_name)
+    {
+        $this->color_name = $color_name;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field size_id
+     *
+     * @param integer $size_id
+     * @return $this
+     */
+    public function setSizeId($size_id)
+    {
+        $this->size_id = $size_id;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field size_name
+     *
+     * @param string $size_name
+     * @return $this
+     */
+    public function setSizeName($size_name)
+    {
+        $this->size_name = $size_name;
+
+        return $this;
+    }
+
+    /**
+     * Returns the value of field id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Returns the value of field product_id
+     *
+     * @return integer
+     */
+    public function getProductId()
+    {
+        return $this->product_id;
+    }
+
+    /**
+     * Returns the value of field order_commonid
+     *
+     * @return integer
+     */
+    public function getOrderCommonid()
+    {
+        return $this->order_commonid;
+    }
+
+    /**
+     * Returns the value of field product_name
+     *
+     * @return string
+     */
+    public function getProductName()
+    {
+        return $this->product_name;
+    }
+
+    /**
+     * Returns the value of field price
+     *
+     * @return double
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * Returns the value of field number
+     *
+     * @return integer
+     */
+    public function getNumber()
+    {
+        return $this->number;
+    }
+
+    /**
+     * Returns the value of field total_price
+     *
+     * @return double
+     */
+    public function getTotalPrice()
+    {
+        return $this->total_price;
+    }
+
+    /**
+     * Returns the value of field picture
+     *
+     * @return string
+     */
+    public function getPicture()
+    {
+        return $this->picture;
+    }
+
+    /**
+     * Returns the value of field picture2
+     *
+     * @return string
+     */
+    public function getPicture2()
+    {
+        return $this->picture2;
+    }
+
+    /**
+     * Returns the value of field color_id
+     *
+     * @return string
+     */
+    public function getColorId()
+    {
+        return $this->color_id;
+    }
+
+    /**
+     * Returns the value of field color_name
+     *
+     * @return string
+     */
+    public function getColorName()
+    {
+        return $this->color_name;
+    }
+
+    /**
+     * Returns the value of field size_id
+     *
+     * @return integer
+     */
+    public function getSizeId()
+    {
+        return $this->size_id;
+    }
+
+    /**
+     * Returns the value of field size_name
+     *
+     * @return string
+     */
+    public function getSizeName()
+    {
+        return $this->size_name;
+    }
+
+    /**
+     * Initialize method for model.
+     */
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('tb_shoporder');
-        
-        // 表关联
-        // 与用户表关联，一对多反向
-        $this->belongsTo(
-            "order_commonid",
-            "\Asa\Erp\TbShoporderCommon",
-            "id",
-            [
-                'alias' => 'shoporder_common',
-                'foreignKey' => [
-                    // 关联字段禁止自动删除
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message"    => $this->getValidateMessage('belongsto-foreign-message', 'shoporder_common'),
-                ],
-            ]
-        );
-        
+        $this->setSource("tb_shoporder");
     }
 
-    public function validation() {
-        $validator = new Validation();
-
-//        $validator->add(
-//            "age",
-//            new Between(
-//                [
-//                    "minimum" => 18,
-//                    "maximum" => 60,
-//                    "message" => "年龄必须是18~60岁",
-//                ]
-//            )
-//        );
-//
-//        $validator->add(
-//            'name',
-//            new Uniqueness(
-//                [
-//                    'message' => '姓名不能重复',
-//                ]
-//            )
-//        );
-
-        return $this->validate($validator);
-    }
-    
-    
     /**
-     * 重写多语言版本配置读取函数
-     * @param languages下面语言文件字段的名称 如template模块下面的uniqueness
-     * @param 待验证字段的编号，显示为当前语言的友好性提示 $name
+     * Returns table name mapped in the model.
+     *
      * @return string
      */
-    public function getValidateMessage($template, $name)
+    public function getSource()
     {
-        // 定义变量
-        // 取出当前语言版本
-        $language = $this->getDI()->get('language');
-        // 拼接变量
-        $template_name = $language->template[$template];
-        $human_name = $language->$name;
-        // 返回最终的友好提示信息
-        return sprintf($template_name, $human_name);
+        return 'tb_shoporder';
     }
+
+    /**
+     * Allows to query a set of records that match the specified conditions
+     *
+     * @param mixed $parameters
+     * @return TbShoporder[]|TbShoporder|\Phalcon\Mvc\Model\ResultSetInterface
+     */
+    public static function find($parameters = null)
+    {
+        return parent::find($parameters);
+    }
+
+    /**
+     * Allows to query the first record that match the specified conditions
+     *
+     * @param mixed $parameters
+     * @return TbShoporder|\Phalcon\Mvc\Model\ResultInterface
+     */
+    public static function findFirst($parameters = null)
+    {
+        return parent::findFirst($parameters);
+    }
+
+    /**
+     * Independent Column Mapping.
+     * Keys are the real names in the table and the values their names in the application
+     *
+     * @return array
+     */
+    public function columnMap()
+    {
+        return [
+            'id' => 'id',
+            'product_id' => 'product_id',
+            'order_commonid' => 'order_commonid',
+            'product_name' => 'product_name',
+            'price' => 'price',
+            'number' => 'number',
+            'total_price' => 'total_price',
+            'picture' => 'picture',
+            'picture2' => 'picture2',
+            'color_id' => 'color_id',
+            'color_name' => 'color_name',
+            'size_id' => 'size_id',
+            'size_name' => 'size_name',
+        ];
+    }
+
 }

@@ -746,6 +746,19 @@ return [
     'search' => '搜索',
     'gongsi' => '公司',
     'guojia' => '国家',
+    'payment-success' => '付款成功',
+    'order-unpaid' => '订单未付款',
+    'order-cancled' => '订单被取消',
+    'order-closed' => '订单已关闭',
+    'refund_status_pending' => '未退款',
+    'refund_status_applied' => '已申请退款',
+    'refund_status_processing' => '退款中',
+    'refund_status_success' => '退款成功',
+    'refund_status_failed' => '退款失败',
+    'ship_status_pending' => '未发货',
+    'ship_status_delivered' => '已发货',
+    'ship_status_received' => '已收货',
+    'shoporder-status-error' => '订单状态不正确',
 
     'template' =>
         [
@@ -910,6 +923,6 @@ return [
             "amortizetype" => [
                 "1" => "按数量摊销",
                 "2" => "按金额摊销",
-            ]
+            ],
         ],
 ];

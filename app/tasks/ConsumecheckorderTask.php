@@ -68,17 +68,18 @@ class ConsumecheckorderTask extends Task
                         $job->delete();
                     } else {
                         // 如果存在，则判断是否已经支付，只要不是未支付，则直接删除队列
-                        if ($orderModel->order_status != 1) {
+                        if ($orderModel->pay_time) {
                             $logger->notice('Orderid ' . $jobInfo . ' is not unpaid, Deleting...' . PHP_EOL);
                             $job->delete();
                         } else {
                             // 再判断是否超时，如果超时，则执行取消订单逻辑，并还原库存
                             if ($orderModel->expire_time <= date('Y-m-d H:i:s')) {
-                                // 开始写取消订单和还原库存的逻辑，明天继续
+                                // 开始写取消订单和还原库存的逻辑
                                 $this->db->begin();
                                 // 变更状态，走队列的都是系统自动处理，所以无需修改订单的过期时间
+                                // 把订单关闭
                                 $data = [
-                                    'order_status' => '4',
+                                    'closed' => '1',
                                 ];
                                 if (!$orderModel->save($data)) {
                                     // 回滚

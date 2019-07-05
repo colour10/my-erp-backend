@@ -24,10 +24,14 @@ class CrontabTask extends \Phalcon\CLI\Task
 
                 //库存商品的id及合计库存（多个仓库，多个尺码合计）
                 $product_sum_list = $saleport->getProductList();
-
                 $product_id_array = Util::recordListColumn($product_sum_list, 'productid');
                 $products = TbProduct::findByIdString($product_id_array, 'id');
-                //print_r($products->toArray());
+
+                // 如果$products为空，则不必往下执行了，直接返回即可。
+                if (empty($products)) {
+                    echo '库存为空，无需同步' . PHP_EOL;
+                    exit;
+                }
 
                 $hashmap = Util::recordToHashtable($product_sum_list, 'productid', 'sumatory');
 
@@ -82,6 +86,6 @@ class CrontabTask extends \Phalcon\CLI\Task
                 $db->execute($sql);
             }
         }
-        echo "同步完毕";
+        echo "同步完毕" . PHP_EOL;
     }
 }

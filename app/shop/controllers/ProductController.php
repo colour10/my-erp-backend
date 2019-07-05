@@ -42,25 +42,25 @@ class ProductController extends AdminController
         }
         // 赋值
         $id = $params[0];
+
         // 取出数据
         // 如果不存在，就跳转到错误页面
-        if (!$product = TbProductSearch::findFirst("productid=$id AND companyid=" . $this->currentCompany)) {
+        if (!$product = TbProductSearch::findFirst("id=$id AND companyid=" . $this->currentCompany)) {
             // 传递错误
             return $this->renderError('make-an-error', 'product-doesnot-exist');
         }
 
         // 商品价格
-        $realprice = $this->getRealPrice($id);
+        $realprice = $this->getRealPrice($product->productid);
 
         // 尺码组颜色需要修改为js调用方式，状态：待修改
         // 尺码组加入多语言字段content
         $name = $this->getlangfield('name');
-        $content = $this->getlangfield('content');
         // 尺码组
         if ($product->sizetopid) {
             $sizecontents_arr = TbSizecontent::find("topid=" . $product->sizetopid)->toArray();
             foreach ($sizecontents_arr as $k => $sizecontent) {
-                $sizecontents_arr[$k]['content'] = $sizecontent[$content];
+                $sizecontents_arr[$k]['content'] = $sizecontent['name'];
             }
         } else {
             $sizecontents_arr = [];

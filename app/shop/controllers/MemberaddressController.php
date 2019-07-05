@@ -6,7 +6,7 @@ use Asa\Erp\TbMemberAddress;
 
 /**
  * 会员地址控制器类
- * Class IndexController
+ * Class MemberaddressController
  * @package Multiple\Shop\Controllers
  */
 class MemberaddressController extends AdminController
@@ -134,7 +134,7 @@ class MemberaddressController extends AdminController
         // 如果是字符串，说明是错误提示，那么就直接返回
         if (is_string($address)) {
             // 传递错误
-            return $this->renderError('make-an-error',$address);
+            return $this->renderError('make-an-error', $address);
         }
         $this->view->setVars([
             'address' => $address->toArray(),

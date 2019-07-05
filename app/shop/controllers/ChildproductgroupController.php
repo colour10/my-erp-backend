@@ -14,6 +14,8 @@ use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
 
 /**
  * 基础资料，子品类表
+ * Class ChildproductgroupController
+ * @package Multiple\Shop\Controllers
  */
 class ChildproductgroupController extends AdminController
 {
@@ -52,7 +54,7 @@ class ChildproductgroupController extends AdminController
         // 如果模型不存在，则给出错误提示
         if (!$childbrand) {
             // 传递错误
-            return $this->renderError('make-an-error','brandgroupchild-doesnot-exist');
+            return $this->renderError('make-an-error', 'brandgroupchild-doesnot-exist');
         }
         // 子品类名称
         // 多语言字段

@@ -20,6 +20,8 @@ use Multiple\Shop\Controllers\CompanyController;
 use Phalcon\Text;
 use PHPMailer\PHPMailer\PHPMailer;
 use Phalcon\Queue\Beanstalk;
+use Yansongda\Pay\Pay;
+use Yansongda\Supports\Logger;
 
 class Module implements ModuleDefinitionInterface
 {
@@ -46,6 +48,7 @@ class Module implements ModuleDefinitionInterface
     {
         // 常用的一些参数
         $config = $di->get("config");
+        $config_array = $config->toArray();
         $session = $di->get('session');
         $language = $session->get('language') ?: $config->language;
         $admin = new AdminController();
@@ -360,6 +363,23 @@ class Module implements ModuleDefinitionInterface
                 ];
             }
             return $return;
+        });
+
+        // 注册微信和支付宝单例服务
+        // 支付宝
+        $di->setShared('alipay', function () use ($config_array) {
+            // 取出支付宝相关配置
+            $config = $config_array['pay']['alipay'];
+            // 调用 Yansongda\Pay 来创建一个支付宝支付对象
+            return Pay::alipay($config);
+        });
+
+        // 微信
+        $di->setShared('wechat_pay', function () use ($config_array) {
+            // 取出支付宝相关配置
+            $config = $config_array['pay']['wechat'];
+            // 调用 Yansongda\Pay 来创建一个微信支付对象
+            return Pay::wechat($config);
         });
 
     }

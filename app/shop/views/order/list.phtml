@@ -88,33 +88,47 @@
                                                         <?php echo date('Y-m-d', strtotime($order['create_time'])); ?>　
                                                         <a href="/order/detail/<?php echo $order['id']; ?>"><?php echo $this->obj->getValidateMessage('dingdanhao'); ?>：<?php echo $order['order_no']; ?></a>　
 
-                                                        <?php if ($order['order_status'] == '1') { ?>
+
+                                                        <?php if ($order['is_show_expireTime']) { ?>
                                                             <span data-expiretime="<?php echo $order['expire_time']; ?>"
                                                                   data-id="<?php echo $order['id']; ?>"
                                                                   class="remainTime"></span>
                                                         <?php } ?>
 
-
-                                                        <?php if ($order['order_status'] == '2' || $order['order_status'] == '3') { ?>
+                                                        <?php if ($order['is_show_totalPrice']) { ?>
                                                             <?php echo $this->obj->getValidateMessage('chengjiaozongjia'); ?>：<?php echo $this->currency . $order['final_price']; ?>
                                                         <?php } ?>
 
-                                                        <?php if ($order['order_status'] == '1') { ?>
+
+                                                        <?php if ($order['is_show_payAndCancleButtons']) { ?>
                                                             <em class="pull-right font-normal">
-                                                                <a href="/order/detail/<?php echo $order['id']; ?>"><?php echo $this->obj->getValidateMessage('to-pay'); ?></a>
+                                                                <a href="/order/payment/<?php echo $order['id']; ?>"><?php echo $this->obj->getValidateMessage('to-pay'); ?></a>
                                                                 <a style="cursor: pointer"
                                                                    onclick="cancle_order(<?php echo $order['id']; ?>);return false;"><?php echo $this->obj->getValidateMessage('order-cancel'); ?></a>
                                                             </em>
-                                                        <?php } else if ($order['order_status'] == '2') { ?>
+                                                        <?php } ?>
+
+
+                                                        <?php if ($order['is_show_refundButton']) { ?>
                                                             <em class="pull-right font-normal">
                                                                 <a style="cursor: pointer"
                                                                    onclick="refund_order(<?php echo $order['id']; ?>);return false;"><?php echo $this->obj->getValidateMessage('apply-for-refund'); ?></a>
                                                             </em>
-                                                        <?php } else if ($order['order_status'] == '4' && $order['expire_time']) { ?>
+                                                        <?php } ?>
+
+
+                                                        <?php if ($order['is_show_overExpired']) { ?>
                                                             <em class="pull-right font-normal">
                                                                 <?php echo $this->obj->getValidateMessage('order-failure'); ?>
                                                             </em>
                                                         <?php } ?>
+
+                                                        <?php if ($order['is_show_cancled']) { ?>
+                                                            <em class="pull-right font-normal">
+                                                                <?php echo $this->obj->getValidateMessage('order-cancled'); ?>
+                                                            </em>
+                                                        <?php } ?>
+
                                                     </span>
                                                 </td>
                                             </tr>
@@ -140,7 +154,7 @@
                                                     <td class="goods-page-total">
                                                         <strong><span><?php echo $this->currency; ?></span><em><?php echo $orderdetail['payment_amount']; ?></em></strong>
                                                     </td>
-                                                    <td class="product-number"><?php echo $order['order_status_desc']; ?></td>
+                                                    <td class="product-number"><?php echo $order['order_status']; ?></td>
                                                 </tr>
                                                 </tbody>
                                             <?php } ?>
@@ -224,16 +238,16 @@
                     _this.html("<?php echo $this->obj->getValidateMessage('remain-time'); ?>：" + days + "<?php echo $this->obj->getValidateMessage('days'); ?>" + hours + "<?php echo $this->obj->getValidateMessage('hours'); ?>" + minutes + "<?php echo $this->obj->getValidateMessage('minutes'); ?>" + seconds + "<?php echo $this->obj->getValidateMessage('seconds'); ?>");
                 } else {
                     // 这里可以添加倒计时结束后需要执行的事件
-                    _this.html("<?php echo $this->obj->getValidateMessage('order-failure'); ?>");
                     window.clearInterval(interval);
-                    // Todo订单失效后的一些列操作：更改订单状态的同时回库存，如果前台还保留此页面，那就做到实时，否则就异步处理。
-                    // ajax取消订单
-                    $.post('/order/cancle/' + _this.attr('data-id'), {}, function (response) {
-                        // 如果没有错误，就删除右侧节点
-                        if (response.messages.length === 0) {
-                            _this.next().remove();
-                        }
-                    }, 'json');
+                    // 下面的逻辑已经交给后台队列处理了，暂时废弃。
+                    // // Todo订单失效后的一些列操作：更改订单状态的同时回库存，如果前台还保留此页面，那就做到实时，否则就异步处理。
+                    // // ajax取消订单
+                    // $.post('/order/cancle/' + _this.attr('data-id'), {}, function (response) {
+                    //     // 如果没有错误，就删除右侧节点
+                    //     if (response.messages.length === 0) {
+                    //         _this.next().remove();
+                    //     }
+                    // }, 'json');
                 }
             }, 1000);
         });
@@ -252,44 +266,6 @@
             yes: function (index) {
                 // ajax取消订单
                 $.post('/order/refund/' + id, {}, function (response) {
-                    // 判断是否有错误
-                    if (response.messages.length > 0) {
-                        layer.open({
-                            content: response.messages[0],
-                            btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>"
-                        });
-                    } else {
-                        //提示
-                        layer.open({
-                            content: "<?php echo $this->obj->getValidateMessage('success'); ?>",
-                            btn: "<?php echo $this->obj->getValidateMessage('please-wait'); ?>",
-                            time: 3, // 3秒后自动跳转
-                        });
-                        // 1秒后跳转
-                        setTimeout(function () {
-                            window.location.reload();
-                        }, 1000);
-                    }
-                }, 'json');
-                // 关闭弹出层
-                layer.close(index);
-            }
-        });
-    }
-
-
-    /**
-     * 主动取消指定id的订单
-     * @param id
-     */
-    function cancle_order(id) {
-        // 询问框
-        layer.open({
-            content: "<?php echo $this->obj->getValidateMessage('confirm-cancle-order'); ?>",
-            btn: ["<?php echo $this->obj->getValidateMessage('yes'); ?>", "<?php echo $this->obj->getValidateMessage('no'); ?>"],
-            yes: function (index) {
-                // ajax取消订单
-                $.post('/order/cancle/' + id + '/1', {}, function (response) {
                     // 判断是否有错误
                     if (response.messages.length > 0) {
                         layer.open({
