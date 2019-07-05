@@ -10,7 +10,7 @@ use Phalcon\Mvc\Model\Relation;
 class TbProduct extends BaseCompanyModel
 {
     private static $box;
-    
+
     public function initialize()
     {
         parent::initialize();
@@ -96,7 +96,7 @@ class TbProduct extends BaseCompanyModel
     function setProjectCode($sizecontentid, $goods_code) {
         if($this->companyid!=$this->getCompanyid()) {
             throw new Exception("#1001#访问非被公司数据#");
-            
+
         }
         $obj = TbProductcode::findFirst(
             sprintf("productid=%d and sizecontentid=%d", $this->id, $sizecontentid)
@@ -126,7 +126,7 @@ class TbProduct extends BaseCompanyModel
         if($this->product_group=="") {
             return ;
         }
-        
+
         $products = TbProduct::find(
             sprintf("product_group='%s'", addslashes($this->product_group))
         );
@@ -284,7 +284,7 @@ class TbProduct extends BaseCompanyModel
         //年代季节是多选，获得最新的年代季节id
         $temparr = explode(",", $this->ageseason);
         $ageseasonid = $temparr[0];
-        
+
         foreach($prices as $row) {
             $setting = TbPriceSetting::getPriceSetting($this->brandid, $ageseasonid, $this->producttypeid, $this->childbrand, $row->id);
             if($setting!=false) {
@@ -326,7 +326,8 @@ class TbProduct extends BaseCompanyModel
                     'price' => $price,
                     "is_special"  => $is_special,
                     "rate" => $value["rate"],
-                    "costplus" => $costplus
+                    "costplus" => $costplus,
+                    "productid" => $this->id
                 ];
             }
         }
@@ -381,6 +382,6 @@ class TbProduct extends BaseCompanyModel
     function syncBrandSugest() {
         if($this->brandcolor!="" && $this->colorname!=""){
             TbProductLastmodify::add($this->companyid, $this->brandid, $this->wordcode_3, $this->brandcolor, $this->colorname);
-        }        
+        }
     }
 }

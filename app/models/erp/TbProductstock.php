@@ -6,6 +6,7 @@ use Phalcon\Di;
 
 /**
  * 库存表
+ * ErrorCode 1109
  */
 class TbProductstock extends BaseCompanyModel
 {
@@ -17,6 +18,7 @@ class TbProductstock extends BaseCompanyModel
     const REQUISITION_PRE_IN = 6; //在途，入库
     const REQUISITION_PRE_IN_CANCEL = 7; //
     const REQUISITION_IN_EXECUTE = 8;
+    const REQUISITION = 9;
 
 
     public function initialize()
@@ -64,7 +66,7 @@ class TbProductstock extends BaseCompanyModel
         );
     }
 
-    private function addProductstockLog($old_number, $number, $change_type, $relationid) {
+    public function addProductstockLog($old_number, $number, $change_type, $relationid) {
         $log = new TbProductstockLog();
         $log->warehouseid = $this->warehouseid;
         $log->productstockid = $this->id;
@@ -120,12 +122,12 @@ class TbProductstock extends BaseCompanyModel
             //更新库存成功，记录操作日志
             if($this->addProductstockLog($this->number, $this->number, $change_type, $relationid)===false) {
                 $db->rollback();
-                return false;
+                throw new \Exception("/11090201/库存日志添加失败。/");
             }
         }
         else {
             $db->rollback();
-            return false;
+            throw new \Exception("/11090202/锁定库存失败。/");
         }
         $db->commit();
         return $this;
@@ -173,12 +175,12 @@ class TbProductstock extends BaseCompanyModel
             //更新库存成功，记录操作日志
             if($this->addProductstockLog($old_number, $this->number, $change_type, $relationid)===false) {
                 $db->rollback();
-                return false;
+                throw new \Exception("/11090301/库存日志添加失败。/");
             }
         }
         else {
             $db->rollback();
-            return false;
+            throw new \Exception("/11090302/锁定库存转出库失败/");
         }
         $db->commit();
         return $this;
@@ -226,12 +228,12 @@ class TbProductstock extends BaseCompanyModel
             //更新库存成功，记录操作日志
             if($this->addProductstockLog($this->number, $this->number, $change_type, $relationid)===false) {
                 $db->rollback();
-                return false;
+                throw new \Exception("/11090101/库存日志添加失败。/");
             }
         }
         else {
             $db->rollback();
-            return false;
+            throw new \Exception("/11090102/取消库存锁定失败。/");
         }
         $db->commit();
         return $this;

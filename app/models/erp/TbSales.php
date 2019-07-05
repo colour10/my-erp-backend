@@ -4,6 +4,7 @@ namespace Asa\Erp;
 
 /**
  * 销售单主表
+ * ErrorCode 1108
  */
 class TbSales extends BaseModel
 {
@@ -30,6 +31,15 @@ class TbSales extends BaseModel
                 'alias' => 'saleport'
             ]
         );
+
+        $this->belongsTo(
+            'warehouseid',
+            '\Asa\Erp\TbWarehouse',
+            'id',
+            [
+                'alias' => 'warehouse'
+            ]
+        );
     }
 
     /**
@@ -42,8 +52,7 @@ class TbSales extends BaseModel
             return $row;
         }
         else {
-            $row->debug();
-            return false;
+            throw new \Exception("/11080101/添加销售明细失败/");
         }
     }
 
@@ -62,16 +71,15 @@ class TbSales extends BaseModel
                 return $row;
             }
             else {
-                //$row->debug();
-                return false;
+                throw new \Exception("/11080201/销售明细更新失败。/");
             }
         }
         else {
-            return false;
+            throw new \Exception("/11080202/销售明细不存在。/");
         }
     }
 
-    function getOrderDetail() {        
+    function getOrderDetail() {
         $data = [
             'form' => $this->toArray(),
             'list'=>[]

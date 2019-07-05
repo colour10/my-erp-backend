@@ -72,7 +72,7 @@ class RequisitionController extends BaseController {
                         "number" => $row['number'],
                         "requisitionid" => $requisition->id
                     ];
-                    $result = $requisition->addDetal($data);
+                    $result = $requisition->addDetail($data);
                     if($result===false) {
                         $this->db->rollback();
                         return $this->error($result);

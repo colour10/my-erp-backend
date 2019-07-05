@@ -14,6 +14,7 @@ use Asa\Erp\TbCode;
 
 /**
  * 销售单主表
+ * ErrorCode 1107
  */
 class SalesController extends BaseController
 {
@@ -50,52 +51,28 @@ class SalesController extends BaseController
         // 判断是否有params参数提交过来
         $params = $this->request->get('params');
         if (!$params) {
-            $msg = $this->getValidateMessage('sales-params', 'template', 'required');
-            return $this->error([$msg]);
+            throw new \Exception("/11070101/参数错误/");
         }
         // 转换成数组
         $submitData = json_decode($params, true);
-                
 
-        // 判断是否有销售单号，分别进行
-        $salesid = (int)$submitData['form']['id'];
         // 判断逻辑
-        if ($salesid>0) {
-            // 有销售单号就修改
-            // 查找销售单号是否存在
-            $sale = TbSales::findFirst(
-                sprintf("id=%d and companyid=%d", $salesid, $this->companyid)
-            );
-            if (!$sale) {
-                $msg = $this->getValidateMessage('sale', 'template', 'notexist');
-                return $this->error([$msg]);
-            }
+        if ($submitData['form']['id']>0) {
+            $sale = $this->updateSales($submitData);
+        }
+        else {
+            $sale = $this->createSales($submitData);
+        }
 
-            $columns =["memberid", "salesstaff", "externalno", "salesdate", "ordercode", "pickingtype", "expresspaidtype", "expressno", "expressfee", "address", "warehouseid", "saleportid", "discount", "status"];
-            //生效的销售单，只能修改部分信息
-            if($sale->status!=0) {
-                return $this->save($sale, $submitData['form']);
-            }
+        // 取出单个模型及下级销售单详情逻辑
+        echo $this->success($sale->getOrderDetail());
+    }
 
-            $this->db->begin();
-
-            // 开始更新
-            foreach ($submitData['form'] as $k => $item) {
-                // 把里面的参数转成post参数传递过去
-                if(in_array($k, $columns)) {
-                    $sale->$k = $item;
-                }                
-            }
-
-            if($sale->update()==false) {
-                $this->db->rollback();
-                return $this->error(['updage-fail']);
-            }
-        } else {
-            $this->db->begin();
-
+    private function createSales($submitData) {
+        $this->db->begin();
+        try {
             $sale = new TbSales();
-            
+
             // 开始更新
             foreach ($submitData['form'] as $k => $item) {
                 // 把里面的参数转成post参数传递过去
@@ -109,63 +86,172 @@ class SalesController extends BaseController
             $sale->orderno = TbCode::getCode($this->companyid, "S", date("y"));
 
             if($sale->create()==false) {
-                $this->db->rollback();
-                return $this->error(['create-fail']);
+                throw new \Exception("/11070201/销售单生成失败。/");
             }
-        }
 
-        $detail_id_array = [];
-        foreach ($submitData['list'] as $k => $item) {
-            // 使用模型更新
-            
-            $data = [
-                'productstockid' => $item['productstockid'],
-                'dealprice' => $item['dealprice'],
-                'number' => $item['number'],
-                'price' => $item['price'],
-                'is_match' => $item['is_match'],
-                'salesid' => $sale->id
-            ];
-            if(isset($item['id']) && $item['id']!='') {
-                $data['id'] = $item['id'];
-                $detail = $sale->updateDetail($data);
-            }
-            else {
+            $array = [];
+            foreach ($submitData['list'] as $k => $item) {
+                // 使用模型更新
+                $fromProductstock = TbProductstock::findFirstById($item['productstockid']);
+                if($fromProductstock->warehouseid!=$sale->warehouseid) {
+                    $productstock = $sale->warehouse->getLocalStock($fromProductstock);
+                }
+                else {
+                    $productstock = $fromProductstock;
+                }
+
+                $data = [
+                    'productstockid' => $productstock->id,
+                    'dealprice' => $item['dealprice'],
+                    'number' => $item['number'],
+                    'price' => $item['price'],
+                    'priceid' => $item['priceid'],
+                    'salesid' => $sale->id
+                ];
                 $detail = $sale->addDetail($data);
-            }
-            if ($detail===false) {
-                $this->db->rollback();
-                $msg = $this->getValidateMessage('orderdetail', 'db', 'add-failed');
-                return $this->error([$msg]);
-            }
 
-            if($sale->status==1) {
-                //订单正式提交，减库存
-                $ret = $detail->productstock->reduceStock($detail->number, TbProductstock::SALES, $detail->id);
-                if($ret==false) {
-                    $db->rollback("减库存失败");
-                    return false;
+                if($detail===false) {
+                    throw new \Exception("/11070202/销售单明细更新失败。/");
+                }
+
+                //锁定库存
+                $productstock->preReduceStock($detail->number, TbProductstock::SALES, $detail->id);
+
+                //如果不在同一个仓库，则自动生成调拨单
+                if($fromProductstock->warehouseid!=$sale->warehouseid) {
+                    $key = $fromProductstock->warehouseid ."_". $sale->warehouseid;
+                    if(!isset($array[$key])) {
+                        $array[$key] = [];
+                    }
+                    $array[$key][] = [
+                        "productstockid" => $item['productstockid'],
+                        "number" => $item['number']
+                    ];
                 }
             }
 
-            $detail_id_array[] = $detail->id;
-        }
+            //生成调拨单
+            foreach($array as $key=>$rows) {
+                $temp = explode("_", $key);
 
-        //清除不存在的详情id
-        if(count($detail_id_array)>0) {
-            $details = TbSalesdetails::find(
-                sprintf("salesid=%d and id not in(%s)", $sale->id, implode(",", $detail_id_array))
-            );
-            foreach($details as $detail) {
-                $detail->delete();
+                \Asa\Erp\TbRequisition::addRequisition($temp[0], $temp[1], $rows);
             }
         }
+        catch(\Exception $e) {
+            $this->db->rollback();
+            throw $e;
+        }
 
-        // 提交事务
         $this->db->commit();
+        return $sale;
+    }
 
-        // 取出单个模型及下级销售单详情逻辑
-        echo $this->success($sale->getOrderDetail());
+    private function updateSales($submitData) {
+        $this->db->begin();
+
+        $sale = TbSales::findFirst(
+            sprintf("id=%d and companyid=%d", $submitData['form']['id'], $this->companyid)
+        );
+
+        try {
+            if(!$sale) {
+                throw new \Exception("/11070301/销售单不存在。/");
+            }
+
+            $columns =["memberid", "salesstaff", "externalno", "salesdate", "ordercode", "pickingtype", "expresspaidtype", "expressno", "expressfee", "address", "warehouseid", "saleportid", "discount", "status"];
+
+            // 开始更新
+            foreach ($submitData['form'] as $k => $item) {
+                // 把里面的参数转成post参数传递过去
+                if(in_array($k, $columns)) {
+                    $sale->$k = $item;
+                }
+            }
+
+            if($sale->update()==false) {
+                $this->db->rollback();
+                throw new \Exception("/11070302/销售单更新失败。/");
+            }
+
+            $detail_id_array = [];
+            foreach ($submitData['list'] as $k => $item) {
+                // 使用模型更新
+                $data = [
+                    'productstockid' => $item['productstockid'],
+                    'dealprice' => $item['dealprice'],
+                    'number' => $item['number'],
+                    'price' => $item['price'],
+                    'priceid' => $item['priceid'],
+                    'salesid' => $sale->id
+                ];
+
+                if(isset($item['id']) && $item['id']>0) {
+                    $data['id'] = $item['id'];
+                    $detail = TbSalesdetails::findFirstById($data['id']);
+                    $oldNumber = $detail->number;
+
+                    if($oldNumber!=$data['number'] || $detail->price!=$data['price'] || $detail->priceid!=$data['priceid']) {
+                        if($detail!=false) {
+                            if($detail->update($data)===false) {
+                                throw new \Exception("/11070303/销售明细更新失败。/");
+                            }
+                        }
+                        else {
+                            throw new \Exception("/11070304/销售明细不存在。/");
+                        }
+
+                        if($oldNumber!=$data['number']) {
+                            //更新库存锁定
+                            $detail->productstock->preReduceStock($detail->number-$oldNumber, TbProductstock::SALES, $detail->id);
+                        }
+                    }
+                }
+                else {
+                    $detail = $sale->addDetail($data);
+
+                    //锁定库存
+                    $detail->productstock->preReduceStock($detail->number, TbProductstock::SALES, $detail->id);
+
+                    //如果不在同一个仓库，则自动生成调拨单
+                    if($detail->productstock->warehouseid!=$sale->warehouseid) {
+                        $key = $detail->productstock->warehouseid ."_". $sale->warehouseid;
+                        if(!isset($array[$key])) {
+                            $array[$key] = [];
+                        }
+                        $array[$key][] = [
+                            "productstockid" => $item['productstockid'],
+                            "number" => $item['number']
+                        ];
+                    }
+                }
+
+                $detail_id_array[] = $detail->id;
+            }
+
+            //清除不存在的详情id
+            if(count($detail_id_array)>0) {
+                $details = TbSalesdetails::find(
+                    sprintf("salesid=%d and id not in(%s)", $sale->id, implode(",", $detail_id_array))
+                );
+                foreach($details as $detail) {
+                    //取消锁定库存
+                    $detail->productstock->preReduceStockCancel($detail->number, TbProductstock::SALES, $detail->id);
+
+                    //删除销售单明细
+                    if($detail->delete()===false) {
+                        throw new \Exception("/11070305/销售明细删除失败。/");
+                    }
+                }
+            }
+
+        }
+        catch(\Exception $e) {
+            $this->db->rollback();
+            throw $e;
+        }
+
+        $this->db->commit();
+        return $sale;
     }
 
 
@@ -220,7 +306,7 @@ class SalesController extends BaseController
             // 把里面的参数转成post参数传递过去
             if(in_array($k, $columns)) {
                 $sale->$k = $item;
-            }                
+            }
         }
 
         if($sale->update()==false) {

@@ -534,14 +534,19 @@ class ProductController extends CadminController {
     }
 
     function getpricesAction() {
-        $id = (int)$_POST['id'];
-        $product = TbProduct::findFirstById($id);
-        if($product!=false && $product->companyid==$this->companyid) {
-            return $this->success($product->getPriceList());
+        $product_array = explode(",", $_POST['productids']);
+
+        $result = [];
+        foreach($product_array as $productid) {
+            $product = TbProduct::findFirstById($productid);
+            if($product!=false && $product->companyid==$this->companyid) {
+                foreach($product->getPriceList() as $price) {
+                    $result[] = $price;
+                }
+            }
         }
-        else {
-            return $this->error("#1001#产品数据不存在#");
-        }
+
+        return $this->success($result);
     }
 
     function savepriceAction() {
