@@ -254,8 +254,8 @@ class Module implements ModuleDefinitionInterface
         });
 
         // 判断是否为管理员，这个是总管理员
-        $di->setShared('isadmin', function () use ($tbcompany) {
-            return $tbcompany->isadmin();
+        $di->setShared('issuperadmin', function () use ($tbcompany) {
+            return $tbcompany->issuperadmin();
         });
 
         // 取出虚拟公司id
@@ -264,7 +264,7 @@ class Module implements ModuleDefinitionInterface
         });
 
         // 判断是否为公司用户，也就是每个公司下面的管理员
-        $di->setShared('iscu', function () use ($tbcompany) {
+        $di->setShared('isadmin', function () use ($tbcompany) {
             return $tbcompany->isadmin();
         });
 

@@ -103,26 +103,37 @@
                        class="text-muted dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                        aria-expanded="false"><?php echo $this->language['list']['gender']['1']; ?></a>
 
-                    <ul class="dropdown-menu">
-                        <?php foreach ($this->allcates as $cate) { ?>
-                            <li>
-                                <a href="/brandgroup/detail/<?php echo $cate['id']; ?>"><?php echo $cate['name']; ?></a>
-                            </li>
-                        <?php } ?>
 
-                        <li class="dropdown-submenu">
-                            <a href="javascript:void(0);" data-toggle="dropdown" aria-haspopup="true"
-                               aria-expanded="false"><?php echo $this->obj->getValidateMessage('pinpai'); ?> <i
-                                        class="fa fa-angle-right"></i></a>
-                            <ul class="dropdown-menu">
-                                <?php foreach ($this->girlbrands as $brand) { ?>
-                                    <li>
-                                        <a href="/brand/detail/<?php echo $brand['id']; ?>"><?php echo $brand['name']; ?></a>
-                                    </li>
-                                <?php } ?>
-                            </ul>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <div class="header-navigation-content">
+                                <div class="row">
+                                    <div class="col-md-12 header-navigation-col">
+                                        <h4><?php echo $this->obj->getValidateMessage('pinlei'); ?></h4>
+                                        <ul>
+                                            <?php foreach ($this->allcates as $cate) { ?>
+                                                <li>
+                                                    <a href="/brandgroup/detail/<?php echo $cate['id']; ?>"><?php echo $cate['name']; ?></a>
+                                                </li>
+                                            <?php } ?>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-12 nav-brands">
+                                        <h4><?php echo $this->obj->getValidateMessage('pinpai'); ?></h4>
+                                        <ul>
+                                            <?php foreach ($this->girlbrands as $brand) { ?>
+                                                <li>
+                                                    <a href="/brand/detail/<?php echo $brand['id']; ?>"><?php echo $brand['name']; ?></a>
+                                                </li>
+                                            <?php } ?>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
                         </li>
                     </ul>
+
+
                 </li>
 
 
@@ -131,25 +142,34 @@
                        href="javascript:;"><?php echo $this->language['list']['gender']['2']; ?></a>
 
                     <ul class="dropdown-menu">
-                        <?php foreach ($this->allcates as $cate) { ?>
-                            <li>
-                                <a href="/brandgroup/detail/<?php echo $cate['id']; ?>"><?php echo $cate['name']; ?></a>
-                            </li>
-                        <?php } ?>
-
-                        <li class="dropdown-submenu">
-                            <a href="javascript:void(0);" data-toggle="dropdown" aria-haspopup="true"
-                               aria-expanded="false"><?php echo $this->obj->getValidateMessage('pinpai'); ?> <i
-                                        class="fa fa-angle-right"></i></a>
-                            <ul class="dropdown-menu">
-                                <?php foreach ($this->boybrands as $brand) { ?>
-                                    <li>
-                                        <a href="/brand/detail/<?php echo $brand['id']; ?>"><?php echo $brand['name']; ?></a>
-                                    </li>
-                                <?php } ?>
-                            </ul>
+                        <li>
+                            <div class="header-navigation-content">
+                                <div class="row">
+                                    <div class="col-md-12 header-navigation-col">
+                                        <h4><?php echo $this->obj->getValidateMessage('pinlei'); ?></h4>
+                                        <ul>
+                                            <?php foreach ($this->allcates as $cate) { ?>
+                                                <li>
+                                                    <a href="/brandgroup/detail/<?php echo $cate['id']; ?>"><?php echo $cate['name']; ?></a>
+                                                </li>
+                                            <?php } ?>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-12 nav-brands">
+                                        <h4><?php echo $this->obj->getValidateMessage('pinpai'); ?></h4>
+                                        <ul>
+                                            <?php foreach ($this->boybrands as $brand) { ?>
+                                                <li>
+                                                    <a href="/brand/detail/<?php echo $brand['id']; ?>"><?php echo $brand['name']; ?></a>
+                                                </li>
+                                            <?php } ?>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
                         </li>
                     </ul>
+
                 </li>
 
 
@@ -157,26 +177,37 @@
                     <a class="dropdown-toggle" data-toggle="dropdown" data-target="#"
                        href="javascript:;"><?php echo $this->language['list']['gender']['6']; ?></a>
 
-                    <ul class="dropdown-menu">
-                        <?php foreach ($this->allcates as $cate) { ?>
-                            <li>
-                                <a href="/brandgroup/detail/<?php echo $cate['id']; ?>"><?php echo $cate['name']; ?></a>
-                            </li>
-                        <?php } ?>
 
-                        <li class="dropdown-submenu">
-                            <a href="javascript:void(0);" data-toggle="dropdown" aria-haspopup="true"
-                               aria-expanded="false"><?php echo $this->obj->getValidateMessage('pinpai'); ?> <i
-                                        class="fa fa-angle-right"></i></a>
-                            <ul class="dropdown-menu">
-                                <?php foreach ($this->childbrands as $brand) { ?>
-                                    <li>
-                                        <a href="/brand/detail/<?php echo $brand['id']; ?>"><?php echo $brand['name']; ?></a>
-                                    </li>
-                                <?php } ?>
-                            </ul>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <div class="header-navigation-content">
+                                <div class="row">
+                                    <div class="col-md-12 header-navigation-col">
+                                        <h4><?php echo $this->obj->getValidateMessage('pinlei'); ?></h4>
+                                        <ul>
+                                            <?php foreach ($this->allcates as $cate) { ?>
+                                                <li>
+                                                    <a href="/brandgroup/detail/<?php echo $cate['id']; ?>"><?php echo $cate['name']; ?></a>
+                                                </li>
+                                            <?php } ?>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-12 nav-brands">
+                                        <h4><?php echo $this->obj->getValidateMessage('pinpai'); ?></h4>
+                                        <ul>
+                                            <?php foreach ($this->childbrands as $brand) { ?>
+                                                <li>
+                                                    <a href="/brand/detail/<?php echo $brand['id']; ?>"><?php echo $brand['name']; ?></a>
+                                                </li>
+                                            <?php } ?>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
                         </li>
                     </ul>
+
+
                 </li>
 
                 <!-- BEGIN TOP SEARCH -->

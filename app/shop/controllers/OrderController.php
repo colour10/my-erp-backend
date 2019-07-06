@@ -12,9 +12,7 @@ use Asa\Erp\TbShoporderCommon;
 use Asa\Erp\TbBuycar;
 use Asa\Erp\TbSizecontent;
 use Asa\Erp\Util;
-use Phalcon\Mvc\Model;
 use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
-use Yansongda\Pay\Pay;
 
 /**
  * 订单操作类
@@ -53,10 +51,22 @@ class OrderController extends AdminController
         $id = $params[0];
 
         // 判断是否登录
+        // 但是如果是超级管理员，是可以看到他公司的所有用户的订单的，这个毋庸置疑
         if ($rs = $this->member) {
-            $order = TbShoporderCommon::findFirst(
-                "member_id = " . $rs['id'] . ' and id=' . $id
-            );
+            // 如果是超级管理员，能查看所有的订单
+            if ($this->issuperadmin) {
+                $sql = "id = " . $id;
+            } else {
+                if ($this->isadmin) {
+                    // 如果是普通管理员，只能查看属于本公司的所有订单
+                    $sql = "companyid = " . $this->currentCompany . "id = " . $id;
+                } else {
+                    // 如果是普通用户，只能查看属于自己的订单
+                    $sql = "member_id = " . $rs['id'] . ' and id=' . $id;
+                }
+            }
+            // 查看订单
+            $order = TbShoporderCommon::findFirst($sql);
             // 判断是否存在
             if ($order) {
                 // 写入最新的订单状态
@@ -156,20 +166,20 @@ class OrderController extends AdminController
 
     /**
      * 获取最新的订单状态
-     * @param Model $order 订单模型
+     * @param TbShoporderCommon $order 订单模型
      * @return string
      */
-    private function getOrderStatus(Model $order)
+    private function getOrderStatus(TbShoporderCommon $order)
     {
         // 逻辑
         // 是否关闭
-        if ($order->closed) {
+        if ($order->getClosed()) {
             return $this->getValidateMessage('order-closed');
         }
         // 是否退款
-        if ($order->refund_no) {
+        if ($order->getRefundNo()) {
             // 接着判断具体的退款状态
-            switch ($order->refund_status) {
+            switch ($order->getRefundStatus()) {
                 case 'applied':
                     return $this->getValidateMessage('refund_status_applied');
                     break;
@@ -188,7 +198,7 @@ class OrderController extends AdminController
             }
         }
         // 是否支付
-        if ($order->pay_time) {
+        if ($order->getPayTime()) {
             return $this->getValidateMessage('payment-success');
         }
         // 如果不符合以上任何情况，则订单未付款
@@ -429,12 +439,12 @@ class OrderController extends AdminController
                 // 默认订单有效期为1个小时
                 $now = time();
                 $model_common = new TbShoporderCommon();
-                $model_common->total_price = $total_price;
-                $model_common->send_price = $send_price;
-                $model_common->final_price = $final_price;
-                $model_common->create_time = date("Y-m-d H:i:s", $now);
-                $model_common->expire_time = date("Y-m-d H:i:s", $now + 3600);
-                $model_common->member_id = $rs['id'];
+                $model_common->setTotalPrice($total_price);
+                $model_common->setSendPrice($send_price);
+                $model_common->setFinalPrice($final_price);
+                $model_common->setCreateTime(date("Y-m-d H:i:s", $now));
+                $model_common->setExpireTime(date("Y-m-d H:i:s", $now + 3600));
+                $model_common->setMemberId($rs['id']);
                 // 生成唯一订单号
                 // 如果订单号重复，就一直生成
                 do {
@@ -442,7 +452,7 @@ class OrderController extends AdminController
                 } while (TbShoporderCommon::findFirst("order_no = " . $generate_trade_no));
 
                 // 把订单号加入到更新变量
-                $model_common->order_no = $generate_trade_no;
+                $model_common->setOrderNo($generate_trade_no);
                 if (!$model_common->save()) {
                     // 回滚
                     $this->db->rollback();
@@ -454,7 +464,7 @@ class OrderController extends AdminController
                 $data_common = [];
                 foreach ($_POST['data'] as $key => $value) {
                     $data_common = [
-                        'order_commonid' => $model_common->id,
+                        'order_commonid' => $model_common->getId(),
                         'product_id' => $value['product_id'],
                         'product_name' => $value['product']['productname'],
                         'price' => $value['product']['realprice'],
@@ -520,7 +530,7 @@ class OrderController extends AdminController
                 if ($this->queue) {
                     $this->queue->choose('my_checkorder_tube');
                     // 只把必要的参数传递给队列即可，剩下的逻辑交给Beanstalk吧。
-                    $this->queue->put($model_common->id, [
+                    $this->queue->put($model_common->getId(), [
                         // 任务优先级
                         'priority' => 250,
                         // 延迟时间，表示将job放入ready队列需要等待的秒数，10代表10秒
@@ -531,7 +541,7 @@ class OrderController extends AdminController
                 }
 
                 // 返回提交成功，并且返回新订单的ID
-                return $this->success($model_common->id);
+                return $this->success($model_common->getId());
 
             } else {
                 // 返回错误信息
@@ -581,7 +591,7 @@ class OrderController extends AdminController
                 }
 
                 // 如果订单已支付或者已关闭
-                if ($order->pay_time || $order->closed) {
+                if ($order->getPayTime() || $order->getClosed()) {
                     // 回滚
                     $this->db->rollback();
                     // 取出错误信息
@@ -634,11 +644,11 @@ class OrderController extends AdminController
                         return $this->error($this->getValidateMessage('address-doesnot-exist'));
                     }
                     // 赋值
-                    $order->reciver_name = $addressModel->name;
-                    $order->reciver_phone = $addressModel->tel;
+                    $order->setReciverName($addressModel->name);
+                    $order->setReciverPhone($addressModel->tel);
                     // 身份证暂时不需要，注释掉
                     // $order->reciver_no = $address->idno;
-                    $order->reciver_address = $addressModel->address;
+                    $order->setReciverAddress($addressModel->address);
                 } else {
                     // 否则就新建一个地址
                     // 但是要先验证数据合法性
@@ -656,11 +666,14 @@ class OrderController extends AdminController
                     }
 
                     // 开始插入
-                    $order->reciver_name = $name = $_POST['reciver_name'];
-                    $order->reciver_phone = $tel = $_POST['reciver_phone'];
+                    $name = $_POST['reciver_name'];
+                    $tel = $_POST['reciver_phone'];
+                    $address = $_POST['reciver_address'];
+                    $order->setReciverName($name);
+                    $order->setReciverPhone($tel);
+                    $order->setReciverAddress($address);
                     // 身份证暂时不需要，注释掉
                     // $order->reciver_no = $idno = $_POST['reciver_no'];
-                    $order->reciver_address = $address = $_POST['reciver_address'];
                     $member_id = $rs['id'];
                     $is_default = '1';
 
@@ -679,7 +692,7 @@ class OrderController extends AdminController
                 // $order->pay_time = date("Y-m-d H:i:s");
                 // 付款方式，如果不存在，则为wechat，也就是微信
                 $payment_method = empty($_POST['payment_method']) ? 'wechat' : $_POST['payment_method'];
-                $order->payment_method = $payment_method;
+                $order->setPaymentMethod($payment_method);
                 // 订单支付方式
                 // 失败则回滚
                 if (!$order->save()) {
@@ -715,7 +728,7 @@ class OrderController extends AdminController
 
                 } elseif ($payment_method == 'alipay') {
                     // 默认调用支付宝的网页支付，这个将会自动跳转到支付宝的付款页面
-                    $this->alipayWeb($order->order_no, $order->final_price, '订单支付');
+                    $this->alipayWeb($order->getOrderNo(), $order->getFinalPrice(), '订单支付');
                 } else {
                     // 其他的支付方法暂时不支持
                     // 回滚
@@ -1049,7 +1062,7 @@ class OrderController extends AdminController
                 // $this->alipayRefund();
                 //
                 // // 变更状态，向第三方接口申请退款，这个最好用异步通知来做
-                // $refund_result = $this->refundapiAction();
+                $refund_result = $this->refundAction();
                 // 如果退款成功，状态变为6-已退款
                 if ($refund_result['result_code'] == 'SUCCESS') {
                     // 变更状态为已退款
@@ -1120,7 +1133,7 @@ class OrderController extends AdminController
 
             // 取出订单
             if (!$model = TbShoporderCommon::findFirst([
-                "id = :id: AND order_status = 1",
+                "id = :id: AND pay_time is null AND closed = 0",
                 'bind' => [
                     'id' => $id,
                 ],

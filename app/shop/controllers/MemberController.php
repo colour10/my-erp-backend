@@ -100,7 +100,7 @@ class MemberController extends AdminController
                 $email = $this->request->get('email');
                 $username = $this->request->get('username');
                 // 对于companyid的判断，如果当前登录用户是超级用户，那么companyid就是传过来的$this->request->get('companyid')，如果是普通的公司管理员，那么就是当前用户登录的companyid
-                if ($this->isadmin) {
+                if ($this->issuperadmin) {
                     $companyid = $this->request->get('companyid');
                     $membertype = '1';
                 } else {
@@ -254,8 +254,8 @@ EOT;
         // 分页
         $currentPage = $this->request->getQuery("page", "int", 1);
 
-        // 找到所有的主订单列表，并且按照创建时间倒叙排列
-        $orders = TbShoporderCommon::find("order_status = 1 order by create_time desc");
+        // 找到所有的未支付订单，并且按照创建时间倒叙排列
+        $orders = TbShoporderCommon::find("pay_time is null AND closed = 0 order by create_time desc");
 
         // 整合子订单
         $orders_array = $orders->toArray();

@@ -39,10 +39,10 @@ class CompanyController extends AdminController
     }
 
     /**
-     * 是否管理员用户
+     * 是否超级管理员用户
      * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|string
      */
-    public function isadmin()
+    public function issuperadmin()
     {
         // 逻辑
         if (!$companyid = $this->getSuperCoId()) {
@@ -51,7 +51,7 @@ class CompanyController extends AdminController
 
         // 顺便创建一个虚拟公司的用户
         if (!$memberModel = TbMember::findFirst("login_name='VirtualCorporation'")) {
-            if (!$this->db->execute("INSERT INTO tb_member(`name`,`login_name`, `password`, `companyid`) VALUES('VirtualCorporation', 'VirtualCorporation', md5('VirtualCorporation'), $companyid)")) {
+            if (!$this->db->execute("INSERT INTO tb_member(`name`,`login_name`, `password`, `companyid`, `membertype`) VALUES('VirtualCorporation', 'VirtualCorporation', md5('VirtualCorporation'), $companyid, '1')")) {
                 return false;
             }
         }
@@ -62,6 +62,20 @@ class CompanyController extends AdminController
         } else {
             return false;
         }
+    }
+
+    /**
+     * 是否管理员用户
+     * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|string
+     */
+    public function isadmin()
+    {
+        // 逻辑
+        // 如果当前用户是公司会员，那么就是管理员；如果是个人会员，就是普通用户
+        if ($this->member && $this->member['membertype']) {
+            return true;
+        }
+        return false;
     }
 
     /**
