@@ -274,19 +274,20 @@ button {
     }
 }
 
-.ecommerce .header-navigation-content .nav-brands {
+/* 导航美化 */
+.header-navigation-content .nav-brands {
     margin: 0 0 6px;
 }
 
-.ecommerce .header-navigation-content ul li {
+.header-navigation-content ul li {
     display: inline-block;
 }
 
-.ecommerce .header-navigation-content .nav-brands li a {
-    padding: 10px 15px;
+.header-navigation-content .nav-brands li a {
+    padding: 0 5px !important;
 }
 
-.ecommerce .header-navigation-content .nav-brands h4 {
+.header-navigation-content .nav-brands h4 {
     border-bottom: none;
 }
 
