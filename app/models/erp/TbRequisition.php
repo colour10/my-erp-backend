@@ -213,50 +213,76 @@ class TbRequisition extends BaseCompanyModel
         $db = $di->get("db");
 
         $db->begin();
-        if($total>0) {
-            //入库
-            $this->status = 5;
-            $this->turnin_staff = $di->get("currentUser");
-            $this->turnin_date = date("Y-m-d H:i:s");
-            if($this->update()==false) {
-                $db->rollback();
-                throw new \Exception("/11050201/调拨单确认入库失败。/");
+        try {
+            if($total>0) {
+                //入库
+                $this->status = 5;
+                $this->turnin_staff = $di->get("currentUser");
+                $this->turnin_date = date("Y-m-d H:i:s");
+                if($this->update()==false) {
+                    throw new \Exception("/11050201/调拨单确认入库失败。/");
+                }
+
+                $details = [];
+                foreach ($this->requisitionDetail as $detail) {
+                    if($list[$detail->id]>$detail->out_number) {
+                        throw new \Exception("/11050202/调拨单入库数量错误。/");
+                    }
+
+                    $detail->in_number = $list[$detail->id];
+                    if($detail->update()==false) {
+                        throw new \Exception("/11050203/调拨单入库明细更新失败。/");
+                    }
+
+                    //加库存
+                    $detail->inProductstock->preAddStockExecute($detail->in_number, TbProductstock::REQUISITION, $detail->id);
+
+                    //拒绝入库部分生成反向调拨单
+                    $refuseNumber = $detail->out_number-$detail->in_number;
+                    if($refuseNumber>0) {
+                        $details[] = [
+                            "out_productstockid" => $detail->in_productstockid,
+                            "in_productstockid" => $detail->out_productstockid,
+                            "number" => $refuseNumber,
+                            "out_number" => $refuseNumber
+                        ];
+                    }
+                }
+
+                if(count($details)>0) {
+                    //生成反向调拨单
+                    $newrequisition = new TbRequisition();
+                    $newrequisition->status = 3;
+                    $newrequisition->out_id = $this->in_id;
+                    $newrequisition->in_id = $this->out_id;
+                    $newrequisition->apply_staff = $di->get("currentUser");
+                    $newrequisition->apply_date = date("Y-m-d H:i:s");
+                    $newrequisition->turnout_staff = $di->get("currentUser");
+                    $newrequisition->turnout_date = date("Y-m-d H:i:s");
+                    $newrequisition->companyid = $this->companyid;
+                    $newrequisition->memo = "in deny";
+                    if($newrequisition->create()==false) {
+                        throw new \Exception("/11050205/反向调拨单创建失败。/");
+                    }
+
+                    foreach ($details as $data) {
+                        $data['requisitionid'] = $newrequisition->id;
+                        $detail = $newrequisition->addDetail($data, false);
+
+                        //未确认入库的部分
+                        $detail->outProductstock->preAddStockCancel($detail->number, TbProductstock::REQUISITION, $detail->id);
+                        $detail->inProductstock->preAddStock($detail->number, TbProductstock::REQUISITION, $detail->id);
+                    }
+                }
             }
-
-            $total = 0;
-            $details = [];
-            foreach ($this->requisitionDetail as $detail) {
-                if($list[$detail->id]>$detail->out_number) {
-                    $db->rollback();
-                    throw new \Exception("/11050202/调拨单入库数量错误。/");
+            else {
+                $this->status = 4;
+                $this->turnin_staff = $di->get("currentUser");
+                $this->turnin_date = date("Y-m-d H:i:s");
+                if($this->update()==false) {
+                    throw new \Exception("/11050209/调拨单拒绝入库失败。/");
                 }
 
-                $detail->in_number = $list[$detail->id];
-                if($detail->update()==false) {
-                    $db->rollback();
-                    throw new \Exception("/11050203/调拨单入库明细更新失败。/");
-                }
-
-                //加库存
-                $ret = $detail->inProductstock->preAddStockExecute($detail->in_number, TbProductstock::REQUISITION_IN_EXECUTE, $detail->id);
-                if($ret==false) {
-                    $db->rollback();
-                    throw new \Exception("/11050204/调拨单入库仓库库存更新失败。/");
-                }
-
-                $total += $detail->out_number-$detail->in_number;
-
-                if($detail->number-$detail->out_number>0) {
-                    $details[] = [
-                        "out_productstockid" => $detail->in_productstockid,
-                        "in_productstockid" => $detail->out_productstockid,
-                        "number" => $detail->out_number-$detail->in_number,
-                        "out_number" => $detail->out_number-$detail->in_number
-                    ];
-                }
-            }
-
-            if(count($details)>0) {
                 //生成反向调拨单
                 $newrequisition = new TbRequisition();
                 $newrequisition->status = 3;
@@ -269,86 +295,31 @@ class TbRequisition extends BaseCompanyModel
                 $newrequisition->companyid = $this->companyid;
                 $newrequisition->memo = "in deny";
                 if($newrequisition->create()==false) {
-                    $db->rollback();
-                    throw new \Exception("/11050205/反向调拨单创建失败。/");
+                    throw new \Exception("/11050210/反向调拨单创建失败。/");
                 }
+                foreach ($this->requisitionDetail as $detail) {
+                    $data = [
+                        "out_productstockid" => $detail->in_productstockid,
+                        "in_productstockid" => $detail->out_productstockid,
+                        "number" => $detail->out_number,
+                        "out_number" => $detail->out_number,
+                        "requisitionid" => $newrequisition->id
+                    ];
 
-                foreach ($details as $data) {
-                    $data['requisitionid'] = $newrequisition->id;
-                    $result = $newrequisition->addDetail($data);
-                    if($result!==true) {
-                        $db->rollback();
-                        throw new \Exception("/11050206/反向调拨单明细创建失败。/");
+                    $requisitionDetail = $newrequisition->addDetail($data, false);
+                    if($requisitionDetail===false) {
+                        throw new \Exception("/11050211/反向调拨单明细创建失败。/");
                     }
 
-                    //未确认入库的部分
-                    $ret = $newrequisition->outProductstock->preAddStockCancel($result->number, TbProductstock::REQUISITION_PRE_IN_CANCEL, $result->id);
-                    if($ret===false) {
-                        $db->rollback();
-                        throw new \Exception("/11050207/反向调拨单明细创建失败。/");
-                    }
-
-                    $ret = $newrequisition->inProductstock->preAddStock($result->number, TbProductstock::REQUISITION_PRE_IN_CANCEL, $result->id);
-                    if($ret===false) {
-                        $db->rollback();
-                        throw new \Exception("/11050208/反向调拨单明细创建失败。/");
-                    }
+                    //减库存
+                    $requisitionDetail->outProductstock->preAddStockCancel($requisitionDetail->out_number, TbProductstock::REQUISITION, $requisitionDetail->id);
+                    $requisitionDetail->inProductstock->preAddStock($requisitionDetail->out_number, TbProductstock::REQUISITION, $requisitionDetail->id);
                 }
             }
         }
-        else {
-            $this->status = 4;
-            $this->turnin_staff = $di->get("currentUser");
-            $this->turnin_date = date("Y-m-d H:i:s");
-
-            if($this->update()==false) {
-                $db->rollback();
-                throw new \Exception("/11050209/调拨单拒绝入库失败。/");
-            }
-
-            //生成反向调拨单
-            $newrequisition = new TbRequisition();
-            $newrequisition->status = 3;
-            $newrequisition->out_id = $this->in_id;
-            $newrequisition->in_id = $this->out_id;
-            $newrequisition->apply_staff = $di->get("currentUser");
-            $newrequisition->apply_date = date("Y-m-d H:i:s");
-            $newrequisition->turnout_staff = $di->get("currentUser");
-            $newrequisition->turnout_date = date("Y-m-d H:i:s");
-            $newrequisition->companyid = $this->companyid;
-            $newrequisition->memo = "in deny";
-            if($newrequisition->create()==false) {
-                $db->rollback();
-                throw new \Exception("/11050210/反向调拨单创建失败。/");
-            }
-            foreach ($this->requisitionDetail as $detail) {
-                $data = [
-                    "out_productstockid" => $detail->in_productstockid,
-                    "in_productstockid" => $detail->out_productstockid,
-                    "number" => $detail->out_number,
-                    "out_number" => $detail->out_number,
-                    "requisitionid" => $newrequisition->id
-                ];
-
-                $requisitionDetail = $newrequisition->addDetail($data);
-                if($requisitionDetail===false) {
-                    $db->rollback();
-                    throw new \Exception("/11050211/反向调拨单明细创建失败。/");
-                }
-
-                //减库存
-                $ret = $requisitionDetail->outProductstock->reduceStock($requisitionDetail->out_number, TbProductstock::REQUISITION_OUT, $requisitionDetail->id);
-                if($ret===false) {
-                    $db->rollback();
-                    throw new \Exception("/11050112/调整库存失败。/");
-                }
-
-                $ret = $requisitionDetail->inProductstock->preAddStock($requisitionDetail->out_number, TbProductstock::REQUISITION_PRE_IN, $requisitionDetail->id);
-                if($ret===false) {
-                    $db->rollback();
-                    throw new \Exception("/11050113/调入仓库调整库存失败。/");
-                }
-            }
+        catch(\Exception $e) {
+            $db->rollback();
+            throw $e;
         }
 
         $db->commit();
