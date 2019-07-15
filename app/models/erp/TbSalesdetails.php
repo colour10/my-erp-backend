@@ -17,7 +17,7 @@ class TbSalesdetails extends BaseModel
             '\Asa\Erp\TbSales',
             'id',
             [
-                'alias' => 'tbsales'
+                'alias' => 'sales'
             ]
         );
 
@@ -29,5 +29,9 @@ class TbSalesdetails extends BaseModel
                 'alias' => 'productstock'
             ]
         );
+    }
+
+    function getLocalProductstock() {
+        return $this->sales->warehouse->getLocalStock($this->productstock);
     }
 }

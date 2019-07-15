@@ -16,10 +16,66 @@ class RequisitionController extends BaseController {
     }
 
     public function pageAction() {
-        $result = TbRequisition::find(
+        $params = [$this->getSearchCondition()];
+        $params["order"] = "id desc";
+
+        $result = TbRequisition::find($params);
+
+        $page = $this->request->getPost("page", "int", 1);
+        $pageSize = $this->request->getPost("pageSize", "int", 20);
+
+        $paginator = new \Phalcon\Paginator\Adapter\Model(
+            [
+                "data"  => $result,
+                "limit" => $pageSize,
+                "page"  => $page,
+            ]
+        );
+
+        // Get the paginated results
+        $pageObject = $paginator->getPaginate();
+
+        $data = [];
+        foreach($pageObject->items as $row) {
+            $data[] = $row->toArray();
+        }
+
+        $pageinfo = [
+            //"previous"      => $pageObject->previous,
+            "current"       => $pageObject->current,
+            "totalPages"    => $pageObject->total_pages,
+            //"next"          => $pageObject->next,
+            "total"    => $pageObject->total_items,
+            "pageSize"     => $pageSize
+        ];
+        echo $this->reportJson(array("data"=>$data, "pagination" => $pageinfo),200,[]);
+    }
+
+    function getSearchCondition() {
+        $where = array(
             sprintf("companyid=%d", $this->companyid)
         );
-        echo $this->success($result->toArray());
+
+        /*if(isset($_POST["keyword"]) && trim($_POST["keyword"])!="") {
+            $where[] = sprintf("orderno like '%%%s%%'", addslashes(strtoupper($_POST["keyword"])));
+        }
+
+        $names = ['bookingid', 'ageseason', 'supplierid', 'seasontype', 'bussinesstype', 'property'];
+        foreach ($names as $name) {
+            if(isset($_POST[$name]) && preg_match("#^\d+(,\d+)*$#", $_POST[$name])) {
+                $where[] = \Asa\Erp\Sql::isInclude($name, $_POST[$name]);
+            }
+        }
+
+        $names = ['brandids'];
+        foreach ($names as $name) {
+            if(isset($_POST[$name]) && preg_match("#^\d+(,\d+)*$#", $_POST[$name])) {
+                $where[] = \Asa\Erp\Sql::isMatch($name, $_POST[$name]);
+            }
+        }*/
+
+        //echo implode(' and ', $where);
+        return implode(' and ', $where);
     }
 
     public function saveAction()

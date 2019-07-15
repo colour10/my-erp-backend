@@ -656,8 +656,8 @@ return [
     "feiyongguanli" => "费用管理",
     "shifoutanxiao" => "是否摊销",
     "tanxiaofangshi" => "摊销方式",
-    "zaitushuliang" => "在途数量",
-    "zaitushuliang" => "在途数量",
+    "xiaoshou" => "销售",
+    "querentijiao" => "确认提交吗？",
     "zaitushuliang" => "在途数量",
     "zaitushuliang" => "在途数量",
     "zaitushuliang" => "在途数量",
@@ -910,6 +910,12 @@ return [
             "amortizetype" => [
                 "1" => "按数量摊销",
                 "2" => "按金额摊销",
-            ]
+            ],
+            "salestatus" => [
+                "0" => "未保存",
+                "1" => "预售",
+                "2" => "已售",
+                "3" => "作废"
+            ],
         ],
 ];

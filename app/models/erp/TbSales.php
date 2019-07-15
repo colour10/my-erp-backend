@@ -90,9 +90,9 @@ class TbSales extends BaseModel
             $orderdetail_array = $detail->toArray();
             $productstock = $detail->productstock;
 
-            $orderdetail_array['productname'] = $productstock->product->productname;
+          /*  $orderdetail_array['productname'] = $productstock->product->productname;
             $orderdetail_array['sizecontentid'] = $productstock->sizecontentid;
-            $orderdetail_array['price'] = $productstock->goods->price;
+            $orderdetail_array['price'] = $productstock->goods->price;*/
             $orderdetail_array['productstock'] = $detail->productstock->toArray();
             $data['list'][] = $orderdetail_array;
         }

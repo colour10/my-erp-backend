@@ -63,6 +63,10 @@ class TbRequisition extends BaseCompanyModel
             $out_productstock = TbProductstock::findFirstById($row['productstockid']);
 
             if($out_productstock!=false) {
+                if($out_productstock->getAvailableNumber()<$row['number']) {
+                    throw new \Exception("/11060302/库存不足，不能调拨/");
+                }
+
                 $data = [
                     "out_productstockid" => $out_productstock->id,
                     "in_productstockid" => $requisition->inWarehouse->getLocalStock($out_productstock)->id,
@@ -72,12 +76,12 @@ class TbRequisition extends BaseCompanyModel
                 $result = $requisition->addDetail($data);
                 if($result===false) {
                     $db->rollback();
-                    throw new \Exception("/11060302/生成调拨单明细失败。/");
+                    throw new \Exception("/11060303/生成调拨单明细失败。/");
                 }
             }
             else {
                 $db->rollback();
-                throw new \Exception("/11060303/生成调拨单明细失败-库存不存在。/");
+                throw new \Exception("/11060304/生成调拨单明细失败-库存不存在。/");
             }
         }
 
@@ -298,6 +302,10 @@ class TbRequisition extends BaseCompanyModel
                     throw new \Exception("/11050210/反向调拨单创建失败。/");
                 }
                 foreach ($this->requisitionDetail as $detail) {
+                    if($detail->out_number==0) {
+                        continue;
+                    }
+
                     $data = [
                         "out_productstockid" => $detail->in_productstockid,
                         "in_productstockid" => $detail->out_productstockid,

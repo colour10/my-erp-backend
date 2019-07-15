@@ -167,21 +167,27 @@ class TbProductstock extends BaseCompanyModel
         $db->begin();
         $old_number = $this->number;
 
-        $this->number = $this->number - $number;
-        $this->reserve_number = $this->reserve_number - $number;
-        $this->change_time = date("Y-m-d H:i:s");
-        $this->change_stuff = $this->getDI()->get('currentUser');
-        if($this->update()) {
-            //更新库存成功，记录操作日志
-            if($this->addProductstockLog($old_number, $this->number, $change_type, $relationid)===false) {
+        if($number<=$this->reserve_number && $this->number>=$this->reserve_number) {
+            $this->number = $this->number - $number;
+            $this->reserve_number = $this->reserve_number - $number;
+            $this->change_time = date("Y-m-d H:i:s");
+            $this->change_stuff = $this->getDI()->get('currentUser');
+            if($this->update()) {
+                //更新库存成功，记录操作日志
+                if($this->addProductstockLog($old_number, $this->number, $change_type, $relationid)===false) {
+                    $db->rollback();
+                    throw new \Exception("/11090301/库存日志添加失败。/");
+                }
+            }
+            else {
                 $db->rollback();
-                throw new \Exception("/11090301/库存日志添加失败。/");
+                throw new \Exception("/11090302/锁定库存转出库失败/");
             }
         }
         else {
-            $db->rollback();
-            throw new \Exception("/11090302/锁定库存转出库失败/");
+            throw new \Exception("/11090303/库存不足/");
         }
+
         $db->commit();
         return $this;
     }
@@ -338,5 +344,9 @@ class TbProductstock extends BaseCompanyModel
 
         $db->commit();
         return $productStock;
+    }
+
+    function getAvailableNumber() {
+        return $this->number-max($this->shipping_number, $this->reserve_number);
     }
 }
