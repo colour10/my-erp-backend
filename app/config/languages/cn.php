@@ -963,7 +963,8 @@ return [
 
             "shippingstatus" => [
                 "1" => "在途",
-                "2" => "入库",
+                "2" => "待入库",
+                "3" => "已入库"
             ],
 
             "amortizetype" => [
