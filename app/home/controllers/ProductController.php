@@ -35,10 +35,10 @@ class ProductController extends CadminController {
             $product->companyid = $this->companyid;
             $product->maketime = date("Y-m-d H:i:s");
             $product->makestaff = $this->currentUser;
-            $product->wordcode_1 = $row['wordcode_1'];
-            $product->wordcode_2 = $row['wordcode_2'];
-            $product->wordcode_3 = $row['wordcode_3'];
-            $product->wordcode_4 = $row['wordcode_4'];
+            $product->wordcode_1 = trim($row['wordcode_1']);
+            $product->wordcode_2 = trim($row['wordcode_2']);
+            $product->wordcode_3 = trim($row['wordcode_3']);
+            $product->wordcode_4 = trim($row['wordcode_4']);
             $product->brandcolor = $row['brandcolor'];
             $product->colorname = $row['colorname'];
             $product->picture = $row['picture'];
@@ -116,10 +116,10 @@ class ProductController extends CadminController {
             foreach($products as $row) {
                 if($row->id==$product->id) {
                     $row->colorname = $params['form']["colorname"];
-                    $row->wordcode_1 = $params['form']["wordcode_1"];
-                    $row->wordcode_2 = $params['form']["wordcode_2"];
-                    $row->wordcode_3 = $params['form']["wordcode_3"];
-                    $row->wordcode_4 = $params['form']["wordcode_4"];
+                    $row->wordcode_1 = trim($params['form']["wordcode_1"]);
+                    $row->wordcode_2 = trim($params['form']["wordcode_2"]);
+                    $row->wordcode_3 = trim($params['form']["wordcode_3"]);
+                    $row->wordcode_4 = trim($params['form']["wordcode_4"]);
                     $row->brandcolor = $params['form']["brandcolor"];
                     $row->picture = $params['form']["picture"];
                     $row->picture2 = $params['form']["picture2"];

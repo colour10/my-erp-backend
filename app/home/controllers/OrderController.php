@@ -10,6 +10,7 @@ use Asa\Erp\TbCode;
 
 /**
  * 订单主表
+ * ErrorCode 1111
  */
 class OrderController extends BaseController
 {
@@ -159,7 +160,7 @@ class OrderController extends BaseController
             $order->property = $form['property'];
             $order->memo = $form['memo'];
             $order->orderdate = $form['orderdate'];
-            $order->status = $form['status'];
+            $order->status = 1;
             $order->total = $form['total'];
             $order->genders = $form['genders'];
             $order->brandids = $form['brandids'];
@@ -308,7 +309,6 @@ class OrderController extends BaseController
         }
         else {
             throw new \Exception("/1001/订单不存在/");
-
         }
     }
 
@@ -321,8 +321,11 @@ class OrderController extends BaseController
         // 根据orderid查询出当前订单以及订单详情的所有信息
         $order = TbOrder::findFirstById($orderid);
         if($order!=false && $order->companyid==$this->companyid) {
-            $order->isstatus = 1;
-            $this->doTableAction($order,"update");
+            $order->finish();
+            $this->success();
+        }
+        else {
+            throw new \Exception("/11110101/订单不存在/");
         }
     }
 
@@ -358,6 +361,8 @@ class OrderController extends BaseController
             $conditions[] = sprintf("(brandids='%d' or brandids like '%%,%s%%' or brandids like '%%%s,%%')", $_POST['brandid'], $_POST['brandid'], $_POST['brandid']);
         }
 
+        $conditions[] = "status=1";
+
         $orders = TbOrder::find(
             implode(" and ", $conditions)
         );
@@ -365,10 +370,15 @@ class OrderController extends BaseController
         //查询订单明细
         $array = \Asa\Erp\Util::recordListColumn($orders, "id");
         if(count($array)>0) {
-            $details = TbOrderdetails::find([
+            $rows = TbOrderdetails::find([
                 sprintf("orderid in (%s)", implode(",", $array)),
                 "order" => "productid, orderid"
-            ])->toArray();
+            ]);
+
+            $details = [];
+            foreach($rows as $detail) {
+                $details[] = $detail->toArray();
+            }
         }
         else {
             $details = [];
