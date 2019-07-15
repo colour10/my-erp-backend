@@ -8,7 +8,7 @@ use Asa\Erp\Util;
 
 /**
  * 会员注册类
- * Class MemberController
+ * Class RegController
  * @package Multiple\Shop\Controllers
  */
 class RegController extends AdminController

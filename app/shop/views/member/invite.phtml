@@ -74,7 +74,7 @@
                                            class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('company'); ?>
                                         <span class="require">*</span></label>
                                     <div class="col-lg-8">
-                                        <?php if ($this->isadmin) { ?>
+                                        <?php if ($this->issuperadmin) { ?>
                                             <select name="companyid" id="companyid" class="form-control">
                                                 <option value="">
                                                     == <?php echo $this->obj->getValidateMessage('qingxuanze'); ?> ==

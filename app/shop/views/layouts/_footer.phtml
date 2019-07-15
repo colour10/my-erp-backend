@@ -55,6 +55,9 @@
      * @param id 当前购物车的对应id
      */
     function delheadergoods(obj, id) {
+        // 取出ul节点
+        var li = $(obj).parent();
+        var ul = $('.scroller');
         // 逻辑
         $.post('/buycar/deletecar/' + id, function (response) {
             // 判断是否成功
@@ -67,16 +70,55 @@
             } else {
                 // 没有错误信息，成功
                 // 直接删除原来的节点即可，同时添加动画效果
-                var li = $(obj).parent();
-                // 取出当前钱的总价格
                 li.fadeTo("slow", 0.01, function () {
                     $(this).slideUp("slow", function () {
                         // 执行删除
                         $(this).remove();
+                        // 监控是否还有li节点，如果不存在则直接跳转到空购物车页面
+                        if (ul.children('li[class="buycar-list"]').length === 0) {
+                            window.location.href = '/buycar';
+                        }
                     });
                 });
             }
         }, 'json');
+    }
+
+    /**
+     * 主动取消指定id的订单
+     * @param id
+     */
+    function cancle_order(id) {
+        // 询问框
+        layer.open({
+            content: "<?php echo $this->obj->getValidateMessage('confirm-cancle-order'); ?>",
+            btn: ["<?php echo $this->obj->getValidateMessage('yes'); ?>", "<?php echo $this->obj->getValidateMessage('no'); ?>"],
+            yes: function (index) {
+                // ajax取消订单
+                $.post('/order/cancle/' + id + '/1', {}, function (response) {
+                    // 判断是否有错误
+                    if (response.messages.length > 0) {
+                        layer.open({
+                            content: response.messages[0],
+                            btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>"
+                        });
+                    } else {
+                        //提示
+                        layer.open({
+                            content: "<?php echo $this->obj->getValidateMessage('success'); ?>",
+                            btn: "<?php echo $this->obj->getValidateMessage('please-wait'); ?>",
+                            time: 3, // 3秒后自动跳转
+                        });
+                        // 1秒后跳转
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 1000);
+                    }
+                }, 'json');
+                // 关闭弹出层
+                layer.close(index);
+            }
+        });
     }
 </script>
 

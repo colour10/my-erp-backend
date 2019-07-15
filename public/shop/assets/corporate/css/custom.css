@@ -273,3 +273,24 @@ button {
         font-size: 17px;
     }
 }
+
+/* 导航美化 */
+.header-navigation-content .nav-brands {
+    margin: 0 0 6px;
+}
+
+.header-navigation-content ul li {
+    display: inline-block;
+}
+
+.header-navigation-content .nav-brands li a {
+    padding: 0 5px !important;
+}
+
+.header-navigation-content .nav-brands h4 {
+    border-bottom: none;
+}
+
+.nav-brands ul {
+    padding: 10px;
+}

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<!--[if IE 8]>
+<html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+
+<!-- Head BEGIN -->
+<head>
+    <meta charset="utf-8">
+    <title><?php echo $this->obj->getValidateMessage('dingdanjiesuan'); ?></title>
+
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <meta content="Metronic Shop UI description" name="description">
+    <meta content="Metronic Shop UI keywords" name="keywords">
+    <meta content="keenthemes" name="author">
+
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <!-- Global styles START -->
+    <link href="/shop/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/shop/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Global styles END -->
+
+    <!-- Page level plugin styles START -->
+    <link href="/shop/assets/pages/css/animate.css" rel="stylesheet">
+    <link href="/shop/assets/plugins/fancybox/source/jquery.fancybox.css" rel="stylesheet">
+    <link href="/shop/assets/plugins/owl.carousel/assets/owl.carousel.css" rel="stylesheet">
+    <!-- Page level plugin styles END -->
+
+    <!-- Theme styles START -->
+    <link href="/shop/assets/pages/css/components.css" rel="stylesheet">
+    <link href="/shop/assets/pages/css/slider.css" rel="stylesheet">
+    <link href="/shop/assets/pages/css/style-shop.css" rel="stylesheet" type="text/css">
+    <link href="/shop/assets/corporate/css/style.css" rel="stylesheet">
+    <link href="/shop/assets/corporate/css/style-responsive.css" rel="stylesheet">
+    <link href="/shop/assets/corporate/css/themes/red.css" rel="stylesheet" id="style-color">
+    <link rel="stylesheet" href="/shop/assets/static/css/bootstrap-submenu.css">
+    <link href="/shop/assets/corporate/css/custom.css" rel="stylesheet">
+    <!-- Theme styles END -->
+</head>
+<!-- Head END -->
+
+<!-- Body BEGIN -->
+<body class="ecommerce">
+
+<?php echo $this->obj->view->getPartial('layouts/_header') ?>
+
+<div class="main">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="/"><?php echo $this->obj->getValidateMessage('shouye'); ?></a></li>
+            <li class="active"><?php echo $this->obj->getValidateMessage('dingdanjiesuan'); ?></li>
+        </ul>
+        <!-- BEGIN SIDEBAR & CONTENT -->
+        <div class="row margin-bottom-40">
+            <!-- BEGIN CONTENT -->
+            <div class="col-md-12 col-sm-12">
+                <!--<h1>结算</h1>-->
+                <!-- BEGIN CHECKOUT PAGE -->
+                <div class="panel-group checkout-page accordion scrollable" id="checkout-page">
+
+                    <!-- 第一步：BEGIN CHECKOUT -->
+                    <div id="checkout" class="panel panel-default">
+                        <div class="panel-heading">
+                            <h2 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#checkout-page" href="#checkout-content"
+                                   class="accordion-toggle">
+                                    Step
+                                    1: <?php echo $this->obj->getValidateMessage('please-fill-in-your-address'); ?>
+                                </a>
+                            </h2>
+                        </div>
+                        <div id="checkout-content" class="panel-collapse collapse in">
+                            <div class="panel-body row">
+                                <div class="col-md-12 col-sm-6">
+
+                                    <?php
+                                    if (count($data['addresses']) == '0') {
+                                        ?>
+
+                                        <div class="form-group">
+                                            <label for="reciver_name"><?php echo $this->obj->getValidateMessage('shouhuoren'); ?>
+                                                <span
+                                                        class="require">*</span></label>
+                                            <input type="text" id="username" class="form-control">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="reciver_phone"><?php echo $this->obj->getValidateMessage('mobile'); ?>
+                                                <span
+                                                        class="require">*</span></label>
+                                            <input type="text" id="mobile" class="form-control">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="reciver_address"><?php echo $this->obj->getValidateMessage('address'); ?>
+                                                <span
+                                                        class="require">*</span></label>
+                                            <input type="text" id="address" class="form-control">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="smart_address"><?php echo $this->obj->getValidateMessage('address-resolution'); ?></label>
+                                            <textarea type="text" id="smart-address"
+                                                      class="form-control" onchange="smart()"></textarea><br>
+                                            <p><?php echo $this->obj->getValidateMessage('address-resolution-rule'); ?></p>
+                                        </div>
+
+                                        <?php
+                                    } else {
+                                        foreach ($data['addresses'] as $address) {
+                                            ?>
+                                            <label for="address_id-<?php echo $address['id'] ?>"
+                                                   class="label-address"><input
+                                                        id="address_id-<?php echo $address['id'] ?>"
+                                                        name="address_id" type="radio"
+                                                        value="<?php echo $address['id'] ?>"<?php if ($address['is_default']) {
+                                                    echo 'checked="checked"';
+                                                } ?>> <?php echo $address['name'] . ' ' . $address['tel'] . ' ' . $address['address']; ?><?php if ($address['is_default']) {
+                                                    echo ' [' . $this->obj->getValidateMessage('default-address') . ']';
+                                                } ?></label>
+                                            <br>
+                                            <?php
+                                        }
+                                    }
+                                    ?>
+
+                                    <button class="btn btn-primary pull-right" type="submit"
+                                            data-toggle="collapse" data-parent="#checkout-page"
+                                            data-target="#payment-address-content" id="button-payment-address">
+                                        <?php echo $this->obj->getValidateMessage('continue'); ?>
+                                    </button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END CHECKOUT -->
+
+                    <!-- 第二步：BEGIN PAYMENT ADDRESS -->
+                    <div id="payment-address" class="panel panel-default">
+                        <div class="panel-heading">
+                            <h2 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#checkout-page"
+                                   href="#payment-address-content" class="accordion-toggle">
+                                    Step
+                                    2: <?php echo $this->obj->getValidateMessage('choose-payment-method'); ?>
+                                </a>
+                            </h2>
+                        </div>
+                        <div id="payment-address-content" class="panel-collapse collapse">
+                            <div class="panel-body row">
+                                <div class="col-md-12 col-sm-6">
+                                    <div class="form-group paymethod">
+                                        <label for="paymethod1"><input type="radio" id="paymethod1" class=""
+                                                                       name="payment_method" value="wechat"
+                                                                       checked="checked">
+                                            <?php echo $this->obj->getValidateMessage('weixin'); ?></label>
+
+                                        <label for="paymethod2"><input type="radio" id="paymethod2" class=""
+                                                                       name="payment_method" value="alipay">
+                                            <?php echo $this->obj->getValidateMessage('alipay'); ?></label>
+
+                                        <button class="btn btn-primary  pull-right" type="submit"
+                                                data-toggle="collapse" data-parent="#checkout-page"
+                                                data-target="#confirm-content"
+                                                id="button-payment-address"><?php echo $this->obj->getValidateMessage('continue'); ?>
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END PAYMENT ADDRESS -->
+
+
+                    <!-- 第三步：BEGIN CONFIRM -->
+                    <div id="confirm" class="panel panel-default">
+                        <?php
+                        if ($data['is_allow_payment_order']) {
+                            ?>
+                            <div class="panel-heading">
+                                <h2 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#checkout-page" href="#confirm-content"
+                                       class="accordion-toggle">
+                                        Step 3: <?php echo $this->obj->getValidateMessage('menu-8'); ?>
+                                    </a>
+                                </h2>
+                            </div>
+                        <?php } ?>
+                        <div id="confirm-content"
+                             class="panel-collapse collapse">
+                            <div class="panel-body row">
+                                <div class="col-md-12 clearfix">
+                                    <div class="table-wrapper-responsive">
+                                        <table>
+                                            <tr>
+                                                <th class="checkout-image"><?php echo $this->obj->getValidateMessage('tupian'); ?></th>
+                                                <th class="checkout-description"><?php echo $this->obj->getValidateMessage('shangpinmingcheng'); ?></th>
+                                                <th class="checkout-model"><?php echo $this->obj->getValidateMessage('yanse'); ?></th>
+                                                <th class="checkout-model"><?php echo $this->obj->getValidateMessage('menu-2-1-7'); ?></th>
+                                                <th class="checkout-quantity"><?php echo $this->obj->getValidateMessage('jiage'); ?></th>
+                                                <th class="checkout-price"><?php echo $this->obj->getValidateMessage('shuliang'); ?></th>
+                                                <th class="checkout-price"><?php echo $this->obj->getValidateMessage('zongjia'); ?></th>
+                                            </tr>
+                                            <?php foreach ($data['product'] as $k => $v) { ?>
+                                                <tr>
+                                                    <td class="checkout-image">
+                                                        <a href="/product/detail/<?php echo $v['product_detail_id']; ?>"><img
+                                                                    src="<?php echo $v['picture']; ?>"
+                                                                    alt="<?php echo $v['product_name']; ?>"></a>
+                                                    </td>
+                                                    <td class="checkout-description">
+                                                        <h3>
+                                                            <a href="/product/detail/<?php echo $v['product_detail_id']; ?>"><?php echo $v['product_name']; ?></a>
+                                                        </h3>
+                                                    </td>
+                                                    <td class="checkout-model"><?php echo $v['color_name']; ?></td>
+                                                    <td class="checkout-model"><?php echo $v['size_name']; ?></td>
+                                                    <td class="checkout-quantity"><?php echo $this->obj->currency . $v['price']; ?></td>
+                                                    <td class="checkout-price">
+                                                        <strong><?php echo $v['number']; ?></strong></td>
+                                                    <td class="checkout-total">
+                                                        <strong><span><?php echo $this->obj->currency; ?></span><?php echo $v['total_price']; ?>
+                                                        </strong></td>
+                                                </tr>
+                                            <?php } ?>
+
+                                        </table>
+                                    </div>
+                                    <div class="checkout-total-block">
+                                        <ul>
+                                            <li>
+                                                <em><?php echo $this->obj->getValidateMessage('zongjia'); ?></em>
+                                                <strong class="price"><span><?php echo $this->obj->currency; ?></span><?php echo $data['common']['total_price']; ?>
+                                                </strong>
+                                            </li>
+                                            <li>
+                                                <em><?php echo $this->obj->getValidateMessage('freight'); ?></em>
+                                                <strong class="price"><span><?php echo $this->obj->currency; ?></span><?php echo $data['common']['send_price']; ?>
+                                                </strong>
+                                            </li>
+                                            <li class="checkout-total-price">
+                                                <em><?php echo $this->obj->getValidateMessage('chengjiaozongjia'); ?></em>
+                                                <strong class="price"><span><?php echo $this->obj->currency; ?></span><?php echo $data['common']['final_price']; ?>
+                                                </strong>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="clearfix"></div>
+
+                                    <!-- 功能按钮 Start -->
+                                    <button class="btn btn-primary pull-right" type="button"
+                                            id="button-confirm"
+                                            onclick="payment_order(<?php echo $data['common']['id']; ?>);return false;">
+                                        <?php echo $this->obj->getValidateMessage('pay'); ?>
+                                    </button>
+                                    <button type="button" class="btn btn-default pull-right margin-right-20"
+                                            id="button-cancle"
+                                            onclick="cancle_order(<?php echo $data['common']['id']; ?>);return false;">
+                                        <?php echo $this->obj->getValidateMessage('button-cancel'); ?>
+                                    </button>
+                                    <!-- 功能按钮 End -->
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END CONFIRM -->
+
+
+                </div>
+                <!-- END CHECKOUT PAGE -->
+            </div>
+            <!-- END CONTENT -->
+        </div>
+        <!-- END SIDEBAR & CONTENT -->
+    </div>
+</div>
+
+<script src="/shop/assets/custom/arealist.js"></script>
+<script src="/shop/assets/custom/addressparse.js"></script>
+<?php echo $this->obj->view->getPartial('layouts/_footer'); ?>
+
+<script>
+    // 订单支付逻辑
+    function payment_order(id) {
+        // ajax提交
+        $.ajax({
+            type: "post",
+            url: "/order/confirm/" + id,
+            async: true,
+            dataType: 'html',
+            data: {
+                'reciver_name': $('#username').val(),
+                'reciver_phone': $('#mobile').val(),
+                // 'reciver_no':$('#reciver_no').val(),
+                'reciver_address': $('#address').val(),
+                'address_id': $("input[name='address_id']:checked").val(),
+                'payment_method': $("input[name='payment_method']:checked").val(),
+            },
+            beforeSend: function () {
+                // 禁用按钮防止重复提交
+                $("#button-confirm").attr({disabled: "disabled"});
+            },
+            success: function (response) {
+                // 判断是否有form标签，如果有，则成功
+                if (response.indexOf('form') !== -1) {
+                    // 如果没有错误，则把收到的form表单添加到新节点，然后自动提交发送
+                    const div = document.createElement('div');
+                    div.innerHTML = response; // data就是接口返回的form 表单字符串
+                    document.body.appendChild(div);
+                    document.getElementById('alipay_submit').submit();
+                    return;
+                }
+                // 如果失败了，则处理错误
+                // 把html转成json对象
+                let json = JSON.parse(response);
+                // 判断是否有错误
+                if (json.messages.length > 0) {
+                    layer.open({
+                        content: json.messages[0],
+                        btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>"
+                    });
+                }
+            },
+            complete: function () {
+                $("#button-confirm").removeAttr("disabled");
+            },
+        });
+        // 禁止自动跳转
+        return false;
+    }
+</script>
+<!-- END PAGE LEVEL JAVASCRIPTS -->
+</body>
+<!-- END BODY -->
+</html>
