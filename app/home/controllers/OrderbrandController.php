@@ -497,15 +497,28 @@ class OrderbrandController extends AdminController {
 
     function searchorderAction() {
         //首先检索出来确认订单id
+        $conditions = [
+            sprintf("companyid=%d", $this->companyid)
+        ];
+
+        if(isset($_POST['supplierid']) && $_POST['supplierid']>0) {
+            $conditions[] = sprintf("supplierid=%d", $_POST['supplierid']);
+        }
+
+        if(isset($_POST['ageseason']) && $_POST['ageseason']>0) {
+            $conditions[] = sprintf("ageseason=%d", $_POST['ageseason']);
+        }
+        $conditions[] = "status=2";
+
         $orders = TbOrderBrand::find(
-            sprintf("companyid=%d and supplierid=%d and ageseason=%d and status=2", $this->companyid, $_POST['supplierid'], $_POST['ageseason'])
+            implode(' and ', $conditions)
         );
 
         $array = Util::recordListColumn($orders, 'id');
         //print_r($array);
         if(count($array)>0) {
             $details = TbOrderBrandDetail::find(
-                sprintf("orderbrandid in(%s)", implode(",", $array))
+                sprintf("orderbrandid in(%s) and shipping_number<confirm_number", implode(",", $array))
             );
 
             return $this->success( ["orderbrands"=>$orders->toArray(), "orderbranddetails"=>$details->toArray()] );
