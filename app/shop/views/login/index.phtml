@@ -131,64 +131,10 @@ License: You must have a valid license purchased only from themeforest (the abov
 </div>
 <!-- END SIDEBAR & CONTENT -->
 
-<!-- BEGIN PRE-FOOTER -->
-<!-- END PRE-FOOTER -->
-
 <!-- BEGIN FOOTER -->
 <?php echo $this->view->getPartial('layouts/_footer'); ?>
 <!-- END FOOTER -->
 
-<script type="text/javascript">
-    var button = $('#btn-login');
-    button.click(function () {
-        $.ajax({
-            type: "post",
-            url: "/login/login",
-            async: true,
-            dataType: 'json',
-            data: {
-                'login_name': $("#login_name").val(),
-                'password': $("#password").val(),
-                'language': $("#language").val(),
-            },
-            beforeSend: function () {
-                // 更改文字
-                button.html("<?php echo $this->obj->getValidateMessage('please-wait'); ?>");
-                // 禁用按钮防止重复提交
-                button.attr({disabled: "disabled"});
-            },
-            complete: function () {
-                // 更改文字
-                button.html("<?php echo $this->obj->getValidateMessage('queren'); ?>");
-                // 恢复提交
-                button.removeAttr("disabled");
-            },
-            success: function (result) {
-                // 判断是否有错误
-                if (result.messages.length > 0) {
-                    layer.open({
-                        content: result.messages[0],
-                        btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>"
-                    });
-                } else {
-                    //提示
-                    layer.open({
-                        content: "<?php echo $this->obj->getValidateMessage('success'); ?>",
-                        btn: "<?php echo $this->obj->getValidateMessage('please-wait'); ?>",
-                        time: 3, // 3秒后自动跳转
-                    });
-                    // 3秒后跳转
-                    setTimeout(function () {
-                        window.location.href = '/';
-                    }, 1000);
-                }
-            }
-        });
-        // 禁止自动跳转
-        return false;
-    });
-</script>
-<!-- END PAGE LEVEL JAVASCRIPTS -->
 </body>
 <!-- END BODY -->
 </html>

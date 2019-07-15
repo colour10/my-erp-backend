@@ -12,6 +12,9 @@ use Asa\Erp\TbShoporderCommon;
 use Asa\Erp\TbBuycar;
 use Asa\Erp\TbSizecontent;
 use Asa\Erp\Util;
+use Endroid\QrCode\QrCode;
+use Phalcon\Http\Response;
+use Phalcon\Logger\Adapter\File as FileLogger;
 use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
 
 /**
@@ -59,7 +62,7 @@ class OrderController extends AdminController
             } else {
                 if ($this->isadmin) {
                     // 如果是普通管理员，只能查看属于本公司的所有订单
-                    $sql = "companyid = " . $this->currentCompany . "id = " . $id;
+                    $sql = "company_id = " . $this->currentCompany . " and id = " . $id;
                 } else {
                     // 如果是普通用户，只能查看属于自己的订单
                     $sql = "member_id = " . $rs['id'] . ' and id=' . $id;
@@ -70,13 +73,14 @@ class OrderController extends AdminController
             // 判断是否存在
             if ($order) {
                 // 写入最新的订单状态
-                $data['order_status'] = $this->getOrderStatus($order);
+                $data['order_status'] = $order->getSimpleOrderStatus();
                 // 是否允许付款
-                $data['is_allow_payment_order'] = $this->is_allow_payment_order($order);
-
+                $data['isAllowPaymentOrder'] = $order->isAllowPaymentOrder();
+                // 显示订单的最新状态
+                $data['getOrderStatus'] = $order->getOrderStatus();
                 // 赋值
                 $data['common'] = $order;
-                $data['product'] = $order->shoporder;
+                $data['product'] = $order->getShoporder();
                 $data['addresses'] = TbMemberAddress::find("member_id=" . $rs['id']);
                 // 转成数组
                 $data = json_decode(json_encode($data), true);
@@ -131,9 +135,9 @@ class OrderController extends AdminController
             // 判断是否存在
             if ($order) {
                 // 写入最新的订单状态
-                $data['order_status'] = $this->getOrderStatus($order);
+                $data['order_status'] = $order->getOrderStatus();
                 // 是否允许付款
-                $data['is_allow_payment_order'] = $this->is_allow_payment_order($order);
+                $data['isAllowPaymentOrder'] = $order->isAllowPaymentOrder();
 
                 // 赋值
                 $data['common'] = $order;
@@ -164,157 +168,6 @@ class OrderController extends AdminController
         }
     }
 
-    /**
-     * 获取最新的订单状态
-     * @param TbShoporderCommon $order 订单模型
-     * @return string
-     */
-    private function getOrderStatus(TbShoporderCommon $order)
-    {
-        // 逻辑
-        // 是否关闭
-        if ($order->getClosed()) {
-            return $this->getValidateMessage('order-closed');
-        }
-        // 是否退款
-        if ($order->getRefundNo()) {
-            // 接着判断具体的退款状态
-            switch ($order->getRefundStatus()) {
-                case 'applied':
-                    return $this->getValidateMessage('refund_status_applied');
-                    break;
-                case 'processing':
-                    return $this->getValidateMessage('refund_status_processing');
-                    break;
-                case 'success':
-                    return $this->getValidateMessage('refund_status_success');
-                    break;
-                case 'failed':
-                    return $this->getValidateMessage('refund_status_failed');
-                    break;
-                default:
-                    return $this->getValidateMessage('refund_status_applied');
-                    break;
-            }
-        }
-        // 是否支付
-        if ($order->getPayTime()) {
-            return $this->getValidateMessage('payment-success');
-        }
-        // 如果不符合以上任何情况，则订单未付款
-        return $this->getValidateMessage('order-unpaid');
-    }
-
-    /**
-     * 是否在订单列表中显示截至时间
-     * @param TbShoporderCommon $order
-     * @return bool
-     */
-    private function is_show_expireTime(TbShoporderCommon $order)
-    {
-        // 逻辑
-        // 如果订单处于未支付状态，则显示
-        if (!$order->getPayTime()) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * 是否在订单列表中显示计算后的价格
-     * @param TbShoporderCommon $order
-     * @return bool
-     */
-    private
-    function is_show_totalPrice(TbShoporderCommon $order)
-    {
-        // 逻辑
-        // 如果订单处于支付状态，则显示
-        if ($order->getPayTime()) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * 判断该订单是否允许付款
-     * @param TbShoporderCommon $order
-     * @return bool
-     */
-    private function is_allow_payment_order(TbShoporderCommon $order)
-    {
-        // 逻辑
-        // 订单被关闭，不允许付款；
-        // 订单有付款时间，不允许付款
-        if ($order->getClosed() || $order->getPayTime()) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * 是否在订单列表中显示去支付和取消订单按钮
-     * @param TbShoporderCommon $order
-     * @return bool
-     */
-    private
-    function is_show_payAndCancleButtons(TbShoporderCommon $order)
-    {
-        // 逻辑
-        // 如果订单处于未支付状态，并且没有过截至时间，而且订单没有关闭
-        if (!$order->getClosed() && !$order->getPayTime() && $order->getExpireTime() > date('Y-m-d H:i:s')) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * 是否在订单列表中显示退款按钮
-     * @param TbShoporderCommon $order
-     * @return bool
-     */
-    private
-    function is_show_refundButton(TbShoporderCommon $order)
-    {
-        // 逻辑
-        // 如果订单已经支付，并且退款状态不是pending
-        if ($order->getPayTime() && $order->getRefundStatus() !== 'pending') {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * 是否在订单列表中显示订单已经过了截至时间，已经失效
-     * @param TbShoporderCommon $order
-     * @return bool
-     */
-    private
-    function is_show_overExpired(TbShoporderCommon $order)
-    {
-        // 逻辑
-        // 如果订单没有支付，并且已经过了截止时间，截至时间不能为空
-        if (!$order->getPayTime() && $order->getClosed() && $order->getExpireTime() && $order->getExpireTime() < date('Y-m-d H:i:s')) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * 是否在订单列表中显示订单已被用户取消的提示
-     * @param TbShoporderCommon $order
-     * @return bool
-     */
-    private
-    function is_show_cancled(TbShoporderCommon $order)
-    {
-        // 逻辑
-        // 如果订单没有支付，并且已经过了截止时间
-        if ($order->getClosed() && !$order->getExpireTime()) {
-            return true;
-        }
-        return false;
-    }
 
     /**
      * 把购物车添加到订单
@@ -436,21 +289,20 @@ class OrderController extends AdminController
 
 
                 // 开始添加订单主表
-                // 默认订单有效期为1个小时
+                // 默认订单有效期为1个小时，但是如果用户不需要锁库存，那么就不添加订单有效期
                 $now = time();
                 $model_common = new TbShoporderCommon();
                 $model_common->setTotalPrice($total_price);
                 $model_common->setSendPrice($send_price);
                 $model_common->setFinalPrice($final_price);
                 $model_common->setCreateTime(date("Y-m-d H:i:s", $now));
-                $model_common->setExpireTime(date("Y-m-d H:i:s", $now + 3600));
+                if ($rs['is_lockstock']) {
+                    $model_common->setExpireTime(date("Y-m-d H:i:s", $now + 3600));
+                }
                 $model_common->setMemberId($rs['id']);
+                $model_common->setCompanyId($rs['companyid']);
                 // 生成唯一订单号
-                // 如果订单号重复，就一直生成
-                do {
-                    $generate_trade_no = $this->generate_trade_no();
-                } while (TbShoporderCommon::findFirst("order_no = " . $generate_trade_no));
-
+                $generate_trade_no = TbShoporderCommon::getAvailableOrderNo();
                 // 把订单号加入到更新变量
                 $model_common->setOrderNo($generate_trade_no);
                 if (!$model_common->save()) {
@@ -504,24 +356,27 @@ class OrderController extends AdminController
                 }
 
 
-                // 商品表执行减库存操作
-                // 分别减库存
-                foreach ($_POST['data'] as $item) {
-                    // 产品库存模型，采用悲观锁
-                    $model = TbProductSearch::findFirst([
-                        'conditions' => 'id=' . $item['product_id'],
-                        'for_update' => true,
-                    ]);
-                    // 做减法
-                    // 本来应该检测是否超卖的，但是上一步已经验证有库存，所以最终值不会小于0
-                    $model->number -= $item['number'];
-                    if (!$model->save()) {
-                        // 回滚
-                        $this->db->rollback();
-                        // 取出错误信息
-                        return $this->error($model);
+                // 因为有的客户下单不锁库存，所以要先判断，如果is_lockstock是1才锁库存
+                // 商品表执行减库存操作逻辑
+                if ($rs['is_lockstock']) {
+                    foreach ($_POST['data'] as $item) {
+                        // 产品库存模型，采用悲观锁
+                        $model = TbProductSearch::findFirst([
+                            'conditions' => 'id=' . $item['product_id'],
+                            'for_update' => true,
+                        ]);
+                        // 做减法
+                        // 本来应该检测是否超卖的，但是上一步已经验证有库存，所以最终值不会小于0
+                        $model->number -= $item['number'];
+                        if (!$model->save()) {
+                            // 回滚
+                            $this->db->rollback();
+                            // 取出错误信息
+                            return $this->error($model);
+                        }
                     }
                 }
+
 
                 // 提交事务
                 $this->db->commit();
@@ -587,7 +442,7 @@ class OrderController extends AdminController
                     // 回滚
                     $this->db->rollback();
                     // 取出错误信息
-                    return $this->error($this->getValidateMessage('payment-failed'));
+                    return $this->error($this->getValidateMessage('order', 'template', 'notexist'));
                 }
 
                 // 如果订单已支付或者已关闭
@@ -601,36 +456,40 @@ class OrderController extends AdminController
                 // 存在则付款
                 // 但是在付款之前，要先检查是否还有库存，如果没有库存，则提示库存不足
                 // 声明一个新数组来保存最终统计的变量
-                $stock = [];
-                // 遍历
-                foreach ($order->shoporder as $k => $item) {
-                    if (!isset($stock[$item->product_id])) {
-                        $stock[$item->product_id] = [
-                            'id' => $item->product_id,
-                            'number' => $item->number,
-                        ];
-                    } else {
-                        $stock[$item->product_id]['number'] += $item->number;
+                // 付款时，如果判断付款人是不需要锁定库存的，那么就不需要检查库存
+                if ($order->member->is_lockstock) {
+                    $stock = [];
+                    // 遍历
+                    foreach ($order->shoporder as $k => $item) {
+                        if (!isset($stock[$item->product_id])) {
+                            $stock[$item->product_id] = [
+                                'id' => $item->product_id,
+                                'number' => $item->number,
+                            ];
+                        } else {
+                            $stock[$item->product_id]['number'] += $item->number;
+                        }
+                    }
+
+                    // 接着判断库存够不够
+                    // 生成订单的时候验证库存，同时付款的时候也要再检查一次
+                    foreach ($stock as $item) {
+                        // 取出数据库中的库存进行对比
+                        $model = TbProductSearch::findFirst("id=" . $item['id']);
+                        if (!$model) {
+                            // 回滚
+                            $this->db->rollback();
+                            // 取出错误信息
+                            return $this->error($this->getValidateMessage('product', 'template', 'notexist'));
+                        }
+                        if ($model->number < $item['number']) {
+                            // 回滚
+                            $this->db->rollback();
+                            return $this->error($this->getValidateMessage('out-of-stock'));
+                        }
                     }
                 }
 
-                // 接着判断库存够不够
-                // 生成订单的时候验证库存，同时付款的时候也要再检查一次
-                foreach ($stock as $item) {
-                    // 取出数据库中的库存进行对比
-                    $model = TbProductSearch::findFirstById($item['id']);
-                    if (!$model) {
-                        // 回滚
-                        $this->db->rollback();
-                        // 取出错误信息
-                        return $this->error($this->getValidateMessage('product', 'template', 'notexist'));
-                    }
-                    if ($model->number < $item['number']) {
-                        // 回滚
-                        $this->db->rollback();
-                        return $this->error($this->getValidateMessage('out-of-stock'));
-                    }
-                }
 
                 // 付款成功，开始执行数据库写入操作
                 // 如果客户之前存入了地址，就从地址中选择一个插入
@@ -725,17 +584,57 @@ class OrderController extends AdminController
                 // 判断是支付宝还是微信，如果是微信
                 if ($payment_method == 'wechat') {
                     // 调用微信支付
+                    // 请求参数
+                    $order = [
+                        // 订单编号，需保证在商户端不重复
+                        'out_trade_no' => $order->getOrderNo(),
+                        // 订单金额，单位分，支持小数点后两位
+                        'total_fee' => $order->getFinalPrice() * 100,
+                        // 订单标题
+                        'body' => 'Wechat payment',
+                    ];
+                    // 支付
+                    $result = $this->wechat_pay->scan($order);
 
-                } elseif ($payment_method == 'alipay') {
+                    // 把要转换的字符串作为 QrCode 的构造函数参数
+                    $qrCode = new QrCode($result->code_url);
+
+                    // 将生成的二维码图片数据以字符串形式输出，并带上相应的响应类型
+                    $response = new Response();
+                    $response->setStatusCode(200);
+                    $response->setContentType($qrCode->getContentType());
+                    $response->setContent($qrCode->writeString());
+                    return $response;
+
+                } else if ($payment_method == 'alipay') {
                     // 默认调用支付宝的网页支付，这个将会自动跳转到支付宝的付款页面
-                    $this->alipayWeb($order->getOrderNo(), $order->getFinalPrice(), '订单支付');
+                    // 请求参数
+                    $order = [
+                        // 订单编号，需保证在商户端不重复
+                        'out_trade_no' => $order->getOrderNo(),
+                        // 订单金额，单位元，支持小数点后两位
+                        'total_amount' => $order->getFinalPrice(),
+                        // 订单标题
+                        'subject' => 'Alipay payment',
+                    ];
+                    // 支付，这里要采用第三方授权支付。
+                    // 先看看tbshoppayment是否存储了支付参数，如果没有则给出提示
+                    // app_auth_token赋值
+                    if (!$this->alipay_app_auth_token) {
+                        // 返回卖家支付宝未授权，不能通过支付宝付款的错误信息
+                        return $this->error($this->getValidateMessage('seller-alipay-not-authorized'));
+                    }
+                    $this->config['pay']['alipay']['app_auth_token'] = $this->alipay_app_auth_token;
+                    // 开始支付
+                    $alipay = $this->alipay->web($order);
+                    // 返回
+                    return $alipay->send();
                 } else {
                     // 其他的支付方法暂时不支持
-                    // 回滚
-                    $this->db->rollback();
                     // 取出错误信息
-                    return $this->error($this->getValidateMessage('params-error'));
+                    return $this->error($this->getValidateMessage('unknown_payment_method'));
                 }
+
             } else {
                 // 返回错误信息
                 return $this->error($this->getValidateMessage('model-delete-message'));
@@ -766,21 +665,23 @@ class OrderController extends AdminController
         $orders_array = $orders->toArray();
         foreach ($orders as $k => $order) {
             // 子订单信息
-            $orders_array[$k]['orderdetails'] = $order->shoporder->toArray();
+            $orders_array[$k]['orderdetails'] = $order->getShoporder()->toArray();
             // 订单状态
-            $orders_array[$k]['order_status'] = $this->getOrderStatus($order);
+            $orders_array[$k]['order_status'] = $order->getSimpleOrderStatus();
             // 是否显示截至时间
-            $orders_array[$k]['is_show_expireTime'] = $this->is_show_expireTime($order);
+            $orders_array[$k]['isShowExpiretime'] = $order->isShowExpiretime();
             // 是否显示计算后的价格
-            $orders_array[$k]['is_show_totalPrice'] = $this->is_show_totalPrice($order);
+            $orders_array[$k]['isShowTotalprice'] = $order->isShowTotalprice();
             // 是否显示去支付和取消订单按钮
-            $orders_array[$k]['is_show_payAndCancleButtons'] = $this->is_show_payAndCancleButtons($order);
+            $orders_array[$k]['isShowPayAndCancledButtons'] = $order->isShowPayAndCancledButtons();
             // 是否显示退款按钮
-            $orders_array[$k]['is_show_refundButton'] = $this->is_show_refundButton($order);
+            $orders_array[$k]['isShowRefundButton'] = $order->isShowRefundButton();
             // 是否显示订单已经过了截至时间
-            $orders_array[$k]['is_show_overExpired'] = $this->is_show_overExpired($order);
+            $orders_array[$k]['isShowOverExpired'] = $order->isShowOverExpired();
             // 是否显示订单已经被用户主动取消了
-            $orders_array[$k]['is_show_cancled'] = $this->is_show_cancled($order);
+            $orders_array[$k]['isShowCancled'] = $order->isShowCancled();
+            // 是否显示退款状态
+            $orders_array[$k]['isShowRefundStatus'] = $order->isShowRefundStatus();
 
             // 子订单加入额外信息
             foreach ($orders_array[$k]['orderdetails'] as $key => $value) {
@@ -789,7 +690,7 @@ class OrderController extends AdminController
                 // id
                 $orders_array[$k]['orderdetails'][$key]['product_detail_id'] = $value['product_id'];
                 // 如果是未付款或者订单已关闭，则实付价格为0
-                if ($this->getOrderStatus($order) == $this->getValidateMessage('order-unpaid') || $this->getOrderStatus($order) == $this->getValidateMessage('order-closed')) {
+                if ($order->getOrderStatus() == $this->getValidateMessage('order-unpaid') || $order->getOrderStatus() == $this->getValidateMessage('order-closed')) {
                     $orders_array[$k]['orderdetails'][$key]['payment_amount'] = '0.00';
                 } else {
                     $orders_array[$k]['orderdetails'][$key]['payment_amount'] = $value['total_price'];
@@ -816,96 +717,6 @@ class OrderController extends AdminController
         ]);
     }
 
-
-    /**
-     * 支付宝网站付款接口
-     * @param string $out_trade_no 订单号
-     * @param string $total_amount 总金额，价格是元
-     * @param string $subject 订单标题
-     * @return mixed
-     */
-    public
-    function alipayWeb($out_trade_no, $total_amount, $subject)
-    {
-        // 逻辑
-        // 请求参数
-        $order = [
-            'out_trade_no' => $out_trade_no,
-            'total_amount' => $total_amount,
-            'subject' => $subject,
-        ];
-        // 支付
-        $alipay = $this->alipay->web($order);
-        // 返回
-        return $alipay->send();
-    }
-
-    /**
-     * 微信扫码支付
-     * @param string $out_trade_no 订单号
-     * @param string $body 订单标题
-     * @param string $total_fee 总金额，价格是分
-     * @return mixed
-     */
-    public
-    function wechatpayScan($out_trade_no, $body, $total_fee)
-    {
-        // 逻辑
-        // 请求参数
-        $order = [
-            'out_trade_no' => $out_trade_no,
-            'body' => $body,
-            'total_fee' => $total_fee,
-        ];
-        // 支付
-        $result = $this->wechat_pay->scan($order);
-        // 返回二维码
-        return $result->code_url;
-    }
-
-
-    /**
-     * @param string $out_trade_no 订单号
-     * @param string $refund_amount 退款金额，单位为元
-     * @return mixed
-     */
-    public
-    function alipayRefund($out_trade_no, $refund_amount)
-    {
-        // 逻辑
-        $order = [
-            'out_trade_no' => $out_trade_no,
-            'refund_amount' => $refund_amount,
-        ];
-        // 退款
-        $result = $this->alipay->refund($order);
-        // 返回
-        return $result;
-    }
-
-    /**
-     * 第三方异步通知接口，因为是自动配置并接受，所以只需要处理逻辑即可。
-     * 这个部分需要重写，现在只是演示
-     * @return array
-     */
-    public
-    function notifyapiAction()
-    {
-        // 逻辑
-        // result_code的值SUCCESS则退款成功，FAIL则为退款成功
-        return ['result_code' => 'SUCCESS'];
-    }
-
-    /**
-     * 生成唯一订单号
-     * @return string
-     */
-    private
-    function generate_trade_no()
-    {
-        // 逻辑
-        return date('Ymd') . substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
-    }
 
     /**
      * 取出支付状态
@@ -955,8 +766,8 @@ class OrderController extends AdminController
             if ($rs = $this->member) {
                 $params = $this->dispatcher->getParams();
                 if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
-                    // 传递错误
-                    return $this->renderError();
+                    // 取出错误信息
+                    return $this->error($this->getValidateMessage('params-error'));
                 }
                 // 赋值
                 $id = $params[0];
@@ -972,11 +783,11 @@ class OrderController extends AdminController
                 if (isset($params[1])) {
                     $expire_time = NULL;
                 } else {
-                    $expire_time = $order->expire_time;
+                    $expire_time = $order->getExpireTime();
                 }
 
                 // 取出每个订单下面具体商品信息
-                $shoporders = $order->shoporder;
+                $shoporders = $order->getShoporder();
 
                 // 开启事务处理，因为涉及到库存变化
                 $this->db->begin();
@@ -991,83 +802,11 @@ class OrderController extends AdminController
                     // 报错
                     return $this->error($this->getValidateMessage('order', 'db', 'save-failed'));
                 }
+
+
                 // 锁定库存还原
-                foreach ($shoporders as $shoporder) {
-                    // 执行写入，为了安全，这里采用悲观锁进行处理
-                    $productSearchModel = TbProductSearch::findFirst([
-                        'conditions' => 'id=' . $shoporder->product_id,
-                        'for_update' => true,
-                    ]);
-                    // 商品不存在回滚
-                    if (!$productSearchModel) {
-                        // 回滚
-                        $this->db->rollback();
-                        return $this->error($this->getValidateMessage('product-doesnot-exist'));
-                    }
-                    // 开始还原
-                    $productSearchModel->number += $shoporder->number;
-                    if (!$productSearchModel->save()) {
-                        // 回滚
-                        $this->db->rollback();
-                        return $this->error($this->getValidateMessage('order', 'db', 'save-failed'));
-                    }
-                }
-                // 事务提交
-                $this->db->commit();
-                // 最终返回成功
-                return $this->success();
-            } else {
-                // 报错
-                return $this->error($this->getValidateMessage('model-delete-message'));
-            }
-        }
-    }
-
-    /**
-     * 订单退款
-     * @return false|string
-     */
-    public
-    function refundAction()
-    {
-        // 逻辑
-        // 先过滤
-        if ($this->request->isPost()) {
-            // 是否登录
-            if ($rs = $this->member) {
-                $params = $this->dispatcher->getParams();
-                if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
-                    // 传递错误
-                    return $this->renderError();
-                }
-                // 赋值
-                $id = $params[0];
-
-                // 采用事务处理
-                $this->db->begin();
-
-                // 查找订单是否存在，订单要求为已付款未完成状态
-                $order = TbShoporderCommon::findFirst("member_id=" . $rs['id'] . " and id=" . $id . " and order_status=2");
-                if (!$order) {
-                    // 回滚
-                    $this->db->rollback();
-                    // 取出错误信息
-                    return $this->error($this->getValidateMessage('order', 'template', 'notexist'));
-                }
-
-                // 取出每个订单下面具体商品信息
-                $shoporders = $order->shoporder;
-
-                // // 开始申请退款
-                // $this->alipayRefund();
-                //
-                // // 变更状态，向第三方接口申请退款，这个最好用异步通知来做
-                $refund_result = $this->refundAction();
-                // 如果退款成功，状态变为6-已退款
-                if ($refund_result['result_code'] == 'SUCCESS') {
-                    // 变更状态为已退款
-                    $order_status = '6';
-                    // 如果是已退款，还得还原库存，还原库存同样采用悲观锁处理
+                // 如果不锁定库存，那么库存无需还原
+                if ($rs['is_lockstock']) {
                     foreach ($shoporders as $shoporder) {
                         // 执行写入，为了安全，这里采用悲观锁进行处理
                         $productSearchModel = TbProductSearch::findFirst([
@@ -1088,27 +827,65 @@ class OrderController extends AdminController
                             return $this->error($this->getValidateMessage('order', 'db', 'save-failed'));
                         }
                     }
-                } else {
-                    // 否则变为退款中
-                    $order_status = '5';
-                }
-                // 写入变更状态
-                if (!$order->save(compact('order_status'))) {
-                    // 回滚
-                    $this->db->rollback();
-                    // 报错
-                    return $this->error($this->getValidateMessage('order', 'db', 'save-failed'));
                 }
 
-                // 提交事务
+                // 事务提交
                 $this->db->commit();
-
                 // 最终返回成功
                 return $this->success();
             } else {
                 // 报错
                 return $this->error($this->getValidateMessage('model-delete-message'));
             }
+        }
+    }
+
+
+    /**
+     * 订单申请退款
+     * @return false|Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|string
+     */
+    public
+    function applyrefundAction()
+    {
+        // 逻辑
+        // 判断订单是否存在
+        if ($this->request->isPost() && $rs = $this->member) {
+            // 取出订单
+            $params = $this->dispatcher->getParams();
+            if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
+                // 取出错误信息
+                return $this->error($this->getValidateMessage('params-error'));
+            }
+            // 赋值
+            $id = $params[0];
+
+            // 查找订单是否存在，订单要求为已付款状态，订单不能关闭，退款状态必须为pending
+            $order = TbShoporderCommon::findFirst("member_id=" . $rs['id'] . " and id=" . $id);
+            if (!$order) {
+                // 取出错误信息
+                return $this->error($this->getValidateMessage('order', 'template', 'notexist'));
+            }
+
+            // 判断订单是否已付款，如果没付款则不能退款
+            if (!$order->getPayTime()) {
+                return $this->error($this->getValidateMessage('paid-not-allowed-to-refund'));
+            }
+            // 判断订单退款状态是否正确
+            if ($order->getRefundStatus() !== TbShoporderCommon::REFUND_STATUS_PENDING) {
+                return $this->error($this->getValidateMessage('order-has-been-refunded'));
+            }
+            // 将用户输入的退款理由放到订单的 extra 字段中
+            $extra = $order->getExtra() ?: [];
+            $extra['refund_reason'] = $this->request->get('reason');
+            // 将订单退款状态改为已申请退款
+            $order->setRefundStatus(TbShoporderCommon::REFUND_STATUS_APPLIED)->setExtra($extra);
+            // 如果更新失败
+            if (!$order->save()) {
+                return $this->getValidateMessage('order', 'db', 'save-failed');
+            }
+            // 如果不报错，则默认成功
+            return $this->success();
         }
     }
 
@@ -1147,6 +924,306 @@ class OrderController extends AdminController
             } else {
                 return $this->success();
             }
+        }
+    }
+
+
+    /**
+     * 订单退款逻辑
+     * @param TbShoporderCommon $order 订单模型
+     * @return false|Response|\Phalcon\Http\ResponseInterface|string
+     */
+    private
+    function _refundOrder(TbShoporderCommon $order)
+    {
+        // 逻辑
+        ini_set('display_errors', 'Off');
+        error_reporting(0);
+        // 判断该订单的支付方式
+        switch ($order->getPaymentMethod()) {
+            // 微信支付
+            case 'wechat':
+                // 生成退款订单号
+                $refundNo = TbShoporderCommon::getAvailableRefundNo();
+                // 用try，cache捕捉错误
+                try {
+                    $this->wechat_pay->refund([
+                        'out_trade_no' => $order->getOrderNo(), // 之前的订单流水号
+                        'total_fee' => $order->getFinalPrice() * 100, //原订单金额，单位分
+                        'refund_fee' => $order->getFinalPrice() * 100, // 要退款的订单金额，单位分
+                        'out_refund_no' => $refundNo, // 退款订单号
+                        // 微信支付的退款结果并不是实时返回的，而是通过退款回调来通知，因此这里需要配上退款回调接口地址
+                        'notify_url' => $this->config['pay']['wechat']['notify_url'],
+                    ]);
+                } catch (\Exception $e) {
+                    // 返回错误
+                    return $this->getValidateMessage('refund_status_failed');
+                }
+
+                // 将订单状态改成退款中
+                $order->save([
+                    'refund_no' => $refundNo,
+                    'refund_status' => TbShoporderCommon::REFUND_STATUS_PROCESSING,
+                ]);
+                break;
+            // 支付宝支付
+            case 'alipay':
+                // 用我们刚刚写的方法来生成一个退款订单号
+                $refundNo = TbShoporderCommon::getAvailableRefundNo();
+                // 调用支付宝支付实例的 refund 方法
+                try {
+                    $ret = $this->alipay->refund([
+                        'out_trade_no' => $order->getOrderNo(), // 之前的订单流水号
+                        'refund_amount' => $order->getFinalPrice(), // 退款金额，单位元
+                        'out_request_no' => $refundNo, // 退款订单号
+                    ]);
+                } catch (\Exception $e) {
+                    // 把失败的具体信息写入日志
+                    // 但是如果这个订单已经退款，则需要返回给用户
+                    $ret = $this->alipay->find(['out_trade_no' => $order->getOrderNo()]);
+                    $arr = json_decode(json_encode($e), true);
+                    // 如果订单状态有TRADE_CLOSED字样说明退款成功，写入数据库
+                    if (isset($arr['trade_status']) && $arr['trade_status'] === 'TRADE_CLOSED') {
+                        // 将订单的退款状态标记为退款成功并保存退款订单号
+                        $order->save([
+                            'refund_no' => $refundNo,
+                            'refund_status' => TbShoporderCommon::REFUND_STATUS_SUCCESS,
+                        ]);
+                    }
+                }
+
+                // 根据支付宝的文档，如果返回值里有 sub_code 字段说明退款失败
+                if ($ret->sub_code) {
+                    // 将退款失败的保存存入 extra 字段
+                    // 首先取出原来的内容
+                    $extra = $order->getExtra();
+                    if (is_array($extra)) {
+                        $extra['refund_failed_code'] = $ret->sub_code;
+                    }
+                    // 将订单的退款状态标记为退款失败
+                    $order->save([
+                        'refund_no' => $refundNo,
+                        'refund_status' => TbShoporderCommon::REFUND_STATUS_FAILED,
+                        'extra' => $extra,
+                    ]);
+                } else {
+                    // 将订单的退款状态标记为退款成功并保存退款订单号
+                    $order->save([
+                        'refund_no' => $refundNo,
+                        'refund_status' => TbShoporderCommon::REFUND_STATUS_SUCCESS,
+                    ]);
+                }
+                break;
+            default:
+                // 原则上不可能出现，这个只是为了代码健壮性
+                // 回滚
+                $this->db->rollback();
+                // 取出错误信息
+                return $this->getValidateMessage('unknown_refund_method');
+                break;
+        }
+
+        // 如果没有返回，则最终确认成功
+        return $this->success();
+    }
+
+
+    /**
+     * 同意退款
+     * @return false|\Phalcon\Mvc\View|string
+     */
+    public function refundagreeAction()
+    {
+        // 逻辑
+        // 要求必须是post请求，登录状态，而且必须是管理员才能访问
+        if ($this->request->isPost() && $member = $this->member && $this->isadmin) {
+            // 取出订单
+            $params = $this->dispatcher->getParams();
+            if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
+                // 取出错误信息
+                return $this->error($this->getValidateMessage('params-error'));
+            }
+            // 赋值
+            $id = $params[0];
+            // 取出order
+            $order = TbShoporderCommon::findFirst("id=" . $id);
+            if (!$order) {
+                // 取出错误信息
+                return $this->error($this->getValidateMessage('order', 'template', 'notexist'));
+            }
+            // 判断订单状态是否正确
+            if ($order->getRefundStatus() !== TbShoporderCommon::REFUND_STATUS_APPLIED) {
+                // 取出错误信息
+                return $this->error($this->getValidateMessage('shoporder-status-error'));
+            }
+            // 开始调用退款逻辑
+            // 调用退款逻辑
+            $result = $this->_refundOrder($order);
+            // 如果是json，则退款成功，否则退款失败
+            if (!Util::is_json($result)) {
+                return $this->error($result);
+            }
+
+            // 开始执行还原库存操作
+            // 用户锁库存才涉及到库存还原，否则直接无视即可。
+            if ($member['is_lockstock']) {
+                // 取出每个订单下面具体商品信息
+                $shoporders = $order->getShoporder();
+                // 如果是已退款，还得还原库存，还原库存同样采用悲观锁处理
+                foreach ($shoporders as $shoporder) {
+                    // 执行写入，为了安全，这里采用悲观锁进行处理
+                    $productSearchModel = TbProductSearch::findFirst([
+                        'conditions' => 'id=' . $shoporder->product_id,
+                        'for_update' => true,
+                    ]);
+                    // 商品不存在报错
+                    if (!$productSearchModel) {
+                        return $this->error($this->getValidateMessage('product-doesnot-exist'));
+                    }
+                    // 开始还原
+                    $productSearchModel->number += $shoporder->number;
+                    if (!$productSearchModel->save()) {
+                        return $this->error($this->getValidateMessage('order', 'db', 'save-failed'));
+                    }
+                }
+            }
+
+            // 如果到现在为止没有任何返回，则最终成功
+            return $this->success();
+        }
+    }
+
+    /**
+     * 不同意退款
+     * @return false|\Phalcon\Mvc\View|string
+     */
+    public function refunddisagreeAction()
+    {
+        // 逻辑
+        // 要求必须是post请求，登录状态，而且必须是管理员才能访问
+        if ($this->request->isPost() && $member = $this->member && $this->isadmin) {
+            // 取出订单
+            $params = $this->dispatcher->getParams();
+            if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
+                // 取出错误信息
+                return $this->error($this->getValidateMessage('params-error'));
+            }
+            // 赋值
+            $id = $params[0];
+            // 取出order
+            $order = TbShoporderCommon::findFirst("id=" . $id);
+            if (!$order) {
+                // 取出错误信息
+                return $this->error($this->getValidateMessage('order', 'template', 'notexist'));
+            }
+            // 判断订单状态是否正确
+            if ($order->getRefundStatus() !== TbShoporderCommon::REFUND_STATUS_APPLIED) {
+                // 取出错误信息
+                return $this->error($this->getValidateMessage('shoporder-status-error'));
+            }
+            // 将拒绝退款理由放到订单的 extra 字段中
+            $extra = $order->getExtra() ?: [];
+            $extra['refund_disagree_reason'] = $this->request->get('reason');
+            // 将订单的退款状态改为未退款
+            $order->setRefundStatus(TbShoporderCommon::REFUND_STATUS_PENDING)->setExtra($extra);
+            if (!$order->save()) {
+                return $this->getValidateMessage('order', 'db', 'save-failed');
+            }
+
+            // 如果没有任何错误返回，则说明成功
+            return $this->success();
+        }
+    }
+
+
+    /**
+     * 订单发货，必须是管理员
+     * @return false|Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|string
+     */
+    public function shipAction()
+    {
+        // 逻辑
+        // 要求必须是post请求，登录状态，而且必须是管理员才能访问
+        if ($this->request->isPost() && $member = $this->member && $this->isadmin) {
+            // 取出订单
+            $params = $this->dispatcher->getParams();
+            if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
+                // 取出错误信息
+                return $this->error($this->getValidateMessage('params-error'));
+            }
+            // 赋值
+            $id = $params[0];
+            // 物流发货信息不能为空
+            if (!$this->request->get('express_company') || !$this->request->get('express_no')) {
+                // 取出错误信息
+                return $this->error($this->getValidateMessage('logistics-incomplete'));
+            }
+            // 赋值
+            $express_company = $this->request->get('express_company');
+            $express_no = $this->request->get('express_no');
+            // 取出order
+            $order = TbShoporderCommon::findFirst("id=" . $id);
+            if (!$order) {
+                // 取出错误信息
+                return $this->error($this->getValidateMessage('order', 'template', 'notexist'));
+            }
+            // 判断当前订单是否已支付
+            if (!$order->getPayTime()) {
+                return $this->error($this->getValidateMessage('order-unpaid'));
+            }
+            // 判断当前订单发货状态是否为未发货
+            if ($order->getShipStatus() !== TbShoporderCommon::SHIP_STATUS_PENDING) {
+                return $this->error($this->getValidateMessage('order-shipped'));
+            }
+            // 将订单发货状态改为已发货，并存入物流信息
+            $shipData = [
+                'express_company' => $express_company,
+                'express_no' => $express_no,
+            ];
+            $order->setShipStatus(TbShoporderCommon::SHIP_STATUS_DELIVERED)->setShipData($shipData);
+            if (!$order->save()) {
+                return $this->getValidateMessage('order', 'db', 'save-failed');
+            }
+            // 如果没有任何错误返回，则说明成功
+            return $this->success();
+        }
+    }
+
+    /**
+     * 确认收货，这个必须是本人才能操作，不需要管理员权限
+     * @return false|Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|string
+     */
+    public function receiveAction()
+    {
+        // 逻辑
+        // 要求必须是post请求，登录状态，而且必须是管理员才能访问
+        if ($this->request->isPost() && $member = $this->member) {
+            // 取出订单
+            $params = $this->dispatcher->getParams();
+            if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
+                // 取出错误信息
+                return $this->error($this->getValidateMessage('params-error'));
+            }
+            // 赋值
+            $id = $params[0];
+            // 取出order
+            $order = TbShoporderCommon::findFirst("id=" . $id);
+            if (!$order) {
+                // 取出错误信息
+                return $this->error($this->getValidateMessage('order', 'template', 'notexist'));
+            }
+            // 判断订单的发货状态是否为已发货
+            if ($order->getShipStatus() !== TbShoporderCommon::SHIP_STATUS_DELIVERED) {
+                // 取出错误信息
+                return $this->error($this->getValidateMessage('incorrect-delivery-status'));
+            }
+            // 将订单发货状态改为已签收
+            $order->setShipStatus(TbShoporderCommon::SHIP_STATUS_RECEIVED);
+            if (!$order->save()) {
+                return $this->getValidateMessage('order', 'db', 'save-failed');
+            }
+            // 如果没有任何错误返回，则说明成功
+            return $this->success();
         }
     }
 

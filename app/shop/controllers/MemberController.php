@@ -6,6 +6,7 @@ use Asa\Erp\TbCompany;
 use Asa\Erp\TbMember;
 use Asa\Erp\TbProductSearch;
 use Asa\Erp\TbShoporderCommon;
+use Asa\Erp\TbShoppayment;
 use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
 
 /**
@@ -139,6 +140,8 @@ class MemberController extends AdminController
                     'membertype' => $membertype,
                     // 添加邀请人
                     'invoteuser' => $member['id'],
+                    // 是否锁库存
+                    'is_lockstock' => $this->request->get('is_lockstock'),
                 ];
                 $model = new TbMember();
                 if (!$model->create($data)) {
@@ -199,15 +202,29 @@ class MemberController extends AdminController
             <head>
             <meta charset="UTF-8" />
             <title>{$this->getValidateMessage('notice-for-success-register')}</title>
+            <style>
+            a {
+                display: block;
+                height: 40px;
+                line-height:40px;
+                width: 90px;
+				text-align: center;
+                background: #33af7b;
+                color: #ffffff;
+                font-size: 14px;
+                font-weight: bold;
+                text-decoration: none !important;
+                padding-top: 3px;
+                margin-top:3px;
+            }
+            </style>
             </head>
             <body>
                 {$this->getValidateMessage('dear')}{$username}，{$this->getValidateMessage('thank-you-for-register')}~<br><br>
                 
                 {$this->getValidateMessage('default-password')}：{$password}，{$this->getValidateMessage('modify-in-time')}。<br><br>
                 
-                {$this->getValidateMessage('login-by-click-link')}：<br>
-                
-                <a href="http://{$this->shop_host}" target="_blank">http://{$this->shop_host}</a>
+                 <a href="http://{$this->shop_host}" target="_blank">登 录</a>
             </body>
         </html>
 EOT;
@@ -222,6 +239,7 @@ EOT;
     {
         // 逻辑
         // 判断是否为公司用户，如果是个人用户则报错
+        // 如果列表中存在公司用户，那么就添加一个发送支付宝授权的功能
         if ($member = $this->member && $this->member['membertype'] > 0) {
             $result = TbMember::find("invoteuser=" . $this->member['id']);
             $result_array = $result->toArray();
@@ -237,6 +255,10 @@ EOT;
         }
     }
 
+    /**
+     * 订单列表
+     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View
+     */
     public function ordersAction()
     {
         // 逻辑
@@ -254,26 +276,36 @@ EOT;
         // 分页
         $currentPage = $this->request->getQuery("page", "int", 1);
 
-        // 找到所有的未支付订单，并且按照创建时间倒叙排列
-        $orders = TbShoporderCommon::find("pay_time is null AND closed = 0 order by create_time desc");
+        // 找到所有的订单，并且按照创建时间倒叙排列
+        $orders = TbShoporderCommon::find([
+            'conditions' => 'company_id = ' . $member['companyid'],
+            'order' => 'create_time DESC',
+        ]);
 
         // 整合子订单
         $orders_array = $orders->toArray();
         foreach ($orders as $k => $order) {
             $orders_array[$k]['orderdetails'] = $order->shoporder->toArray();
+            // 下单人
+            $member = $order->getMember();
+            $orders_array[$k]['member_name'] = $member->name;
+            // 是否显示更改截止时间
+            // 要求是锁库存用户，未付款订单，有截止时间，并且截止时间有效，还有就是订单不能是关闭状态
+            $orders_array[$k]['is_show_change_expiretime'] = ($member->is_lockstock && !$order->getPayTime() && $order->getExpireTime() && $order->getExpireTime() > date('Y-m-d H:i:s') && !$order->getClosed()) ? true : false;
+            // 显示付款状态
+            $orders_array[$k]['pay_status'] = $order->getPayTime() ? $this->getValidateMessage('order-paid') : $this->getValidateMessage('order-unpaid');
+            // 显示物流状态
+            $orders_array[$k]['ship_status'] = $this->getValidateMessage('ship_status_' . $order->getShipStatus());
+            // 是否显示发货按钮
+            $orders_array[$k]['is_show_ship_button'] = $order->isShowShipButton();
+            // 显示退款状态
+            $orders_array[$k]['refund_status'] = $this->getValidateMessage('refund_status_' . $order->getRefundStatus());
             // 子订单加入额外信息
             foreach ($orders_array[$k]['orderdetails'] as $key => $value) {
                 // 封面图
                 $orders_array[$k]['orderdetails'][$key]['picture'] = $this->file_prex . $value['picture'];
                 // id
                 $orders_array[$k]['orderdetails'][$key]['product_detail_id'] = $value['product_id'];
-                // 付款情况
-                // 如果是1或4，则是未付款
-                if ($order->order_status == '1' || $order->order_status == '4') {
-                    $orders_array[$k]['orderdetails'][$key]['payment_amount'] = '0.00';
-                } else {
-                    $orders_array[$k]['orderdetails'][$key]['payment_amount'] = $value['total_price'];
-                }
             }
         }
 
@@ -294,5 +326,55 @@ EOT;
             'orders' => $orders_array,
             'page' => $page,
         ]);
+    }
+
+
+    /**
+     * 支付授权
+     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View
+     */
+    public function payauthAction()
+    {
+        // 逻辑
+        // get请求，判断是否登录
+        // 还要必须公司用户才行
+        if (!$member = $this->member) {
+            return $this->response->redirect('/login');
+        } else {
+            if (!$member['membertype']) {
+                // 传递错误
+                return $this->renderError('make-an-error', '404-not-found');
+            }
+        }
+
+        // 判断是否授权了
+        $payment = TbShoppayment::findFirst("companyid=" . $member['companyid']);
+        // 如果不存在，则写入一条记录
+        if (!$payment) {
+            $payment = new TbShoppayment();
+            $payment->setCompanyid($member['companyid']);
+            $payment->save();
+        }
+        $config = $payment ? $payment->getConfig() : '';
+        // 查找里面是否有app_auth_token字段
+        $is_alipay_allow_auth = (strpos($config, 'app_auth_token') !== false) ? true : false;
+        $is_wechatpay_allow_auth = (strpos($config, 'wx_app_auth_token') !== false) ? true : false;
+        // 判断支付宝是否已授权
+        if (!$is_alipay_allow_auth) {
+            $alipay_url = '<a class="btn-custom" href="/alipay/gettoken" target="_blank">支付宝授权</a>';
+        } else {
+            $alipay_url = '<a class="btn-custom disabled" href="javascript:void(0);">支付宝已授权</a>';
+        }
+
+        // 判断微信是否已授权
+        if (!$is_wechatpay_allow_auth) {
+            $wechat_url = '<a class="btn-custom" href="/wechat/gettoken" target="_blank">微信支付授权</a>';
+        } else {
+            $wechat_url = '<a class="btn-custom disabled" href="javascript:void(0);">微信支付已授权</a>';
+        }
+
+        // 发送给模板
+        $url = ['alipay_url' => $alipay_url, 'wechat_url' => $wechat_url];
+        $this->view->setVars(compact('url'));
     }
 }

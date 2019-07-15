@@ -47,11 +47,13 @@ class CrontabTask extends \Phalcon\CLI\Task
                     if (in_array($product->id, $exist_product_id_array)) {
                         //更新
                         $sql = sprintf(
-                            "UPDATE tb_product_search SET productname='%s', number=%d, brandid=%d,sizetopid=%d, brandgroupid=%d, childbrand=%d, picture='%s', picture2='%s' WHERE companyid=%d and productid=%d",
+                            "UPDATE tb_product_search SET productname='%s', number=%d, brandid=%d, gender = '%s',sizetopid=%d, brandgroupid=%d, childbrand=%d, picture='%s', picture2='%s' WHERE companyid=%d and productid=%d",
                             addslashes($product->productname),
                             $hashmap[$product->id],
                             // 添加品牌id
                             $product->brandid,
+                            // 添加性别
+                            $product->gender,
                             $product->sizetopid,
                             $product->brandgroupid,
                             $product->childbrand,
@@ -64,11 +66,13 @@ class CrontabTask extends \Phalcon\CLI\Task
                     } else {
                         //新增
                         $sql = sprintf(
-                            "INSERT INTO tb_product_search SET productname='%s', number=%d, brandid=%d,sizetopid=%d, brandgroupid=%d, childbrand=%d, picture='%s', picture2='%s', companyid=%d, productid=%d",
+                            "INSERT INTO tb_product_search SET productname='%s', number=%d, brandid=%d,gender = '%s',sizetopid=%d, brandgroupid=%d, childbrand=%d, picture='%s', picture2='%s', companyid=%d, productid=%d",
                             addslashes($product->productname),
                             $hashmap[$product->id],
                             // 添加品牌id
                             $product->brandid,
+                            // 添加性别
+                            $product->gender,
                             $product->sizetopid,
                             $product->brandgroupid,
                             $product->childbrand,

@@ -111,37 +111,44 @@ class ConsumecheckorderTask extends Task
                         $job->release(100, 10);
                     }
                     // 订单更新成功日志
-                    $logger->notice('Orderid ' . $jobInfo . ' save success, Waiting for stock reduction...' . PHP_EOL);
-                    // 取出每个订单下面具体商品信息
-                    $shoporders = $orderModel->shoporder;
-                    // 锁定库存还原
-                    foreach ($shoporders as $shoporder) {
-                        // 执行写入，为了安全，这里采用悲观锁进行处理
-                        $productSearchModel = TbProductSearch::findFirst([
-                            'conditions' => 'id=' . $shoporder->product_id,
-                            'for_update' => true,
-                        ]);
-                        // 商品不存在回滚
-                        if (!$productSearchModel) {
-                            // 回滚
-                            $this->db->rollback();
-                            // 商品不在了则直接删除
-                            $logger->notice('Product does not exist, Deleting...' . PHP_EOL);
-                            $job->delete();
+                    $logger->notice('Orderid ' . $jobInfo . ' closed success, Waiting for stock reduction...' . PHP_EOL);
+                    // 开始执行锁定库存还原逻辑
+                    $is_lockstock = $orderModel->member->is_lockstock;
+                    // 如果下单人不涉及到库存还原，那么就无需进行此操作
+                    if ($is_lockstock) {
+                        $logger->notice('Orderid ' . $jobInfo . ' is required to reback the stock, Please waiting...' . PHP_EOL);
+                        // 取出每个订单下面具体商品信息
+                        $shoporders = $orderModel->shoporder;
+                        // 锁定库存还原
+                        foreach ($shoporders as $shoporder) {
+                            // 执行写入，为了安全，这里采用悲观锁进行处理
+                            $productSearchModel = TbProductSearch::findFirst([
+                                'conditions' => 'id=' . $shoporder->product_id,
+                                'for_update' => true,
+                            ]);
+                            // 商品不存在回滚
+                            if (!$productSearchModel) {
+                                // 回滚
+                                $this->db->rollback();
+                                // 商品不在了则直接删除
+                                $logger->notice('Product does not exist, Deleting...' . PHP_EOL);
+                                $job->delete();
+                            }
+                            // 开始库存还原
+                            $productSearchModel->number += $shoporder->number;
+                            if (!$productSearchModel->save()) {
+                                // 回滚
+                                $this->db->rollback();
+                                // 如果写入失败，则过一会再处理，先报错
+                                $logger->notice('Orderdetail save failed, Waiting for retry...' . PHP_EOL);
+                                // 等待10秒后重新放入队列
+                                $job->release(100, 10);
+                            }
                         }
-                        // 开始还原
-                        $productSearchModel->number += $shoporder->number;
-                        if (!$productSearchModel->save()) {
-                            // 回滚
-                            $this->db->rollback();
-                            // 如果写入失败，则过一会再处理，先报错
-                            $logger->notice('Orderdetail save failed, Waiting for retry...' . PHP_EOL);
-                            // 等待10秒后重新放入队列
-                            $job->release(100, 10);
-                        }
+                        // 库存还原提示
+                        $logger->notice('Stock reduction success! Great! ' . PHP_EOL);
                     }
-                    // 库存还原提示
-                    $logger->notice('Stock reduction success! Great! ' . PHP_EOL);
+
                     // 事务提交
                     $this->db->commit();
                     // 至此，才算真正的处理完毕

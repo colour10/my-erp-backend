@@ -90,7 +90,8 @@
                                     <?php //echo $price; ?><!--</span></em>-->
                                 </div>
                                 <div class="availability">
-                                    在库: <strong><?php echo $number; ?></strong>
+                                    <?php echo $this->obj->getValidateMessage('in-stock'); ?>:
+                                    <strong><?php echo $number; ?></strong>
                                 </div>
                             </div>
                         </div>
@@ -98,7 +99,7 @@
                         <div class="product-page-content">
                             <ul id="myTab" class="nav nav-tabs">
                                 <li class="active"><a href="#Description"
-                                                      data-toggle="tab"><?php echo $this->obj->obj->getValidateMessage('product-description'); ?></a>
+                                                      data-toggle="tab"><?php echo $this->obj->getValidateMessage('product-description'); ?></a>
                                 </li>
                             </ul>
                             <div id="myTabContent" class="tab-content">
@@ -123,73 +124,4 @@
 
 </body>
 <!-- END BODY -->
-
-<script>
-    $("#add-buycar").click(function () {
-        // 之前select获取值错误，重写
-        // var color_id = $("#product_color").val();
-        var color_id = $('#product_color option:selected').val();
-        // var color_name = '';
-        // var size_id = $("#product_size").val();
-        var size_id = $('#product_size option:selected').val();
-        var product_quantity = $("#product-quantity");
-        var price = $("#price");
-        // var size_name = '';
-        // $("#product_color option").each(function(){
-        // 	if(color_id == $("#product_color").val()){
-        // 		color_name = $(this).html()
-        // 	}
-        // });
-        // $("#product_size option").each(function(){
-        // 	if(size_id == $("#product_size").val()){
-        // 		size_name = $(this).html()
-        // 	}
-        // });
-
-        $.ajax({
-            type: "post",
-            url: "/buycar/add",
-            async: true,
-            dataType: 'json',
-            data: {
-                'number': product_quantity.val(),
-                'price': price.html(),
-                'total_price': product_quantity.val() * price.html(),
-                // 取商品标题
-                'product_name': $('h1').html(),
-                'product_id': $("#product_id").attr("attr-id"),
-                'size_id': size_id,
-                // 'size_name': size_name,
-                'color_id': color_id,
-                // 'color_name': color_name,
-                // 添加封面图
-                'picture': "<?php echo $product->picture ?>",
-            },
-            success: function (result) {
-                console.log(result);
-                if (!result.auth) {
-                    layer.open({
-                        content: result.messages[0],
-                        btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>"
-                    });
-                } else {
-                    // return false;
-                    //提示
-                    layer.open({
-                        content: "<?php echo $this->obj->getValidateMessage('success'); ?>",
-                        btn: "<?php echo $this->obj->getValidateMessage('please-wait'); ?>",
-                        time: 3, // 3秒后自动关闭
-                    });
-                    // 3秒后跳转
-                    setTimeout(function () {
-                        window.location.reload();
-                    }, 3000);
-                }
-            }
-        });
-
-        // 禁止后续操作
-        return false;
-    });
-</script>
 </html>

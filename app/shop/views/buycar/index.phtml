@@ -214,7 +214,7 @@
         // 当失去焦点时
         $(this).blur(function () {
             new_number = $(this).val();
-            if (new_number != old_number) {
+            if (new_number !== old_number) {
                 // 这里，我们规定，当失去焦点时，再判断值是否变动，如果变动了，就重新计算；否则就忽略
                 // 更改后的数量赋值给一个变量，只在循环体内有效
                 let sum_price = Number(parentTR.find('.em-price').html() * new_number).toFixed(2);
@@ -258,7 +258,7 @@
     // 当失去焦点时
     input_send_price.blur(function () {
         new_send_price = $(this).val();
-        if (old_send_price != new_send_price) {
+        if (old_send_price !== new_send_price) {
             // 这个时候商品的总额啥的就不用变化了
             // 重新执行sum函数
             addMoney();
@@ -297,7 +297,7 @@
             postData.push(temp_data);
         });
 
-        // ajax提交
+        // ajax提交，跳转链接不同，不用标准的ajax函数
         $.ajax({
             type: "post",
             url: "/order/addOrder",
@@ -319,7 +319,7 @@
                     layer.open({
                         content: "<?php echo $this->obj->getValidateMessage('success'); ?>",
                         btn: "<?php echo $this->obj->getValidateMessage('please-wait'); ?>",
-                        time: 2, //2秒后自动跳转
+                        time: 3, // 3秒后自动跳转
                     });
                     // 1秒后跳转
                     setTimeout(function () {
