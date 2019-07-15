@@ -158,14 +158,20 @@
                             <div class="panel-body row">
                                 <div class="col-md-12 col-sm-6">
                                     <div class="form-group paymethod">
-                                        <label for="paymethod1"><input type="radio" id="paymethod1" class=""
-                                                                       name="payment_method" value="wechat"
-                                                                       checked="checked">
-                                            <?php echo $this->obj->getValidateMessage('weixin'); ?></label>
 
-                                        <label for="paymethod2"><input type="radio" id="paymethod2" class=""
-                                                                       name="payment_method" value="alipay">
-                                            <?php echo $this->obj->getValidateMessage('alipay'); ?></label>
+                                        <div class="radio-inline">
+                                            <label><input type="radio" name="payment_method"
+                                                          value="alipay"
+                                                          checked="checked"/><?php echo $this->obj->getValidateMessage('alipay'); ?>
+                                            </label>
+                                        </div>
+
+                                        <div class="radio-inline">
+                                            <label><input type="radio" name="payment_method"
+                                                          value="wechat"
+                                                /><?php echo $this->obj->getValidateMessage('weixin'); ?>
+                                            </label>
+                                        </div>
 
                                         <button class="btn btn-primary  pull-right" type="submit"
                                                 data-toggle="collapse" data-parent="#checkout-page"
@@ -184,7 +190,7 @@
                     <!-- 第三步：BEGIN CONFIRM -->
                     <div id="confirm" class="panel panel-default">
                         <?php
-                        if ($data['is_allow_payment_order']) {
+                        if ($data['isAllowPaymentOrder']) {
                             ?>
                             <div class="panel-heading">
                                 <h2 class="panel-title">
@@ -262,11 +268,6 @@
                                             onclick="payment_order(<?php echo $data['common']['id']; ?>);return false;">
                                         <?php echo $this->obj->getValidateMessage('pay'); ?>
                                     </button>
-                                    <button type="button" class="btn btn-default pull-right margin-right-20"
-                                            id="button-cancle"
-                                            onclick="cancle_order(<?php echo $data['common']['id']; ?>);return false;">
-                                        <?php echo $this->obj->getValidateMessage('button-cancel'); ?>
-                                    </button>
                                     <!-- 功能按钮 End -->
 
                                 </div>
@@ -290,7 +291,11 @@
 <?php echo $this->obj->view->getPartial('layouts/_footer'); ?>
 
 <script>
-    // 订单支付逻辑
+    /**
+     * 订单支付逻辑，这个暂时不用ajax函数统一调用
+     * @param id 订单id
+     * @returns {boolean}
+     */
     function payment_order(id) {
         // ajax提交
         $.ajax({

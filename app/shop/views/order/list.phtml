@@ -89,18 +89,18 @@
                                                         <a href="/order/detail/<?php echo $order['id']; ?>"><?php echo $this->obj->getValidateMessage('dingdanhao'); ?>：<?php echo $order['order_no']; ?></a>　
 
 
-                                                        <?php if ($order['is_show_expireTime']) { ?>
+                                                        <?php if ($order['isShowExpiretime']) { ?>
                                                             <span data-expiretime="<?php echo $order['expire_time']; ?>"
                                                                   data-id="<?php echo $order['id']; ?>"
                                                                   class="remainTime"></span>
                                                         <?php } ?>
 
-                                                        <?php if ($order['is_show_totalPrice']) { ?>
+                                                        <?php if ($order['isShowTotalprice']) { ?>
                                                             <?php echo $this->obj->getValidateMessage('chengjiaozongjia'); ?>：<?php echo $this->currency . $order['final_price']; ?>
                                                         <?php } ?>
 
 
-                                                        <?php if ($order['is_show_payAndCancleButtons']) { ?>
+                                                        <?php if ($order['isShowPayAndCancledButtons']) { ?>
                                                             <em class="pull-right font-normal">
                                                                 <a href="/order/payment/<?php echo $order['id']; ?>"><?php echo $this->obj->getValidateMessage('to-pay'); ?></a>
                                                                 <a style="cursor: pointer"
@@ -109,7 +109,7 @@
                                                         <?php } ?>
 
 
-                                                        <?php if ($order['is_show_refundButton']) { ?>
+                                                        <?php if ($order['isShowRefundButton']) { ?>
                                                             <em class="pull-right font-normal">
                                                                 <a style="cursor: pointer"
                                                                    onclick="refund_order(<?php echo $order['id']; ?>);return false;"><?php echo $this->obj->getValidateMessage('apply-for-refund'); ?></a>
@@ -117,17 +117,24 @@
                                                         <?php } ?>
 
 
-                                                        <?php if ($order['is_show_overExpired']) { ?>
+                                                        <?php if ($order['isShowOverExpired']) { ?>
                                                             <em class="pull-right font-normal">
                                                                 <?php echo $this->obj->getValidateMessage('order-failure'); ?>
                                                             </em>
                                                         <?php } ?>
 
-                                                        <?php if ($order['is_show_cancled']) { ?>
+                                                        <?php if ($order['isShowCancled']) { ?>
                                                             <em class="pull-right font-normal">
                                                                 <?php echo $this->obj->getValidateMessage('order-cancled'); ?>
                                                             </em>
                                                         <?php } ?>
+
+                                                        <?php if ($order['isShowRefundStatus']) { ?>
+                                                            <em class="pull-right font-normal">
+                                                                <?php echo $order['isShowRefundStatus']; ?>
+                                                            </em>
+                                                        <?php } ?>
+
 
                                                     </span>
                                                 </td>
@@ -235,6 +242,7 @@
                     let leave3 = leave2 % 60;      //计算分钟数后剩余的毫秒数
                     let seconds = Math.round(leave3);
                     // 写入dom
+                    // 判断是否过期
                     _this.html("<?php echo $this->obj->getValidateMessage('remain-time'); ?>：" + days + "<?php echo $this->obj->getValidateMessage('days'); ?>" + hours + "<?php echo $this->obj->getValidateMessage('hours'); ?>" + minutes + "<?php echo $this->obj->getValidateMessage('minutes'); ?>" + seconds + "<?php echo $this->obj->getValidateMessage('seconds'); ?>");
                 } else {
                     // 这里可以添加倒计时结束后需要执行的事件
@@ -252,44 +260,6 @@
             }, 1000);
         });
     });
-
-
-    /**
-     * 指定id的订单申请退款
-     * @param id
-     */
-    function refund_order(id) {
-        // 询问框
-        layer.open({
-            content: "<?php echo $this->obj->getValidateMessage('confirm-apply-refund'); ?>",
-            btn: ["<?php echo $this->obj->getValidateMessage('yes'); ?>", "<?php echo $this->obj->getValidateMessage('no'); ?>"],
-            yes: function (index) {
-                // ajax取消订单
-                $.post('/order/refund/' + id, {}, function (response) {
-                    // 判断是否有错误
-                    if (response.messages.length > 0) {
-                        layer.open({
-                            content: response.messages[0],
-                            btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>"
-                        });
-                    } else {
-                        //提示
-                        layer.open({
-                            content: "<?php echo $this->obj->getValidateMessage('success'); ?>",
-                            btn: "<?php echo $this->obj->getValidateMessage('please-wait'); ?>",
-                            time: 3, // 3秒后自动跳转
-                        });
-                        // 1秒后跳转
-                        setTimeout(function () {
-                            window.location.reload();
-                        }, 1000);
-                    }
-                }, 'json');
-                // 关闭弹出层
-                layer.close(index);
-            }
-        });
-    }
 </script>
 
 </body>

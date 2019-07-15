@@ -49,8 +49,9 @@ a {
     text-align: center;
 }
 
-.paymethod label {
+.paymethod label, .invite label {
     cursor: pointer;
+    font-weight: normal;
 }
 
 #paymethod2 {
@@ -89,6 +90,7 @@ table .t-default {
     border-radius: 3px;
     background: #ffd6cc;
     color: #f30;
+    text-decoration: none;
 }
 
 .label-address {
@@ -294,3 +296,44 @@ button {
 .nav-brands ul {
     padding: 10px;
 }
+
+a.btn-custom {
+    display: inline-block;
+    height: 40px;
+    line-height: 40px;
+    padding: 3px 10px 0;
+    text-align: center;
+    background: #eee;
+    color: #3E4D5C;
+    font-size: 14px;
+    font-weight: normal;
+    text-decoration: none !important;
+    margin-top: 3px;
+}
+
+a.btn-custom:hover {
+    color: white;
+    background: #E02222;
+}
+
+a.disabled {
+    cursor: not-allowed;
+}
+
+.custom-div p {
+    margin: 1em 0;
+}
+
+.margin-top-20 {
+    margin-top: 20px !important;
+}
+
+.custom-div p span button.hover {
+    background: red;
+    color: white;
+}
+
+#btn-ship {
+    margin-top: 0.5em;
+}
+

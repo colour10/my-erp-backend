@@ -134,7 +134,83 @@
                                         <div class="clearfix"></div>
 
                                         <!-- 订单状态 Start -->
-                                        <span class="pull-right"><?php echo $data['order_status']; ?></span>
+                                        <div class="pull-right text-right custom-div">
+                                            <p><?php echo $this->obj->getValidateMessage('payment-status'); ?>
+                                                ：<?php echo $data['getOrderStatus']['pay_status']; ?></p>
+                                            <p><?php echo $this->obj->getValidateMessage('close_or_not'); ?>
+                                                ：<?php echo $data['getOrderStatus']['closed_status']; ?></p>
+                                            <?php
+                                            // 如果退款订单有状态，则显示具体状态；否则就判断是否有退款理由
+                                            if ($data['common']['refund_status'] !== \Asa\Erp\TbShoporderCommon::REFUND_STATUS_PENDING) {
+                                                ?>
+                                                <p><?php echo $this->obj->getValidateMessage('refund-status'); ?>
+                                                    ：<?php echo $data['getOrderStatus']['refund_status']; ?>
+                                                    　<?php echo $this->obj->getValidateMessage('reason'); ?>
+                                                    ：<?php echo json_decode($data['common']['extra'], true)['refund_reason']; ?></p>
+
+                                                <!-- 如果订单退款状态是已申请，则展示处理按钮 -->
+                                                <?php
+                                                // 处理申请退款必须是管理员
+                                                if ($this->isadmin && $data['common']['refund_status'] === \Asa\Erp\TbShoporderCommon::REFUND_STATUS_APPLIED) {
+                                                    ?>
+                                                    <button class="btn btn-sm btn-success" id="btn-refund-agree"
+                                                            onclick="refund_agree(<?php echo $data['common']['id']; ?>);">
+                                                        <?php echo $this->obj->getValidateMessage('agree'); ?>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-danger" id="btn-refund-disagree"
+                                                            onclick="refund_disagree(<?php echo $data['common']['id']; ?>);">
+                                                        <?php echo $this->obj->getValidateMessage('disagree'); ?>
+                                                    </button>
+                                                    <?php
+                                                }
+                                                ?>
+
+                                            <?php } else { ?>
+                                                <!-- 是否显示拒绝退款理由 -->
+                                                <?php if (isset(json_decode($data['common']['extra'], true)['refund_disagree_reason'])) { ?>
+                                                    <p><?php echo $this->obj->getValidateMessage('disagree-reason'); ?>
+                                                        ：<?php echo json_decode($data['common']['extra'], true)['refund_disagree_reason']; ?><?php if ($this->member['id'] === $data['common']['member_id']) {?>
+                                                            　<button class="btn btn-sm btn-success" id="btn-refund-agree"
+                                                                    onclick="refund_order(<?php echo $data['common']['id']; ?>);">
+                                                                <?php echo $this->obj->getValidateMessage('apply-for-refund'); ?>
+                                                            </button>
+                                                        <?php } ?>
+                                                    </p>
+                                                <?php } ?>
+                                            <?php } ?>
+
+
+                                            <p>
+                                                <?php echo $this->obj->getValidateMessage('express_status'); ?>
+                                                ：<?php echo $data['getOrderStatus']['ship_status']; ?>
+                                                <?php
+                                                // 如果物流状态为发送中，那么就显示签收按钮，这个只有本人才可以操作，管理员不行
+                                                if ($data['common']['ship_status'] === \Asa\Erp\TbShoporderCommon::SHIP_STATUS_DELIVERED && $this->member['id'] === $data['common']['member_id']) {
+                                                    ?>
+                                                    　<button class="btn btn-sm btn-success" id="btn-refund-agree"
+                                                            onclick="receive_order(<?php echo $data['common']['id']; ?>);">
+                                                        <?php echo $this->obj->getValidateMessage('receive-order'); ?>
+                                                    </button>
+                                                    <?php
+                                                }
+                                                ?>
+                                            </p>
+
+                                            <!-- 显示物流状态 -->
+                                            <?php
+                                            if (isset(json_decode($data['common']['ship_data'], true)['express_company'])) {
+                                                ?>
+                                                <p>
+                                                    <?php echo $this->obj->getValidateMessage('express_company'); ?>：
+                                                    <?php echo json_decode($data['common']['ship_data'], true)['express_company']; ?>
+                                                    　<?php echo $this->obj->getValidateMessage('express_no'); ?>：
+                                                    <?php echo json_decode($data['common']['ship_data'], true)['express_no']; ?>
+                                                </p>
+                                                <?php
+                                            }
+                                            ?>
+
+                                        </div>
                                         <!-- 订单状态 End -->
 
                                     </div>

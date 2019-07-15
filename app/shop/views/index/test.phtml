@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 
-<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
-<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if IE 8]>
+<html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
 <html lang="en">
 <!--<![endif]-->
@@ -34,7 +36,7 @@
     <link href="/shop/assets/corporate/css/style-responsive.css" rel="stylesheet">
     <link href="/shop/assets/corporate/css/themes/red.css" rel="stylesheet" id="style-color">
     <link href="/shop/assets/corporate/css/custom.css" rel="stylesheet">
-    <link href="/shop/assets/custom/templatemo-style.css" rel="stylesheet" />
+    <link href="/shop/assets/custom/templatemo-style.css" rel="stylesheet"/>
     <!-- Theme styles END -->
 </head>
 <!-- Head END -->
@@ -42,24 +44,24 @@
 <!-- Body BEGIN -->
 <body class="ecommerce">
 <script src="/js/jquery.min.js"></script>
-<script src="/common/systemlanguage?<?=time()?>"></script>
-<script src="/js/erp.js?<?=time()?>"></script>
-<script src="/js/shop.js?<?=time()?>"></script>
+<script src="/common/systemlanguage?<?= time() ?>"></script>
+<script src="/js/erp.js?<?= time() ?>"></script>
+<script src="/js/shop.js?<?= time() ?>"></script>
 
 <script>
-$(document).ready(function(){
-    //参数可以传递商品id，或者商品记录的json对象
-    ASAP.product(1, function(data){
-        console.log(data)
-        data.sizecontents.forEach(function(item){
-            console.log(item.getLabel())
-        })
-    })
+    $(document).ready(function () {
+        //参数可以传递商品id，或者商品记录的json对象
+        ASAP.product(1, function (data) {
+            console.log(data);
+            data.sizecontents.forEach(function (item) {
+                console.log(item.getLabel());
+            })
+        });
 
-    ASAP.getLabel("country", 'cn', '1,3', function(labels){
-        console.log(labels)
+        ASAP.getLabel("country", 'cn', '1,3', function (labels) {
+            console.log(labels);
+        });
     })
-})
 </script>
 </body>
 <!-- END BODY -->

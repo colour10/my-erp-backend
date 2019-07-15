@@ -41,7 +41,11 @@ function ajax(button, url, data, locationUrl = '') {
                 });
                 // 3秒后跳转
                 setTimeout(function () {
-                    window.location.href = locationUrl;
+                    if (locationUrl === '') {
+                        window.location.href = locationUrl;
+                    } else {
+                        window.location.reload();
+                    }
                 }, 1000);
             }
         }

@@ -131,55 +131,7 @@
 <?php echo $this->view->getPartial('layouts/_footer'); ?>
 
 <script>
-    /**
-     * 注册新用户
-     * @returns {boolean}
-     */
-    function reg() {
-        // ajax提交
-        $.ajax({
-            type: "post",
-            url: "/reg",
-            async: true,
-            dataType: 'json',
-            data: {
-                'name': $('#name').val(),
-                'password': $('#password').val(),
-                'repeat_password': $('#repeat-password').val(),
-                'email': $('#email').val(),
-                'c': $('#c').val(),
-            },
-            beforeSend: function () {
-                // 禁用按钮防止重复提交
-                $("#button-reg").attr({disabled: "disabled"});
-            },
-            success: function (response) {
-                // 判断是否有错误
-                if (response.messages.length > 0) {
-                    layer.open({
-                        content: response.messages[0],
-                        btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>"
-                    });
-                } else {
-                    //提示
-                    layer.open({
-                        content: "<?php echo $this->obj->getValidateMessage('success'); ?>",
-                        btn: "<?php echo $this->obj->getValidateMessage('please-wait'); ?>",
-                        time: 3, // 3秒后自动跳转
-                    });
-                    // 3秒后跳转
-                    setTimeout(function () {
-                        window.location.href = '/login';
-                    }, 1000);
-                }
-            },
-            complete: function () {
-                $("#button-reg").removeAttr("disabled");
-            },
-        });
-        // 禁止自动跳转
-        return false;
-    }
+
 </script>
 
 </body>

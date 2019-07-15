@@ -64,6 +64,7 @@
             <!-- BEGIN CONTENT -->
             <div class="col-md-9 col-sm-9">
                 <h1 class="h1-title"><?php echo $this->obj->getValidateMessage('invitation-registration'); ?></h1>
+
                 <div class="content-form-page">
                     <div class="row">
                         <div class="col-md-7 col-sm-7">
@@ -89,6 +90,26 @@
                                         <? } ?>
                                     </div>
                                 </div>
+
+                                <?php if (!$this->issuperadmin) { ?>
+                                    <div class="form-group">
+                                        <label for="is_lockstock"
+                                               class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('is_lockstock'); ?>
+                                            <span class="require">*</span></label>
+                                        <div class="col-lg-8 invite">
+
+                                            <div class="radio-inline">
+                                                <label><input type="radio" name="is_lockstock" value="1"
+                                                    >是</label>
+                                            </div>
+
+                                            <div class="radio-inline">
+                                                <label><input type="radio" name="is_lockstock" value="0"
+                                                              checked="checked"/>否</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <? } ?>
 
                                 <div class="form-group">
                                     <label for="email"
@@ -146,62 +167,6 @@
 </div>
 
 <?php echo $this->view->getPartial('layouts/_footer'); ?>
-
-<script>
-    /**
-     * 邀请注册
-     * @returns {boolean}
-     */
-    function invite() {
-        var button = $("#button-invite");
-        // ajax提交
-        $.ajax({
-            type: "post",
-            url: "/member/invite",
-            async: true,
-            dataType: 'json',
-            data: {
-                'email': $('#email').val(),
-                'username': $('#username').val(),
-                'companyid': $('#companyid').val(),
-            },
-            beforeSend: function () {
-                // 更改文字
-                button.html("<?php echo $this->obj->getValidateMessage('please-wait'); ?>");
-                // 禁用按钮防止重复提交
-                button.attr({disabled: "disabled"});
-            },
-            complete: function () {
-                // 更改文字
-                button.html("<?php echo $this->obj->getValidateMessage('queren'); ?>");
-                // 恢复提交
-                button.removeAttr("disabled");
-            },
-            success: function (response) {
-                // 判断是否有错误
-                if (response.messages.length > 0) {
-                    layer.open({
-                        content: response.messages[0],
-                        btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>"
-                    });
-                } else {
-                    //提示
-                    layer.open({
-                        content: "<?php echo $this->obj->getValidateMessage('success'); ?>",
-                        btn: "<?php echo $this->obj->getValidateMessage('please-wait'); ?>",
-                        time: 3, // 3秒后自动跳转
-                    });
-                    // 3秒后跳转
-                    setTimeout(function () {
-                        window.location.reload();
-                    }, 1000);
-                }
-            },
-        });
-        // 禁止自动跳转
-        return false;
-    }
-</script>
 
 </body>
 <!-- END BODY -->

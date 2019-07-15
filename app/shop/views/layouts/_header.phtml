@@ -30,8 +30,10 @@
                             echo $this->obj->getValidateMessage('welcome') . ' ' . $this->session->get('member')['name'];
                         } ?></li>
                     <li><a href="/member"><?php echo $this->obj->getValidateMessage('jibenziliao'); ?></a></li>
+
                     <li><a href="/buycar"><?php echo $this->obj->getValidateMessage('buycar'); ?></a></li>
                     <li><a href="/order/list"><?php echo $this->obj->getValidateMessage('my-order'); ?></a></li>
+
                     <li <?php if ($this->session->get('member')) {
                         echo "style='display:none;'";
                     } ?>><a href="/login/index"><?php echo $this->obj->getValidateMessage('denglu'); ?></a></li>
@@ -111,7 +113,7 @@
                                     <div class="col-md-12 header-navigation-col">
                                         <h4><?php echo $this->obj->getValidateMessage('pinlei'); ?></h4>
                                         <ul>
-                                            <?php foreach ($this->allcates as $cate) { ?>
+                                            <?php foreach ($this->girlbrandgroups as $cate) { ?>
                                                 <li>
                                                     <a href="/brandgroup/detail/<?php echo $cate['id']; ?>"><?php echo $cate['name']; ?></a>
                                                 </li>
@@ -148,7 +150,7 @@
                                     <div class="col-md-12 header-navigation-col">
                                         <h4><?php echo $this->obj->getValidateMessage('pinlei'); ?></h4>
                                         <ul>
-                                            <?php foreach ($this->allcates as $cate) { ?>
+                                            <?php foreach ($this->boybrandgroups as $cate) { ?>
                                                 <li>
                                                     <a href="/brandgroup/detail/<?php echo $cate['id']; ?>"><?php echo $cate['name']; ?></a>
                                                 </li>
@@ -185,7 +187,7 @@
                                     <div class="col-md-12 header-navigation-col">
                                         <h4><?php echo $this->obj->getValidateMessage('pinlei'); ?></h4>
                                         <ul>
-                                            <?php foreach ($this->allcates as $cate) { ?>
+                                            <?php foreach ($this->childbrandgroups as $cate) { ?>
                                                 <li>
                                                     <a href="/brandgroup/detail/<?php echo $cate['id']; ?>"><?php echo $cate['name']; ?></a>
                                                 </li>

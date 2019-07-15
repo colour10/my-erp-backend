@@ -260,11 +260,53 @@ class AdminController extends Controller
     public function renderError($title = 'make-an-error', $message = 'params-error')
     {
         // 逻辑
-        // 传递错误
+        // 传递错误，如果没有对应的语言字段，就显示当前传递的内容
         $this->view->setVars([
-            'title' => $this->getValidateMessage($title),
-            'message' => $this->getValidateMessage($message),
+            'title' => $this->getValidateMessage($title) ?: $title,
+            'message' => $this->getValidateMessage($message) ?: $message,
         ]);
         return $this->view->pick('error/error');
     }
+
+    /**
+     * 注册模板
+     * @param string $username 用户名
+     * @param string $msg 友好提示
+     * @param string $order_id 订单id
+     * @return string
+     */
+    public function paySuccessOutputhtml($username, $msg, $order_id)
+    {
+        return <<<EOT
+            <!Doctype html>
+            <html lang="en">
+            <head>
+            <meta charset="UTF-8" />
+            <title>{$this->getValidateMessage('notice-for-success-register')}</title>
+            <style>
+            a {
+                display: block;
+                height: 40px;
+                line-height:40px;
+                width: 90px;
+				text-align: center;
+                background: #33af7b;
+                color: #ffffff;
+                font-size: 14px;
+                font-weight: bold;
+                text-decoration: none !important;
+                padding-top: 3px;
+                margin-top:3px;
+            }
+            </style>
+            </head>
+            <body>
+                {$this->getValidateMessage('dear')}{$username}：<br><br>
+                {$msg}。<br><br>
+                <a href="http://{$this->shop_host}/order/detail/{$order_id}" target="_blank">查看订单</a>
+            </body>
+        </html>
+EOT;
+    }
+
 }

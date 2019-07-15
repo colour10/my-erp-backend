@@ -967,4 +967,31 @@ class Util
         }
     }
 
+    /**
+     * 生成一个随机字符串
+     * @return string
+     */
+    public static
+    function generate_trade_no()
+    {
+        // 逻辑
+        return date('Ymd') . substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
+    }
+
+    /**
+     * 生成UUID
+     * @param string $prefix 前缀
+     * @return string UUID，//可以指定前缀
+     */
+    public static function create_uuid($prefix = "")
+    {    //可以指定前缀
+        $str = md5(uniqid(mt_rand(), true));
+        $uuid = substr($str, 0, 8);
+        $uuid .= substr($str, 8, 4);
+        $uuid .= substr($str, 12, 4);
+        $uuid .= substr($str, 16, 4);
+        $uuid .= substr($str, 20, 12);
+        return $prefix . $uuid;
+    }
+
 }

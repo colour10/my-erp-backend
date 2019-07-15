@@ -20,13 +20,19 @@ class TbShoporderCommon extends BaseModel
      *
      * @var string
      */
-    protected $order_no;
+    protected $this_no;
 
     /**
      *
      * @var integer
      */
     protected $member_id;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $company_id;
 
     /**
      *
@@ -137,6 +143,12 @@ class TbShoporderCommon extends BaseModel
     protected $update_time;
 
     /**
+     *
+     * @var string
+     */
+    protected $extra;
+
+    /**
      * Method to set the value of field id
      *
      * @param integer $id
@@ -152,12 +164,12 @@ class TbShoporderCommon extends BaseModel
     /**
      * Method to set the value of field order_no
      *
-     * @param string $order_no
+     * @param string $this_no
      * @return $this
      */
-    public function setOrderNo($order_no)
+    public function setOrderNo($this_no)
     {
-        $this->order_no = $order_no;
+        $this->order_no = $this_no;
 
         return $this;
     }
@@ -171,6 +183,19 @@ class TbShoporderCommon extends BaseModel
     public function setMemberId($member_id)
     {
         $this->member_id = $member_id;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field company_id
+     *
+     * @param integer $company_id
+     * @return $this
+     */
+    public function setCompanyId($company_id)
+    {
+        $this->company_id = $company_id;
 
         return $this;
     }
@@ -347,12 +372,12 @@ class TbShoporderCommon extends BaseModel
     /**
      * Method to set the value of field ship_data
      *
-     * @param string $ship_data
+     * @param array $ship_data
      * @return $this
      */
-    public function setShipData($ship_data)
+    public function setShipData(array $ship_data)
     {
-        $this->ship_data = $ship_data;
+        $this->ship_data = json_encode($ship_data);
 
         return $this;
     }
@@ -410,6 +435,19 @@ class TbShoporderCommon extends BaseModel
     }
 
     /**
+     * Method to set the value of field extra
+     *
+     * @param array $extra 这里传递一个数组进去，因为保存在数据库里的是json
+     * @return $this
+     */
+    public function setExtra(array $extra)
+    {
+        $this->extra = json_encode($extra);
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field id
      *
      * @return integer
@@ -437,6 +475,16 @@ class TbShoporderCommon extends BaseModel
     public function getMemberId()
     {
         return $this->member_id;
+    }
+
+    /**
+     * Returns the value of field company_id
+     *
+     * @return integer
+     */
+    public function getCompanyId()
+    {
+        return $this->company_id;
     }
 
     /**
@@ -572,11 +620,12 @@ class TbShoporderCommon extends BaseModel
     /**
      * Returns the value of field ship_data
      *
-     * @return string
+     * @return array
      */
     public function getShipData()
     {
-        return $this->ship_data;
+        // 返回数组
+        return json_decode($this->ship_data, true);
     }
 
     /**
@@ -620,6 +669,28 @@ class TbShoporderCommon extends BaseModel
     }
 
     /**
+     * Returns the value of field extra
+     *
+     * @return string
+     */
+    public function getExtra()
+    {
+        // 返回数组
+        return json_decode($this->extra, true);
+    }
+
+    // 退款和发货相关状态设定
+    const REFUND_STATUS_PENDING = 'pending';
+    const REFUND_STATUS_APPLIED = 'applied';
+    const REFUND_STATUS_PROCESSING = 'processing';
+    const REFUND_STATUS_SUCCESS = 'success';
+    const REFUND_STATUS_FAILED = 'failed';
+
+    const SHIP_STATUS_PENDING = 'pending';
+    const SHIP_STATUS_DELIVERED = 'delivered';
+    const SHIP_STATUS_RECEIVED = 'received';
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -628,7 +699,7 @@ class TbShoporderCommon extends BaseModel
         $this->setSource('tb_shoporder_common');
 
         // 表关联
-        // 与用户表关联，一对多反向
+        // 与订单详情表关联，一对多
         $this->hasMany(
             "id",
             "\Asa\Erp\TbShoporder",
@@ -637,6 +708,46 @@ class TbShoporderCommon extends BaseModel
                 'alias' => 'shoporder',
             ]
         );
+
+        // 表关联
+        // 与会员表关联，一对多反向
+        $this->belongsTo(
+            "member_id",
+            "\Asa\Erp\TbMember",
+            "id",
+            [
+                'alias' => 'member',
+            ]
+        );
+
+        // 表关联
+        // 与公司表关联，一对多反向
+        $this->belongsTo(
+            "company_id",
+            "\Asa\Erp\TbCompany",
+            "id",
+            [
+                'alias' => 'company',
+            ]
+        );
+    }
+
+    /**
+     * 取出订单详情
+     * @return \Phalcon\Mvc\Model\Resultset|\Phalcon\Mvc\Phalcon\Mvc\Model
+     */
+    public function getShoporder()
+    {
+        return $this->shoporder;
+    }
+
+    /**
+     * 取出下单人详情
+     * @return \Phalcon\Mvc\Model\Resultset|\Phalcon\Mvc\Phalcon\Mvc\Model
+     */
+    public function getMember()
+    {
+        return $this->member;
     }
 
     /**
@@ -683,6 +794,7 @@ class TbShoporderCommon extends BaseModel
             'id' => 'id',
             'order_no' => 'order_no',
             'member_id' => 'member_id',
+            'company_id' => 'company_id',
             'reciver_name' => 'reciver_name',
             'reciver_phone' => 'reciver_phone',
             'reciver_address' => 'reciver_address',
@@ -701,7 +813,276 @@ class TbShoporderCommon extends BaseModel
             'expire_time' => 'expire_time',
             'pay_time' => 'pay_time',
             'update_time' => 'update_time',
+            'extra' => 'extra',
         ];
+    }
+
+    /**
+     * 获取可用的唯一订单号
+     * @return string
+     */
+    public static function getAvailableOrderNo()
+    {
+        // 死循环获取
+        do {
+            // 生成唯一订单号
+            $no = Util::generate_trade_no();
+            // 为了避免重复我们在生成之后在数据库中查询看看是否已经存在相同的订单号
+        } while (self::findFirst("order_no=" . $no));
+        // 返回订单号
+        return $no;
+    }
+
+    /**
+     * 获取可用的唯一退款订单号
+     * @return string
+     */
+    public static function getAvailableRefundNo()
+    {
+        // 死循环获取
+        do {
+            // 生成唯一订单号
+            $no = Util::generate_trade_no();
+            // 为了避免重复我们在生成之后在数据库中查询看看是否已经存在相同的退款订单号
+        } while (self::findFirst("refund_no=" . $no));
+        // 返回订单号
+        return $no;
+    }
+
+
+    /**
+     * 是否在订单列表中显示截至时间
+     * @return bool
+     */
+    public function isShowExpiretime()
+    {
+        // 逻辑
+        // 如果订单处于未支付状态，则显示
+        if (!$this->getPayTime()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 是否在订单列表中显示计算后的价格
+     * @return bool
+     */
+    public
+    function isShowTotalprice()
+    {
+        // 逻辑
+        // 如果订单处于支付状态，则显示
+        if ($this->getPayTime()) {
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * 判断该订单是否允许付款
+     * @return bool
+     */
+    public function isAllowPaymentOrder()
+    {
+        // 逻辑
+        // 订单被关闭，不允许付款；
+        // 订单有付款时间，不允许付款
+        if ($this->getClosed() || $this->getPayTime()) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 是否在订单列表中显示去支付和取消订单按钮
+     * @return bool
+     */
+    public
+    function isShowPayAndCancledButtons()
+    {
+        // 逻辑
+        // 如果订单处于未支付状态，并且没有过截至时间，而且订单没有关闭
+        if (!$this->getClosed() && !$this->getPayTime() && $this->getExpireTime() > date('Y-m-d H:i:s')) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 是否在订单列表中显示退款按钮
+     * @return bool
+     */
+    public
+    function isShowRefundButton()
+    {
+        // 逻辑
+        // 订单已经支付，退款状态是pending，订单不能关闭
+        if ($this->getPayTime() && $this->getRefundStatus() === 'pending' && !$this->getClosed()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 是否在订单列表中显示订单已经过了截至时间，已经失效
+     * @return bool
+     */
+    public
+    function isShowOverExpired()
+    {
+        // 逻辑
+        // 如果订单没有支付，并且已经过了截止时间，截至时间不能为空
+        if (!$this->getPayTime() && $this->getClosed() && $this->getExpireTime() && $this->getExpireTime() < date('Y-m-d H:i:s')) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 是否在订单列表中显示订单倒计时
+     * @return bool
+     */
+    public
+    function isShowRemainExactTime()
+    {
+        // 逻辑
+        // 如果订单没有支付，截止时间有值，并且没有关闭，
+        if (!$this->getPayTime() && !$this->getClosed() && $this->getExpireTime() && $this->getExpireTime() > date('Y-m-d H:i:s')) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 是否在订单列表中显示订单已被用户取消的提示
+     * @return bool
+     */
+    public
+    function isShowCancled()
+    {
+        // 逻辑
+        // 如果订单没有支付，并且已经过了截止时间
+        if ($this->getClosed() && !$this->getExpireTime()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 是否显示退款状态
+     * @return bool
+     */
+    public
+    function isShowRefundStatus()
+    {
+        // 逻辑
+        // 如果订单退款状态不是pending，则显示
+        if ($this->getRefundStatus() !== TbShoporderCommon::REFUND_STATUS_PENDING) {
+            return $this->getValidateMessage('refund_status_' . $this->getRefundStatus());
+        }
+        return false;
+    }
+
+    /**
+     * 是否显示发货按钮
+     * @return bool
+     */
+    public
+    function isShowShipButton()
+    {
+        // 逻辑
+        // 显示按钮的逻辑：已付款，未关闭、未发货
+        if ($this->getPayTime() && $this->getShipStatus() === TbShoporderCommon::SHIP_STATUS_PENDING && !$this->getClosed()) {
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * 显示订单的完整状态
+     * @return array
+     */
+    public
+    function getOrderStatus()
+    {
+        // 逻辑
+        $status = [];
+        // 付款状态
+        $status['pay_status'] = $this->getPayTime() ? $this->getValidateMessage('order-paid') : $this->getValidateMessage('order-unpaid');
+        // 是否关闭
+        $status['closed_status'] = $this->getClosed() ? $this->getValidateMessage('order-closed') : $this->getValidateMessage('order-not-closed');
+        // 退款状态，分为pending、applied、processing、success、failed五种情况
+        $status['refund_status'] = $this->getValidateMessage('refund_status_' . $this->getRefundStatus());
+        // 物流状态
+        $status['ship_status'] = $this->getValidateMessage('ship_status_' . $this->getShipStatus());
+        // 返回
+        return $status;
+    }
+
+    /**
+     * 获取最新的订单状态，仅仅是单一形态
+     * @return string
+     */
+    public function getSimpleOrderStatus()
+    {
+        // 逻辑
+        // 是否关闭
+        if ($this->getClosed()) {
+            return $this->getValidateMessage('order-closed');
+        }
+        // 是否退款
+        if ($this->getRefundNo()) {
+            // 接着判断具体的退款状态
+            switch ($this->getRefundStatus()) {
+                case 'applied':
+                    return $this->getValidateMessage('refund_status_applied');
+                    break;
+                case 'processing':
+                    return $this->getValidateMessage('refund_status_processing');
+                    break;
+                case 'success':
+                    return $this->getValidateMessage('refund_status_success');
+                    break;
+                case 'failed':
+                    return $this->getValidateMessage('refund_status_failed');
+                    break;
+                default:
+                    return $this->getValidateMessage('refund_status_applied');
+                    break;
+            }
+        }
+        // 是否支付
+        if ($this->getPayTime()) {
+            return $this->getValidateMessage('payment-success');
+        }
+        // 如果不符合以上任何情况，则订单未付款
+        return $this->getValidateMessage('order-unpaid');
+    }
+
+    /**
+     * 多语言版本配置读取函数
+     * @param string $field_name 验证字段的提示名称，比如cn.php中上面的自定义变量名system_name
+     * @param string $module_name 模块名称，比如cn.php中的template
+     * @param string $module_rule 模块验证规则，比如cn.php中的template模块下面的uniqueness
+     * @return string
+     */
+    public function getValidateMessage($field_name, $module_name = '', $module_rule = '')
+    {
+        // 逻辑
+        // 定义变量
+        // 取出当前语言版本
+        $language = $this->getDI()->get('language');
+        // 拼接变量
+        // 判断是否需要取出模块部分来展示
+        $human_name = $language->$field_name;
+        if (!$module_name && !$module_rule) {
+            return $human_name;
+        }
+        // 否则就展示模块和信息组合后的结果
+        return sprintf($language->$module_name[$module_rule], $human_name);
     }
 
 }

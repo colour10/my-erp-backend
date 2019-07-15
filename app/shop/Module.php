@@ -4,9 +4,11 @@ namespace Multiple\Shop;
 
 use Asa\Erp\StaticReader;
 use Asa\Erp\TbBrand;
+use Asa\Erp\TbBrandgroup;
 use Asa\Erp\TbCompany;
 use Asa\Erp\TbCurrency;
-use Asa\Erp\TbProduct;
+use Asa\Erp\TbProductSearch;
+use Asa\Erp\TbShoppayment;
 use Multiple\Shop\Controllers\AdminController;
 use Phalcon\Events\Manager as EventsManager;
 use Phalcon\Loader;
@@ -21,7 +23,6 @@ use Phalcon\Text;
 use PHPMailer\PHPMailer\PHPMailer;
 use Phalcon\Queue\Beanstalk;
 use Yansongda\Pay\Pay;
-use Yansongda\Supports\Logger;
 
 class Module implements ModuleDefinitionInterface
 {
@@ -308,7 +309,7 @@ class Module implements ModuleDefinitionInterface
         // 取出女性品牌
         $di->setShared('girlbrands', function () use ($admin) {
             $name = $admin->getlangfield('name');
-            $products = TbProduct::find([
+            $products = TbProductSearch::find([
                 'conditions' => 'gender = 0',
                 'columns' => "brandid",
             ]);
@@ -319,7 +320,27 @@ class Module implements ModuleDefinitionInterface
             foreach ($brandids as $k => $id) {
                 $return[] = [
                     'id' => $id,
-                    'name' => TbBrand::findFirstById($id)->$name,
+                    'name' => TbBrand::findFirst("id=" . $id)->$name,
+                ];
+            }
+            return $return;
+        });
+
+        // 取出女性品类
+        $di->setShared('girlbrandgroups', function () use ($admin) {
+            $name = $admin->getlangfield('name');
+            $products = TbProductSearch::find([
+                'conditions' => 'gender = 0',
+                'columns' => "brandgroupid",
+            ]);
+            // 品类id列表
+            $brandgroupids = array_unique(array_column($products->toArray(), 'brandgroupid'));
+            // 把品牌名称进行整合
+            $return = [];
+            foreach ($brandgroupids as $k => $id) {
+                $return[] = [
+                    'id' => $id,
+                    'name' => TbBrandgroup::findFirst("id=" . $id)->$name,
                 ];
             }
             return $return;
@@ -328,7 +349,7 @@ class Module implements ModuleDefinitionInterface
         // 取出男性品牌
         $di->setShared('boybrands', function () use ($admin) {
             $name = $admin->getlangfield('name');
-            $products = TbProduct::find([
+            $products = TbProductSearch::find([
                 'conditions' => 'gender = 1',
                 'columns' => "brandid",
             ]);
@@ -339,16 +360,36 @@ class Module implements ModuleDefinitionInterface
             foreach ($brandids as $k => $id) {
                 $return[] = [
                     'id' => $id,
-                    'name' => TbBrand::findFirstById($id)->$name,
+                    'name' => TbBrand::findFirst("id=" . $id)->$name,
                 ];
             }
             return $return;
         });
 
-        // 取出儿童品牌
+        // 取出男性品类
+        $di->setShared('boybrandgroups', function () use ($admin) {
+            $name = $admin->getlangfield('name');
+            $products = TbProductSearch::find([
+                'conditions' => 'gender = 1',
+                'columns' => "brandgroupid",
+            ]);
+            // 品类id列表
+            $brandgroupids = array_unique(array_column($products->toArray(), 'brandgroupid'));
+            // 把品牌名称进行整合
+            $return = [];
+            foreach ($brandgroupids as $k => $id) {
+                $return[] = [
+                    'id' => $id,
+                    'name' => TbBrandgroup::findFirst("id=" . $id)->$name,
+                ];
+            }
+            return $return;
+        });
+
+        // 取出儿童品牌，也就是中性
         $di->setShared('childbrands', function () use ($admin) {
             $name = $admin->getlangfield('name');
-            $products = TbProduct::find([
+            $products = TbProductSearch::find([
                 'conditions' => 'gender = 2',
                 'columns' => "brandid",
             ]);
@@ -359,7 +400,27 @@ class Module implements ModuleDefinitionInterface
             foreach ($brandids as $k => $id) {
                 $return[] = [
                     'id' => $id,
-                    'name' => TbBrand::findFirstById($id)->$name,
+                    'name' => TbBrand::findFirst("id=" . $id)->$name,
+                ];
+            }
+            return $return;
+        });
+
+        // 取出儿童品类
+        $di->setShared('childbrandgroups', function () use ($admin) {
+            $name = $admin->getlangfield('name');
+            $products = TbProductSearch::find([
+                'conditions' => 'gender = 2',
+                'columns' => "brandgroupid",
+            ]);
+            // 品类id列表
+            $brandgroupids = array_unique(array_column($products->toArray(), 'brandgroupid'));
+            // 把品牌名称进行整合
+            $return = [];
+            foreach ($brandgroupids as $k => $id) {
+                $return[] = [
+                    'id' => $id,
+                    'name' => TbBrandgroup::findFirst("id=" . $id)->$name,
                 ];
             }
             return $return;
@@ -380,6 +441,31 @@ class Module implements ModuleDefinitionInterface
             $config = $config_array['pay']['wechat'];
             // 调用 Yansongda\Pay 来创建一个微信支付对象
             return Pay::wechat($config);
+        });
+
+        // 当前登录用户的支付宝支付方式
+        $di->setShared('alipay_app_auth_token', function () use ($session) {
+            // 取出公司id
+            if ($session->has('member')) {
+                $companyid = $session->get('member')['companyid'];
+                // 取出支付方式
+                $payment = TbShoppayment::findFirst("companyid=" . $companyid);
+                $config = $payment ? json_decode($payment->getConfig(), true) : [];
+                // 如果$config不为空，则取出支付参数
+                if ($config) {
+                    if (array_key_exists('alipayUserToken', $config) && array_key_exists('app_auth_token', $config['alipayUserToken'])) {
+                        $app_auth_token = $config['alipayUserToken']['app_auth_token'];
+                    } else {
+                        $app_auth_token = '';
+                    }
+                } else {
+                    $app_auth_token = '';
+                }
+            } else {
+                $app_auth_token = '';
+            }
+            // 返回
+            return $app_auth_token;
         });
 
     }
