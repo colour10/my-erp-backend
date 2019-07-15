@@ -123,7 +123,7 @@ class OrderbrandController extends AdminController {
                             $detail->createdate = date("Y-m-d H:i:s");
                             $detail->companyid = $this->companyid;
                             $detail->factoryprice = $row["factoryprice"];
-                            $detail->wordprice = $row["wordprice"];
+                            $detail->wordprice = isset($row["wordprice"]) ? $row["wordprice"] : 0;
                             $detail->currencyid = $row["currencyid"];
                             if($detail->create() === false) {
                                 //返回失败信息
@@ -218,7 +218,7 @@ class OrderbrandController extends AdminController {
                         $detail->createdate = date("Y-m-d H:i:s");
                         $detail->companyid = $this->companyid;
                         $detail->factoryprice = $row["factoryprice"];
-                        $detail->wordprice = $row["wordprice"];
+                        $detail->wordprice = isset($row["wordprice"]) ? $row["wordprice"] : 0;
                         $detail->currencyid = $row["currencyid"];
                         if($detail->create() === false) {
                             //返回失败信息
