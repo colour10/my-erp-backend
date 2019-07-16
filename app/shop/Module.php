@@ -427,7 +427,7 @@ class Module implements ModuleDefinitionInterface
         });
 
         // 注册微信和支付宝单例服务
-        // 支付宝
+        // 第三方应用-支付宝
         $di->setShared('alipay', function () use ($config_array) {
             // 取出支付宝相关配置
             $config = $config_array['pay']['alipay'];
@@ -435,7 +435,7 @@ class Module implements ModuleDefinitionInterface
             return Pay::alipay($config);
         });
 
-        // 微信
+        // 第三方应用-微信
         $di->setShared('wechat_pay', function () use ($config_array) {
             // 取出支付宝相关配置
             $config = $config_array['pay']['wechat'];
@@ -443,7 +443,23 @@ class Module implements ModuleDefinitionInterface
             return Pay::wechat($config);
         });
 
-        // 当前登录用户的支付宝支付方式
+        // 自用型应用-支付宝
+        $di->setShared('selfAlipay', function () use ($config_array) {
+            // 取出支付宝相关配置
+            $config = $config_array['pay']['selfAlipay'];
+            // 调用 Yansongda\Pay 来创建一个支付宝支付对象
+            return Pay::alipay($config);
+        });
+
+        // 自用型应用-微信
+        $di->setShared('selfWechatpay', function () use ($config_array) {
+            // 取出支付宝相关配置
+            $config = $config_array['pay']['selfWechat'];
+            // 调用 Yansongda\Pay 来创建一个微信支付对象
+            return Pay::wechat($config);
+        });
+
+        // 第三方授权支付-当前登录用户的支付宝支付方式
         $di->setShared('alipay_app_auth_token', function () use ($session) {
             // 取出公司id
             if ($session->has('member')) {
@@ -466,6 +482,18 @@ class Module implements ModuleDefinitionInterface
             }
             // 返回
             return $app_auth_token;
+        });
+
+
+        // 取出支付宝的超级UID
+        $di->setShared('alipaySuperUid', function () use ($session, $config_array) {
+            // 取出支付方式
+            $superUid = $config_array['pay']['alipaySuperUid'];
+            $payment = TbShoppayment::findFirst("config like '%$superUid%'");
+            if (!$payment) {
+                return '';
+            }
+            return $payment->getCompanyid();
         });
 
     }
