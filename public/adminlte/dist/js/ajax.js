@@ -5,7 +5,7 @@
  * @param data ajax数据，对象
  * @param locationUrl 成功后的跳转
  */
-function ajax(button, url, data, locationUrl = '') {
+function ajax(button, url, data, locationUrl = window.location.href) {
     // ajax提交
     $.ajax({
         type: "post",
@@ -41,11 +41,7 @@ function ajax(button, url, data, locationUrl = '') {
                 });
                 // 3秒后跳转
                 setTimeout(function () {
-                    if (locationUrl === '') {
-                        window.location.href = locationUrl;
-                    } else {
-                        window.location.reload();
-                    }
+                    window.location.href = locationUrl;
                 }, 1000);
             }
         }
