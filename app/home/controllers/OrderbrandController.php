@@ -241,7 +241,11 @@ class OrderbrandController extends AdminController {
                     }
                 }
             }
+        }
 
+        // 检查相关的客户订单是否已经完成
+        foreach($orderBrand->getOrderList() as $order) {
+            $order->checkToFinish();
         }
 
         // 提交事务
@@ -251,7 +255,7 @@ class OrderbrandController extends AdminController {
         echo $this->success($orderbrand_id_array);
     }
 
-    function saveAction() {
+    /*function saveAction() {
         // 判断是否有params参数提交过来
         $params = $this->request->get('params');
         if (!$params) {
@@ -368,12 +372,14 @@ class OrderbrandController extends AdminController {
             }
         }
 
+        //
+
         // 提交事务
         $this->db->commit();
 
         // 最终成功返回，原来的数据还要保留，再加上订单详情之中每个商品的名称也要放进去
         echo $this->success($order->toArray());
-    }
+    }*/
 
     public function loadAction()
     {

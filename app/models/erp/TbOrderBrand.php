@@ -21,14 +21,14 @@ class TbOrderBrand extends BaseModel
         );
     }
 
-    function getOrderDetail() {        
+    function getOrderDetail() {
         $data = [
             'form' => $this->toArray(),
             'list'=>[]
         ];
 
         // 循环添加数据
-        foreach ($this->orderdetails as $k => $orderdetail) {
+        foreach ($this->orderbranddetail as $k => $orderdetail) {
             $data['list'][] = $orderdetail->toArray();
         }
 
@@ -40,5 +40,21 @@ class TbOrderBrand extends BaseModel
             sprintf("orderbrandid=%d", $this->id),
             "order" => "productid asc"
         ]);
+    }
+
+    function getOrderList() {
+        $orderids = [];
+        foreach ($this->orderbranddetail as $k => $orderdetail) {
+            $orderids[] = $orderdetail->orderid;
+        }
+
+        if(count($orderids)>0) {
+            return TbOrder::find(
+                sprintf("id in (%s)", implode(',', $orderids))
+            );
+        }
+        else {
+            return [];
+        }
     }
 }

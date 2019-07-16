@@ -529,7 +529,14 @@ class ShippingController extends AdminController {
 //print_r($product_array);exit;
         foreach($product_array as $row) {
             $product = TbProduct::getInstance($row['productid']);
-            $product->cost = round($row['product_amount']/$row["product_number"],2);
+
+            if(isset($info["product_amount"]) && isset($info["product_number"]) && $info["product_number"]>0) {
+                $product->cost = round($row['product_amount']/$row["product_number"],2);
+            }
+            else {
+                $product->cost = round($row['amount']/$row["number"],2);
+            }
+
             $product->costcurrency = $currencyid;
             if($product->update()===false) {
                 $this->db->rollback();

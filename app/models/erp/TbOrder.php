@@ -4,6 +4,7 @@ namespace Asa\Erp;
 
 /**
  * 订单主表
+ * ErrorCode 1110
  */
 class TbOrder extends BaseModel
 {
@@ -72,9 +73,9 @@ class TbOrder extends BaseModel
     }
 
     /**
-     * 
+     *
      */
-    function getOrderDetail() {        
+    function getOrderDetail() {
         $data = [
             'form' => $this->toArray(),
             'list'=>[]
@@ -95,5 +96,26 @@ class TbOrder extends BaseModel
             sprintf("orderid=%d", $this->id),
             "order" => "productid asc"
         ]);
+    }
+
+    function finish() {
+        $this->status = 2;
+        if($this->update()==false) {
+            throw new \Exception("/11100101/订单更新失败。/");
+        }
+    }
+
+    /**
+     * 检查订单的详情是否已经都生成了品牌订单，如果是则将订单完成。
+     * @return [type] [description]
+     */
+    function checkToFinish() {
+        foreach ($this->orderdetails as $detail) {
+            if($detail->number>$detail->brand_number) {
+                return false;
+            }
+        }
+
+        $this->finish();
     }
 }
