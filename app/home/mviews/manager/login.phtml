@@ -16,7 +16,7 @@
 <div class="limiter">
     <div class="container-login100" style="background-image: url('/manager/static/images/bg-01.jpg')">
         <div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
-            <form class="login100-form validate-form" method="post" name="login_form">
+            <form class="login100-form validate-form" method="post" name="login_form" onsubmit="return false;">
 
                 <span class="login100-form-title p-b-49">超级管理员登录</span>
 
@@ -52,57 +52,17 @@
 <!-- BEGIN PRE-FOOTER -->
 <script src="/manager/static/js/jquery.min.js" type="text/javascript"></script>
 <script src="/manager/static/js/layer_mobile/layer.js"></script>
+<script src="/adminlte/dist/js/ajax.js"></script>
 <!-- END PRE-FOOTER -->
 
 <script>
     // 登录逻辑
     let button = $('#btn-login');
     button.click(function () {
-        // ajax提交
-        $.ajax({
-            type: "post",
-            url: '/manager/login',
-            async: true,
-            dataType: 'json',
-            data: {
-                'login_name': $("#login_name").val(),
-                'password': $("#password").val(),
-            },
-            beforeSend: function () {
-                // 更改文字
-                button.html("请稍候...");
-                // 禁用按钮防止重复提交
-                button.attr({disabled: "disabled"});
-            },
-            complete: function () {
-                // 更改文字
-                button.html("确认");
-                // 恢复提交
-                button.removeAttr("disabled");
-            },
-            success: function (result) {
-                // 判断是否有错误
-                if (result.messages.length > 0) {
-                    layer.open({
-                        content: result.messages[0],
-                        btn: "我知道了"
-                    });
-                } else {
-                    //提示
-                    layer.open({
-                        content: "操作成功",
-                        btn: "请稍候...",
-                        time: 3, // 3秒后自动跳转
-                    });
-                    // 3秒后跳转
-                    setTimeout(function () {
-                        window.location.href = '/manager/welcome';
-                    }, 1000);
-                }
-            }
-        });
-        // 禁止自动跳转
-        return false;
+        ajax(button, '/manager/login', {
+            'login_name': $("#login_name").val(),
+            'password': $("#password").val(),
+        }, '/manager/welcome');
     });
 </script>
 
