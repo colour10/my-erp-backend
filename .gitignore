@@ -22,3 +22,5 @@ app/config/languages/hk.php
 app/config/languages/it.php
 app/config/languages/sp.php
 app/shop/views/test
+app/shop/packages/alipay/.idea
+app/shop/packages/wechatpay/cert

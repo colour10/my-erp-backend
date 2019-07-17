@@ -281,8 +281,8 @@ class Util
 
     /**
      * 把图片转换成对应的分辨率，都是正方形格式的
-     * @param $filepath 图片的绝对路径，比如：/www/wwwroot/www.jinxiaocun.com/erp/public/upload/product/model4.jpg
-     * @param $resizeArray 分辨率数组，例如[80, 200]，代表裁剪为两组分辨率，分别是80*80、200*200，路径保存在和原来的图片相同的目录下
+     * @param string $filepath 图片的绝对路径，比如：/www/wwwroot/www.jinxiaocun.com/erp/public/upload/product/model4.jpg
+     * @param array $resizeArray 分辨率数组，例如[80, 200]，代表裁剪为两组分辨率，分别是80*80、200*200，路径保存在和原来的图片相同的目录下
      * @throws \Exception
      */
     public static function convertPics($filepath, $resizeArray)
@@ -301,8 +301,8 @@ class Util
 
     /**
      * 导入带图片格式的excel，即使是每一列含有多张图片也没有问题
-     * @param $excelFilePath excel文件的绝对路径
-     * @param $pictureSaveFolder 图片保存的文件夹，具体是指/public/upload下面的具体文件夹名称，比如product
+     * @param string $excelFilePath excel文件的绝对路径
+     * @param string $pictureSaveFolder 图片保存的文件夹，具体是指/public/upload下面的具体文件夹名称，比如product
      * @return array|bool
      * @throws \PHPExcel_Exception
      * @throws \PHPExcel_Reader_Exception

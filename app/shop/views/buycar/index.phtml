@@ -156,7 +156,7 @@
                                     class="fa fa-shopping-cart"></i>
                         </button>
                         <button class="btn btn-primary" type="button"
-                                id="btn-checkout"><?php echo $this->obj->getValidateMessage('dingdanjiesuan'); ?> <i
+                                id="btn-checkout"><?php echo $this->obj->getValidateMessage('add-to-order'); ?> <i
                                     class="fa fa-check"></i>
                         </button>
                     </div>
@@ -305,6 +305,7 @@
             dataType: 'json',
             data: {
                 'data': postData,
+                // 运费
                 'send_price': send_price,
             },
             success: function (result) {

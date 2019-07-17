@@ -821,6 +821,8 @@ return [
     'receive-order' => '确认收货',
     'confirm-receive-order' => '您真的要确认收货吗？',
     'incorrect-delivery-status' => '发货状态不正确？',
+    'add-to-order' => '添加到订单',
+    'zero-not-allow-to-order' => '金额为0，不能下单',
 
     'template' =>
         [
@@ -980,7 +982,7 @@ return [
             "shippingstatus" => [
                 "1" => "在途",
                 "2" => "待入库",
-                "3" => "已入库"
+                "3" => "已入库",
             ],
 
             "amortizetype" => [

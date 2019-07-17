@@ -20,8 +20,7 @@ CREATE TABLE `tb_buycar`
     PRIMARY KEY (`id`),
     KEY `product_id` (`product_id`),
     KEY `member_id` (`member_id`)
-) engine = InnoDB
-  DEFAULT CHARSET = utf8mb4 COMMENT ='购物车';
+) engine = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT ='购物车';
 
 
 /* 支付订单主表 */
@@ -30,7 +29,7 @@ DROP TABLE IF EXISTS `tb_shoporder_common`;
 CREATE TABLE `tb_shoporder_common`
 (
     `id`              int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-    `order_no`        varchar(255)              DEFAULT NULL COMMENT '订单号',
+    `order_no`        varchar(100)              DEFAULT NULL COMMENT '订单号',
     `member_id`       int(10) UNSIGNED          DEFAULT NULL COMMENT '会员id',
     `company_id`      int(10) UNSIGNED          DEFAULT NULL COMMENT '会员所属公司id',
     `reciver_name`    varchar(64)               DEFAULT NULL COMMENT '收件人',
@@ -41,9 +40,9 @@ CREATE TABLE `tb_shoporder_common`
     `send_price`      decimal(9, 2)             DEFAULT '0.00' COMMENT '运费',
     `final_price`     decimal(9, 2)             DEFAULT NULL COMMENT '成交价',
     `payment_method`  varchar(255)              DEFAULT NULL COMMENT '支付方式：wechat-微信支付；alipay-支付宝支付',
-    `payment_no`      varchar(255)              DEFAULT NULL COMMENT '支付单号',
+    `payment_no`      varchar(100)              DEFAULT NULL COMMENT '支付单号',
     `refund_status`   varchar(255)              DEFAULT 'pending' COMMENT '退款状态：pending-未退款；applied-已申请退款；processing-退款中；success-退款成功；failed-退款失败',
-    `refund_no`       varchar(255)              DEFAULT NULL COMMENT '退款单号',
+    `refund_no`       varchar(100)              DEFAULT NULL COMMENT '退款单号',
     `closed`          tinyint(1)                DEFAULT 0 COMMENT '订单是否已关闭：0-未关闭；1-已关闭；默认为0-未关闭',
     `ship_status`     varchar(255)              DEFAULT 'pending' COMMENT '物流状态：pending-未发货；delivered-已发货；received-已收货',
     `ship_data`       text COMMENT '物流数据',
@@ -58,8 +57,7 @@ CREATE TABLE `tb_shoporder_common`
     KEY `company_id` (`company_id`),
     KEY `payment_no` (`payment_no`),
     KEY `refund_no` (`refund_no`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4 COMMENT ='支付订单主表';
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT ='支付订单主表';
 
 
 /* 支付订单详情表 */
@@ -84,29 +82,19 @@ CREATE TABLE `tb_shoporder`
     KEY `product_id` (`product_id`),
     KEY `order_commonid` (`order_commonid`),
     KEY `size_id` (`size_id`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4 COMMENT ='支付订单详情表';
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT ='支付订单详情表';
 
 /* `tb_product_search` 更改key为primary key */
-ALTER TABLE `tb_product_search`
-    DROP INDEX `id`,
-    ADD PRIMARY KEY (`id`);
+ALTER TABLE `tb_product_search` DROP INDEX `id`, ADD PRIMARY KEY (`id`);
 
 /* `tb_product_search` 增加一个字段brandid */
-ALTER TABLE `tb_product_search`
-    ADD `brandid` INT UNSIGNED NULL COMMENT '品牌id' AFTER `sizetopid`;
+ALTER TABLE `tb_product_search` ADD `brandid` INT UNSIGNED NULL COMMENT '品牌id' AFTER `sizetopid`;
 
 /* `tb_product_search` 增加一个字段gender */
-ALTER TABLE `tb_product_search`
-    ADD `gender` VARCHAR(100) DEFAULT NULL COMMENT '性别' AFTER `brandid`;
+ALTER TABLE `tb_product_search` ADD `gender` VARCHAR(100) DEFAULT NULL COMMENT '性别' AFTER `brandid`;
 
 /* `tb_member` 增加一个字段is_lockstock */
-ALTER TABLE `tb_member`
-    ADD `is_lockstock` TINYINT(1) DEFAULT 0 COMMENT '是否锁库存' AFTER `companyid`;
-
-/* `tb_member` 增加一个字段payment_config */
-ALTER TABLE `tb_member`
-    ADD `payment_config` TEXT COMMENT '支付配置参数' AFTER `is_lockstock`;
+ALTER TABLE `tb_member` ADD `is_lockstock` TINYINT(1) DEFAULT 0 COMMENT '是否锁库存' AFTER `companyid`;
 
 /* 超级管理员表 */
 DROP TABLE IF EXISTS `tb_manager`;
@@ -119,12 +107,10 @@ CREATE TABLE `tb_manager`
     `created_at` timestamp        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `updated_at` timestamp        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     KEY `login_name` (`login_name`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4 COMMENT ='超级管理员表';
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT ='超级管理员表';
 
 /* 添加一个admin管理员 */
-INSERT INTO `tb_manager` (login_name, password)
-VALUES ('asa', md5('asa'));
+INSERT INTO `tb_manager` (login_name, password) VALUES ('asa', md5('asa'));
 
 /* 删除tb_companyhost表 */
 DROP TABLE IF EXISTS `tb_companyhost`;
@@ -140,5 +126,4 @@ CREATE TABLE `tb_shoppayment`
     `created_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `updated_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     KEY `companyid` (`companyid`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4 COMMENT ='ERP附带商城支付配置表';
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT ='ERP附带商城支付配置表';

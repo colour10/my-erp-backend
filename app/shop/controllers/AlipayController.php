@@ -171,7 +171,7 @@ class AlipayController extends AdminController
 
                 // 第二步：访问授权链接获取auth_code
                 // 传公共的参数
-                require_once APP_PATH . '/public/AlipaySystemOauthToken/AopSdk.php';
+                require_once APP_PATH . '/app/shop/packages/alipay/AopSdk.php';
                 $aop = new \AopClient ();
                 $aop->gatewayUrl = $this->config['pay']['alipay']['gateway'];
                 $aop->appId = $this->config['pay']['alipay']['app_id'];
@@ -264,7 +264,7 @@ class AlipayController extends AdminController
                     }
 
                     // 获取access_token
-                    require_once APP_PATH . '/public/AlipaySystemOauthToken/AopSdk.php';
+                    require_once APP_PATH . '/app/shop/packages/alipay/AopSdk.php';
                     $aop = new \AopClient();
                     $aop->appId = $this->config['pay']['alipay']['app_id'];
                     $aop->rsaPrivateKey = $this->config['pay']['alipay']['private_key'];

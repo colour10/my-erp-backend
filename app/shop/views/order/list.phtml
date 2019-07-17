@@ -149,10 +149,8 @@
                                                                 href="/product/detail/<?php echo $orderdetail['product_detail_id']; ?>"><img
                                                                     class="w80"
                                                                     src="<?php echo $orderdetail['picture']; ?>"
-                                                                    alt="<?php echo $orderdetail['product_name']; ?>"></a></span>
-
-                                                        <a class="product-name"
-                                                           href="/product/detail/<?php echo $orderdetail['product_detail_id']; ?>"><?php echo $orderdetail['product_name']; ?></a>
+                                                                    alt="<?php echo $orderdetail['product_name']; ?>"
+                                                                    title="<?php echo $orderdetail['product_name']; ?>"></a></span>
                                                     </td>
                                                     <td class="goods-page-price">
                                                         <strong><span><?php echo $this->currency; ?></span><?php echo $orderdetail['price']; ?>

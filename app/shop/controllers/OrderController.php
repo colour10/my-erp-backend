@@ -286,6 +286,12 @@ class OrderController extends AdminController
 
                 // 最终成交价格=商品总价格+运费，采用高精度计算
                 $final_price = bcadd($total_price, $send_price, 2);
+                // 如果总价格为0，则提示不能下单
+                if ($final_price == 0) {
+                    // 回滚
+                    $this->db->rollback();
+                    return $this->error($this->getValidateMessage('zero-not-allow-to-order'));
+                }
 
 
                 // 开始添加订单主表
@@ -296,9 +302,7 @@ class OrderController extends AdminController
                 $model_common->setSendPrice($send_price);
                 $model_common->setFinalPrice($final_price);
                 $model_common->setCreateTime(date("Y-m-d H:i:s", $now));
-                if ($rs['is_lockstock']) {
-                    $model_common->setExpireTime(date("Y-m-d H:i:s", $now + 3600));
-                }
+                $model_common->setExpireTime(date("Y-m-d H:i:s", $now + 3600));
                 $model_common->setMemberId($rs['id']);
                 $model_common->setCompanyId($rs['companyid']);
                 // 生成唯一订单号
@@ -358,7 +362,7 @@ class OrderController extends AdminController
 
                 // 因为有的客户下单不锁库存，所以要先判断，如果is_lockstock是1才锁库存
                 // 商品表执行减库存操作逻辑
-                if ($rs['is_lockstock']) {
+                if (isset($rs['is_lockstock']) && $rs['is_lockstock']) {
                     foreach ($_POST['data'] as $item) {
                         // 产品库存模型，采用悲观锁
                         $model = TbProductSearch::findFirst([
@@ -457,7 +461,8 @@ class OrderController extends AdminController
                 // 但是在付款之前，要先检查是否还有库存，如果没有库存，则提示库存不足
                 // 声明一个新数组来保存最终统计的变量
                 // 付款时，如果判断付款人是不需要锁定库存的，那么就不需要检查库存
-                if ($order->member->is_lockstock) {
+                $memberModel = $order->getMember();
+                if ($memberModel && isset($memberModel->is_lockstock) && $memberModel->is_lockstock) {
                     $stock = [];
                     // 遍历
                     foreach ($order->shoporder as $k => $item) {
@@ -512,7 +517,7 @@ class OrderController extends AdminController
                     // 否则就新建一个地址
                     // 但是要先验证数据合法性
                     // 不能为空
-                    if (!$_POST['reciver_name'] || !$_POST['reciver_phone'] || !$_POST['reciver_address']) {
+                    if (!isset($_POST['reciver_name']) || !isset($_POST['reciver_phone']) || !isset($_POST['reciver_address'])) {
                         // 回滚
                         $this->db->rollback();
                         return $this->error($this->getValidateMessage('fill-out-required-fields'));
@@ -806,7 +811,7 @@ class OrderController extends AdminController
 
                 // 锁定库存还原
                 // 如果不锁定库存，那么库存无需还原
-                if ($rs['is_lockstock']) {
+                if (isset($rs['is_lockstock']) && $rs['is_lockstock']) {
                     foreach ($shoporders as $shoporder) {
                         // 执行写入，为了安全，这里采用悲观锁进行处理
                         $productSearchModel = TbProductSearch::findFirst([
@@ -1066,7 +1071,7 @@ class OrderController extends AdminController
 
             // 开始执行还原库存操作
             // 用户锁库存才涉及到库存还原，否则直接无视即可。
-            if ($member['is_lockstock']) {
+            if (isset($member['is_lockstock']) && $member['is_lockstock']) {
                 // 取出每个订单下面具体商品信息
                 $shoporders = $order->getShoporder();
                 // 如果是已退款，还得还原库存，还原库存同样采用悲观锁处理
