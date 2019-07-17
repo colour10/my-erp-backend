@@ -185,7 +185,7 @@ class TbProductstock extends BaseCompanyModel
             }
         }
         else {
-            throw new \Exception("/11090303/库存不足/");
+            throw new \Exception("/11090303/库存不足{$number},{$this->number},{$this->reserve_number}/");
         }
 
         $db->commit();
@@ -348,5 +348,59 @@ class TbProductstock extends BaseCompanyModel
 
     function getAvailableNumber() {
         return $this->number-max($this->shipping_number, $this->reserve_number);
+    }
+
+    public static function getProductStock($productid, $sizecontentid, $warehouseid, $property=1, $defective_level=1) {
+        $di = \Phalcon\DI::getDefault();
+        $companyid = $di->get("currentCompany");
+        if($companyid<=0) {
+            throw new \Exception("/11090401/数据错误。/");
+        }
+
+        $goods = TbGoods::findFirst(
+            sprintf(
+                "companyid=%d and productid=%d and sizecontentid=%d and defective_level=%d and property=%d",
+                $companyid,
+                $productid,
+                $sizecontentid,
+                $defective_level,
+                $property
+            )
+        );
+
+        if($goods==false) {
+            //创建一个新的
+            $goods = new TbGoods();
+            $goods->companyid = $companyid;
+            $goods->productid = $productid;
+            $goods->sizecontentid = $sizecontentid;
+            $goods->property = $property;
+            $goods->defective_level = $defective_level;
+            $goods->change_time = date("Y-m-d H:i:s");
+            $goods->change_staff = $di->get("currentUser");
+            $goods->price = 0;
+            if($goods->create()===false) {
+                throw new \Exception("/11090402/创建商品条目失败/");
+            }
+        }
+
+        if($warehouseid>0) {
+            $productstock = TbProductstock::findFirst(
+                sprintf("companyid=%d and warehouseid=%d and goodsid=%d", $companyid, $warehouseid, $goods->id)
+            );
+
+            if($productstock==false) {
+                //创建库存记录
+                $productstock = TbProductstock::initStock([
+                    "goods" => $goods,
+                    "warehouseid" => $warehouseid
+                ]);
+            }
+
+            return $productstock;
+        }
+        else {
+            throw new \Exception("/11090403/数据错误，仓库不能为空。/");
+        }
     }
 }

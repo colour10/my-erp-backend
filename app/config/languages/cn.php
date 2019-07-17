@@ -658,6 +658,22 @@ return [
     "tanxiaofangshi" => "摊销方式",
     "xiaoshou" => "销售",
     "querentijiao" => "确认提交吗？",
+    "querenruku" => "确认入库",
+    "baocunxinxi" => "保存信息",
+    "feiyongshuqi" => "费用输齐",
+    "chengben" => "成本",
+    "canpin" => "残品",
+    "zaitushuliang" => "在途数量",
+    "zaitushuliang" => "在途数量",
+    "zaitushuliang" => "在途数量",
+    "zaitushuliang" => "在途数量",
+    "zaitushuliang" => "在途数量",
+    "zaitushuliang" => "在途数量",
+    "zaitushuliang" => "在途数量",
+    "zaitushuliang" => "在途数量",
+    "zaitushuliang" => "在途数量",
+    "zaitushuliang" => "在途数量",
+    "zaitushuliang" => "在途数量",
     "zaitushuliang" => "在途数量",
     "zaitushuliang" => "在途数量",
     "zaitushuliang" => "在途数量",
@@ -952,8 +968,8 @@ return [
                 ],
             'defectivelevel' =>
                 [
-                    2 => '合格',
-                    1 => '残次品',
+                    1 => '合格',
+                    2 => '残次品',
                 ],
 
             "customtype" => [

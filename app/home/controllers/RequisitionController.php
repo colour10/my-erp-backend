@@ -9,6 +9,7 @@ use Asa\Erp\TbProductstock;
 
 /**
  * 调拨单主表
+ * ErrorCode 1112
  */
 class RequisitionController extends BaseController {
     public function initialize() {
@@ -99,46 +100,42 @@ class RequisitionController extends BaseController {
                 $array[$key] = [$row];
             }
         }
+
         // 采用事务处理
         $this->db->begin();
 
-        foreach($array as $key => $rows) {
-            $temp = explode('_', $key);
+        try {
+            foreach($array as $key => $rows) {
+                $temp = explode('_', $key);
 
-            $requisition = new TbRequisition();
-            $requisition->status = 2;
-            $requisition->out_id = $temp[0];
-            $requisition->in_id = $temp[1];
-            $requisition->apply_staff = $this->currentUser;
-            $requisition->apply_date = date('Y-m-d H:i:s');
-            $requisition->companyid = $this->companyid;
-            if($requisition->create()==false) {
-                $this->db->rollback();
-                return $this->error($requisition);
-            }
+                $requisition = new TbRequisition();
+                $requisition->status = 2;
+                $requisition->out_id = $temp[0];
+                $requisition->in_id = $temp[1];
+                $requisition->apply_staff = $this->currentUser;
+                $requisition->apply_date = date('Y-m-d H:i:s');
+                $requisition->memo = $submitData['memo'];
+                $requisition->companyid = $this->companyid;
+                if($requisition->create()==false) {
+                    throw new \Exception('/11120101/生成调拨单失败。/');
+                }
 
-            //增加调拨明细
-            foreach($rows as $row) {
-                $out_productstock = TbProductstock::findFirstById($row['productstockid']);
+                //增加调拨明细
+                foreach($rows as $row) {
+                    $out_productstock = TbProductstock::getProductStock($row['productid'], $row['sizecontentid'], $row['out_id'], $row['property'], $row['defective_level']);
 
-                if($out_productstock!=false) {
-                    $data = [
+                    $requisition->addDetail([
                         "out_productstockid" => $out_productstock->id,
                         "in_productstockid" => $requisition->inWarehouse->getLocalStock($out_productstock)->id,
                         "number" => $row['number'],
                         "requisitionid" => $requisition->id
-                    ];
-                    $result = $requisition->addDetail($data);
-                    if($result===false) {
-                        $this->db->rollback();
-                        return $this->error($result);
-                    }
-                }
-                else {
-                    $this->db->rollback();
-                    return $this->error(["operate_fail"]);
+                    ]);
                 }
             }
+        }
+        catch(\Exception $e) {
+            $this->db->rollback();
+            throw $e;
         }
 
         // 提交事务

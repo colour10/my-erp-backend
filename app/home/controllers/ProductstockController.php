@@ -25,6 +25,14 @@ class ProductstockController extends BaseController {
             $conditions[] = sprintf("productid in (%s)", $productids);
         }
 
+        if(isset($_POST["productid"]) && $_POST["productid"]>0) {
+            $conditions[] = sprintf("productid=%d", $_POST["productid"]);
+        }
+
+        if(isset($_POST["sizecontentid"]) && $_POST["sizecontentid"]>0) {
+            $conditions[] = sprintf("sizecontentid=%d", $_POST["sizecontentid"]);
+        }
+
         if(isset($_POST["warehouseid"]) && $_POST["warehouseid"]>0) {
             $conditions[] = sprintf("warehouseid=%d", $_POST["warehouseid"]);
         }

@@ -52,7 +52,7 @@ class TbSaleport extends BaseModel
         }
 
         return TbProductstock::sum([
-            sprintf("warehouseid in (%s) and defective_level=0", implode(',', $array)),
+            sprintf("warehouseid in (%s) and defective_level=1", implode(',', $array)),
             "group" => 'productid',
             "column" => 'number'
         ]);

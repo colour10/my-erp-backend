@@ -113,7 +113,6 @@ class CommonController extends BaseController
             "sales" =>["table"=>"Asa\\Erp\\TbSales", "columns"=>[]],
             "productmaterial" =>["table"=>"Asa\\Erp\\TbProductMaterial", "columns"=>[]],
             "saletype" =>["table"=>"Asa\\Erp\\TbSaleType", "columns"=>[]],
-            "warehousingdetails" =>["table"=>"Asa\\Erp\\TbWarehousingdetails", "columns"=>['number'], "key"=>"confirmorderdetailsid"],
         ];
 
         //new \Asa\Erp\TbProduct();
@@ -199,8 +198,6 @@ class CommonController extends BaseController
             "user" => ["model"=>'Asa\Erp\TbUser',"company"=>true],
             "warehouse" => ["model"=>'Asa\Erp\TbWarehouse',"company"=>true],
             "warehouse_user" => ["model"=>'Asa\Erp\TbWarehouseUser',"company"=>true],
-            "warehousingdetails" => ["model"=>'Asa\Erp\TbWarehousingdetails',"company"=>true],
-            "warehousing" => ["model"=>'Asa\Erp\TbWarehousing',"company"=>true],
             "ageseason" => ["model"=>'Asa\Erp\TbAgeseason',"company"=>false, "orderby"=>"name desc,sessionmark asc"],
             //"aliases" => ["model"=>'Asa\Erp\TbAliases',"company"=>false],
             "brandgroup" => ["model"=>'Asa\Erp\TbBrandgroup',"company"=>false, "orderby"=>"displayindex asc"],
