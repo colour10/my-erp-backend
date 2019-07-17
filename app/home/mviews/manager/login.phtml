@@ -59,7 +59,7 @@
     // 登录逻辑
     let button = $('#btn-login');
     button.click(function () {
-        ajax(button, '/manager/login', {
+        return ajax(button, '/manager/login', {
             'login_name': $("#login_name").val(),
             'password': $("#password").val(),
         }, '/manager/welcome');

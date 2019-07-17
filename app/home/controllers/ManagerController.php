@@ -168,45 +168,22 @@ class ManagerController extends AdminController
                 }
             }
 
-            // 添加管理员
-            // 如果管理员存在，就循环写入
-            if ($rs = TbUser::findFirst([
-                "login_name = :login_name:",
-                'bind' => [
-                    'login_name' => trim($admin),
-                ],
-            ])) {
-                // 开始循环写入
-                while (true) {
-                    $username = trim($admin) . mt_rand(1000, 9999);
-                    // 如果找不到就直接添加
-                    if (!$rs = TbUser::findFirst([
-                        "login_name = :login_name:",
-                        'bind' => [
-                            'login_name' => $username,
-                        ],
-                    ])) {
-                        // 添加公司管理员
-                        $userModel = new TbUser();
-                        $data = ['login_name' => $username, 'password' => md5($admin . '123'), 'companyid' => $companyid, 'groupid' => $groupid, 'departmentid' => $departmentid];
-                        if (!$userModel->create($data)) {
-                            $this->db->rollback();
-                            return $this->error('用户名创建失败');
-                        }
-                        // 成功就跳出循环
-                        break;
-                    }
-                }
-            } else {
-                // 如果管理员不存在，则直接添加
-                // 添加公司管理员
-                $userModel = new TbUser();
-                // groupid暂时设置为2
-                $data = ['login_name' => trim($admin), 'password' => md5($admin . '123'), 'companyid' => $companyid, 'groupid' => $groupid, 'departmentid' => $departmentid];
-                if (!$userModel->create($data)) {
-                    $this->db->rollback();
-                    return $this->error('用户名创建失败');
-                }
+            // 添加user管理员
+            $login_name = TbUser::getAvailableNo($admin);
+            $userModel = new TbUser();
+            $data = ['login_name' => $login_name, 'password' => md5($login_name . '123'), 'companyid' => $companyid, 'groupid' => $groupid, 'departmentid' => $departmentid];
+            if (!$userModel->create($data)) {
+                $this->db->rollback();
+                return $this->error('user管理员创建失败');
+            }
+
+            // 添加shop管理员
+            $name = TbMember::getAvailableNo($admin);
+            $memberModel = new TbMember();
+            $data = ['login_name' => $name, 'name' => $name, 'password' => md5($name . '123'), 'companyid' => $companyid];
+            if (!$memberModel->create($data)) {
+                $this->db->rollback();
+                return $this->error('shop商城用户名创建失败');
             }
 
             // 给所属的权限组添加权限
