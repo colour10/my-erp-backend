@@ -577,4 +577,36 @@ class ProductController extends CadminController {
 
         echo $this->success($result->toArray());
     }
+
+    /**
+     * 通过商品条码搜索商品信息
+     * @return [type] [description]
+     */
+    function searchcodeAction() {
+        if(isset($_POST['code'])) {
+            $result = TbProductcode::findFirst(
+                sprintf("companyid=%d and goods_code='%s'", $this->companyid, $_POST['code'])
+            );
+
+            if($result!=false) {
+                return $this->success($result->toArray());
+            }
+        }
+
+        return $this->success();
+    }
+
+    function getcodeAction() {
+        if(isset($_POST['productid']) && isset($_POST['sizecontentid'])) {
+            $result = TbProductcode::findFirst(
+                sprintf("productid=%d and sizecontentid=%d", $_POST['productid'], $_POST['sizecontentid'])
+            );
+
+            if($result!=false && $result->companyid==$this->companyid) {
+                return $this->success($result->goods_code);
+            }
+        }
+
+        return $this->success();
+    }
 }

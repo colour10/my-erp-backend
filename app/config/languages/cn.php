@@ -664,9 +664,9 @@ return [
     "chengben" => "成本",
     "canpin" => "残品",
     "diaobofangshi" => "调拨方式",
-    "zaitushuliang" => "在途数量",
-    "zaitushuliang" => "在途数量",
-    "zaitushuliang" => "在途数量",
+    "wancheng" => "完成",
+    "kucunbuzu" => "库存不足",
+    "qingxuanzecangku" => "请选择仓库",
     "zaitushuliang" => "在途数量",
     "zaitushuliang" => "在途数量",
     "zaitushuliang" => "在途数量",
@@ -931,6 +931,7 @@ return [
                     3 => '在途',
                     4 => '入库拒绝',
                     5 => '完成',
+                    6 => '作废',
                 ],
             'warehouserole' =>
                 [

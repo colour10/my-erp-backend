@@ -206,6 +206,36 @@ class TbRequisition extends BaseCompanyModel
         return true;
     }
 
+    function cancel() {
+        $di = $this->getDI();
+        $db = $di->get("db");
+
+        $db->begin();
+
+        try {
+            // 取消
+            $this->status = 6; // 取消
+            $this->turnout_staff = $di->get("currentUser");
+            $this->turnout_date = date("Y-m-d H:i:s");
+
+            if($this->update()==false) {
+                throw new \Exception("/11050401/调拨单取消失败。/");
+            }
+
+            foreach ($this->requisitionDetail as $detail) {
+                //锁定库存取消
+                $detail->outProductstock->preReduceStockCancel($detail->number, TbProductstock::REQUISITION, $detail->id);
+            }
+        }
+        catch(\Exception $e) {
+            $db->rollback();
+            throw $e;
+        }
+
+        $db->commit();
+        return true;
+    }
+
     function doIn($list) {
         //检查一下是否有允许出库的
         $total = 0;

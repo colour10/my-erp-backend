@@ -6,6 +6,7 @@ use Phalcon\Mvc\Model\Relation;
 
 /**
  * 商品表
+ * ErrorCode 1113
  */
 class TbProduct extends BaseCompanyModel
 {
@@ -95,7 +96,7 @@ class TbProduct extends BaseCompanyModel
      */
     function setProjectCode($sizecontentid, $goods_code) {
         if($this->companyid!=$this->getCompanyid()) {
-            throw new Exception("#1001#访问非被公司数据#");
+            throw new \Exception("/11130101/非法访问。/");
 
         }
         $obj = TbProductcode::findFirst(
@@ -109,10 +110,11 @@ class TbProduct extends BaseCompanyModel
             $obj->goods_code = $goods_code;
             $obj->sizecontentid = $sizecontentid;
             $obj->productid = $this->id;
+            $obj->companyid = $this->companyid;
         }
 
         if($obj->save()==false) {
-            throw new Exception("#1002#保存失败#");
+            throw new \Exception("/11130102/商品货号保存失败/");
         }
 
         return $obj;

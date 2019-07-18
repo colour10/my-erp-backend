@@ -202,4 +202,19 @@ class RequisitionController extends BaseController {
             }
         }
     }
+
+    function cancelAction() {
+        $submitData = json_decode($_POST["params"], true);
+        $id = $submitData["id"];
+        $requisition = TbRequisition::findFirst(
+            sprintf("id=%d and companyid=%d", $submitData["id"], $this->companyid)
+        );
+
+        //print_r($submitData);
+
+        if($requisition!=false) {
+            $requisition->cancel();
+            return $this->success($requisition->getDetail());
+        }
+    }
 }
