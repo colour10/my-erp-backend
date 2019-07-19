@@ -38,10 +38,20 @@ class OrderController extends AdminController
     /**
      * 订单详情首页
      * @param int $id
-     * @return Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|void
+     * @return false|Response|\Phalcon\Http\ResponseInterface|string
      */
     public function detailAction(int $id)
     {
+        // 如果是post请求
+        if ($member = $this->member && $this->request->isPost()) {
+            if ($order = TbShoporderCommon::findFirst("id=" . $id)) {
+                return $this->success($order->toArray());
+            } else {
+                return $this->error($this->getValidateMessage('no-data'));
+            }
+        }
+
+        // 下面是普通get请求
         // 验证是否登录
         if (!$member = $this->member) {
             return $this->response->redirect('/login');

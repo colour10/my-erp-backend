@@ -486,6 +486,31 @@
             }
         });
     }
+
+    /**
+     * 取出当前订单
+     * @param {string} order_id 用户微信openid
+     * @return {bool}
+     */
+    function getOrder(order_id) {
+        // 初始化
+        var result = false;
+        // 同步处理
+        $.ajaxSetup({async: false});
+        // 逻辑
+        $.post('/order/detail/' + order_id, {}, function (response) {
+            // 判断逻辑
+            if (response.messages.length === 0) {
+                // 如果没有错误，返回模型
+                result = response.data;
+            } else {
+                // 否则返回假
+                result = false;
+            }
+        }, 'json');
+        // 返回
+        return result;
+    }
 </script>
 <!-- END PAGE LEVEL JAVASCRIPTS -->
 

@@ -1023,6 +1023,7 @@ class Util
         $response->setStatusCode(200);
         $response->setContentType($qrCode->getContentType());
         $response->setContent($qrCode->writeString());
+        $response->send();
         return $response;
     }
 
