@@ -850,6 +850,8 @@ return [
     'NOT_UTF8' => '编码格式错误',
     'please-choose-address' => '请选择收货地址',
     'scan-code-to-pay' => '请扫描下方的二维码完成支付',
+    'scan-wechat-code-to-pay' => '请扫描下方的微信二维码完成支付',
+    'scan-alipay-code-to-pay' => '请扫描下方的支付宝二维码完成支付',
     'pay-success' => '支付成功',
     'paying' => '支付中...',
     'SUCCESS' => '支付成功',
@@ -859,6 +861,7 @@ return [
     'REVOKED' => '已撤销',
     'USERPAYING' => '用户支付中',
     'PAYERROR' => '支付失败',
+    'order-completed' => '已完成付款',
 
     'template' =>
         [

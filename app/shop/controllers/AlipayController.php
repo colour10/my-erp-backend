@@ -7,17 +7,16 @@ use Asa\Erp\TbShoppayment;
 use Asa\Erp\Util;
 use Phalcon\Http\Response;
 use Yansongda\Pay\Log;
-use Yansongda\Pay\Pay;
 
 /**
- * 支付宝支付类
+ * 支付宝支付类，因为是第三方应用，所以只支持当面付，也就是扫码和刷卡
  * Class AlipayController
  * @package Multiple\Shop\Controllers
  */
 class AlipayController extends AdminController
 {
     /**
-     * 支付宝网页付款
+     * 支付宝扫码支付
      * @param $order_id
      * @return bool|Response
      */
@@ -54,9 +53,9 @@ class AlipayController extends AdminController
         $config = $this->config['pay']['alipay'];
         $config['app_auth_token'] = $this->alipay_app_auth_token;
         // 开始支付
-        $alipay = $this->alipay->web($orderConfig);
-        // 返回
-        return $alipay->send();
+        $result = $this->alipay->scan($orderConfig);
+        // 返回支付宝二维码内容
+        return Util::createQrcode($result->qr_code);
     }
 
     /**
@@ -160,7 +159,7 @@ class AlipayController extends AdminController
      * 支付宝回调地址返回通知，生成授权码
      * 授权码一旦授权成功，就不能覆盖，只能删除之后重新授权
      * 是否授权成功，从数据库中提取，如果没有查询到记录，那么就说明没有授权；如果查到了记录说明授权成功了
-     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View
+     * @return Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View
      */
     public function gettokenAction()
     {
@@ -173,108 +172,102 @@ class AlipayController extends AdminController
         // 第一步拼接授权链接.注意scope=auth_user的值一定要为auth_user 传别的值会报错无效授权令牌
         // https://openauth.alipaydev.com/oauth2/appToAppAuth.htm?app_id=2016072800109035&scope=auth_user&redirect_uri=https%3A%2F%2Fwww.alipay.com
         // 逻辑
-        // 判断是否在session已经存在，如果存在则无需重复获取
-        if (!$this->session->has('alipayUserToken')) {
 
-            // 先把state存在Session中，防止csrf
-            // 通过网站后台传入一个state参数，但是在支付宝后台因为无法传入state，所以需要授权两次
-            // 新生成一个session
-            if (!$this->session->has('state')) {
-                $this->session->set('state', Util::create_uuid());
-            }
 
-            // 授权逻辑
-            try {
-                // 过滤CSRF
-                if (!isset($_GET['state'])) {
-                    // 再次授权
-                    // 拼接跳转参数
-                    $redirect_uri = 'https://' . $this->config['pay']['alipay']['auth_url'] . '/oauth2/appToAppAuth.htm?app_id=' . $this->config['pay']['alipay']['app_id'] . '&state=' . $this->session->get('state') . '&redirect_uri=' . urlencode($_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/alipay/gettoken');
-
-                    //跳转获取code
-                    header("location:{$redirect_uri}");
-                }
-
-                // 赋给一个变量
-                $code = trim($_GET['app_auth_code']);
-
-                // 验证是否合法请求
-                if ($this->session->get('state') != $_GET['state']) {
-                    return $this->renderError('make-an-error', 'illegal-source-request');
-                }
-
-                // session合法之后作废，防止重复授权
-                $this->session->remove('state');
-
-                // 判定appid是否是我们的
-                if ($this->config['pay']['alipay']['app_id'] != $this->request->get('app_id')) {
-                    $msg = sprintf($this->getValidateMessage('missing-params'), 'app_id');
-                    return $this->renderError('make-an-error', $msg);
-                }
-
-                // 第一步：拼接授权链接，上一步已完成
-                // http://openauth.alipay.com/oauth2/appToAppAuth.htm?app_id=您的appid&redirect_uri=您的授权回调地址
-
-                // 第二步：访问授权链接获取auth_code
-                // 传公共的参数
-                require_once APP_PATH . '/app/shop/packages/alipay/AopSdk.php';
-                $aop = new \AopClient ();
-                $aop->gatewayUrl = $this->config['pay']['alipay']['gateway'];
-                $aop->appId = $this->config['pay']['alipay']['app_id'];
-                $aop->rsaPrivateKey = $this->config['pay']['alipay']['private_key'];
-                //支付宝的公钥
-                $aop->alipayrsaPublicKey = $this->config['pay']['alipay']['ali_public_key'];
-                $aop->apiVersion = '1.0';
-                $aop->postCharset = 'utf-8';
-                $aop->format = 'json';
-                $aop->signType = 'RSA2';
-                //初始化换取app_auth_token接口
-                $request = new \AlipayOpenAuthTokenAppRequest();
-                //请求的必传信息
-                $request->setBizContent("{\"grant_type\":\"authorization_code\",\"code\":\"$code\"}");
-                /**
-                 * 刷新app_auth_token的方法，app_auth_token有效期365天，如果过期需要重新授权,
-                 * 刷新令牌后我们会保证老的app_auth_token从刷新开始24小时内可继续使用，请及时替换为最新token
-                 * $request->setBizContent("{\"grant_type\":\"refresh_token\",\"code\":\"填写app_auth_token的值\"}");
-                 */
-                $result = $aop->execute($request);
-                $responseNode = str_replace(".", "_", $request->getApiMethodName()) . "_response";
-                // 转成数组
-                $userToken = (array)$result->$responseNode;
-                // 写入session
-                // 把companyid也放进去
-                $userToken['companyid'] = $member['companyid'];
-                $this->session->set('alipayUserToken', $userToken);
-                if (empty($userToken['code']) || $userToken['code'] != 10000) {
-                    return $this->renderError('make-an-error', 'fail-to-get-userinfo');
-                }
-
-                // 向数据库写入config
-                // 判断是否授权了
-                $payment = TbShoppayment::findFirst("companyid=" . $member['companyid']);
-                // 如果不存在，则写入一条记录
-                if (!$payment) {
-                    $payment = new TbShoppayment();
-                    $payment->setCompanyid($member['companyid']);
-                    $payment->save();
-                }
-                // 取出原来的内容，然后把alipayToken的部分添加进去
-                $config = json_decode($payment->getConfig(), true);
-                $config['alipayUserToken'] = $this->session->get('alipayUserToken');
-                $payment->setConfig(json_encode($config));
-                $payment->save();
-
-                // 最终成功
-                return $this->renderError('success', 'successful-authorization');
-            } catch (\Exception $exception) {
-                // 返回
-                return $this->renderError('make-an-error', $exception->getMessage());
-            }
+        // 先把state存在Session中，防止csrf
+        // 通过网站后台传入一个state参数，但是在支付宝后台因为无法传入state，所以需要授权两次
+        // 新生成一个session
+        if (!$this->session->has('state')) {
+            $this->session->set('state', Util::create_uuid());
         }
 
-        // 如果存在，则直接返回授权成功
-        return $this->renderError('success', 'successful-authorization');
+        // 授权逻辑
+        try {
+            // 过滤CSRF
+            if (!isset($_GET['state'])) {
+                // 再次授权
+                // 拼接跳转参数
+                $redirect_uri = 'https://' . $this->config['pay']['alipay']['auth_url'] . '/oauth2/appToAppAuth.htm?app_id=' . $this->config['pay']['alipay']['app_id'] . '&state=' . $this->session->get('state') . '&redirect_uri=' . urlencode($_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/alipay/gettoken');
 
+                //跳转获取code
+                header("location:{$redirect_uri}");
+            }
+
+            // 赋给一个变量
+            $code = trim($_GET['app_auth_code']);
+
+            // 验证是否合法请求
+            if ($this->session->get('state') != $_GET['state']) {
+                return $this->renderError('make-an-error', 'illegal-source-request');
+            }
+
+            // session合法之后作废，防止重复授权
+            $this->session->remove('state');
+
+            // 判定appid是否是我们的
+            if ($this->config['pay']['alipay']['app_id'] != $this->request->get('app_id')) {
+                $msg = sprintf($this->getValidateMessage('missing-params'), 'app_id');
+                return $this->renderError('make-an-error', $msg);
+            }
+
+            // 第一步：拼接授权链接，上一步已完成
+            // http://openauth.alipay.com/oauth2/appToAppAuth.htm?app_id=您的appid&redirect_uri=您的授权回调地址
+
+            // 第二步：访问授权链接获取auth_code
+            // 传公共的参数
+            require_once APP_PATH . '/app/shop/packages/alipay/AopSdk.php';
+            $aop = new \AopClient ();
+            $aop->gatewayUrl = $this->config['pay']['alipay']['gateway'];
+            $aop->appId = $this->config['pay']['alipay']['app_id'];
+            $aop->rsaPrivateKey = $this->config['pay']['alipay']['private_key'];
+            //支付宝的公钥
+            $aop->alipayrsaPublicKey = $this->config['pay']['alipay']['ali_public_key'];
+            $aop->apiVersion = '1.0';
+            $aop->postCharset = 'utf-8';
+            $aop->format = 'json';
+            $aop->signType = 'RSA2';
+            //初始化换取app_auth_token接口
+            $request = new \AlipayOpenAuthTokenAppRequest();
+            //请求的必传信息
+            $request->setBizContent("{\"grant_type\":\"authorization_code\",\"code\":\"$code\"}");
+            /**
+             * 刷新app_auth_token的方法，app_auth_token有效期365天，如果过期需要重新授权,
+             * 刷新令牌后我们会保证老的app_auth_token从刷新开始24小时内可继续使用，请及时替换为最新token
+             * $request->setBizContent("{\"grant_type\":\"refresh_token\",\"code\":\"填写app_auth_token的值\"}");
+             */
+            $result = $aop->execute($request);
+            $responseNode = str_replace(".", "_", $request->getApiMethodName()) . "_response";
+            // 转成数组
+            $userToken = (array)$result->$responseNode;
+            // 写入session
+            // 把companyid也放进去
+            $userToken['companyid'] = $member['companyid'];
+            $this->session->set('alipayUserToken', $userToken);
+            if (empty($userToken['code']) || $userToken['code'] != 10000) {
+                return $this->renderError('make-an-error', 'fail-to-get-userinfo');
+            }
+
+            // 向数据库写入config
+            // 判断是否授权了
+            $payment = TbShoppayment::findFirst("companyid=" . $member['companyid']);
+            // 如果不存在，则写入一条记录
+            if (!$payment) {
+                $payment = new TbShoppayment();
+                $payment->setCompanyid($member['companyid']);
+                $payment->save();
+            }
+            // 取出原来的内容，然后把alipayToken的部分添加进去
+            $config = json_decode($payment->getConfig(), true);
+            $config['alipayUserToken'] = $this->session->get('alipayUserToken');
+            $payment->setConfig(json_encode($config));
+            $payment->save();
+
+            // 最终成功
+            return $this->renderError('success', 'successful-authorization');
+        } catch (\Exception $exception) {
+            // 返回
+            return $this->renderError('make-an-error', $exception->getMessage());
+        }
     }
 
 

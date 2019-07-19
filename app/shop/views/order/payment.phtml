@@ -136,45 +136,48 @@
     </div>
 </div>
 
-<script src="/shop/assets/custom/arealist.js"></script>
-<script src="/shop/assets/custom/addressparse.js"></script>
 <?php echo $this->obj->view->getPartial('layouts/_footer'); ?>
+<!--引入托管 qrcode-->
+<script src="/shop/assets/static/js/jquery.qrcode.min.js"></script>
 
 <script>
-    // 定义一个弹出层
-    var index = null;
-
     /**
-     * 支付宝支付
+     * 支付宝扫码支付
      * @param order_id 订单id
      * @returns {boolean}
      */
     function paymentByAliapy(order_id) {
-        // 跳转支付
-        window.open('/alipay/pay/' + order_id);
+        // 动态添加付款二维码
+        let img = '<div id="qrcode"><p><?php echo $this->obj->getValidateMessage('scan-alipay-code-to-pay'); ?>：</p><img alt="二维码" src="/alipay/pay/' + order_id + '"></div>';
+        // 弹出一张二维码图片
+        layer.open({
+            content: img,
+            shadeClose: false,
+            btn: "<?php echo $this->obj->getValidateMessage('order-completed'); ?>",
+            yes: function () {
+                // 如果执行了完成按钮，则刷新页面
+                window.location.reload();
+            }
+        });
     }
 
     /**
-     * 微信支付
+     * 微信扫码支付
      * @param order_id 订单id
      * @returns {boolean}
      */
     function paymentByWechat(order_id) {
         // 动态添加付款二维码
-        ajax('/wechatpay/pay/' + order_id, {}, null, paymentByWechatCallback);
-    }
-
-    /**
-     * 回调函数：生成微信付款二维码
-     * @param response
-     */
-    function paymentByWechatCallback(response) {
-        // 逻辑
-        let img = '<div><p><?php echo $this->obj->getValidateMessage('scan-code-to-pay'); ?>：</p><img alt="二维码" src="' + response.data + '"></div>';
+        let img = '<div id="qrcode"><p><?php echo $this->obj->getValidateMessage('scan-wechat-code-to-pay'); ?>：</p><img alt="二维码" src="/wechatpay/pay/' + order_id + '"></div>';
         // 弹出一张二维码图片
-        index = layer.open({
+        layer.open({
             content: img,
-            btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>"
+            shadeClose: false,
+            btn: "<?php echo $this->obj->getValidateMessage('order-completed'); ?>",
+            yes: function () {
+                // 如果执行了完成按钮，则刷新页面
+                window.location.reload();
+            }
         });
     }
 </script>

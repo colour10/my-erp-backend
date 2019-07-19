@@ -5,7 +5,9 @@ namespace Asa\Erp;
 use AlibabaCloud\Client\AlibabaCloud;
 use AlibabaCloud\Client\Exception\ClientException;
 use AlibabaCloud\Client\Exception\ServerException;
+use Endroid\QrCode\QrCode;
 use Gregwar\Image\Image;
+use Phalcon\Http\Response;
 use PHPExcel;
 use PHPMailer\PHPMailer\PHPMailer;
 use ZipArchive;
@@ -1002,6 +1004,26 @@ class Util
         // 逻辑
         ini_set('display_errors', 'Off');
         error_reporting(0);
+    }
+
+
+    /**
+     * 生成二维码图片
+     * @param string $content 二维码内容
+     * @return Response
+     */
+    public static function createQrcode($content)
+    {
+        // 逻辑
+        // 把要转换的字符串作为 QrCode 的构造函数参数
+        $qrCode = new QrCode($content);
+
+        // 将生成的二维码图片数据以字符串形式输出，并带上相应的响应类型
+        $response = new Response();
+        $response->setStatusCode(200);
+        $response->setContentType($qrCode->getContentType());
+        $response->setContent($qrCode->writeString());
+        return $response;
     }
 
 }
