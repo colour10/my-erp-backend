@@ -12,38 +12,7 @@
 <head>
     <meta charset="utf-8">
     <title><?php echo $this->obj->getValidateMessage('buycar'); ?></title>
-
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-
-    <meta content="Metronic Shop UI description" name="description">
-    <meta content="Metronic Shop UI keywords" name="keywords">
-    <meta content="keenthemes" name="author">
-
-    <link rel="shortcut icon" href="favicon.ico">
-
-    <!-- Global styles START -->
-    <link href="/shop/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <link href="/shop/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Global styles END -->
-
-    <!-- Page level plugin styles START -->
-    <link href="/shop/assets/plugins/fancybox/source/jquery.fancybox.css" rel="stylesheet">
-    <link href="/shop/assets/plugins/owl.carousel/assets/owl.carousel.css" rel="stylesheet">
-    <link href="/shop/assets/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css">
-    <link href="/shop/assets/plugins/jquery-ui/jquery-ui.css" rel="stylesheet" type="text/css"><!-- for slider-range -->
-    <link href="/shop/assets/plugins/rateit/src/rateit.css" rel="stylesheet" type="text/css">
-    <!-- Page level plugin styles END -->
-
-    <!-- Theme styles START -->
-    <link href="/shop/assets/pages/css/components.css" rel="stylesheet">
-    <link href="/shop/assets/corporate/css/style.css" rel="stylesheet">
-    <link href="/shop/assets/pages/css/style-shop.css" rel="stylesheet" type="text/css">
-    <link href="/shop/assets/corporate/css/style-responsive.css" rel="stylesheet">
-    <link href="/shop/assets/corporate/css/themes/red.css" rel="stylesheet" id="style-color">
-    <link rel="stylesheet" href="/shop/assets/static/css/bootstrap-submenu.css">
-    <link href="/shop/assets/corporate/css/custom.css" rel="stylesheet">
-    <!-- Theme styles END -->
+    <?php echo $this->view->getPartial('layouts/_meta') ?>
 </head>
 <!-- Head END -->
 
@@ -56,111 +25,194 @@
 
 <div class="main">
     <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="/"><?php echo $this->obj->getValidateMessage('shouye'); ?></a></li>
+            <li class="active"><?php echo $this->obj->getValidateMessage('add-to-order'); ?></li>
+        </ul>
         <!-- BEGIN SIDEBAR & CONTENT -->
         <div class="row margin-bottom-40">
             <!-- BEGIN CONTENT -->
             <div class="col-md-12 col-sm-12">
-                <h1><?php echo $this->obj->getValidateMessage('buycar'); ?></h1>
-                <?php if (isset($lists)) { ?>
-                    <div class="goods-page">
-                        <div class="goods-data clearfix">
-                            <div class="table-wrapper-responsive">
-                                <table summary="Shopping cart" id="table-buycar">
-                                    <thead>
-                                    <tr>
-                                        <th class="goods-page-image"><?php echo $this->obj->getValidateMessage('tupian'); ?></th>
-                                        <th class="goods-page-description width30"><?php echo $this->obj->getValidateMessage('mingcheng'); ?></th>
-                                        <th class="goods-page-size"><?php echo $this->obj->getValidateMessage('shangpinchicun'); ?></th>
-                                        <th class="goods-page-color"><?php echo $this->obj->getValidateMessage('kucun'); ?></th>
-                                        <th class="goods-page-quantity"><?php echo $this->obj->getValidateMessage('shuliang'); ?></th>
-                                        <th class="goods-page-price"><?php echo $this->obj->getValidateMessage('danjia'); ?></th>
-                                        <th class="goods-page-total"
-                                            colspan="2"><?php echo $this->obj->getValidateMessage('zongjia'); ?></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php
-                                    foreach ($lists['items'] as $list) {
-                                        ?>
-                                        <tr>
-                                            <td class="goods-page-image">
-                                                <a href="/product/detail/<?php echo $list['product']['productid']; ?>"><img
-                                                            src="<?php echo $this->file_prex . $list['product']['picture']; ?>"
-                                                            alt="<?php echo $list['product']['productname']; ?>"></a>
-                                            </td>
-                                            <td class="goods-page-description">
-                                                <h3>
-                                                    <a href="/product/detail/<?php echo $list['product']['productid']; ?>"><?php echo $list['product']['productname']; ?></a>
-                                                </h3>
-                                            </td>
-                                            <td class="goods-page-size"><?php echo $list['size_name']; ?></td>
-                                            <td class="goods-page-color"><?php echo $list['productstock']; ?></td>
-                                            <td class="goods-page-quantity">
-                                                <div class="product-quantity">
-                                                    <input type="text"
-                                                           data-productid="<?php echo $list['product_id']; ?>"
-                                                           data-sizeid="<?php echo $list['size_id']; ?>"
-                                                           data-id="<?php echo $list['id']; ?>"
-                                                           value="<?php echo $list['number']; ?>"
-                                                           class="form-control input-sm buycar-number" min="0"
-                                                           max="<?php echo $list['productstock']; ?>">
-                                                </div>
-                                            </td>
-                                            <td class="goods-page-price">
-                                                <strong>
-                                                    <span><?php echo $this->currency; ?></span><em
-                                                            class="em-price"><?php echo $list['price']; ?></em>
-                                                </strong>
-                                            </td>
-                                            <td class="goods-page-total">
-                                                <strong><span><?php echo $this->currency; ?></span><em
-                                                            class="em-total-price"></em></strong>
-                                            </td>
-                                            <td class="del-goods-col">
-                                                <a class="del-goods"
-                                                   onClick="delgoods(this, <?php echo $list['id']; ?>);">&nbsp;</a>
-                                            </td>
-                                        </tr>
-                                        <?php
-                                    }
-                                    ?>
-                                    </tbody>
-                                </table>
-                            </div>
 
-                            <div class="shopping-total">
-                                <ul>
-                                    <li>
-                                        <em><?php echo $this->obj->getValidateMessage('dingdanzongjia'); ?></em>
-                                        <strong class="price"
-                                                id="total_price"><span><?php echo $this->currency; ?></span><em><?php echo $lists['total']['totalprice']; ?></em></strong>
-                                    </li>
-                                    <li>
-                                        <em><?php echo $this->obj->getValidateMessage('freight'); ?></em>
-                                        <strong class="price"
-                                                id="send_price"><span><?php echo $this->currency; ?></span> <em><input
-                                                        type="text" name="send_price"
-                                                        value="0.00"
-                                                        oninput="value=value.replace(/[^\d.]/g,'')"></em></strong>
-                                    </li>
-                                    <li class="shopping-total-price">
-                                        <em><?php echo $this->obj->getValidateMessage('chengjiaozongjia'); ?></em>
-                                        <strong class="price"
-                                                id="final_price"><span><?php echo $this->currency; ?></span><em><?php echo $lists['total']['finalprice']; ?></em></strong>
-                                    </li>
-                                </ul>
+
+                <?php if (isset($lists)) { ?>
+                    <!-- BEGIN SIDEBAR & CONTENT -->
+                    <div class="row margin-bottom-40">
+                        <!-- BEGIN CONTENT -->
+                        <div class="col-md-12 col-sm-12">
+                            <!--<h1>结算</h1>-->
+                            <!-- BEGIN CHECKOUT PAGE -->
+                            <div class="panel-group checkout-page accordion scrollable" id="checkout-page">
+
+                                <!-- 第1步：BEGIN CHECKOUT -->
+                                <div id="checkout" class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h2 class="panel-title">
+                                            <a data-parent="#checkout-page"
+                                               class="accordion-toggle in">
+                                                Step
+                                                1: <?php echo $this->obj->getValidateMessage('confirm-recieve-address'); ?>
+                                            </a>
+                                        </h2>
+                                    </div>
+                                    <div id="checkout-content" class="panel-collapse collapse in">
+                                        <div class="panel-body row">
+                                            <div class="col-md-12 col-sm-6">
+
+                                                <?php
+                                                foreach ($addresses as $address) {
+                                                    ?>
+                                                    <label for="address_id-<?php echo $address['id'] ?>"
+                                                           class="label-address"><input
+                                                                id="address_id-<?php echo $address['id'] ?>"
+                                                                name="address_id" type="radio"
+                                                                value="<?php echo $address['id'] ?>"<?php if ($address['is_default']) {
+                                                            echo 'checked="checked"';
+                                                        } ?>> <?php echo $address['name'] . ' ' . $address['tel'] . ' ' . $address['address']; ?><?php if ($address['is_default']) {
+                                                            echo ' [' . $this->obj->getValidateMessage('default-address') . ']';
+                                                        } ?></label>
+                                                    <br>
+                                                    <?php
+                                                }
+                                                ?>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- END CHECKOUT -->
+
+
+                                <!-- 第2步：BEGIN CONFIRM -->
+                                <div id="confirm" class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h2 class="panel-title">
+                                            <a data-parent="#checkout-page"
+                                               class="accordion-toggle">
+                                                Step
+                                                2: <?php echo $this->obj->getValidateMessage('confirm-order-info'); ?>
+                                            </a>
+                                        </h2>
+                                    </div>
+                                    <div id="confirm-content"
+                                         class="panel-collapse collapse in">
+                                        <div class="panel-body row">
+                                            <div class="col-md-12 clearfix">
+                                                <div class="goods-page">
+
+                                                    <div class="goods-data clearfix">
+                                                        <div class="table-wrapper-responsive">
+                                                            <table summary="Shopping cart" id="table-buycar">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th class="goods-page-image"><?php echo $this->obj->getValidateMessage('tupian'); ?></th>
+                                                                    <th class="goods-page-description width30"><?php echo $this->obj->getValidateMessage('mingcheng'); ?></th>
+                                                                    <th class="goods-page-size"><?php echo $this->obj->getValidateMessage('shangpinchicun'); ?></th>
+                                                                    <th class="goods-page-color"><?php echo $this->obj->getValidateMessage('kucun'); ?></th>
+                                                                    <th class="goods-page-quantity"><?php echo $this->obj->getValidateMessage('shuliang'); ?></th>
+                                                                    <th class="goods-page-price"><?php echo $this->obj->getValidateMessage('danjia'); ?></th>
+                                                                    <th class="goods-page-total"
+                                                                        colspan="2"><?php echo $this->obj->getValidateMessage('zongjia'); ?></th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                <?php
+                                                                foreach ($lists['items'] as $list) {
+                                                                    ?>
+                                                                    <tr>
+                                                                        <td class="goods-page-image">
+                                                                            <a href="/product/detail/<?php echo $list['product']['productid']; ?>"><img
+                                                                                        src="<?php echo $this->file_prex . $list['product']['picture']; ?>"
+                                                                                        alt="<?php echo $list['product']['productname']; ?>"></a>
+                                                                        </td>
+                                                                        <td class="goods-page-description">
+                                                                            <h3>
+                                                                                <a href="/product/detail/<?php echo $list['product']['productid']; ?>"><?php echo $list['product']['productname']; ?></a>
+                                                                            </h3>
+                                                                        </td>
+                                                                        <td class="goods-page-size"><?php echo $list['size_name']; ?></td>
+                                                                        <td class="goods-page-color"><?php echo $list['productstock']; ?></td>
+                                                                        <td class="goods-page-quantity">
+                                                                            <div class="product-quantity">
+                                                                                <input type="text"
+                                                                                       data-productid="<?php echo $list['product_id']; ?>"
+                                                                                       data-sizeid="<?php echo $list['size_id']; ?>"
+                                                                                       data-id="<?php echo $list['id']; ?>"
+                                                                                       value="<?php echo $list['number']; ?>"
+                                                                                       class="form-control input-sm buycar-number"
+                                                                                       min="1"
+                                                                                       max="<?php echo $list['productstock']; ?>">
+                                                                            </div>
+                                                                        </td>
+                                                                        <td class="goods-page-price">
+                                                                            <strong>
+                                                                                <span><?php echo $this->currency; ?></span><em
+                                                                                        class="em-price"><?php echo $list['price']; ?></em>
+                                                                            </strong>
+                                                                        </td>
+                                                                        <td class="goods-page-total">
+                                                                            <strong><span><?php echo $this->currency; ?></span><em
+                                                                                        class="em-total-price"></em></strong>
+                                                                        </td>
+                                                                        <td class="del-goods-col">
+                                                                            <a class="del-goods"
+                                                                               onClick="delgoods(this, <?php echo $list['id']; ?>);">&nbsp;</a>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <?php
+                                                                }
+                                                                ?>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+
+                                                        <div class="shopping-total">
+                                                            <ul>
+                                                                <li>
+                                                                    <em><?php echo $this->obj->getValidateMessage('dingdanzongjia'); ?></em>
+                                                                    <strong class="price"
+                                                                            id="total_price"><span><?php echo $this->currency; ?></span><em><?php echo $lists['total']['totalprice']; ?></em></strong>
+                                                                </li>
+                                                                <li>
+                                                                    <em><?php echo $this->obj->getValidateMessage('freight'); ?></em>
+                                                                    <strong class="price"
+                                                                            id="send_price"><span><?php echo $this->currency; ?></span>
+                                                                        <em><input
+                                                                                    type="text" name="send_price"
+                                                                                    value="0.00"
+                                                                                    oninput="value=value.replace(/[^\d.]/g,'')"></em></strong>
+                                                                </li>
+                                                                <li class="shopping-total-price">
+                                                                    <em><?php echo $this->obj->getValidateMessage('chengjiaozongjia'); ?></em>
+                                                                    <strong class="price"
+                                                                            id="final_price"><span><?php echo $this->currency; ?></span><em><?php echo $lists['total']['finalprice']; ?></em></strong>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <button class="btn btn-primary" type="button"
+                                                            id="btn-checkout"><?php echo $this->obj->getValidateMessage('add-to-order'); ?>
+                                                        <i
+                                                                class="fa fa-check"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- END CONFIRM -->
+
                             </div>
+                            <!-- END CHECKOUT PAGE -->
                         </div>
-                        <button class="btn btn-default" type="submit"
-                                id="continue"><?php echo $this->obj->getValidateMessage('continue'); ?> <i
-                                    class="fa fa-shopping-cart"></i>
-                        </button>
-                        <button class="btn btn-primary" type="button"
-                                id="btn-checkout"><?php echo $this->obj->getValidateMessage('add-to-order'); ?> <i
-                                    class="fa fa-check"></i>
-                        </button>
+                        <!-- END CONTENT -->
                     </div>
+                    <!-- END SIDEBAR & CONTENT -->
                 <?php } ?>
+
+
             </div>
             <!-- END CONTENT -->
         </div>
@@ -283,7 +335,7 @@
         $('#final_price').find('em').html(final_price);
     }
 
-    // 去结算
+    // 提交订单
     $("#btn-checkout").click(function () {
         // 遍历input值
         var postData = [];
@@ -297,39 +349,29 @@
             postData.push(temp_data);
         });
 
-        // ajax提交，跳转链接不同，不用标准的ajax函数
-        $.ajax({
-            type: "post",
-            url: "/order/addOrder",
-            async: true,
-            dataType: 'json',
-            data: {
-                'data': postData,
-                // 运费
-                'send_price': send_price,
-            },
-            success: function (result) {
-                // 判断是否有错误
-                if (result.messages.length > 0) {
-                    layer.open({
-                        content: result.messages[0],
-                        btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>"
-                    });
-                } else {
-                    //提示
-                    layer.open({
-                        content: "<?php echo $this->obj->getValidateMessage('success'); ?>",
-                        btn: "<?php echo $this->obj->getValidateMessage('please-wait'); ?>",
-                        time: 3, // 3秒后自动跳转
-                    });
-                    // 1秒后跳转
-                    setTimeout(function () {
-                        window.location.href = '/order/payment/' + result.data;
-                    }, 1000);
-                }
-            }
-        });
+        // ajax提交
+        ajax('/order/addOrder', {
+            'data': postData,
+            // 运费
+            'send_price': send_price,
+            // 地址id
+            'address_id': $("input[name='address_id']:checked").val(),
+        }, window.location.href, addOrderCallback);
     });
+
+    /**
+     * 结算的回调函数
+     * @param result 返回的json对象
+     */
+    function addOrderCallback(result) {
+        // 逻辑
+        // 1秒后跳转
+        setTimeout(function () {
+            window.location.href = '/order/payment/' + result.data;
+        }, 1000);
+        // 禁止执行后续操作
+        return false;
+    }
 
     // 如果是继续购物
     $('#continue').click(function () {

@@ -4,6 +4,7 @@ namespace Multiple\Shop\Controllers;
 
 use Asa\Erp\TbColortemplate;
 use Asa\Erp\TbCompany;
+use Asa\Erp\TbMemberAddress;
 use Asa\Erp\TbProductSearch;
 use Asa\Erp\TbProductstock;
 use Asa\Erp\TbSizecontent;
@@ -34,7 +35,7 @@ class BuycarController extends AdminController
         if (count($lists['items']) > 0) {
             $this->view->setVars([
                 'lists' => $lists,
-
+                'addresses' => TbMemberAddress::find("member_id=" . $member['id'])->toArray(),
             ]);
         } else {
             // 否则就直接转发到空购物车
@@ -115,7 +116,11 @@ class BuycarController extends AdminController
         }
     }
 
-    // 渲染用
+
+    /**
+     * 渲染用
+     * @return array|bool|mixed|void
+     */
     function getListsAction()
     {
         if ($rs = $this->member) {

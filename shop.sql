@@ -32,10 +32,7 @@ CREATE TABLE `tb_shoporder_common`
     `order_no`        varchar(100)              DEFAULT NULL COMMENT '订单号',
     `member_id`       int(10) UNSIGNED          DEFAULT NULL COMMENT '会员id',
     `company_id`      int(10) UNSIGNED          DEFAULT NULL COMMENT '会员所属公司id',
-    `reciver_name`    varchar(64)               DEFAULT NULL COMMENT '收件人',
-    `reciver_phone`   varchar(64)               DEFAULT NULL COMMENT '手机',
-    `reciver_address` varchar(255)              DEFAULT NULL COMMENT '地址',
-    `reciver_no`      varchar(18)               DEFAULT NULL COMMENT '身份证',
+    `address`      text NULL COMMENT '收件人地址信息',
     `total_price`     decimal(9, 2)             DEFAULT NULL COMMENT '商品总计',
     `send_price`      decimal(9, 2)             DEFAULT '0.00' COMMENT '运费',
     `final_price`     decimal(9, 2)             DEFAULT NULL COMMENT '成交价',
@@ -46,6 +43,7 @@ CREATE TABLE `tb_shoporder_common`
     `closed`          tinyint(1)                DEFAULT 0 COMMENT '订单是否已关闭：0-未关闭；1-已关闭；默认为0-未关闭',
     `ship_status`     varchar(255)              DEFAULT 'pending' COMMENT '物流状态：pending-未发货；delivered-已发货；received-已收货',
     `ship_data`       text COMMENT '物流数据',
+    `remark`      text      COMMENT '备注',
     `create_time`     timestamp        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `expire_time`     datetime                  DEFAULT NULL COMMENT '库存锁定截止时间，默认为1个小时',
     `pay_time`        datetime                  DEFAULT NULL COMMENT '支付时间',
@@ -127,3 +125,6 @@ CREATE TABLE `tb_shoppayment`
     `updated_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     KEY `companyid` (`companyid`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT ='ERP附带商城支付配置表';
+
+/* 地址表添加一个last_used_at */
+ALTER TABLE `tb_member_address` ADD `last_used_at` timestamp DEFAULT NULL COMMENT '最后使用时间' AFTER `is_default`;

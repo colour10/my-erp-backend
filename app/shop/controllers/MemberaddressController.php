@@ -49,8 +49,8 @@ class MemberaddressController extends AdminController
             $name = $this->request->get('username', 'string');
             $tel = $this->request->get('mobile', 'int');
             $address = $this->request->get('address', 'string');
-            // 非默认地址选项
-            $is_default = '0';
+            // 默认地址选项，如果当前用户一个地址也没有保存，那么就设置为默认，否则为非默认
+            $is_default = TbMemberAddress::count("member_id=" . $member_id) ? 0 : 1;
             // 不能为空
             if (!$name || !$tel || !$address) {
                 return $this->error($this->getValidateMessage('fill-out-required-fields'));

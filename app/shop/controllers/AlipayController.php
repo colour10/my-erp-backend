@@ -5,7 +5,9 @@ namespace Multiple\Shop\Controllers;
 use Asa\Erp\TbShoporderCommon;
 use Asa\Erp\TbShoppayment;
 use Asa\Erp\Util;
+use Phalcon\Http\Response;
 use Yansongda\Pay\Log;
+use Yansongda\Pay\Pay;
 
 /**
  * 支付宝支付类
@@ -14,6 +16,49 @@ use Yansongda\Pay\Log;
  */
 class AlipayController extends AdminController
 {
+    /**
+     * 支付宝网页付款
+     * @param $order_id
+     * @return bool|Response
+     */
+    public function payAction($order_id)
+    {
+        // 逻辑
+        // 订单不存在，则报错
+        if (!$order = TbShoporderCommon::findFirst("id=" . $order_id)) {
+            return $this->getValidateMessage('order', 'template', 'notexist');
+        }
+
+        // 判断订单状态是否正确
+        if ($order->getPayTime() || $order->getClosed()) {
+            return $this->getValidateMessage('shoporder-status-error');
+        }
+
+        // 默认调用支付宝的网页支付，这个将会自动跳转到支付宝的付款页面
+        // 请求参数
+        $orderConfig = [
+            // 订单编号，需保证在商户端不重复
+            'out_trade_no' => $order->getOrderNo(),
+            // 订单金额，单位元，支持小数点后两位
+            'total_amount' => $order->getFinalPrice(),
+            // 订单标题
+            'subject' => 'Alipay payment: ' . $order->getOrderNo(),
+        ];
+        // 支付，这里要采用第三方授权支付。
+        // 先看看tbshoppayment是否存储了支付参数，如果没有则给出提示
+        if (!$this->alipay_app_auth_token) {
+            // 返回卖家支付宝未授权，不能通过支付宝付款的错误信息
+            return $this->getValidateMessage('seller-alipay-not-authorized');
+        }
+        // app_auth_token赋值
+        $config = $this->config['pay']['alipay'];
+        $config['app_auth_token'] = $this->alipay_app_auth_token;
+        // 开始支付
+        $alipay = $this->alipay->web($orderConfig);
+        // 返回
+        return $alipay->send();
+    }
+
     /**
      * 支付宝同步接收通知
      */
@@ -75,7 +120,7 @@ class AlipayController extends AdminController
         Log::debug('Alipay notify', $array_data);
 
         // 更新订单状态为已支付，同时添加支付时间和异步通知数据
-        $order->setPaymentNo($data->trade_no)->setPayTime($data->notify_time);
+        $order->setPaymentMethod('alipay')->setPaymentNo($data->trade_no)->setPayTime($data->notify_time);
         // 下面这种情况非常少见，如果抽风写入失败，就放在下一次进行写入吧。
         if (!$order->save()) {
             return 'fail';
@@ -90,6 +135,7 @@ class AlipayController extends AdminController
         $msg = sprintf($this->getValidateMessage('order_has_been_paid'), $time);
         // 自动发送一个注册邮件，使用队列进行处理
         // 如果队列服务成功开启，则执行，否则不执行
+        // 如果邮箱存在，才发邮件，否则就没有意义了
         if ($email) {
             if ($this->queue) {
                 $this->queue->choose('my_sendemail_tube');

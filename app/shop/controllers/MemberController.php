@@ -89,7 +89,6 @@ class MemberController extends AdminController
      * 1、超级用户邀请的用户，必须指定某个公司，且该公司自动成为这个公司的管理员
      * 2、普通用户邀请必须是公司管理员才行，邀请的用户默认是普通用户，不能再次邀请
      * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|string
-     * @throws \PHPMailer\PHPMailer\Exception
      */
     public function inviteAction()
     {
@@ -263,14 +262,14 @@ EOT;
     {
         // 逻辑
         // get请求，判断是否登录
-        // 还要必须公司用户才行
         if (!$member = $this->member) {
             return $this->response->redirect('/login');
-        } else {
-            if (!$member['membertype']) {
-                // 传递错误
-                return $this->renderError('make-an-error', '404-not-found');
-            }
+        }
+
+        // 还要必须公司用户才行
+        if (!$member['membertype']) {
+            // 传递错误
+            return $this->renderError('make-an-error', '404-not-found');
         }
 
         // 分页
@@ -285,7 +284,7 @@ EOT;
         // 整合子订单
         $orders_array = $orders->toArray();
         foreach ($orders as $k => $order) {
-            $orders_array[$k]['orderdetails'] = $order->shoporder->toArray();
+            $orders_array[$k]['orderdetails'] = $order->getShoporder()->toArray();
             // 下单人
             $member = $order->getMember();
             $orders_array[$k]['member_name'] = $member->name;
@@ -293,7 +292,7 @@ EOT;
             // 要求是锁库存用户，未付款订单，有截止时间，并且截止时间有效，还有就是订单不能是关闭状态
             $orders_array[$k]['is_show_change_expiretime'] = ($member->is_lockstock && !$order->getPayTime() && $order->getExpireTime() && $order->getExpireTime() > date('Y-m-d H:i:s') && !$order->getClosed()) ? true : false;
             // 显示付款状态
-            $orders_array[$k]['pay_status'] = $order->getPayTime() ? $this->getValidateMessage('order-paid') : $this->getValidateMessage('order-unpaid');
+            $orders_array[$k]['pay_status'] = $order->getPayTime() ? $this->getValidateMessage('paid') : $this->getValidateMessage('not-paid');
             // 显示物流状态
             $orders_array[$k]['ship_status'] = $this->getValidateMessage('ship_status_' . $order->getShipStatus());
             // 是否显示发货按钮

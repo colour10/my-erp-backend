@@ -994,4 +994,14 @@ class Util
         return $prefix . $uuid;
     }
 
+    /**
+     * 关闭错误提示
+     */
+    public static function closeDisplayErrors()
+    {
+        // 逻辑
+        ini_set('display_errors', 'Off');
+        error_reporting(0);
+    }
+
 }
