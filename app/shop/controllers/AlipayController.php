@@ -7,6 +7,7 @@ use Asa\Erp\TbShoppayment;
 use Asa\Erp\Util;
 use Phalcon\Http\Response;
 use Yansongda\Pay\Log;
+use Yansongda\Pay\Pay;
 
 /**
  * 支付宝支付类，因为是第三方应用，所以只支持当面付，也就是扫码和刷卡
@@ -23,6 +24,7 @@ class AlipayController extends AdminController
     public function payAction($order_id)
     {
         // 逻辑
+        Util::closeDisplayErrors();
         // 订单不存在，则报错
         if (!$order = TbShoporderCommon::findFirst("id=" . $order_id)) {
             return $this->getValidateMessage('order', 'template', 'notexist');
@@ -43,17 +45,21 @@ class AlipayController extends AdminController
             // 订单标题
             'subject' => 'Alipay payment: ' . $order->getOrderNo(),
         ];
+
         // 支付，这里要采用第三方授权支付。
         // 先看看tbshoppayment是否存储了支付参数，如果没有则给出提示
-        if (!$this->alipay_app_auth_token) {
+        if (!$this->app_auth_token) {
             // 返回卖家支付宝未授权，不能通过支付宝付款的错误信息
             return $this->getValidateMessage('seller-alipay-not-authorized');
         }
-        // app_auth_token赋值
-        $config = $this->config['pay']['alipay'];
-        $config['app_auth_token'] = $this->alipay_app_auth_token;
         // 开始支付
-        $result = $this->alipay->scan($orderConfig);
+        try {
+            $result = $this->alipay->scan($orderConfig);
+        } catch (\Exception $e) {
+            // 生成错误提示二维码
+            return $e->getMessage();
+        }
+
         // 返回支付宝二维码内容
         return Util::createQrcode($result->qr_code);
     }
@@ -215,20 +221,11 @@ class AlipayController extends AdminController
 
             // 第二步：访问授权链接获取auth_code
             // 传公共的参数
-            require_once APP_PATH . '/app/shop/packages/alipay/AopSdk.php';
-            $aop = new \AopClient ();
-            $aop->gatewayUrl = $this->config['pay']['alipay']['gateway'];
-            $aop->appId = $this->config['pay']['alipay']['app_id'];
-            $aop->rsaPrivateKey = $this->config['pay']['alipay']['private_key'];
-            //支付宝的公钥
-            $aop->alipayrsaPublicKey = $this->config['pay']['alipay']['ali_public_key'];
-            $aop->apiVersion = '1.0';
-            $aop->postCharset = 'utf-8';
-            $aop->format = 'json';
-            $aop->signType = 'RSA2';
-            //初始化换取app_auth_token接口
+            // 首先获取aop
+            $aop = $this->getAop();
+            // 初始化换取app_auth_token接口
             $request = new \AlipayOpenAuthTokenAppRequest();
-            //请求的必传信息
+            // 请求的必传信息
             $request->setBizContent("{\"grant_type\":\"authorization_code\",\"code\":\"$code\"}");
             /**
              * 刷新app_auth_token的方法，app_auth_token有效期365天，如果过期需要重新授权,
@@ -239,12 +236,23 @@ class AlipayController extends AdminController
             $responseNode = str_replace(".", "_", $request->getApiMethodName()) . "_response";
             // 转成数组
             $userToken = (array)$result->$responseNode;
-            // 写入session
             // 把companyid也放进去
             $userToken['companyid'] = $member['companyid'];
-            $this->session->set('alipayUserToken', $userToken);
             if (empty($userToken['code']) || $userToken['code'] != 10000) {
                 return $this->renderError('make-an-error', 'fail-to-get-userinfo');
+            }
+
+            // 第三步，查询这个应用授权AppAuthToken的授权信息，把结果记录到数组中
+            $app_auth_token = $userToken['app_auth_token'];
+            $request = new \AlipayOpenAuthTokenAppQueryRequest ();
+            $request->setBizContent("{" .
+                "\"app_auth_token\":\"$app_auth_token\"" .
+                "  }");
+            $result = $aop->execute($request);
+            $responseNode = str_replace(".", "_", $request->getApiMethodName()) . "_response";
+            $queryToken = (array)$result->$responseNode;;
+            if (empty($queryToken['code']) || $queryToken['code'] != 10000) {
+                return $this->renderError('make-an-error', 'fail-to-get-token-info');
             }
 
             // 向数据库写入config
@@ -257,9 +265,10 @@ class AlipayController extends AdminController
                 $payment->save();
             }
             // 取出原来的内容，然后把alipayToken的部分添加进去
-            $config = json_decode($payment->getConfig(), true);
-            $config['alipayUserToken'] = $this->session->get('alipayUserToken');
-            $payment->setConfig(json_encode($config));
+            $config = $payment->getConfig();
+            $config['alipayUserToken'] = $userToken;
+            $config['alipayQueryToken'] = $queryToken;
+            $payment->setConfig($config);
             $payment->save();
 
             // 最终成功
@@ -303,16 +312,7 @@ class AlipayController extends AdminController
                     }
 
                     // 获取access_token
-                    require_once APP_PATH . '/app/shop/packages/alipay/AopSdk.php';
-                    $aop = new \AopClient();
-                    $aop->appId = $this->config['pay']['alipay']['app_id'];
-                    $aop->rsaPrivateKey = $this->config['pay']['alipay']['private_key'];
-                    $aop->alipayrsaPublicKey = $this->config['pay']['alipay']['ali_public_key'];
-                    $aop->gatewayUrl = $this->config['pay']['alipay']['gateway'];
-                    $aop->apiVersion = '1.0';
-                    $aop->postCharset = 'utf-8';
-                    $aop->format = 'json';
-                    $aop->signType = 'RSA2';
+                    $aop = $this->getAop();
 
                     // 第二步，首先获取access_token
                     $request = new \AlipaySystemOauthTokenRequest();
@@ -344,10 +344,8 @@ class AlipayController extends AdminController
                         return $this->renderError('make-an-error', 'fail-to-get-userinfo');
                     }
 
-                    // 返回
-                    // 写入缓存
+                    // 把companyid加入进去
                     $alipayUserData['companyid'] = $member['companyid'];
-                    $this->session->set('alipayUserData', $alipayUserData);
 
                     // 向数据库写入config
                     // 判断是否授权了
@@ -359,9 +357,9 @@ class AlipayController extends AdminController
                         $payment->save();
                     }
                     // 取出原来的内容，然后把alipayToken的部分添加进去
-                    $config = json_decode($payment->getConfig(), true);
-                    $config['alipayUserData'] = $this->session->get('alipayUserData');
-                    $payment->setConfig(json_encode($config));
+                    $config = $payment->getConfig();
+                    $config['alipayUserData'] = $alipayUserData;
+                    $payment->setConfig($config);
                     $payment->save();
 
                     // 返回
@@ -375,6 +373,27 @@ class AlipayController extends AdminController
             // 返回
             return $this->success($this->session->get('alipayUserData'));
         }
+    }
+
+    /**
+     * 获取AOP对象，私有方法
+     * @return \AopClient
+     */
+    private function getAop()
+    {
+        // 逻辑
+        require_once APP_PATH . '/app/shop/packages/alipay/AopSdk.php';
+        $aop = new \AopClient();
+        $aop->appId = $this->config['pay']['alipay']['app_id'];
+        $aop->rsaPrivateKey = $this->config['pay']['alipay']['private_key'];
+        $aop->alipayrsaPublicKey = $this->config['pay']['alipay']['ali_public_key'];
+        $aop->gatewayUrl = $this->config['pay']['alipay']['gateway'];
+        $aop->apiVersion = '1.0';
+        $aop->postCharset = 'utf-8';
+        $aop->format = 'json';
+        $aop->signType = 'RSA2';
+        // 返回
+        return $aop;
     }
 
 }

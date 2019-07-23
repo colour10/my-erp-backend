@@ -147,16 +147,29 @@
      * @returns {boolean}
      */
     function paymentByAliapy(order_id) {
-        // 动态添加付款二维码
-        let img = '<div id="qrcode"><p><?php echo $this->obj->getValidateMessage('scan-alipay-code-to-pay'); ?>：</p><img alt="二维码" src="/alipay/pay/' + order_id + '"></div>';
-        // 弹出一张二维码图片
-        layer.open({
-            content: img,
-            shadeClose: false,
-            btn: "<?php echo $this->obj->getValidateMessage('order-completed'); ?>",
-            yes: function () {
-                // 如果执行了完成按钮，则刷新页面
-                window.location.reload();
+        // 先判断远程页面返回的是json还是图片
+        $.get('/alipay/pay/' + order_id, function (response, textStatus, jqXHR) {
+            // 如果返回不是图片，则说明出错了，这个时候直接显示错误即可
+            if (jqXHR.getResponseHeader('Content-Type') !== 'image/png') {
+                // 弹出错误
+                layer.open({
+                    content: response,
+                    btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>",
+                });
+            } else {
+                // 否则就是成功了，取出返回的图片
+                // 动态添加付款二维码
+                let img = '<div id="qrcode"><p><?php echo $this->obj->getValidateMessage('scan-alipay-code-to-pay'); ?>：</p><img alt="二维码" src="/alipay/pay/' + order_id + '"></div>';
+                // 弹出一张二维码图片
+                layer.open({
+                    content: img,
+                    shadeClose: false,
+                    btn: "<?php echo $this->obj->getValidateMessage('order-completed'); ?>",
+                    yes: function () {
+                        // 如果执行了完成按钮，则刷新页面
+                        window.location.reload();
+                    }
+                });
             }
         });
     }
@@ -167,16 +180,29 @@
      * @returns {boolean}
      */
     function paymentByWechat(order_id) {
-        // 动态添加付款二维码
-        let img = '<div id="qrcode"><p><?php echo $this->obj->getValidateMessage('scan-wechat-code-to-pay'); ?>：</p><img alt="二维码" src="/wechatpay/pay/' + order_id + '"></div>';
-        // 弹出一张二维码图片
-        layer.open({
-            content: img,
-            shadeClose: false,
-            btn: "<?php echo $this->obj->getValidateMessage('order-completed'); ?>",
-            yes: function () {
-                // 如果执行了完成按钮，则刷新页面
-                window.location.reload();
+        // 先判断远程页面返回的是json还是图片
+        $.get('/wechatpay/pay/' + order_id, function (response, textStatus, jqXHR) {
+            // 如果返回不是图片，则说明出错了，这个时候直接显示错误即可
+            if (jqXHR.getResponseHeader('Content-Type') !== 'image/png') {
+                // 弹出错误
+                layer.open({
+                    content: response,
+                    btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>",
+                });
+            } else {
+                // 否则就是成功了，取出返回的图片
+                // 动态添加付款二维码
+                let img = '<div id="qrcode"><p><?php echo $this->obj->getValidateMessage('scan-wechat-code-to-pay'); ?>：</p><img alt="二维码" src="/wechatpay/pay/' + order_id + '"></div>';
+                // 弹出一张二维码图片
+                layer.open({
+                    content: img,
+                    shadeClose: false,
+                    btn: "<?php echo $this->obj->getValidateMessage('order-completed'); ?>",
+                    yes: function () {
+                        // 如果执行了完成按钮，则刷新页面
+                        window.location.reload();
+                    }
+                });
             }
         });
     }

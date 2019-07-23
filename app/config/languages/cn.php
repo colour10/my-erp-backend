@@ -793,6 +793,7 @@ return [
     'missing-params' => '缺少 %s 参数',
     'gain-error' => '获取 %s 失败',
     'fail-to-get-userinfo' => '获取用户信息失败',
+    'fail-to-get-token-info' => '获取授权详情失败',
     'successful-authorization' => '授权成功',
     'pay-authorization' => '支付授权',
     'alipay-authorization' => '支付宝授权',

@@ -16,6 +16,7 @@ use Endroid\QrCode\QrCode;
 use Phalcon\Http\Response;
 use Phalcon\Logger\Adapter\File as FileLogger;
 use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
+use Yansongda\Pay\Log;
 
 /**
  * 订单操作类
@@ -711,10 +712,10 @@ class OrderController extends AdminController
                         'notify_url' => $this->config['pay']['wechat']['notify_url'],
                     ]);
                 } catch (\Exception $e) {
-                    // 返回错误
-                    // 取出错误提示
-                    $msg = $e->raw['err_code'] ?: 'payment-failed';
-                    return $this->getValidateMessage($msg);
+                    // 定义退款失败
+                    // 把失败原因记录日志
+                    Log::error('订单号' . $order->getOrderNo() . '退款失败：', $e->raw);
+                    return $this->getValidateMessage('refund_status_failed');
                 }
                 // 将订单状态改成退款中
                 $order->save([
@@ -734,9 +735,10 @@ class OrderController extends AdminController
                         'out_request_no' => $refundNo, // 退款订单号
                     ]);
                 } catch (\Exception $e) {
-                    // 取出错误提示
-                    $msg = $e->raw['err_code'] ?: 'payment-failed';
-                    return $this->getValidateMessage($msg);
+                    // 定义退款失败
+                    // 把失败原因记录日志
+                    Log::error('订单号' . $order->getOrderNo() . '退款失败：', $e->raw);
+                    return $this->getValidateMessage('refund_status_failed');
                 }
 
                 // 根据支付宝的文档，如果返回值里有 sub_code 字段说明退款失败

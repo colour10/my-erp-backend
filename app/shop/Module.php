@@ -8,7 +8,9 @@ use Asa\Erp\TbBrandgroup;
 use Asa\Erp\TbCompany;
 use Asa\Erp\TbCurrency;
 use Asa\Erp\TbProductSearch;
+use Asa\Erp\TbShoporderCommon;
 use Asa\Erp\TbShoppayment;
+use Asa\Erp\Util;
 use Multiple\Shop\Controllers\AdminController;
 use Phalcon\Events\Manager as EventsManager;
 use Phalcon\Loader;
@@ -277,8 +279,7 @@ class Module implements ModuleDefinitionInterface
         // 队列，但是依赖于系统服务beanstalk是否开启
         $di->setShared('queue', function () {
             // 屏蔽错误，防止Beanstalk服务没有启动引起报错
-            ini_set('display_errors', 'off');
-            error_reporting(0);
+            Util::closeDisplayErrors();
             // 连接到队列
             $beanstalk = new Beanstalk(
                 [
@@ -426,74 +427,105 @@ class Module implements ModuleDefinitionInterface
             return $return;
         });
 
-        // 注册微信和支付宝单例服务
-        // 第三方应用-支付宝
-        $di->setShared('alipay', function () use ($config_array) {
-            // 取出支付宝相关配置
-            $config = $config_array['pay']['alipay'];
-            // 调用 Yansongda\Pay 来创建一个支付宝支付对象
-            return Pay::alipay($config);
-        });
-
-        // 第三方应用-微信
-        $di->setShared('wechat_pay', function () use ($config_array) {
-            // 取出支付宝相关配置
-            $config = $config_array['pay']['wechat'];
-            // 调用 Yansongda\Pay 来创建一个微信支付对象
-            return Pay::wechat($config);
-        });
-
-        // 自用型应用-支付宝
-        $di->setShared('selfAlipay', function () use ($config_array) {
-            // 取出支付宝相关配置
-            $config = $config_array['pay']['selfAlipay'];
-            // 调用 Yansongda\Pay 来创建一个支付宝支付对象
-            return Pay::alipay($config);
-        });
-
-        // 自用型应用-微信
-        $di->setShared('selfWechatpay', function () use ($config_array) {
-            // 取出支付宝相关配置
-            $config = $config_array['pay']['selfWechat'];
-            // 调用 Yansongda\Pay 来创建一个微信支付对象
-            return Pay::wechat($config);
-        });
-
-        // 第三方授权支付-当前登录用户的支付宝支付方式
-        $di->setShared('alipay_app_auth_token', function () use ($session) {
-            // 取出公司id
-            if ($session->has('member')) {
-                $companyid = $session->get('member')['companyid'];
-                // 取出支付方式
-                $payment = TbShoppayment::findFirst("companyid=" . $companyid);
-                $config = $payment ? json_decode($payment->getConfig(), true) : [];
-                // 如果$config不为空，则取出支付参数
-                if ($config) {
-                    if (array_key_exists('alipayUserToken', $config) && array_key_exists('app_auth_token', $config['alipayUserToken'])) {
-                        $app_auth_token = $config['alipayUserToken']['app_auth_token'];
-                    } else {
-                        $app_auth_token = '';
-                    }
-                } else {
-                    $app_auth_token = '';
-                }
-            } else {
-                $app_auth_token = '';
+        // 当前公司的支付配置对象
+        $di->setShared('shopPayment', function () use ($di) {
+            // 取出支付宝相关配置currentCompany
+            // 如果未登录
+            if (!$companyid = $di->get('currentCompany')) {
+                return [];
+            }
+            // 取出支付方式
+            if (!$payment = TbShoppayment::findFirst("companyid=" . $companyid)) {
+                return [];
             }
             // 返回
-            return $app_auth_token;
+            return $payment;
         });
 
 
-        // 取出支付宝的超级UID
-        $di->setShared('alipaySuperUid', function () use ($session, $config_array) {
-            // 取出支付方式
-            $superUid = $config_array['pay']['alipaySuperUid'];
-            $payment = TbShoppayment::findFirst("config like '%$superUid%'");
-            if (!$payment) {
+        // 当前公司的支付配置config
+        $di->setShared('shopPaymentConfig', function () use ($di) {
+            // 取出支付宝相关配置currentCompany
+            if (!$payment = $di->get('shopPayment')) {
+                return [];
+            }
+            // 返回
+            return $payment->getConfig();
+        });
+
+
+        // 支付宝app_auth_token
+        $di->setShared('app_auth_token', function () use ($di) {
+            // 逻辑
+            // 如果结果为空
+            if (!$config = $di->get('shopPaymentConfig')) {
                 return '';
             }
-            return $payment->getCompanyid();
+
+            // 取出app_auth_token，但是不能过期，如果过期就要重新授权
+            // 下面的逻辑确保app_auth_token为空，或者是在有效期之内
+            if (
+                array_key_exists('alipayUserToken', $config) &&
+                array_key_exists('app_auth_token', $config['alipayUserToken']) &&
+                array_key_exists('alipayQueryToken', $config) &&
+                array_key_exists('auth_end', $config['alipayQueryToken']) &&
+                date('Y-m-d H:i:s') < $config['alipayQueryToken']['auth_end']
+            ) {
+                return $config['alipayUserToken']['app_auth_token'];
+            } else {
+                // 删除失效的token记录，赋值为NULL
+                $di->get('shopPayment')->setConfig(NULL);
+                $di->get('shopPayment')->save();
+                return '';
+            }
+        });
+
+
+        // 微信sub_mch_id
+        $di->setShared('sub_mch_id', function () use ($di) {
+            // 逻辑
+            // 如果结果为空
+            if (!$config = $di->get('shopPaymentConfig')) {
+                return '';
+            }
+
+            // 取出app_auth_token，但是不能过期，如果过期就要重新授权
+            // 下面的逻辑确保app_auth_token为空，或者是在有效期之内
+            if (
+                array_key_exists('alipayUserToken', $config) &&
+                array_key_exists('app_auth_token', $config['alipayUserToken']) &&
+                array_key_exists('alipayQueryToken', $config) &&
+                array_key_exists('auth_end', $config['alipayQueryToken']) &&
+                date('Y-m-d H:i:s') < $config['alipayQueryToken']['auth_end']
+            ) {
+                return $config['alipayUserToken']['app_auth_token'];
+            } else {
+                // 删除失效的token记录，赋值为NULL
+                $di->get('shopPayment')->setConfig(NULL);
+                $di->get('shopPayment')->save();
+                return '';
+            }
+        });
+
+
+        // 注册微信和支付宝单例服务
+        // 支付宝
+        $di->setShared('alipay', function () use ($config_array, $di) {
+            // 取出支付宝相关配置
+            // app_auth_token，这个是必填项
+            $config_array['pay']['alipay']['app_auth_token'] = $di->get('app_auth_token');
+            // 调用 Yansongda\Pay 来创建一个支付宝支付对象
+            return Pay::alipay($config_array['pay']['alipay']);
+        });
+
+        // 微信
+        $di->setShared('wechat_pay', function () use ($config_array, $di) {
+            // 取出微信相关配置
+            $config = $config_array['pay']['wechat'];
+            // 添加子商户号，待完善
+            $config_array['pay']['wechat']['sub_mch_id'] = $di->get('sub_mch_id');
+            // 调用 Yansongda\Pay 来创建一个微信支付对象
+            return Pay::wechat($config);
         });
 
     }

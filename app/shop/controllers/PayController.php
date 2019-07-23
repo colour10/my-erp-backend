@@ -11,6 +11,11 @@ use Asa\Erp\Util;
  */
 class PayController extends AdminController
 {
+    /**
+     * 聚合付款，二维码多合一
+     * @param $order_id
+     * @return string|void
+     */
     public function payAction($order_id)
     {
         // 逻辑
@@ -28,6 +33,11 @@ class PayController extends AdminController
         }
     }
 
+    /**
+     * 聚合付款，生成二维码
+     * @param $order_id
+     * @return \Phalcon\Http\Response
+     */
     public function createqrcodeAction($order_id)
     {
         // 逻辑

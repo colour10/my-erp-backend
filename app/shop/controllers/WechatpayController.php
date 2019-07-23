@@ -26,12 +26,12 @@ class WechatpayController extends AdminController
         Util::closeDisplayErrors();
         // 订单不存在，则报错
         if (!$order = TbShoporderCommon::findFirst("id=" . $order_id)) {
-            return $this->error($this->getValidateMessage('order', 'template', 'notexist'));
+            return $this->getValidateMessage('order', 'template', 'notexist');
         }
 
         // 判断订单状态是否正确
         if ($order->getPayTime() || $order->getClosed()) {
-            return $this->error($this->getValidateMessage('shoporder-status-error'));
+            return $this->getValidateMessage('shoporder-status-error');
         }
 
         // 请求参数
@@ -41,7 +41,7 @@ class WechatpayController extends AdminController
             // 订单金额，单位分，支持小数点后两位
             'total_fee' => $order->getFinalPrice() * 100,
             // 订单标题
-            'body' => 'Wechat payment',
+            'body' => 'Wechat payment: ' . $order->getOrderNo(),
         ];
 
         // 调用微信支付
@@ -49,35 +49,14 @@ class WechatpayController extends AdminController
             // 扫码
             $result = $this->wechat_pay->scan($config);
         } catch (\Exception $e) {
-            // 取出错误提示
-            $msg = $e->raw['err_code'] ?: 'payment-failed';
-            return $this->error($this->getValidateMessage($msg));
+            // 生成错误提示二维码
+            return Util::createQrcode($e->getMessage());
         }
 
         // 返回二维码图片
         return Util::createQrcode($result->code_url);
     }
 
-    /**
-     * 生成微信付款二维码图片
-     */
-    public function createqrcodeAction()
-    {
-        // 逻辑
-        require_once APP_PATH . '/app/shop/packages/phpqrcode/phpqrcode.php';
-        $url = urldecode($this->request->get('data'));
-        // 开始生成
-        if (substr($url, 0, 6) == "weixin") {
-            // 设置生成二维码的格式
-            // 第1个参数$text：二维码包含的内容，可以是链接、文字、json字符串等等；
-            // 第2个参数$outfile：默认为false，不生成文件，只将二维码图片返回输出；否则需要给出存放生成二维码图片的文件名及路径；
-            // 第3个参数$level：默认为L，这个参数可传递的值分别是L(QR_ECLEVEL_L，7%)、M(QR_ECLEVEL_M，15%)、Q(QR_ECLEVEL_Q，25%)、H(QR_ECLEVEL_H，30%)，这个参数控制二维码容错率，不同的参数表示二维码可被覆盖的区域百分比，也就是被覆盖的区域还能识别；
-            // 第4个参数$size：控制生成图片的大小，默认为4；计算公式为：floor(图片宽度 / 37 * 100) / 100 + 0.01;比如宽度为200px的就是floor(200 / 37 * 100) / 100 + 0.01 = 5.41；宽度为300px则是floor(300 / 37 * 100) / 100 + 0.01 = 8.11
-            // 第5个参数$margin：控制生成二维码的空白区域大小；
-            // 第6个参数$saveandprint：保存二维码图片并显示出来，$outfile必须传递图片路径；
-            \QRcode::png($url, false, 'H', 8.11);
-        }
-    }
 
     /**
      * 微信接收异步通知
