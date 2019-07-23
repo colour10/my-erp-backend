@@ -21,7 +21,10 @@ class ProductstockController extends BaseController {
             sprintf("companyid=%d", $this->companyid)
         ];
 
-        if($productids!="") {
+        if($productids!==false) {
+            if($productids=='') {
+                return $this->success([]);
+            }
             $conditions[] = sprintf("productid in (%s)", $productids);
         }
 
@@ -48,7 +51,8 @@ class ProductstockController extends BaseController {
         $where = [sprintf("companyid=%d", $this->companyid)];
 
         if(isset($_POST["wordcode"]) && trim($_POST["wordcode"])!="") {
-            $where[] = sprintf("wordcode like '%%%s%%'", addslashes(strtoupper($_POST["wordcode"])));
+            $wordcode = preg_replace("#\s#msi", '', strtoupper($_POST["wordcode"]));
+            $where[] = sprintf("wordcode like '%%%s%%'", addslashes($wordcode));
         }
 
         $names = ['brandid', 'brandgroupid', 'childbrand', 'brandcolor', 'saletypeid', 'producttypeid','gender'];
@@ -92,7 +96,7 @@ class ProductstockController extends BaseController {
             return implode(',', $array);
         }
         else {
-            return "";
+            return false;
         }
     }
 }

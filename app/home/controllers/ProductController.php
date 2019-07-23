@@ -607,6 +607,6 @@ class ProductController extends CadminController {
             }
         }
 
-        return $this->success();
+        return $this->success('');
     }
 }

@@ -61,7 +61,9 @@ class TbShipping extends BaseModel
             "form" => $this->toArray(),
             "shippingdetails" => $details->toArray(),
             "orderbrands" => $orderbrands,
-            "orderbranddetails" => $orderbranddetails
+            "orderbranddetails" => $orderbranddetails,
+            // 只有已经确认过的入库单，才显示成本。
+            "costs" => $this->status==2 || $this->status==3 ? $this->getCostList($this->currency) : []
         ];
     }
 
@@ -84,14 +86,19 @@ class TbShipping extends BaseModel
                 $row = $result[$detail->productid];
             }
             else {
-                $row = ["number"=>0, "amount"=>0, "productid"=>$detail->productid];
+                /*
+                 * amount 保存当前的商品的总金额，包括商品售价及摊销的费用
+                 * amount_ 仅仅是商品的总金额，用来计算按金额摊销的费用的，避免已经按数量摊销过，在按照金额摊销就错了。
+                 */
+                $row = ["number"=>0, "amount"=>0, "amount_"=>0, "productid"=>$detail->productid, "currencyid"=>$currencyid];
             }
             $row["number"] += $detail->warehousingnumber;
             $row["amount"] += $amount['number'];
+            $row["amount_"] = $row["amount"];
             $result[$detail->productid] = $row;
         }
 
-        //直接返回结果
+        // 如果已经入库了，说明已经分摊过了，直接返回结果
         if($this->status==3) {
             return $result;
         }
@@ -103,24 +110,30 @@ class TbShipping extends BaseModel
                 //print_r($shippingFee->feename->toArray());
 
                 if($shippingFee->feename->amortize_type==1) {
-                    //按数量摊销
-
-                    $average = $fee_amount['number']/$total_number;
-                    //print_r( $average);
-                    foreach($result as $key=>$row) {
-                        $row['amount'] += $average*$row['number'];
-                        $result[$key] = $row;
+                    // 按数量摊销
+                    if($total_number>0) {
+                        $average = $fee_amount['number']/$total_number;
+                        //print_r( $average);
+                        //echo ",".$fee_amount['number'];
+                        foreach($result as $key=>$row) {
+                            $row['amount'] += $average*$row['number'];
+                            $result[$key] = $row;
+                        }
                     }
                 }
                 else {
-                    //按金额摊销
-                    foreach($result as $key=>$row) {
-                        $row['amount'] += $fee_amount['number']*$row['amount']/$total_amount;
-                        $result[$key] = $row;
+                    // 按金额摊销
+                    if($total_amount>0) {
+                        foreach($result as $key=>$row) {
+                            $row['amount'] += $fee_amount['number']*$row['amount_']/$total_amount;
+                            $result[$key] = $row;
+                        }
                     }
                 }
             }
         }
+
+        //print_r($result);
 
         return $result;
     }

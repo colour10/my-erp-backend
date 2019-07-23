@@ -16,6 +16,7 @@ class ShippingfeeController extends CadminController {
     }
 
     function before_add() {
+        $_POST['companyid'] = $this->companyid;
         $_POST['makestaff'] = $this->currentUser;
         $_POST['maketime'] = date("Y-m-d H:i:s");
     }
