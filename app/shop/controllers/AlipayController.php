@@ -122,7 +122,7 @@ class AlipayController extends AdminController
 
         // 记录日志
         $array_data = $data->all();
-        Log::debug('Alipay notify', $array_data);
+        Log::debug('支付宝订单号' . $data->trade_no . '的异步通知：', $array_data);
 
         // 更新订单状态为已支付，同时添加支付时间和异步通知数据
         $order->setPaymentMethod('alipay')->setPaymentNo($data->trade_no)->setPayTime($data->notify_time);
