@@ -282,6 +282,7 @@ class AlipayController extends AdminController
 
     /**
      * 获取授权用户基本信息
+     * @return false|Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|string|void
      */
     public function getuserAction()
     {

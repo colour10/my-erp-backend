@@ -18,6 +18,7 @@ class MemberController extends AdminController
 {
     /**
      * 没有首页
+     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|void
      */
     public function indexAction()
     {
@@ -31,7 +32,7 @@ class MemberController extends AdminController
 
     /**
      * 修改密码
-     * @return false|string
+     * @return false|string|void
      */
     public function resetpasswordAction()
     {
@@ -88,7 +89,7 @@ class MemberController extends AdminController
      * 邀请注册的逻辑：
      * 1、超级用户邀请的用户，必须指定某个公司，且该公司自动成为这个公司的管理员
      * 2、普通用户邀请必须是公司管理员才行，邀请的用户默认是普通用户，不能再次邀请
-     * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|string
+     * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|string|void
      */
     public function inviteAction()
     {
@@ -232,7 +233,7 @@ EOT;
 
     /**
      * 邀请注册名单
-     * @return \Phalcon\Mvc\View
+     * @return \Phalcon\Mvc\View|void
      */
     public function invitelistAction()
     {
@@ -256,7 +257,7 @@ EOT;
 
     /**
      * 订单列表
-     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View
+     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|void
      */
     public function ordersAction()
     {
@@ -330,7 +331,7 @@ EOT;
 
     /**
      * 支付授权
-     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View
+     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|void
      */
     public function payauthAction()
     {
@@ -354,7 +355,7 @@ EOT;
             $payment->setCompanyid($member['companyid']);
             $payment->save();
         }
-        $config = $payment ? $payment->getConfig() : '';
+        $config = $payment ? json_encode($payment->getConfig()) : '';
         // 查找里面是否有app_auth_token字段
         $is_alipay_allow_auth = (strpos($config, 'app_auth_token') !== false) ? true : false;
         $is_wechatpay_allow_auth = (strpos($config, 'wx_app_auth_token') !== false) ? true : false;
