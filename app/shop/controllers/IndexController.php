@@ -3,6 +3,8 @@
 namespace Multiple\Shop\Controllers;
 
 use Asa\Erp\TbProductSearch;
+use Phalcon\Assets\Filters\Cssmin;
+use Phalcon\Assets\Filters\Jsmin;
 use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
 
 /**
@@ -39,6 +41,7 @@ class IndexController extends AdminController
         $this->view->setVars([
             'productlist' => $productlist_array,
         ]);
+
     }
 
     /**
