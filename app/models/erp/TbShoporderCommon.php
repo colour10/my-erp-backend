@@ -9,7 +9,6 @@ namespace Asa\Erp;
  */
 class TbShoporderCommon extends BaseModel
 {
-
     /**
      *
      * @var integer
@@ -20,7 +19,7 @@ class TbShoporderCommon extends BaseModel
      *
      * @var string
      */
-    protected $this_no;
+    protected $order_no;
 
     /**
      *
@@ -38,25 +37,7 @@ class TbShoporderCommon extends BaseModel
      *
      * @var string
      */
-    protected $reciver_name;
-
-    /**
-     *
-     * @var string
-     */
-    protected $reciver_phone;
-
-    /**
-     *
-     * @var string
-     */
-    protected $reciver_address;
-
-    /**
-     *
-     * @var string
-     */
-    protected $reciver_no;
+    protected $address;
 
     /**
      *
@@ -122,6 +103,12 @@ class TbShoporderCommon extends BaseModel
      *
      * @var string
      */
+    protected $remark;
+
+    /**
+     *
+     * @var string
+     */
     protected $create_time;
 
     /**
@@ -164,12 +151,12 @@ class TbShoporderCommon extends BaseModel
     /**
      * Method to set the value of field order_no
      *
-     * @param string $this_no
+     * @param string $order_no
      * @return $this
      */
-    public function setOrderNo($this_no)
+    public function setOrderNo($order_no)
     {
-        $this->order_no = $this_no;
+        $this->order_no = $order_no;
 
         return $this;
     }
@@ -201,53 +188,14 @@ class TbShoporderCommon extends BaseModel
     }
 
     /**
-     * Method to set the value of field reciver_name
+     * Method to set the value of field address
      *
-     * @param string $reciver_name
+     * @param array $address
      * @return $this
      */
-    public function setReciverName($reciver_name)
+    public function setAddress(array $address)
     {
-        $this->reciver_name = $reciver_name;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field reciver_phone
-     *
-     * @param string $reciver_phone
-     * @return $this
-     */
-    public function setReciverPhone($reciver_phone)
-    {
-        $this->reciver_phone = $reciver_phone;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field reciver_address
-     *
-     * @param string $reciver_address
-     * @return $this
-     */
-    public function setReciverAddress($reciver_address)
-    {
-        $this->reciver_address = $reciver_address;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field reciver_no
-     *
-     * @param string $reciver_no
-     * @return $this
-     */
-    public function setReciverNo($reciver_no)
-    {
-        $this->reciver_no = $reciver_no;
+        $this->address = json_encode($address);
 
         return $this;
     }
@@ -378,6 +326,18 @@ class TbShoporderCommon extends BaseModel
     public function setShipData(array $ship_data)
     {
         $this->ship_data = json_encode($ship_data);
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field remark
+     *
+     * @param string $remark
+     * @return $this
+     */
+    public function setRemark($remark)
+    {
+        $this->remark = $remark;
 
         return $this;
     }
@@ -488,43 +448,13 @@ class TbShoporderCommon extends BaseModel
     }
 
     /**
-     * Returns the value of field reciver_name
+     * Returns the value of field address
      *
-     * @return string
+     * @return array
      */
-    public function getReciverName()
+    public function getAddress()
     {
-        return $this->reciver_name;
-    }
-
-    /**
-     * Returns the value of field reciver_phone
-     *
-     * @return string
-     */
-    public function getReciverPhone()
-    {
-        return $this->reciver_phone;
-    }
-
-    /**
-     * Returns the value of field reciver_address
-     *
-     * @return string
-     */
-    public function getReciverAddress()
-    {
-        return $this->reciver_address;
-    }
-
-    /**
-     * Returns the value of field reciver_no
-     *
-     * @return string
-     */
-    public function getReciverNo()
-    {
-        return $this->reciver_no;
+        return json_decode($this->address, true);
     }
 
     /**
@@ -629,6 +559,16 @@ class TbShoporderCommon extends BaseModel
     }
 
     /**
+     * Returns the value of field remark
+     *
+     * @return string
+     */
+    public function getRemark()
+    {
+        return $this->remark;
+    }
+
+    /**
      * Returns the value of field create_time
      *
      * @return string
@@ -671,7 +611,7 @@ class TbShoporderCommon extends BaseModel
     /**
      * Returns the value of field extra
      *
-     * @return string
+     * @return array
      */
     public function getExtra()
     {
@@ -795,10 +735,7 @@ class TbShoporderCommon extends BaseModel
             'order_no' => 'order_no',
             'member_id' => 'member_id',
             'company_id' => 'company_id',
-            'reciver_name' => 'reciver_name',
-            'reciver_phone' => 'reciver_phone',
-            'reciver_address' => 'reciver_address',
-            'reciver_no' => 'reciver_no',
+            'address' => 'address',
             'total_price' => 'total_price',
             'send_price' => 'send_price',
             'final_price' => 'final_price',
@@ -809,6 +746,7 @@ class TbShoporderCommon extends BaseModel
             'closed' => 'closed',
             'ship_status' => 'ship_status',
             'ship_data' => 'ship_data',
+            'remark' => 'remark',
             'create_time' => 'create_time',
             'expire_time' => 'expire_time',
             'pay_time' => 'pay_time',
@@ -1011,9 +949,9 @@ class TbShoporderCommon extends BaseModel
         // 逻辑
         $status = [];
         // 付款状态
-        $status['pay_status'] = $this->getPayTime() ? $this->getValidateMessage('order-paid') : $this->getValidateMessage('order-unpaid');
+        $status['pay_status'] = $this->getPayTime() ? $this->getValidateMessage('paid') : $this->getValidateMessage('not-paid');
         // 是否关闭
-        $status['closed_status'] = $this->getClosed() ? $this->getValidateMessage('order-closed') : $this->getValidateMessage('order-not-closed');
+        $status['closed_status'] = $this->getClosed() ? $this->getValidateMessage('closed') : $this->getValidateMessage('not-closed');
         // 退款状态，分为pending、applied、processing、success、failed五种情况
         $status['refund_status'] = $this->getValidateMessage('refund_status_' . $this->getRefundStatus());
         // 物流状态
@@ -1031,7 +969,7 @@ class TbShoporderCommon extends BaseModel
         // 逻辑
         // 是否关闭
         if ($this->getClosed()) {
-            return $this->getValidateMessage('order-closed');
+            return $this->getValidateMessage('closed');
         }
         // 是否退款
         if ($this->getRefundNo()) {
@@ -1059,7 +997,7 @@ class TbShoporderCommon extends BaseModel
             return $this->getValidateMessage('payment-success');
         }
         // 如果不符合以上任何情况，则订单未付款
-        return $this->getValidateMessage('order-unpaid');
+        return $this->getValidateMessage('not-paid');
     }
 
     /**

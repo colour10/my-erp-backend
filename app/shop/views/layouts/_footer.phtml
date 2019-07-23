@@ -51,13 +51,28 @@
 
 <script type="text/javascript">
     /**
+     * 判断函数是否存在
+     * @param funcName 函数名
+     */
+    function isExitsFunction(funcName) {
+        try {
+            if (typeof (eval(funcName)) == "function") {
+                return true;
+            }
+        } catch (e) {
+        }
+        return false;
+    }
+
+    /**
      * ajax提交封装函数
      * @param url ajax处理的url地址
      * @param data ajax数据，对象
+     * @param callback 成功后的回调
      * @param locationUrl 页面执行成功后跳转的url地址，如果不填写则默认是当前页面的地址
      * @param type 默认是post提交
      */
-    function ajax(url, data = {}, locationUrl = window.location.href, type = 'post') {
+    function ajax(url, data = {}, locationUrl = window.location.href, callback = null, type = 'post') {
         // 定义layer弹出层index
         var index = null;
         $.ajax({
@@ -86,10 +101,20 @@
                         btn: "<?php echo $this->obj->getValidateMessage('please-wait'); ?>",
                         time: 3, // 3秒后自动跳转
                     });
-                    // 3秒后跳转
-                    setTimeout(function () {
-                        window.location.href = locationUrl;
-                    }, 1000);
+
+                    // 这里执行成功后的回调逻辑
+                    if (callback === null) {
+                        // 如果为空，则默认跳转
+                        setTimeout(function () {
+                            window.location.href = locationUrl;
+                        }, 1000);
+                    } else {
+                        // 否则就执行回调逻辑，把返回的result传进去
+                        // 为了防止报错，先要判断callback是否存在
+                        if (isExitsFunction(callback)) {
+                            return callback(result);
+                        }
+                    }
                 }
             },
             error: function () {
@@ -460,6 +485,31 @@
                 layer.close(index);
             }
         });
+    }
+
+    /**
+     * 取出当前订单
+     * @param {string} order_id 用户微信openid
+     * @return {bool}
+     */
+    function getOrder(order_id) {
+        // 初始化
+        var result = false;
+        // 同步处理
+        $.ajaxSetup({async: false});
+        // 逻辑
+        $.post('/order/detail/' + order_id, {}, function (response) {
+            // 判断逻辑
+            if (response.messages.length === 0) {
+                // 如果没有错误，返回模型
+                result = response.data;
+            } else {
+                // 否则返回假
+                result = false;
+            }
+        }, 'json');
+        // 返回
+        return result;
     }
 </script>
 <!-- END PAGE LEVEL JAVASCRIPTS -->

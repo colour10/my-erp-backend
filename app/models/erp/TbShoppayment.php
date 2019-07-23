@@ -69,12 +69,12 @@ class TbShoppayment extends BaseModel
     /**
      * Method to set the value of field config
      *
-     * @param string $config
+     * @param array $config
      * @return $this
      */
-    public function setConfig($config)
+    public function setConfig(array $config)
     {
-        $this->config = $config;
+        $this->config = json_encode($config);
 
         return $this;
     }
@@ -128,11 +128,11 @@ class TbShoppayment extends BaseModel
     /**
      * Returns the value of field config
      *
-     * @return string
+     * @return array
      */
     public function getConfig()
     {
-        return $this->config;
+        return json_decode($this->config, true);
     }
 
     /**

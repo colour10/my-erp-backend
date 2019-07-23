@@ -309,7 +309,7 @@ class BrandgroupController extends AdminController
      * @param $id
      * @return string
      */
-    public function getdetailAction($id)
+    public function getdetailAction(int $id)
     {
         // 逻辑
         $brandGroup = TbBrandgroup::find('id=' . $id);
