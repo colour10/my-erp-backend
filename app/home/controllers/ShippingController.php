@@ -190,6 +190,7 @@ class ShippingController extends AdminController {
         }
         else {
             $shipping = new TbShipping();
+            $shipping->status = 1;
             $shipping->supplierid = $form["supplierid"];
             $shipping->finalsupplierid = $form["finalsupplierid"];
             $shipping->ageseason = $form["ageseason"];
@@ -660,6 +661,92 @@ class ShippingController extends AdminController {
         }
 
         $this->db->commit();
+        return $this->success();
+    }
+
+    /**
+     * 返回入库单费用统计，分别统计按数量摊销费用总和和按金额摊销费用总和
+     */
+    /*function feesumAction() {
+        $shipping = TbShipping::findFirst(
+            sprintf("id=%d and companyid=%d", $_POST['id'], $this->companyid)
+        );
+
+        if($shipping==false) {
+            throw new \Exception("/11011401/发货单不存在/");
+        }
+
+        $by_number = 0;
+        $by_amount = 0;
+        foreach ($shipping->shippingFee as $shippingFee) {
+            if($shippingFee->feename->is_amortize==1) {
+                $fee_amount = TbExchangeRate::convert($this->companyid, $shippingFee->currencyid, $shipping->currency, $shippingFee->amount);
+
+                if($shippingFee->feename->amortize_type==1) {
+                    // 按数量摊销
+                    $by_number += $fee_amount['number'];
+                }
+                else {
+                    // 按金额摊销
+                    $by_amount += $fee_amount['number'];
+                }
+            }
+        }
+
+        return $this->success([
+            'by_number' => $by_number,
+            'by_amount' => $by_amount,
+        ]);
+    }*/
+
+    /**
+     * 保存入库单的基本信息
+     * @return [type] [description]
+     */
+    function saveinfoAction() {
+        $shipping = TbShipping::findFirst(
+            sprintf("id=%d and companyid=%d", $_POST['id'], $this->companyid)
+        );
+
+        if($shipping==false) {
+            throw new \Exception("/11011501/发货单不存在/");
+        }
+
+        $shipping->supplierid = $_POST["supplierid"];
+        $shipping->finalsupplierid = $_POST["finalsupplierid"];
+        $shipping->ageseason = $_POST["ageseason"];
+        $shipping->seasontype = $_POST["seasontype"];
+        $shipping->property = $_POST["property"];
+        $shipping->currency = $_POST["currency"];
+        $shipping->bussinesstype = $_POST["bussinesstype"];
+        $shipping->warehouseid = $_POST["warehouseid"];
+        // $shipping->total = $_POST["total"];
+        $shipping->exchangerate = $_POST["exchangerate"];
+        $shipping->paydate = $_POST["paydate"];
+        $shipping->apickingdate = $_POST["apickingdate"];
+        $shipping->flightno = $_POST["flightno"];
+        $shipping->flightdate = $_POST["flightdate"];
+        $shipping->mblno = $_POST["mblno"];
+        $shipping->hblno = $_POST["hblno"];
+        $shipping->dispatchport = $_POST["dispatchport"];
+        $shipping->deliveryport = $_POST["deliveryport"];
+        $shipping->box_number = $_POST["box_number"];
+        $shipping->weight = $_POST["weight"];
+        $shipping->volume = $_POST["volume"];
+        $shipping->chargedweight = $_POST["chargedweight"];
+        $shipping->transcompany = $_POST["transcompany"];
+        $shipping->invoiceno = $_POST["invoiceno"];
+        $shipping->aarrivaldate = $_POST["aarrivaldate"];
+        $shipping->buyerid = $_POST["buyerid"];
+        $shipping->sellerid = $_POST["sellerid"];
+        $shipping->transporttype = $_POST["transporttype"];
+        $shipping->paytype = $_POST["paytype"];
+        $shipping->estimatedate = $_POST["estimatedate"];
+
+        if($shipping->update()==false) {
+            throw new \Exception("/11011502/更新发货单基本信息失败。/");
+        }
+
         return $this->success();
     }
 }

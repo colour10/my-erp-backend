@@ -259,7 +259,7 @@ class TbProductstock extends BaseCompanyModel
             return $this->changeStock(-1*abs($number), $change_type, $relationid);
         }
         else {
-            return false;
+            throw new \Exception("/11090501/库存不足/");
         }
     }
 
@@ -336,6 +336,8 @@ class TbProductstock extends BaseCompanyModel
         $productStock->change_stuff = $userid;
         $productStock->change_time = $productStock->create_time;
         $productStock->number = 0;
+        $productStock->reserve_number = 0;
+        $productStock->shipping_number = 0;
         if($productStock->create()==false) {
             $db->rollback();
             $productStock->debug();
