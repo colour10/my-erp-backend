@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<!--[if IE 8]>
+<html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+
+<!-- Head BEGIN -->
+<head>
+    <meta charset="utf-8">
+    <title><?php echo $this->obj->getValidateMessage('menu-5-1-2'); ?></title>
+    <?php echo $this->view->getPartial('layouts/_meta') ?>
+</head>
+<!-- Head END -->
+
+<!-- Body BEGIN -->
+<body class="ecommerce">
+
+<?php echo $this->obj->view->getPartial('layouts/_header') ?>
+
+<div class="main">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="/"><?php echo $this->obj->getValidateMessage('shouye'); ?></a></li>
+            <li class="active"><?php echo $this->obj->getValidateMessage('menu-5-1-2'); ?></li>
+        </ul>
+        <!-- BEGIN SIDEBAR & CONTENT -->
+        <div class="row margin-bottom-40">
+            <!-- BEGIN CONTENT -->
+            <div class="col-md-12 col-sm-12">
+                <!--<h1>结算</h1>-->
+                <!-- BEGIN CHECKOUT PAGE -->
+                <div class="panel-group checkout-page accordion scrollable" id="checkout-page">
+
+                    <?php
+                    // 必须判断有数据才能循环，否则不执行
+                    if (count($data['product']) > 0) {
+                        ?>
+
+                        <!-- BEGIN CONFIRM -->
+                        <div id="confirm" class="panel panel-default">
+                            <div id="confirm-content"
+                                 class="panel-collapse collapse in">
+                                <div class="panel-body row">
+                                    <div class="col-md-12 clearfix">
+                                        <div class="table-wrapper-responsive">
+                                            <table>
+                                                <tr>
+                                                    <th class="checkout-image"><?php echo $this->obj->getValidateMessage('tupian'); ?></th>
+                                                    <th class="checkout-description"><?php echo $this->obj->getValidateMessage('shangpinmingcheng'); ?></th>
+                                                    <th class="checkout-model"><?php echo $this->obj->getValidateMessage('yanse'); ?></th>
+                                                    <th class="checkout-model"><?php echo $this->obj->getValidateMessage('menu-2-1-7'); ?></th>
+                                                    <th class="checkout-quantity"><?php echo $this->obj->getValidateMessage('jiage'); ?></th>
+                                                    <th class="checkout-price"><?php echo $this->obj->getValidateMessage('shuliang'); ?></th>
+                                                    <th class="checkout-price"><?php echo $this->obj->getValidateMessage('zongjia'); ?></th>
+                                                </tr>
+                                                <?php foreach ($data['product'] as $k => $v) { ?>
+                                                    <tr>
+                                                        <td class="checkout-image">
+                                                            <a href="/product/detail/<?php echo $v['product_detail_id']; ?>"><img
+                                                                        src="<?php echo $v['picture']; ?>"
+                                                                        alt="<?php echo $v['product_name']; ?>"></a>
+                                                        </td>
+                                                        <td class="checkout-description">
+                                                            <h3>
+                                                                <a href="/product/detail/<?php echo $v['product_detail_id']; ?>"><?php echo $v['product_name']; ?></a>
+                                                            </h3>
+                                                        </td>
+                                                        <td class="checkout-model"><?php echo $v['color_name']; ?></td>
+                                                        <td class="checkout-model"><?php echo $v['size_name']; ?></td>
+                                                        <td class="checkout-quantity"><?php echo $this->obj->currency . $v['price']; ?></td>
+                                                        <td class="checkout-price">
+                                                            <strong><?php echo $v['number']; ?></strong></td>
+                                                        <td class="checkout-total">
+                                                            <strong><span><?php echo $this->obj->currency; ?></span><?php echo $v['total_price']; ?>
+                                                            </strong></td>
+                                                    </tr>
+                                                <?php } ?>
+
+                                            </table>
+                                        </div>
+                                        <div class="checkout-total-block">
+                                            <ul>
+                                                <li>
+                                                    <em><?php echo $this->obj->getValidateMessage('zongjia'); ?></em>
+                                                    <strong class="price"><span><?php echo $this->obj->currency; ?></span><?php echo $data['common']['total_price']; ?>
+                                                    </strong>
+                                                </li>
+                                                <li>
+                                                    <em><?php echo $this->obj->getValidateMessage('freight'); ?></em>
+                                                    <strong class="price"><span><?php echo $this->obj->currency; ?></span><?php echo $data['common']['send_price']; ?>
+                                                    </strong>
+                                                </li>
+                                                <li class="checkout-total-price">
+                                                    <em><?php echo $this->obj->getValidateMessage('chengjiaozongjia'); ?></em>
+                                                    <strong class="price"><span><?php echo $this->obj->currency; ?></span><?php echo $data['common']['final_price']; ?>
+                                                    </strong>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="clearfix"></div>
+
+                                        <!-- 订单状态 Start -->
+                                        <div class="pull-right text-right custom-div">
+                                            <p><?php echo $this->obj->getValidateMessage('payment-status'); ?>
+                                                ：<?php echo $data['getOrderStatus']['pay_status']; ?></p>
+                                            <p><?php echo $this->obj->getValidateMessage('close_or_not'); ?>
+                                                ：<?php echo $data['getOrderStatus']['closed_status']; ?></p>
+                                            <?php
+                                            // 如果退款订单有状态，则显示具体状态；否则就判断是否有退款理由
+                                            if ($data['common']['refund_status'] !== \Asa\Erp\TbShoporderCommon::REFUND_STATUS_PENDING) {
+                                                ?>
+                                                <p><?php echo $this->obj->getValidateMessage('refund-status'); ?>
+                                                    ：<?php echo $data['getOrderStatus']['refund_status']; ?>
+                                                    　<?php echo $this->obj->getValidateMessage('reason'); ?>
+                                                    ：<?php echo json_decode($data['common']['extra'], true)['refund_reason']; ?></p>
+
+                                                <!-- 如果订单退款状态是已申请，则展示处理按钮 -->
+                                                <?php
+                                                // 处理申请退款必须是管理员
+                                                if ($this->isadmin && $data['common']['refund_status'] === \Asa\Erp\TbShoporderCommon::REFUND_STATUS_APPLIED) {
+                                                    ?>
+                                                    <button class="btn btn-sm btn-success" id="btn-refund-agree"
+                                                            onclick="refund_agree(<?php echo $data['common']['id']; ?>);">
+                                                        <?php echo $this->obj->getValidateMessage('agree'); ?>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-danger" id="btn-refund-disagree"
+                                                            onclick="refund_disagree(<?php echo $data['common']['id']; ?>);">
+                                                        <?php echo $this->obj->getValidateMessage('disagree'); ?>
+                                                    </button>
+                                                    <?php
+                                                }
+                                                ?>
+
+                                            <?php } else { ?>
+                                                <!-- 是否显示拒绝退款理由 -->
+                                                <?php if (isset(json_decode($data['common']['extra'], true)['refund_disagree_reason'])) { ?>
+                                                    <p><?php echo $this->obj->getValidateMessage('disagree-reason'); ?>
+                                                        ：<?php echo json_decode($data['common']['extra'], true)['refund_disagree_reason']; ?><?php if ($this->member['id'] === $data['common']['member_id']) { ?>
+                                                            　
+                                                            <button class="btn btn-sm btn-success" id="btn-refund-agree"
+                                                                    onclick="refund_order(<?php echo $data['common']['id']; ?>);">
+                                                                <?php echo $this->obj->getValidateMessage('apply-for-refund'); ?>
+                                                            </button>
+                                                        <?php } ?>
+                                                    </p>
+                                                <?php } ?>
+                                            <?php } ?>
+
+
+                                            <p>
+                                                <?php echo $this->obj->getValidateMessage('express_status'); ?>
+                                                ：<?php echo $data['getOrderStatus']['ship_status']; ?>
+                                                <?php
+                                                // 如果物流状态为发送中，那么就显示签收按钮，这个只有本人才可以操作，管理员不行
+                                                if ($data['common']['ship_status'] === \Asa\Erp\TbShoporderCommon::SHIP_STATUS_DELIVERED && $this->member['id'] === $data['common']['member_id']) {
+                                                    ?>
+                                                    　
+                                                    <button class="btn btn-sm btn-success" id="btn-refund-agree"
+                                                            onclick="receive_order(<?php echo $data['common']['id']; ?>);">
+                                                        <?php echo $this->obj->getValidateMessage('receive-order'); ?>
+                                                    </button>
+                                                    <?php
+                                                }
+                                                ?>
+                                            </p>
+
+                                            <!-- 显示物流状态 -->
+                                            <?php
+                                            if (isset(json_decode($data['common']['ship_data'], true)['express_company'])) {
+                                                ?>
+                                                <p>
+                                                    <?php echo $this->obj->getValidateMessage('express_company'); ?>：
+                                                    <?php echo json_decode($data['common']['ship_data'], true)['express_company']; ?>
+                                                    　<?php echo $this->obj->getValidateMessage('express_no'); ?>：
+                                                    <?php echo json_decode($data['common']['ship_data'], true)['express_no']; ?>
+                                                </p>
+                                                <?php
+                                            }
+                                            ?>
+
+                                        </div>
+                                        <!-- 订单状态 End -->
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END CONFIRM -->
+                    <?php } else { ?>
+                        <p><?php echo $this->obj->getValidateMessage('order', 'template', 'notexist'); ?></p>
+                    <?php } ?>
+
+                </div>
+                <!-- END CHECKOUT PAGE -->
+            </div>
+            <!-- END CONTENT -->
+        </div>
+        <!-- END SIDEBAR & CONTENT -->
+    </div>
+</div>
+
+<script src="/shop/assets/custom/arealist.js"></script>
+<script src="/shop/assets/custom/addressparse.js"></script>
+<?php echo $this->obj->view->getPartial('layouts/_footer'); ?>
+
+</body>
+<!-- END BODY -->
+</html>

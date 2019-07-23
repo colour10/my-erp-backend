@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<!--[if IE 8]>
+<html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+
+<!-- Head BEGIN -->
+<head>
+    <meta charset="utf-8">
+    <title><?php echo $this->obj->getValidateMessage('address') . $this->obj->getValidateMessage('button-modify'); ?></title>
+    <?php echo $this->view->getPartial('layouts/_meta') ?>
+</head>
+<!-- Head END -->
+
+<!-- Body BEGIN -->
+<body class="corporate">
+
+<?php echo $this->view->getPartial('layouts/_header') ?>
+
+<div class="main">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="/"><?php echo $this->obj->getValidateMessage('shouye'); ?></a></li>
+            <li class="active"><?php echo $this->obj->getValidateMessage('address-list'); ?></li>
+        </ul>
+        <!-- BEGIN SIDEBAR & CONTENT -->
+        <div class="row margin-bottom-40">
+
+            <?php echo $this->view->getPartial('layouts/_member_sidebar') ?>
+
+            <!-- BEGIN CONTENT -->
+            <div class="col-md-9 col-sm-9">
+                <h1 class="h1-title"><?php echo $this->obj->getValidateMessage('address') . $this->obj->getValidateMessage('button-modify'); ?></h1>
+                <div class="content-form-page">
+                    <div class="row">
+                        <div class="col-md-7 col-sm-7">
+
+
+                            <form class="form-horizontal form-without-legend" role="form">
+
+                                <div class="form-group">
+                                    <label for="username"
+                                           class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('shouhuoren'); ?>
+                                        <span
+                                                class="require">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input type="text" class="form-control" id="username"
+                                               value="<?php echo $address['name']; ?>">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="mobile"
+                                           class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('mobile'); ?>
+                                        <span
+                                                class="require">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input type="text" class="form-control" id="mobile"
+                                               value="<?php echo $address['tel']; ?>">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="address"
+                                           class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('dizhi'); ?>
+                                        <span
+                                                class="require">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input type="text" class="form-control" id="address"
+                                               value="<?php echo $address['address']; ?>">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="smart-address"
+                                           class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('address-resolution'); ?></label>
+                                    <div class="col-lg-8">
+                                        <textarea name="" id="smart-address" cols="43" rows="10"
+                                                  onchange="smart()"></textarea><br>
+                                        <p><?php echo $this->obj->getValidateMessage('address-resolution-rule'); ?></p>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-8 col-md-offset-4 padding-left-0 padding-top-20">
+                                        <button type="submit" class="btn btn-primary" id="button-address-edit"
+                                                onclick="address_edit(<?php echo $address['id'] ?>);return false;">
+                                            <?php echo $this->obj->getValidateMessage('button-submit'); ?>
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </form>
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- END CONTENT -->
+        </div>
+        <!-- END SIDEBAR & CONTENT -->
+    </div>
+</div>
+
+<script src="/shop/assets/custom/arealist.js"></script>
+<script src="/shop/assets/custom/addressparse.js"></script>
+<?php echo $this->view->getPartial('layouts/_footer'); ?>
+
+<script>
+
+</script>
+
+</body>
+<!-- END BODY -->
+</html>

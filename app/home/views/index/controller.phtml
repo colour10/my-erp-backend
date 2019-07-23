@@ -1,0 +1,19 @@
+<?<?="php"?>
+
+namespace Multiple\Home\Controllers;
+
+use Phalcon\Mvc\Controller;
+use Phalcon\Mvc\View;
+use Asa\Erp\<?=$model?>;
+
+/**
+ * <?=$remark?>
+
+ */
+class <?=$controller?>Controller extends <?=$parent?> {
+    public function initialize() {
+	    parent::initialize();
+
+	    $this->setModelName('Asa\\Erp\\<?=$model?>');
+    }
+}

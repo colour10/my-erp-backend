@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<!--[if IE 8]>
+<html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+
+<!-- Head BEGIN -->
+<head>
+    <meta charset="utf-8">
+    <title><?php echo $this->obj->getValidateMessage('menu-5-1') . '(' . $this->obj->getValidateMessage('change-jiezhishijian') . ')'; ?></title>
+    <?php echo $this->view->getPartial('layouts/_meta') ?>
+    <style>
+        .goods-data table, .checkout-page table {
+            font-size: 12px;
+        }
+
+        .getorder {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<!-- Head END -->
+
+<!-- Body BEGIN -->
+<body class="corporate">
+
+<?php echo $this->view->getPartial('layouts/_header') ?>
+
+<div class="main">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="/"><?php echo $this->obj->getValidateMessage('shouye'); ?></a></li>
+            <li class="active"><?php echo $this->obj->getValidateMessage('menu-5-1'); ?></li>
+        </ul>
+        <!-- BEGIN SIDEBAR & CONTENT -->
+        <div class="row margin-bottom-40">
+
+            <?php echo $this->view->getPartial('layouts/_member_sidebar') ?>
+
+            <!-- BEGIN CONTENT -->
+            <div class="col-md-9 col-sm-9">
+                <h1 class="h1-title"><?php echo $this->obj->getValidateMessage('menu-5-1') . '(' . $this->obj->getValidateMessage('change-jiezhishijian') . ')'; ?></h1>
+                <div class="goods-page">
+                    <div class="goods-data clearfix">
+                        <div class="table-wrapper-responsive">
+                            <table class="order-table">
+                                <tbody class="order-table-header">
+                                <tr>
+                                    <th class="goods-page-description"><?php echo $this->obj->getValidateMessage('order-people'); ?></th>
+                                    <th class="goods-page-description"><?php echo $this->obj->getValidateMessage('shangpin'); ?></th>
+                                    <th class="goods-page-price"><?php echo $this->obj->getValidateMessage('danjia'); ?></th>
+                                    <th class="goods-page-product-number"><?php echo $this->obj->getValidateMessage('number'); ?></th>
+
+                                    <th class="goods-page-quantity"><?php echo $this->obj->getValidateMessage('jiezhishijian'); ?></th>
+
+                                    <th class="goods-page-product-number"><?php echo $this->obj->getValidateMessage('payment-status'); ?></th>
+
+                                    <th class="goods-page-product-number"><?php echo $this->obj->getValidateMessage('logistics'); ?></th>
+
+                                    <th class="goods-page-product-number"><?php echo $this->obj->getValidateMessage('refund-status'); ?></th>
+
+                                    <th class="goods-page-product-number"><?php echo $this->obj->getValidateMessage('caozuo'); ?></th>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                            <?php if (isset($page) && count($page->items) > 0) { ?>
+                                <?php foreach ($page->items as $order) { ?>
+                                    <div class="margin10 border">
+                                        <table class="order-table">
+
+                                            <tbody class="order-table-title">
+                                            <tr>
+                                                <td colspan="9" class="text-left">
+                                                    <span class="margin-left-20">
+                                                        <?php echo date('Y-m-d', strtotime($order['create_time'])); ?>　
+                                                        <a href="/order/detail/<?php echo $order['id']; ?>"><?php echo $this->obj->getValidateMessage('dingdanhao'); ?>：<?php echo $order['order_no']; ?></a>　
+
+                                                            <span data-expiretime="<?php echo $order['expire_time']; ?>"
+                                                                  data-id="<?php echo $order['id']; ?>"
+                                                                  class="remainTime"></span>
+
+                                                    </span>
+
+                                                    <?php
+                                                    if ($order['is_show_change_expiretime']) {
+                                                        ?>
+                                                        <em class="pull-right font-normal">
+                                                            <a class="getorder"
+                                                               data-orderno="<?php echo $order['order_no']; ?>"
+                                                               data-id="<?php echo $order['id']; ?>"
+                                                               data-expiretime="<?php echo $order['expire_time']; ?>"
+                                                               onclick="getorder(this);"><?php echo $this->obj->getValidateMessage('change-jiezhishijian'); ?></a>
+                                                        </em>
+                                                    <?php } ?>
+
+                                                </td>
+                                            </tr>
+                                            </tbody>
+
+                                            <?php foreach ($order['orderdetails'] as $orderdetail) { ?>
+                                                <tbody>
+                                                <tr>
+
+                                                    <td class="text-left">
+                                                        <span class="margin-left-20">
+                                                            <?php echo $order['member_name']; ?>
+                                                        </span>
+                                                    </td>
+
+                                                    <td class="text-left">
+                                                    <span class="margin-left-20"><a
+                                                                href="/product/detail/<?php echo $orderdetail['product_detail_id']; ?>"><img
+                                                                    class="w80"
+                                                                    src="<?php echo $orderdetail['picture']; ?>"
+                                                                    alt="<?php echo $orderdetail['product_name']; ?>"
+                                                                    title="<?php echo $orderdetail['product_name']; ?>"></a></span>
+                                                    </td>
+                                                    <td class="goods-page-price">
+                                                        <strong><span><?php echo $this->currency; ?></span><?php echo $orderdetail['price']; ?>
+                                                        </strong></td>
+                                                    <td class="product-number"><?php echo $orderdetail['number']; ?></td>
+                                                    <td class="product-number">
+                                                        <?php echo $order['expire_time']; ?>
+                                                    </td>
+
+                                                    <td class="product-number">
+                                                        <?php echo $order['pay_status']; ?>
+                                                    </td>
+
+                                                    <td class="product-number">
+                                                        <span><?php echo $order['ship_status']; ?></span>
+
+                                                        <?php
+                                                        // 显示发货按钮
+                                                        if ($order['is_show_ship_button']) {
+                                                            ?>
+                                                            <button class="btn btn-sm" id="btn-ship"
+                                                                    onclick="ship_order(<?php echo $order['id']; ?>);">
+                                                                <?php echo $this->obj->getValidateMessage('ship'); ?>
+                                                            </button>
+                                                            <?php
+                                                        }
+                                                        ?>
+
+                                                    </td>
+
+                                                    <td class="product-number">
+                                                        <?php echo $order['refund_status']; ?>
+                                                    </td>
+
+                                                    <td class="product-number">
+                                                        <button onclick="order_view(<?php echo $order['id']; ?>);"
+                                                                class="btn btn-sm">查看
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            <?php } ?>
+
+                                        </table>
+                                    </div>
+                                <?php } ?>
+                            <?php } else { ?>
+                                <p class="text-center order-null"><?php echo $this->obj->getValidateMessage('order-empty'); ?></p>
+                            <?php } ?>
+
+
+                            <!-- BEGIN PAGINATOR -->
+                            <?php if (isset($page) && $page->total_pages > 1) { ?>
+                                <div class="page_margin pull-right">
+                                    <ul class="pagination ">
+                                        <li class="<?php echo $page->current <= 1 ? 'disabled' : ''; ?>"><a
+                                                    href="<?php echo $this->url->get('member/orders', ['page' => $page->before]); ?>">&laquo;</a>
+                                        </li>
+                                        <?php for ($i = 1; $i <= $page->total_pages; $i++) { ?>
+                                            <li class="<?php echo $page->current == $i ? 'active' : ''; ?>"><a
+                                                        href="<?php echo $this->url->get('member/orders', ['page' => $i]); ?>"><?php echo $i; ?></a>
+                                            </li>
+                                        <?php } ?>
+                                        <li class="<?php echo $page->current >= $page->total_pages ? 'disabled' : ''; ?>">
+                                            <a href="<?php echo $this->url->get('member/orders', ['page' => $page->next]); ?>">&raquo;</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            <?php } ?>
+                            <!-- END PAGINATOR -->
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <!-- END CONTENT -->
+        </div>
+        <!-- END SIDEBAR & CONTENT -->
+    </div>
+</div>
+
+<!-- 修改过期时间 Start -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop='static'>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"
+                    id="myModalLabel"><?php echo $this->obj->getValidateMessage('change-jiezhishijian'); ?></h4>
+            </div>
+            <div class="modal-body">
+                <form id="changeform" method="post">
+
+                    <input type="hidden" id="modal-id">
+
+                    <div class="form-group">
+                        <label><?php echo $this->obj->getValidateMessage('dingdanhao'); ?>：<span
+                                    id="modal-orderno"></span></label>
+                        <div class='input-group date' id='modal_expire_time'>
+                            <input type='text' class="form-control" readonly name="modal_expire_time"/>
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="text-right">
+                        <span id="returnMessage" class="glyphicon"> </span>
+                        <button type="button" class="btn btn-default right"
+                                data-dismiss="modal"><?php echo $this->obj->getValidateMessage('cancel'); ?></button>
+                        <button id="submitBtn" type="button" class="btn btn-primary"
+                                onclick="updatetime();return false;"><?php echo $this->obj->getValidateMessage('button-submit'); ?>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 修改过期时间 End -->
+
+<?php echo $this->view->getPartial('layouts/_footer'); ?>
+
+<!-- 日期控件js -->
+<script src="/shop/assets/custom/bootstrap-datetimepicker.min.js"></script>
+<script src="/shop/assets/custom/bootstrap-datetimepicker.zh-CN.js"></script>
+
+<script>
+    // 获取当前订单信息
+    function getorder(obj) {
+        // 开始赋值
+        $('#modal-orderno').html($(obj).attr('data-orderno'));
+        $('#modal-id').val($(obj).attr('data-id'));
+        $('input[name="modal_expire_time"]').val($(obj).attr('data-expiretime'));
+        $('#myModal').modal('show');
+    }
+
+    // 选择日期
+    $('#modal_expire_time').datetimepicker({
+        language: "zh-CN",
+        format: 'yyyy-mm-dd hh:ii:ss',
+        autoclose: true,
+        startView: 0,
+        clearBtn: true,
+        todayBtn: false,
+    });
+</script>
+
+</body>
+<!-- END BODY -->
+</html>

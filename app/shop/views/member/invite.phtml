@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<!--[if IE 8]>
+<html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+
+<!-- Head BEGIN -->
+<head>
+    <meta charset="utf-8">
+    <title><?php echo $this->obj->getValidateMessage('invitation-registration'); ?></title>
+    <?php echo $this->view->getPartial('layouts/_meta') ?>
+</head>
+<!-- Head END -->
+
+<!-- Body BEGIN -->
+<body class="corporate">
+
+<?php echo $this->view->getPartial('layouts/_header') ?>
+
+<div class="main">
+    <div class="container">
+        <ul class="breadcrumb">
+            <li><a href="/"><?php echo $this->obj->getValidateMessage('shouye'); ?></a></li>
+            <li class="active"><?php echo $this->obj->getValidateMessage('invitation-registration'); ?></li>
+        </ul>
+        <!-- BEGIN SIDEBAR & CONTENT -->
+        <div class="row margin-bottom-40">
+
+            <?php echo $this->view->getPartial('layouts/_member_sidebar') ?>
+
+            <!-- BEGIN CONTENT -->
+            <div class="col-md-9 col-sm-9">
+                <h1 class="h1-title"><?php echo $this->obj->getValidateMessage('invitation-registration'); ?></h1>
+
+                <div class="content-form-page">
+                    <div class="row">
+                        <div class="col-md-7 col-sm-7">
+                            <form class="form-horizontal form-without-legend" role="form">
+
+                                <div class="form-group">
+                                    <label for="company"
+                                           class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('company'); ?>
+                                        <span class="require">*</span></label>
+                                    <div class="col-lg-8">
+                                        <?php if ($this->issuperadmin) { ?>
+                                            <select name="companyid" id="companyid" class="form-control">
+                                                <option value="">
+                                                    == <?php echo $this->obj->getValidateMessage('qingxuanze'); ?> ==
+                                                </option>
+                                                <?php foreach ($this->allcompany as $company) { ?>
+                                                    <option value="<?php echo $company['id']; ?>"><?php echo $company['name']; ?></option>
+                                                <?php } ?>
+                                            </select>
+                                        <? } else { ?>
+                                            <input type="text" class="form-control" id="companyid" readonly
+                                                   value="<?php echo $this->host['company']->name; ?>">
+                                        <? } ?>
+                                    </div>
+                                </div>
+
+                                <?php if (!$this->issuperadmin) { ?>
+                                    <div class="form-group">
+                                        <label for="is_lockstock"
+                                               class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('is_lockstock'); ?>
+                                            <span class="require">*</span></label>
+                                        <div class="col-lg-8 invite">
+
+                                            <div class="radio-inline">
+                                                <label><input type="radio" name="is_lockstock" value="1"
+                                                    >是</label>
+                                            </div>
+
+                                            <div class="radio-inline">
+                                                <label><input type="radio" name="is_lockstock" value="0"
+                                                              checked="checked"/>否</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <? } ?>
+
+                                <div class="form-group">
+                                    <label for="email"
+                                           class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('email'); ?>
+                                        <span class="require">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input type="email" class="form-control" id="email">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="username"
+                                           class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('yonghuming'); ?>
+                                        <span
+                                                class="require">*</span></label>
+                                    <div class="col-lg-8">
+                                        <input type="text" class="form-control" id="username"><span
+                                                class="require">(<?php echo $this->obj->getValidateMessage('beizhu'); ?>：<?php echo $this->obj->getValidateMessage('default-password'); ?>：<?php echo $this->obj->getValidateMessage('yonghuming'); ?>+123)</span>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-8 col-md-offset-4 padding-left-0 padding-top-20">
+                                        <button type="submit" class="btn btn-primary" id="button-invite"
+                                                onclick="invite();return false;"><?php echo $this->obj->getValidateMessage('queren'); ?>
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- END CONTENT -->
+        </div>
+        <!-- END SIDEBAR & CONTENT -->
+    </div>
+</div>
+
+<!-- loading，暂时没用上 -->
+<div class="modal fade" id="loading" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop='static'>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel"><?php echo $this->obj->getValidateMessage('tishi'); ?></h4>
+            </div>
+            <div class="modal-body">
+                <?php echo $this->obj->getValidateMessage('please-wait'); ?>
+                <span id="result"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php echo $this->view->getPartial('layouts/_footer'); ?>
+
+</body>
+<!-- END BODY -->
+</html>

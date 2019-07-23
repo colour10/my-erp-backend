@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+
+<!--[if IE 8]>
+<html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+
+<!-- Head BEGIN -->
+<head>
+    <meta charset="utf-8">
+    <title><?php echo $title . ' - ' . $this->host['webtitle']; ?></title>
+    <?php echo $this->view->getPartial('layouts/_meta') ?>
+</head>
+<!-- Head END -->
+
+<!-- Body BEGIN -->
+<body class="ecommerce">
+
+<?php echo $this->view->getPartial('layouts/_header') ?>
+
+<div class="main">
+    <div class="container">
+        <ul class="breadcrumb">
+            <?php echo $breadcrumb; ?>
+        </ul>
+
+        <!-- BEGIN SIDEBAR & CONTENT -->
+        <div class="row margin-bottom-40">
+
+            <!-- BEGIN CONTENT -->
+            <div class="col-md-12 col-sm-12 col-xs-12">
+
+                <!-- BEGIN PRODUCT LIST -->
+                <div class="child_product_list row product-list">
+
+                    <?php if (isset($page) && count($page->items) > 0) { ?>
+                        <!-- PRODUCT ITEM START -->
+                        <div class="col-col-md-12 col-sm-12 col-xs-12">
+                            <table class="table table-responsive table-hover table-bordered table-order">
+
+                                <tr>
+                                    <th><?php echo $this->obj->getValidateMessage('zhutu'); ?></th>
+                                    <th><?php echo $this->obj->getValidateMessage('futu'); ?></th>
+                                    <th><?php echo $this->obj->getValidateMessage('mingcheng'); ?></th>
+                                    <th><?php echo $this->obj->getValidateMessage('guojima'); ?></th>
+                                    <th><?php echo $this->obj->getValidateMessage('jiage'); ?></th>
+                                    <th colspan="<?php echo $max_sum_sizecontents + 1; ?>"><?php echo $this->obj->getValidateMessage('kucun'); ?></th>
+                                    <th><?php echo $this->obj->getValidateMessage('caozuo'); ?></th>
+                                </tr>
+
+                                <?php foreach ($page->items as $item) { ?>
+
+                                    <tr>
+                                        <input type="hidden" name="id" value="<?php echo $item['id'] ?>">
+                                        <td rowspan="3"><a
+                                                    href="/product/detail/<?php echo $item['productid']; ?>"><img
+                                                        class="w80"
+                                                        src="<?php echo $this->file_prex . $item['picture']; ?>"
+                                                        alt="<?php echo $item['productname']; ?>"></a>
+                                        </td>
+                                        <td rowspan="3"><a
+                                                    href="/product/detail/<?php echo $item['productid']; ?>"><img
+                                                        class="w80"
+                                                        src="<?php echo $this->file_prex . $item['picture2']; ?>"
+                                                        alt="<?php echo $item['productname']; ?>"></a>
+                                        </td>
+                                        <td rowspan="3"><a
+                                                    href="/product/detail/<?php echo $item['productid']; ?>"><?php echo $item['productname']; ?></a>
+                                        </td>
+                                        <td rowspan="3"><?php echo $item['wordcode']; ?></td>
+                                        <td rowspan="3">
+                                            <?php echo $this->currency; ?><?php echo $item['realprice']; ?>
+                                        </td>
+
+
+                                        <td style="width: 8%;"><?php echo $this->obj->getValidateMessage('chimazu'); ?></td>
+                                        <!-- 尺码组有数据就填充 Start -->
+                                        <?php foreach ($item['sizecontents'] as $sizecontent) { ?>
+                                            <td><?php echo $sizecontent['sizecontentname']; ?></td>
+                                        <?php } ?>
+                                        <!-- 尺码组有数据就填充 End -->
+
+                                        <!-- 尺码组没有数据就补充空格 Start -->
+                                        <?php for ($i = 0; $i < $max_sum_sizecontents - $item['sum_sizecontents']; $i++) { ?>
+                                            <td></td>
+                                        <?php } ?>
+                                        <!-- 尺码组没有数据就补充空格 End -->
+
+                                        <td rowspan="3">
+                                            <?php if ($item['sum_sizecontents'] > 0) { ?>
+                                                <button class="btn btn-primary" type="submit"
+                                                        onclick="addbuycar(this, <?php echo $item['id'] ?>);return false;">
+                                                    <?php echo $this->obj->getValidateMessage('add-to-cart'); ?>
+                                                </button>
+                                            <?php } else { ?>
+                                                <span class="red"><?php echo $this->obj->getValidateMessage('inoperable'); ?></span>
+                                            <?php } ?>
+                                        </td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <td><?php echo $this->obj->getValidateMessage('kucunshuliang'); ?></td>
+                                        <!-- 库存数量有数据就填充 Start -->
+                                        <?php foreach ($item['sizecontents'] as $sizecontent) { ?>
+                                            <td><?php echo $sizecontent['sumatory']; ?></td>
+                                        <?php } ?>
+                                        <!-- 库存数量有数据就填充 End -->
+
+                                        <!-- 库存数量没有数据就补充空格 Start -->
+                                        <?php for ($i = 0; $i < $max_sum_sizecontents - $item['sum_sizecontents']; $i++) { ?>
+                                            <td></td>
+                                        <?php } ?>
+                                        <!-- 库存数量没有数据就补充空格 End -->
+                                    </tr>
+
+
+                                    <tr>
+                                        <td><?php echo $this->obj->getValidateMessage('dinggoushuliang'); ?></td>
+                                        <!-- 订购数量有数据就填充 Start -->
+                                        <?php foreach ($item['sizecontents'] as $sizecontent) { ?>
+                                            <td><input class="table-w30"
+                                                       data-id="<?php echo $sizecontent['sizecontentid']; ?>"
+                                                       type="text"/>
+                                            </td>
+                                        <?php } ?>
+                                        <!-- 库存数量有数据就填充 End -->
+
+                                        <!-- 库存数量没有数据就补充空格 Start -->
+                                        <?php for ($i = 0; $i < $max_sum_sizecontents - $item['sum_sizecontents']; $i++) { ?>
+                                            <td></td>
+                                        <?php } ?>
+                                        <!-- 库存数量没有数据就补充空格 End -->
+                                    </tr>
+
+
+                                <?php } ?>
+
+                            </table>
+                        </div>
+                        <!-- PRODUCT ITEM END -->
+
+
+                    <?php } else { ?>
+                        <div class="col-md-12 col-sm-12 col-xs-12"><?php echo $this->obj->getValidateMessage('no-products'); ?></div>
+                    <?php } ?>
+
+                </div>
+                <!-- END PRODUCT LIST -->
+
+                <!-- BEGIN PAGINATOR -->
+                <?php if (isset($page) && $page->total_pages > 1) { ?>
+                    <div class="page_margin pull-right">
+                        <ul class="pagination ">
+                            <li class="<?php echo $page->current <= 1 ? 'disabled' : ''; ?>"><a
+                                        href="<?php echo $this->url->get('childproductgroup/detail/' . $id, ['page' => $page->before]); ?>">&laquo;</a>
+                            </li>
+                            <?php for ($i = 1; $i <= $page->total_pages; $i++) { ?>
+                                <li class="<?php echo $page->current == $i ? 'active' : ''; ?>"><a
+                                            href="<?php echo $this->url->get('childproductgroup/detail/' . $id, ['page' => $i]); ?>"><?php echo $i; ?></a>
+                                </li>
+                            <?php } ?>
+                            <li class="<?php echo $page->current >= $page->total_pages ? 'disabled' : ''; ?>"><a
+                                        href="<?php echo $this->url->get('childproductgroup/detail/' . $id, ['page' => $page->next]); ?>">&raquo;</a>
+                            </li>
+                        </ul>
+                    </div>
+                <?php } ?>
+                <!-- END PAGINATOR -->
+
+            </div>
+            <!-- END CONTENT -->
+
+        </div>
+        <!-- END SIDEBAR & CONTENT -->
+
+
+    </div>
+</div>
+
+<?php echo $this->view->getPartial('layouts/_footer'); ?>
+
+</body>
+<!-- END BODY -->
+</html>

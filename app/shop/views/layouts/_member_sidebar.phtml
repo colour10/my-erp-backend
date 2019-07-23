@@ -1,0 +1,33 @@
+<!-- BEGIN SIDEBAR -->
+<div class="sidebar col-md-3 col-sm-3">
+    <ul class="list-group margin-bottom-25 sidebar-menu">
+        <li class="list-group-item clearfix"><a href="/member"><i
+                        class="fa fa-angle-right"></i> <?php echo $this->obj->getValidateMessage('shouye'); ?></a></li>
+        <li class="list-group-item clearfix"><a href="/member/resetpassword"><i
+                        class="fa fa-angle-right"></i> <?php echo $this->obj->getValidateMessage('reset-password'); ?>
+            </a>
+        </li>
+        <li class="list-group-item clearfix"><a href="/memberaddress"><i
+                        class="fa fa-angle-right"></i> <?php echo $this->obj->getValidateMessage('address-list'); ?></a>
+        </li>
+        <?php if ($this->member['membertype']) { ?>
+            <li class="list-group-item clearfix"><a href="/member/invite"><i
+                            class="fa fa-angle-right"></i> <?php echo $this->obj->getValidateMessage('invitation-registration'); ?>
+                </a>
+            </li>
+            <li class="list-group-item clearfix"><a href="/member/invitelist"><i
+                            class="fa fa-angle-right"></i> <?php echo $this->obj->getValidateMessage('invitation-registration-list'); ?>
+                </a>
+            </li>
+            <li class="list-group-item clearfix"><a href="/member/orders"><i
+                            class="fa fa-angle-right"></i> <?php echo $this->obj->getValidateMessage('menu-5-1'); ?>
+                </a>
+            </li>
+            <li class="list-group-item clearfix"><a href="/member/payauth"><i
+                            class="fa fa-angle-right"></i> <?php echo $this->obj->getValidateMessage('pay-authorization'); ?>
+                </a>
+            </li>
+        <?php } ?>
+    </ul>
+</div>
+<!-- END SIDEBAR -->

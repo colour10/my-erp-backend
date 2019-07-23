@@ -1,0 +1,15 @@
+<?<?='php'?>
+
+namespace Asa\Erp;
+
+/**
+ * <?=$remark?><?="\n"?>
+ */
+class <?=$model?> extends BaseModel
+{
+    public function initialize()
+    {
+        parent::initialize();
+        $this->setSource('<?=$table?>');
+    }
+}
