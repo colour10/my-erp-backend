@@ -863,6 +863,14 @@ return [
     'USERPAYING' => '用户支付中',
     'PAYERROR' => '支付失败',
     'order-completed' => '已完成付款',
+    'input-submchid' => '请填写子商户号',
+    'alipay-auth-completed-with-expire' => '支付宝授权已完成，有效期至 %s',
+    'alipay-auth' => '支付宝授权',
+    'alipay-auth-completed' => '支付宝已授权',
+    'wechat-auth' => '微信支付授权',
+    'wechat-auth-completed' => '微信支付已授权',
+    'wechat-auth-completed-with-confirm' => "微信支付已授权，当前子商户号为：%s，要重新输入吗？<br><br>温馨提示：输入不正确的子商户号将导致您无法收到买家的打款，请三思而后行！",
+    'wechat-auth-not-completed' => '微信支付未授权',
 
     'template' =>
         [

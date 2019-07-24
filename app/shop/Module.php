@@ -436,7 +436,10 @@ class Module implements ModuleDefinitionInterface
             }
             // 取出支付方式
             if (!$payment = TbShoppayment::findFirst("companyid=" . $companyid)) {
-                return [];
+                // 如果不存在，则新增一条记录
+                $payment = new TbShoppayment();
+                $payment->setCompanyid($companyid);
+                $payment->save();
             }
             // 返回
             return $payment;
@@ -481,29 +484,21 @@ class Module implements ModuleDefinitionInterface
         });
 
 
-        // 微信sub_mch_id，待完善
+        // 微信sub_mch_id，这个可以为空，对于没有赋值的场景，暂时设置为0
         $di->setShared('sub_mch_id', function () use ($di) {
             // 逻辑
             // 如果结果为空
             if (!$config = $di->get('shopPaymentConfig')) {
-                return '';
+                return 0;
             }
-
-            // 取出app_auth_token，但是不能过期，如果过期就要重新授权
-            // 下面的逻辑确保app_auth_token为空，或者是在有效期之内
+            // 判断是否存在
             if (
-                array_key_exists('alipayUserToken', $config) &&
-                array_key_exists('app_auth_token', $config['alipayUserToken']) &&
-                array_key_exists('alipayQueryToken', $config) &&
-                array_key_exists('auth_end', $config['alipayQueryToken']) &&
-                date('Y-m-d H:i:s') < $config['alipayQueryToken']['auth_end']
+                array_key_exists('wechatpay', $config) &&
+                array_key_exists('sub_mch_id', $config['wechatpay'])
             ) {
-                return $config['alipayUserToken']['app_auth_token'];
+                return $config['wechatpay']['sub_mch_id'];
             } else {
-                // 删除失效的token记录，赋值为NULL
-                $di->get('shopPayment')->setConfig(NULL);
-                $di->get('shopPayment')->save();
-                return '';
+                return 0;
             }
         });
 

@@ -486,6 +486,66 @@
         // 返回
         return result;
     }
+
+    /**
+     * 微信支付授权
+     */
+    function wechatAuth() {
+        // 逻辑
+        $.post('/member/getwechatauth', {}, function (response) {
+            if (response.messages.length !== 0) {
+                // 询问框
+                wechatauthAction();
+            } else {
+                // 询问框
+                layer.open({
+                    content: response.data,
+                    btn: ["<?php echo $this->obj->getValidateMessage('yes'); ?>", "<?php echo $this->obj->getValidateMessage('no'); ?>"],
+                    yes: function (index) {
+                        // 询问框
+                        wechatauthAction();
+                        // 关闭弹出层
+                        layer.close(index);
+                    }
+                });
+            }
+        }, 'json');
+    }
+
+    /**
+     * 微信授权动作
+     */
+    function wechatauthAction() {
+        layer.open({
+            content: "<?php echo $this->obj->getValidateMessage('input-submchid'); ?><br/><br/><input type='text' name='sub_mch_id' style='width:60%;height:30px;line-height:30px;padding:6px 10px;'>",
+            btn: ["<?php echo $this->obj->getValidateMessage('yes'); ?>", "<?php echo $this->obj->getValidateMessage('no'); ?>"],
+            yes: function (index) {
+                // sub_mch_id
+                let obj = $("input[name='sub_mch_id']");
+                let sub_mch_id = obj.val();
+                // ajax取消订单
+                ajax('/member/wechatauth', {
+                    "sub_mch_id": sub_mch_id
+                });
+                // 关闭弹出层
+                layer.close(index);
+            }
+        });
+    }
+
+    /**
+     * 支付宝授权成功提示
+     */
+    function alipayAuth() {
+        // 逻辑
+        // 使用post请求
+        $.post('/member/getalipayauth', {}, function (response) {
+            layer.open({
+                content: response.data,
+                btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>"
+            });
+        }, 'json');
+    }
 </script>
 <!-- END PAGE LEVEL JAVASCRIPTS -->
 

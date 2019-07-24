@@ -52,6 +52,7 @@ class AlipayController extends AdminController
             // 返回卖家支付宝未授权，不能通过支付宝付款的错误信息
             return $this->getValidateMessage('seller-alipay-not-authorized');
         }
+
         // 开始支付
         try {
             $result = $this->alipay->scan($orderConfig);
