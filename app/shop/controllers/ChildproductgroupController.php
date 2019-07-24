@@ -127,6 +127,8 @@ class ChildproductgroupController extends AdminController
             $products[$k]['wordcode'] = $wordcode;
             // 价格
             $products[$k]['realprice'] = $realprice;
+            // 商品名称
+            $products[$k]['productname'] = $item->getProductname();
         }
 
         // 重新遍历，把尺码名称填写进去

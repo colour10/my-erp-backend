@@ -33,7 +33,6 @@ class ProductController extends AdminController
         if (!$this->member) {
             return $this->response->redirect('/login');
         }
-
         // 先过滤
         $params = $this->dispatcher->getParams();
         if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
@@ -42,7 +41,6 @@ class ProductController extends AdminController
         }
         // 赋值
         $id = $params[0];
-
         // 取出数据
         // 如果不存在，就跳转到错误页面
         if (!$product = TbProductSearch::findFirst("id=$id AND companyid=" . $this->currentCompany)) {

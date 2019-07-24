@@ -307,11 +307,11 @@ class Module implements ModuleDefinitionInterface
             }
         });
 
-        // 取出女性品牌
+        // 取出女性品牌，gender=2
         $di->setShared('girlbrands', function () use ($admin) {
             $name = $admin->getlangfield('name');
             $products = TbProductSearch::find([
-                'conditions' => 'gender = 0',
+                'conditions' => 'gender = 2',
                 'columns' => "brandid",
             ]);
             // 品牌id列表
@@ -327,11 +327,11 @@ class Module implements ModuleDefinitionInterface
             return $return;
         });
 
-        // 取出女性品类
+        // 取出女性品类，gender=2
         $di->setShared('girlbrandgroups', function () use ($admin) {
             $name = $admin->getlangfield('name');
             $products = TbProductSearch::find([
-                'conditions' => 'gender = 0',
+                'conditions' => 'gender = 2',
                 'columns' => "brandgroupid",
             ]);
             // 品类id列表
@@ -347,7 +347,7 @@ class Module implements ModuleDefinitionInterface
             return $return;
         });
 
-        // 取出男性品牌
+        // 取出男性品牌，gender=1
         $di->setShared('boybrands', function () use ($admin) {
             $name = $admin->getlangfield('name');
             $products = TbProductSearch::find([
@@ -367,7 +367,7 @@ class Module implements ModuleDefinitionInterface
             return $return;
         });
 
-        // 取出男性品类
+        // 取出男性品类，gender=1
         $di->setShared('boybrandgroups', function () use ($admin) {
             $name = $admin->getlangfield('name');
             $products = TbProductSearch::find([
@@ -391,7 +391,7 @@ class Module implements ModuleDefinitionInterface
         $di->setShared('childbrands', function () use ($admin) {
             $name = $admin->getlangfield('name');
             $products = TbProductSearch::find([
-                'conditions' => 'gender = 2',
+                'conditions' => 'gender = 6',
                 'columns' => "brandid",
             ]);
             // 品牌id列表
@@ -411,7 +411,7 @@ class Module implements ModuleDefinitionInterface
         $di->setShared('childbrandgroups', function () use ($admin) {
             $name = $admin->getlangfield('name');
             $products = TbProductSearch::find([
-                'conditions' => 'gender = 2',
+                'conditions' => 'gender = 6',
                 'columns' => "brandgroupid",
             ]);
             // 品类id列表
@@ -481,7 +481,7 @@ class Module implements ModuleDefinitionInterface
         });
 
 
-        // 微信sub_mch_id
+        // 微信sub_mch_id，待完善
         $di->setShared('sub_mch_id', function () use ($di) {
             // 逻辑
             // 如果结果为空

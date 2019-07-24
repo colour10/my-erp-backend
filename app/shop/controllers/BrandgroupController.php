@@ -49,8 +49,10 @@ class BrandgroupController extends AdminController
         }
     }
 
+
     /**
      * 获取当前主分类产品列表
+     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|void
      */
     public function detailAction()
     {
@@ -108,7 +110,7 @@ class BrandgroupController extends AdminController
             // 国际码
             $productModel = TbProduct::findFirstById($item->productid);
             if ($productModel) {
-                $wordcode = $productModel->wordcode_1 . $productModel->wordcode_2 . $productModel->wordcode_3 . $productModel->wordcode_4;
+                $wordcode = $productModel->wordcode;
                 // 价格
                 $realprice = $productModel->wordprice;
             } else {
@@ -137,6 +139,8 @@ class BrandgroupController extends AdminController
             $products[$k]['wordcode'] = $wordcode;
             // 价格
             $products[$k]['realprice'] = $realprice;
+            // 商品名称
+            $products[$k]['productname'] = $item->getProductname();
         }
 
         // 重新遍历，把尺码名称填写进去
