@@ -4,7 +4,6 @@ namespace Multiple\Shop\Controllers;
 
 use Asa\Erp\TbCompany;
 use Asa\Erp\TbMember;
-use Asa\Erp\TbProductSearch;
 use Asa\Erp\TbShoporderCommon;
 use Asa\Erp\TbShoppayment;
 use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
@@ -18,6 +17,7 @@ class MemberController extends AdminController
 {
     /**
      * 没有首页
+     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|void
      */
     public function indexAction()
     {
@@ -31,7 +31,7 @@ class MemberController extends AdminController
 
     /**
      * 修改密码
-     * @return false|string
+     * @return false|string|void
      */
     public function resetpasswordAction()
     {
@@ -88,7 +88,7 @@ class MemberController extends AdminController
      * 邀请注册的逻辑：
      * 1、超级用户邀请的用户，必须指定某个公司，且该公司自动成为这个公司的管理员
      * 2、普通用户邀请必须是公司管理员才行，邀请的用户默认是普通用户，不能再次邀请
-     * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|string
+     * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|string|void
      */
     public function inviteAction()
     {
@@ -232,7 +232,7 @@ EOT;
 
     /**
      * 邀请注册名单
-     * @return \Phalcon\Mvc\View
+     * @return \Phalcon\Mvc\View|void
      */
     public function invitelistAction()
     {
@@ -256,7 +256,7 @@ EOT;
 
     /**
      * 订单列表
-     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View
+     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|void
      */
     public function ordersAction()
     {
@@ -330,20 +330,20 @@ EOT;
 
     /**
      * 支付授权
-     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View
+     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|void
      */
     public function payauthAction()
     {
         // 逻辑
         // get请求，判断是否登录
-        // 还要必须公司用户才行
         if (!$member = $this->member) {
             return $this->response->redirect('/login');
-        } else {
-            if (!$member['membertype']) {
-                // 传递错误
-                return $this->renderError('make-an-error', '404-not-found');
-            }
+        }
+
+        // 还要必须公司用户才行
+        if (!$member['membertype']) {
+            // 传递错误
+            return $this->renderError('make-an-error', '404-not-found');
         }
 
         // 判断是否授权了
@@ -354,26 +354,87 @@ EOT;
             $payment->setCompanyid($member['companyid']);
             $payment->save();
         }
-        $config = $payment ? $payment->getConfig() : '';
+        $config = $payment ? json_encode($payment->getConfig()) : '';
         // 查找里面是否有app_auth_token字段
         $is_alipay_allow_auth = (strpos($config, 'app_auth_token') !== false) ? true : false;
-        $is_wechatpay_allow_auth = (strpos($config, 'wx_app_auth_token') !== false) ? true : false;
+        $is_wechatpay_allow_auth = (strpos($config, 'sub_mch_id') !== false) ? true : false;
         // 判断支付宝是否已授权
         if (!$is_alipay_allow_auth) {
-            $alipay_url = '<a class="btn-custom" href="/alipay/gettoken" target="_blank">支付宝授权</a>';
+            $alipay_url = '<a class="btn-custom" href="/alipay/gettoken" target="_blank">' . $this->getValidateMessage('alipay-auth') . '</a>';
         } else {
-            $alipay_url = '<a class="btn-custom disabled" href="javascript:void(0);">支付宝已授权</a>';
+            $alipay_url = '<a class="btn-custom" href="javascript:void(0);" onclick="return alipayAuth();">' . $this->getValidateMessage('alipay-auth-completed') . '</a>';
         }
 
         // 判断微信是否已授权
         if (!$is_wechatpay_allow_auth) {
-            $wechat_url = '<a class="btn-custom" href="/wechat/gettoken" target="_blank">微信支付授权</a>';
+            $wechat_url = '<a class="btn-custom" href="javascript:void(0);" onclick="return wechatAuth();">' . $this->getValidateMessage('wechat-auth') . '</a>';
         } else {
-            $wechat_url = '<a class="btn-custom disabled" href="javascript:void(0);">微信支付已授权</a>';
+            $wechat_url = '<a class="btn-custom" href="javascript:void(0);" onclick="return wechatAuth();">' . $this->getValidateMessage('wechat-auth-completed') . '</a>';
         }
 
         // 发送给模板
         $url = ['alipay_url' => $alipay_url, 'wechat_url' => $wechat_url];
         $this->view->setVars(compact('url'));
+    }
+
+
+    /**
+     * 微信支付授权-写入逻辑
+     * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|string|void
+     */
+    public function wechatauthAction()
+    {
+        // 逻辑
+        if ($this->member && $this->request->isPost() && !empty($this->member['membertype'])) {
+            // 配置
+            if ($config = $this->shopPaymentConfig) {
+                // 把原来的wechat配置项中的sub_mch_id写入即可，其他项保持不变
+                $config['wechatpay']['sub_mch_id'] = $this->request->get('sub_mch_id');
+                $model = $this->shopPayment;
+                $model->setConfig($config);
+                if (!$model->save()) {
+                    return $this->error($model);
+                }
+                // 最终返回成功
+                return $this->success();
+            }
+        }
+    }
+
+
+    /**
+     * 获取微信支付授权
+     * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|string|void
+     */
+    public function getwechatauthAction()
+    {
+        // 逻辑
+        if ($this->member && $this->request->isPost() && !empty($this->member['membertype'])) {
+            // 配置
+            // 还没有授权
+            if ($this->sub_mch_id === 0) {
+                return $this->error($this->getValidateMessage('wechat-auth-not-completed'));
+            }
+            // 下面说明已经授权成功了
+            $msg = sprintf($this->getValidateMessage('wechat-auth-completed-with-confirm'), $this->sub_mch_id);
+            return $this->success($msg);
+        }
+    }
+
+
+    /**
+     * 获取支付宝授权有效期
+     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|void
+     */
+    public function getalipayauthAction()
+    {
+        // 逻辑
+        if ($this->member && $this->request->isPost() && !empty($this->member['membertype'])) {
+            // 开始查询
+            $config = $this->shopPaymentConfig;
+            // 返回
+            $msg = sprintf($this->getValidateMessage('alipay-auth-completed-with-expire'), $config['alipayQueryToken']['auth_end']);
+            return $this->success($msg);
+        }
     }
 }

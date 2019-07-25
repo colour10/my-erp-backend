@@ -2,6 +2,7 @@
 
 namespace Multiple\Shop\Controllers;
 
+use Asa\Erp\TbColortemplate;
 use Asa\Erp\TbCompany;
 use Asa\Erp\TbProduct;
 use Asa\Erp\TbProductSearch;
@@ -28,7 +29,7 @@ class BrandController extends AdminController
     }
 
     /**
-     * 获取当前品牌下面所有的商品列表
+     * 获取当前品牌下面所有的商品列表，获取商品名称，明天继续做
      */
     public function detailAction()
     {
@@ -78,7 +79,7 @@ class BrandController extends AdminController
             // 国际码
             $productModel = TbProduct::findFirstById($item->productid);
             if ($productModel) {
-                $wordcode = $productModel->wordcode_1 . $productModel->wordcode_2 . $productModel->wordcode_3 . $productModel->wordcode_4;
+                $wordcode = $productModel->wordcode;
                 // 价格
                 $realprice = $productModel->wordprice;
             } else {
@@ -107,6 +108,8 @@ class BrandController extends AdminController
             $products[$k]['wordcode'] = $wordcode;
             // 价格
             $products[$k]['realprice'] = $realprice;
+            // 名称
+            $products[$k]['productname'] = $item->getProductname();
         }
 
         // 重新遍历，把尺码名称填写进去

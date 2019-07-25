@@ -3,6 +3,8 @@
 namespace Multiple\Shop\Controllers;
 
 use Asa\Erp\TbProductSearch;
+use Phalcon\Assets\Filters\Cssmin;
+use Phalcon\Assets\Filters\Jsmin;
 use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
 
 /**
@@ -33,12 +35,15 @@ class IndexController extends AdminController
         $productlist_array = $productlist->toArray();
         foreach ($productlist as $k => $product) {
             $productlist_array[$k]['realprice'] = $product->product->wordprice;
+            // 商品名称
+            $productlist_array[$k]['productname'] = $product->getProductname();
         }
 
         // 分配到模板
         $this->view->setVars([
             'productlist' => $productlist_array,
         ]);
+
     }
 
     /**
@@ -68,6 +73,8 @@ class IndexController extends AdminController
         $productlist_array = $productlist->toArray();
         foreach ($productlist as $k => $product) {
             $productlist_array[$k]['realprice'] = $product->product->wordprice;
+            // 商品名称
+            $productlist_array[$k]['productname'] = $product->getProductname();
         }
 
         // 创建分页对象

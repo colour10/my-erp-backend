@@ -92,9 +92,9 @@ class MemberaddressController extends AdminController
             // 赋值
             $params = $this->dispatcher->getParams();
             $id = $params[0];
-            $name = $this->request->get('username', 'string');
-            $tel = $this->request->get('mobile', 'int');
-            $address = $this->request->get('address', 'string');
+            $name = $this->request->get('username');
+            $tel = $this->request->get('mobile');
+            $address = $this->request->get('address');
 
             // 不能为空
             if (!$name || !$tel || !$address) {
@@ -114,7 +114,6 @@ class MemberaddressController extends AdminController
             }
 
             // 但是修改的时候不能和已经保存的其他地址重复
-            $address = $addressModel->address;
             $exists = TbMemberAddress::findFirst("id!=" . $id . " and member_id=" . $member['id'] . " and name = '" . $name . "' and tel = '" . $tel . "' and address = '" . $address . "'");
             if ($exists) {
                 return $this->error($this->getValidateMessage('address-exist'));
