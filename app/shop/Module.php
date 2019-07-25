@@ -387,7 +387,7 @@ class Module implements ModuleDefinitionInterface
             return $return;
         });
 
-        // 取出儿童品牌，也就是中性
+        // 取出儿童品牌，gender=6
         $di->setShared('childbrands', function () use ($admin) {
             $name = $admin->getlangfield('name');
             $products = TbProductSearch::find([
@@ -407,7 +407,7 @@ class Module implements ModuleDefinitionInterface
             return $return;
         });
 
-        // 取出儿童品类
+        // 取出儿童品类，gender=6
         $di->setShared('childbrandgroups', function () use ($admin) {
             $name = $admin->getlangfield('name');
             $products = TbProductSearch::find([
@@ -517,7 +517,7 @@ class Module implements ModuleDefinitionInterface
         $di->setShared('wechat_pay', function () use ($config_array, $di) {
             // 取出微信相关配置
             $config = $config_array['pay']['wechat'];
-            // 添加子商户号，待完善
+            // 添加子商户号
             $config_array['pay']['wechat']['sub_mch_id'] = $di->get('sub_mch_id');
             // 调用 Yansongda\Pay 来创建一个微信支付对象
             return Pay::wechat($config);
