@@ -43,6 +43,8 @@ $loader->registerDirs(
 $console = new ConsoleApp();
 $console->setDI($di);
 
+$di['config'] = new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/config.php");
+
 // Set the database service
 $di['db'] = function() use($config) {
     if($config->mode=='develop') {

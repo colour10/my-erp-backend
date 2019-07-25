@@ -1027,5 +1027,25 @@ class Util
         return $response;
     }
 
+    /**
+     * 通知商品库存发生变化
+     * @param  [type] $productid   [description]
+     * @param  [type] $warehouseid [description]
+     * @return [type]              [description]
+     */
+    public static function sendStockChange($productid, $warehouseid) {
+        $config = \Phalcon\DI::getDefault()->get("config");
 
+        $logger = new \Phalcon\Logger\Adapter\File($config->app->log_path . sprintf("/productstock_%s.log",date('Ymd')));
+
+
+        $url = sprintf("%s/productstock/change/%d/%d", $config->productstock_service->server, $productid, $warehouseid);
+        $response = file_get_contents($url);
+        if($response=='1') {
+            $logger->info($productid .','. $warehouseid);
+        }
+        else {
+            $logger->error($productid .','. $warehouseid);
+        }
+    }
 }

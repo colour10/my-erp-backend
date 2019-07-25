@@ -169,6 +169,8 @@ class SalesController extends BaseController {
         }
 
         $this->db->commit();
+        TbProductstock::sendStockChange();
+
         echo $this->success();
     }
 
@@ -265,6 +267,7 @@ class SalesController extends BaseController {
         }
 
         $this->db->commit();
+        TbProductstock::sendStockChange();
         return $sale;
     }
 
@@ -297,6 +300,7 @@ class SalesController extends BaseController {
         }
 
         $this->db->commit();
+        TbProductstock::sendStockChange();
         echo $this->success();
     }
 
@@ -348,6 +352,7 @@ class SalesController extends BaseController {
         }
 
         $this->db->commit();
+        TbProductstock::sendStockChange();
         echo $this->success();
     }
 }

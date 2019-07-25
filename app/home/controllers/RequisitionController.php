@@ -140,6 +140,8 @@ class RequisitionController extends BaseController {
 
         // 提交事务
         $this->db->commit();
+        TbProductstock::sendStockChange();
+
         // 最终成功返回
         echo $this->success();
     }
