@@ -86,6 +86,8 @@ class TbRequisition extends BaseCompanyModel
         }
 
         $db->commit();
+        TbProductstock::sendStockChange();
+
         return $requisition;
     }
 
@@ -203,6 +205,7 @@ class TbRequisition extends BaseCompanyModel
         }
 
         $db->commit();
+        TbProductstock::sendStockChange();
         return true;
     }
 
@@ -233,6 +236,7 @@ class TbRequisition extends BaseCompanyModel
         }
 
         $db->commit();
+        TbProductstock::sendStockChange();
         return true;
     }
 
@@ -361,6 +365,7 @@ class TbRequisition extends BaseCompanyModel
         }
 
         $db->commit();
+        TbProductstock::sendStockChange();
         return true;
     }
 

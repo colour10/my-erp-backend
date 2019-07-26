@@ -130,4 +130,9 @@ return [
         ],
     ],
 
+    // 库存变动服务配置
+    "productstock_service" => [
+        "server" => "http://127.0.0.1:3000"
+    ],
+
 ];

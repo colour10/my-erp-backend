@@ -573,6 +573,7 @@ class ShippingController extends AdminController {
         }
 
         $this->db->commit();
+        TbProductstock::sendStockChange();
         return $this->success();
     }
 
@@ -661,6 +662,7 @@ class ShippingController extends AdminController {
         }
 
         $this->db->commit();
+        TbProductstock::sendStockChange();
         return $this->success();
     }
 
