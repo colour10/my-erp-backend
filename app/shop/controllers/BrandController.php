@@ -2,7 +2,6 @@
 
 namespace Multiple\Shop\Controllers;
 
-use Asa\Erp\TbColortemplate;
 use Asa\Erp\TbCompany;
 use Asa\Erp\TbProduct;
 use Asa\Erp\TbProductSearch;
@@ -11,7 +10,6 @@ use Asa\Erp\TbProductstock;
 use Asa\Erp\TbSizecontent;
 use Asa\Erp\Util;
 use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
-use phpDocumentor\Reflection\Types\Self_;
 
 /**
  * 品牌操作类

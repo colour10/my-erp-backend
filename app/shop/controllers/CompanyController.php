@@ -4,7 +4,6 @@ namespace Multiple\Shop\Controllers;
 
 use Asa\Erp\TbCompany;
 use Asa\Erp\TbMember;
-use Asa\Erp\TbUser;
 
 /**
  * 公司操作类

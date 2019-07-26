@@ -7,7 +7,6 @@ use Asa\Erp\TbShoppayment;
 use Asa\Erp\Util;
 use Phalcon\Http\Response;
 use Yansongda\Pay\Log;
-use Yansongda\Pay\Pay;
 
 /**
  * 支付宝支付类，因为是第三方应用，所以只支持当面付，也就是扫码和刷卡

@@ -9,7 +9,6 @@ use Asa\Erp\TbProductSearch;
 use Asa\Erp\TbProductstock;
 use Asa\Erp\TbSizecontent;
 use Asa\Erp\TbBuycar;
-use Asa\Erp\TbProduct;
 use Asa\Erp\Util;
 
 /**

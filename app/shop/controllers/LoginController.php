@@ -2,7 +2,6 @@
 
 namespace Multiple\Shop\Controllers;
 
-use Phalcon\Mvc\Controller;
 use Asa\Erp\TbMember;
 
 /**

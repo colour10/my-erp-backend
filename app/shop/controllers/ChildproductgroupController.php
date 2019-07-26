@@ -2,7 +2,6 @@
 
 namespace Multiple\Shop\Controllers;
 
-use Asa\Erp\TbBrandgroup;
 use Asa\Erp\TbCompany;
 use Asa\Erp\TbProduct;
 use Asa\Erp\TbProductSearch;
