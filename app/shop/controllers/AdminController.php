@@ -321,7 +321,6 @@ EOT;
         $headerCollection = $this->assets->collection("header");
         $headerCollection->setTargetPath(APP_PATH . "/public/shop/assets/static/css/final.css")->setTargetUri("/shop/assets/static/css/final.css");
         $headerCollection
-            ->addCss(APP_PATH . "/public/shop/assets/plugins/font-awesome/css/font-awesome.min.css")
             ->addCss(APP_PATH . "/public/shop/assets/plugins/bootstrap/css/bootstrap.min.css")
             ->addCss(APP_PATH . "/public/shop/assets/pages/css/animate.css")
             ->addCss(APP_PATH . "/public/shop/assets/plugins/fancybox/source/jquery.fancybox.css")

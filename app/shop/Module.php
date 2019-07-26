@@ -231,7 +231,7 @@ class Module implements ModuleDefinitionInterface
 
         // 默认联系邮箱
         $di->setShared('contactEmail', function () {
-            return "806316776@qq.com";
+            return "88888888@qq.com";
         });
 
         // 登录用户信息
