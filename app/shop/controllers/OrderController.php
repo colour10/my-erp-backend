@@ -12,9 +12,7 @@ use Asa\Erp\TbShoporderCommon;
 use Asa\Erp\TbBuycar;
 use Asa\Erp\TbSizecontent;
 use Asa\Erp\Util;
-use Endroid\QrCode\QrCode;
 use Phalcon\Http\Response;
-use Phalcon\Logger\Adapter\File as FileLogger;
 use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
 use Yansongda\Pay\Log;
 

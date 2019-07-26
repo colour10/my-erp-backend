@@ -4,7 +4,6 @@ namespace Multiple\Shop\Controllers;
 
 use Asa\Erp\TbShoporderCommon;
 use Asa\Erp\Util;
-use Endroid\QrCode\QrCode;
 use Phalcon\Http\Response;
 
 /**

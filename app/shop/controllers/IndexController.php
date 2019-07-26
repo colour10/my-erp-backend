@@ -46,7 +46,7 @@ class IndexController extends AdminController
 
     /**
      * 搜索
-     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
+     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|void
      */
     public function searchAction()
     {
