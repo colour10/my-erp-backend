@@ -667,7 +667,7 @@ return [
     "wancheng" => "完成",
     "kucunbuzu" => "库存不足",
     "qingxuanzecangku" => "请选择仓库",
-    "zaitushuliang" => "在途数量",
+    "error-1000" => "调拨单列表不能为空",
     "zaitushuliang" => "在途数量",
     "zaitushuliang" => "在途数量",
     "zaitushuliang" => "在途数量",

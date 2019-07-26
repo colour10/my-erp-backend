@@ -228,7 +228,10 @@ class SalesController extends BaseController {
                     'number' => $item['number'],
                     'price' => $item['price'],
                     'priceid' => $item['priceid'],
-                    'salesid' => $sale->id
+                    'salesid' => $sale->id,
+                    'update_time' => time(),
+                    'cost' => $productstock->product->cost,
+                    'costcurrency' => $productstock->product->costcurrency,
                 ]);
 
                 //本地锁定库存
@@ -287,11 +290,13 @@ class SalesController extends BaseController {
                 }
 
                 foreach($sale->salesdetails as $detail) {
-                    $detail->getLocalProductstock()->preReduceStockExecute($detail->number, TbProductstock::SALES, $detail->id);
+                    if($detail->preReduceStockExecute()===false) {
+                        throw new \Exception("/11070402/销售单更新失败。/");
+                    }
                 }
             }
             else {
-                throw new \Exception("/11070401/销售单不存在。/");
+                throw new \Exception("/11070403/销售单不存在。/");
             }
         }
         catch(\Exception $e) {

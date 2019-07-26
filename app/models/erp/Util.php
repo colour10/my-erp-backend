@@ -1036,7 +1036,12 @@ class Util
     public static function sendStockChange($productid, $warehouseid) {
         $config = \Phalcon\DI::getDefault()->get("config");
 
-        $logger = new \Phalcon\Logger\Adapter\File($config->app->log_path . sprintf("/productstock_%s.log",date('Ymd')));
+        $filename = $config->app->log_path . sprintf("/productstock_%s.log",date('Ymd'));
+        if(file_exists($filename)) {
+            touch($filename);
+            chmod($filename, 0777);
+        }
+        $logger = new \Phalcon\Logger\Adapter\File($filename);
 
 
         $url = sprintf("%s/productstock/change/%d/%d", $config->productstock_service->server, $productid, $warehouseid);

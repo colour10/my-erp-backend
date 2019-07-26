@@ -527,7 +527,7 @@ class ShippingController extends AdminController {
             $product_array[$row->productid] = $info;
         }
 
-//print_r($product_array);exit;
+        //print_r($product_array);exit;
         foreach($product_array as $row) {
             $product = TbProduct::getInstance($row['productid']);
 
@@ -539,6 +539,7 @@ class ShippingController extends AdminController {
             }
 
             $product->costcurrency = $currencyid;
+            $product->laststoragedate = date("Y-m-d H:i:s");
             if($product->update()===false) {
                 $this->db->rollback();
                 throw new \Exception("/11011206/更新商品成本失败/");

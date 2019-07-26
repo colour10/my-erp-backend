@@ -191,6 +191,10 @@ class TbProductstock extends BaseCompanyModel
         if($number<=$this->reserve_number && $this->number>=$this->reserve_number) {
             $this->number = $this->number - $number;
             $this->reserve_number = $this->reserve_number - $number;
+            if($change_type===self::SALES) {
+                $this->sales_number = $this->sales_number + $number;
+            }
+
             $this->change_time = date("Y-m-d H:i:s");
             $this->change_stuff = $this->getDI()->get('currentUser');
             if($this->update()) {
@@ -296,6 +300,9 @@ class TbProductstock extends BaseCompanyModel
         $db->begin();
         $old_number = $this->number;
 
+        if($change_type===self::SALES && $number<0) {
+            $this->sales_number = $this->sales_number-$number;
+        }
         $this->number = $this->number+$number;
         $this->change_time = date("Y-m-d H:i:s");
         $this->change_stuff = $this->getDI()->get('currentUser');

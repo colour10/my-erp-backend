@@ -34,4 +34,15 @@ class TbSalesdetails extends BaseModel
     function getLocalProductstock() {
         return $this->sales->warehouse->getLocalStock($this->productstock);
     }
+
+    function preReduceStockExecute() {
+        $productstock = $this->getLocalProductstock();
+
+        $productstock->preReduceStockExecute($this->number, TbProductstock::SALES, $this->id);
+
+        $this->cost = $productstock->product->cost;
+        $this->costcurrency = $productstock->product->costcurrency;
+        $this->update_time = time();
+        return $this->update();
+    }
 }
