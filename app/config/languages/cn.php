@@ -871,6 +871,10 @@ return [
     'wechat-auth-completed' => '微信支付已授权',
     'wechat-auth-completed-with-confirm' => "微信支付已授权，当前子商户号为：%s，要重新输入吗？<br><br>温馨提示：输入不正确的子商户号将导致您无法收到买家的打款，请三思而后行！",
     'wechat-auth-not-completed' => '微信支付未授权',
+    'AUTH_UNCOMPLETED' => '未授权',
+    'AUTH_COMPLETED' => '已授权',
+    'pay-authorization-list' => '支付授权列表',
+    'click-for-wechatpay-auth' => '点击进行微信支付授权',
 
     'template' =>
         [
