@@ -34,7 +34,7 @@
 
             <!-- BEGIN CONTENT -->
             <div class="col-md-9 col-sm-9">
-                <h1 class="h1-title"><?php echo $this->obj->getValidateMessage('pay-authorization'); ?>
+                <h1 class="h1-title"><?php echo $h1; ?>
                 </h1>
                 <div class="content-form-page">
                     <div class="row">
@@ -42,11 +42,56 @@
                             <?php
                             if (isset($url)) {
                                 echo $url['alipay_url'] . '　' . $url['wechat_url'];
+                            } else {
+                                // 否则，就是超级管理员
+                                if (isset($page) && count($page->items) > 0) {
+                                    ?>
+                                    <table class="table table-hover table-responsive table-bordered">
+                                        <tr>
+                                            <th>公司名称</th>
+                                            <th>支付宝授权状态</th>
+                                            <th>微信授权状态</th>
+                                        </tr>
+                                        <?php
+                                        foreach ($page->items as $item) {
+                                            ?>
+                                            <tr>
+                                                <td><?php echo $item['companyname']; ?></td>
+                                                <td><?php echo $item['is_alipay_auth']; ?></td>
+                                                <td><?php echo $item['is_wechat_auth']; ?></td>
+                                            </tr>
+                                            <?php
+                                        }
+                                        ?>
+                                    </table>
+                                    <?php
+                                }
                             }
                             ?>
                         </div>
                     </div>
                 </div>
+
+                <!-- BEGIN PAGINATOR -->
+                <?php if (isset($page) && $page->total_pages > 1) { ?>
+                    <div class="page_margin pull-right">
+                        <ul class="pagination ">
+                            <li class="<?php echo $page->current <= 1 ? 'disabled' : ''; ?>"><a
+                                        href="<?php echo $this->url->get('member/payauth', ['page' => $page->before]); ?>">&laquo;</a>
+                            </li>
+                            <?php for ($i = 1; $i <= $page->total_pages; $i++) { ?>
+                                <li class="<?php echo $page->current == $i ? 'active' : ''; ?>"><a
+                                            href="<?php echo $this->url->get('member/payauth', ['page' => $i]); ?>"><?php echo $i; ?></a>
+                                </li>
+                            <?php } ?>
+                            <li class="<?php echo $page->current >= $page->total_pages ? 'disabled' : ''; ?>"><a
+                                        href="<?php echo $this->url->get('member/payauth', ['page' => $page->next]); ?>">&raquo;</a>
+                            </li>
+                        </ul>
+                    </div>
+                <?php } ?>
+                <!-- END PAGINATOR -->
+
             </div>
             <!-- END CONTENT -->
         </div>

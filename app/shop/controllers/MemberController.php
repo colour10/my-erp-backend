@@ -347,34 +347,83 @@ EOT;
         }
 
         // 判断是否授权了
-        $payment = TbShoppayment::findFirst("companyid=" . $member['companyid']);
-        // 如果不存在，则写入一条记录
-        if (!$payment) {
-            $payment = new TbShoppayment();
-            $payment->setCompanyid($member['companyid']);
-            $payment->save();
-        }
-        $config = $payment ? json_encode($payment->getConfig()) : '';
-        // 查找里面是否有app_auth_token字段
-        $is_alipay_allow_auth = (strpos($config, 'app_auth_token') !== false) ? true : false;
-        $is_wechatpay_allow_auth = (strpos($config, 'sub_mch_id') !== false) ? true : false;
-        // 判断支付宝是否已授权
-        if (!$is_alipay_allow_auth) {
-            $alipay_url = '<a class="btn-custom" href="/alipay/gettoken" target="_blank">' . $this->getValidateMessage('alipay-auth') . '</a>';
-        } else {
-            $alipay_url = '<a class="btn-custom" href="javascript:void(0);" onclick="return alipayAuth();">' . $this->getValidateMessage('alipay-auth-completed') . '</a>';
-        }
+        // 但是如果是超级管理员就不授权，仅仅是管理
+        if (!$this->issuperadmin) {
+            $payment = TbShoppayment::findFirst("companyid=" . $member['companyid']);
+            // 如果不存在，则写入一条记录
+            if (!$payment) {
+                $payment = new TbShoppayment();
+                $payment->setCompanyid($member['companyid']);
+                $payment->save();
+            }
+            $config = $payment ? json_encode($payment->getConfig()) : '';
+            // 查找里面是否有app_auth_token字段
+            $is_alipay_allow_auth = (strpos($config, 'app_auth_token') !== false) ? true : false;
+            $is_wechatpay_allow_auth = (strpos($config, 'sub_mch_id') !== false) ? true : false;
+            // 判断支付宝是否已授权
+            if (!$is_alipay_allow_auth) {
+                $alipay_url = '<a class="btn-custom" href="/alipay/gettoken" target="_blank">' . $this->getValidateMessage('alipay-auth') . '</a>';
+            } else {
+                $alipay_url = '<a class="btn-custom" href="javascript:void(0);" onclick="return alipayAuth();">' . $this->getValidateMessage('alipay-auth-completed') . '</a>';
+            }
 
-        // 判断微信是否已授权
-        if (!$is_wechatpay_allow_auth) {
-            $wechat_url = '<a class="btn-custom" href="javascript:void(0);" onclick="return wechatAuth();">' . $this->getValidateMessage('wechat-auth') . '</a>';
-        } else {
-            $wechat_url = '<a class="btn-custom" href="javascript:void(0);" onclick="return wechatAuth();">' . $this->getValidateMessage('wechat-auth-completed') . '</a>';
-        }
+            // 判断微信是否已授权
+            if (!$is_wechatpay_allow_auth) {
+                $wechat_url = '<a class="btn-custom" href="javascript:void(0);" onclick="return wechatAuth();">' . $this->getValidateMessage('click-for-wechatpay-authwechat-auth') . '</a>';
+            } else {
+                $wechat_url = '<a class="btn-custom" href="javascript:void(0);" onclick="return wechatAuth();">' . $this->getValidateMessage('wechat-auth-completed') . '</a>';
+            }
 
-        // 发送给模板
-        $url = ['alipay_url' => $alipay_url, 'wechat_url' => $wechat_url];
-        $this->view->setVars(compact('url'));
+            // 发送给模板
+            $url = ['alipay_url' => $alipay_url, 'wechat_url' => $wechat_url];
+            $h1 = $this->getValidateMessage('pay-authorization');
+            $this->view->setVars(compact('url', 'h1'));
+        } else {
+            // 如果是超级管理员
+            // 分页
+            $currentPage = $this->request->getQuery("page", "int", 1);
+            // 查找所有的公司，支付宝和微信授权情况
+            $datas = TbShoppayment::find("id != " . $this->supercoid);
+            $return = $datas->toArray();
+            foreach ($datas as $k => $data) {
+                // 支付宝是否授权
+                if (strpos(json_encode($data->getConfig()), 'app_auth_token') !== false) {
+                    $is_alipay_auth = '<a class="btn-custom disabled" href="javascript:void(0);">' . $this->getValidateMessage('AUTH_COMPLETED') . '</a>';
+                } else {
+                    $is_alipay_auth = '<a class="btn-custom disabled" href="javascript:void(0);">' . $this->getValidateMessage('AUTH_UNCOMPLETED') . '</a>';
+                }
+
+                // 微信是否授权
+                if (strpos(json_encode($data->getConfig()), 'sub_mch_id') !== false) {
+                    $is_wechat_auth = '<a class="btn-custom disabled" href="javascript:void(0);">' . $this->getValidateMessage('AUTH_COMPLETED') . '</a>';
+                } else {
+                    $is_wechat_auth = '<a class="btn-custom" href="javascript:void(0);">' . $this->getValidateMessage('click-for-wechatpay-auth') . '</a>';
+                }
+
+                // 变量赋值
+                $return[$k]['companyname'] = $data->company->name;
+                $return[$k]['is_alipay_auth'] = $is_alipay_auth;
+                $return[$k]['is_wechat_auth'] = $is_wechat_auth;
+            }
+
+            // 创建分页对象，使用数组分页
+            $paginator = new PaginatorArray(
+                [
+                    "data" => $return,
+                    "limit" => 10,
+                    "page" => $currentPage,
+                ]
+            );
+
+            // 展示分页
+            $page = $paginator->getPaginate();
+
+            // 推送
+            $this->view->setVars([
+                'page' => $page,
+                'h1' => $this->getValidateMessage('pay-authorization-list'),
+            ]);
+        }
     }
 
 

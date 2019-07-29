@@ -13,6 +13,7 @@ use Asa\Erp\TbPermission;
 use Asa\Erp\TbPermissionGroup;
 use Asa\Erp\TbProduct;
 use Asa\Erp\TbSeries;
+use Asa\Erp\TbShoppayment;
 use Asa\Erp\TbUser;
 use Asa\Erp\TbCompany;
 use Asa\Erp\Util;
@@ -129,6 +130,13 @@ class ManagerController extends AdminController
 
             // 新公司id
             $companyid = $companyModel->id;
+
+            // 添加shoppayment配置项
+            $shopPayment = new TbShoppayment();
+            if (!$shopPayment->create(compact('companyid'))) {
+                $this->db->rollback();
+                return $this->error('公司支付配置项创建失败');
+            }
 
             // 创建管理员组，这个是分配权限用的
             foreach ($groups as $group) {

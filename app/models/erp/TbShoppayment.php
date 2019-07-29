@@ -161,6 +161,16 @@ class TbShoppayment extends BaseModel
     public function initialize()
     {
         $this->setSource("tb_shoppayment");
+
+        // 支付配置表-公司表，一对一
+        $this->belongsTo(
+            'companyid',
+            '\Asa\Erp\TbCompany',
+            'id',
+            [
+                'alias' => 'company',
+            ]
+        );
     }
 
     /**
