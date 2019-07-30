@@ -881,6 +881,9 @@ return [
     'shoppayment-config' => '支付配置',
     'self-payauth-notice' => '温馨提示：请自行进行支付宝授权，微信支付将由管理员授权，请知悉！',
     'payauth-notice' => '温馨提示：请及时对微信支付进行授权，支付宝是由商家自行授权，请知悉！',
+    'company-name' => '公司名称',
+    'alipay-auth-status' => '支付宝授权状态',
+    'wechat-auth-status' => '微信授权状态',
 
     'template' =>
         [
