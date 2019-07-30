@@ -73,7 +73,21 @@ class ProductstockController extends BaseController {
             $conditions[] = sprintf("warehouseid=%d", $_POST["warehouseid"]);
         }
 
-        $conditions[] = "number>0";
+        if(isset($_POST['type'])) {
+            if($_POST['type']=='1') {
+                $conditions[] = "number>reserve_number";
+            }
+            elseif($_POST['type']=='2') {
+                $conditions[] = "reserve_number>0";
+            }
+            else {
+                $conditions[] = "number>0";
+            }
+        }
+        else {
+            $conditions[] = "number>0";
+        }
+
         $result = TbProductstockSearch::find(
             implode(" and ", $conditions)
         );
