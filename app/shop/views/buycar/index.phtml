@@ -122,7 +122,7 @@
                                                                     <tr>
                                                                         <td class="goods-page-image">
                                                                             <a href="/product/detail/<?php echo $list['product']['productid']; ?>"><img
-                                                                                        src="<?php echo $this->file_prex . $list['product']['picture']; ?>"
+                                                                                        src="<?php echo \Asa\Erp\Util::getCorrentImgUrl($this->file_prex . $list['product']['picture']); ?>"
                                                                                         alt="<?php echo $list['product']['productname']; ?>"></a>
                                                                         </td>
                                                                         <td class="goods-page-description">

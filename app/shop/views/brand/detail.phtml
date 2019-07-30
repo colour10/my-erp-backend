@@ -58,13 +58,13 @@
                                         <td rowspan="3"><a
                                                     href="/product/detail/<?php echo $item['productid']; ?>"><img
                                                         class="w80"
-                                                        src="<?php echo $this->file_prex . $item['picture']; ?>"
+                                                        src="<?php echo \Asa\Erp\Util::getCorrentImgUrl($this->file_prex . $item['picture']); ?>"
                                                         alt="<?php echo $item['productname']; ?>"></a>
                                         </td>
                                         <td rowspan="3"><a
                                                     href="/product/detail/<?php echo $item['productid']; ?>"><img
                                                         class="w80"
-                                                        src="<?php echo $this->file_prex . $item['picture2']; ?>"
+                                                        src="<?php echo \Asa\Erp\Util::getCorrentImgUrl($this->file_prex . $item['picture2']); ?>"
                                                         alt="<?php echo $item['productname']; ?>"></a>
                                         </td>
                                         <td rowspan="3"><a

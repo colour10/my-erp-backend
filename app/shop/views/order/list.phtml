@@ -117,7 +117,7 @@
                                                     <span class="margin-left-20"><a
                                                                 href="/product/detail/<?php echo $orderdetail['product_detail_id']; ?>"><img
                                                                     class="w80"
-                                                                    src="<?php echo $orderdetail['picture']; ?>"
+                                                                    src="<?php echo \Asa\Erp\Util::getCorrentImgUrl($this->file_prex . $orderdetail['picture']); ?>"
                                                                     alt="<?php echo $orderdetail['product_name']; ?>"
                                                                     title="<?php echo $orderdetail['product_name']; ?>"></a></span>
                                                     </td>
