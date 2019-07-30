@@ -494,8 +494,14 @@
         // 逻辑
         // 使用post请求
         $.post('/member/getwechatauth', {}, function (response) {
+            if (response.messages.length !== 0) {
+                $msg = response.messages[0];
+            } else {
+                $msg = response.data;
+            }
+            // 调出弹窗
             layer.open({
-                content: response.data,
+                content: $msg,
                 btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>"
             });
         }, 'json');

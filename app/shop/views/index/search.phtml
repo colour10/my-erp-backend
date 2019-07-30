@@ -48,7 +48,7 @@
                             <div class="col-md-4 col-sm-6 col-xs-12">
                                 <div class="product-item">
                                     <div class="pi-img-wrapper">
-                                        <img src="<?php echo $this->file_prex . $item['picture']; ?>"
+                                        <img src="<?php echo \Asa\Erp\Util::getCorrentImgUrl($this->file_prex . $item['picture']); ?>"
                                              class="img-responsive"
                                              alt="<?php echo $item['productname']; ?>">
                                         <div>

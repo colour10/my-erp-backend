@@ -48,9 +48,9 @@
                                     ?>
                                     <table class="table table-hover table-responsive table-bordered">
                                         <tr>
-                                            <th>公司名称</th>
-                                            <th>支付宝授权状态</th>
-                                            <th>微信授权状态</th>
+                                            <th><?php echo $this->obj->getValidateMessage('company-name'); ?></th>
+                                            <th><?php echo $this->obj->getValidateMessage('alipay-auth-status'); ?></th>
+                                            <th><?php echo $this->obj->getValidateMessage('wechat-auth-status'); ?></th>
                                         </tr>
                                         <?php
                                         foreach ($page->items as $item) {

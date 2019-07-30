@@ -1033,11 +1033,12 @@ class Util
      * @param  [type] $warehouseid [description]
      * @return [type]              [description]
      */
-    public static function sendStockChange($productid, $warehouseid) {
+    public static function sendStockChange($productid, $warehouseid)
+    {
         $config = \Phalcon\DI::getDefault()->get("config");
 
-        $filename = $config->app->log_path . sprintf("/productstock_%s.log",date('Ymd'));
-        if(file_exists($filename)) {
+        $filename = $config->app->log_path . sprintf("/productstock_%s.log", date('Ymd'));
+        if (file_exists($filename)) {
             touch($filename);
             chmod($filename, 0777);
         }
@@ -1046,11 +1047,53 @@ class Util
 
         $url = sprintf("%s/productstock/change/%d/%d", $config->productstock_service->server, $productid, $warehouseid);
         $response = file_get_contents($url);
-        if($response=='1') {
-            $logger->info($productid .','. $warehouseid);
+        if ($response == '1') {
+            $logger->info($productid . ',' . $warehouseid);
+        } else {
+            $logger->error($productid . ',' . $warehouseid);
         }
-        else {
-            $logger->error($productid .','. $warehouseid);
+    }
+
+
+    /**
+     * 判断一个远程文件是否存在
+     * @param $url
+     * @return bool
+     */
+    public static function checkRemoteFileExists($url)
+    {
+        // 逻辑
+        $curl = curl_init($url);
+        // 不取回数据
+        curl_setopt($curl, CURLOPT_NOBODY, true);
+        // 发送请求
+        $result = curl_exec($curl);
+        $found = false;
+        // 如果请求没有发送失败
+        if ($result !== false) {
+            // 再检查http响应码是否为200
+            $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            if ($statusCode == 200) {
+                $found = true;
+            }
         }
+        curl_close($curl);
+        // 返回结果
+        return $found;
+    }
+
+    /**
+     * 检测图片url是否存在，如果不存在则返回默认的图片
+     * @param string $url 一个图片的url地址
+     * @return string
+     */
+    public static function getCorrentImgUrl($url)
+    {
+        // 逻辑
+        if (!self::checkRemoteFileExists($url)) {
+            return '/imgs/none.png';
+        }
+        // 否则就返回原网址
+        return $url;
     }
 }

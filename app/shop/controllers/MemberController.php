@@ -369,7 +369,7 @@ EOT;
 
             // 判断微信是否已授权
             if (!$is_wechatpay_allow_auth) {
-                $wechat_url = '<a class="btn-custom" href="javascript:void(0);" onclick="return wechatAuth();">' . $this->getValidateMessage('click-for-wechatpay-authwechat-auth') . '</a>';
+                $wechat_url = '<a class="btn-custom" href="javascript:void(0);" onclick="return wechatAuth();">' . $this->getValidateMessage('wechat-auth-not-completed') . '</a>';
             } else {
                 $wechat_url = '<a class="btn-custom" href="javascript:void(0);" onclick="return wechatAuth();">' . $this->getValidateMessage('wechat-auth-completed') . '</a>';
             }

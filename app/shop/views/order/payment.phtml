@@ -57,7 +57,7 @@
                                                 <tr>
                                                     <td class="checkout-image">
                                                         <a href="/product/detail/<?php echo $v['product_detail_id']; ?>"><img
-                                                                    src="<?php echo $v['picture']; ?>"
+                                                                    src="<?php echo \Asa\Erp\Util::getCorrentImgUrl($this->file_prex . $v['picture']); ?>"
                                                                     alt="<?php echo $v['product_name']; ?>"></a>
                                                     </td>
                                                     <td class="checkout-description">

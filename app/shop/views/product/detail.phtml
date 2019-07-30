@@ -38,17 +38,17 @@
                     <div class="row">
                         <div class="col-md-6 col-sm-6">
                             <div class="product-main-image">
-                                <img src="<?php echo $this->file_prex . $product->picture; ?>"
+                                <img src="<?php echo \Asa\Erp\Util::getCorrentImgUrl($this->file_prex . $product->picture); ?>"
                                      alt="<?php echo $product->productname; ?>" class="img-responsive"
-                                     data-BigImgsrc="<?php echo $this->file_prex . $product->picture; ?>">
+                                     data-BigImgsrc="<?php echo \Asa\Erp\Util::getCorrentImgUrl($this->file_prex . $product->picture); ?>">
                             </div>
                             <div class="product-other-images">
                                 <a href="<?php echo $this->file_prex . $product->picture; ?>" class="fancybox-button"
                                    rel="photos-lib"><img alt="<?php echo $product->productname; ?>"
-                                                         src="<?php echo $this->file_prex . $product->picture; ?>"></a>
+                                                         src="<?php echo \Asa\Erp\Util::getCorrentImgUrl($this->file_prex . $product->picture); ?>"></a>
                                 <a href="<?php echo $this->file_prex . $product->picture2; ?>" class="fancybox-button"
                                    rel="photos-lib"><img alt="<?php echo $product->productname; ?>"
-                                                         src="<?php echo $this->file_prex . $product->picture2; ?>"></a>
+                                                         src="<?php echo \Asa\Erp\Util::getCorrentImgUrl($this->file_prex . $product->picture2); ?>"></a>
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-6">

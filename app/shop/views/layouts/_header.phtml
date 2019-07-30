@@ -72,8 +72,9 @@
                         <?php if ($this->buycar) { ?>
                             <?php foreach ($this->buycar['items'] as $k => $v) { ?>
                                 <li class="buycar-list">
-                                    <a href="/"><img src="<?php echo $this->file_prex . $v['product']['picture']; ?>"
-                                                     alt="<?php echo $v['product_name'] ?>" width="37" height="34"></a>
+                                    <a href="/"><img
+                                                src="<?php echo \Asa\Erp\Util::getCorrentImgUrl($this->file_prex . $v['product']['picture']); ?>"
+                                                alt="<?php echo $v['product_name'] ?>" width="37" height="34"></a>
                                     <span class="cart-content-count">x <?php echo $v['number']; ?></span>
                                     <strong><a href="/"><?php echo $v['product']['productname']; ?></a></strong>
                                     <em>$<?php echo sprintf('%.2f', $v['price']); ?></em>
