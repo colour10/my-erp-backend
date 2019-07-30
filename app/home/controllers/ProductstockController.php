@@ -34,7 +34,7 @@ class ProductstockController extends BaseController {
             $conditions[] = sprintf("wordcode like '%%%s%%'", addslashes($wordcode));
         }
 
-        $names = ['brandid', 'brandgroupid', 'childbrand', 'brandcolor', 'saletypeid', 'producttypeid','gender'];
+        $names = ['brandid', 'brandgroupid', 'childbrand', 'brandcolor', 'saletypeid', 'producttypeid', 'gender', 'property', 'defective_level'];
         foreach ($names as $name) {
             if(isset($_POST[$name]) && preg_match("#^\d+(,\d+)*$#", $_POST[$name])) {
                 $conditions[] = \Asa\Erp\Sql::isInclude($name, $_POST[$name]);
@@ -73,11 +73,55 @@ class ProductstockController extends BaseController {
             $conditions[] = sprintf("warehouseid=%d", $_POST["warehouseid"]);
         }
 
-        $conditions[] = "number>0";
+        if(isset($_POST['type'])) {
+            if($_POST['type']=='1') {
+                $conditions[] = "number>reserve_number";
+            }
+            elseif($_POST['type']=='2') {
+                $conditions[] = "reserve_number>0";
+            }
+            else {
+                $conditions[] = "number>0";
+            }
+        }
+        else {
+            $conditions[] = "number>0";
+        }
+
         $result = TbProductstockSearch::find(
             implode(" and ", $conditions)
         );
-        echo $this->success($result->toArray());
+
+
+        $page = $this->request->getPost("page", "int", 1);
+        $pageSize = $this->request->getPost("pageSize", "int", 20);
+
+        $paginator = new \Phalcon\Paginator\Adapter\Model(
+            [
+                "data"  => $result,
+                "limit" => $pageSize,
+                "page"  => $page,
+            ]
+        );
+
+        // Get the paginated results
+        $pageObject = $paginator->getPaginate();
+
+        $data = [];
+        foreach($pageObject->items as $row) {
+            $data[] = $row->toArray();
+        }
+
+        $pagination = [
+            //"previous"      => $pageObject->previous,
+            "current"       => $pageObject->current,
+            "totalPages"    => $pageObject->total_pages,
+            //"next"          => $pageObject->next,
+            "total"    => $pageObject->total_items,
+            "pageSize"     => $pageSize
+        ];
+
+        echo $this->success(["data"=>$data, "pagination"=>$pagination]);
     }
 
     function searchstockAction() {

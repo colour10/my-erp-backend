@@ -34,12 +34,13 @@ return [
     ],
 
     //默认语言
-    "language" => "zh-cn",
+    "language" => "cn",
 
     "languages" => [
-        "zh-cn" => "简体中文",
-        "zh-hk" => "繁体中文",
-        "en-us" => "英文",
+        "cn" => array("code"=>"cn","name"=>"简体中文","shortName" => "简"),
+        //"hk" => array("code"=>"hk","name"=>"繁体中文","shortName" => "繁"),
+        "en" => array("code"=>"en","name"=>"English","shortName" => "英"),
+        //"it" => array("code"=>"it","name"=>"意大利语","shortName" => "意")
     ],
 
     //上传文件的保存目录
