@@ -488,14 +488,29 @@
     }
 
     /**
-     * 微信支付授权
+     * 微信支付授权，给当前登录用户授权
      */
     function wechatAuth() {
         // 逻辑
+        // 使用post请求
         $.post('/member/getwechatauth', {}, function (response) {
+            layer.open({
+                content: response.data,
+                btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>"
+            });
+        }, 'json');
+    }
+
+    /**
+     * @param id
+     * 微信支付授权，给当前登录用户授权
+     */
+    function wechatAuthById(id) {
+        // 逻辑
+        $.post('/member/getwechatauthbyid/' + id, {}, function (response) {
             if (response.messages.length !== 0) {
                 // 询问框
-                wechatauthAction();
+                wechatauthbyidAction(id);
             } else {
                 // 询问框
                 layer.open({
@@ -503,7 +518,7 @@
                     btn: ["<?php echo $this->obj->getValidateMessage('yes'); ?>", "<?php echo $this->obj->getValidateMessage('no'); ?>"],
                     yes: function (index) {
                         // 询问框
-                        wechatauthAction();
+                        wechatauthbyidAction(id);
                         // 关闭弹出层
                         layer.close(index);
                     }
@@ -534,6 +549,28 @@
     }
 
     /**
+     * 给指定的用户进行微信支付授权动作
+     * @param id
+     */
+    function wechatauthbyidAction(id) {
+        layer.open({
+            content: "<?php echo $this->obj->getValidateMessage('input-submchid'); ?><br/><br/><input type='text' name='sub_mch_id' style='width:60%;height:30px;line-height:30px;padding:6px 10px;'>",
+            btn: ["<?php echo $this->obj->getValidateMessage('yes'); ?>", "<?php echo $this->obj->getValidateMessage('no'); ?>"],
+            yes: function (index) {
+                // sub_mch_id
+                let obj = $("input[name='sub_mch_id']");
+                let sub_mch_id = obj.val();
+                // ajax取消订单
+                ajax('/member/wechatauthbyid/' + id, {
+                    "sub_mch_id": sub_mch_id
+                });
+                // 关闭弹出层
+                layer.close(index);
+            }
+        });
+    }
+
+    /**
      * 支付宝授权成功提示
      */
     function alipayAuth() {
@@ -545,6 +582,73 @@
                 btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>"
             });
         }, 'json');
+    }
+
+
+    /**
+     * 支付宝扫码支付
+     * @param order_id 订单id
+     * @returns {boolean}
+     */
+    function paymentByAliapy(order_id) {
+        // 先判断远程页面返回的是json还是图片
+        $.get('/alipay/pay/' + order_id, function (response, textStatus, jqXHR) {
+            // 如果返回不是图片，则说明出错了，这个时候直接显示错误即可
+            if (jqXHR.getResponseHeader('Content-Type') !== 'image/png') {
+                // 弹出错误
+                layer.open({
+                    content: response,
+                    btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>",
+                });
+            } else {
+                // 否则就是成功了，取出返回的图片
+                // 动态添加付款二维码
+                let img = '<div id="qrcode"><p><?php echo $this->obj->getValidateMessage('scan-alipay-code-to-pay'); ?>：</p><img alt="二维码" src="/alipay/pay/' + order_id + '"></div>';
+                // 弹出一张二维码图片
+                layer.open({
+                    content: img,
+                    shadeClose: false,
+                    btn: "<?php echo $this->obj->getValidateMessage('order-completed'); ?>",
+                    yes: function () {
+                        // 如果执行了完成按钮，则刷新页面
+                        window.location.reload();
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * 微信扫码支付
+     * @param order_id 订单id
+     * @returns {boolean}
+     */
+    function paymentByWechat(order_id) {
+        // 先判断远程页面返回的是json还是图片
+        $.get('/wechatpay/pay/' + order_id, function (response, textStatus, jqXHR) {
+            // 如果返回不是图片，则说明出错了，这个时候直接显示错误即可
+            if (jqXHR.getResponseHeader('Content-Type') !== 'image/png') {
+                // 弹出错误
+                layer.open({
+                    content: response,
+                    btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>",
+                });
+            } else {
+                // 否则就是成功了，取出返回的图片
+                // 动态添加付款二维码
+                let img = '<div id="qrcode"><p><?php echo $this->obj->getValidateMessage('scan-wechat-code-to-pay'); ?>：</p><img alt="二维码" src="/wechatpay/pay/' + order_id + '"></div>';
+                // 弹出一张二维码图片
+                layer.open({
+                    content: img,
+                    shadeClose: false,
+                    btn: "<?php echo $this->obj->getValidateMessage('order-completed'); ?>",
+                    yes: function () {
+                        // 如果执行了完成按钮，则刷新页面
+                        window.location.reload();
+                    }
+                });
+            }
+        });
     }
 </script>
 <!-- END PAGE LEVEL JAVASCRIPTS -->

@@ -870,12 +870,17 @@ return [
     'alipay-auth-completed' => '支付宝已授权',
     'wechat-auth' => '微信支付授权',
     'wechat-auth-completed' => '微信支付已授权',
-    'wechat-auth-completed-with-confirm' => "微信支付已授权，当前子商户号为：%s，要重新输入吗？<br><br>温馨提示：输入不正确的子商户号将导致您无法收到买家的打款，请三思而后行！",
+    'wechat-auth-completed-with-confirm' => "微信支付已授权，当前子商户号为：%s，要重新输入吗？<br><br>温馨提示：输入不正确的子商户号将影响正常收款，请三思而后行！",
+    'wechat-auth-completed-with-self-confirm' => "微信支付已授权，当前子商户号为：%s",
     'wechat-auth-not-completed' => '微信支付未授权',
     'AUTH_UNCOMPLETED' => '未授权',
     'AUTH_COMPLETED' => '已授权',
     'pay-authorization-list' => '支付授权列表',
     'click-for-wechatpay-auth' => '点击进行微信支付授权',
+    'sub_mch_id' => '子商户号',
+    'shoppayment-config' => '支付配置',
+    'self-payauth-notice' => '温馨提示：请自行进行支付宝授权，微信支付将由管理员授权，请知悉！',
+    'payauth-notice' => '温馨提示：请及时对微信支付进行授权，支付宝是由商家自行授权，请知悉！',
 
     'template' =>
         [

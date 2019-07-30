@@ -101,21 +101,25 @@
 
                                     <div class="pull-right">
                                         <?php if ($data['isAllowPaymentOrder']) { ?>
-                                            <!-- 微信功能按钮 Start -->
-                                            <button class="btn btn-success" type="button"
-                                                    id="button-confirm"
-                                                    onclick="return paymentByWechat(<?php echo $data['common']['id']; ?>);">
-                                                <?php echo $this->obj->getValidateMessage('wechat-method'); ?>
-                                            </button>
-                                            <!-- 微信功能按钮 End -->
+                                            <?php if ($this->sub_mch_id) { ?>
+                                                <!-- 微信功能按钮 Start -->
+                                                <button class="btn btn-success" type="button"
+                                                        id="button-confirm"
+                                                        onclick="return paymentByWechat(<?php echo $data['common']['id']; ?>);">
+                                                    <?php echo $this->obj->getValidateMessage('wechat-method'); ?>
+                                                </button>
+                                                <!-- 微信功能按钮 End -->
+                                            <?php } ?>
 
-                                            <!-- 支付宝功能按钮 Start -->
-                                            <button class="btn btn-info" type="button"
-                                                    id="button-confirm"
-                                                    onclick="return paymentByAliapy(<?php echo $data['common']['id']; ?>);">
-                                                <?php echo $this->obj->getValidateMessage('alipay-method'); ?>
-                                            </button>
-                                            <!-- 支付宝功能按钮 End -->
+                                            <?php if ($this->app_auth_token) { ?>
+                                                <!-- 支付宝功能按钮 Start -->
+                                                <button class="btn btn-info" type="button"
+                                                        id="button-confirm"
+                                                        onclick="return paymentByAliapy(<?php echo $data['common']['id']; ?>);">
+                                                    <?php echo $this->obj->getValidateMessage('alipay-method'); ?>
+                                                </button>
+                                                <!-- 支付宝功能按钮 End -->
+                                            <?php } ?>
                                         <?php } else { ?>
                                             <p><?php echo $data['order_status']['pay_status']; ?></p>
                                         <?php } ?>
@@ -138,77 +142,7 @@
 </div>
 
 <?php echo $this->obj->view->getPartial('layouts/_footer'); ?>
-<!--引入托管 qrcode-->
-<script src="/shop/assets/static/js/jquery.qrcode.min.js"></script>
 
-<script>
-    /**
-     * 支付宝扫码支付
-     * @param order_id 订单id
-     * @returns {boolean}
-     */
-    function paymentByAliapy(order_id) {
-        // 先判断远程页面返回的是json还是图片
-        $.get('/alipay/pay/' + order_id, function (response, textStatus, jqXHR) {
-            // 如果返回不是图片，则说明出错了，这个时候直接显示错误即可
-            if (jqXHR.getResponseHeader('Content-Type') !== 'image/png') {
-                // 弹出错误
-                layer.open({
-                    content: response,
-                    btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>",
-                });
-            } else {
-                // 否则就是成功了，取出返回的图片
-                // 动态添加付款二维码
-                let img = '<div id="qrcode"><p><?php echo $this->obj->getValidateMessage('scan-alipay-code-to-pay'); ?>：</p><img alt="二维码" src="/alipay/pay/' + order_id + '"></div>';
-                // 弹出一张二维码图片
-                layer.open({
-                    content: img,
-                    shadeClose: false,
-                    btn: "<?php echo $this->obj->getValidateMessage('order-completed'); ?>",
-                    yes: function () {
-                        // 如果执行了完成按钮，则刷新页面
-                        window.location.reload();
-                    }
-                });
-            }
-        });
-    }
-
-    /**
-     * 微信扫码支付
-     * @param order_id 订单id
-     * @returns {boolean}
-     */
-    function paymentByWechat(order_id) {
-        // 先判断远程页面返回的是json还是图片
-        $.get('/wechatpay/pay/' + order_id, function (response, textStatus, jqXHR) {
-            // 如果返回不是图片，则说明出错了，这个时候直接显示错误即可
-            if (jqXHR.getResponseHeader('Content-Type') !== 'image/png') {
-                // 弹出错误
-                layer.open({
-                    content: response,
-                    btn: "<?php echo $this->obj->getValidateMessage('iknow'); ?>",
-                });
-            } else {
-                // 否则就是成功了，取出返回的图片
-                // 动态添加付款二维码
-                let img = '<div id="qrcode"><p><?php echo $this->obj->getValidateMessage('scan-wechat-code-to-pay'); ?>：</p><img alt="二维码" src="/wechatpay/pay/' + order_id + '"></div>';
-                // 弹出一张二维码图片
-                layer.open({
-                    content: img,
-                    shadeClose: false,
-                    btn: "<?php echo $this->obj->getValidateMessage('order-completed'); ?>",
-                    yes: function () {
-                        // 如果执行了完成按钮，则刷新页面
-                        window.location.reload();
-                    }
-                });
-            }
-        });
-    }
-</script>
-<!-- END PAGE LEVEL JAVASCRIPTS -->
 </body>
 <!-- END BODY -->
 </html>
