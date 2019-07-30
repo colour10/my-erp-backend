@@ -347,7 +347,7 @@ EOT;
         }
 
         // 判断是否授权了
-        // 但是如果是超级管理员就不授权，仅仅是管理
+        // 如果是普通管理员，我们规定允许他进行支付宝授权，但是微信授权不行
         if (!$this->issuperadmin) {
             $payment = TbShoppayment::findFirst("companyid=" . $member['companyid']);
             // 如果不存在，则写入一条记录
@@ -377,7 +377,8 @@ EOT;
             // 发送给模板
             $url = ['alipay_url' => $alipay_url, 'wechat_url' => $wechat_url];
             $h1 = $this->getValidateMessage('pay-authorization');
-            $this->view->setVars(compact('url', 'h1'));
+            $notice = $this->getValidateMessage('self-payauth-notice');
+            $this->view->setVars(compact('url', 'h1', 'notice'));
         } else {
             // 如果是超级管理员
             // 分页
@@ -387,17 +388,18 @@ EOT;
             $return = $datas->toArray();
             foreach ($datas as $k => $data) {
                 // 支付宝是否授权
-                if (strpos(json_encode($data->getConfig()), 'app_auth_token') !== false) {
-                    $is_alipay_auth = '<a class="btn-custom disabled" href="javascript:void(0);">' . $this->getValidateMessage('AUTH_COMPLETED') . '</a>';
+                $config = json_encode($data->getConfig());
+                if (strpos($config, 'app_auth_token') !== false) {
+                    $is_alipay_auth = $this->getValidateMessage('AUTH_COMPLETED');
                 } else {
-                    $is_alipay_auth = '<a class="btn-custom disabled" href="javascript:void(0);">' . $this->getValidateMessage('AUTH_UNCOMPLETED') . '</a>';
+                    $is_alipay_auth = $this->getValidateMessage('AUTH_UNCOMPLETED');
                 }
 
                 // 微信是否授权
-                if (strpos(json_encode($data->getConfig()), 'sub_mch_id') !== false) {
-                    $is_wechat_auth = '<a class="btn-custom disabled" href="javascript:void(0);">' . $this->getValidateMessage('AUTH_COMPLETED') . '</a>';
+                if (strpos($config, 'sub_mch_id') !== false) {
+                    $is_wechat_auth = '<a class="btn-custom disabled" href="javascript:void(0);" onclick="return wechatAuthById(' . $data->getId() . ')">' . $this->getValidateMessage('AUTH_COMPLETED') . '</a>　' . $this->getValidateMessage('sub_mch_id') . ': ' . $data->getConfig()['wechatpay']['sub_mch_id'];
                 } else {
-                    $is_wechat_auth = '<a class="btn-custom" href="javascript:void(0);">' . $this->getValidateMessage('click-for-wechatpay-auth') . '</a>';
+                    $is_wechat_auth = '<a class="btn-custom" href="javascript:void(0);" onclick="return wechatAuthById(' . $data->getId() . ')">' . $this->getValidateMessage('click-for-wechatpay-auth') . '</a>';
                 }
 
                 // 变量赋值
@@ -422,13 +424,14 @@ EOT;
             $this->view->setVars([
                 'page' => $page,
                 'h1' => $this->getValidateMessage('pay-authorization-list'),
+                'notice' => $this->getValidateMessage('payauth-notice'),
             ]);
         }
     }
 
 
     /**
-     * 微信支付授权-写入逻辑
+     * 当前登录用户的微信支付授权-写入逻辑
      * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|string|void
      */
     public function wechatauthAction()
@@ -452,7 +455,36 @@ EOT;
 
 
     /**
-     * 获取微信支付授权
+     * 为指定用户进行微信支付授权-写入逻辑
+     * @param $id
+     * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|string|void
+     */
+    public function wechatauthbyidAction($id)
+    {
+        // 逻辑
+        if ($this->member && $this->request->isPost() && !empty($this->member['membertype'])) {
+            // 配置
+            // 配置
+            $payment = TbShoppayment::findFirst("id=" . $id);
+            if (!$payment) {
+                return $this->error($this->getValidateMessage('shoppayment-config', 'template', 'notexist'));
+            }
+            // 支付配置
+            $config = $payment->getConfig();
+            // 把原来的wechat配置项中的sub_mch_id写入即可，其他项保持不变
+            $config['wechatpay']['sub_mch_id'] = $this->request->get('sub_mch_id');
+            $payment->setConfig($config);
+            if (!$payment->save()) {
+                return $this->error($payment);
+            }
+            // 最终返回成功
+            return $this->success();
+        }
+    }
+
+
+    /**
+     * 获取当前登录用户的微信支付授权
      * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|string|void
      */
     public function getwechatauthAction()
@@ -465,8 +497,40 @@ EOT;
                 return $this->error($this->getValidateMessage('wechat-auth-not-completed'));
             }
             // 下面说明已经授权成功了
-            $msg = sprintf($this->getValidateMessage('wechat-auth-completed-with-confirm'), $this->sub_mch_id);
+            $msg = sprintf($this->getValidateMessage('wechat-auth-completed-with-self-confirm'), $this->sub_mch_id);
             return $this->success($msg);
+        }
+    }
+
+    /**
+     * 获取指定用户的微信支付授权
+     * @param $id
+     * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|string|void
+     */
+    public function getwechatauthbyidAction($id)
+    {
+        // 逻辑
+        if ($this->member && $this->request->isPost() && !empty($this->member['membertype'])) {
+            // 配置
+            $payment = TbShoppayment::findFirst("id=" . $id);
+            if (!$payment) {
+                return $this->error($this->getValidateMessage('shoppayment-config', 'template', 'notexist'));
+            }
+            // 支付配置
+            $config = $payment->getConfig();
+            // 如果授权成功，那么就重新提示
+            if (
+                array_key_exists('wechatpay', $config) &&
+                array_key_exists('sub_mch_id', $config['wechatpay'])
+            ) {
+                // 下面说明已经授权成功了
+                $msg = sprintf($this->getValidateMessage('wechat-auth-completed-with-confirm'), $config['wechatpay']['sub_mch_id']);
+                return $this->success($msg);
+            } else {
+                // 如果没有授权
+                $msg = $this->getValidateMessage('input-submchid');
+                return $this->error($msg);
+            }
         }
     }
 
