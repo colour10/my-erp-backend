@@ -74,5 +74,10 @@ class SimpleTest extends \UnitTestCase
         print 'foo';
     }
 
+    public function testIndex()
+    {
+        // 逻辑
+    }
+
 }
 
