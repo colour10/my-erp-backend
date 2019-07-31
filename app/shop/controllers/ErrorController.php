@@ -13,7 +13,6 @@ class ErrorController extends Controller
 {
     /**
      * 自定义错误页面
-     * @return string
      */
     public function errorAction()
     {

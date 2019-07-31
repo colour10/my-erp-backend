@@ -34,7 +34,7 @@ class LoginController extends AdminController
 
     /**
      * 会员登录逻辑
-     * @return false|string
+     * @return false|string|void
      */
     public function loginAction()
     {

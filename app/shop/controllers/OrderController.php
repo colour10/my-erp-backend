@@ -37,7 +37,7 @@ class OrderController extends AdminController
     /**
      * 订单详情首页
      * @param int $id
-     * @return false|Response|\Phalcon\Http\ResponseInterface|string
+     * @return false|Response|\Phalcon\Http\ResponseInterface|string|void
      */
     public function detailAction(int $id)
     {
@@ -105,7 +105,7 @@ class OrderController extends AdminController
     /**
      * 订单结算页面
      * @param int $id 订单id
-     * @return Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View
+     * @return Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|void
      */
     public function paymentAction(int $id)
     {
@@ -145,7 +145,7 @@ class OrderController extends AdminController
 
     /**
      * 把购物车添加到订单
-     * @return false|string
+     * @return false|string|void
      */
     public
     function addOrderAction()
@@ -414,6 +414,7 @@ class OrderController extends AdminController
 
     /**
      * 我的订单列表
+     * @return Response|\Phalcon\Http\ResponseInterface|void
      */
     public
     function listAction()
@@ -526,7 +527,7 @@ class OrderController extends AdminController
     /**
      * 用户主动取消订单
      * @param int $id
-     * @return false|Response|\Phalcon\Http\ResponseInterface|string
+     * @return false|Response|\Phalcon\Http\ResponseInterface|string|void
      */
     public
     function cancleAction(int $id)
@@ -607,7 +608,7 @@ class OrderController extends AdminController
     /**
      * 订单申请退款
      * @param int $id
-     * @return false|Response|\Phalcon\Http\ResponseInterface|string
+     * @return false|Response|\Phalcon\Http\ResponseInterface|string|void
      */
     public
     function applyrefundAction(int $id)
@@ -646,7 +647,7 @@ class OrderController extends AdminController
 
     /**
      * 更改未支付订单的截止时间
-     * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|string
+     * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|string|void
      */
     public
     function updatetimeAction()
@@ -775,7 +776,7 @@ class OrderController extends AdminController
     /**
      * 同意退款
      * @param int $id 订单编号
-     * @return false|Response|\Phalcon\Http\ResponseInterface|string
+     * @return false|Response|\Phalcon\Http\ResponseInterface|string|void
      */
     public function refundagreeAction(int $id)
     {
@@ -835,7 +836,7 @@ class OrderController extends AdminController
     /**
      * 不同意退款
      * @param int $id 订单编号
-     * @return false|Response|\Phalcon\Http\ResponseInterface|string
+     * @return false|Response|\Phalcon\Http\ResponseInterface|string|void
      */
     public function refunddisagreeAction(int $id)
     {
@@ -870,7 +871,7 @@ class OrderController extends AdminController
     /**
      * 订单发货，必须是管理员
      * @param int $id 订单编号
-     * @return false|Response|\Phalcon\Http\ResponseInterface|string
+     * @return false|Response|\Phalcon\Http\ResponseInterface|string|void
      */
     public function shipAction(int $id)
     {
@@ -917,7 +918,7 @@ class OrderController extends AdminController
     /**
      * 确认收货，这个必须是本人才能操作，不需要管理员权限
      * @param int $id 订单编号
-     * @return false|Response|\Phalcon\Http\ResponseInterface|string
+     * @return false|Response|\Phalcon\Http\ResponseInterface|string|void
      */
     public function receiveAction(int $id)
     {

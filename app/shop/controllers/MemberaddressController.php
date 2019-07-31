@@ -19,8 +19,10 @@ class MemberaddressController extends AdminController
         $this->setModelName('Asa\\Erp\\TbMemberAddress');
     }
 
+
     /**
      * 列表页，必须登录才能访问
+     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|void
      */
     public function indexAction()
     {
@@ -37,7 +39,7 @@ class MemberaddressController extends AdminController
 
     /**
      * 地址添加
-     * @return false|string
+     * @return false|string|void
      */
     public function addAction()
     {
@@ -83,7 +85,7 @@ class MemberaddressController extends AdminController
 
     /**
      * 地址编辑
-     * @return false|string
+     * @return false|string|void
      */
     public function editAction()
     {
@@ -143,7 +145,7 @@ class MemberaddressController extends AdminController
 
     /**
      * 地址删除
-     * @return false|string
+     * @return false|string|void
      */
     public function delAction()
     {
@@ -166,7 +168,7 @@ class MemberaddressController extends AdminController
 
     /**
      * 设置默认地址
-     * @return false|string
+     * @return false|string|void
      */
     public function setdefaultAction()
     {

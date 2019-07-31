@@ -26,8 +26,10 @@ class BrandController extends AdminController
         $this->setModelName('Asa\\Erp\\TbBrand');
     }
 
+
     /**
      * 获取当前品牌下面所有的商品列表，获取商品名称，明天继续做
+     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|void
      */
     public function detailAction()
     {
