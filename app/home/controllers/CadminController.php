@@ -8,7 +8,7 @@ use Phalcon\Db\Column;
 /**
  * 各个公司私有数据的表的基类
  */
-class CadminController extends AdminController { 
+class CadminController extends AdminController {
     public function initialize() {
 	    parent::initialize();
     }
@@ -18,7 +18,7 @@ class CadminController extends AdminController {
     }
 
     function before_edit($row) {
-        if(isset($_POST['companyid']) || $row->companyid!=$this->companyid) {
+        if($row->companyid!=$this->companyid) {
             throw new \Exception("/1001/数据非法/");
         }
     }
@@ -29,7 +29,7 @@ class CadminController extends AdminController {
         }
     }
 
-    function before_page() {        
+    function before_page() {
         $this->injectParam("companyid", $this->companyid);
     }
 /*
@@ -39,11 +39,11 @@ class CadminController extends AdminController {
 	        sprintf("id=%d and companyid=%d", $_POST["id"], $this->companyid)
 	    ));
 
-	    if($row!=false) {   
-	        echo $this->reportJson(["data" => $row->toArray()]);   
+	    if($row!=false) {
+	        echo $this->reportJson(["data" => $row->toArray()]);
 	    }
 	    else {
-	        echo '{}';   
+	        echo '{}';
 	    }
 	}*/
 }

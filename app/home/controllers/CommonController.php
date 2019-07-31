@@ -58,6 +58,13 @@ class CommonController extends BaseController
         if(isset($auth['company']) && isset($auth['company']->currencyid)) {
             $setting["_currencyid"] = $auth['company']->currencyid;
         }
+
+        $user = \Asa\Erp\TbUser::findFirstById($this->currentUser);
+        if($user!=false) {
+            $setting['saleportid'] = $user->saleportid;
+            $setting['warehouseid'] = $user->warehouseid;
+            $setting['priceid'] = $user->priceid;
+        }
         return $this->success($setting);
     }
 

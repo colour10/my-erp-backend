@@ -6,6 +6,10 @@ use Phalcon\Mvc\View;
 use Asa\Erp\TbUser;
 use Asa\Erp\TbSaleport;
 
+/**
+ *
+ * ErrorCode 1114
+ */
 class UserController extends CadminController {
     public function initialize() {
         parent::initialize();
@@ -141,6 +145,24 @@ class UserController extends CadminController {
         }
         else {
             return $this->success();
-        }        
+        }
+    }
+
+    /**
+     * 个人设置自己的默认端口号、仓库和价格
+     * @return [type] [description]
+     */
+    function settingAction() {
+        $user = \Asa\Erp\TbUser::findFirstById($this->currentUser);
+        if($user!=false) {
+            $user->saleportid = $_POST['saleportid'];
+            $user->priceid = $_POST['priceid'];
+            $user->warehouseid = $_POST['warehouseid'];
+            if($user->update()) {
+                return $this->success();
+            }
+        }
+
+        throw new \Exception("/11140101/个人信息设置失败。/");
     }
 }
