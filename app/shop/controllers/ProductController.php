@@ -100,18 +100,16 @@ class ProductController extends AdminController
 
     /**
      * 获取当前productid的价格
-     * @param $productid
+     * @param int $productid
      * @return string
      */
-    public function getRealPrice($productid)
+    public function getRealPrice(int $productid)
     {
         // 逻辑
         if (!$productModel = TbProduct::findFirstById($productid)) {
-            $realprice = '0';
-        } else {
-            $realprice = $productModel->wordprice;
+            return '0';
         }
-        // 返回价格
-        return $realprice;
+        // 返回实际价格
+        return $productModel->wordprice;
     }
 }

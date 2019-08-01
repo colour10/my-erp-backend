@@ -13,10 +13,10 @@ class PayController extends AdminController
 {
     /**
      * 聚合付款，二维码多合一
-     * @param $order_id
+     * @param int $order_id
      * @return string|void
      */
-    public function payAction($order_id)
+    public function payAction(int $order_id)
     {
         // 逻辑
         $header = $this->request->getHeader('User-Agent');
@@ -35,10 +35,10 @@ class PayController extends AdminController
 
     /**
      * 聚合付款，生成二维码
-     * @param $order_id
+     * @param int $order_id
      * @return \Phalcon\Http\Response
      */
-    public function createqrcodeAction($order_id)
+    public function createqrcodeAction(int $order_id)
     {
         // 逻辑
         return Util::createQrcode("http://www.myshop.com/pay/pay/" . $order_id);
