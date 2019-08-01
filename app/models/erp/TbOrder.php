@@ -110,6 +110,11 @@ class TbOrder extends BaseModel
      * @return [type] [description]
      */
     function checkToFinish() {
+        $details = $this->orderdetails;
+        if(count($details)==0) {
+            return ;
+        }
+
         foreach ($this->orderdetails as $detail) {
             if($detail->number>$detail->brand_number) {
                 return false;
