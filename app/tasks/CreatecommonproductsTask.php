@@ -13,7 +13,7 @@ class CreatecommonproductsTask extends \Phalcon\CLI\Task
 {
     /**
      * 生成逻辑
-     * @return false|string
+     * @return false|string|void
      * @throws ReflectionException
      */
     public function mainAction()
