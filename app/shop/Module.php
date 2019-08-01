@@ -8,7 +8,6 @@ use Asa\Erp\TbBrandgroup;
 use Asa\Erp\TbCompany;
 use Asa\Erp\TbCurrency;
 use Asa\Erp\TbProductSearch;
-use Asa\Erp\TbShoporderCommon;
 use Asa\Erp\TbShoppayment;
 use Asa\Erp\Util;
 use Multiple\Shop\Controllers\AdminController;
@@ -44,17 +43,18 @@ class Module implements ModuleDefinitionInterface
         $loader->register();
     }
 
+
     /**
      * 注册自定义服务
+     * @param DiInterface $di
      */
     public function registerServices(DiInterface $di)
     {
-        // 常用的一些参数
+        // 常用的一些参数，下面这些变量将会被用到多次，所以放在上面
         $config = $di->get("config");
         $config_array = $config->toArray();
         $session = $di->get('session');
         $language = $session->get('language') ?: $config->language;
-        $admin = new AdminController();
 
         // Registering a dispatcher
         $di->set(
@@ -154,8 +154,7 @@ class Module implements ModuleDefinitionInterface
 
         // 图片域名
         $di->setShared('file_prex', function () use ($config) {
-            $file_prex = $config['file_prex'];
-            return $file_prex;
+            return $config['file_prex'];
         });
 
         // 为了使用共享model数据，需要注册language
@@ -164,64 +163,55 @@ class Module implements ModuleDefinitionInterface
         });
 
         // language转换成数组
-        $di->setShared('languageArr', function () use ($language) {
-            $language = new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
-            return $language->toArray();
+        $di->setShared('languageArr', function () use ($language, $di) {
+            return $di->get('language')->toArray();
         });
 
         // 取出前5个主分类
         $brandGroup = new BrandgroupController();
         $di->setShared('frontcates', function () use ($brandGroup) {
-            $cates = $brandGroup->frontcatesAction();
-            return $cates;
+            return $brandGroup->frontcatesAction();
         });
 
         // 取出从第6条开始剩下的主分类
         $di->setShared('leftcates', function () use ($brandGroup) {
-            $cates = $brandGroup->leftcatesAction();
-            return $cates;
+            return $brandGroup->leftcatesAction();
         });
 
         // 取出所有的主分类
         $di->setShared('allfirstcates', function () use ($brandGroup) {
-            $cates = $brandGroup->allfirstcatesAction();
-            return $cates;
+            return $brandGroup->allfirstcatesAction();
         });
 
         // 取出所有的主分类以及二级分类
         $di->setShared('allcates', function () use ($brandGroup) {
-            $allcates = $brandGroup->allcatesAction();
-            return $allcates;
+            return $brandGroup->allcatesAction();
         });
 
         // 获取购物车
         $buycar = new BuycarController();
         $di->setShared('buycar', function () use ($buycar) {
-            $cates = $buycar->getListsAction();
-            return $cates;
+            return $buycar->getListsAction();
         });
 
         // 获取当前域名及所属公司的模型
         $tbcompany = new CompanyController();
         $di->setShared('host', function () use ($tbcompany) {
-            $host = $tbcompany->gethost();
-            return $host;
+            return $tbcompany->gethost();
         });
 
         // 获取所有公司列表
         $di->setShared('allcompany', function () {
-            $datas = TbCompany::find()->toArray();
-            return $datas;
+            return TbCompany::find()->toArray();
         });
 
         // 为了使用共享model数据，需要注册currentCompany
         $di->setShared('currentCompany', function () use ($session) {
-            if ($session->has("member")) {
-                $member = $session->get("member");
-                return $member["companyid"];
-            } else {
-                return "";
+            // 如果未登录，则返回空
+            if (!$session->has("member")) {
+                return '';
             }
+            return $session->get('member')['companyid'];
         });
 
         // 默认货币，以后会从配置文件导入，这个先随便写个，有变动在修改
@@ -236,12 +226,11 @@ class Module implements ModuleDefinitionInterface
 
         // 登录用户信息
         $di->setShared('member', function () use ($di, $session) {
-            if ($session->has("member")) {
-                $member = $session->get("member");
-                return $member;
-            } else {
+            // 如果未登录，则返回空
+            if (!$session->has("member")) {
                 return [];
             }
+            return $session->get('member');
         });
 
         // 访问静态列表数据的资源
@@ -252,8 +241,8 @@ class Module implements ModuleDefinitionInterface
         });
 
         // 主控制器模型
-        $di->setShared('obj', function () use ($admin) {
-            return $admin;
+        $di->setShared('obj', function () {
+            return new AdminController();
         });
 
         // 判断是否为管理员，这个是总管理员
@@ -299,17 +288,15 @@ class Module implements ModuleDefinitionInterface
 
         // 取出欧元
         $di->setShared('eur', function () {
-            $currency = TbCurrency::findFirst("name_cn='欧元'");
-            if ($currency) {
-                return $currency->id;
-            } else {
+            if (!$currency = TbCurrency::findFirst("name_cn='欧元'")) {
                 return 0;
             }
+            return $currency->id;
         });
 
         // 取出女性品牌，gender=2
-        $di->setShared('girlbrands', function () use ($admin) {
-            $name = $admin->getlangfield('name');
+        $di->setShared('girlbrands', function () use ($di) {
+            $name = $di->get('obj')->getlangfield('name');
             $products = TbProductSearch::find([
                 'conditions' => 'gender = 2',
                 'columns' => "brandid",
@@ -328,8 +315,8 @@ class Module implements ModuleDefinitionInterface
         });
 
         // 取出女性品类，gender=2
-        $di->setShared('girlbrandgroups', function () use ($admin) {
-            $name = $admin->getlangfield('name');
+        $di->setShared('girlbrandgroups', function () use ($di) {
+            $name = $di->get('obj')->getlangfield('name');
             $products = TbProductSearch::find([
                 'conditions' => 'gender = 2',
                 'columns' => "brandgroupid",
@@ -348,8 +335,8 @@ class Module implements ModuleDefinitionInterface
         });
 
         // 取出男性品牌，gender=1
-        $di->setShared('boybrands', function () use ($admin) {
-            $name = $admin->getlangfield('name');
+        $di->setShared('boybrands', function () use ($di) {
+            $name = $di->get('obj')->getlangfield('name');
             $products = TbProductSearch::find([
                 'conditions' => 'gender = 1',
                 'columns' => "brandid",
@@ -368,8 +355,8 @@ class Module implements ModuleDefinitionInterface
         });
 
         // 取出男性品类，gender=1
-        $di->setShared('boybrandgroups', function () use ($admin) {
-            $name = $admin->getlangfield('name');
+        $di->setShared('boybrandgroups', function () use ($di) {
+            $name = $di->get('obj')->getlangfield('name');
             $products = TbProductSearch::find([
                 'conditions' => 'gender = 1',
                 'columns' => "brandgroupid",
@@ -388,8 +375,8 @@ class Module implements ModuleDefinitionInterface
         });
 
         // 取出儿童品牌，gender=6
-        $di->setShared('childbrands', function () use ($admin) {
-            $name = $admin->getlangfield('name');
+        $di->setShared('childbrands', function () use ($di) {
+            $name = $di->get('obj')->getlangfield('name');
             $products = TbProductSearch::find([
                 'conditions' => 'gender = 6',
                 'columns' => "brandid",
@@ -408,8 +395,8 @@ class Module implements ModuleDefinitionInterface
         });
 
         // 取出儿童品类，gender=6
-        $di->setShared('childbrandgroups', function () use ($admin) {
-            $name = $admin->getlangfield('name');
+        $di->setShared('childbrandgroups', function () use ($di) {
+            $name = $di->get('obj')->getlangfield('name');
             $products = TbProductSearch::find([
                 'conditions' => 'gender = 6',
                 'columns' => "brandgroupid",
@@ -493,13 +480,13 @@ class Module implements ModuleDefinitionInterface
             }
             // 判断是否存在
             if (
-                array_key_exists('wechatpay', $config) &&
-                array_key_exists('sub_mch_id', $config['wechatpay'])
+                !array_key_exists('wechatpay', $config) ||
+                !array_key_exists('sub_mch_id', $config['wechatpay'])
             ) {
-                return $config['wechatpay']['sub_mch_id'];
-            } else {
                 return 0;
             }
+            // 返回sub_mch_id
+            return $config['wechatpay']['sub_mch_id'];
         });
 
 
