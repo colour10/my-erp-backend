@@ -29,6 +29,7 @@ class BrandgroupController extends AdminController
 
     /**
      * 取出主域名
+     * @return mixed|void
      */
     public function getmainhostAction()
     {
@@ -40,6 +41,7 @@ class BrandgroupController extends AdminController
 
     /**
      * 取出图片域名
+     * @return mixed|void
      */
     public function getfileprexAction()
     {
@@ -98,65 +100,34 @@ class BrandgroupController extends AdminController
         $company = TbCompany::findFirstById($member['companyid']);
         // 获取销售端口
         $saleport = $company->shopSaleport;
-        if ($saleport) {
-            $array = Util::recordListColumn($saleport->saleportWarehouses, 'warehouseid');
-        } else {
-            $array = [];
-        }
+        $array = $saleport ? Util::recordListColumn($saleport->saleportWarehouses, 'warehouseid') : [];
 
         // 需要拿到每个商品下面所有的尺码，库存数
         $products = $productsModel->toArray();
         foreach ($productsModel as $k => $item) {
-            // 国际码
+            // 产品模型判断
             $productModel = TbProduct::findFirstById($item->productid);
-            if ($productModel) {
-                $wordcode = $productModel->wordcode;
-                // 价格
-                $realprice = $productModel->wordprice;
-            } else {
-                $wordcode = '';
-                $realprice = 0;
-            }
-            if ($item->sizetopid) {
-                if ($array) {
-                    $sizecontents = TbProductstock::sum([
-                        sprintf("warehouseid in (%s) and defective_level=0 and productid = %s", implode(',', $array), $item->productid),
-                        "group" => 'productid, sizecontentid',
-                        "column" => 'number',
-                    ]);
-                    if ($sizecontents) {
-                        $sizecontents = $sizecontents->toArray();
-                    }
-                } else {
-                    $sizecontents = [];
-                }
-            } else {
-                $sizecontents = [];
+            // 国际码
+            $products[$k]['wordcode'] = $productModel->wordcode ?: '';
+            // 实际价格
+            $products[$k]['realprice'] = $productModel->wordprice ?: 0;
+            // 尺码
+            $sizecontents = ($item->sizetopid && $array) ? TbProductstock::sum([
+                sprintf("warehouseid in (%s) and defective_level=0 and productid = %s", implode(',', $array), $item->productid),
+                "group" => 'productid, sizecontentid',
+                "column" => 'number',
+            ])->toArray() : [];
+            // 尺码加入名称，还有最大尺码记录数
+            foreach ($sizecontents as $key => $value) {
+                $sizecontentname = ($TbSizecontentModel = TbSizecontent::findFirstById($value['sizecontentid'])) ? $TbSizecontentModel->name : '';
+                $sizecontents[$key]['sizecontentname'] = $sizecontentname;
             }
             // 尺码组赋值
             $products[$k]['sizecontents'] = $sizecontents;
-            // 国际码赋值
-            $products[$k]['wordcode'] = $wordcode;
-            // 价格
-            $products[$k]['realprice'] = $realprice;
             // 商品名称
             $products[$k]['productname'] = $item->getProductname();
-        }
-
-        // 重新遍历，把尺码名称填写进去
-        // 每个分页当中把当前最大尺码记录数加入进去
-        foreach ($products as $k => $product) {
-            // 把sizecontents的统计数量加入进去
-            $products[$k]['sum_sizecontents'] = count($product['sizecontents']);
-            foreach ($product['sizecontents'] as $key => $item) {
-                $TbSizecontentModel = TbSizecontent::findFirstById($item['sizecontentid']);
-                if ($TbSizecontentModel) {
-                    $sizecontentname = $TbSizecontentModel->name;
-                } else {
-                    $sizecontentname = '';
-                }
-                $products[$k]['sizecontents'][$key]['sizecontentname'] = $sizecontentname;
-            }
+            // 尺码组统计数量
+            $products[$k]['sum_sizecontents'] = count($sizecontents);
         }
 
         // 使用冒泡排序算法得出当前最大sum_sizecontents值

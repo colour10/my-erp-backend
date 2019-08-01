@@ -55,12 +55,13 @@ class CompanyController extends AdminController
             }
         }
 
-        // 判断是否是超级用户
-        if ($this->currentCompany == $companyid) {
-            return true;
-        } else {
+        // 判断该用户是否是超级公司的用户
+        if ($this->currentCompany != $companyid) {
             return false;
         }
+
+        // 否则返回真
+        return true;
     }
 
     /**
@@ -97,14 +98,5 @@ class CompanyController extends AdminController
         // 赋值
         return $companyModel->id;
     }
-
-    /**
-     *
-     */
-    public function iscu()
-    {
-        // 逻辑
-    }
-
 
 }

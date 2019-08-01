@@ -24,8 +24,10 @@ class ProductController extends AdminController
         $this->setModelName('Asa\\Erp\\TbProductSearch');
     }
 
+
     /**
      * 商品详情页
+     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|void
      */
     public function detailAction()
     {
