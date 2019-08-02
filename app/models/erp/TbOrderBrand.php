@@ -42,7 +42,7 @@ class TbOrderBrand extends BaseModel
         ]);
     }
 
-    function getOrderList() {
+    /*function getOrderList() {
         $orderids = [];
         foreach ($this->orderbranddetail as $k => $orderdetail) {
             $orderids[] = $orderdetail->orderid;
@@ -56,5 +56,45 @@ class TbOrderBrand extends BaseModel
         else {
             return [];
         }
+    }*/
+
+    function getOrderList() {
+        $sql = sprintf("SELECT distinct orderid FROM tb_order_brand_detail WHERE orderbrandid=%d", $this->id);
+        $rows = $this->getDI()->get('db')->fetchAll($sql);
+
+        $result = [];
+
+        if(count($rows)>0) {
+            $array = [];
+            foreach ($rows as $row) {
+                $array[] = $row['orderid'];
+            }
+
+            $result = TbOrder::find(
+                sprintf("id in (%s)", implode(',', $array))
+            )->toArray();
+        }
+
+        return $result;
+    }
+
+    function getShippingList() {
+        $sql = sprintf("SELECT distinct shippingid FROM tb_shipping_detail WHERE orderbrandid=%d", $this->id);
+        $rows = $this->getDI()->get('db')->fetchAll($sql);
+
+        $result = [];
+
+        if(count($rows)>0) {
+            $array = [];
+            foreach ($rows as $row) {
+                $array[] = $row['shippingid'];
+            }
+
+            $result = TbShipping::find(
+                sprintf("id in (%s)", implode(',', $array))
+            )->toArray();
+        }
+
+        return $result;
     }
 }

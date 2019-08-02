@@ -361,6 +361,10 @@ class OrderController extends BaseController
             $conditions[] = sprintf("(brandids='%d' or brandids like '%%,%s%%' or brandids like '%%%s,%%')", $_POST['brandid'], $_POST['brandid'], $_POST['brandid']);
         }
 
+        if(isset($_POST['orderid']) && $_POST['orderid']>0) {
+            $conditions[] = sprintf("id = %d", $_POST['orderid']);
+        }
+
         $conditions[] = "status=1";
 
         $orders = TbOrder::find(
@@ -384,5 +388,15 @@ class OrderController extends BaseController
             $details = [];
         }
         return $this->success(["orders"=>$orders->toArray(), "details"=>$details]);
+    }
+
+    function orderbrandlistAction() {
+        $order = TbOrder::findFirstById($_POST['id']);
+        if($order!=false && $order->companyid==$this->companyid) {
+            return $this->success($order->getOrderbrandList());
+        }
+        else {
+            throw new \Exception("/11110201/订单不存在/");
+        }
     }
 }

@@ -137,4 +137,24 @@ class TbShipping extends BaseModel
 
         return $result;
     }
+
+    function getOrderbrandList() {
+        $sql = sprintf("SELECT distinct orderbrandid FROM tb_shipping_detail WHERE shippingid=%d", $this->id);
+        $rows = $this->getDI()->get('db')->fetchAll($sql);
+
+        $result = [];
+
+        if(count($rows)>0) {
+            $array = [];
+            foreach ($rows as $row) {
+                $array[] = $row['orderbrandid'];
+            }
+
+            $result = TbOrderBrand::find(
+                sprintf("id in (%s)", implode(',', $array))
+            )->toArray();
+        }
+
+        return $result;
+    }
 }

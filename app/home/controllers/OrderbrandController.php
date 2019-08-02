@@ -625,4 +625,36 @@ class OrderbrandController extends AdminController {
             throw new \Exception("/11020404/品牌订单不存在/");
         }
     }
+
+    /*public function detailAction()
+    {
+        // 根据orderid查询出当前订单以及订单详情的所有信息
+        $orderbrand = TbOrderBrand::findFirstById($_POST['id']);
+        if($orderbrand!=false && $orderbrand->companyid==$this->companyid) {
+            echo $this->success($orderbrand->toArray());
+        }
+        else {
+            throw new \Exception("/11020501/品牌订单不存在/");
+        }
+    }*/
+
+    function orderlistAction() {
+        $orderbrand = TbOrderBrand::findFirstById($_POST['id']);
+        if($orderbrand!=false && $orderbrand->companyid==$this->companyid) {
+            return $this->success($orderbrand->getOrderList());
+        }
+        else {
+            throw new \Exception("/11020601/品牌订单不存在/");
+        }
+    }
+
+    function shippinglistAction() {
+        $orderbrand = TbOrderBrand::findFirstById($_POST['id']);
+        if($orderbrand!=false && $orderbrand->companyid==$this->companyid) {
+            return $this->success($orderbrand->getShippingList());
+        }
+        else {
+            throw new \Exception("/11020601/品牌订单不存在/");
+        }
+    }
 }

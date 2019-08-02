@@ -123,4 +123,25 @@ class TbOrder extends BaseModel
 
         $this->finish();
     }
+
+    function getOrderbrandList() {
+        $sql = sprintf("SELECT distinct orderbrandid FROM tb_order_brand_detail WHERE orderid=%d", $this->id);
+        $rows = $this->getDI()->get('db')->fetchAll($sql);
+
+        $result = [];
+
+        if(count($rows)>0) {
+            $array = [];
+            foreach ($rows as $row) {
+                $array[] = $row['orderbrandid'];
+            }
+
+            $result = TbOrderBrand::find(
+                sprintf("id in (%s)", implode(',', $array))
+            )->toArray();
+        }
+
+
+        return $result;
+    }
 }

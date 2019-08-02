@@ -752,4 +752,14 @@ class ShippingController extends AdminController {
 
         return $this->success();
     }
+
+    function orderbrandlistAction() {
+        $shipping = TbShipping::findFirstById($_POST['id']);
+        if($shipping!=false && $shipping->companyid==$this->companyid) {
+            return $this->success($shipping->getOrderbrandList());
+        }
+        else {
+            throw new \Exception("/11011601/发货单不存在/");
+        }
+    }
 }
