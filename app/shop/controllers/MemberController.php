@@ -456,10 +456,10 @@ EOT;
 
     /**
      * 为指定用户进行微信支付授权-写入逻辑
-     * @param $id
+     * @param int $id
      * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|string|void
      */
-    public function wechatauthbyidAction($id)
+    public function wechatauthbyidAction(int $id)
     {
         // 逻辑
         if ($this->member && $this->request->isPost() && !empty($this->member['membertype'])) {
@@ -504,10 +504,10 @@ EOT;
 
     /**
      * 获取指定用户的微信支付授权
-     * @param $id
+     * @param int $id
      * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|string|void
      */
-    public function getwechatauthbyidAction($id)
+    public function getwechatauthbyidAction(int $id)
     {
         // 逻辑
         if ($this->member && $this->request->isPost() && !empty($this->member['membertype'])) {

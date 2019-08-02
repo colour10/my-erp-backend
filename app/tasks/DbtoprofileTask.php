@@ -10,7 +10,7 @@ use Asa\Erp\Util;
 class DbtoprofileTask extends \Phalcon\CLI\Task
 {
     /**
-     * 临时表替换真实数据
+     * 逻辑
      * @return false|string
      */
     public function mainAction()

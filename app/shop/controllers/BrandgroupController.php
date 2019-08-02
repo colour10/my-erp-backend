@@ -281,7 +281,7 @@ class BrandgroupController extends AdminController
 
     /**
      * 获取当前品类的相关信息
-     * @param $id
+     * @param int $id
      * @return string
      */
     public function getdetailAction(int $id)

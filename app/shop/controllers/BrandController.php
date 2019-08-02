@@ -146,10 +146,10 @@ class BrandController extends AdminController
 
     /**
      * 获取当前品牌的相关信息
-     * @param $id
+     * @param int $id
      * @return string
      */
-    public function getdetailAction($id)
+    public function getdetailAction(int $id)
     {
         // 逻辑
         $brand = TbBrand::find('id=' . $id);

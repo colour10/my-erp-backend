@@ -17,10 +17,10 @@ class AlipayController extends AdminController
 {
     /**
      * 支付宝扫码支付
-     * @param $order_id
+     * @param int $order_id
      * @return bool|Response
      */
-    public function payAction($order_id)
+    public function payAction(int $order_id)
     {
         // 逻辑
         Util::closeDisplayErrors();

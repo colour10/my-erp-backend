@@ -95,11 +95,11 @@ class RegController extends AdminController
 
     /**
      * 检查$email和$companyid的合法性，是否需要注册逻辑的验证
-     * @param $email
-     * @param $companyid
+     * @param string $email
+     * @param int $companyid
      * @return \Phalcon\Mvc\Model|string
      */
-    private function checkIfInvitationCorrect($email, $companyid)
+    private function checkIfInvitationCorrect(string $email, int $companyid)
     {
         // 逻辑
         // 判断是否存在该email和companyid
