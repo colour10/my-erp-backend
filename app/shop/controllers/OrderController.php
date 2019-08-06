@@ -43,11 +43,10 @@ class OrderController extends AdminController
     {
         // 如果是post请求
         if ($member = $this->member && $this->request->isPost()) {
-            if ($order = TbShoporderCommon::findFirst("id=" . $id)) {
-                return $this->success($order->toArray());
-            } else {
+            if (!$order = TbShoporderCommon::findFirst("id=" . $id)) {
                 return $this->error($this->getValidateMessage('no-data'));
             }
+            return $this->success($order->toArray());
         }
 
         // 下面是普通get请求
