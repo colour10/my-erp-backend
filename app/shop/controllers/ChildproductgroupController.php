@@ -158,7 +158,6 @@ class ChildproductgroupController extends AdminController
             'breadcrumb' => $breadcrumb,
             'title' => $childbrandname,
             'max_sum_sizecontents' => $max_sum_sizecontents,
-
         ]);
     }
 }

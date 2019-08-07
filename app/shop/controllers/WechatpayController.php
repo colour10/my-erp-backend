@@ -47,13 +47,13 @@ class WechatpayController extends AdminController
         try {
             // 扫码
             $result = $this->wechat_pay->scan($config);
+            // 返回二维码图片
+            return Util::createQrcode($result->code_url);
         } catch (\Exception $e) {
             // 生成错误提示二维码
             return Util::createQrcode($e->getMessage());
         }
 
-        // 返回二维码图片
-        return Util::createQrcode($result->code_url);
     }
 
 

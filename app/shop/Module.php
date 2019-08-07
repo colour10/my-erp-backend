@@ -29,6 +29,7 @@ class Module implements ModuleDefinitionInterface
 {
     /**
      * 注册自定义加载器
+     * @param DiInterface|null $di
      */
     public function registerAutoloaders(DiInterface $di = null)
     {

@@ -11,7 +11,6 @@ use Asa\Erp\TbMember;
  */
 class LoginController extends AdminController
 {
-
     /**
      * 初始化
      */
@@ -46,30 +45,28 @@ class LoginController extends AdminController
             $language = $this->request->get('language');
 
             // 验证合法性
-            if (!$username || !$password) {
+            if (empty($username) || empty($password)) {
                 return $this->error($this->getValidateMessage('fill-out-required-fields'));
             }
 
             // 查找记录
             // 我们规定，用户名，昵称或者邮箱都可以登录
-            $rs = TbMember::findFirst([
+            // 如果登录失败，则返回
+            if (!$rs = TbMember::findFirst([
                 "(name = :username: or login_name = :username: or email = :username:) and password = :password:",
                 'bind' => [
                     'username' => $username,
                     'password' => md5($password),
                 ],
-            ]);
-
-            // 分别返回
-            if ($rs) {
-                // 加入session
-                $language = $language ?: 'cn';
-                $this->session->set('language', $language);
-                $this->session->set('member', $rs->toArray());
-                return json_encode(['code' => '200', 'auth' => $this->session->get('member'), 'messages' => []]);
-            } else {
+            ])) {
                 return $this->error($this->getValidateMessage('login-failed'));
             }
+
+            // 登录成功之后加入session
+            $language = $language ?: 'cn';
+            $this->session->set('language', $language);
+            $this->session->set('member', $rs->toArray());
+            return json_encode(['code' => '200', 'auth' => $this->session->get('member'), 'messages' => []]);
         }
     }
 

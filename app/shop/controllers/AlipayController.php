@@ -55,13 +55,13 @@ class AlipayController extends AdminController
         // 开始支付
         try {
             $result = $this->alipay->scan($orderConfig);
+            // 返回支付宝二维码内容
+            return Util::createQrcode($result->qr_code);
         } catch (\Exception $e) {
             // 生成错误提示二维码
             return $e->getMessage();
         }
 
-        // 返回支付宝二维码内容
-        return Util::createQrcode($result->qr_code);
     }
 
     /**
@@ -78,13 +78,12 @@ class AlipayController extends AdminController
         // 开始进行验签
         try {
             $this->alipay->verify($data);
+            // 返回成功
+            return $this->renderError('success', 'payment-success');
         } catch (\Exception $e) {
             // 传递错误
             return $this->renderError('error', 1001);
         }
-
-        // 返回
-        return $this->renderError('success', 'payment-success');
     }
 
     /**
