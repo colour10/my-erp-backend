@@ -514,6 +514,10 @@ class OrderbrandController extends AdminController {
         if(isset($_POST['ageseason']) && $_POST['ageseason']>0) {
             $conditions[] = sprintf("ageseason=%d", $_POST['ageseason']);
         }
+
+        if(isset($_POST['orderbrandid']) && $_POST['orderbrandid']>0) {
+            $conditions[] = sprintf("id=%d", $_POST['orderbrandid']);
+        }
         $conditions[] = "status=2";
 
         $orders = TbOrderBrand::find(

@@ -677,7 +677,7 @@ return [
     "morenshezhi" => "默认设置",
     "houcha" => "后查",
     "qiancha" => "前查",
-    "zaitushuliang" => "在途数量",
+    "tip-001" => "所有商品已经加入品牌订单了。",
     "zaitushuliang" => "在途数量",
     "zaitushuliang" => "在途数量",
     "zaitushuliang" => "在途数量",
@@ -992,9 +992,7 @@ return [
             'ordertatus' =>
                 [
                     1 => '保存',
-                    2 => '待审核',
-                    3 => '审核',
-                    4 => '作废',
+                    2 => '已完成',
                 ],
             'requisitiontype' =>
                 [
@@ -1069,6 +1067,10 @@ return [
                 "1" => "预售",
                 "2" => "已售",
                 "3" => "作废",
+            ],
+            "orderbrandstatus" => [
+                "1" => "待确认",
+                "2" => "待发货",
             ],
         ],
 ];

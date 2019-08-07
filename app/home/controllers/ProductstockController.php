@@ -7,6 +7,7 @@ use Phalcon\Mvc\View;
 use Asa\Erp\TbProductstock;
 use Asa\Erp\TbProduct;
 use Asa\Erp\TbProductstockSearch;
+use Asa\Erp\TbProductstockSummary;
 
 /**
  * 库存表
@@ -69,9 +70,9 @@ class ProductstockController extends BaseController {
             $conditions[] = sprintf("sizecontentid=%d", $_POST["sizecontentid"]);
         }*/
 
-        if(isset($_POST["warehouseid"]) && $_POST["warehouseid"]>0) {
+        /*if(isset($_POST["warehouseid"]) && $_POST["warehouseid"]>0) {
             $conditions[] = sprintf("warehouseid=%d", $_POST["warehouseid"]);
-        }
+        }*/
 
         if(isset($_POST['type'])) {
             if($_POST['type']=='1') {
@@ -88,10 +89,9 @@ class ProductstockController extends BaseController {
             $conditions[] = "number>0";
         }
 
-        $result = TbProductstockSearch::find(
+        $result = TbProductstockSummary::find(
             implode(" and ", $conditions)
         );
-
 
         $page = $this->request->getPost("page", "int", 1);
         $pageSize = $this->request->getPost("pageSize", "int", 20);

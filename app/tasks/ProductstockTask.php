@@ -18,11 +18,11 @@ class ProductstockTask extends \Phalcon\CLI\Task
     }
 
     function syncallAction() {
-        $results = $this->db->fetchAll("select distinct productid,warehouseid from tb_productstock");
+        $results = $this->db->fetchAll("select distinct productid from tb_productstock");
 
         foreach($results as $row) {
             print_r($row);
-            \Asa\Erp\Util::sendStockChange($row['productid'], $row['warehouseid']);
+            \Asa\Erp\Util::sendStockChange($row['productid']);
         }
     }
 }

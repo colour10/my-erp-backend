@@ -68,14 +68,13 @@ class TbProductstock extends BaseCompanyModel
         );
     }
 
-    private static function addToChangeList($productid, $warehouseid) {
-        self::$changed_list[$productid .','. $warehouseid] = 1;
+    private static function addToChangeList($productid) {
+        self::$changed_list[$productid] = 1;
     }
 
     public static function sendStockChange() {
-        foreach (self::$changed_list as $key => $value) {
-            $arr = explode(',', $key);
-            Util::sendStockChange($arr[0], $arr[1]);
+        foreach (self::$changed_list as $productid => $value) {
+            Util::sendStockChange($productid);
         }
 
         self::$changed_list = [];
@@ -121,7 +120,7 @@ class TbProductstock extends BaseCompanyModel
         }
         $db->commit();
 
-        self::addToChangeList($this->productid, $this->warehouseid);
+        self::addToChangeList($this->productid);
         return $this;
     }
 
@@ -148,7 +147,7 @@ class TbProductstock extends BaseCompanyModel
         }
         $db->commit();
 
-        self::addToChangeList($this->productid, $this->warehouseid);
+        self::addToChangeList($this->productid);
         return $this;
     }
 
@@ -175,7 +174,7 @@ class TbProductstock extends BaseCompanyModel
         }
         $db->commit();
 
-        self::addToChangeList($this->productid, $this->warehouseid);
+        self::addToChangeList($this->productid);
         return $this;
     }
 
@@ -214,7 +213,7 @@ class TbProductstock extends BaseCompanyModel
         }
 
         $db->commit();
-        self::addToChangeList($this->productid, $this->warehouseid);
+        self::addToChangeList($this->productid);
         return $this;
     }
 
@@ -243,7 +242,7 @@ class TbProductstock extends BaseCompanyModel
             return false;
         }
         $db->commit();
-        self::addToChangeList($this->productid, $this->warehouseid);
+        self::addToChangeList($this->productid);
         return $this;
     }
 
@@ -269,7 +268,7 @@ class TbProductstock extends BaseCompanyModel
             throw new \Exception("/11090102/取消库存锁定失败。/");
         }
         $db->commit();
-        self::addToChangeList($this->productid, $this->warehouseid);
+        self::addToChangeList($this->productid);
         return $this;
     }
 
@@ -328,7 +327,7 @@ class TbProductstock extends BaseCompanyModel
             return false;
         }
         $db->commit();
-        self::addToChangeList($this->productid, $this->warehouseid);
+        self::addToChangeList($this->productid);
         return $this;
     }
 
