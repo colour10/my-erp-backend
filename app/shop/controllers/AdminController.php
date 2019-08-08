@@ -4,8 +4,8 @@ namespace Multiple\Shop\Controllers;
 
 use Phalcon\Assets\Filters\Cssmin;
 use Phalcon\Assets\Filters\Jsmin;
-use Phalcon\Mvc\Controller;
 use Phalcon\Db\Column;
+use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\Model;
 
 class AdminController extends Controller

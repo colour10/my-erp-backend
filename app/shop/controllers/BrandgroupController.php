@@ -2,15 +2,14 @@
 
 namespace Multiple\Shop\Controllers;
 
+use Asa\Erp\TbBrandgroup;
 use Asa\Erp\TbCompany;
 use Asa\Erp\TbProduct;
 use Asa\Erp\TbProductSearch;
-use Asa\Erp\TbBrandgroup;
 use Asa\Erp\TbProductstock;
 use Asa\Erp\TbSizecontent;
 use Asa\Erp\Util;
 use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
-use phpDocumentor\Reflection\Types\Self_;
 
 /**
  * 品类操作类
