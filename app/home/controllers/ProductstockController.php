@@ -147,4 +147,20 @@ class ProductstockController extends BaseController {
         );
         echo $this->success($result->toArray());
     }
+
+    function searchproductAction() {
+        $conditions = [
+            sprintf("companyid=%d", $this->companyid)
+        ];
+
+        $conditions[] = sprintf("productid=%d", $_POST["productid"]);
+        $conditions[] = sprintf("property=%d", $_POST["property"]);
+        $conditions[] = sprintf("defective_level=%d", $_POST["defective_level"]);
+        $conditions[] = "number>0";
+
+        $result = TbProductstockSearch::find(
+            implode(" and ", $conditions)
+        );
+        echo $this->success($result->toArray());
+    }
 }
