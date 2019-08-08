@@ -2,10 +2,10 @@
 
 namespace Multiple\Shop\Controllers;
 
+use Asa\Erp\TbBrand;
 use Asa\Erp\TbCompany;
 use Asa\Erp\TbProduct;
 use Asa\Erp\TbProductSearch;
-use Asa\Erp\TbBrand;
 use Asa\Erp\TbProductstock;
 use Asa\Erp\TbSizecontent;
 use Asa\Erp\Util;

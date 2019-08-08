@@ -3,7 +3,6 @@
 namespace Multiple\Shop\Controllers;
 
 use Asa\Erp\TbMember;
-use Asa\Erp\TbMemberAddress;
 use Asa\Erp\Util;
 
 /**
