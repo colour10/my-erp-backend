@@ -41,6 +41,6 @@ class PayController extends AdminController
     public function createqrcodeAction(int $order_id)
     {
         // 逻辑
-        return Util::createQrcode("http://www.myshop.com/pay/pay/" . $order_id);
+        return Util::createQrcode("http://" . $this->config['app']['shop_host'] . "/pay/pay/" . $order_id);
     }
 }
