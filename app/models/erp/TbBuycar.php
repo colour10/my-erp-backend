@@ -1,44 +1,82 @@
 <?php
+
 namespace Asa\Erp;
-use Phalcon\Validation;
-use Phalcon\Validation\Validator\Between;
-use Phalcon\Validation\Validator\Uniqueness;
+
 use Phalcon\Mvc\Model\Relation;
+use Phalcon\Validation;
 
 /**
- * 商品表
+ * 购物车表
+ * Class TbBuycar
+ * @package Asa\Erp
  */
 class TbBuycar extends BaseModel
 {
-	
-	public $id;
 
-	public $product_id;
-	
-	public $product_name;
-	
-	public $price;
- 	
- 	public $number;
- 	
- 	public $total_price;
- 	
- 	public $color_id;
- 	
- 	public $color_name;
- 	
- 	public $size_id;
- 	
- 	public $size_name;
- 	
- 	public $member_id;
-	
-	
+    /**
+     * @var
+     */
+    public $id;
+
+    /**
+     * @var
+     */
+    public $product_id;
+
+    /**
+     * @var
+     */
+    public $product_name;
+
+    /**
+     * @var
+     */
+    public $price;
+
+    /**
+     * @var
+     */
+    public $number;
+
+    /**
+     * @var
+     */
+    public $total_price;
+
+    /**
+     * @var
+     */
+    public $color_id;
+
+    /**
+     * @var
+     */
+    public $color_name;
+
+    /**
+     * @var
+     */
+    public $size_id;
+
+    /**
+     * @var
+     */
+    public $size_name;
+
+    /**
+     * @var
+     */
+    public $member_id;
+
+
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
         $this->setSource('tb_buycar');
-        
+
         // 表关联
         // 与用户表关联，一对多反向
         $this->belongsTo(
@@ -50,11 +88,11 @@ class TbBuycar extends BaseModel
                 'foreignKey' => [
                     // 关联字段禁止自动删除
                     'action' => Relation::ACTION_RESTRICT,
-                    "message"    => $this->getValidateMessage('belongsto-foreign-message', 'member'),
+                    "message" => $this->getValidateMessage('belongsto-foreign-message', 'member'),
                 ],
             ]
         );
-        
+
         // 与产品表关联，一对多反向
         $this->belongsTo(
             "product_id",
@@ -65,44 +103,28 @@ class TbBuycar extends BaseModel
                 'foreignKey' => [
                     // 关联字段禁止自动删除
                     'action' => Relation::ACTION_RESTRICT,
-                    "message"    => $this->getValidateMessage('belongsto-foreign-message', 'product'),
+                    "message" => $this->getValidateMessage('belongsto-foreign-message', 'product'),
                 ],
             ]
         );
-        
+
     }
 
-    public function validation() {
+    /**
+     * @return bool
+     */
+    public function validation()
+    {
         $validator = new Validation();
-
-//        $validator->add(
-//            "age",
-//            new Between(
-//                [
-//                    "minimum" => 18,
-//                    "maximum" => 60,
-//                    "message" => "年龄必须是18~60岁",
-//                ]
-//            )
-//        );
-//
-//        $validator->add(
-//            'name',
-//            new Uniqueness(
-//                [
-//                    'message' => '姓名不能重复',
-//                ]
-//            )
-//        );
 
         return $this->validate($validator);
     }
-    
-    
+
+
     /**
      * 重写多语言版本配置读取函数
-     * @param languages下面语言文件字段的名称 如template模块下面的uniqueness
-     * @param 待验证字段的编号，显示为当前语言的友好性提示 $name
+     * @param string languages下面语言文件字段的名称 如template模块下面的uniqueness
+     * @param string 待验证字段的编号，显示为当前语言的友好性提示 $name
      * @return string
      */
     public function getValidateMessage($template, $name)
