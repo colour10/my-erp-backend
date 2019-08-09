@@ -11,18 +11,18 @@ use Asa\Erp\TbProductSearch;
 use Asa\Erp\TbShoppayment;
 use Asa\Erp\Util;
 use Multiple\Shop\Controllers\AdminController;
-use Phalcon\Events\Manager as EventsManager;
-use Phalcon\Loader;
-use Phalcon\Mvc\View;
-use Phalcon\DiInterface;
-use Phalcon\Mvc\Dispatcher;
-use Phalcon\Mvc\ModuleDefinitionInterface;
 use Multiple\Shop\Controllers\BrandgroupController;
 use Multiple\Shop\Controllers\BuycarController;
 use Multiple\Shop\Controllers\CompanyController;
+use Phalcon\DiInterface;
+use Phalcon\Events\Manager as EventsManager;
+use Phalcon\Loader;
+use Phalcon\Mvc\Dispatcher;
+use Phalcon\Mvc\ModuleDefinitionInterface;
+use Phalcon\Mvc\View;
+use Phalcon\Queue\Beanstalk;
 use Phalcon\Text;
 use PHPMailer\PHPMailer\PHPMailer;
-use Phalcon\Queue\Beanstalk;
 use Yansongda\Pay\Pay;
 
 class Module implements ModuleDefinitionInterface
@@ -52,10 +52,10 @@ class Module implements ModuleDefinitionInterface
     public function registerServices(DiInterface $di)
     {
         // 常用的一些参数，下面这些变量将会被用到多次，所以放在上面
-        $config = $di->get("config");
+        $config       = $di->get("config");
         $config_array = $config->toArray();
-        $session = $di->get('session');
-        $language = $session->get('language') ?: $config->language;
+        $session      = $di->get('session');
+        $language     = $session->get('language') ?: $config->language;
 
         // Registering a dispatcher
         $di->set(
@@ -99,7 +99,7 @@ class Module implements ModuleDefinitionInterface
                                 $dispatcher->forward(
                                     [
                                         'controller' => 'error',
-                                        'action' => 'show404',
+                                        'action'     => 'show404',
                                     ]
                                 );
                                 break;
@@ -107,7 +107,7 @@ class Module implements ModuleDefinitionInterface
                                 $dispatcher->forward(
                                     [
                                         'controller' => 'error',
-                                        'action' => 'show500',
+                                        'action'     => 'show500',
                                     ]
                                 );
 
@@ -297,10 +297,10 @@ class Module implements ModuleDefinitionInterface
 
         // 取出女性品牌，gender=2
         $di->setShared('girlbrands', function () use ($di) {
-            $name = $di->get('obj')->getlangfield('name');
+            $name     = $di->get('obj')->getlangfield('name');
             $products = TbProductSearch::find([
                 'conditions' => 'gender = 2',
-                'columns' => "brandid",
+                'columns'    => "brandid",
             ]);
             // 品牌id列表
             $brandids = array_unique(array_column($products->toArray(), 'brandid'));
@@ -308,7 +308,7 @@ class Module implements ModuleDefinitionInterface
             $return = [];
             foreach ($brandids as $k => $id) {
                 $return[] = [
-                    'id' => $id,
+                    'id'   => $id,
                     'name' => TbBrand::findFirst("id=" . $id)->$name,
                 ];
             }
@@ -317,10 +317,10 @@ class Module implements ModuleDefinitionInterface
 
         // 取出女性品类，gender=2
         $di->setShared('girlbrandgroups', function () use ($di) {
-            $name = $di->get('obj')->getlangfield('name');
+            $name     = $di->get('obj')->getlangfield('name');
             $products = TbProductSearch::find([
                 'conditions' => 'gender = 2',
-                'columns' => "brandgroupid",
+                'columns'    => "brandgroupid",
             ]);
             // 品类id列表
             $brandgroupids = array_unique(array_column($products->toArray(), 'brandgroupid'));
@@ -328,7 +328,7 @@ class Module implements ModuleDefinitionInterface
             $return = [];
             foreach ($brandgroupids as $k => $id) {
                 $return[] = [
-                    'id' => $id,
+                    'id'   => $id,
                     'name' => TbBrandgroup::findFirst("id=" . $id)->$name,
                 ];
             }
@@ -337,10 +337,10 @@ class Module implements ModuleDefinitionInterface
 
         // 取出男性品牌，gender=1
         $di->setShared('boybrands', function () use ($di) {
-            $name = $di->get('obj')->getlangfield('name');
+            $name     = $di->get('obj')->getlangfield('name');
             $products = TbProductSearch::find([
                 'conditions' => 'gender = 1',
-                'columns' => "brandid",
+                'columns'    => "brandid",
             ]);
             // 品牌id列表
             $brandids = array_unique(array_column($products->toArray(), 'brandid'));
@@ -348,7 +348,7 @@ class Module implements ModuleDefinitionInterface
             $return = [];
             foreach ($brandids as $k => $id) {
                 $return[] = [
-                    'id' => $id,
+                    'id'   => $id,
                     'name' => TbBrand::findFirst("id=" . $id)->$name,
                 ];
             }
@@ -357,10 +357,10 @@ class Module implements ModuleDefinitionInterface
 
         // 取出男性品类，gender=1
         $di->setShared('boybrandgroups', function () use ($di) {
-            $name = $di->get('obj')->getlangfield('name');
+            $name     = $di->get('obj')->getlangfield('name');
             $products = TbProductSearch::find([
                 'conditions' => 'gender = 1',
-                'columns' => "brandgroupid",
+                'columns'    => "brandgroupid",
             ]);
             // 品类id列表
             $brandgroupids = array_unique(array_column($products->toArray(), 'brandgroupid'));
@@ -368,7 +368,7 @@ class Module implements ModuleDefinitionInterface
             $return = [];
             foreach ($brandgroupids as $k => $id) {
                 $return[] = [
-                    'id' => $id,
+                    'id'   => $id,
                     'name' => TbBrandgroup::findFirst("id=" . $id)->$name,
                 ];
             }
@@ -377,10 +377,10 @@ class Module implements ModuleDefinitionInterface
 
         // 取出儿童品牌，gender=6
         $di->setShared('childbrands', function () use ($di) {
-            $name = $di->get('obj')->getlangfield('name');
+            $name     = $di->get('obj')->getlangfield('name');
             $products = TbProductSearch::find([
                 'conditions' => 'gender = 6',
-                'columns' => "brandid",
+                'columns'    => "brandid",
             ]);
             // 品牌id列表
             $brandids = array_unique(array_column($products->toArray(), 'brandid'));
@@ -388,7 +388,7 @@ class Module implements ModuleDefinitionInterface
             $return = [];
             foreach ($brandids as $k => $id) {
                 $return[] = [
-                    'id' => $id,
+                    'id'   => $id,
                     'name' => TbBrand::findFirst("id=" . $id)->$name,
                 ];
             }
@@ -397,10 +397,10 @@ class Module implements ModuleDefinitionInterface
 
         // 取出儿童品类，gender=6
         $di->setShared('childbrandgroups', function () use ($di) {
-            $name = $di->get('obj')->getlangfield('name');
+            $name     = $di->get('obj')->getlangfield('name');
             $products = TbProductSearch::find([
                 'conditions' => 'gender = 6',
-                'columns' => "brandgroupid",
+                'columns'    => "brandgroupid",
             ]);
             // 品类id列表
             $brandgroupids = array_unique(array_column($products->toArray(), 'brandgroupid'));
@@ -408,7 +408,7 @@ class Module implements ModuleDefinitionInterface
             $return = [];
             foreach ($brandgroupids as $k => $id) {
                 $return[] = [
-                    'id' => $id,
+                    'id'   => $id,
                     'name' => TbBrandgroup::findFirst("id=" . $id)->$name,
                 ];
             }
