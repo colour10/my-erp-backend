@@ -72,7 +72,7 @@ class TbOrderBrand extends BaseModel
 
             $result = TbOrder::find(
                 sprintf("id in (%s)", implode(',', $array))
-            )->toArray();
+            );
         }
 
         return $result;

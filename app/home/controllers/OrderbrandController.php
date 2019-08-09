@@ -645,7 +645,7 @@ class OrderbrandController extends AdminController {
     function orderlistAction() {
         $orderbrand = TbOrderBrand::findFirstById($_POST['id']);
         if($orderbrand!=false && $orderbrand->companyid==$this->companyid) {
-            return $this->success($orderbrand->getOrderList());
+            return $this->success($orderbrand->getOrderList()->toArray());
         }
         else {
             throw new \Exception("/11020601/品牌订单不存在/");
