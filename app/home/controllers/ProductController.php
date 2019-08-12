@@ -12,6 +12,7 @@ use Asa\Erp\TbProductMaterial;
 
 /**
  * 商品表
+ * ErrorCode 1116
  */
 class ProductController extends CadminController {
     public function initialize() {
@@ -35,21 +36,28 @@ class ProductController extends CadminController {
             $product->companyid = $this->companyid;
             $product->maketime = date("Y-m-d H:i:s");
             $product->makestaff = $this->currentUser;
-            $product->wordcode_1 = trim($row['wordcode_1']);
-            $product->wordcode_2 = trim($row['wordcode_2']);
-            $product->wordcode_3 = trim($row['wordcode_3']);
-            $product->wordcode_4 = trim($row['wordcode_4']);
+            $product->wordcode_1 = $this->filterCode($row['wordcode_1']);
+            $product->wordcode_2 = $this->filterCode($row['wordcode_2']);
+            $product->wordcode_3 = $this->filterCode($row['wordcode_3']);
+            $product->wordcode_4 = $this->filterCode($row['wordcode_4']);
             $product->brandcolor = $row['brandcolor'];
             $product->colorname = $row['colorname'];
             $product->picture = $row['picture'];
             $product->picture2 = $row['picture2'];
-            $product->wordcode = $row['wordcode_1'].$row['wordcode_2'].$row['wordcode_3'];
+            $product->wordcode = $this->filterCode($row['wordcode_1']).$this->filterCode($row['wordcode_2']).$this->filterCode($row['wordcode_3']);
 
             foreach($keys as $key) {
-                $product->$key = $params['form'][$key];
+                $product->$key = trim($params['form'][$key]);
             }
             $product->factorypricecurrency = $params['form']["wordpricecurrency"];
             $product->nationalfactorypricecurrency = $params['form']["nationalpricecurrency"];
+
+            //检验国际码是否重复
+            $where = sprintf("companyid=%d and wordcode='%s'", $this->companyid, addslashes($product->wordcode));
+            if(TbProduct::count($where)>0) {
+                $this->db->rollback();
+                throw new \Exception("/11160101/国际码不能重复/");
+            }
 
             if($product->create()==false) {
                 $this->db->rollback();
@@ -110,22 +118,30 @@ class ProductController extends CadminController {
                 );
             }
 
+            $wordcode = $this->filterCode($params['form']['wordcode_1']).$this->filterCode($params['form']['wordcode_2']).$this->filterCode($params['form']['wordcode_3']);
+            //检验国际码是否重复
+            $where = sprintf("companyid=%d and wordcode='%s' and id<>%d", $this->companyid, addslashes($wordcode), $product->id);
+            if(TbProduct::count($where)>0) {
+                $this->db->rollback();
+                throw new \Exception("/11160201/国际码不能重复/");
+            }
+
 
             //生成绑定的颜色组的字符串
             $data = [];
             foreach($products as $row) {
                 if($row->id==$product->id) {
                     $row->colorname = $params['form']["colorname"];
-                    $row->wordcode_1 = trim($params['form']["wordcode_1"]);
-                    $row->wordcode_2 = trim($params['form']["wordcode_2"]);
-                    $row->wordcode_3 = trim($params['form']["wordcode_3"]);
-                    $row->wordcode_4 = trim($params['form']["wordcode_4"]);
+                    $row->wordcode_1 = $this->filterCode($params['form']["wordcode_1"]);
+                    $row->wordcode_2 = $this->filterCode($params['form']["wordcode_2"]);
+                    $row->wordcode_3 = $this->filterCode($params['form']["wordcode_3"]);
+                    $row->wordcode_4 = $this->filterCode($params['form']["wordcode_4"]);
                     $row->brandcolor = $params['form']["brandcolor"];
                     $row->picture = $params['form']["picture"];
                     $row->picture2 = $params['form']["picture2"];
                     $row->laststoragedate = $params['form']["laststoragedate"];
                     $row->producttypeid = $params['form']["producttypeid"];
-                    $row->wordcode = $params['form']['wordcode_1'].$params['form']['wordcode_2'].$params['form']['wordcode_3'];
+                    $row->wordcode = $wordcode;
                 }
 
                 $row->brandid = $params['form']["brandid"];
@@ -156,6 +172,8 @@ class ProductController extends CadminController {
                 $row->nationalfactoryprice = $params['form']["nationalfactoryprice"];
                 $row->saletypeid = $params['form']["saletypeid"];
                 $row->winterproofingid = $params['form']["winterproofingid"];
+
+
 
                 if($row->update()==false) {
                     $this->db->rollback();
@@ -368,7 +386,7 @@ class ProductController extends CadminController {
                     else {
                         $product_else = TbProduct::findFirstById($row['id']);
                         if($product_else==false) {
-                            throw new \Exception("#1002#绑定的商品不存在#");
+                            throw new \Exception("/11160304/绑定的商品不存在/");
                         }
 
                         $product_else->brandid = $product->brandid;
@@ -399,14 +417,14 @@ class ProductController extends CadminController {
                     }
 
                     $product_else->brandcolor = $row['brandcolor'];
-                    $product_else->wordcode_1 = $row['wordcode_1'];
-                    $product_else->wordcode_2 = $row['wordcode_2'];
-                    $product_else->wordcode_3 = $row['wordcode_3'];
-                    $product_else->wordcode_4 = $row['wordcode_4'];
+                    $product_else->wordcode_1 = $this->filterCode($row['wordcode_1']);
+                    $product_else->wordcode_2 = $this->filterCode($row['wordcode_2']);
+                    $product_else->wordcode_3 = $this->filterCode($row['wordcode_3']);
+                    $product_else->wordcode_4 = $this->filterCode($row['wordcode_4']);
                     $product_else->colorname = $row['colorname'];
                     $product_else->picture = $row['picture'];
                     $product_else->picture2 = $row['picture2'];
-                    $product_else->wordcode = $row['wordcode_1'].$row['wordcode_2'].$row['wordcode_3'];
+                    $product_else->wordcode = $product_else->wordcode_1.$product_else->wordcode_2.$product_else->wordcode_3;
 
                     $products[] = $product_else;
                     $data[] = $product_else->id.",".$product_else->brandcolor;
@@ -423,8 +441,14 @@ class ProductController extends CadminController {
                 foreach($products as $row) {
                     $row->product_group = $product_group;
 
+                    //检验国际码是否重复
+                    $where = sprintf("companyid=%d and wordcode='%s' and id<>%d", $this->companyid, addslashes($row->wordcode), $row->id);
+                    if(TbProduct::count($where)>0) {
+                        throw new \Exception("/11160301/国际码不能重复/");
+                    }
+
                     if($row->update()==false) {
-                        throw new \Exception("#1002#更新product_group字段失败#");
+                        throw new \Exception("/11160302/更新product_group字段失败/");
                     }
 
                     $row->syncMaterial($product);
@@ -442,8 +466,12 @@ class ProductController extends CadminController {
             }
         }
         else {
-            return $this->error("#1001#产品数据不存在#");
+            return $this->error("/11160303/产品数据不存在/");
         }
+    }
+
+    private function filterCode($code) {
+        return preg_replace("#\s+#msi", "", $code);
     }
 
     /**

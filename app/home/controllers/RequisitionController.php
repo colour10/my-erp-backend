@@ -59,16 +59,16 @@ class RequisitionController extends BaseController {
 
         /*if(isset($_POST["keyword"]) && trim($_POST["keyword"])!="") {
             $where[] = sprintf("orderno like '%%%s%%'", addslashes(strtoupper($_POST["keyword"])));
-        }
+        }*/
 
-        $names = ['bookingid', 'ageseason', 'supplierid', 'seasontype', 'bussinesstype', 'property'];
+        $names = ['out_id', 'in_id', 'status'];
         foreach ($names as $name) {
             if(isset($_POST[$name]) && preg_match("#^\d+(,\d+)*$#", $_POST[$name])) {
                 $where[] = \Asa\Erp\Sql::isInclude($name, $_POST[$name]);
             }
         }
 
-        $names = ['brandids'];
+        /*$names = ['brandids'];
         foreach ($names as $name) {
             if(isset($_POST[$name]) && preg_match("#^\d+(,\d+)*$#", $_POST[$name])) {
                 $where[] = \Asa\Erp\Sql::isMatch($name, $_POST[$name]);
