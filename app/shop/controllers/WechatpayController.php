@@ -38,9 +38,9 @@ class WechatpayController extends AdminController
             // 订单编号，需保证在商户端不重复
             'out_trade_no' => $order->getOrderNo(),
             // 订单金额，单位分，支持小数点后两位
-            'total_fee' => $order->getFinalPrice() * 100,
+            'total_fee'    => $order->getFinalPrice() * 100,
             // 订单标题
-            'body' => 'Wechat payment: ' . $order->getOrderNo(),
+            'body'         => 'Wechat payment: ' . $order->getOrderNo(),
         ];
 
         // 调用微信支付
@@ -51,7 +51,7 @@ class WechatpayController extends AdminController
             return Util::createQrcode($result->code_url);
         } catch (\Exception $e) {
             // 生成错误提示二维码
-            return Util::createQrcode($e->getMessage());
+            return $e->getMessage();
         }
 
     }
@@ -94,9 +94,9 @@ class WechatpayController extends AdminController
 
         // 开始给用户发送支付成功的邮件
         $memberModel = $order->getMember();
-        $email = $memberModel->email;
-        $username = $memberModel->name;
-        $time = $order->getCreateTime();
+        $email       = $memberModel->email;
+        $username    = $memberModel->name;
+        $time        = $order->getCreateTime();
         // 友好提示
         $msg = sprintf($this->getValidateMessage('order_has_been_paid'), $time);
         // 自动发送一个注册邮件，使用队列进行处理
@@ -109,9 +109,9 @@ class WechatpayController extends AdminController
                     // 任务优先级
                     'priority' => 250,
                     // 延迟时间，表示将job放入ready队列需要等待的秒数，10代表10秒
-                    'delay' => 10,
+                    'delay'    => 10,
                     // 运行时间，表示允许一个worker执行该job的秒数。这个时间将从一个worker 获取一个job开始计算
-                    'ttr' => 3600,
+                    'ttr'      => 3600,
                 ]);
             }
         }
@@ -147,7 +147,7 @@ class WechatpayController extends AdminController
     {
         // 给微信的失败响应
         $failXml = '<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[FAIL]]></return_msg></xml>';
-        $data = $this->wechat_pay->verify(null, true);
+        $data    = $this->wechat_pay->verify(null, true);
 
         // 没有找到对应的订单，原则上不可能发生，保证代码健壮性
         if (!$order = TbShoporderCommon::findFirst("order_no=" . $data['out_trade_no'])) {
@@ -160,7 +160,7 @@ class WechatpayController extends AdminController
             $order->save();
         } else {
             // 退款失败，将具体状态存入 extra 字段，并表退款状态改成失败
-            $extra = $order->getExtra();
+            $extra                       = $order->getExtra();
             $extra['refund_failed_code'] = $data['refund_status'];
             $order->setExtra($extra)->setRefundStatus(TbShoporderCommon::REFUND_STATUS_FAILED);
             $order->save();
