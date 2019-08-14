@@ -26,7 +26,7 @@ class AdminController extends Controller
     function getModelObject()
     {
         if (!$this->modelObject) {
-            $class = new \ReflectionClass($this->getModelName());
+            $class             = new \ReflectionClass($this->getModelName());
             $this->modelObject = $class->newInstance();
         }
 
@@ -47,10 +47,10 @@ class AdminController extends Controller
 
     function getCondition()
     {
-        $model = $this->getModelObject();
-        $metaData = $model->getModelsMetaData();
+        $model       = $this->getModelObject();
+        $metaData    = $model->getModelsMetaData();
         $primaryKeys = $metaData->getPrimaryKeyAttributes($model);
-        $fieldTypes = $metaData->getDataTypes($model);
+        $fieldTypes  = $metaData->getDataTypes($model);
 
         $array = [];
 
@@ -68,7 +68,7 @@ class AdminController extends Controller
     public function indexAction()
     {
         $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
-        $result = $findFirst->invokeArgs(null, []);
+        $result    = $findFirst->invokeArgs(null, []);
 
         $this->view->setVar("result", $result->toArray());
     }
@@ -134,7 +134,7 @@ class AdminController extends Controller
     {
         if ($this->request->isPost()) {
             $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
-            $row = $findFirst->invokeArgs(null, [$this->getCondition()]);
+            $row       = $findFirst->invokeArgs(null, [$this->getCondition()]);
 
             if ($row != false) {
                 $fields = $this->getAttributes();
@@ -157,7 +157,7 @@ class AdminController extends Controller
             }
         } else {
             $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
-            $info = $findFirst->invokeArgs(null, [$this->getCondition()]);
+            $info      = $findFirst->invokeArgs(null, [$this->getCondition()]);
 
             if ($info != false) {
                 $this->view->setVar("info", $info);
@@ -168,7 +168,7 @@ class AdminController extends Controller
     function doDelete()
     {
         $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
-        $row = $findFirst->invokeArgs(null, [$this->getCondition()]);
+        $row       = $findFirst->invokeArgs(null, [$this->getCondition()]);
 
         $result = ["code" => 200, "messages" => []];
         if ($row != false) {
@@ -264,7 +264,7 @@ class AdminController extends Controller
         // 逻辑
         // 传递错误，如果没有对应的语言字段，就显示当前传递的内容
         $this->view->setVars([
-            'title' => $this->getValidateMessage($title) ?: $title,
+            'title'   => $this->getValidateMessage($title) ?: $title,
             'message' => $this->getValidateMessage($message) ?: $message,
         ]);
         return $this->view->pick('error/error');

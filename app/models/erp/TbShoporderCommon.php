@@ -620,15 +620,15 @@ class TbShoporderCommon extends BaseModel
     }
 
     // 退款和发货相关状态设定
-    const REFUND_STATUS_PENDING = 'pending';
-    const REFUND_STATUS_APPLIED = 'applied';
+    const REFUND_STATUS_PENDING    = 'pending';
+    const REFUND_STATUS_APPLIED    = 'applied';
     const REFUND_STATUS_PROCESSING = 'processing';
-    const REFUND_STATUS_SUCCESS = 'success';
-    const REFUND_STATUS_FAILED = 'failed';
+    const REFUND_STATUS_SUCCESS    = 'success';
+    const REFUND_STATUS_FAILED     = 'failed';
 
-    const SHIP_STATUS_PENDING = 'pending';
+    const SHIP_STATUS_PENDING   = 'pending';
     const SHIP_STATUS_DELIVERED = 'delivered';
-    const SHIP_STATUS_RECEIVED = 'received';
+    const SHIP_STATUS_RECEIVED  = 'received';
 
     /**
      * Initialize method for model.
@@ -731,27 +731,27 @@ class TbShoporderCommon extends BaseModel
     public function columnMap()
     {
         return [
-            'id' => 'id',
-            'order_no' => 'order_no',
-            'member_id' => 'member_id',
-            'company_id' => 'company_id',
-            'address' => 'address',
-            'total_price' => 'total_price',
-            'send_price' => 'send_price',
-            'final_price' => 'final_price',
+            'id'             => 'id',
+            'order_no'       => 'order_no',
+            'member_id'      => 'member_id',
+            'company_id'     => 'company_id',
+            'address'        => 'address',
+            'total_price'    => 'total_price',
+            'send_price'     => 'send_price',
+            'final_price'    => 'final_price',
             'payment_method' => 'payment_method',
-            'payment_no' => 'payment_no',
-            'refund_status' => 'refund_status',
-            'refund_no' => 'refund_no',
-            'closed' => 'closed',
-            'ship_status' => 'ship_status',
-            'ship_data' => 'ship_data',
-            'remark' => 'remark',
-            'create_time' => 'create_time',
-            'expire_time' => 'expire_time',
-            'pay_time' => 'pay_time',
-            'update_time' => 'update_time',
-            'extra' => 'extra',
+            'payment_no'     => 'payment_no',
+            'refund_status'  => 'refund_status',
+            'refund_no'      => 'refund_no',
+            'closed'         => 'closed',
+            'ship_status'    => 'ship_status',
+            'ship_data'      => 'ship_data',
+            'remark'         => 'remark',
+            'create_time'    => 'create_time',
+            'expire_time'    => 'expire_time',
+            'pay_time'       => 'pay_time',
+            'update_time'    => 'update_time',
+            'extra'          => 'extra',
         ];
     }
 

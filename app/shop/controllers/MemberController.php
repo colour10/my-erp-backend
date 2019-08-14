@@ -40,8 +40,8 @@ class MemberController extends AdminController
             // 是否登录
             if ($member = $this->member) {
                 // 需要接受旧密码、新密码，确认新密码三个选项
-                $old_password = $this->request->get('old_password');
-                $new_password = $this->request->get('new_password');
+                $old_password    = $this->request->get('old_password');
+                $new_password    = $this->request->get('new_password');
                 $repeat_password = $this->request->get('repeat_password');
 
                 // 判断密码是否全部填写了
@@ -97,14 +97,14 @@ class MemberController extends AdminController
             // 是否登录
             if ($member = $this->member) {
                 // 需要接受邮箱，用户名两个选项，公司名称暂时用session的，也就是邀请人只能隶属于本公司
-                $email = $this->request->get('email');
+                $email    = $this->request->get('email');
                 $username = $this->request->get('username');
                 // 对于companyid的判断，如果当前登录用户是超级用户，那么companyid就是传过来的$this->request->get('companyid')，如果是普通的公司管理员，那么就是当前用户登录的companyid
                 if ($this->issuperadmin) {
-                    $companyid = $this->request->get('companyid');
+                    $companyid  = $this->request->get('companyid');
                     $membertype = '1';
                 } else {
-                    $companyid = $this->currentCompany;
+                    $companyid  = $this->currentCompany;
                     $membertype = '0';
                 }
 
@@ -117,7 +117,7 @@ class MemberController extends AdminController
                 $existsModel = TbMember::findFirst([
                     "email = :email: or name = :username: or login_name = :username:",
                     'bind' => [
-                        'email' => $email,
+                        'email'    => $email,
                         'username' => $username,
                     ],
                 ]);
@@ -126,19 +126,19 @@ class MemberController extends AdminController
                 }
 
                 // 默认密码是用户名+123
-                $password = $username . '123';
+                $password        = $username . '123';
                 $bcrypt_password = md5($username . '123');
 
                 // 开始写入数据库
-                $data = [
-                    'email' => $email,
-                    'name' => $username,
-                    'login_name' => $username,
-                    'password' => $bcrypt_password,
-                    'companyid' => $companyid,
-                    'membertype' => $membertype,
+                $data  = [
+                    'email'        => $email,
+                    'name'         => $username,
+                    'login_name'   => $username,
+                    'password'     => $bcrypt_password,
+                    'companyid'    => $companyid,
+                    'membertype'   => $membertype,
                     // 添加邀请人
-                    'invoteuser' => $member['id'],
+                    'invoteuser'   => $member['id'],
                     // 是否锁库存
                     'is_lockstock' => $this->request->get('is_lockstock'),
                 ];
@@ -156,9 +156,9 @@ class MemberController extends AdminController
                         // 任务优先级
                         'priority' => 250,
                         // 延迟时间，表示将job放入ready队列需要等待的秒数，10代表10秒
-                        'delay' => 10,
+                        'delay'    => 10,
                         // 运行时间，表示允许一个worker执行该job的秒数。这个时间将从一个worker 获取一个job开始计算
-                        'ttr' => 3600,
+                        'ttr'      => 3600,
                     ]);
                 }
 
@@ -240,7 +240,7 @@ EOT;
         // 判断是否为公司用户，如果是个人用户则报错
         // 如果列表中存在公司用户，那么就添加一个发送支付宝授权的功能
         if ($member = $this->member && $this->member['membertype'] > 0) {
-            $result = TbMember::find("invoteuser=" . $this->member['id']);
+            $result       = TbMember::find("invoteuser=" . $this->member['id']);
             $result_array = $result->toArray();
             foreach ($result->toArray() as $k => $v) {
                 $result_array[$k]['companyname'] = ($company = TbCompany::findFirstById($this->member['companyid'])) ? $company->name : '';
@@ -278,7 +278,7 @@ EOT;
         // 找到所有的订单，并且按照创建时间倒叙排列
         $orders = TbShoporderCommon::find([
             'conditions' => 'company_id = ' . $member['companyid'],
-            'order' => 'create_time DESC',
+            'order'      => 'create_time DESC',
         ]);
 
         // 整合子订单
@@ -286,7 +286,7 @@ EOT;
         foreach ($orders as $k => $order) {
             $orders_array[$k]['orderdetails'] = $order->getShoporder()->toArray();
             // 下单人
-            $member = $order->getMember();
+            $member                          = $order->getMember();
             $orders_array[$k]['member_name'] = $member->name;
             // 是否显示更改截止时间
             // 要求是锁库存用户，未付款订单，有截止时间，并且截止时间有效，还有就是订单不能是关闭状态
@@ -311,9 +311,9 @@ EOT;
         // 创建分页对象，使用数组分页
         $paginator = new PaginatorArray(
             [
-                "data" => $orders_array,
+                "data"  => $orders_array,
                 "limit" => 5,
-                "page" => $currentPage,
+                "page"  => $currentPage,
             ]
         );
 
@@ -323,7 +323,7 @@ EOT;
         // 分配给模板
         $this->view->setVars([
             'orders' => $orders_array,
-            'page' => $page,
+            'page'   => $page,
         ]);
     }
 
@@ -358,7 +358,7 @@ EOT;
             }
             $config = $payment ? json_encode($payment->getConfig()) : '';
             // 查找里面是否有app_auth_token字段
-            $is_alipay_allow_auth = (strpos($config, 'app_auth_token') !== false) ? true : false;
+            $is_alipay_allow_auth    = (strpos($config, 'app_auth_token') !== false) ? true : false;
             $is_wechatpay_allow_auth = (strpos($config, 'sub_mch_id') !== false) ? true : false;
             // 判断支付宝是否已授权
             if (!$is_alipay_allow_auth) {
@@ -375,8 +375,8 @@ EOT;
             }
 
             // 发送给模板
-            $url = ['alipay_url' => $alipay_url, 'wechat_url' => $wechat_url];
-            $h1 = $this->getValidateMessage('pay-authorization');
+            $url    = ['alipay_url' => $alipay_url, 'wechat_url' => $wechat_url];
+            $h1     = $this->getValidateMessage('pay-authorization');
             $notice = $this->getValidateMessage('self-payauth-notice');
             $this->view->setVars(compact('url', 'h1', 'notice'));
         } else {
@@ -384,7 +384,7 @@ EOT;
             // 分页
             $currentPage = $this->request->getQuery("page", "int", 1);
             // 查找所有的公司，支付宝和微信授权情况
-            $datas = TbShoppayment::find("id != " . $this->supercoid);
+            $datas  = TbShoppayment::find("id != " . $this->supercoid);
             $return = $datas->toArray();
             foreach ($datas as $k => $data) {
                 // 支付宝是否授权
@@ -403,7 +403,7 @@ EOT;
                 }
 
                 // 变量赋值
-                $return[$k]['companyname'] = $data->company->name;
+                $return[$k]['companyname']    = $data->company->name;
                 $return[$k]['is_alipay_auth'] = $is_alipay_auth;
                 $return[$k]['is_wechat_auth'] = $is_wechat_auth;
             }
@@ -411,9 +411,9 @@ EOT;
             // 创建分页对象，使用数组分页
             $paginator = new PaginatorArray(
                 [
-                    "data" => $return,
+                    "data"  => $return,
                     "limit" => 10,
-                    "page" => $currentPage,
+                    "page"  => $currentPage,
                 ]
             );
 
@@ -422,8 +422,8 @@ EOT;
 
             // 推送
             $this->view->setVars([
-                'page' => $page,
-                'h1' => $this->getValidateMessage('pay-authorization-list'),
+                'page'   => $page,
+                'h1'     => $this->getValidateMessage('pay-authorization-list'),
                 'notice' => $this->getValidateMessage('payauth-notice'),
             ]);
         }
@@ -442,7 +442,7 @@ EOT;
             if ($config = $this->shopPaymentConfig) {
                 // 把原来的wechat配置项中的sub_mch_id写入即可，其他项保持不变
                 $config['wechatpay']['sub_mch_id'] = $this->request->get('sub_mch_id');
-                $model = $this->shopPayment;
+                $model                             = $this->shopPayment;
                 $model->setConfig($config);
                 if (!$model->save()) {
                     return $this->error($model);

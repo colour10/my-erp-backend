@@ -48,9 +48,9 @@ class MemberaddressController extends AdminController
         if ($this->request->isPost() && $member = $this->member) {
             // 接收参数并过滤
             $member_id = $member['id'];
-            $name = $this->request->get('username', 'string');
-            $tel = $this->request->get('mobile', 'int');
-            $address = $this->request->get('address', 'string');
+            $name      = $this->request->get('username', 'string');
+            $tel       = $this->request->get('mobile', 'int');
+            $address   = $this->request->get('address', 'string');
             // 默认地址选项，如果当前用户一个地址也没有保存，那么就设置为默认，否则为非默认
             $is_default = TbMemberAddress::count("member_id=" . $member_id) ? 0 : 1;
             // 不能为空
@@ -92,10 +92,10 @@ class MemberaddressController extends AdminController
         // 逻辑
         if ($this->request->isPost() && $member = $this->member) {
             // 赋值
-            $params = $this->dispatcher->getParams();
-            $id = $params[0];
-            $name = $this->request->get('username');
-            $tel = $this->request->get('mobile');
+            $params  = $this->dispatcher->getParams();
+            $id      = $params[0];
+            $name    = $this->request->get('username');
+            $tel     = $this->request->get('mobile');
             $address = $this->request->get('address');
 
             // 不能为空
@@ -230,7 +230,7 @@ class MemberaddressController extends AdminController
         $address = TbMemberAddress::findFirst([
             "id = :id: and member_id = :member_id:",
             'bind' => [
-                'id' => $params[0],
+                'id'        => $params[0],
                 'member_id' => $this->member['id'],
             ],
         ]);
