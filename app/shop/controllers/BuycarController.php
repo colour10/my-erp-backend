@@ -224,9 +224,13 @@ class BuycarController extends AdminController
                 // 取出post数据
                 $post = $this->request->getPost();
                 // 尺码留空的数据删除
+                // 同时检测下单数量不能为负数
                 foreach ($post['sizecontentids'] as $k => $v) {
                     if (!$v) {
                         unset($post['sizecontentids'][$k]);
+                    }
+                    if ($v < 1) {
+                        return $this->error($this->getValidateMessage('params-error'));
                     }
                 }
 

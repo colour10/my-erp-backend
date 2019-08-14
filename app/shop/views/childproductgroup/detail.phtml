@@ -124,7 +124,7 @@
                                         <?php foreach ($item['sizecontents'] as $sizecontent) { ?>
                                             <td><input class="table-w30"
                                                        data-id="<?php echo $sizecontent['sizecontentid']; ?>"
-                                                       type="text"/>
+                                                       type="text" oninput="value=value.replace(/[^\d]/g,'')"/>
                                             </td>
                                         <?php } ?>
                                         <!-- 库存数量有数据就填充 End -->
