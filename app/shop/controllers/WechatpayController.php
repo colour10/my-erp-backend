@@ -40,7 +40,7 @@ class WechatpayController extends AdminController
             // 订单金额，单位分，支持小数点后两位
             'total_fee'    => $order->getFinalPrice() * 100,
             // 订单标题
-            'body'         => 'Wechat payment: ' . $order->getOrderNo(),
+            'body'         => $this->getValidateMessage('order') . ': ' . $order->getOrderNo(),
         ];
 
         // 调用微信支付

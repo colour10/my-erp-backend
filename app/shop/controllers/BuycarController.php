@@ -33,14 +33,14 @@ class BuycarController extends AdminController
         // 传递参数
         if (count($lists['items']) > 0) {
             $this->view->setVars([
-                'lists' => $lists,
+                'lists'     => $lists,
                 'addresses' => TbMemberAddress::find("member_id=" . $member['id'])->toArray(),
             ]);
         } else {
             // 否则就直接转发到空购物车
             return $this->dispatcher->forward([
                 'controller' => 'buycar',
-                'action' => 'index_null',
+                'action'     => 'index_null',
             ]);
         }
     }
@@ -70,40 +70,40 @@ class BuycarController extends AdminController
                 return json_encode(['code' => '200', 'auth' => [], 'messages' => []]);
             }
             // 数据整合
-            $cars_arr = [];
+            $cars_arr   = [];
             $totalprice = 0;
-            $totalnum = 0;
+            $totalnum   = 0;
             foreach ($cars as $k => $car) {
-                $car_arr = $car->toArray();
-                $cars_arr['items'][$k]['id'] = $car->id;
-                $cars_arr['items'][$k]['product_id'] = $car->product_id;
+                $car_arr                               = $car->toArray();
+                $cars_arr['items'][$k]['id']           = $car->id;
+                $cars_arr['items'][$k]['product_id']   = $car->product_id;
                 $cars_arr['items'][$k]['product_name'] = $car->product_name;
-                $cars_arr['items'][$k]['size_id'] = $car->size_id;
-                $cars_arr['items'][$k]['color_id'] = $car->color_id;
-                $cars_arr['items'][$k]['size_name'] = $car->size_name;
-                $cars_arr['items'][$k]['color_name'] = $car->color_name;
-                $cars_arr['items'][$k]['number'] = $car->number;
-                $cars_arr['items'][$k]['price'] = $car->price;
-                $cars_arr['items'][$k]['total_price'] = $car->total_price;
-                $cars_arr['items'][$k]['product'] = $car->product->toArray();
-                $cars_arr['items'][$k]['member'] = $car->member->toArray();
-                $temp_product = $car->product->toArray();
-                $temp_num = $car->number;
+                $cars_arr['items'][$k]['size_id']      = $car->size_id;
+                $cars_arr['items'][$k]['color_id']     = $car->color_id;
+                $cars_arr['items'][$k]['size_name']    = $car->size_name;
+                $cars_arr['items'][$k]['color_name']   = $car->color_name;
+                $cars_arr['items'][$k]['number']       = $car->number;
+                $cars_arr['items'][$k]['price']        = $car->price;
+                $cars_arr['items'][$k]['total_price']  = $car->total_price;
+                $cars_arr['items'][$k]['product']      = $car->product->toArray();
+                $cars_arr['items'][$k]['member']       = $car->member->toArray();
+                $temp_product                          = $car->product->toArray();
+                $temp_num                              = $car->number;
                 // 价格采用高精度计算
                 $totalprice = bcadd($totalprice, $car->total_price, 2);
-                $totalnum += $temp_num;
+                $totalnum   += $temp_num;
             }
             // 默认运费为0
-            $freightprice = 0;
+            $freightprice      = 0;
             $cars_arr['total'] = [
                 // 订单商品总价
-                'totalprice' => $totalprice,
+                'totalprice'   => $totalprice,
                 // 订单运费，默认为0
                 'freightprice' => $freightprice,
                 // 订单总数量
-                'totalnum' => $totalnum,
+                'totalnum'     => $totalnum,
                 // 订单总金额（合计金额+运费，采用高精度计算）
-                'finalprice' => bcadd($totalprice, $freightprice, 2),
+                'finalprice'   => bcadd($totalprice, $freightprice, 2),
             ];
             return json_encode(['code' => '200', 'auth' => $cars_arr, 'messages' => []]);
         } else {
@@ -134,27 +134,27 @@ class BuycarController extends AdminController
 
             // 按照product_id和sizecontent_id取库存
             // 在取出库存之前，首先获取销售端口
-            $company = TbCompany::findFirstById($rs['companyid']);
+            $company  = TbCompany::findFirstById($rs['companyid']);
             $saleport = $company->shopSaleport;
-            $array = Util::recordListColumn($saleport->saleportWarehouses, 'warehouseid');
+            $array    = Util::recordListColumn($saleport->saleportWarehouses, 'warehouseid');
             if (count($array) == 0) {
                 return $array;
             }
 
             // 数据整合
-            $cars_arr = [];
+            $cars_arr   = [];
             $totalprice = 0;
-            $totalnum = 0;
+            $totalnum   = 0;
             foreach ($cars as $k => $car) {
-                $car_arr = $car->toArray();
-                $cars_arr['items'][$k]['id'] = $car->id;
-                $cars_arr['items'][$k]['product_id'] = $car->product_id;
+                $car_arr                               = $car->toArray();
+                $cars_arr['items'][$k]['id']           = $car->id;
+                $cars_arr['items'][$k]['product_id']   = $car->product_id;
                 $cars_arr['items'][$k]['product_name'] = $car->product_name;
-                $cars_arr['items'][$k]['size_id'] = $car->size_id;
-                $cars_arr['items'][$k]['color_id'] = $car->color_id;
-                $cars_arr['items'][$k]['size_name'] = $car->size_name;
-                $cars_arr['items'][$k]['color_name'] = $car->color_name;
-                $cars_arr['items'][$k]['number'] = $car->number;
+                $cars_arr['items'][$k]['size_id']      = $car->size_id;
+                $cars_arr['items'][$k]['color_id']     = $car->color_id;
+                $cars_arr['items'][$k]['size_name']    = $car->size_name;
+                $cars_arr['items'][$k]['color_name']   = $car->color_name;
+                $cars_arr['items'][$k]['number']       = $car->number;
 
                 // 取出product模型，一定是存在的
                 $productModel = TbProductSearch::findFirstById($car->product_id);
@@ -163,7 +163,7 @@ class BuycarController extends AdminController
                 if ($car->size_id) {
                     $sizecontents = TbProductstock::sum([
                         sprintf("warehouseid in (%s) and defective_level=0 and productid = %s and sizecontentid = %s", implode(',', $array), $productModel->productid, $car->size_id),
-                        "group" => 'productid, sizecontentid',
+                        "group"  => 'productid, sizecontentid',
                         "column" => 'number',
                     ]);
                     if (count($sizecontents) > 0) {
@@ -177,27 +177,27 @@ class BuycarController extends AdminController
                 }
 
                 $cars_arr['items'][$k]['productstock'] = $productstock;
-                $cars_arr['items'][$k]['price'] = $car->price;
-                $cars_arr['items'][$k]['total_price'] = $car->total_price;
-                $cars_arr['items'][$k]['product'] = $car->product->toArray();
-                $cars_arr['items'][$k]['member'] = $car->member->toArray();
-                $temp_product = $car->product->toArray();
-                $temp_num = $car->number;
+                $cars_arr['items'][$k]['price']        = $car->price;
+                $cars_arr['items'][$k]['total_price']  = $car->total_price;
+                $cars_arr['items'][$k]['product']      = $car->product->toArray();
+                $cars_arr['items'][$k]['member']       = $car->member->toArray();
+                $temp_product                          = $car->product->toArray();
+                $temp_num                              = $car->number;
                 // 采用高精度计算
                 $totalprice = bcadd($totalprice, $car->total_price, 2);
-                $totalnum += $temp_num;
+                $totalnum   += $temp_num;
             }
             // 默认运费为0
-            $freightprice = 0;
+            $freightprice      = 0;
             $cars_arr['total'] = [
                 // 订单商品总价
-                'totalprice' => $totalprice,
+                'totalprice'   => $totalprice,
                 // 订单运费，默认为0
                 'freightprice' => $freightprice,
                 // 订单总数量
-                'totalnum' => $totalnum,
+                'totalnum'     => $totalnum,
                 // 订单总金额（合计金额+运费，采用高精度计算）
-                'finalprice' => bcadd($totalprice, $freightprice, 2),
+                'finalprice'   => bcadd($totalprice, $freightprice, 2),
             ];
             // 返回
             return $cars_arr;
@@ -247,9 +247,9 @@ class BuycarController extends AdminController
 
                 // 首先取出销售端口，查库存用
                 // 在取出库存之前，首先获取销售端口
-                $company = TbCompany::findFirstById($rs['companyid']);
+                $company  = TbCompany::findFirstById($rs['companyid']);
                 $saleport = $company->shopSaleport;
-                $array = Util::recordListColumn($saleport->saleportWarehouses, 'warehouseid');
+                $array    = Util::recordListColumn($saleport->saleportWarehouses, 'warehouseid');
                 if (count($array) == 0) {
                     return $array;
                 }
@@ -258,8 +258,8 @@ class BuycarController extends AdminController
                 // 组装库存数据列表，采用悲观锁
                 $sizecontents = TbProductstock::sum([
                     sprintf("warehouseid in (%s) and defective_level=0 and productid = %s", implode(',', $array), $productModel->productid),
-                    "group" => 'productid, sizecontentid',
-                    "column" => 'number',
+                    "group"      => 'productid, sizecontentid',
+                    "column"     => 'number',
                     "for_update" => true,
                 ]);
                 if ($sizecontents) {
@@ -299,21 +299,21 @@ class BuycarController extends AdminController
 
                     // 如果无此商品，则把该商品添加到新购物车
                     if (!$cars) {
-                        $model = new TbBuycar;
-                        $model->product_id = $post['product_id'];
+                        $model               = new TbBuycar;
+                        $model->product_id   = $post['product_id'];
                         $model->product_name = $productModel->productname;
-                        $model->price = $realprice;
-                        $model->picture = $productModel->picture;
-                        $model->picture2 = $productModel->picture2;
-                        $model->number = Intval($sizecontentnumber);
-                        $model->total_price = round($realprice * Intval($sizecontentnumber), 2);
+                        $model->price        = $realprice;
+                        $model->picture      = $productModel->picture;
+                        $model->picture2     = $productModel->picture2;
+                        $model->number       = Intval($sizecontentnumber);
+                        $model->total_price  = round($realprice * Intval($sizecontentnumber), 2);
 
                         // 写入color_id
                         $model->color_id = $productModel->color;
                         // 颜色描述默认为空
                         $color_name = '';
                         if ($productModel->color) {
-                            $colorids = explode(',', $productModel->color);
+                            $colorids   = explode(',', $productModel->color);
                             $colornames = [];
                             foreach ($colorids as $colorid) {
                                 $colorModel = TbColortemplate::findFirstById($colorid);
@@ -329,10 +329,10 @@ class BuycarController extends AdminController
                         }
 
                         $model->color_name = $color_name;
-                        $model->size_id = $sizecontentid;
-                        $model->size_name = TbSizecontent::findFirstById($sizecontentid)->name;
-                        $model->member_id = $rs['id'];
-                        $res = $model->save();
+                        $model->size_id    = $sizecontentid;
+                        $model->size_name  = TbSizecontent::findFirstById($sizecontentid)->name;
+                        $model->member_id  = $rs['id'];
+                        $res               = $model->save();
                         if (!$res) {
                             // 回滚
                             $this->db->rollback();
@@ -340,9 +340,9 @@ class BuycarController extends AdminController
                         }
                         // 有则更新数量
                     } else {
-                        $cars->number = $cars->number + Intval($sizecontentnumber);
+                        $cars->number      = $cars->number + Intval($sizecontentnumber);
                         $cars->total_price = sprintf($cars->total_price + sprintf("%.2f", $realprice * Intval($sizecontentnumber)));
-                        $res = $cars->save();
+                        $res               = $cars->save();
                         if (!$res) {
                             // 回滚
                             $this->db->rollback();

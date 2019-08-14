@@ -64,7 +64,7 @@ class IndexController extends AdminController
         // 取出结果
         $productlist = TbProductSearch::find([
             'conditions' => 'productname like :keyword: AND companyid = ' . $this->currentCompany,
-            'bind' => ['keyword' => '%' . $keyword . '%'],
+            'bind'       => ['keyword' => '%' . $keyword . '%'],
         ]);
 
         // 还缺少价格，现在进行补充，暂时用product表中的国际零售价代替（需要修改）
@@ -78,9 +78,9 @@ class IndexController extends AdminController
         // 创建分页对象
         $paginator = new PaginatorArray(
             [
-                "data" => $productlist_array,
+                "data"  => $productlist_array,
                 "limit" => 1,
-                "page" => $currentPage,
+                "page"  => $currentPage,
             ]
         );
 
@@ -89,7 +89,7 @@ class IndexController extends AdminController
 
         // 分配到模板
         $this->view->setVars([
-            'page' => $page,
+            'page'    => $page,
             'keyword' => $keyword,
         ]);
     }

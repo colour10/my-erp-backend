@@ -4,10 +4,10 @@ namespace Multiple\Shop\Controllers;
 
 use Asa\Erp\TbBrandgroup;
 use Asa\Erp\TbBrandgroupchild;
-use Asa\Erp\TbProduct;
-use Asa\Erp\TbSizecontent;
-use Asa\Erp\TbProductSearch;
 use Asa\Erp\TbColortemplate;
+use Asa\Erp\TbProduct;
+use Asa\Erp\TbProductSearch;
+use Asa\Erp\TbSizecontent;
 
 /**
  * 产品操作类
@@ -79,21 +79,21 @@ class ProductController extends AdminController
         }
 
         // 定义面包屑导航
-        $brandgroup = TbBrandgroup::findFirstById($product->brandgroupid);
+        $brandgroup      = TbBrandgroup::findFirstById($product->brandgroupid);
         $brandgroupchild = TbBrandgroupchild::findFirstById($product->childbrand);
-        $name = $this->getlangfield('name');
-        $breadcrumb = '<li><a href="/">' . $this->getValidateMessage('shouye') . '</a></li><li><a href="/brandgroup/detail/' . $product->brandgroupid . '">' . $brandgroup->$name . '</a></li><li><a href="/childproductgroup/detail/' . $product->childbrand . '">' . $brandgroupchild->$name . '</a></li>';
+        $name            = $this->getlangfield('name');
+        $breadcrumb      = '<li><a href="/">' . $this->getValidateMessage('shouye') . '</a></li><li><a href="/brandgroup/detail/' . $product->brandgroupid . '">' . $brandgroup->$name . '</a></li><li><a href="/childproductgroup/detail/' . $product->childbrand . '">' . $brandgroupchild->$name . '</a></li>';
 
         // 推送给模板
         $this->view->setVars([
-            'product' => $product,
+            'product'      => $product,
             'sizecontents' => $sizecontents_arr,
-            'colors' => $colors_arr,
+            'colors'       => $colors_arr,
             // 'price' => $product->price,
-            'realprice' => $realprice,
-            'id' => $id,
-            'breadcrumb' => $breadcrumb,
-            'number' => $product->number,
+            'realprice'    => $realprice,
+            'id'           => $id,
+            'breadcrumb'   => $breadcrumb,
+            'number'       => $product->number,
         ]);
     }
 

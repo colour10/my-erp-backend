@@ -5,6 +5,7 @@ namespace Multiple\Home\Controllers;
 use Asa\Erp\TbAgeseason;
 use Asa\Erp\TbBrand;
 use Asa\Erp\TbBrandgroup;
+use Asa\Erp\TbCompany;
 use Asa\Erp\TbDepartment;
 use Asa\Erp\TbGroup;
 use Asa\Erp\TbManager;
@@ -15,7 +16,6 @@ use Asa\Erp\TbProduct;
 use Asa\Erp\TbSeries;
 use Asa\Erp\TbShoppayment;
 use Asa\Erp\TbUser;
-use Asa\Erp\TbCompany;
 use Asa\Erp\Util;
 
 /**
@@ -39,7 +39,7 @@ class ManagerController extends AdminController
         if ($this->request->isPost()) {
             // 验证数据
             $login_name = $this->request->get('login_name');
-            $password = $this->request->get('password');
+            $password   = $this->request->get('password');
 
             if (!$login_name || !$password) {
                 return $this->error('请填写所有必填字段');
@@ -50,7 +50,7 @@ class ManagerController extends AdminController
                 "login_name = :login_name: and password = :password:",
                 'bind' => [
                     'login_name' => $login_name,
-                    'password' => md5($password),
+                    'password'   => md5($password),
                 ],
             ]);
 
@@ -122,7 +122,7 @@ class ManagerController extends AdminController
             // 如果不报错，则开始添加
             // 添加公司
             $companyModel = new TbCompany();
-            $data = ['name' => trim($company)];
+            $data         = ['name' => trim($company)];
             if (!$companyModel->create($data)) {
                 $this->db->rollback();
                 return $this->error('公司名创建失败');
@@ -143,7 +143,7 @@ class ManagerController extends AdminController
                 // 如果不存在，则创建
                 if (!$groupModel = TbGroup::findFirst("group_name='$group' AND companyid=$companyid")) {
                     $groupModel = new TbGroup();
-                    $data = ['group_name' => $group, 'companyid' => $companyid];
+                    $data       = ['group_name' => $group, 'companyid' => $companyid];
                     if (!$groupModel->create($data)) {
                         $this->db->rollback();
                         return $this->error($group . '创建失败');
@@ -165,7 +165,7 @@ class ManagerController extends AdminController
                     return $this->error('部门名称' . $v . '重复，创建失败');
                 }
                 $departmentModel = new TbDepartment();
-                $data = ['name' => $v, 'companyid' => $companyid, 'up_dp_id' => 0];
+                $data            = ['name' => $v, 'companyid' => $companyid, 'up_dp_id' => 0];
                 if (!$departmentModel->create($data)) {
                     $this->db->rollback();
                     return $this->error('部门创建失败');
@@ -178,17 +178,17 @@ class ManagerController extends AdminController
 
             // 添加user管理员
             $login_name = TbUser::getAvailableNo($admin);
-            $userModel = new TbUser();
-            $data = ['login_name' => $login_name, 'password' => md5($login_name . '123'), 'companyid' => $companyid, 'groupid' => $groupid, 'departmentid' => $departmentid];
+            $userModel  = new TbUser();
+            $data       = ['login_name' => $login_name, 'password' => md5($login_name . '123'), 'companyid' => $companyid, 'groupid' => $groupid, 'departmentid' => $departmentid];
             if (!$userModel->create($data)) {
                 $this->db->rollback();
                 return $this->error('user管理员创建失败');
             }
 
             // 添加shop管理员
-            $name = TbMember::getAvailableNo($admin);
+            $name        = TbMember::getAvailableNo($admin);
             $memberModel = new TbMember();
-            $data = ['login_name' => $name, 'name' => $name, 'password' => md5($name . '123'), 'companyid' => $companyid];
+            $data        = ['login_name' => $name, 'name' => $name, 'password' => md5($name . '123'), 'companyid' => $companyid, 'membertype' => '1'];
             if (!$memberModel->create($data)) {
                 $this->db->rollback();
                 return $this->error('shop商城用户名创建失败');
@@ -208,7 +208,7 @@ class ManagerController extends AdminController
             // 新增权限
             foreach ($permissions as $permission) {
                 $pgmodel = new TbPermissionGroup();
-                $data = ['groupid' => $groupid, 'permissionid' => $permission->id];
+                $data    = ['groupid' => $groupid, 'permissionid' => $permission->id];
                 if (!$pgmodel->create($data)) {
                     $this->db->rollback();
                     return $this->error('权限创建失败');
@@ -259,10 +259,10 @@ class ManagerController extends AdminController
         $companydid = $companyModel->id;
 
         // 开始统计
-        $companys = TbCompany::find("id != " . $companydid);
-        $datas = [];
-        $total_members_count = 0;
-        $total_users_count = 0;
+        $companys             = TbCompany::find("id != " . $companydid);
+        $datas                = [];
+        $total_members_count  = 0;
+        $total_users_count    = 0;
         $total_products_count = 0;
         foreach ($companys as $k => $company) {
             // 用户表
@@ -272,12 +272,12 @@ class ManagerController extends AdminController
             $return_users = [];
             // 循环遍历
             foreach ($users->toArray() as $j => $user) {
-                $departmentModel = TbDepartment::findFirstById($user['departmentid']);
-                $groupModel = TbGroup::findFirstById($user['groupid']);
-                $companyModel = TbCompany::findFirstById($user['companyid']);
+                $departmentModel        = TbDepartment::findFirstById($user['departmentid']);
+                $groupModel             = TbGroup::findFirstById($user['groupid']);
+                $companyModel           = TbCompany::findFirstById($user['companyid']);
                 $user['departmentname'] = $departmentModel ? $departmentModel->name : '';
-                $user['groupname'] = $groupModel ? $groupModel->group_name : '';
-                $user['companyname'] = $companyModel ? $companyModel->name : '';
+                $user['groupname']      = $groupModel ? $groupModel->group_name : '';
+                $user['companyname']    = $companyModel ? $companyModel->name : '';
                 // 如果有为null，则赋值为空
                 foreach (array_keys($user) as $key) {
                     if (is_null($user[$key])) {
@@ -294,7 +294,7 @@ class ManagerController extends AdminController
             $return_members = [];
             // 循环遍历
             foreach ($members->toArray() as $i => $member) {
-                $companyModel = TbCompany::findFirstById($member['companyid']);
+                $companyModel          = TbCompany::findFirstById($member['companyid']);
                 $member['companyname'] = $companyModel ? $companyModel->name : '';
 
                 // 性别
@@ -330,16 +330,16 @@ class ManagerController extends AdminController
             // 循环遍历
             foreach ($products->toArray() as $l => $product) {
                 // 系列
-                $seriesModel = TbSeries::findFirstById($product['series']);
+                $seriesModel           = TbSeries::findFirstById($product['series']);
                 $product['seriesname'] = $seriesModel ? $seriesModel->name_cn : '';
                 // 公司名
-                $companyModel = TbCompany::findFirstById($product['companyid']);
+                $companyModel           = TbCompany::findFirstById($product['companyid']);
                 $product['companyname'] = $companyModel ? $companyModel->name : '';
                 // 品牌
-                $brandModel = TbBrand::findFirstById($product['brandid']);
+                $brandModel           = TbBrand::findFirstById($product['brandid']);
                 $product['brandname'] = $brandModel ? $brandModel->name_cn : '';
                 // 品类
-                $brandgroupModel = TbBrandgroup::findFirstById($product['brandgroupid']);
+                $brandgroupModel           = TbBrandgroup::findFirstById($product['brandgroupid']);
                 $product['brandgroupname'] = $brandgroupModel ? $brandgroupModel->name_cn : '';
                 // 性别
                 switch ($product['gender']) {
@@ -372,33 +372,33 @@ class ManagerController extends AdminController
             // 赋值
             $datas['items'][$k] = [
                 // 公司模型
-                'company' => $company->toArray(),
+                'company'  => $company->toArray(),
                 // 公司用户
-                'users' => [
-                    'count' => $users->count(),
+                'users'    => [
+                    'count'   => $users->count(),
                     'details' => $return_users,
                 ],
                 // 公司下属会员
-                'members' => [
-                    'count' => $members->count(),
+                'members'  => [
+                    'count'   => $members->count(),
                     'details' => $return_members,
                 ],
                 // 公司下属产品
                 'products' => [
-                    'count' => $products->count(),
+                    'count'   => $products->count(),
                     'details' => $return_products,
                 ],
             ];
             // 累计
-            $total_members_count += $members->count();
-            $total_users_count += $users->count();
+            $total_members_count  += $members->count();
+            $total_users_count    += $users->count();
             $total_products_count += $products->count();
         }
 
         // 添加累计值
         $datas['total'] = [
-            'total_members_count' => $total_members_count,
-            'total_users_count' => $total_users_count,
+            'total_members_count'  => $total_members_count,
+            'total_users_count'    => $total_users_count,
             'total_products_count' => $total_products_count,
         ];
 

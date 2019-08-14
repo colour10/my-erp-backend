@@ -59,14 +59,14 @@ class ChildproductgroupController extends AdminController
         // 子品类名称
         // 多语言字段
         // 名称
-        $name = $this->getlangfield('name');
+        $name           = $this->getlangfield('name');
         $childbrandname = $childbrand->$name;
 
         // 主品类名称
         $brandgroup = $childbrand->brandgroup;
         if ($brandgroup) {
             $brandgroupname = $brandgroup->$name;
-            $brandgroupid = $brandgroup->id;
+            $brandgroupid   = $brandgroup->id;
         }
 
         // 分页
@@ -77,16 +77,16 @@ class ChildproductgroupController extends AdminController
             "childbrand = :childbrand: AND companyid = :companyid:",
             'bind' => [
                 'childbrand' => $id,
-                'companyid' => $this->currentCompany,
+                'companyid'  => $this->currentCompany,
             ],
         ]);
 
 
         // 加工数据
         // 在取出库存之前，首先获取销售端口
-        $company = TbCompany::findFirstById($member['companyid']);
+        $company  = TbCompany::findFirstById($member['companyid']);
         $saleport = $company->shopSaleport;
-        $array = $saleport ? Util::recordListColumn($saleport->saleportWarehouses, 'warehouseid') : [];
+        $array    = $saleport ? Util::recordListColumn($saleport->saleportWarehouses, 'warehouseid') : [];
 
 
         // 需要拿到每个商品下面所有的尺码，库存数
@@ -101,12 +101,12 @@ class ChildproductgroupController extends AdminController
             // 尺码
             $sizecontents = ($item->sizetopid && $array) ? TbProductstock::sum([
                 sprintf("warehouseid in (%s) and defective_level=0 and productid = %s", implode(',', $array), $item->productid),
-                "group" => 'productid, sizecontentid',
+                "group"  => 'productid, sizecontentid',
                 "column" => 'number',
             ])->toArray() : [];
             // 尺码加入名称，还有最大尺码记录数
             foreach ($sizecontents as $key => $value) {
-                $sizecontentname = ($TbSizecontentModel = TbSizecontent::findFirstById($value['sizecontentid'])) ? $TbSizecontentModel->name : '';
+                $sizecontentname                       = ($TbSizecontentModel = TbSizecontent::findFirstById($value['sizecontentid'])) ? $TbSizecontentModel->name : '';
                 $sizecontents[$key]['sizecontentname'] = $sizecontentname;
             }
             // 尺码组赋值
@@ -124,8 +124,8 @@ class ChildproductgroupController extends AdminController
             for ($i = 0; $i < $count - 1; $i++) {
                 for ($j = 0; $j < $count - $i - 1; $j++) {
                     if ($products[$j]['sum_sizecontents'] > $products[$j + 1]['sum_sizecontents']) {
-                        $temp = $products[$j];
-                        $products[$j] = $products[$j + 1];
+                        $temp             = $products[$j];
+                        $products[$j]     = $products[$j + 1];
                         $products[$j + 1] = $temp;
                     }
                 }
@@ -139,9 +139,9 @@ class ChildproductgroupController extends AdminController
         // 创建分页对象
         $paginator = new PaginatorArray(
             [
-                "data" => $products,
+                "data"  => $products,
                 "limit" => 10,
-                "page" => $currentPage,
+                "page"  => $currentPage,
             ]
         );
 
@@ -153,10 +153,10 @@ class ChildproductgroupController extends AdminController
 
         // 推送给模板
         $this->view->setVars([
-            'page' => $page,
-            'id' => $id,
-            'breadcrumb' => $breadcrumb,
-            'title' => $childbrandname,
+            'page'                 => $page,
+            'id'                   => $id,
+            'breadcrumb'           => $breadcrumb,
+            'title'                => $childbrandname,
             'max_sum_sizecontents' => $max_sum_sizecontents,
         ]);
     }

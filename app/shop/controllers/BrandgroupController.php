@@ -88,7 +88,7 @@ class BrandgroupController extends AdminController
         // 查找隶属于子品类的商品
         $productsModel = TbProductSearch::find([
             'conditions' => 'childbrand IN ({brandGroup_ids:array}) AND companyid = ' . $this->currentCompany,
-            'bind' => ['brandGroup_ids' => $brandGroup_ids],
+            'bind'       => ['brandGroup_ids' => $brandGroup_ids],
         ]);
 
         // 加工数据
@@ -99,7 +99,7 @@ class BrandgroupController extends AdminController
         $company = TbCompany::findFirstById($member['companyid']);
         // 获取销售端口
         $saleport = $company->shopSaleport;
-        $array = $saleport ? Util::recordListColumn($saleport->saleportWarehouses, 'warehouseid') : [];
+        $array    = $saleport ? Util::recordListColumn($saleport->saleportWarehouses, 'warehouseid') : [];
 
         // 需要拿到每个商品下面所有的尺码，库存数
         $products = $productsModel->toArray();
@@ -113,12 +113,12 @@ class BrandgroupController extends AdminController
             // 尺码
             $sizecontents = ($item->sizetopid && $array) ? TbProductstock::sum([
                 sprintf("warehouseid in (%s) and defective_level=0 and productid = %s", implode(',', $array), $item->productid),
-                "group" => 'productid, sizecontentid',
+                "group"  => 'productid, sizecontentid',
                 "column" => 'number',
             ])->toArray() : [];
             // 尺码加入名称，还有最大尺码记录数
             foreach ($sizecontents as $key => $value) {
-                $sizecontentname = ($TbSizecontentModel = TbSizecontent::findFirstById($value['sizecontentid'])) ? $TbSizecontentModel->name : '';
+                $sizecontentname                       = ($TbSizecontentModel = TbSizecontent::findFirstById($value['sizecontentid'])) ? $TbSizecontentModel->name : '';
                 $sizecontents[$key]['sizecontentname'] = $sizecontentname;
             }
             // 尺码组赋值
@@ -136,8 +136,8 @@ class BrandgroupController extends AdminController
             for ($i = 0; $i < $count - 1; $i++) {
                 for ($j = 0; $j < $count - $i - 1; $j++) {
                     if ($products[$j]['sum_sizecontents'] > $products[$j + 1]['sum_sizecontents']) {
-                        $temp = $products[$j];
-                        $products[$j] = $products[$j + 1];
+                        $temp             = $products[$j];
+                        $products[$j]     = $products[$j + 1];
                         $products[$j + 1] = $temp;
                     }
                 }
@@ -152,9 +152,9 @@ class BrandgroupController extends AdminController
         // 创建分页对象，使用数组分页
         $paginator = new PaginatorArray(
             [
-                "data" => $products,
+                "data"  => $products,
                 "limit" => 10,
-                "page" => $currentPage,
+                "page"  => $currentPage,
             ]
         );
 
@@ -167,10 +167,10 @@ class BrandgroupController extends AdminController
         // 推送给模板
         // 再加上当前object对象
         $this->view->setVars([
-            'page' => $page,
-            'id' => $id,
-            'breadcrumb' => $breadcrumb,
-            'title' => $brandGroup->$name,
+            'page'                 => $page,
+            'id'                   => $id,
+            'breadcrumb'           => $breadcrumb,
+            'title'                => $brandGroup->$name,
             'max_sum_sizecontents' => $max_sum_sizecontents,
         ]);
     }
@@ -204,8 +204,8 @@ class BrandgroupController extends AdminController
     {
         // 逻辑
         // 判断是否超出了6个，如果超过了6个，那么取前5个，最后一个放more
-        $list = TbBrandgroup::find();
-        $count = count($list);
+        $list     = TbBrandgroup::find();
+        $count    = count($list);
         $leftlist = [];
         if ($count > 5) {
             // 剩下多少条
