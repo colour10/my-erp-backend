@@ -8,8 +8,40 @@ use Asa\Erp\Util;
 
 /**
  * 权限表，这个控制器在页面不体现出来，所以只录入就可以了
+ * ErrorCode 1117
  */
-class PermissionController extends BaseController {
+class PermissionController extends ZadminController {
+    public function initialize() {
+        parent::initialize();
+
+        $this->setModelName('Asa\\Erp\\TbPermission');
+    }
+
+    function before_edit($row) {
+        $this->check();
+        //print_r($_POST);
+    }
+
+    function before_add() {
+        $this->check();
+    }
+
+    function before_delete($row) {
+        $this->check();
+    }
+
+    function before_page() {
+        $this->check();
+
+        $_POST["__orderby"] = "pid asc, display_index asc";
+    }
+
+    private function check() {
+        if($this->config->mode!='develop') {
+            throw new \Exception("/11170101/内部错误/");
+        }
+    }
+
     /**
      * 获取权限目录树
      * @return false|string

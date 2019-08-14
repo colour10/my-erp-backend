@@ -682,7 +682,7 @@ return [
     "fahuozongjia" => "发货总价",
     "rukuheji" => "入库合计",
     "rukuzongjia" => "入库总价",
-    "zaitushuliang" => "在途数量",
+    "pingtaiquanxian" => "平台权限",
     "zaitushuliang" => "在途数量",
     "zaitushuliang" => "在途数量",
     "zaitushuliang" => "在途数量",
