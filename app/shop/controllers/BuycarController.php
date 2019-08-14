@@ -226,11 +226,12 @@ class BuycarController extends AdminController
                 // 尺码留空的数据删除
                 // 同时检测下单数量不能为负数
                 foreach ($post['sizecontentids'] as $k => $v) {
-                    if (!$v) {
+                    if (empty($v)) {
                         unset($post['sizecontentids'][$k]);
-                    }
-                    if ($v < 1) {
-                        return $this->error($this->getValidateMessage('params-error'));
+                    } else {
+                        if ($v < 1) {
+                            return $this->error($this->getValidateMessage('params-error'));
+                        }
                     }
                 }
 
