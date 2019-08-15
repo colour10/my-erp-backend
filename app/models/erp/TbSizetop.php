@@ -46,8 +46,9 @@ class TbSizetop extends BaseModel
     public function getRules() {
         $factory = $this->getValidatorFactory();
         return [
-            'name_cn' => $factory->presenceOfMultiple('mingcheng'),
-            'code' => [$factory->presenceOf('bianhao'), $factory->uniqueness('bianhao')]
+            'name_cn' => $factory->presenceOf('jiancheng'),
+            'name_en' => $factory->presenceOf('mingcheng'),
+            'displayindex' => [$factory->presenceOf('paixu')]
         ];
     }
 }
