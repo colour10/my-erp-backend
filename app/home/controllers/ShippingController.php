@@ -481,6 +481,10 @@ class ShippingController extends AdminController {
         $total_amount = 0;//总金额
         $exchangerate = $shipping->exchangerate;
 
+        if($exchangerate<=0) {
+            throw new \Exception('/11011209/汇率不合法。/');
+        }
+
         //本币id
         $auth = $this->auth;
         if(isset($auth['company']) && isset($auth['company']->currencyid)) {
