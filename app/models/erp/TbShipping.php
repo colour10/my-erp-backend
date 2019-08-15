@@ -63,24 +63,24 @@ class TbShipping extends BaseModel
             "orderbrands" => $orderbrands,
             "orderbranddetails" => $orderbranddetails,
             // 只有已经确认过的入库单，才显示成本。
-            "costs" => $this->status==2 || $this->status==3 ? $this->getCostList($this->currency) : []
+            "costs" => $this->status==2 || $this->status==3 ? $this->getCostList() : []
         ];
     }
 
-    function getCostList($currencyid) {
+    function getCostList() {
         $result = [];
         $total_number = 0;
         $total_amount = 0;
         foreach($this->shippingDetail as $detail) {
             if($this->status==3) {
-                $amount = TbExchangeRate::convert($this->companyid, $detail->costcurrency, $currencyid, $detail->warehousingnumber*$detail->cost);
+                $amount = $detail->warehousingnumber*$detail->cost;
             }
             else {
-                $amount = TbExchangeRate::convert($this->companyid, $detail->currencyid, $currencyid, $detail->warehousingnumber*$detail->price);
+                $amount = $detail->warehousingnumber*$detail->price;
             }
 
             $total_number += $detail->warehousingnumber;
-            $total_amount += $amount['number'];
+            $total_amount += $amount;
 
             if(isset($result[$detail->productid])) {
                 $row = $result[$detail->productid];
@@ -90,10 +90,10 @@ class TbShipping extends BaseModel
                  * amount 保存当前的商品的总金额，包括商品售价及摊销的费用
                  * amount_ 仅仅是商品的总金额，用来计算按金额摊销的费用的，避免已经按数量摊销过，在按照金额摊销就错了。
                  */
-                $row = ["number"=>0, "amount"=>0, "amount_"=>0, "productid"=>$detail->productid, "currencyid"=>$currencyid];
+                $row = ["number"=>0, "amount"=>0, "amount_"=>0, "productid"=>$detail->productid];
             }
             $row["number"] += $detail->warehousingnumber;
-            $row["amount"] += $amount['number'];
+            $row["amount"] += $amount;
             $row["amount_"] = $row["amount"];
             $result[$detail->productid] = $row;
         }
@@ -104,7 +104,7 @@ class TbShipping extends BaseModel
         }
 
         foreach ($this->shippingFee as $shippingFee) {
-            $fee_amount = TbExchangeRate::convert($this->companyid, $shippingFee->currencyid, $currencyid, $shippingFee->amount);
+            $fee_amount = round($shippingFee->amount*$shippingFee->exchangerate, 2); // TbExchangeRate::convert($this->companyid, $shippingFee->currencyid, $currencyid, $shippingFee->amount);
 
             if($shippingFee->feename->is_amortize==1) {
                 //print_r($shippingFee->feename->toArray());
@@ -112,7 +112,7 @@ class TbShipping extends BaseModel
                 if($shippingFee->feename->amortize_type==1) {
                     // 按数量摊销
                     if($total_number>0) {
-                        $average = $fee_amount['number']/$total_number;
+                        $average = $fee_amount/$total_number;
                         //print_r( $average);
                         //echo ",".$fee_amount['number'];
                         foreach($result as $key=>$row) {
@@ -125,7 +125,7 @@ class TbShipping extends BaseModel
                     // 按金额摊销
                     if($total_amount>0) {
                         foreach($result as $key=>$row) {
-                            $row['amount'] += $fee_amount['number']*$row['amount_']/$total_amount;
+                            $row['amount'] += $fee_amount*$row['amount_']/$total_amount;
                             $result[$key] = $row;
                         }
                     }

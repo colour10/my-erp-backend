@@ -1045,12 +1045,14 @@ class Util
 
 
         $url = sprintf("%s/productstock/change/%d", $config->productstock_service->server, $productid);
+        //echo $url." {$productid}\n";
         $response = file_get_contents($url);
         if ($response == '1') {
-            $logger->info($productid);
+            $logger->info($productid.'');
         } else {
-            $logger->error($productid);
+            $logger->error($productid.'');
         }
+        //echo $url." ++\n";
     }
 
 

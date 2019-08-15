@@ -21,21 +21,17 @@ class ShippingfeeController extends CadminController {
         $_POST['makestaff'] = $this->currentUser;
         $_POST['maketime'] = date("Y-m-d H:i:s");
 
-        $this->checkExchange();
+        //$this->checkExchange($_POST["shippingid"]);
     }
 
     function before_edit($row) {
-        $this->checkExchange();
+        $this->checkExchange($row->shippingid);
     }
 
     //检查是否设置过汇率
-    function checkExchange() {
-        $shipping = TbShipping::findFirstById($_POST["shippingid"]);
-        if($shipping!=false && $shipping->companyid==$this->companyid) {
-            $rate = TbExchangeRate::getExchangeRate($this->companyid, $_POST['currencyid'], $shipping->currency);
-        }
-        else {
-            throw new \Exception("/11150101/数据错误。/");
+    function checkExchange($shippingid) {
+        if(!isset($_POST['exchangerate']) || $_POST['exchangerate']<=0) {
+            throw new \Exception("/11150101/汇率不合法。/");
         }
     }
 }

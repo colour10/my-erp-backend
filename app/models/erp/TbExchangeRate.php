@@ -60,7 +60,7 @@ class TbExchangeRate extends BaseModel
         );
 
         if($exchange==false) {
-            throw new \Exception("/11050102/请先设置汇率。/");
+            throw new \Exception("/11050102/请先设置汇率({$from}=>{$to})。/");
         }
         else {
             return $exchange->rate;

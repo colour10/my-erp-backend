@@ -473,18 +473,13 @@ class ShippingController extends AdminController {
      * @return [type] [description]
      */
     function warehousingAction() {
-        $shipping = TbShipping::findFirst(
-            sprintf("id=%d and companyid=%d", $_POST['id'], $this->companyid)
-        );
-
-        if($shipping==false) {
-            throw new \Exception("/11011201/发货单不存在/");
-        }
-
         $this->db->begin();
+
+        $shipping = $this->saveinfo();
 
         $total_number = 0;//总数量
         $total_amount = 0;//总金额
+        $exchangerate = $shipping->exchangerate;
 
         //本币id
         $auth = $this->auth;
@@ -496,7 +491,8 @@ class ShippingController extends AdminController {
             throw new \Exception("/11011203/没有设置本币，不能计算成本/");
         }
 
-        $product_array = $shipping->getCostList($currencyid);
+        //货币单位跟入库单保持一致
+        $product_array = $shipping->getCostList();
 
         //计算每件商品摊销后的成本
         $prodctstocks = TbProductstock::sum([
@@ -505,6 +501,14 @@ class ShippingController extends AdminController {
             "group" => "productid"
         ]);
 
+        $array = [];
+        foreach($product_array as $productid=>$row) {
+            $array[$productid] = [
+                "amount" => $row['amount'] * $exchangerate,
+                "number" => $row['number']
+            ];
+        }
+
         foreach($prodctstocks as $row) {
             $product = TbProduct::getInstance($row->productid);
             if($product==false) {
@@ -512,37 +516,32 @@ class ShippingController extends AdminController {
                 throw new \Exception("/11011205/商品信息不存在。/");
             }
 
-            //当前库存的商品总价
-            $info = $product_array[$row->productid];
-            if($product->cost>0 && $product->costcurrency>0) {
-                $amount = TbExchangeRate::convert($this->companyid, $product->costcurrency, $currencyid, $product->cost*$row->sumatory);
-
-                $info["product_amount"] = $info["amount"]+$amount['number'];
-                $info['product_number'] = $info['number']+$row->sumatory;
+            //当前库存的商品总价，全部转化成本币
+            if(isset($array[$row->productid])) {
+                $array[$row->productid]['amount'] += $product->cost*$row->sumatory;
+                $array[$row->productid]['number'] += $row->sumatory;
             }
             else {
-                $info["product_amount"] = $info['amount'];
-                $info['product_number'] = $info['number']+$row->sumatory;
+                $array[$row->productid] = [
+                    "amount" => $product->cost*$row->sumatory,
+                    "number" => $row->sumatory
+                ];
             }
-            $product_array[$row->productid] = $info;
         }
 
-        //print_r($product_array);exit;
-        foreach($product_array as $row) {
-            $product = TbProduct::getInstance($row['productid']);
+        //print_r($array);exit;
+        foreach($array as $productid=>$row) {
+            $product = TbProduct::getInstance($productid);
 
-            if(isset($info["product_amount"]) && isset($info["product_number"]) && $info["product_number"]>0) {
-                $product->cost = round($row['product_amount']/$row["product_number"],2);
-            }
-            else {
-                $product->cost = round($row['amount']/$row["number"],2);
-            }
+            if($product && $row["number"]>0) {
+                $product->cost = round($row['amount']/$row["number"], 2);
 
-            $product->costcurrency = $currencyid;
-            $product->laststoragedate = date("Y-m-d H:i:s");
-            if($product->update()===false) {
-                $this->db->rollback();
-                throw new \Exception("/11011206/更新商品成本失败/");
+                $product->costcurrency = $currencyid;
+                $product->laststoragedate = date("Y-m-d H:i:s");
+                if($product->update()===false) {
+                    $this->db->rollback();
+                    throw new \Exception("/11011206/更新商品成本失败/");
+                }
             }
         }
 
@@ -607,7 +606,7 @@ class ShippingController extends AdminController {
             throw new \Exception("/11011303/没有设置本币，不能计算成本/");
         }
 
-        $costList = $shipping->getCostList($currencyid);
+        $costList = $shipping->getCostList();
         $prodctstocks = TbProductstock::sum([
             sprintf("productid in (%s)", implode(",", array_keys($costList))),
             "column" => "number",
@@ -619,11 +618,28 @@ class ShippingController extends AdminController {
             $product = TbProduct::getInstance($row['productid']);
 
             if($product->costcurrency>0) {
-                $amount = TbExchangeRate::convert($this->companyid, $product->costcurrency, $currencyid, $product->cost*$row->sumatory);
-                $info = $costList[$row->productid];
-                $product->cost = round(($amount['number']-$info['amount'])/($row->sumatory-$info['number']),2);
-                $product->costcurrency = $currencyid;
+                // 计算当前库存里的商品的总价格,本币
+                $amount = $product->cost*$row->sumatory;
 
+                // 开始计算，取消入库后的剩余库存商品的价格
+                $info = $costList[$row->productid];
+
+                //如果库存商品数量跟要取消入库的商品数量相同，需要再看一下商品总价格是否相同
+                //  如果相同，说明是第一次进该商品，取消入库后，商品的库存数量为零，成本价没有意义了。
+                //  如果库存数量大于要取消的商品数量，则计算摊销费用，减库存即可
+                //  如果库存数量小于要取消的商品数量，则不能取消
+                if($row->sumatory-$info['number']===0) {
+                    // do nothing
+                    continue;
+                }
+                else if($row->sumatory-$info['number']>0) {
+                    $product->cost = round(($amount-$info['amount']*$shipping->exchangerate)/($row->sumatory-$info['number']),2);
+                }
+                else {
+                    throw new \Exception("/11011309/库存不足，不能取消/");
+                }
+
+                //$product->costcurrency = $currencyid;
                 //echo round(($amount['number']-$info['amount'])/($row->sumatory-$info['number']),2);
                 if($product->update()===false) {
                     $this->db->rollback();
@@ -707,6 +723,21 @@ class ShippingController extends AdminController {
      * @return [type] [description]
      */
     function saveinfoAction() {
+        $this->saveinfo();
+        return $this->success();
+    }
+
+    function orderbrandlistAction() {
+        $shipping = TbShipping::findFirstById($_POST['id']);
+        if($shipping!=false && $shipping->companyid==$this->companyid) {
+            return $this->success($shipping->getOrderbrandList());
+        }
+        else {
+            throw new \Exception("/11011601/发货单不存在/");
+        }
+    }
+
+    private function saveinfo() {
         $shipping = TbShipping::findFirst(
             sprintf("id=%d and companyid=%d", $_POST['id'], $this->companyid)
         );
@@ -750,16 +781,6 @@ class ShippingController extends AdminController {
             throw new \Exception("/11011502/更新发货单基本信息失败。/");
         }
 
-        return $this->success();
-    }
-
-    function orderbrandlistAction() {
-        $shipping = TbShipping::findFirstById($_POST['id']);
-        if($shipping!=false && $shipping->companyid==$this->companyid) {
-            return $this->success($shipping->getOrderbrandList());
-        }
-        else {
-            throw new \Exception("/11011601/发货单不存在/");
-        }
+        return $shipping;
     }
 }
