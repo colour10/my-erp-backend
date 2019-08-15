@@ -49,7 +49,10 @@ class PermissionController extends ZadminController {
     public function treeAction()
     {
         // 逻辑
-        $permissions = TbPermission::find("is_only_superadmin=0");
+        $permissions = TbPermission::find([
+            "is_only_superadmin=0",
+            "order" => "display_index asc"
+        ]);
         if(!$permissions) {
             return $this->error(['permissions are not exist']);
         }
