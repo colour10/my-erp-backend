@@ -1,9 +1,9 @@
 <?php
 
 use Asa\Erp\TbProductSearch;
+use Asa\Erp\TbShoporderCommon;
 use Asa\Erp\Util;
 use Phalcon\Cli\Task;
-use Asa\Erp\TbShoporderCommon;
 use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Queue\Beanstalk;
 
@@ -32,7 +32,7 @@ class ConsumecheckorderTask extends Task
 
         // 初始化日志地址
         $root_path = dirname(dirname(__FILE__));
-        $folder = $root_path . '/cache/logs/';
+        $folder    = $root_path . '/cache/logs/';
         if (!file_exists($folder)) {
             Util::Directory($folder);
         }
