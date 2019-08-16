@@ -79,6 +79,28 @@ class WechatpayController extends AdminController
             return 'fail';
         }
 
+        // 如果订单状态已经关闭，那么说明用户是在订单快临近关闭时付款的，这个时候的付款无效，我们要给用户做退款处理
+        if ($order->getClosed()) {
+            if ($this->queue) {
+                $this->queue->choose('my_refundorder_tube');
+                // 只把必要的参数传递给队列即可，剩下的逻辑交给Beanstalk吧。
+                // 因为命令行session，注入变量都不能访问，所以需要把所有数据都传递过去
+                $this->queue->put([
+                    'order'   => $order,
+                    'method'  => 'wechat',
+                    'payment' => $this->wechat_pay,
+                    'config'  => $this->config,
+                ], [
+                    // 任务优先级
+                    'priority' => 250,
+                    // 延迟时间，表示将job放入ready队列需要等待的秒数，10代表10秒
+                    'delay'    => 10,
+                    // 运行时间，表示允许一个worker执行该job的秒数。这个时间将从一个worker 获取一个job开始计算
+                    'ttr'      => 3600,
+                ]);
+            }
+        }
+
         // 如果这笔订单的状态是已付款，那么就无需再次支付了。
         if ($order->getPayTime()) {
             // 返回数据给支付宝

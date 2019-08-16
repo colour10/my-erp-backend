@@ -688,8 +688,8 @@ class OrderController extends AdminController
      * @param TbShoporderCommon $order 订单模型
      * @return false|Response|\Phalcon\Http\ResponseInterface|string
      */
-    private
-    function _refundOrder(TbShoporderCommon $order)
+    public
+    function refundOrder(TbShoporderCommon $order)
     {
         // 逻辑
         Util::closeDisplayErrors();
@@ -796,7 +796,7 @@ class OrderController extends AdminController
 
             // 开始调用退款逻辑
             // 调用退款逻辑
-            $result = $this->_refundOrder($order);
+            $result = $this->refundOrder($order);
             // 如果是json，则退款成功，否则退款失败
             if (!Util::is_json($result)) {
                 return $this->error($result);
