@@ -87,13 +87,14 @@ class WechatpayController extends AdminController
                 // 因为命令行session，注入变量都不能访问，所以需要把所有数据都传递过去
                 $this->queue->put([
                     'order'   => $order,
+                    'method'  => 'wechat',
                     'payment' => $this->wechat_pay,
                     'config'  => $this->config,
                 ], [
                     // 任务优先级
                     'priority' => 250,
                     // 延迟时间，表示将job放入ready队列需要等待的秒数，10代表10秒
-                    'delay'    => 1,
+                    'delay'    => 10,
                     // 运行时间，表示允许一个worker执行该job的秒数。这个时间将从一个worker 获取一个job开始计算
                     'ttr'      => 3600,
                 ]);
