@@ -196,7 +196,7 @@ class OrderController extends BaseController
             if($detail!=false) {
                 $detail->number = $item['number'];
                 $detail->discount = $item['discount'];
-                $detail->factoryprice = $product->factoryprice;
+                $detail->factoryprice = $item['factoryprice'];
                 $detail->currencyid = $product->factorypricecurrency;
                 $detail->wordprice = $product->wordprice;
                 if($detail->update()==false) {
@@ -212,7 +212,7 @@ class OrderController extends BaseController
                 $detail->number = $item['number'];
                 $detail->discount = $item['discount'];
                 $detail->companyid = $this->companyid;
-                $detail->factoryprice = $product->factoryprice;
+                $detail->factoryprice = $item['factoryprice'];
                 $detail->currencyid = $product->factorypricecurrency;
                 $detail->wordprice = $product->wordprice;
                 $detail->createdate = date("Y-m-d H:i:s");

@@ -138,7 +138,8 @@ class ShippingController extends AdminController {
                     $detail->number = $item['number'];
                     $detail->discount = $item['discount'];
                     $detail->price = $item['price'];
-                    $detail->currencyid = TbProduct::getInstance($item['productid'])->factorypricecurrency;
+                    $detail->factoryprice = $item['factoryprice'];
+                    $detail->currencyid = $item['currencyid'];
                     $detail->createdate = date("Y-m-d H:i:s");
                     $detail->orderdetailid = $item['orderdetailid'];
                     $detail->orderid = $item['orderid'];
@@ -243,7 +244,8 @@ class ShippingController extends AdminController {
                 $detail->number = $item['number'];
                 $detail->discount = $item['discount'];
                 $detail->price = $item['price'];
-                $detail->currencyid = TbProduct::getInstance($item['productid'])->factorypricecurrency;
+                $detail->factoryprice = $item['factoryprice'];
+                $detail->currencyid = $item['currencyid'];
                 $detail->createdate = date("Y-m-d H:i:s");
                 $detail->orderdetailid = $item['orderdetailid'];
                 $detail->orderid = $item['orderid'];
