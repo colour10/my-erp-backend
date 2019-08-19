@@ -305,7 +305,7 @@ class AdminController extends Controller
             <body>
                 {$this->getValidateMessage('dear')}{$username}：<br><br>
                 {$msg}。<br><br>
-                <a href="http://{$this->shop_host}/order/detail/{$order_id}" target="_blank">查看订单</a>
+                <a href="http://{$this->shop_host}/order/detail/{$order_id}" target="_blank">{$this->getValidateMessage('view-order')}</a>
             </body>
         </html>
 EOT;
