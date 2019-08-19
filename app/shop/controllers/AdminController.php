@@ -331,6 +331,7 @@ EOT;
             ->addCss(APP_PATH . "/public/shop/assets/corporate/css/style.css")
             ->addCss(APP_PATH . "/public/shop/assets/corporate/css/style-responsive.css")
             ->addCss(APP_PATH . "/public/shop/assets/corporate/css/themes/red.css")
+            ->addCss(APP_PATH . "/public/shop/assets/static/css/bootstrap-datetimepicker.min.css")
             ->addCss(APP_PATH . "/public/shop/assets/static/css/bootstrap-submenu.css")
             ->addCss(APP_PATH . "/public/shop/assets/corporate/css/custom.css")
             ->join(true)

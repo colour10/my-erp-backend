@@ -86,18 +86,6 @@
 
                                                     </span>
 
-                                                    <?php
-                                                    if ($order['is_show_change_expiretime']) {
-                                                        ?>
-                                                        <em class="pull-right font-normal">
-                                                            <a class="getorder"
-                                                               data-orderno="<?php echo $order['order_no']; ?>"
-                                                               data-id="<?php echo $order['id']; ?>"
-                                                               data-expiretime="<?php echo $order['expire_time']; ?>"
-                                                               onclick="getorder(this);"><?php echo $this->obj->getValidateMessage('change-jiezhishijian'); ?></a>
-                                                        </em>
-                                                    <?php } ?>
-
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -116,7 +104,7 @@
                                                     <span class="margin-left-20"><a
                                                                 href="/product/detail/<?php echo $orderdetail['product_detail_id']; ?>"><img
                                                                     class="w80"
-                                                                    src="<?php echo $orderdetail['picture']; ?>"
+                                                                    src="<?php echo \Asa\Erp\Util::getCorrentImgUrl($orderdetail['picture']); ?>"
                                                                     alt="<?php echo $orderdetail['product_name']; ?>"
                                                                     title="<?php echo $orderdetail['product_name']; ?>"></a></span>
                                                     </td>
@@ -126,6 +114,18 @@
                                                     <td class="product-number"><?php echo $orderdetail['number']; ?></td>
                                                     <td class="product-number">
                                                         <?php echo $order['expire_time']; ?>
+                                                        <br>
+                                                        <?php
+                                                        if ($order['is_show_change_expiretime']) {
+                                                            ?>
+                                                            <button class="btn btn-sm"
+                                                                    data-orderno="<?php echo $order['order_no']; ?>"
+                                                                    data-id="<?php echo $order['id']; ?>"
+                                                                    data-expiretime="<?php echo $order['expire_time']; ?>"
+                                                                    onclick="getorder(this);"><?php echo $this->obj->getValidateMessage('modify'); ?></button>
+                                                            <?php
+                                                        }
+                                                        ?>
                                                     </td>
 
                                                     <td class="product-number">
