@@ -289,8 +289,8 @@ EOT;
             $member                          = $order->getMember();
             $orders_array[$k]['member_name'] = $member->name;
             // 是否显示更改截止时间
-            // 要求是锁库存用户，未付款订单，有截止时间，并且截止时间有效，还有就是订单不能是关闭状态
-            $orders_array[$k]['is_show_change_expiretime'] = ($member->is_lockstock && !$order->getPayTime() && $order->getExpireTime() && $order->getExpireTime() > date('Y-m-d H:i:s') && !$order->getClosed()) ? true : false;
+            // 要求是未付款订单，有截止时间，并且截止时间有效，还有就是订单不能是关闭状态
+            $orders_array[$k]['is_show_change_expiretime'] = (!$order->getPayTime() && $order->getExpireTime() && $order->getExpireTime() > date('Y-m-d H:i:s') && !$order->getClosed()) ? true : false;
             // 显示付款状态
             $orders_array[$k]['pay_status'] = $order->getPayTime() ? $this->getValidateMessage('paid') : $this->getValidateMessage('not-paid');
             // 显示物流状态

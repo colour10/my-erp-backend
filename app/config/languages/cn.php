@@ -898,6 +898,8 @@ return [
     'company-name' => '公司名称',
     'alipay-auth-status' => '支付宝授权状态',
     'wechat-auth-status' => '微信授权状态',
+    'modify' => '修改',
+    'view-order' => '查看订单',
 
     'template' =>
         [
