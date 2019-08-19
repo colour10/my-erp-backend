@@ -287,7 +287,7 @@ class Util
      * @param array $resizeArray 分辨率数组，例如[80, 200]，代表裁剪为两组分辨率，分别是80*80、200*200，路径保存在和原来的图片相同的目录下
      * @throws \Exception
      */
-    public static function convertPics($filepath, $resizeArray)
+    public static function convertPics($filepath, $resizeArray, $type = 'png', $quality = 80)
     {
         // 逻辑
         // 首先获取图片的参数
@@ -296,7 +296,7 @@ class Util
             // 开始处理
             Image::open($filepath)
                 ->resize($resize, $resize)
-                ->save(dirname($filepath) . '/' . $pathinfo['basename'] . '_' . $resize . 'x' . $resize . '.' . $pathinfo['extension']);
+                ->save(dirname($filepath) . '/' . $pathinfo['basename'] . '_' . $resize . 'x' . $resize . '.' . $type, $type, $quality);
         }
     }
 

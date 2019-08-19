@@ -17,6 +17,7 @@ class CommonController extends BaseController
 
     public function indexAction()
     {
+
     }
 
     function systemlanguageAction()
