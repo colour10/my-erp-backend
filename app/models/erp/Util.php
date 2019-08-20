@@ -756,7 +756,6 @@ class Util
      * @param string $subject email标题
      * @param string $body email主体内容
      * @return bool
-     * @throws \PHPMailer\PHPMailer\Exception
      */
     public static function sendEmail($toemail, $subject, $body)
     {
@@ -817,12 +816,14 @@ class Util
 
         //发送命令 返回布尔值
         //PS：经过测试，要是收件人不存在，若不出现错误依然返回true 也就是说在发送之前 自己需要些方法实现检测该邮箱是否真实有效
-        $status = $mail->send();
-
-        //简单的判断与提示信息
-        if ($status) {
-            return true;
-        } else {
+        try {
+            //简单的判断与提示信息
+            if ($mail->send()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (\Exception $e) {
             return false;
         }
     }
