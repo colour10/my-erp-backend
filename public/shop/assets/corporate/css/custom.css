@@ -216,6 +216,11 @@ div.goods-page em {
     font-style: normal;
 }
 
+.goods-page-description h3 {
+    font: 300 14px 'Open Sans', sans-serif;
+    padding-top: 0;
+}
+
 .shopping-total em, .checkout-total-block em {
     float: none;
     top: 0;
