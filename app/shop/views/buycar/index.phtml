@@ -176,11 +176,8 @@
                                                                 <li>
                                                                     <em><?php echo $this->obj->getValidateMessage('freight'); ?></em>
                                                                     <strong class="price"
-                                                                            id="send_price"><span><?php echo $this->currency; ?></span>
-                                                                        <em><input
-                                                                                    type="text" name="send_price"
-                                                                                    value="0.00"
-                                                                                    oninput="value=value.replace(/[^\d.]/g,'')"></em></strong>
+                                                                            id="send_price"><span><?php echo $this->currency; ?></span><em><span
+                                                                                    id="send_price_number">0.00</span></strong>
                                                                 </li>
                                                                 <li class="shopping-total-price">
                                                                     <em><?php echo $this->obj->getValidateMessage('chengjiaozongjia'); ?></em>
@@ -227,8 +224,8 @@
 
 <script type="text/javascript">
 
-    // 运费
-    var send_price = '0.00';
+    // 读取默认运费
+    var send_price = $('#send_price_number').html();
 
     // 初始化数量和金额，有可能数据库存的是原始的订购数和金额，但是实际库存已经不够了，这个时候需要重新计算
     $(function () {
@@ -298,30 +295,11 @@
         });
     });
 
-    // 检测运费的值的变化
-    // 首先跟踪input焦点动作
-    // 当获得焦点时
-    var old_send_price = 0;
-    var new_send_price = 0;
-    var input_send_price = $("input[name='send_price']");
-    input_send_price.focus(function () {
-        old_send_price = $(this).val();
-    });
-    // 当失去焦点时
-    input_send_price.blur(function () {
-        new_send_price = $(this).val();
-        if (old_send_price !== new_send_price) {
-            // 这个时候商品的总额啥的就不用变化了
-            // 重新执行sum函数
-            addMoney();
-        }
-    });
-
     // 重新赋值
     // 时刻检测订单金额的变化
     function addMoney() {
         // 逻辑
-        var total_price = 0;
+        let total_price = 0;
         $('.em-total-price').each(function () {
             total_price += Number($(this).html());
         });
@@ -329,9 +307,9 @@
         total_price = Number(total_price);
         $('#total_price').find('em').html(total_price.toFixed(2));
         // 运费
-        send_price = Number(input_send_price.val());
+        send_price = Number(send_price);
         // 订单总额
-        var final_price = Number(total_price + send_price).toFixed(2);
+        let final_price = Number(total_price + send_price).toFixed(2);
         $('#final_price').find('em').html(final_price);
     }
 

@@ -209,7 +209,11 @@ button {
 }
 
 .shopping-total strong span, .checkout-total-block strong span {
-    font-size: 21px;
+    font-size: 18px;
+}
+
+div.goods-page em {
+    font-style: normal;
 }
 
 .shopping-total em, .checkout-total-block em {
