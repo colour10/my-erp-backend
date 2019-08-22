@@ -209,7 +209,16 @@ button {
 }
 
 .shopping-total strong span, .checkout-total-block strong span {
-    font-size: 21px;
+    font-size: 18px;
+}
+
+div.goods-page em {
+    font-style: normal;
+}
+
+.goods-page-description h3 {
+    font: 300 14px 'Open Sans', sans-serif;
+    padding-top: 0;
 }
 
 .shopping-total em, .checkout-total-block em {

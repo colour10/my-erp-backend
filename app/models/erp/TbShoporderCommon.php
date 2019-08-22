@@ -795,8 +795,8 @@ class TbShoporderCommon extends BaseModel
     public function isShowExpiretime()
     {
         // 逻辑
-        // 如果订单处于未支付状态，则显示
-        if (!$this->getPayTime()) {
+        // 如果订单处于未支付状态，并且未关闭，则显示
+        if (is_null($this->getPayTime()) && !$this->getClosed()) {
             return true;
         }
         return false;
@@ -901,8 +901,8 @@ class TbShoporderCommon extends BaseModel
     function isShowCancled()
     {
         // 逻辑
-        // 如果订单没有支付，并且已经过了截止时间
-        if ($this->getClosed() && !$this->getExpireTime()) {
+        // 如果订单没有支付，并且已经过了截止时间，并且已经被关闭
+        if ($this->getClosed() && !$this->getExpireTime() && !$this->getPayTime()) {
             return true;
         }
         return false;

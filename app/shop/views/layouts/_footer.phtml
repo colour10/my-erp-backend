@@ -166,7 +166,7 @@
             btn: ["<?php echo $this->obj->getValidateMessage('yes'); ?>", "<?php echo $this->obj->getValidateMessage('no'); ?>"],
             yes: function (index) {
                 // ajax提交
-                ajax('/order/cancle/' + id + '/1', {}, '/order/detail/' + id);
+                ajax('/order/cancle/' + id + '/1', {}, '/order/list');
                 // 关闭弹出层
                 layer.close(index);
             }
