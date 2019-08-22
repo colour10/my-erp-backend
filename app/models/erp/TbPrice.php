@@ -7,6 +7,8 @@ use Phalcon\Mvc\Model\Relation;
  */
 class TbPrice extends BaseModel
 {
+    private static $box;
+
     public function initialize()
     {
         parent::initialize();
@@ -25,6 +27,14 @@ class TbPrice extends BaseModel
                 ],
             ]
         );
+    }
+
+    public static function getInstance($id) {
+        if(!isset(self::$box[$id])) {
+            self::$box[$id] = self::findFirstById($id);
+        }
+
+        return self::$box[$id];
     }
 
     private function getCondition($name, $ids) {

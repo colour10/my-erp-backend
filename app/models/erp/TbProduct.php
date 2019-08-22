@@ -288,49 +288,63 @@ class TbProduct extends BaseCompanyModel
         $ageseasonid = $temparr[0];
 
         foreach($prices as $row) {
-            $setting = TbPriceSetting::getPriceSetting($this->brandid, $ageseasonid, $this->producttypeid, $this->childbrand, $row->id);
-            if($setting!=false) {
-                $value = TbExchangeRate::convert($this->companyid, $this->wordpricecurrency, $row->currencyid, $this->wordprice);
-                //echo $price;exit;
-                if($value==false) {
-                    //没有设置汇率
-                    //echo "2";
-                    continue;
+            if(isset($hashTable[$row->id]) && $hashTable[$row->id]->price>0) {
+                $is_special = 1;
+                $price = $hashTable[$row->id]->price;
+
+                try {
+                    $value = TbExchangeRate::convert($this->companyid, $this->factorypricecurrency, $row->currencyid, $this->factoryprice);
+
+                    $costplus = round(($price-$value['number'])*100/$value['number'], 0);
+
+                    $result[] = [
+                        'id' => $row->id,
+                        'name' => $row->name,
+                        'currencyid' => $row->currencyid,
+                        'discount' => '',
+                        'filter' => $row->filter,
+                        'autoprice' => 0,
+                        'price' => $price,
+                        "is_special"  => 1,
+                        "rate" => '',
+                        "costplus" => $costplus,
+                        "productid" => $this->id
+                    ];
                 }
-
-                $autoprice = $row->getPriceValue($value["number"]*$setting->discount);
-
-                $is_special = "0";
-                if(isset($hashTable[$row->id]) && $hashTable[$row->id]->price>0) {
-                    $price = TbExchangeRate::convert($this->companyid, $hashTable[$row->id]->currencyid, $row->currencyid, $hashTable[$row->id]->price);
-                    if($price==false) {
-                        //echo "0";
+                catch(\Exception $e) {
+                }
+            }
+            else {
+                $setting = TbPriceSetting::getPriceSetting($this->brandid, $ageseasonid, $this->producttypeid, $this->childbrand, $row->id);
+                if($setting!=false) {
+                    $value = TbExchangeRate::convert($this->companyid, $this->wordpricecurrency, $row->currencyid, $this->wordprice);
+                    //echo $price;exit;
+                    if($value==false) {
+                        //没有设置汇率
+                        //echo "2";
                         continue;
                     }
-                    $is_special = 1;
-                    $price = $price["number"];
-                }
-                else {
-                    $price = $autoprice;
-                }
 
-                //计算Cost+
-                $factoryprice = $this->factoryprice*$value["rate"];
-                $costplus = round(($price-$factoryprice)*100/$factoryprice,0);
+                    $price = $row->getPriceValue($value["number"]*$setting->discount);
 
-                $result[] = [
-                    'id' => $row->id,
-                    'name' => $row->name,
-                    'currencyid' => $row->currencyid,
-                    'discount' => $setting->discount,
-                    'filter' => $row->filter,
-                    'autoprice' => $autoprice,
-                    'price' => $price,
-                    "is_special"  => $is_special,
-                    "rate" => $value["rate"],
-                    "costplus" => $costplus,
-                    "productid" => $this->id
-                ];
+                    //计算Cost+
+                    $factoryprice = $this->factoryprice*$value["rate"];
+                    $costplus = round(($price-$factoryprice)*100/$factoryprice,0);
+
+                    $result[] = [
+                        'id' => $row->id,
+                        'name' => $row->name,
+                        'currencyid' => $row->currencyid,
+                        'discount' => $setting->discount,
+                        'filter' => $row->filter,
+                        'autoprice' => $price,
+                        'price' => $price,
+                        "is_special"  => 0,
+                        "rate" => $value["rate"],
+                        "costplus" => $costplus,
+                        "productid" => $this->id
+                    ];
+                }
             }
         }
 

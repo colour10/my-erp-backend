@@ -181,7 +181,7 @@
 
     .order-form .el-radio {line-height: 20px;}
 
-    .formx .el-input__inner {width:130px;}
+    .formx .el-input__inner {width:130px;padding: 0px 5px}
     .formx .el-input-group {width:130px;}
     .formx .el-input-group--prepend .el-input-group__prepend .el-input__inner { width:60px; padding:0px 5px;}
     .formx .el-input-group--prepend .el-input__inner { width:69px; }
@@ -249,6 +249,7 @@
 
   .color-group {
     margin:3px;
+    float: left;
   }
 
   .color-group .box{
@@ -276,6 +277,7 @@
 .product .el-tabs .el-table td, .product .el-tabs .el-table th { padding:0px 0px; }
 .product img {padding:0px;margin:0px;display: block;}
 .product td.picture .cell {padding-left:0px}
+.product td.nopadding .cell {padding-left: 0px}
 .product .el-table th div .el-input {display:block; line-height:25px;}
 
 .supermini .el-checkbox__label {
@@ -358,10 +360,14 @@ body .el-select-dropdown__wrap {max-height:500px;}
 .sizecontent .el-table__body .cell {line-height: 15px }
 .sizecontent .el-table__body .sumline td {padding-top:5px}
 .sizecontent .linetop .el-input__inner {height:15px}
-.sizecontent .sumline .el-input__inner {color:red; background: #99cccc;}
-.sizecontent .sumline .sumtotal .el-input__inner {color:blue; background: #99cccc;height:22px}
+.sizecontent .danger .el-input__inner {color:red;}
+.sizecontent .normal .el-input__inner {color:blue;}
+.sizecontent .success .el-input__inner {color:green;}
+.sizecontent .sumline .el-input__inner {background: #99cccc;height:22px}
+.sizecontent .sumline .sumtotal .el-input__inner { background: #99cccc;height:22px}
 .sizecontent .sumline .linetop .el-input__inner {height:22px}
 .sizecontent .sumcolumn .inputsum .el-input__inner{color:yellow; background: #CD9B9B}
+.sizecontent .footer .el-input__inner{color:yellow;}
 
 .inputtable .el-table__body .el-table__row .el-input__inner { padding:0 5px; }
 
@@ -378,7 +384,7 @@ body .el-select-dropdown__wrap {max-height:500px;}
 
     <script type="text/javascript">
       $(document).ready(function(){
-        var version = '1036'
+        var version = '1037'
         let o = new Vue({
           data:function(){
             return {

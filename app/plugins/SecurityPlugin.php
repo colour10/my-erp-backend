@@ -11,7 +11,7 @@ use Asa\Erp\Util;
 use Asa\Erp\TbPermissionAction;
 
 class SecurityPlugin extends Plugin
-{    
+{
     public function beforeExecuteRoute(Event $event, Dispatcher $dispatcher)
     {
         // Check whether the "auth" variable exists in session to define the active role
@@ -32,15 +32,23 @@ class SecurityPlugin extends Plugin
             return false;
         }
 
+        //
+        $auth = $this->getDI()->get("auth");
+        if($auth && $auth['is_super']=='1') {
+            return true;
+        }
+
         // Obtain the ACL list
         $acl = $this->getDI()->get("acl");
 
+
         // Check if the Role have access to the controller (resource)
         $allowed = $acl->isAllowed($role, $controller, $action);
-        
+        //echo "$role, $controller, $action";
+
         if ($allowed != Acl::ALLOW && false) {
             // If he doesn't have access forward him to the index controller
-            
+
             header('Access-Control-Allow-Origin: *');
             header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
             header('Access-Control-Allow-Methods: Get,Post,Put,OPTIONS');

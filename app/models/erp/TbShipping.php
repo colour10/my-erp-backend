@@ -104,7 +104,7 @@ class TbShipping extends BaseModel
         }
 
         foreach ($this->shippingFee as $shippingFee) {
-            $fee_amount = round($shippingFee->amount*$shippingFee->exchangerate, 2); // TbExchangeRate::convert($this->companyid, $shippingFee->currencyid, $currencyid, $shippingFee->amount);
+            $fee_amount = round($shippingFee->amount*$shippingFee->exchangerate, 2);
 
             if($shippingFee->feename->is_amortize==1) {
                 //print_r($shippingFee->feename->toArray());

@@ -286,21 +286,21 @@ class OrderController extends BaseController
             $this->db->begin();
             $orderdetails = $order->orderdetails;
             foreach ($orderdetails as $detail) {
-                if($detail->orderbrandid>0) {
+                if($detail->brand_number>0) {
                     //已经加入外部订单的订单明细不能删除
                     $this->db->rollback();
-                    throw new \Exception("/1001/不能删除已经加入外部订单的订单明细/");
+                    throw new \Exception("/11110301/不能删除已经加入外部订单的订单明细/");
                 }
 
                 if($detail->delete()==false) {
                     $this->db->rollback();
-                    throw new \Exception("/1001/删除订单明细失败。/");
+                    throw new \Exception("/11110302/删除订单明细失败。/");
                 }
             }
 
             if($order->delete()==false) {
                 $this->db->rollback();
-                    throw new \Exception("/1001/订单不能删除/");
+                    throw new \Exception("/11110303/订单不能删除/");
             }
 
             $this->db->commit();
@@ -308,7 +308,7 @@ class OrderController extends BaseController
             return $this->success();
         }
         else {
-            throw new \Exception("/1001/订单不存在/");
+            throw new \Exception("/11110304/订单不存在/");
         }
     }
 

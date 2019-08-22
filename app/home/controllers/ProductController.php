@@ -9,7 +9,9 @@ use Asa\Erp\TbPicture;
 use Asa\Erp\TbProductSizeProperty;
 use Asa\Erp\TbProductstock;
 use Asa\Erp\TbProductMaterial;
-
+use Asa\Erp\TbExchangeRate;
+use Asa\Erp\TbPrice;
+use Asa\Erp\TbProductPrice;
 /**
  * 商品表
  * ErrorCode 1116
@@ -636,5 +638,89 @@ class ProductController extends CadminController {
         }
 
         return $this->success('');
+    }
+
+    /**
+     * 批量修改商品价格
+     * @return [type] [description]
+     */
+    function modifypricesAction() {
+        $params = $this->request->get('params');
+        if (!$params) {
+            throw new \Exception("/11160401/参数错误/");
+        }
+
+        // 转换成数组
+        $submitData = json_decode($params, true);
+
+        if(!preg_match("#^\d+(,\d+)*$#", $submitData['products'])) {
+            throw new \Exception("/11160402/参数错误/");
+        }
+
+        $products = TbProduct::find(
+            sprintf("companyid=%d and id in (%s)", $this->companyid, $submitData['products'])
+        );
+
+        //print_r($products->toArray());
+
+        $this->db->begin();
+        try {
+            foreach ($submitData['prices'] as $row) {
+                //echo "{$row['name']}\n";
+                $price = TbPrice::getInstance($row['id']);
+                if($price==false || $price->companyid!=$this->companyid) {
+                    throw new \Exception("/11160403/价格未定义/");
+                }
+                //echo "{$row['name']}\n";
+
+                foreach ($products as $product) {
+                    //echo "do {$product->id}\n";
+                    $priceValue = 0;
+                    if($row['price']>0) {
+                        $priceValue = $row['price'];
+                    }
+                    else if($row['discount']>0) {
+                        //国际零售价*系数
+                        $priceValue = TbExchangeRate::convert($this->companyid, $product->wordpricecurrency, $price->currencyid, $row['discount']*$product->wordprice);
+                        $priceValue = $priceValue['number'];
+                    }
+                    else if($row['discountCost']>0 && $product->costcurrency>0) {
+                        //成本价*系数
+                        $priceValue = TbExchangeRate::convert($this->companyid, $product->costcurrency, $price->currencyid, $row['discountCost']*$product->cost);
+                        $priceValue = $priceValue['number'];
+                    }
+
+                    if($priceValue>0) {
+                        // 更新价格信息
+                        $productPrice = TbProductPrice::findFirst(
+                            sprintf("productid=%d and priceid=%d", $product->id, $price->id)
+                        );
+
+                        if($productPrice==false) {
+                            $productPrice = new TbProductPrice();
+                            $productPrice->productid = $product->id;
+                            $productPrice->priceid = $price->id;
+                            $productPrice->companyid = $this->companyid;
+                            $productPrice->currencyid = $price->currencyid;
+                        }
+
+                        $productPrice->price = $priceValue;
+                        $productPrice->updatetime = date('Y-m-d H:i:s');
+                        $productPrice->updatestaff = $this->currentUser;
+
+                        if($productPrice->save()==false) {
+                            //echo "xxxx";
+                            throw new \Exception("/11160404/价格更新失败/");
+                        }
+                    }
+                }
+            }
+        }
+        catch(\Exception $e) {
+            $this->db->rollback();
+            echo $this->error($e->getMessage());
+        }
+        $this->db->commit();
+        return $this->success();
     }
 }

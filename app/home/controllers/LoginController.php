@@ -23,6 +23,7 @@ class LoginController extends Controller
 
                 $this->session->set('user', array(
                     'id' => $user->id,
+                    'is_super' => $group->is_super,
                     'username' => $user->login_name,
                     'companyid' => $user->companyid,
                     'saleportid' => $user->saleportid,
@@ -50,7 +51,7 @@ class LoginController extends Controller
     function logoutAction() {
         $this->session->destroy();
 
-        echo json_encode(['code' => '200', 'messages' => []]); 
+        echo json_encode(['code' => '200', 'messages' => []]);
     }
 
     function checkloginAction() {
@@ -60,7 +61,7 @@ class LoginController extends Controller
             echo json_encode(['code' => '200', 'auth' =>$auth, 'messages' => []]);
         }
         else {
-            echo json_encode(['code' => '200', 'messages' => []]); 
+            echo json_encode(['code' => '200', 'messages' => []]);
         }
     }
 }

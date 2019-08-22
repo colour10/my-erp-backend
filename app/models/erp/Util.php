@@ -209,6 +209,10 @@ class Util
         return $array;
     }
 
+    /**
+     * 定义登录用户拥有的权限。
+     * @return [type] [description]
+     */
     public static function getAuthResourse()
     {
         return [
@@ -236,17 +240,6 @@ class Util
             ["country", "page"],
             ["saleport", "page"],
             ["supplier", "page"],
-            ["order", "page"],
-            ["order", "loadorder"],
-            ["confirmorder", "loadorder"],
-            ["confirmorder", "page"],
-            ["warehousing", "page"],
-            ["warehousing", "load"],
-            ["requisition", "page"],
-            ["requisition", "load"],
-            ["requisition", "confirmout"],
-            ["requisition", "confirmin"],
-            ["productstock", "search"],
             ["permission", "tree"],
             ["user", "saleportlist"],
             ["sales", "page"],
@@ -277,6 +270,7 @@ class Util
             ["login", "logout"],
             ['login', 'checklogin'],
             ['common', 'systemlanguage'],
+            ['common', 'setting'],
         ];
     }
 
