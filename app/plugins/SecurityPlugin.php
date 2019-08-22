@@ -34,7 +34,7 @@ class SecurityPlugin extends Plugin
 
         //
         $auth = $this->getDI()->get("auth");
-        if($auth && $auth['is_super']=='1') {
+        if($auth && isset($auth['is_super']) && $auth['is_super']=='1') {
             return true;
         }
 
