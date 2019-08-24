@@ -29,7 +29,7 @@ class PayController extends AdminController
             return $this->dispatcher->forward(['controller' => 'wechatpay', 'action' => 'pay', 'params' => ['order_id' => $order_id]]);
         } else {
             // 其他途径，报错处理
-            return '未知支付方式';
+            return $this->getValidateMessage('unknown_payment_method');
         }
     }
 

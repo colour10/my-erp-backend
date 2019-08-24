@@ -38,6 +38,7 @@ class Module implements ModuleDefinitionInterface
         $loader->registerNamespaces(
             [
                 "Multiple\\Shop\\Controllers" => "../app/shop/controllers/",
+                "Multiple\\Shop\\Exceptions"  => "../app/shop/exceptions/",
             ]
         );
 
@@ -52,10 +53,10 @@ class Module implements ModuleDefinitionInterface
     public function registerServices(DiInterface $di)
     {
         // 常用的一些参数，下面这些变量将会被用到多次，所以放在上面
-        $config       = $di->get("config");
+        $config = $di->get("config");
         $config_array = $config->toArray();
-        $session      = $di->get('session');
-        $language     = $session->get('language') ?: $config->language;
+        $session = $di->get('session');
+        $language = $session->get('language') ?: $config->language;
 
         // Registering a dispatcher
         $di->set(
@@ -297,7 +298,7 @@ class Module implements ModuleDefinitionInterface
 
         // 取出女性品牌，gender=2
         $di->setShared('girlbrands', function () use ($di) {
-            $name     = $di->get('obj')->getlangfield('name');
+            $name = $di->get('obj')->getlangfield('name');
             $products = TbProductSearch::find([
                 'conditions' => 'gender = 2',
                 'columns'    => "brandid",
@@ -317,7 +318,7 @@ class Module implements ModuleDefinitionInterface
 
         // 取出女性品类，gender=2
         $di->setShared('girlbrandgroups', function () use ($di) {
-            $name     = $di->get('obj')->getlangfield('name');
+            $name = $di->get('obj')->getlangfield('name');
             $products = TbProductSearch::find([
                 'conditions' => 'gender = 2',
                 'columns'    => "brandgroupid",
@@ -337,7 +338,7 @@ class Module implements ModuleDefinitionInterface
 
         // 取出男性品牌，gender=1
         $di->setShared('boybrands', function () use ($di) {
-            $name     = $di->get('obj')->getlangfield('name');
+            $name = $di->get('obj')->getlangfield('name');
             $products = TbProductSearch::find([
                 'conditions' => 'gender = 1',
                 'columns'    => "brandid",
@@ -357,7 +358,7 @@ class Module implements ModuleDefinitionInterface
 
         // 取出男性品类，gender=1
         $di->setShared('boybrandgroups', function () use ($di) {
-            $name     = $di->get('obj')->getlangfield('name');
+            $name = $di->get('obj')->getlangfield('name');
             $products = TbProductSearch::find([
                 'conditions' => 'gender = 1',
                 'columns'    => "brandgroupid",
@@ -377,7 +378,7 @@ class Module implements ModuleDefinitionInterface
 
         // 取出儿童品牌，gender=6
         $di->setShared('childbrands', function () use ($di) {
-            $name     = $di->get('obj')->getlangfield('name');
+            $name = $di->get('obj')->getlangfield('name');
             $products = TbProductSearch::find([
                 'conditions' => 'gender = 6',
                 'columns'    => "brandid",
@@ -397,7 +398,7 @@ class Module implements ModuleDefinitionInterface
 
         // 取出儿童品类，gender=6
         $di->setShared('childbrandgroups', function () use ($di) {
-            $name     = $di->get('obj')->getlangfield('name');
+            $name = $di->get('obj')->getlangfield('name');
             $products = TbProductSearch::find([
                 'conditions' => 'gender = 6',
                 'columns'    => "brandgroupid",

@@ -78,19 +78,19 @@ class OrderController extends AdminController
             // 显示订单的最新状态
             $data['getOrderStatus'] = $order->getOrderStatus();
             // 赋值
-            $data['common']    = $order;
-            $data['product']   = $order->getShoporder();
+            $data['common'] = $order;
+            $data['product'] = $order->getShoporder();
             $data['addresses'] = TbMemberAddress::find("member_id=" . $member['id']);
             // 转成数组
             $data = json_decode(json_encode($data), true);
             // 给商品加入封面图和id
             foreach ($data['product'] as $k => $item) {
-                $data['product'][$k]['picture']           = $this->file_prex . $item['picture'];
+                $data['product'][$k]['picture'] = $this->file_prex . $item['picture'];
                 $data['product'][$k]['product_detail_id'] = $item['product_id'];
             }
         } else {
             // 如果没有符合条件的订单，那么就赋值为空数组
-            $data['common']  = [];
+            $data['common'] = [];
             $data['product'] = [];
         }
 
@@ -116,7 +116,7 @@ class OrderController extends AdminController
         // 判断订单是否存在
         if (!$order = TbShoporderCommon::findFirst("id=$id AND member_id=" . $member['id'])) {
             $title = 'make-an-error';
-            $msg   = $this->getValidateMessage('order', 'template', 'notexist');
+            $msg = $this->getValidateMessage('order', 'template', 'notexist');
             return $this->renderError($title, $msg);
         }
         // 开始组装数据
@@ -126,13 +126,13 @@ class OrderController extends AdminController
         $data['isAllowPaymentOrder'] = $order->isAllowPaymentOrder();
 
         // 赋值
-        $data['common']  = $order;
+        $data['common'] = $order;
         $data['product'] = $order->getShoporder();
         // 转成数组
         $data = json_decode(json_encode($data), true);
         // 给商品加入封面图和id
         foreach ($data['product'] as $k => $item) {
-            $data['product'][$k]['picture']           = $this->file_prex . $item['picture'];
+            $data['product'][$k]['picture'] = $this->file_prex . $item['picture'];
             $data['product'][$k]['product_detail_id'] = $item['product_id'];
         }
         // 分配模板
@@ -172,9 +172,9 @@ class OrderController extends AdminController
                 // 因为下单的时候是按照尺码下单的，这个时候需要分别统计
                 // 首先取出销售端口，查库存用
                 // 在取出库存之前，首先获取销售端口
-                $company  = TbCompany::findFirstById($rs['companyid']);
+                $company = TbCompany::findFirstById($rs['companyid']);
                 $saleport = $company->shopSaleport;
-                $array    = Util::recordListColumn($saleport->saleportWarehouses, 'warehouseid');
+                $array = Util::recordListColumn($saleport->saleportWarehouses, 'warehouseid');
 
                 // 遍历
                 // 多语言字段
@@ -205,7 +205,7 @@ class OrderController extends AdminController
                     ]);
                     // 如果库存信息存在
                     if ($stockModel) {
-                        $stock       = $stockModel->toArray();
+                        $stock = $stockModel->toArray();
                         $stocknumber = $stock[0]['sumatory'];
                     } else {
                         $stocknumber = 0;
@@ -219,7 +219,7 @@ class OrderController extends AdminController
                     // 颜色描述默认为空
                     $color_name = '';
                     if ($productModel->color) {
-                        $colorids   = explode(',', $productModel->color);
+                        $colorids = explode(',', $productModel->color);
                         $colornames = [];
                         foreach ($colorids as $colorid) {
                             $colorModel = TbColortemplate::findFirstById($colorid);
@@ -293,7 +293,7 @@ class OrderController extends AdminController
                 $now = time();
                 // 生成唯一订单号
                 $generate_trade_no = TbShoporderCommon::getAvailableOrderNo();
-                $model_common      = new TbShoporderCommon();
+                $model_common = new TbShoporderCommon();
                 // 添加地址信息
                 $model_common->setAddress([
                     'address' => $addressModel->getFullAddress() ?: '',
@@ -320,7 +320,7 @@ class OrderController extends AdminController
                 // 接着添加订单详情表
                 $data_common = [];
                 foreach ($_POST['data'] as $key => $value) {
-                    $data_common     = [
+                    $data_common = [
                         'order_commonid' => $model_common->getId(),
                         'product_id'     => $value['product_id'],
                         'product_name'   => $value['product']['productname'],
@@ -631,7 +631,7 @@ class OrderController extends AdminController
                 return $this->error($this->getValidateMessage('order-has-been-refunded'));
             }
             // 将用户输入的退款理由放到订单的 extra 字段中
-            $extra                  = $order->getExtra() ?: [];
+            $extra = $order->getExtra() ?: [];
             $extra['refund_reason'] = $this->request->get('reason');
             // 将订单退款状态改为已申请退款
             $order->setRefundStatus(TbShoporderCommon::REFUND_STATUS_APPLIED)->setExtra($extra);
@@ -655,7 +655,7 @@ class OrderController extends AdminController
         // 必须为管理员，而且是post请求
         if ($member = $this->member && $this->member['membertype'] && $this->request->isPost()) {
             // 赋值
-            $id          = $this->request->get('id');
+            $id = $this->request->get('id');
             $expire_time = $this->request->get('expire_time');
 
             // 取出参数
@@ -854,7 +854,7 @@ class OrderController extends AdminController
                 return $this->error($this->getValidateMessage('shoporder-status-error'));
             }
             // 将拒绝退款理由放到订单的 extra 字段中
-            $extra                           = $order->getExtra() ?: [];
+            $extra = $order->getExtra() ?: [];
             $extra['refund_disagree_reason'] = $this->request->get('reason');
             // 将订单的退款状态改为未退款
             $order->setRefundStatus(TbShoporderCommon::REFUND_STATUS_PENDING)->setExtra($extra);
@@ -884,7 +884,7 @@ class OrderController extends AdminController
             }
             // 赋值
             $express_company = $this->request->get('express_company');
-            $express_no      = $this->request->get('express_no');
+            $express_no = $this->request->get('express_no');
             // 取出order
             $order = TbShoporderCommon::findFirst("id=" . $id);
             if (!$order) {
