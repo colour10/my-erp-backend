@@ -56,35 +56,30 @@
                                                 <?php } ?>
                                             </select>
                                         <? } else { ?>
-                                            <input type="text" class="form-control" id="companyid" readonly
-                                                   value="<?php echo $this->host['company']->name; ?>">
+                                            <input type="text" class="form-control" id="companyid" readonly value="<?php echo $this->host['company']->name; ?>">
                                         <? } ?>
                                     </div>
                                 </div>
 
                                 <?php if (!$this->issuperadmin) { ?>
                                     <div class="form-group">
-                                        <label for="is_lockstock"
-                                               class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('is_lockstock'); ?>
+                                        <label for="is_lockstock" class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('is_lockstock'); ?>
                                             <span class="require">*</span></label>
                                         <div class="col-lg-8 invite">
 
                                             <div class="radio-inline">
-                                                <label><input type="radio" name="is_lockstock" value="1"
-                                                    >是</label>
+                                                <label><input type="radio" name="is_lockstock" value="1">是</label>
                                             </div>
 
                                             <div class="radio-inline">
-                                                <label><input type="radio" name="is_lockstock" value="0"
-                                                              checked="checked"/>否</label>
+                                                <label><input type="radio" name="is_lockstock" value="0" checked="checked"/>否</label>
                                             </div>
                                         </div>
                                     </div>
                                 <? } ?>
 
                                 <div class="form-group">
-                                    <label for="email"
-                                           class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('email'); ?>
+                                    <label for="email" class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('email'); ?>
                                         <span class="require">*</span></label>
                                     <div class="col-lg-8">
                                         <input type="email" class="form-control" id="email">
@@ -92,10 +87,8 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="username"
-                                           class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('yonghuming'); ?>
-                                        <span
-                                                class="require">*</span></label>
+                                    <label for="username" class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('yonghuming'); ?>
+                                        <span class="require">*</span></label>
                                     <div class="col-lg-8">
                                         <input type="text" class="form-control" id="username"><span
                                                 class="require">(<?php echo $this->obj->getValidateMessage('beizhu'); ?>：<?php echo $this->obj->getValidateMessage('default-password'); ?>：<?php echo $this->obj->getValidateMessage('yonghuming'); ?>+123)</span>
@@ -104,8 +97,7 @@
 
                                 <div class="row">
                                     <div class="col-lg-8 col-md-offset-4 padding-left-0 padding-top-20">
-                                        <button type="submit" class="btn btn-primary" id="button-invite"
-                                                onclick="invite();return false;"><?php echo $this->obj->getValidateMessage('queren'); ?>
+                                        <button type="submit" class="btn btn-primary" id="button-invite" onclick="invite();return false;"><?php echo $this->obj->getValidateMessage('queren'); ?>
                                         </button>
                                     </div>
                                 </div>
