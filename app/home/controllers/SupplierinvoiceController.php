@@ -35,4 +35,21 @@ class SupplierinvoiceController extends CadminController {
     function before_page() {
         $_POST['companyid'] = $this->companyid;
     }
+
+    /**
+     * 根据supperid，返回客户的发票列表
+     * @return [type] [description]
+     */
+    function getlistAction() {
+        if(isset($_POST['supplierid'])) {
+            $result = TbSupplierInvoice::find(
+                sprintf("companyid=%d and supplierid=%d", $this->companyid, $_POST['supplierid'])
+            );
+
+            return $this->success($result->toArray());
+        }
+        else {
+            return $this->success();
+        }
+    }
 }

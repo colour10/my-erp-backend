@@ -121,6 +121,8 @@ class CommonController extends BaseController
             "sales" =>["table"=>"Asa\\Erp\\TbSales", "columns"=>[]],
             "productmaterial" =>["table"=>"Asa\\Erp\\TbProductMaterial", "columns"=>[]],
             "saletype" =>["table"=>"Asa\\Erp\\TbSaleType", "columns"=>[]],
+            "member" =>["table"=>"Asa\\Erp\\TbMember", "columns"=>[]],
+            "supplierinvoice" => ["table"=>"Asa\\Erp\\TbSupplierInvoice", "columns"=>[]],
         ];
 
         //new \Asa\Erp\TbProduct();
@@ -232,6 +234,7 @@ class CommonController extends BaseController
             "winterproofing" => ["model"=>'Asa\Erp\TbWinterproofing',"company"=>false, "orderby"=>"displayindex asc"],
             "feename" => ["model"=>'Asa\Erp\TbFeename',"company"=>false, "orderby"=>"displayindex asc"],
             "userprice" => ["model"=>'Asa\Erp\TbUserPrice',"company"=>false],
+            "paymentway" => ["model"=>'Asa\Erp\TbPaymentway',"company"=>true, "orderby"=>"displayindex asc"],
         ];
         $table = $this->dispatcher->getParam("table");
         $model = $maps[$table];

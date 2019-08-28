@@ -17,9 +17,9 @@ class AdminController extends BaseController
     protected $list_columns;
     protected $is_language = false;
 
-    public function initialize() 
+    public function initialize()
     {
-	    parent::initialize();        
+	    parent::initialize();
     }
 
     function setModelName($modelName)
@@ -27,12 +27,12 @@ class AdminController extends BaseController
         $this->modelName = $modelName;
     }
 
-    function configList($key_column, $columns) 
+    function configList($key_column, $columns)
     {
         $this->list_key_column = $key_column;
         $this->list_columns = $columns;
     }
-    
+
     function setLanguageFlag($boolValue) {
         $this->is_language = $boolValue;
     }
@@ -63,21 +63,21 @@ class AdminController extends BaseController
             echo $e->getMessage();
         }
     }
-    
+
     function getSearchCondition()
     {
         $model = $this->getModelObject();
         $metaData = $model->getModelsMetaData();
         $primaryKeys = $metaData->getPrimaryKeyAttributes($model);
         $fieldTypes = $metaData->getDataTypes($model);
-        
+
         //var_dump($fieldTypes);
 
         $array = $model->getSearchBaseCondition();
 
         $keyword = $this->request->get("keyword", "trim");
         $keywords = [];
-        foreach ($fieldTypes as $key=>$value) {     
+        foreach ($fieldTypes as $key=>$value) {
             if ($fieldTypes[$key] == Column::TYPE_INTEGER || $fieldTypes[$key] == Column::TYPE_BIGINTEGER ) {
 
                 if(isset($_REQUEST[$key]) && $_REQUEST[$key]!=="" ) {
@@ -122,7 +122,7 @@ class AdminController extends BaseController
     public function indexAction()
     {
 	}
-	
+
 	function pageAction() {
         $this->before_page();
         $params = [$this->getSearchCondition()];
@@ -147,7 +147,7 @@ class AdminController extends BaseController
 
         // Get the paginated results
         $pageObject = $paginator->getPaginate();
-        
+
         $data = [];
         foreach($pageObject->items as $row) {
             $data[] = $this->recordToArray($row);
@@ -163,7 +163,7 @@ class AdminController extends BaseController
         ];
         echo $this->reportJson(array("data"=>$data, "pagination" => $pageinfo),200,[]);
 	}
-	
+
 	function editAction() {
 	    //print_r($this->dispatcher->getParams());exit;
 	    $this->doEdit();
@@ -189,8 +189,8 @@ class AdminController extends BaseController
 
             $this->before_add();
 
-	        $fields = $this->getAttributes(); 
-	        
+	        $fields = $this->getAttributes();
+
 	        foreach($fields as $name) {
 	            if(isset($_POST[$name])) {
 	                $row->$name = $_POST[$name];
@@ -209,7 +209,7 @@ class AdminController extends BaseController
                 $result['id'] = $row->id;
                 //$message['idd'] = "999";
             }
-            
+
             echo json_encode($result);
         }
     }
@@ -235,15 +235,15 @@ class AdminController extends BaseController
                 }
 
                 $result = array("code" => 200, "messages" => array());
-                if ($row->save() === false) {
+                if ($row->update() === false) {
                     $messages = $row->getMessages();
 
                     foreach ($messages as $message) {
                         $result["messages"][] = $message->getMessage();
                     }
                 }
-                
-                echo json_encode($result);                
+
+                echo json_encode($result);
     	    }
     	    else {
     	        $result = array("code"=>200, "messages" => array("数据不存在"));

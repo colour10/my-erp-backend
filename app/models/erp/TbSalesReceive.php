@@ -2,10 +2,6 @@
 
 namespace Asa\Erp;
 
-use Phalcon\Validation;
-use Phalcon\Validation\Validator\Regex;
-use Phalcon\Mvc\Model\Relation;
-
 /**
  * 销售单收款信息表
  */
@@ -18,5 +14,14 @@ class TbSalesReceive extends BaseModel
     {
         parent::initialize();
         $this->setSource('tb_sales_receive');
+
+        $this->belongsTo(
+            'salesid',
+            '\Asa\Erp\TbSales',
+            'id',
+            [
+                'alias' => 'sales'
+            ]
+        );
     }
 }

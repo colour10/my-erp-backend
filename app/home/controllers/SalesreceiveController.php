@@ -6,7 +6,7 @@ use Phalcon\Mvc\View;
 use Asa\Erp\TbSalesReceive;
 
 /**
- * 
+ *
  */
 class SalesreceiveController extends CadminController {
     public function initialize() {
@@ -78,5 +78,27 @@ class SalesreceiveController extends CadminController {
         else {
             throw new \Exception('/1001/记录不存在。/');
         }
+    }
+
+    /**
+     * 销售对账单新建的时候，查询明细数据
+     * @return [type] [description]
+     */
+    function searchlistAction() {
+        $conditions = [
+            sprintf("companyid=%d and billid=0 and paymentdate>='%s' and paymentdate<='%s'", $this->companyid, addslashes($_POST['begin']), addslashes($_POST['end']))
+        ];
+
+        $rows = TbSalesReceive::find(
+            implode(' and ', $conditions)
+        );
+
+        $result = [];
+        foreach($rows as $row) {
+            $array = $row->toArray();
+            $array['sales'] = $row->sales->toArray();
+            $result[] = $array;
+        }
+        return $this->success($result);
     }
 }
