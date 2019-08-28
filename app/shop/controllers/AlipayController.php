@@ -155,9 +155,9 @@ class AlipayController extends AdminController
 
         // 开始给用户发送支付成功的邮件
         $memberModel = $order->getMember();
-        $email       = $memberModel->email;
-        $username    = $memberModel->name;
-        $time        = $order->getCreateTime();
+        $email = $memberModel->email;
+        $username = $memberModel->name;
+        $time = $order->getCreateTime();
         // 友好提示
         $msg = sprintf($this->getValidateMessage('order_has_been_paid'), $time);
         // 自动发送一个注册邮件，使用队列进行处理
@@ -254,7 +254,7 @@ class AlipayController extends AdminController
              * 刷新令牌后我们会保证老的app_auth_token从刷新开始24小时内可继续使用，请及时替换为最新token
              * $request->setBizContent("{\"grant_type\":\"refresh_token\",\"code\":\"填写app_auth_token的值\"}");
              */
-            $result       = $aop->execute($request);
+            $result = $aop->execute($request);
             $responseNode = str_replace(".", "_", $request->getApiMethodName()) . "_response";
             // 转成数组
             $userToken = (array)$result->$responseNode;
@@ -266,13 +266,13 @@ class AlipayController extends AdminController
 
             // 第三步，查询这个应用授权AppAuthToken的授权信息，把结果记录到数组中
             $app_auth_token = $userToken['app_auth_token'];
-            $request        = new \AlipayOpenAuthTokenAppQueryRequest ();
+            $request = new \AlipayOpenAuthTokenAppQueryRequest ();
             $request->setBizContent("{" .
                 "\"app_auth_token\":\"$app_auth_token\"" .
                 "  }");
-            $result       = $aop->execute($request);
+            $result = $aop->execute($request);
             $responseNode = str_replace(".", "_", $request->getApiMethodName()) . "_response";
-            $queryToken   = (array)$result->$responseNode;;
+            $queryToken = (array)$result->$responseNode;;
             if (empty($queryToken['code']) || $queryToken['code'] != 10000) {
                 return $this->renderError('make-an-error', 'fail-to-get-token-info');
             }
@@ -287,8 +287,8 @@ class AlipayController extends AdminController
                 $payment->save();
             }
             // 取出原来的内容，然后把alipayToken的部分添加进去
-            $config                     = $payment->getConfig();
-            $config['alipayUserToken']  = $userToken;
+            $config = $payment->getConfig();
+            $config['alipayUserToken'] = $userToken;
             $config['alipayQueryToken'] = $queryToken;
             $payment->setConfig($config);
             $payment->save();
@@ -344,7 +344,7 @@ class AlipayController extends AdminController
 
                     $result = $aop->execute($request);
                     // 转成数组
-                    $result_arr   = json_decode(json_encode($result), true);
+                    $result_arr = json_decode(json_encode($result), true);
                     $responseNode = str_replace(".", "_", $request->getApiMethodName()) . "_response";
                     // 判断授权码是否已经过期
                     if (array_key_exists('error_response', $result_arr)) {
@@ -357,9 +357,9 @@ class AlipayController extends AdminController
                     }
 
                     // 第三步，获取用户信息
-                    $request        = new \AlipayUserInfoShareRequest();
-                    $result         = $aop->execute($request, $resultData['access_token']);
-                    $responseNode   = str_replace(".", "_", $request->getApiMethodName()) . "_response";
+                    $request = new \AlipayUserInfoShareRequest();
+                    $result = $aop->execute($request, $resultData['access_token']);
+                    $responseNode = str_replace(".", "_", $request->getApiMethodName()) . "_response";
                     $alipayUserData = (array)$result->$responseNode;
                     if (empty($alipayUserData['code']) || $alipayUserData['code'] != 10000) {
                         // 记录log
@@ -380,7 +380,7 @@ class AlipayController extends AdminController
                         $payment->save();
                     }
                     // 取出原来的内容，然后把alipayToken的部分添加进去
-                    $config                   = $payment->getConfig();
+                    $config = $payment->getConfig();
                     $config['alipayUserData'] = $alipayUserData;
                     $payment->setConfig($config);
                     $payment->save();
@@ -406,15 +406,15 @@ class AlipayController extends AdminController
     {
         // 逻辑
         require_once APP_PATH . '/app/shop/packages/alipay/AopSdk.php';
-        $aop                     = new \AopClient();
-        $aop->appId              = $this->config['pay']['alipay']['app_id'];
-        $aop->rsaPrivateKey      = $this->config['pay']['alipay']['private_key'];
+        $aop = new \AopClient();
+        $aop->appId = $this->config['pay']['alipay']['app_id'];
+        $aop->rsaPrivateKey = $this->config['pay']['alipay']['private_key'];
         $aop->alipayrsaPublicKey = $this->config['pay']['alipay']['ali_public_key'];
-        $aop->gatewayUrl         = $this->config['pay']['alipay']['gateway'];
-        $aop->apiVersion         = '1.0';
-        $aop->postCharset        = 'utf-8';
-        $aop->format             = 'json';
-        $aop->signType           = 'RSA2';
+        $aop->gatewayUrl = $this->config['pay']['alipay']['gateway'];
+        $aop->apiVersion = '1.0';
+        $aop->postCharset = 'utf-8';
+        $aop->format = 'json';
+        $aop->signType = 'RSA2';
         // 返回
         return $aop;
     }

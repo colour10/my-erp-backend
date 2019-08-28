@@ -25,10 +25,10 @@ class RegController extends AdminController
         if ($this->request->isPost()) {
             // 把密码写入，用户名写入数据库
             // 接收变量
-            $username        = $this->request->get('name');
-            $email           = $this->request->get('email');
-            $c               = $this->request->get('c');
-            $password        = $this->request->get('password');
+            $username = $this->request->get('name');
+            $email = $this->request->get('email');
+            $c = $this->request->get('c');
+            $password = $this->request->get('password');
             $repeat_password = $this->request->get('repeat_password');
 
             // 验证合法性
@@ -58,8 +58,8 @@ class RegController extends AdminController
 
             // 开始写入
             $companyid = Util::strCode($c, 'DECODE');
-            $password  = md5($password);
-            $sql       = "UPDATE tb_member SET login_name = '$username', name = '$username', password = '$password' WHERE email = '$email' AND companyid = $companyid";
+            $password = md5($password);
+            $sql = "UPDATE tb_member SET login_name = '$username', name = '$username', password = '$password' WHERE email = '$email' AND companyid = $companyid";
             if (!$this->db->execute($sql)) {
                 return $this->error($this->getValidateMessage('member', 'db', 'save-failed'));
             } else {
@@ -75,7 +75,7 @@ class RegController extends AdminController
 
         // 开始验证参数
         $email = $this->request->get('invitation_email');
-        $c     = $this->request->get('c');
+        $c = $this->request->get('c');
 
         // 检查逻辑
         $result = $this->checkIfInvitationCorrect($email, $c);
@@ -88,7 +88,7 @@ class RegController extends AdminController
         // 模板赋值
         $this->view->setVars([
             'email' => $email,
-            'c'     => $c,
+            'c' => $c,
         ]);
     }
 
@@ -98,7 +98,7 @@ class RegController extends AdminController
      * @param int $companyid
      * @return \Phalcon\Mvc\Model|string
      */
-    private function checkIfInvitationCorrect(string $email, int $companyid)
+    public function checkIfInvitationCorrect(string $email, int $companyid)
     {
         // 逻辑
         // 判断是否存在该email和companyid
@@ -110,7 +110,7 @@ class RegController extends AdminController
         if (!$memberModel = TbMember::findFirst([
             "email = :email: and companyid = :companyid:",
             'bind' => [
-                'email'     => $email,
+                'email' => $email,
                 'companyid' => Util::strCode($companyid, 'DECODE'),
             ],
         ])) {
