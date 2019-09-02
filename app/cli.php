@@ -37,7 +37,7 @@ $loader->registerDirs(
     )
 )->register();
 
-//require_once(APPLICATION_PATH."/models/vendor/autoload.php");
+require_once(APP_PATH."/vendor/autoload.php");
 
 //Create a console application
 $console = new ConsoleApp();
