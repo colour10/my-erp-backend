@@ -739,7 +739,7 @@ class ProductController extends CadminController
      * 生成图片逻辑
      * 需要外部传入三个参数
      * 1、int productid 产品id
-     * 2、string pic 右侧图片相对地址，如果不传默认为/assets/img/cloth.png
+     * 2、string pic 右侧图片相对地址，如果不传默认为/assets/img/cloth.png，这个图片后期会和品类进行关联，也就是固定的，逻辑待定...
      * 3、string model 款式，如果不传默认为新款
      * @return false|string|void
      */
@@ -842,7 +842,7 @@ class ProductController extends CadminController
                 foreach ($sizecontentids as $sizecontentid) {
                     foreach ($properties as $property) {
                         if (!isset($lists[$sizecontentid][$property['propertyid']])) {
-                            $lists[$sizecontentid][$property['propertyid']] = '未填';
+                            $lists[$sizecontentid][$property['propertyid']] = ' - ';
                         }
                     }
                     // 因为上面的操作会导致key值错位，所以需要重新排序
