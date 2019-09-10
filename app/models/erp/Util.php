@@ -35,18 +35,18 @@ class Util
                 // 并判断是否有子集加不加children
                 if (empty($children)) {
                     $tree[] = [
-                        'id'       => $v['id'],
-                        'label'    => $v['name'],
-                        'memo'     => $v['memo'],
-                        'level'    => $level,
+                        'id' => $v['id'],
+                        'label' => $v['name'],
+                        'memo' => $v['memo'],
+                        'level' => $level,
                         'children' => [],
                     ];
                 } else {
                     $tree[] = [
-                        'id'       => $v['id'],
-                        'label'    => $v['name'],
-                        'memo'     => $v['memo'],
-                        'level'    => $level,
+                        'id' => $v['id'],
+                        'label' => $v['name'],
+                        'memo' => $v['memo'],
+                        'level' => $level,
                         // 新增children
                         'children' => $children,
                     ];
@@ -67,7 +67,7 @@ class Util
     public static function format_tree_single_array($result, $pid = 0, $level = 0)
     {
         // 初始化变量
-        $tree       = [];
+        $tree = [];
         $str_repeat = '　 ';
         // 开始循环
         foreach ($result as $k => $v) {
@@ -75,9 +75,9 @@ class Util
             if ($v['up_dp_id'] == $pid) {
                 // 数据合并
                 $tree[] = [
-                    'id'    => $v['id'],
+                    'id' => $v['id'],
                     'label' => str_repeat($str_repeat, $level) . $v['name'],
-                    'memo'  => $v['memo'],
+                    'memo' => $v['memo'],
                     'level' => $level,
                 ];
                 // 继续寻找
@@ -136,7 +136,7 @@ class Util
         } else if ($len < $length) {
             // 如果小于$length，就进行补位
             $diff = $length - $len;
-            $str  = str_repeat('0', $diff) . $str;
+            $str = str_repeat('0', $diff) . $str;
         }
         // 返回
         return $str;
@@ -315,7 +315,7 @@ class Util
         // 图片保存逻辑
         // 使用 PHPExcel_IOFactory 来鉴别文件应该使用哪一个读取类
         $inputFileType = \PHPExcel_IOFactory::identify($excelFilePath);
-        $objReader     = \PHPExcel_IOFactory::createReader($inputFileType);
+        $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
         // 载入文件
         $objPHPExcel = $objReader->load($excelFilePath);
         // 取出数据
@@ -574,7 +574,7 @@ class Util
     public static function multiarray_to_simplearray(array $array)
     {
         // 逻辑
-        $return     = [];
+        $return = [];
         $assocarray = self::multiarray_to_assocarray($array);
         foreach ($assocarray as $k => $item) {
             $return[] = $k . '|' . $item;
@@ -594,11 +594,11 @@ class Util
             // 判断是否有|，如果有就切割
             if (strpos($item, '|') !== false) {
                 // 开始遍历
-                $rpos  = strrpos($item, '|');
-                $left  = substr($item, 0, $rpos);
+                $rpos = strrpos($item, '|');
+                $left = substr($item, 0, $rpos);
                 $right = substr($item, $rpos + 1);
                 // 分隔left
-                $keys        = explode('|', $left);
+                $keys = explode('|', $left);
                 $current_str = '';
                 foreach ($keys as $j => $key) {
                     // 依次生成当前的元素
@@ -693,7 +693,7 @@ class Util
         $second2 = strtotime($day2);
 
         if ($second1 < $second2) {
-            $tmp     = $second2;
+            $tmp = $second2;
             $second2 = $second1;
             $second1 = $tmp;
         }
@@ -732,12 +732,12 @@ class Util
     public static function strCode($string, $action = 'ENCODE')
     {
         $action != 'ENCODE' && $string = base64_decode($string);
-        $code   = '';
-        $key    = substr(md5($_SERVER['HTTP_USER_AGENT']), 8, 18);
+        $code = '';
+        $key = substr(md5($_SERVER['HTTP_USER_AGENT']), 8, 18);
         $keyLen = strlen($key);
         $strLen = strlen($string);
         for ($i = 0; $i < $strLen; $i++) {
-            $k    = $i % $keyLen;
+            $k = $i % $keyLen;
             $code .= $string[$i] ^ $key[$k];
         }
         return ($action != 'DECODE' ? base64_encode($code) : $code);
@@ -759,7 +759,7 @@ class Util
         //nameplace 模式;
         //$mail = new \LaneLead\PHPMailer\PHPMailer();
         //读取config配置文件
-        $config       = require APP_PATH . '/app/config/config.php';
+        $config = require APP_PATH . '/app/config/config.php';
         $email_config = $config['email_config'];
 
         //是否启用smtp的debug进行调试 开发环境建议开启 生产环境注释掉即可 默认关闭debug调试模式
@@ -832,9 +832,9 @@ class Util
     {
         // 逻辑
         // 配置文件初始化
-        $config          = require APP_PATH . '/app/config/config.php';
-        $alibabacloud    = $config['alibabacloud'];
-        $accessKeyId     = $alibabacloud['accessKeyId'];
+        $config = require APP_PATH . '/app/config/config.php';
+        $alibabacloud = $config['alibabacloud'];
+        $accessKeyId = $alibabacloud['accessKeyId'];
         $accessKeySecret = $alibabacloud['accessKeySecret'];
 
         // 参数列表
@@ -982,7 +982,7 @@ class Util
      */
     public static function create_uuid($prefix = "")
     {    //可以指定前缀
-        $str  = md5(uniqid(mt_rand(), true));
+        $str = md5(uniqid(mt_rand(), true));
         $uuid = substr($str, 0, 8);
         $uuid .= substr($str, 8, 4);
         $uuid .= substr($str, 12, 4);
@@ -1064,7 +1064,7 @@ class Util
         curl_setopt($curl, CURLOPT_NOBODY, true);
         // 发送请求
         $result = curl_exec($curl);
-        $found  = false;
+        $found = false;
         // 如果请求没有发送失败
         if ($result !== false) {
             // 再检查http响应码是否为200
