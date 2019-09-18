@@ -55,12 +55,12 @@ try {
         if(isset($_REQUEST["_session_id"])) {
             $session->setId($_REQUEST["_session_id"]);
         }
-        
+
         $session->start();
         //$session->setId(time());
-        
+
         return $session;
-    });    
+    });
 
     // Set the database service
     $di['db'] = function () use ($config) {

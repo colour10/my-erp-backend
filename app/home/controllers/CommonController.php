@@ -57,6 +57,10 @@ class CommonController extends BaseController
         $setting["_currentUsername"] = $auth['username'];
         $setting["_currentid"] = $auth['id'];
         if(isset($auth['company']) && isset($auth['company']->currencyid)) {
+            $setting["hkgcost"] = $auth['company']->hkgcost;
+            $setting["eurcost"] = $auth['company']->eurcost;
+            $setting["chncost"] = $auth['company']->chncost;
+            $setting["bdacost"] = $auth['company']->bdacost;
             $setting["_currencyid"] = $auth['company']->currencyid;
         }
 
@@ -235,6 +239,8 @@ class CommonController extends BaseController
             "feename" => ["model"=>'Asa\Erp\TbFeename',"company"=>false, "orderby"=>"displayindex asc"],
             "userprice" => ["model"=>'Asa\Erp\TbUserPrice',"company"=>false],
             "paymentway" => ["model"=>'Asa\Erp\TbPaymentway',"company"=>true, "orderby"=>"displayindex asc"],
+            "customsunit" => ["model"=>'Asa\Erp\TbCustomsUnit',"company"=>false, "orderby"=>"displayindex asc"],
+            "customswrap" => ["model"=>'Asa\Erp\TbCustomsWrap',"company"=>false, "orderby"=>"displayindex asc"],
         ];
         $table = $this->dispatcher->getParam("table");
         $model = $maps[$table];

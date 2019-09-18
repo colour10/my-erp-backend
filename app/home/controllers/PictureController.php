@@ -7,10 +7,15 @@ use Asa\Erp\TbPicture;
 use Asa\Erp\TbProduct;
 use Asa\Erp\Util;
 
-class PictureController extends AdminController {    
+/**
+ *
+ * ErrorCode 1121
+ */
+
+class PictureController extends AdminController {
     public function initialize() {
 	    parent::initialize();
-	    
+
 	    $this->setModelName('Asa\\Erp\\TbPicture');
     }
 
@@ -40,10 +45,28 @@ class PictureController extends AdminController {
             else {
                 throw new \Exception("/1001/参数错误/");
             }
-            
+
         }
         else {
             throw new \Exception("/1001/不允许删除/");
         }
+    }
+
+    function ofproductsAction() {
+        $products = TbProduct::find(
+            sprintf("id in (%s)", addslashes($_POST['productids']))
+        );
+
+        foreach($products as $product) {
+            if($product->companyid != $this->companyid) {
+                throw new \Exception('/11210101/没有权限/');
+            }
+        }
+
+        $pictures = TbPicture::find(
+            sprintf("productid in (%s)", addslashes($_POST['productids']))
+        );
+
+        return $this->success($pictures->toArray());
     }
 }

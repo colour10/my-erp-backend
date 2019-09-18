@@ -21,7 +21,7 @@ class CompanyController extends AdminController {
             return $this->success($company->toArray());
         }
         else {
-            throw new \Exception("/1002/公司数据不存在/");            
+            throw new \Exception("/1002/公司数据不存在/");
         }
     }
 
@@ -42,7 +42,7 @@ class CompanyController extends AdminController {
             return $this->success();
         }
         else {
-            throw new \Exception("/1002/公司数据不存在/");            
+            throw new \Exception("/1002/公司数据不存在/");
         }
     }
 }

@@ -30,13 +30,14 @@ class ProductController extends CadminController {
 
         $products = [];
         $colors = [];
-        $keys = ["brandid", "brandgroupid", "childbrand", "productsize", "countries", "productparst", "laststoragedate", "series", "ulnarinch", "factoryprice", "factorypricecurrency", "nationalpricecurrency", "nationalprice", "memo", "wordprice", "wordpricecurrency", "gender", "spring", "summer", "fall", "winter", "ageseason", "sizetopid", "sizecontentids", "productmemoids", "nationalfactorypricecurrency", "nationalfactoryprice","saletypeid","producttypeid", "winterproofingid"];
+        $keys = ["brandid", "brandgroupid", "childbrand", "countries", "laststoragedate", "series", "ulnarinch", "factoryprice", "factorypricecurrency", "nationalpricecurrency", "nationalprice", "memo", "wordprice", "wordpricecurrency", "gender", "spring", "summer", "fall", "winter", "ageseason", "sizetopid", "sizecontentids", "productmemoids", "nationalfactorypricecurrency", "nationalfactoryprice","saletypeid","producttypeid", "winterproofingid"];
 
         $this->db->begin();
         foreach($params['colors'] as $row){
             $product = new TbProduct();
             $product->companyid = $this->companyid;
             $product->maketime = date("Y-m-d H:i:s");
+            $product->updatetime = date("Y-m-d H:i:s");
             $product->makestaff = $this->currentUser;
             $product->wordcode_1 = $this->filterCode($row['wordcode_1']);
             $product->wordcode_2 = $this->filterCode($row['wordcode_2']);
@@ -103,6 +104,55 @@ class ProductController extends CadminController {
         return $this->success($output);
     }
 
+    /**
+     * 批量修改
+     * @return [type] [description]
+     */
+    function modifyAction() {
+        $params = json_decode($_POST["params"], true);
+        //print_r($params);
+
+        $productids = implode(',', $params['products']);
+
+        if(!preg_match("#^\d+(,\d+)*$#", $productids)) {
+            throw new \Exception("/11160601/参数错误/");
+        }
+
+        $products = TbProduct::find(
+            sprintf("companyid=%d and id in (%s)", $this->companyid, addslashes($productids))
+        );
+
+        $this->db->begin();
+
+        try {
+            $keys = ["brandid", "brandgroupid", "childbrand", "countries", "series", "ulnarinch", "factoryprice", "factorypricecurrency", "nationalpricecurrency", "nationalprice", "memo", "wordprice", "wordpricecurrency", "gender", "spring", "summer", "fall", "winter", "ageseason", "sizetopid", "sizecontentids", "productmemoids", "nationalfactorypricecurrency", "nationalfactoryprice","saletypeid","producttypeid", "winterproofingid"];
+            foreach($products as $row) {
+                foreach($keys as $key) {
+                    if(isset($params['form'][$key]) && $params['form'][$key]!="") {
+                        $row->$key = trim($params['form'][$key]);
+                    }
+                }
+                $row->updatetime = date("Y-m-d H:i:s");
+
+
+                if($row->update()==false) {
+                    throw new \Exception("/11160602/批量更新失败。/");
+                }
+
+                if(count($params["materials"])) {
+                    $row->updateMaterial($params["materials"]);
+                }
+            }
+
+            $this->db->commit();
+            return $this->success();
+        }
+        catch(\Exception $e) {
+            $this->db->rollback();
+            throw $e;
+        }
+    }
+
     function editAction() {
         $params = json_decode($_POST["params"], true);
         //print_r($params);
@@ -149,9 +199,9 @@ class ProductController extends CadminController {
                 $row->brandid = $params['form']["brandid"];
                 $row->brandgroupid = $params['form']["brandgroupid"];
                 $row->childbrand = $params['form']["childbrand"];
-                $row->productsize = $params['form']["productsize"];
+                //$row->productsize = $params['form']["productsize"];
                 $row->countries = $params['form']["countries"];
-                $row->productparst = $params['form']["productparst"];
+                //$row->productparst = $params['form']["productparst"];
                 $row->series = $params['form']["series"];
                 $row->ulnarinch = $params['form']["ulnarinch"];
                 $row->factoryprice = $params['form']["factoryprice"];
@@ -174,7 +224,7 @@ class ProductController extends CadminController {
                 $row->nationalfactoryprice = $params['form']["nationalfactoryprice"];
                 $row->saletypeid = $params['form']["saletypeid"];
                 $row->winterproofingid = $params['form']["winterproofingid"];
-
+                $row->updatetime = date("Y-m-d H:i:s");
 
 
                 if($row->update()==false) {
@@ -211,9 +261,43 @@ class ProductController extends CadminController {
         }
     }
 
-    function before_delete($row) {
-        if($row->companyid!=$this->companyid) {
-            throw new \Exception('/1002/数据非法/');
+    function deleteAction() {
+        $product = TbProduct::findFirstById($_POST['id']);
+        if($product==false || $product->companyid!=$this->companyid) {
+            throw new \Exception('/11160501/数据非法/');
+        }
+
+        $this->db->begin();
+
+        try {
+            $product_group = $product->product_group;
+            if($product->delete()===false) {
+                throw new \Exception('/11160502/删除失败/');
+            }
+
+            //更新同款不同色
+            $products = TbProduct::find(
+                sprintf("companyid=%d and product_group='%s'", $this->companyid, addslashes($product_group))
+            );
+
+            $data = [];
+            foreach($products as $row) {
+                $data[] = $row->id.",".$row->brandcolor;
+            }
+            $product_group = implode('|', $data);
+            foreach($products as $row) {
+                $row->product_group = $product_group;
+                if($row->update()==false) {
+                    throw new \Exception('/11160503/删除失败/');
+                }
+            }
+
+            $this->db->commit();
+            return $this->success();
+        }
+        catch(\Exception $e) {
+            $this->db->rollback();
+            throw $e;
         }
     }
 
@@ -449,6 +533,7 @@ class ProductController extends CadminController {
                         throw new \Exception("/11160301/国际码不能重复/");
                     }
 
+                    $row->updatetime = date("Y-m-d H:i:s");
                     if($row->update()==false) {
                         throw new \Exception("/11160302/更新product_group字段失败/");
                     }
@@ -722,5 +807,38 @@ class ProductController extends CadminController {
         }
         $this->db->commit();
         return $this->success();
+    }
+
+    /**
+     * 返回OMS同步需要的价格列表
+     * @return [type] [description]
+     */
+    function getomspricesAction() {
+        $result = ['hkgcost'=>'', 'eurcost'=>'', 'chncost'=>'', 'bdacost'=>''];
+        $auth = $this->auth;
+        if(isset($auth['company'])) {
+            $company = $auth['company'];
+
+            $product = TbProduct::findFirstById($_POST['productid']);
+            if($product!=false && $product->companyid==$this->companyid) {
+                foreach($product->getPriceList() as $row) {
+                    if($row['id']==$company->hkgcost) {
+                        $result['hkgcost'] = $row['price'];
+                    }
+                    else if($row['id']==$company->eurcost) {
+                        $result['eurcost'] = $row['price'];
+                    }
+                    else if($row['id']==$company->chncost) {
+                        $result['chncost'] = $row['price'];
+                    }
+                    else if($row['id']==$company->bdacost) {
+                        $result['bdacost'] = $row['price'];
+                    }
+                }
+
+            }
+        }
+
+        return $this->success($result);
     }
 }

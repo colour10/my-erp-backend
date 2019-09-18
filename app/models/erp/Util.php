@@ -259,6 +259,7 @@ class Util
             ['supplierinvoice', 'page'],
             ['currency', 'page'],
             ['company', 'info'],
+            ['productbase', 'suggest'],
         ];
     }
 
@@ -271,6 +272,7 @@ class Util
             ['login', 'checklogin'],
             ['common', 'systemlanguage'],
             ['common', 'setting'],
+
         ];
     }
 

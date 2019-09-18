@@ -11,4 +11,20 @@ class TbProductstockSearch extends BaseModel
         parent::initialize();
         $this->setSource('tb_productstock_search');
     }
+
+    function getDataList() {
+        $result = [];
+        $array = explode(';', $this->sizecontent_data);
+        foreach($array as $row) {
+            $temp = explode(',', $row);
+            $result[] = [
+                "sizecontentid" => $temp[0],
+                "number" => $temp[1],
+                "reserve_number" => $temp[2],
+                "sales_number" => $temp[3],
+            ];
+        }
+
+        return $result;
+    }
 }

@@ -22,10 +22,10 @@ class BaseController extends Controller
         if($auth) {
             $this->companyid = (int)$auth["companyid"];
         }
-        
     }
 
-    function indexAction(){}
+    function indexAction(){
+    }
 
     /**
      * 返回正确的json信息
