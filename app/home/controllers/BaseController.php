@@ -19,12 +19,13 @@ class BaseController extends Controller
         header('Access-Control-Allow-Methods: Get,Post,Put,OPTIONS');
 
         $auth = $this->auth;
-        if($auth) {
+        if ($auth) {
             $this->companyid = (int)$auth["companyid"];
         }
     }
 
-    function indexAction(){
+    function indexAction()
+    {
     }
 
     /**
@@ -47,16 +48,14 @@ class BaseController extends Controller
      */
     public function error($messages = [], $code = '200')
     {
-        if($messages instanceof Model===true) {
+        if ($messages instanceof Model === true) {
             $array = [];
             foreach ($messages->getMessages() as $message) {
                 $array[] = $message->getMessage();
             }
-        }
-        else if(is_string($messages)) {
+        } else if (is_string($messages)) {
             $array = [$messages];
-        }
-        else {
+        } else {
             $array = $messages;
         }
 
@@ -66,16 +65,19 @@ class BaseController extends Controller
 
     /**
      * 返回输出的json信息
+     * @param array $data
+     * @param int $code
+     * @param array $messages
      * @return false|string
      */
-    public function reportJson($data=[],$code=200, $messages=[])
+    public function reportJson($data = [], $code = 200, $messages = [])
     {
-        $result = array(
+        $result = [
             "code" => $code,
-            "messages" => $messages
-        );
+            "messages" => $messages,
+        ];
 
-        if(is_array($data)) {
+        if (is_array($data)) {
             $result = array_merge($data, $result);
         }
 
@@ -85,12 +87,12 @@ class BaseController extends Controller
 
     /**
      * 多语言版本配置读取函数
-     * @param $field_name 验证字段的提示名称，比如cn.php中上面的自定义变量名system_name
-     * @param $module_name 模块名称，比如cn.php中的template
-     * @param $module_rule 模块验证规则，比如cn.php中的template模块下面的uniqueness
+     * @param string $field_name 验证字段的提示名称，比如cn.php中上面的自定义变量名system_name
+     * @param string $module_name 模块名称，比如cn.php中的template
+     * @param string $module_rule 模块验证规则，比如cn.php中的template模块下面的uniqueness
      * @return string
      */
-    public function getValidateMessage($field_name, $module_name='', $module_rule='')
+    public function getValidateMessage($field_name, $module_name = '', $module_rule = '')
     {
         // 逻辑
         // 定义变量
@@ -106,21 +108,23 @@ class BaseController extends Controller
         return sprintf($language->$module_name[$module_rule], $human_name);
     }
 
+
     /**
      * 对单个模型的单个记录的修改、更新或者删除，并返回标准json输出
-     * @param  [type] $callback 需要调用的方法
-     * @return [type]           [description]
+     * @param $model
+     * @param $action
      */
-    function doTableAction($model, $action) {
+    function doTableAction($model, $action)
+    {
         if (call_user_func([$model, $action]) === false) {
             echo $this->error($model);
-        }
-        else {
+        } else {
             echo $this->success();
         }
     }
 
-    function debug($message, $flag="") {
+    function debug($message, $flag = "")
+    {
         print_r($message);
     }
 }
