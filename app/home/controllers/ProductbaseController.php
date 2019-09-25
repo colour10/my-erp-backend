@@ -11,7 +11,7 @@ class ProductbaseController extends BaseController
 {
     /**
      * 实时下拉搜索框
-     * @return false|string
+     * @return false|string|void
      */
     public function suggestAction()
     {
@@ -21,7 +21,6 @@ class ProductbaseController extends BaseController
                     sprintf("wordcode like '%s%%'", addslashes($keyword)),
                     "order" => "wordcode asc",
                 ]);
-
                 $array = [];
                 foreach ($rows as $row) {
                     $array[] = $row->product->toArray();
