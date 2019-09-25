@@ -16,16 +16,18 @@ class ProductbaseController extends BaseController
     public function suggestAction()
     {
         if ($keyword = $this->request->get('keyword')) {
-            $rows = TbProductBase::find([
-                sprintf("wordcode like '%s%%'", addslashes($keyword)),
-                "order" => "wordcode asc",
-            ]);
+            if (strlen($keyword) >= 4) {
+                $rows = TbProductBase::find([
+                    sprintf("wordcode like '%s%%'", addslashes($keyword)),
+                    "order" => "wordcode asc",
+                ]);
 
-            $array = [];
-            foreach ($rows as $row) {
-                $array[] = $row->product->toArray();
+                $array = [];
+                foreach ($rows as $row) {
+                    $array[] = $row->product->toArray();
+                }
+                return $this->success($array);
             }
-            return $this->success($array);
         } else {
             return $this->success();
         }
