@@ -41,6 +41,8 @@
                         <div class="col-md-7 col-sm-7">
                             <form class="form-horizontal form-without-legend" role="form">
 
+
+
                                 <div class="form-group">
                                     <label for="company"
                                            class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('company'); ?>
@@ -55,9 +57,9 @@
                                                     <option value="<?php echo $company['id']; ?>"><?php echo $company['name']; ?></option>
                                                 <?php } ?>
                                             </select>
-                                        <? } else { ?>
+                                        <?php } else { ?>
                                             <input type="text" class="form-control" id="companyid" readonly value="<?php echo $this->host['company']->name; ?>">
-                                        <? } ?>
+                                        <?php } ?>
                                     </div>
                                 </div>
 
@@ -76,7 +78,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                <? } ?>
+                                <?php } ?>
 
                                 <div class="form-group">
                                     <label for="email" class="col-lg-4 control-label"><?php echo $this->obj->getValidateMessage('email'); ?>
