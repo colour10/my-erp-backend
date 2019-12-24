@@ -20,6 +20,7 @@ class LoginController extends Controller
             ));
             if ($user!=false) {
                 $group = $user->group;
+                $language = isset($_POST['language']) ? $_POST['language'] : 'cn';
 
                 $this->session->set('user', array(
                     'id' => $user->id,
@@ -31,10 +32,10 @@ class LoginController extends Controller
                     'company' => $user->company,
                     'actions' => $group->getActionList()->toArray(),
                     'permissions' => $group->getPermissionList()->toArray(),
-                    "language" => $_POST['language']
+                    "language" => $language
                 ));
 
-                $this->session->set('language', $_POST['language']);
+                $this->session->set('language', $language);
                 //Forward to the 'invoices' controller if the user is valid
                 //header("location:/");
                 echo json_encode(['code' => '200', 'auth' =>$this->session->get('user'), "session_id" => $this->session->getId(), 'messages' => []]);
