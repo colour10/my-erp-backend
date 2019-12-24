@@ -310,6 +310,7 @@ class ProductController extends CadminController
     function before_page()
     {
         $_POST["__orderby"] = "id desc";
+        $_POST['wordcode'] = $this->filterCode($_POST['wordcode']);
     }
 
     function searchAction()
