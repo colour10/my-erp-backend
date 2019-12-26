@@ -89,6 +89,7 @@ return [
     'menu-11-3' => '退出',
     'en' => '英',
     'cn' => '中',
+    'it' => '意',
     'button-save' => '保存',
     'button-cancel' => '取消',
     'button-add' => '添加',
@@ -1139,4 +1140,7 @@ return [
                 "2" => "自动",
             ],
         ],
+
+    /** 验证 */
+    'required' => '不能为空',
 ];
