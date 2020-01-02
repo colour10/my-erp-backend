@@ -123,4 +123,38 @@ class ColorController extends CadminController {
             return $this->error($model);
         }
     }
+
+    /**
+     * 获取色系和颜色
+     * 用于cascader级联选择器
+     */
+    public function getColorSystemAndColorForCascaderAction()
+    {
+        $lang = $this->getDI()->get("session")->get("language");
+
+        $color_systems = TbColorSystem::find([
+            'order' => "id asc"
+        ]);
+
+        $result = [];
+        foreach ($color_systems as $cs) {
+            $result[$cs->id]['id']     = (int)$cs->id;
+            $result[$cs->id]['title']  = $cs->title;
+            $result[$cs->id]['colors'] = [];
+        }
+
+        $colors = TbColortemplate::find("color_system_id > 0");
+        foreach ($colors as $color) {
+            if (isset($result[$color->color_system_id])) {
+                $title = $color->{'name_' . $lang};
+                $col = [
+                    'id' => $color->id,
+                    'title' => $title
+                ];
+                $result[$color->color_system_id]['colors'][] = $col;
+            }
+        }
+
+        return $this->success(array_values($result));
+    }
 }

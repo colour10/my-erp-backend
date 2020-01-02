@@ -17,6 +17,10 @@ use Asa\Erp\TbProductSizeProperty;
 use Asa\Erp\TbProductstock;
 use Asa\Erp\TbProperty;
 use Asa\Erp\TbSizecontent;
+use Asa\Erp\TbAgeseason;
+use Asa\Erp\TbBrandgroup;
+use Asa\Erp\TbBrandgroupchild;
+use Asa\Erp\TbSizetop;
 
 /**
  * 商品表
@@ -30,6 +34,54 @@ class ProductController extends CadminController
 
         $this->setModelName('Asa\\Erp\\TbProduct');
     }
+
+    function pageAction() {
+        $this->before_page();
+        $params = [$this->getSearchCondition()];
+        if(isset($_POST['__orderby'])) {
+            $params['order'] = $_POST['__orderby'];
+        }
+
+        $result = TbProduct::find($params);
+
+        $page = $this->request->getPost("page", "int", 1);
+        $pageSize = $this->request->getPost("pageSize", "int", 20);
+
+        $paginator = new \Phalcon\Paginator\Adapter\Model(
+            [
+                "data"  => $result,
+                "limit" => $pageSize,
+                "page"  => $page,
+            ]
+        );
+
+        // Get the paginated results
+        $pageObject = $paginator->getPaginate();
+
+        $data = [];
+        foreach($pageObject->items as $row) {
+            $row_data = $row->toArray();
+            $row_data['name'] = $row->getName();
+            $row_data['season'] = $row->getSeason();
+            $row_data['worldcode'] = $row->getWorldCode();
+            $row_data['type'] = $row->getType();
+            $row_data['fpCurrencyCode'] = $row->getFactoryPriceCurrencyLabel();
+            $row_data['times'] = $row->getTimes();
+            $row_data['wpCurrencyCode'] = $row->getWordPriceCurrencyLabel();
+            $row_data['discountRate'] = $row->getDiscountRate();
+            $row_data['npCurrencyCode'] = $row->getNationalPriceCurrencyLabel();
+            $row_data['saleType'] = $row->getSaleType();
+            $data[] = $row_data;
+        }
+
+        $pageinfo = [
+            "current"    => $pageObject->current,
+            "totalPages" => $pageObject->total_pages,
+            "total"      => $pageObject->total_items,
+            "pageSize"   => $pageSize
+        ];
+        echo $this->reportJson(array("data"=>$data, "pagination" => $pageinfo),200,[]);
+	}
 
     function addAction()
     {
@@ -294,7 +346,7 @@ class ProductController extends CadminController
             foreach($products as $row) {
                 $row->product_group = $product_group;
                 if($row->update()==false) {
-                    throw new \Exception('/11160503/删除失败/');
+                    throw new  \Exception('/11160503/删除失败/');
                 }
             }
 
@@ -1012,5 +1064,83 @@ class ProductController extends CadminController
         // 默认语言是cn
         $lang = $this->session->get('language') ?: 'cn';
         return $fieldname . '_' . $lang;
+    }
+
+    /**
+     * 获取商品相关内容
+     * 年代
+     */
+    public function getProductRelatedOptionsAction()
+    {
+        $lang = $this->getDI()->get("session")->get("language");
+        $result = [];
+
+        $ageseasons = TbAgeseason::find([
+            "order" => "name desc,sessionmark asc"
+        ]);
+        $result['ageseasons'] = $ageseasons->toArray();
+
+        $result['brands'] = [];
+        $brands = TbBrand::find();
+        foreach ($brands as $brand) {
+            $title = $brand->{'name_' . $lang};
+            $result['brands'][] = [
+                'id' => $brand->id,
+                'title' => $title
+            ];
+        }
+
+        $categories = [];
+        $brandgroups = TbBrandgroup::find([
+            "order" => "displayindex asc"
+        ]);
+        foreach ($brandgroups as $bg) {
+            $title = $bg->{'name_' . $lang};
+            $categories[$bg->id]['id'] = $bg->id;
+            $categories[$bg->id]['title'] = $title;
+            $categories[$bg->id]['children'] = [];
+        }
+
+        $brandgroupchildren = TbBrandgroupchild::find([
+            "order" => "displayindex asc"
+        ]);
+        foreach ($brandgroupchildren as $bgc) {
+            if (isset($categories[$bgc->brandgroupid])) {
+                $title = $bgc->{'name_' . $lang};
+                $child = [
+                    'id' => $bgc->id,
+                    'title' => $title
+                ];
+                $categories[$bgc->brandgroupid]['children'][] = $child;
+            }
+        }
+        $result['categories'] = array_values($categories);
+
+        $sizes = [];
+        $sizetops = TbSizetop::find([
+            "order" => "displayindex asc"
+        ]);
+        foreach ($sizetops as $st) {
+            $title = $st->{'name_' . $lang};
+            $sizes[$st->id]['id'] = $st->id;
+            $sizes[$st->id]['title'] = $title;
+            $sizes[$st->id]['children'] = [];
+        }
+
+        $sizecontents = TbSizecontent::find([
+            "order" => "displayindex asc"
+        ]);
+        foreach ($sizecontents as $sc) {
+            if (isset($sizes[$sc->topid])) {
+                $child = [
+                    'id' => $sc->id,
+                    'title' => $sc->name
+                ];
+                $sizes[$sc->topid]['children'][] = $child;
+            }
+        }
+        $result['sizes'] = array_values($sizes);
+
+        return $this->success($result);
     }
 }

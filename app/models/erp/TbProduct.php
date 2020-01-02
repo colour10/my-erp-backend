@@ -3,7 +3,6 @@
 namespace Asa\Erp;
 
 use Phalcon\Mvc\Model\Relation;
-
 /**
  * 商品表
  * ErrorCode 1113
@@ -24,6 +23,78 @@ class TbProduct extends BaseCompanyModel
             'id',
             [
                 'alias' => 'company'
+            ]
+        );
+
+        $this->belongsTo(
+            'brandid',
+            '\Asa\Erp\TbBrand',
+            'id',
+            [
+                'alias' => 'brand'
+            ]
+        );
+
+        $this->belongsTo(
+            'color_id',
+            '\Asa\Erp\TbColortemplate',
+            'id',
+            [
+                'alias' => 'color'
+            ]
+        );
+
+        $this->belongsTo(
+            'childbrand',
+            '\Asa\Erp\TbBrandgroupchild',
+            'id',
+            [
+                'alias' => 'subbrand'
+            ]
+        );
+
+        $this->belongsTo(
+            'producttypeid',
+            '\Asa\Erp\TbProductType',
+            'id',
+            [
+                'alias' => 'type'
+            ]
+        );
+
+        $this->belongsTo(
+            'factorypricecurrency',
+            '\Asa\Erp\TbCurrency',
+            'id',
+            [
+                'alias' => 'fpcurrency'
+            ]
+        );
+
+        $this->belongsTo(
+            'wordpricecurrency',
+            '\Asa\Erp\TbCurrency',
+            'id',
+            [
+                'alias' => 'wpcurrency'
+            ]
+        );
+
+        $this->belongsTo(
+            'nationalpricecurrency',
+            '\Asa\Erp\TbCurrency',
+            'id',
+            [
+                'alias' => 'npcurrency'
+            ]
+        );
+
+        $this->belongsTo(
+            'saletypeid',
+            '\Asa\Erp\TbSaleType',
+            'id',
+            [
+                'alias' => 'saleType'
             ]
         );
 
@@ -399,5 +470,164 @@ class TbProduct extends BaseCompanyModel
         if($this->brandcolor!="" && $this->colorname!=""){
             TbProductLastmodify::add($this->companyid, $this->brandid, $this->wordcode_3, $this->brandcolor, $this->colorname);
         }
+    }
+
+    /**
+     * 获取品牌名称
+     */
+    public function getBrandName()
+    {
+        $lang = $this->getDI()->get("session")->get("language");
+        return $this->brand->{'name_' . $lang};
+    }
+
+    /**
+     * 获取性别
+     */
+    public function getGenderName()
+    {
+        $language = TbLanguage::findFirst("code='list|gender|{$this->gender}'");
+
+        $lang = $this->getDI()->get("session")->get("language");
+        return $language->{'name_' . $lang};
+    }
+
+    /**
+     * 获取商品颜色
+     */
+    public function getColorName()
+    {
+        $lang = $this->getDI()->get("session")->get("language");
+        return $this->color ? $this->color->{'name_' . $lang} : '';
+    }
+
+    /**
+     * 获取商品描述
+     */
+    public function getProductMemoNames()
+    {
+        if ($this->productmemoids) {
+            $lang = $this->getDI()->get("session")->get("language");
+            $product_memos = TbProductMemo::find("id IN ({$this->productmemoids})");
+            foreach ($product_memos as $memo) {
+                $str[] = $memo->{'name_' . $lang};
+            }
+            $str = implode('', $str);
+            return $str;
+        }
+
+        return '';
+    }
+
+    /**
+     * 获取子品类
+     */
+    public function getSubbrand()
+    {
+        $lang = $this->getDI()->get("session")->get("language");
+        return $this->subbrand ? $this->subbrand->{'name_' . $lang} : '';
+    }
+
+    /**
+     * 获取商品名称
+     */
+    public function getName()
+    {
+        $brand = $this->getBrandName();
+        $gender = $this->getGenderName();
+        $color = $this->getColorName();
+        $product_memo = $this->getProductMemoNames();
+        $subbrand = $this->getSubbrand();
+        return $brand . $gender . $color . $product_memo . $subbrand;
+    }
+
+    /**
+     * 获取年代
+     */
+    public function getSeason()
+    {
+        if ($this->ageseason) {
+            $seasons = TbAgeseason::find("id IN ({$this->ageseason})");
+            foreach ($seasons as $season) {
+                $str[] = $season->sessionmark . $season->name;
+            }
+            $str = implode(',', $str);
+            return $str;
+        }
+
+        return '';
+    }
+
+    /**
+     * 获取国际码
+     */
+    public function getWorldCode()
+    {
+        $arr = [$this->wordcode_1, $this->wordcode_2, $this->wordcode_3, $this->wordcode_4];
+        return implode(' ', $arr);
+    }
+
+    /**
+     * 获取商品属性
+     */
+    public function getType()
+    {
+        $lang = $this->getDI()->get("session")->get("language");
+        return $this->type ? $this->type->{'name_' . $lang} : '';
+    }
+
+    /**
+     * 获取国际出厂价币种
+     */
+    public function getFactoryPriceCurrencyLabel()
+    {
+        return $this->fpcurrency ? $this->fpcurrency->code : '';
+    }
+
+    /**
+     * 获取倍率
+     */
+    public function getTimes()
+    {
+        if ($this->factoryprice != 0) {
+            return round($this->wordprice / $this->factoryprice, 2);
+        }
+        return '';
+    }
+
+    /**
+     * 获取国际零售价币种
+     */
+    public function getWordPriceCurrencyLabel()
+    {
+        return $this->wpcurrency ? $this->wpcurrency->code : '';
+    }
+
+    /**
+     * 获取折扣率
+     */
+    public function getDiscountRate()
+    {
+        if ($this->wordprice != 0) {
+            return round($this->factoryprice / $this->wordprice, 2);
+        }
+        return '';
+    }
+
+    /**
+     * 获取本国零售价币种
+     */
+    public function getNationalPriceCurrencyLabel()
+    {
+        return $this->npcurrency ? $this->npcurrency->code : '';
+    }
+
+    /**
+     * 获取销售属性
+     */
+    public function getSaleType()
+    {
+        $lang = $this->getDI()->get("session")->get("language");
+        return $this->saleType ? $this->saleType->{'name_' . $lang} : '';
     }
 }

@@ -1141,6 +1141,7 @@ return [
             ],
         ],
 
-    /** 验证 */
     'required' => '不能为空',
+    'color' => '颜色',
+    'second_color' => '副颜色'
 ];
