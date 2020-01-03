@@ -21,6 +21,7 @@ use Asa\Erp\TbAgeseason;
 use Asa\Erp\TbBrandgroup;
 use Asa\Erp\TbBrandgroupchild;
 use Asa\Erp\TbSizetop;
+use Asa\Erp\TbMaterialnote;
 
 /**
  * 商品表
@@ -1154,6 +1155,28 @@ class ProductController extends CadminController
             }
         }
         $result['sizes'] = array_values($sizes);
+
+        $materials = TbMaterial::find([
+            "order" => "name_en asc"
+        ]);
+        foreach ($materials as $material) {
+            $title = $material->{'name_' . $lang};
+            $result['materials'][] = [
+                'id' => $material->id,
+                'title' => $title
+            ];
+        }
+
+        $materialnotes = TbMaterialnote::find([
+            "order" => "displayindex asc"
+        ]);
+        foreach ($materialnotes as $mn) {
+            $title = $mn->{'content_' . $lang};
+            $result['materialnotes'][] = [
+                'id' => $mn->id,
+                'title' => $title
+            ];
+        }
 
         return $this->success($result);
     }
