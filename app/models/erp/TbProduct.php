@@ -489,7 +489,7 @@ class TbProduct extends BaseCompanyModel
         $language = TbLanguage::findFirst("code='list|gender|{$this->gender}'");
 
         $lang = $this->getDI()->get("session")->get("language");
-        return $language->{'name_' . $lang};
+        return $language ? $language->{'name_' . $lang} : '';
     }
 
     /**

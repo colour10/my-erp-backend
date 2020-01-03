@@ -85,14 +85,19 @@ class ProductController extends CadminController
 
     function addAction()
     {
-        //print_r($_POST["params"]);
         $params = json_decode($_POST["params"], true);
-        //print_r($params);
 
         $products = [];
         $colors = [];
-        $keys = ["brandid", "brandgroupid", "childbrand", "countries", "laststoragedate", "series", "ulnarinch", "factoryprice", "factorypricecurrency", "nationalpricecurrency", "nationalprice", "memo", "wordprice", "wordpricecurrency", "gender", "spring", "summer", "fall", "winter", "ageseason", "sizetopid", "sizecontentids", "productmemoids", "nationalfactorypricecurrency", "nationalfactoryprice","saletypeid","producttypeid", "winterproofingid"];
-
+        $keys = [
+            "brandid", "countries",
+            "series", "ulnarinch", "factoryprice", "nationalpricecurrency",
+            "nationalprice", "memo", "wordprice", "wordpricecurrency", "gender",
+            "spring", "summer", "fall", "winter",
+            "sizetopid", "productmemoids",
+            "nationalfactoryprice", "wordprice", "wordpricecurrency",
+            "saletypeid","producttypeid", "winterproofingid"
+        ];
 
         $this->db->begin();
         foreach ($params['colors'] as $row) {
@@ -110,6 +115,15 @@ class ProductController extends CadminController
             $product->picture = $row['picture'];
             $product->picture2 = $row['picture2'];
             $product->wordcode = $this->filterCode($row['wordcode_1']) . $this->filterCode($row['wordcode_2']) . $this->filterCode($row['wordcode_3']);
+
+            $product->color_system_id = $row['colorId'][0];
+            $product->color_id = $row['colorId'][1];
+            $product->second_color_id = $row['secondColorId'][1];
+
+            $product->brandgroupid = $params['form']['childbrand'][0];
+            $product->childbrand = $params['form']['childbrand'][1];
+            $product->sizecontentids = implode(',', $params['form']['sizecontentids']);
+            $product->ageseason = implode(',', $params['form']['ageseason']);
 
             foreach ($keys as $key) {
                 $product->$key = trim($params['form'][$key]);
