@@ -22,6 +22,8 @@ use Asa\Erp\TbBrandgroup;
 use Asa\Erp\TbBrandgroupchild;
 use Asa\Erp\TbSizetop;
 use Asa\Erp\TbMaterialnote;
+use Asa\Erp\TbProductMemo;
+use Asa\Erp\TbSeries;
 
 /**
  * 商品表
@@ -459,10 +461,32 @@ class ProductController extends CadminController
             $where[] = sprintf("wordcode like '%%%s%%'", addslashes(strtoupper($_POST["wordcode"])));
         }
 
+        if (isset($_POST['brandgroupid'])) {
+            if (is_array($_POST['brandgroupid'])) {
+                $_POST['brandgroupid'] = implode(',', $_POST['brandgroupid']);
+            }
+        }
+        if (isset($_POST['childbrand'])) {
+            if (is_array($_POST['childbrand'])) {
+                $_POST['childbrand'] = implode(',', $_POST['childbrand']);
+            }
+        }
+
         $names = ['brandid', 'brandgroupid', 'childbrand', 'brandcolor', 'saletypeid', 'producttypeid', 'gender'];
         foreach ($names as $name) {
             if (isset($_POST[$name]) && preg_match("#^\d+(,\d+)*$#", $_POST[$name])) {
                 $where[] = \Asa\Erp\Sql::isInclude($name, $_POST[$name]);
+            }
+        }
+
+        if (isset($_POST['ageseason'])) {
+            if (is_array($_POST['ageseason'])) {
+                $_POST['ageseason'] = implode(',', $_POST['ageseason']);
+            }
+        }
+        if (isset($_POST['productmemoids'])) {
+            if (is_array($_POST['productmemoids'])) {
+                $_POST['productmemoids'] = implode(',', $_POST['productmemoids']);
             }
         }
 
@@ -1095,15 +1119,28 @@ class ProductController extends CadminController
         ]);
         $result['ageseasons'] = $ageseasons->toArray();
 
-        $result['brands'] = [];
-        $brands = TbBrand::find();
-        foreach ($brands as $brand) {
+        $brands = [];
+        $brandsTmp = TbBrand::find();
+        foreach ($brandsTmp as $brand) {
             $title = $brand->{'name_' . $lang};
-            $result['brands'][] = [
-                'id' => $brand->id,
-                'title' => $title
-            ];
+            $brands[$brand->id]['id'] = $brand->id;
+            $brands[$brand->id]['title'] = $title;
+            $brands[$brand->id]['series'] = [];
         }
+        $series = TbSeries::find([
+            "order" => "name_en asc"
+        ]);
+        foreach ($series as $s) {
+            if (isset($brands[$s->brandid])) {
+                $title = $s->{'name_' . $lang};
+                $child = [
+                    'id' => $s->id,
+                    'title' => $title
+                ];
+                $brands[$s->brandid]['series'][] = $child;
+            }
+        }
+        $result['brands'] = array_values($brands);
 
         $categories = [];
         $brandgroups = TbBrandgroup::find([
@@ -1174,6 +1211,18 @@ class ProductController extends CadminController
             $title = $mn->{'content_' . $lang};
             $result['materialnotes'][] = [
                 'id' => $mn->id,
+                'title' => $title
+            ];
+        }
+
+        $result['productMemos'] = [];
+        $productMemos = TbProductMemo::find([
+            "order" => "displayindex asc"
+        ]);
+        foreach ($productMemos as $pm) {
+            $title = $pm->{'name_' . $lang};
+            $result['productMemos'][] = [
+                'id' => $pm->id,
                 'title' => $title
             ];
         }
