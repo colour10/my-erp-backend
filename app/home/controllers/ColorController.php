@@ -148,7 +148,7 @@ class ColorController extends CadminController {
             if (isset($result[$color->color_system_id])) {
                 $title = $color->{'name_' . $lang};
                 $col = [
-                    'id' => $color->id,
+                    'id' => (int)$color->id,
                     'title' => $title
                 ];
                 $result[$color->color_system_id]['colors'][] = $col;

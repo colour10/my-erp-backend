@@ -24,6 +24,7 @@ use Asa\Erp\TbSizetop;
 use Asa\Erp\TbMaterialnote;
 use Asa\Erp\TbProductMemo;
 use Asa\Erp\TbSeries;
+use Asa\Erp\TbUlnarinch;
 
 /**
  * 商品表
@@ -274,11 +275,7 @@ class ProductController extends CadminController
                 }
 
                 $row->brandid = $params['form']["brandid"];
-                $row->brandgroupid = $params['form']["brandgroupid"];
-                $row->childbrand = $params['form']["childbrand"];
-                //$row->productsize = $params['form']["productsize"];
                 $row->countries = $params['form']["countries"];
-                //$row->productparst = $params['form']["productparst"];
                 $row->series = $params['form']["series"];
                 $row->ulnarinch = $params['form']["ulnarinch"];
                 $row->factoryprice = $params['form']["factoryprice"];
@@ -293,15 +290,22 @@ class ProductController extends CadminController
                 $row->summer = $params['form']["summer"];
                 $row->fall = $params['form']["fall"];
                 $row->winter = $params['form']["winter"];
-                $row->ageseason = $params['form']["ageseason"];
                 $row->sizetopid = $params['form']["sizetopid"];
-                $row->sizecontentids = $params['form']["sizecontentids"];
                 $row->productmemoids = $params['form']["productmemoids"];
                 $row->nationalfactorypricecurrency = $params['form']["nationalpricecurrency"];
                 $row->nationalfactoryprice = $params['form']["nationalfactoryprice"];
                 $row->saletypeid = $params['form']["saletypeid"];
                 $row->winterproofingid = $params['form']["winterproofingid"];
                 $row->updatetime = date("Y-m-d H:i:s");
+
+                $row->color_system_id = $params['form']['colorId'][0];
+                $row->color_id = $params['form']['colorId'][1];
+                $row->second_color_id = $params['form']['secondColorId'][1];
+
+                $row->brandgroupid = $params['form']['childbrand'][0];
+                $row->childbrand = $params['form']['childbrand'][1];
+                $row->sizecontentids = implode(',', $params['form']['sizecontentids']);
+                $row->ageseason = implode(',', $params['form']['ageseason']);
 
                 if ($row->update() == false) {
                     $this->db->rollback();
@@ -461,6 +465,11 @@ class ProductController extends CadminController
             $where[] = sprintf("wordcode like '%%%s%%'", addslashes(strtoupper($_POST["wordcode"])));
         }
 
+        if (isset($_POST['brandid'])) {
+            if (is_array($_POST['brandid'])) {
+                $_POST['brandid'] = implode(',', $_POST['brandid']);
+            }
+        }
         if (isset($_POST['brandgroupid'])) {
             if (is_array($_POST['brandgroupid'])) {
                 $_POST['brandgroupid'] = implode(',', $_POST['brandgroupid']);
@@ -487,6 +496,11 @@ class ProductController extends CadminController
         if (isset($_POST['productmemoids'])) {
             if (is_array($_POST['productmemoids'])) {
                 $_POST['productmemoids'] = implode(',', $_POST['productmemoids']);
+            }
+        }
+        if (isset($_POST['series'])) {
+            if (is_array($_POST['series'])) {
+                $_POST['series'] = implode(',', $_POST['series']);
             }
         }
 
@@ -1123,7 +1137,7 @@ class ProductController extends CadminController
         $brandsTmp = TbBrand::find();
         foreach ($brandsTmp as $brand) {
             $title = $brand->{'name_' . $lang};
-            $brands[$brand->id]['id'] = $brand->id;
+            $brands[$brand->id]['id'] = (int)$brand->id;
             $brands[$brand->id]['title'] = $title;
             $brands[$brand->id]['series'] = [];
         }
@@ -1134,7 +1148,7 @@ class ProductController extends CadminController
             if (isset($brands[$s->brandid])) {
                 $title = $s->{'name_' . $lang};
                 $child = [
-                    'id' => $s->id,
+                    'id' => (int)$s->id,
                     'title' => $title
                 ];
                 $brands[$s->brandid]['series'][] = $child;
@@ -1148,7 +1162,7 @@ class ProductController extends CadminController
         ]);
         foreach ($brandgroups as $bg) {
             $title = $bg->{'name_' . $lang};
-            $categories[$bg->id]['id'] = $bg->id;
+            $categories[$bg->id]['id'] = (int)$bg->id;
             $categories[$bg->id]['title'] = $title;
             $categories[$bg->id]['children'] = [];
         }
@@ -1160,7 +1174,7 @@ class ProductController extends CadminController
             if (isset($categories[$bgc->brandgroupid])) {
                 $title = $bgc->{'name_' . $lang};
                 $child = [
-                    'id' => $bgc->id,
+                    'id' => (int)$bgc->id,
                     'title' => $title
                 ];
                 $categories[$bgc->brandgroupid]['children'][] = $child;
@@ -1174,7 +1188,7 @@ class ProductController extends CadminController
         ]);
         foreach ($sizetops as $st) {
             $title = $st->{'name_' . $lang};
-            $sizes[$st->id]['id'] = $st->id;
+            $sizes[$st->id]['id'] = (int)$st->id;
             $sizes[$st->id]['title'] = $title;
             $sizes[$st->id]['children'] = [];
         }
@@ -1185,7 +1199,7 @@ class ProductController extends CadminController
         foreach ($sizecontents as $sc) {
             if (isset($sizes[$sc->topid])) {
                 $child = [
-                    'id' => $sc->id,
+                    'id' => (int)$sc->id,
                     'title' => $sc->name
                 ];
                 $sizes[$sc->topid]['children'][] = $child;
@@ -1199,7 +1213,7 @@ class ProductController extends CadminController
         foreach ($materials as $material) {
             $title = $material->{'name_' . $lang};
             $result['materials'][] = [
-                'id' => $material->id,
+                'id' => (int)$material->id,
                 'title' => $title
             ];
         }
@@ -1210,7 +1224,7 @@ class ProductController extends CadminController
         foreach ($materialnotes as $mn) {
             $title = $mn->{'content_' . $lang};
             $result['materialnotes'][] = [
-                'id' => $mn->id,
+                'id' => (int)$mn->id,
                 'title' => $title
             ];
         }
@@ -1222,10 +1236,76 @@ class ProductController extends CadminController
         foreach ($productMemos as $pm) {
             $title = $pm->{'name_' . $lang};
             $result['productMemos'][] = [
-                'id' => $pm->id,
+                'id' => (int)$pm->id,
                 'title' => $title
             ];
         }
+
+        $result['countries'] = [];
+        $countries = TbCountry::find([
+            "order" => "name_en ASC"
+        ]);
+        foreach ($countries as $country) {
+            $title = $country->{'name_' . $lang};
+            $result['countries'][] = [
+                'id' => (int)$country->id,
+                'title' => $title
+            ];
+        }
+
+        $result['ulnarinches'] = [];
+        $ulnarinches = TbUlnarinch::find([
+            "order" => "displayindex ASC"
+        ]);
+        foreach ($ulnarinches as $ulnarinch) {
+            $title = $ulnarinch->{'name_' . $lang};
+            $result['ulnarinches'][] = [
+                'id' => (int)$ulnarinch->id,
+                'title' => $title
+            ];
+        }
+
+        return $this->success($result);
+    }
+
+    /**
+     * 获取商品信息
+     */
+    public function infoAction()
+    {
+        $id = $this->request->getPost('id', 'int', 0);
+
+        if (!$product = TbProduct::findFirst("id=$id")) {
+            // 传递错误
+            return $this->renderError('make-an-error', 'color-doesnot-exist');
+        }
+
+        return $this->success($product);
+    }
+
+    /**
+     * 获取商品尺码和尺码规格
+     */
+    public function sizecontentsAndPropertiesAction()
+    {
+        $id = $this->request->getPost('id', 'int', 0);
+
+        if (!$product = TbProduct::findFirst("id=$id")) {
+            return $this->renderError('make-an-error', 'product-doesnot-exist');
+        }
+        $result = [];
+
+        $result['sizecontents'] = TbSizecontent::find("id IN ({$product->sizecontentids})");
+
+        $builder = $this->modelsManager->createBuilder();
+        $name = $this->getlangfield('name');
+        $builder->from(['bp' => TbBrandgroupchildProperty::class])
+            ->join(TbProperty::class, 'bp.propertyid = p.id', 'p')
+            ->columns("p.$name AS title")
+            ->where("bp.brandgroupchildid = {$product->childbrand}")
+            ->orderBy("p.displayindex ASC");
+        $query = $builder->getQuery();
+        $result['properties'] = $query->execute()->toArray();
 
         return $this->success($result);
     }
