@@ -630,4 +630,27 @@ class TbProduct extends BaseCompanyModel
         $lang = $this->getDI()->get("session")->get("language");
         return $this->saleType ? $this->saleType->{'name_' . $lang} : '';
     }
+
+    /**
+     * 获取同款不同色的商品
+     * 
+     * @return array [
+     *     'id' => picture
+     * ]
+     */
+    public function getColors()
+    {
+        $result = [];
+        $productGroup = explode('|', $this->product_group);
+        foreach ($productGroup as $pg) {
+            $pgArray = explode(',', $pg);
+            $product = TbProduct::findFirst($pgArray[0]);
+            $result[] = [
+                'id' => $product->id,
+                'picture' => $product->picture
+            ];
+        }
+
+        return $result;
+    }
 }

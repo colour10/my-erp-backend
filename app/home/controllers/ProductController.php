@@ -25,6 +25,10 @@ use Asa\Erp\TbMaterialnote;
 use Asa\Erp\TbProductMemo;
 use Asa\Erp\TbSeries;
 use Asa\Erp\TbUlnarinch;
+use Asa\Erp\TbCurrency;
+use Asa\Erp\TbSaleType;
+use Asa\Erp\TbProductType;
+use Asa\Erp\TbWinterproofing;
 
 /**
  * 商品表
@@ -64,18 +68,19 @@ class ProductController extends CadminController
 
         $data = [];
         foreach($pageObject->items as $row) {
-            $row_data = $row->toArray();
-            $row_data['name'] = $row->getName();
-            $row_data['season'] = $row->getSeason();
-            $row_data['worldcode'] = $row->getWorldCode();
-            $row_data['type'] = $row->getType();
-            $row_data['fpCurrencyCode'] = $row->getFactoryPriceCurrencyLabel();
-            $row_data['times'] = $row->getTimes();
-            $row_data['wpCurrencyCode'] = $row->getWordPriceCurrencyLabel();
-            $row_data['discountRate'] = $row->getDiscountRate();
-            $row_data['npCurrencyCode'] = $row->getNationalPriceCurrencyLabel();
-            $row_data['saleType'] = $row->getSaleType();
-            $data[] = $row_data;
+            $rowData = $row->toArray();
+            $rowData['name'] = $row->getName();
+            $rowData['season'] = $row->getSeason();
+            $rowData['worldcode'] = $row->getWorldCode();
+            $rowData['type'] = $row->getType();
+            $rowData['fpCurrencyCode'] = $row->getFactoryPriceCurrencyLabel();
+            $rowData['times'] = $row->getTimes();
+            $rowData['wpCurrencyCode'] = $row->getWordPriceCurrencyLabel();
+            $rowData['discountRate'] = $row->getDiscountRate();
+            $rowData['npCurrencyCode'] = $row->getNationalPriceCurrencyLabel();
+            $rowData['saleType'] = $row->getSaleType();
+            $rowData['colors'] = $row->getColors();
+            $data[] = $rowData;
         }
 
         $pageinfo = [
@@ -1128,10 +1133,17 @@ class ProductController extends CadminController
         $lang = $this->getDI()->get("session")->get("language");
         $result = [];
 
+        $result['ageseasons'] = [];
         $ageseasons = TbAgeseason::find([
             "order" => "name desc,sessionmark asc"
         ]);
-        $result['ageseasons'] = $ageseasons->toArray();
+        foreach ($ageseasons as $ageseason) {
+            $title = $ageseason->sessionmark . $ageseason->name;
+            $result['ageseasons'][] = [
+                'id' => (int)$ageseason->id,
+                'title' => $title
+            ];
+        }
 
         $brands = [];
         $brandsTmp = TbBrand::find();
@@ -1261,6 +1273,53 @@ class ProductController extends CadminController
             $title = $ulnarinch->{'name_' . $lang};
             $result['ulnarinches'][] = [
                 'id' => (int)$ulnarinch->id,
+                'title' => $title
+            ];
+        }
+
+        $result['currencies'] = [];
+        $currencies = TbCurrency::find([
+            "order" => "code ASC"
+        ]);
+        foreach ($currencies as $currency) {
+            $result['currencies'][] = [
+                'id' => (int)$currency->id,
+                'code' => $currency->code
+            ];
+        }
+
+        $result['saletypes'] = [];
+        $saletypes = TbSaleType::find([
+            "order" => "displayindex ASC"
+        ]);
+        foreach ($saletypes as $saletype) {
+            $title = $saletype->{'name_' . $lang};
+            $result['saletypes'][] = [
+                'id' => (int)$saletype->id,
+                'title' => $title
+            ];
+        }
+
+        $result['productTypes'] = [];
+        $productTypes = TbProductType::find([
+            "order" => "displayindex ASC"
+        ]);
+        foreach ($productTypes as $productType) {
+            $title = $productType->{'name_' . $lang};
+            $result['productTypes'][] = [
+                'id' => (int)$productType->id,
+                'title' => $title
+            ];
+        }
+
+        $result['winterProofings'] = [];
+        $winterProofings = TbWinterproofing::find([
+            "order" => "displayindex ASC"
+        ]);
+        foreach ($winterProofings as $wp) {
+            $title = $wp->{'name_' . $lang};
+            $result['winterProofings'][] = [
+                'id' => (int)$wp->id,
                 'title' => $title
             ];
         }
