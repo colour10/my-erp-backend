@@ -385,9 +385,37 @@ class ProductController extends CadminController
         }
     }
 
+    private function reverseOrderMethod($orderMethod)
+    {
+        return $orderMethod == 'asc' ? 'desc' : 'asc';
+    }
+
     function before_page()
     {
-        $_POST["__orderby"] = "id desc";
+        if (!empty($this->request->getPost('sort')) && !empty($this->request->getPost('order'))) {
+            switch ($this->request->getPost('order')) {
+                case 'ascending':
+                    $orderMethod = ' asc';
+                    break;
+                case 'descending':
+                    $orderMethod = ' desc';
+                    break;
+                default:
+                    $orderMethod = ' asc';
+                    break;
+            }
+
+            $orderby = $this->request->getPost('sort');
+            if ($orderby == 'ageseason') {
+                $orderMethodReversed = $this->reverseOrderMethod($orderMethod);
+                $orderby = "ageseason_year $orderMethod, ageseason_season $orderMethodReversed";
+            }
+            $_POST["__orderby"] = $orderby;
+
+        } else {
+            $_POST["__orderby"] = "id desc";
+        }
+
         if (isset($_POST['wordcode'])) {
             $_POST['wordcode'] = $this->filterCode($_POST['wordcode']);
         }
