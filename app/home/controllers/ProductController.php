@@ -99,11 +99,11 @@ class ProductController extends CadminController
         $products = [];
         $colors = [];
         $keys = [
-            "brandid", "countries",
-            "series", "ulnarinch", "factoryprice", "nationalpricecurrency",
+            "brandid",
+            "series", "factoryprice", "nationalpricecurrency",
             "nationalprice", "memo", "wordprice", "wordpricecurrency", "gender",
             "spring", "summer", "fall", "winter",
-            "sizetopid", "productmemoids",
+            "sizetopid",
             "nationalfactoryprice", "wordprice", "wordpricecurrency",
             "saletypeid","producttypeid", "winterproofingid"
         ];
@@ -127,12 +127,15 @@ class ProductController extends CadminController
 
             $product->color_system_id = $row['colorId'][0];
             $product->color_id = $row['colorId'][1];
-            $product->second_color_id = $row['secondColorId'][1];
+            $product->second_color_id = isset($row['secondColorId'][1]) ? (int)$row['secondColorId'][1] : 0;
 
             $product->brandgroupid = $params['form']['childbrand'][0];
             $product->childbrand = $params['form']['childbrand'][1];
             $product->sizecontentids = implode(',', $params['form']['sizecontentids']);
             $product->ageseason = implode(',', $params['form']['ageseason']);
+            $product->countries = implode(',', $params['form']['countries']);
+            $product->ulnarinch = implode(',', $params['form']['ulnarinch']);
+            $product->productmemoids = implode(',', $params['form']['productmemoids']);
 
             foreach ($keys as $key) {
                 $product->$key = trim($params['form'][$key]);
@@ -167,7 +170,7 @@ class ProductController extends CadminController
                 }
 
                 $products[] = $product;
-                $colors[] = $product->id . "," . $product->brandcolor;
+                $colors[] = $product->id . "," . $product->color_id;
             }
 
             $product->syncBrandSugest();
@@ -280,9 +283,7 @@ class ProductController extends CadminController
                 }
 
                 $row->brandid = $params['form']["brandid"];
-                $row->countries = $params['form']["countries"];
                 $row->series = $params['form']["series"];
-                $row->ulnarinch = $params['form']["ulnarinch"];
                 $row->factoryprice = $params['form']["factoryprice"];
                 $row->factorypricecurrency = $params['form']["wordpricecurrency"];
                 $row->nationalpricecurrency = $params['form']["nationalpricecurrency"];
@@ -304,13 +305,15 @@ class ProductController extends CadminController
                 $row->updatetime = date("Y-m-d H:i:s");
 
                 $row->color_system_id = $params['form']['colorId'][0];
-                $row->color_id = $params['form']['colorId'][1];
-                $row->second_color_id = $params['form']['secondColorId'][1];
-
-                $row->brandgroupid = $params['form']['childbrand'][0];
-                $row->childbrand = $params['form']['childbrand'][1];
-                $row->sizecontentids = implode(',', $params['form']['sizecontentids']);
-                $row->ageseason = implode(',', $params['form']['ageseason']);
+                $row->color_id        = $params['form']['colorId'][1];
+                $row->second_color_id = isset($params['form']['secondColorId'][1]) ? (int)$params['form']['secondColorId'][1] : 0;
+                $row->brandgroupid    = $params['form']['childbrand'][0];
+                $row->childbrand      = $params['form']['childbrand'][1];
+                $row->sizecontentids  = implode(',', $params['form']['sizecontentids']);
+                $row->ageseason       = implode(',', $params['form']['ageseason']);
+                $row->countries       = implode(',', $params['form']['countries']);
+                $row->ulnarinch       = implode(',', $params['form']['ulnarinch']);
+                $row->productmemoids  = implode(',', $params['form']['productmemoids']);
 
                 if ($row->update() == false) {
                     $this->db->rollback();
