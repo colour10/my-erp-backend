@@ -100,6 +100,15 @@ class TbProduct extends BaseCompanyModel
 
         $this->hasMany(
             "id",
+            "\Asa\Erp\TbProductcode",
+            "productid",
+            [
+                'alias' => 'productCode'
+            ]
+        );
+
+        $this->hasMany(
+            "id",
             "\Asa\Erp\TbProductSizeProperty",
             "productid",
             [

@@ -309,11 +309,11 @@ class ProductController extends CadminController
                 $row->second_color_id = isset($params['form']['secondColorId'][1]) ? (int)$params['form']['secondColorId'][1] : 0;
                 $row->brandgroupid    = $params['form']['childbrand'][0];
                 $row->childbrand      = $params['form']['childbrand'][1];
-                $row->sizecontentids  = implode(',', $params['form']['sizecontentids']);
-                $row->ageseason       = implode(',', $params['form']['ageseason']);
-                $row->countries       = implode(',', $params['form']['countries']);
-                $row->ulnarinch       = implode(',', $params['form']['ulnarinch']);
-                $row->productmemoids  = implode(',', $params['form']['productmemoids']);
+                $row->sizecontentids  = empty($params['form']['sizecontentids']) ? '' : implode(',', $params['form']['sizecontentids']);
+                $row->ageseason       = empty($params['form']['ageseason']) ? '' : implode(',', $params['form']['ageseason']);
+                $row->countries       = empty($params['form']['countries']) ? '' :implode(',', $params['form']['countries']);
+                $row->ulnarinch       = empty( $params['form']['ulnarinch']) ? '' : implode(',', $params['form']['ulnarinch']);
+                $row->productmemoids  = empty($params['form']['productmemoids']) ? '' : implode(',', $params['form']['productmemoids']);
 
                 if ($row->update() == false) {
                     $this->db->rollback();
@@ -1367,10 +1367,12 @@ class ProductController extends CadminController
 
         if (!$product = TbProduct::findFirst("id=$id")) {
             // 传递错误
-            return $this->renderError('make-an-error', 'color-doesnot-exist');
+            return $this->renderError('make-an-error', 'product-doesnot-exist');
         }
+        $result = $product->toArray();
+        $result['materials'] = $product->productMaterial->toArray();
 
-        return $this->success($product);
+        return $this->success($result);
     }
 
     /**
@@ -1391,12 +1393,65 @@ class ProductController extends CadminController
         $name = $this->getlangfield('name');
         $builder->from(['bp' => TbBrandgroupchildProperty::class])
             ->join(TbProperty::class, 'bp.propertyid = p.id', 'p')
-            ->columns("p.$name AS title")
+            ->columns("p.$name AS title, p.id")
             ->where("bp.brandgroupchildid = {$product->childbrand}")
             ->orderBy("p.displayindex ASC");
         $query = $builder->getQuery();
         $result['properties'] = $query->execute()->toArray();
 
         return $this->success($result);
+    }
+
+    /**
+     * 获取商品尺码数据
+     */
+    public function sizecontentsAction()
+    {
+        $id = $this->request->getPost('id', 'int', 0);
+
+        if (!$product = TbProduct::findFirst("id=$id")) {
+            return $this->renderError('make-an-error', 'product-doesnot-exist');
+        }
+
+        $result = TbSizecontent::find("id IN ({$product->sizecontentids})");
+        return $this->success($result);
+    }
+
+    /**
+     * 获取商品条码信息
+     */
+    public function getProductCodesAction()
+    {
+        $id = (int)$_POST['id'];
+        $product = TbProduct::findFirstById($id);
+        if ($product != false && $product->companyid == $this->companyid) {
+            return $this->success($product->productCode);
+        } else {
+            return $this->error("#1001#产品数据不存在#");
+        }
+    }
+
+    /**
+     * 保存商品条码
+     * @return [type] [description]
+     */
+    public function saveProductCodeAction()
+    {
+        $form = json_decode($_POST["params"], true);
+
+        $this->db->begin();
+        $product = TbProduct::findFirstById($form['id']);
+        if ($product != false) {
+            try {
+                foreach ($form['list'] as $key => $value) {
+                    $product->setProjectCode($key, $value);
+                }
+            } catch (\Exception $e) {
+                $this->db->rollback();
+                return $this->error([$e->getMessage()]);
+            }
+        }
+        $this->db->commit();
+        return $this->success();
     }
 }
