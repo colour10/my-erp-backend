@@ -80,6 +80,7 @@ class ProductController extends CadminController
             $rowData['npCurrencyCode'] = $row->getNationalPriceCurrencyLabel();
             $rowData['saleType'] = $row->getSaleType();
             $rowData['colors'] = $row->getColors();
+            $rowData['seriesTitle'] = $row->getSeries();
             $data[] = $rowData;
         }
 

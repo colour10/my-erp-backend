@@ -27,6 +27,15 @@ class TbProduct extends BaseCompanyModel
         );
 
         $this->belongsTo(
+            'series',
+            '\Asa\Erp\TbSeries',
+            'id',
+            [
+                'alias' => 'tbseries'
+            ]
+        );
+
+        $this->belongsTo(
             'brandid',
             '\Asa\Erp\TbBrand',
             'id',
@@ -678,5 +687,14 @@ class TbProduct extends BaseCompanyModel
         $this->ageseason_year = $ageseason->name;
         $this->ageseason_season = $ageseason->sessionmark;
         $this->update();
+    }
+
+    /**
+     * 获取商品系列名称
+     */
+    public function getSeries()
+    {
+        $lang = $this->getDI()->get("session")->get("language");
+        return $this->tbseries ? $this->tbseries->{'name_' . $lang} : '';
     }
 }
