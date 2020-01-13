@@ -1460,4 +1460,18 @@ class ProductController extends CadminController
         $this->db->commit();
         return $this->success();
     }
+
+    /**
+     * 获取商品标题
+     */
+    public function titleAction()
+    {
+        $id = $this->request->getPost('id', 'int', 0);
+
+        if (!$product = TbProduct::findFirst("id=$id")) {
+            return $this->renderError('make-an-error', 'product-doesnot-exist');
+        }
+
+        return $this->success($product->getName());
+    }
 }
