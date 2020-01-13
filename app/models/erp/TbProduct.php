@@ -232,7 +232,6 @@ class TbProduct extends BaseCompanyModel
      */
     function cloneByColor($row) {
         $product = new TbProduct();
-        $product->brandcolor = $row['brandcolor'];
         $product->wordcode_1 = $row['wordcode_1'];
         $product->wordcode_2 = $row['wordcode_2'];
         $product->wordcode_3 = $row['wordcode_3'];
@@ -254,6 +253,8 @@ class TbProduct extends BaseCompanyModel
         $product->material = $this->material;
         $product->producttemplate = $this->producttemplate;
         $product->ageseason = $this->ageseason;
+        $product->ageseason_season = $this->ageseason_season;
+        $product->ageseason_year = $this->ageseason_year;
         //$product->laststoragedate = $this->laststoragedate;
         $product->aliases = $this->aliases;
         $product->series = $this->series;

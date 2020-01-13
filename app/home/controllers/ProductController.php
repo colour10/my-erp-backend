@@ -133,6 +133,8 @@ class ProductController extends CadminController
             $product->childbrand = $params['form']['childbrand'][1];
             $product->sizecontentids = implode(',', $params['form']['sizecontentids']);
             $product->ageseason = implode(',', $params['form']['ageseason']);
+            $product->ageseason_season = '';
+            $product->ageseason_year = '';
             $product->countries = implode(',', $params['form']['countries']);
             $product->ulnarinch = implode(',', $params['form']['ulnarinch']);
             $product->productmemoids = implode(',', $params['form']['productmemoids']);
@@ -648,6 +650,8 @@ class ProductController extends CadminController
                         $product_else->fall = $product->fall;
                         $product_else->winter = $product->winter;
                         $product_else->ageseason = $product->ageseason;
+                        $product_else->ageseason_season = $product->ageseason_season;
+                        $product_else->ageseason_year = $product->ageseason_year;
                         $product_else->sizetopid = $product->sizetopid;
                         $product_else->sizecontentids = $product->sizecontentids;
                         $product_else->productmemoids = $product->productmemoids;
@@ -656,7 +660,9 @@ class ProductController extends CadminController
                         $product_else->saletypeid = $product->saletypeid;
                     }
 
-                    $product_else->brandcolor = $row['brandcolor'];
+                    $product_else->color_system_id = $row['colorId'][0];
+                    $product_else->color_id = $row['colorId'][1];
+                    $product_else->second_color_id = isset($row['secondColorId'][1]) ? (int)$row['secondColorId'][1] : 0;
                     $product_else->wordcode_1 = $this->filterCode($row['wordcode_1']);
                     $product_else->wordcode_2 = $this->filterCode($row['wordcode_2']);
                     $product_else->wordcode_3 = $this->filterCode($row['wordcode_3']);
@@ -667,7 +673,7 @@ class ProductController extends CadminController
                     $product_else->wordcode = $product_else->wordcode_1 . $product_else->wordcode_2 . $product_else->wordcode_3;
 
                     $products[] = $product_else;
-                    $data[] = $product_else->id . "," . $product_else->brandcolor;
+                    $data[] = $product_else->id . "," . $product_else->color_id;
                 }
 
                 if (count($data) == 1) {
