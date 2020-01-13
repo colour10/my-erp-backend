@@ -416,6 +416,8 @@ class ProductController extends CadminController
             if ($orderby == 'ageseason') {
                 $orderMethodReversed = $this->reverseOrderMethod($orderMethod);
                 $orderby = "ageseason_year $orderMethod, ageseason_season $orderMethodReversed";
+            } else {
+                $orderby  .= $orderMethod;
             }
             $_POST["__orderby"] = $orderby;
 
