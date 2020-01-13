@@ -176,6 +176,7 @@ class ProductController extends CadminController
             }
 
             $product->syncBrandSugest();
+            $product->updateAgeseason();
         }
 
         $output = [];
@@ -244,7 +245,6 @@ class ProductController extends CadminController
 
     function editAction() {
         $params = json_decode($_POST["params"], true);
-        //print_r($params);
 
         $product = TbProduct::findFirstById($params['form']['id']);
         if ($product != false && $product->companyid == $this->companyid) {
@@ -328,6 +328,8 @@ class ProductController extends CadminController
 
                 //更新颜色提示数据
                 $row->syncBrandSugest();
+
+                $row->updateAgeseason();
             }
 
             if (count($products) > 1) {

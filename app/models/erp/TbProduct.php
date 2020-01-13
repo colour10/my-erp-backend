@@ -663,4 +663,20 @@ class TbProduct extends BaseCompanyModel
 
         return $result;
     }
+
+    /**
+     * 更新ageseason_season,ageseason_year两个字段
+     */
+    public function updateAgeSeason()
+    {
+        $ageseason = TbAgeseason::findFirst(
+            [
+                "id in ($this->ageseason)",
+                "order" => "name desc, sessionmark asc"
+            ]
+        );
+        $this->ageseason_year = $ageseason->name;
+        $this->ageseason_season = $ageseason->sessionmark;
+        $this->update();
+    }
 }
