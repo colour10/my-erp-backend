@@ -1143,5 +1143,6 @@ return [
 
     'required' => '不能为空',
     'color' => '颜色',
-    'second_color' => '副颜色'
+    'second_color' => '副颜色',
+    'createProduct' => '创建商品'
 ];
