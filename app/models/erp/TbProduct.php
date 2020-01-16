@@ -385,7 +385,11 @@ class TbProduct extends BaseCompanyModel
                 try {
                     $value = TbExchangeRate::convert($this->companyid, $this->factorypricecurrency, $row->currencyid, $this->factoryprice);
 
-                    $costplus = round(($price-$value['number'])*100/$value['number'], 0);
+                    if ($value['number'] > 0) {
+                        $costplus = round(($price-$value['number'])*100/$value['number'], 0);
+                    } else {
+                        $costplus = 0;
+                    }
 
                     $result[] = [
                         'id' => $row->id,
@@ -419,7 +423,11 @@ class TbProduct extends BaseCompanyModel
 
                     //计算Cost+
                     $factoryprice = $this->factoryprice*$value["rate"];
-                    $costplus = round(($price-$factoryprice)*100/$factoryprice,0);
+                    if ($factoryprice > 0) {
+                        $costplus = round(($price-$factoryprice)*100/$factoryprice,0);
+                    } else {
+                        $costplus = 0;
+                    }
 
                     $result[] = [
                         'id' => $row->id,
