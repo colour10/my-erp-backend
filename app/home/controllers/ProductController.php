@@ -1190,9 +1190,8 @@ class ProductController extends CadminController
         $brands = [];
         $brandsTmp = TbBrand::find();
         foreach ($brandsTmp as $brand) {
-            $title = $brand->{'name_' . $lang};
             $brands[$brand->id]['id'] = (int)$brand->id;
-            $brands[$brand->id]['title'] = $title;
+            $brands[$brand->id]['title'] = $brand->name_en;
             $brands[$brand->id]['series'] = [];
         }
         $series = TbSeries::find([
@@ -1300,7 +1299,7 @@ class ProductController extends CadminController
             "order" => "name_en ASC"
         ]);
         foreach ($countries as $country) {
-            $title = $country->{'name_' . $lang};
+            $title = $country->name_en . ' / ' . $country->{'name_' . $lang};
             $result['countries'][] = [
                 'id' => (int)$country->id,
                 'title' => $title
