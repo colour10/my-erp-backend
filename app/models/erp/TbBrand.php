@@ -45,4 +45,13 @@ class TbBrand extends BaseModel
             'name_cn' => $factory->presenceOfMultiple('pinpaimingcheng')
         ];
     }
+
+    /**
+     * 获取品牌归属国家
+     */
+    public function getCountry()
+    {
+        $lang = $this->getDI()->get("session")->get("language");
+        return $this->country ? $this->country->{'name_' . $lang} : '';
+    }
 }

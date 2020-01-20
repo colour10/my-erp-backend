@@ -1144,5 +1144,7 @@ return [
     'required' => '不能为空',
     'color' => '颜色',
     'second_color' => '副颜色',
-    'createProduct' => '创建商品'
+    'createProduct' => '创建商品',
+    'noLimited' => '无限制',
+    'disabled' => '禁用'
 ];
