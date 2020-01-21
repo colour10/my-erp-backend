@@ -113,7 +113,7 @@ class BrandController extends ZadminController {
     {
         $sql = sprintf("SELECT distinct countryid FROM tb_brand");
         $rows = $this->getDI()->get('db')->fetchAll($sql);
-        // print_r($rows);die;
+
         $countryIds = [];
         foreach ($rows as $row ) {
             $countryIds[] = $row['countryid'];
@@ -154,7 +154,6 @@ class BrandController extends ZadminController {
             $brand->worldcode1 = $setting['worldcode1']['action'] . ',' . $setting['worldcode1']['length'];
             $brand->worldcode2 = $setting['worldcode2']['action'] . ',' . $setting['worldcode2']['length'];
             $brand->worldcode3 = $setting['worldcode3']['action'] . ',' . $setting['worldcode3']['length'];
-            // $brand->update();
 
             $result = array("code" => 200, "messages" => array());
             if ($brand->update() === false) {
