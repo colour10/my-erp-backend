@@ -56,6 +56,16 @@ class TbBrandgroupchild extends BaseModel
                 ],
             ]
         );
+
+        // 子品类和商品描述的关联表，一对多的关系
+        $this->hasMany(
+            "id",
+            "\Asa\Erp\TbProductMemoBrandgroupchild",
+            "brandgroupchild_id",
+            [
+                'alias' => 'productMemoIds'
+            ]
+        );
     }
 
     public function getRules() {
@@ -64,5 +74,18 @@ class TbBrandgroupchild extends BaseModel
             'brandgroupid' => $this->getValidatorFactory()->tableid('pinlei'),
             'displayindex' => $this->getValidatorFactory()->digit('xuhao') 
         ];
+    }
+
+    /**
+     * 获取子品类关联的商品描述id
+     */
+    public function getProductMemoIds()
+    {
+        $productMemoIds = [];
+        foreach ($this->productMemoIds as $item) {
+            $productMemoIds[] = $item->memo_id;
+        }
+
+        return $productMemoIds;
     }
 }

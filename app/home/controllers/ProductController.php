@@ -1226,9 +1226,11 @@ class ProductController extends CadminController
         foreach ($brandgroupchildren as $bgc) {
             if (isset($categories[$bgc->brandgroupid])) {
                 $title = $bgc->{'name_' . $lang};
+                $productMemoIds = $bgc->getProductMemoIds();
                 $child = [
                     'id' => (int)$bgc->id,
-                    'title' => $title
+                    'title' => $title,
+                    'productMemoids' => $productMemoIds
                 ];
                 $categories[$bgc->brandgroupid]['children'][] = $child;
             }
@@ -1267,7 +1269,8 @@ class ProductController extends CadminController
             $title = $material->{'name_' . $lang};
             $result['materials'][] = [
                 'id' => (int)$material->id,
-                'title' => $title
+                'title' => $title,
+                'materialnoteids' => $material->materialnoteids
             ];
         }
 
@@ -1276,9 +1279,11 @@ class ProductController extends CadminController
         ]);
         foreach ($materialnotes as $mn) {
             $title = $mn->{'content_' . $lang};
+            $brandgroupids = empty($mn->brandgroupids) ? [] : explode(',', $mn->brandgroupids);
             $result['materialnotes'][] = [
                 'id' => (int)$mn->id,
-                'title' => $title
+                'title' => $title,
+                'brandgroupids' => $brandgroupids
             ];
         }
 
@@ -1299,7 +1304,12 @@ class ProductController extends CadminController
             "order" => "name_en ASC"
         ]);
         foreach ($countries as $country) {
-            $title = $country->name_en . ' / ' . $country->{'name_' . $lang};
+            if ($lang != 'en') {
+                $title = $country->name_en . ' / ' . $country->{'name_' . $lang};
+            } else {
+                $title = $country->name_en;
+            }
+
             $result['countries'][] = [
                 'id' => (int)$country->id,
                 'title' => $title

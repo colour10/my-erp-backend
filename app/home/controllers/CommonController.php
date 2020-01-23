@@ -264,5 +264,15 @@ class CommonController extends BaseController
         else {
             echo $this->error(["error"]);
         }
+
+    }
+
+    public function gendersAction()
+    {
+        $language = $this->getDI()->get("session")->get("language");
+        $lang = new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
+
+        $genders = isset($lang['list']['gender']) ? $lang['list']['gender'] : [];
+        return $this->success($genders);
     }
 }

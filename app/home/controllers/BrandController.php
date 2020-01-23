@@ -5,6 +5,7 @@ use Phalcon\Paginator\Adapter\Model as PaginatorModel;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\View;
 use Asa\Erp\TbBrand;
+use Asa\Erp\TbBrandSize;
 use Asa\Erp\TbCountry;
 
 class BrandController extends ZadminController {
@@ -227,5 +228,68 @@ class BrandController extends ZadminController {
         }
 
         return $this->success($setting);
+    }
+
+    public function sizesAction()
+    {
+        $brand_id = filter_input(INPUT_POST, 'brand_id', FILTER_VALIDATE_INT);
+        $result = [];
+        $rows = TbBrandSize::find("brand_id = " . $brand_id);
+        foreach ($rows as $row) {
+            $rowData = [];
+
+            $rowData['id']              = $row->id;
+            $rowData['brandgroup']      = $row->getBrandgroup();
+            $rowData['brandgroupchild'] = $row->getBrandgroupchild();
+            $rowData['gender']          = $row->getGender();
+            $rowData['sizetop']         = $row->getSizetop();
+
+            $result[] = $rowData;
+        }
+        return $this->success($result);
+    }
+
+    public function addSizeAction()
+    {
+	    if($this->request->isPost()) {
+            $brand_id           = filter_input(INPUT_POST, 'brand_id', FILTER_VALIDATE_INT);
+            $brandgroup_id      = filter_input(INPUT_POST, 'brandgroup_id', FILTER_VALIDATE_INT);
+            $brandgroupchild_id = filter_input(INPUT_POST, 'brandgroupchild_id', FILTER_VALIDATE_INT);
+            $gender             = filter_input(INPUT_POST, 'gender', FILTER_VALIDATE_INT);
+            $sizetop_id         = filter_input(INPUT_POST, 'sizetop_id', FILTER_VALIDATE_INT);
+
+            $model = new TbBrandSize;
+            $model->brand_id           = $brand_id;
+            $model->brandgroup_id      = $brandgroup_id;
+            $model->brandgroupchild_id = $brandgroupchild_id;
+            $model->gender             = $gender;
+            $model->sizetop_id         = $sizetop_id;
+
+            $result = array("code"=>200, "messages" => array());
+	        if ($model->create() === false) {
+                $messages = $model->getMessages();
+
+                foreach ($messages as $message) {
+                    $result["messages"][] = $message->getMessage();
+                }
+            } else {
+                $result['is_add'] = "1";
+                $result['id'] = $model->id;
+            }
+
+            echo json_encode($result);
+        }
+    }
+
+    public function sizeInfoAction()
+    {
+        $id = $this->request->getPost('id', 'int', 0);
+
+        if (!$brandSize = TbBrandSize::findFirst("id=$id")) {
+            return $this->renderError('make-an-error', 'brand-size-doesnot-exist');
+        }
+        $result = $brandSize->toArray();
+
+        return $this->success($result);
     }
 }
