@@ -4,6 +4,7 @@ namespace Multiple\Home\Controllers;
 
 use Asa\Erp\CreateImg;
 use Asa\Erp\TbBrand;
+use Asa\Erp\TbBrandSize;
 use Asa\Erp\TbBrandgroupchildProperty;
 use Asa\Erp\TbCountry;
 use Asa\Erp\TbExchangeRate;
@@ -1168,7 +1169,7 @@ class ProductController extends CadminController
 
     /**
      * 获取商品相关内容
-     * 年代
+     * 年代、品牌、系列、品类、尺码组
      */
     public function getProductRelatedOptionsAction()
     {
@@ -1190,9 +1191,10 @@ class ProductController extends CadminController
         $brands = [];
         $brandsTmp = TbBrand::find();
         foreach ($brandsTmp as $brand) {
-            $brands[$brand->id]['id'] = (int)$brand->id;
-            $brands[$brand->id]['title'] = $brand->name_en;
+            $brands[$brand->id]['id']     = (int)$brand->id;
+            $brands[$brand->id]['title']  = $brand->name_en;
             $brands[$brand->id]['series'] = [];
+            $brands[$brand->id]['sizes']  = [];
         }
         $series = TbSeries::find([
             "order" => "name_en asc"
@@ -1205,6 +1207,16 @@ class ProductController extends CadminController
                     'title' => $title
                 ];
                 $brands[$s->brandid]['series'][] = $child;
+            }
+        }
+
+        $sizes = TbBrandSize::find([
+            "order" => "id DESC"
+        ]);
+        foreach ($sizes as $s) {
+            if (isset($brands[$s->brand_id])) {
+                $size = $s->toArray();
+                $brands[$s->brand_id]['sizes'][] = $size;
             }
         }
         $result['brands'] = array_values($brands);
