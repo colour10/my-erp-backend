@@ -504,8 +504,7 @@ class TbProduct extends BaseCompanyModel
      */
     public function getBrandName()
     {
-        $lang = $this->getDI()->get("session")->get("language");
-        return $this->brand->{'name_' . $lang};
+        return $this->brand->name_en;
     }
 
     /**
@@ -704,5 +703,21 @@ class TbProduct extends BaseCompanyModel
     {
         $lang = $this->getDI()->get("session")->get("language");
         return $this->tbseries ? $this->tbseries->{'name_' . $lang} : '';
+    }
+
+    /**
+     * 更新尺码
+     *
+     * @return void
+     */
+    public function updateSizecontentids()
+    {
+        $sizecontentids = [];
+        $sizecontents = TbSizecontent::find("topid = {$this->sizetopid}");
+        foreach ($sizecontents as $value) {
+            $sizecontentids[] = $value->id;
+        }
+        $this->sizecontentids = implode(',', $sizecontentids);
+        $this->update();
     }
 }

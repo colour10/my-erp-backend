@@ -112,7 +112,12 @@ class ProductController extends CadminController
 
         $this->db->begin();
         foreach ($params['colors'] as $row) {
-            $product = new TbProduct();
+            if (!empty($row['id'])) {
+                $product = TbProduct::findFirstById($row['id']);
+            } else {
+                $product = new TbProduct();
+            }
+
             $product->companyid = $this->companyid;
             $product->maketime = date("Y-m-d H:i:s");
             $product->updatetime = date("Y-m-d H:i:s");
@@ -127,13 +132,12 @@ class ProductController extends CadminController
             $product->picture2 = $row['picture2'];
             $product->wordcode = $this->filterCode($row['wordcode_1']) . $this->filterCode($row['wordcode_2']) . $this->filterCode($row['wordcode_3']);
 
-            $product->color_system_id = $row['colorId'][0];
-            $product->color_id = $row['colorId'][1];
+            $product->color_system_id = $row['colorSystemId'];
+            $product->color_id = $row['colorId'];
             $product->second_color_id = isset($row['secondColorId'][1]) ? (int)$row['secondColorId'][1] : 0;
 
             $product->brandgroupid = $params['form']['childbrand'][0];
             $product->childbrand = $params['form']['childbrand'][1];
-            $product->sizecontentids = implode(',', $params['form']['sizecontentids']);
             $product->ageseason = implode(',', $params['form']['ageseason']);
             $product->ageseason_season = '';
             $product->ageseason_year = '';
@@ -148,37 +152,51 @@ class ProductController extends CadminController
             $product->nationalfactorypricecurrency = $params['form']["nationalpricecurrency"];
 
             //检验国际码是否重复
-            $where = sprintf("companyid=%d and wordcode='%s'", $this->companyid, addslashes($product->wordcode));
+            if (empty($row['id'])) {
+                $where = sprintf("companyid=%d and wordcode='%s'", $this->companyid, addslashes($product->wordcode));
+            } else {
+                $where = sprintf("companyid=%d and wordcode='%s' and id<>%d", $this->companyid, addslashes($product->wordcode), $product->id);
+            }
             if (TbProduct::count($where) > 0) {
                 $this->db->rollback();
                 throw new \Exception("/11160101/国际码不能重复/");
             }
 
-            if ($product->create() == false) {
-                $this->db->rollback();
-                return $this->error($product);
-            } else {
-                //添加材质信息
-                if (is_array($params["materials"])) {
-                    foreach ($params['materials'] as $row) {
-                        $productMaterial = new TbProductMaterial();
-                        $productMaterial->productid = $product->id;
-                        $productMaterial->materialid = $row["materialid"];
-                        $productMaterial->materialnoteid = $row["materialnoteid"];
-                        $productMaterial->percent = $row["percent"];
-                        if ($productMaterial->save() == false) {
-                            $this->db->rollback();
-                            return $this->error($productMaterial);
+            if (empty($row['id'])) {
+                if ($product->create() == false) {
+                    $this->db->rollback();
+                    return $this->error($product);
+                } else {
+                    //添加材质信息
+                    if (is_array($params["materials"])) {
+                        foreach ($params['materials'] as $row) {
+                            $productMaterial = new TbProductMaterial();
+                            $productMaterial->productid = $product->id;
+                            $productMaterial->materialid = $row["materialid"];
+                            $productMaterial->materialnoteid = $row["materialnoteid"];
+                            $productMaterial->percent = $row["percent"];
+                            if ($productMaterial->save() == false) {
+                                $this->db->rollback();
+                                return $this->error($productMaterial);
+                            }
                         }
                     }
-                }
 
-                $products[] = $product;
-                $colors[] = $product->id . "," . $product->color_id;
+                    $products[] = $product;
+                    $colors[] = $product->id . "," . $product->color_id;
+                }
+            } else {
+                if ($product->update() == false) {
+                    $this->db->rollback();
+                    return $this->error($product);
+                } else {
+                    $product->updateMaterial($params["materials"]);
+                }
             }
 
             $product->syncBrandSugest();
             $product->updateAgeseason();
+            $product->updateSizecontentids();
         }
 
         $output = [];
@@ -313,7 +331,6 @@ class ProductController extends CadminController
                 $row->second_color_id = isset($params['form']['secondColorId'][1]) ? (int)$params['form']['secondColorId'][1] : 0;
                 $row->brandgroupid    = $params['form']['childbrand'][0];
                 $row->childbrand      = $params['form']['childbrand'][1];
-                $row->sizecontentids  = empty($params['form']['sizecontentids']) ? '' : implode(',', $params['form']['sizecontentids']);
                 $row->ageseason       = empty($params['form']['ageseason']) ? '' : implode(',', $params['form']['ageseason']);
                 $row->countries       = empty($params['form']['countries']) ? '' :implode(',', $params['form']['countries']);
                 $row->ulnarinch       = empty( $params['form']['ulnarinch']) ? '' : implode(',', $params['form']['ulnarinch']);
@@ -332,6 +349,7 @@ class ProductController extends CadminController
                 $row->syncBrandSugest();
 
                 $row->updateAgeseason();
+                $row->updateSizecontentids();
             }
 
             if (count($products) > 1) {
@@ -1191,10 +1209,13 @@ class ProductController extends CadminController
         $brands = [];
         $brandsTmp = TbBrand::find();
         foreach ($brandsTmp as $brand) {
-            $brands[$brand->id]['id']     = (int)$brand->id;
+            $brands[$brand->id]['id']     = $brand->id;
             $brands[$brand->id]['title']  = $brand->name_en;
             $brands[$brand->id]['series'] = [];
             $brands[$brand->id]['sizes']  = [];
+            $brands[$brand->id]['worldcode1'] = $brand->worldcode1;
+            $brands[$brand->id]['worldcode2'] = $brand->worldcode2;
+            $brands[$brand->id]['worldcode3'] = $brand->worldcode3;
         }
         $series = TbSeries::find([
             "order" => "name_en asc"
@@ -1254,9 +1275,8 @@ class ProductController extends CadminController
             "order" => "displayindex asc"
         ]);
         foreach ($sizetops as $st) {
-            $title = $st->{'name_' . $lang};
-            $sizes[$st->id]['id'] = (int)$st->id;
-            $sizes[$st->id]['title'] = $title;
+            $sizes[$st->id]['id'] = $st->id;
+            $sizes[$st->id]['title'] = $st->name_cn;
             $sizes[$st->id]['children'] = [];
         }
 
@@ -1499,5 +1519,46 @@ class ProductController extends CadminController
         }
 
         return $this->success($product->getName());
+    }
+
+    public function addSizeAction()
+    {
+	    if($this->request->isPost()) {
+            $brand_id           = filter_input(INPUT_POST, 'brand_id', FILTER_VALIDATE_INT);
+            $brandgroup_id      = filter_input(INPUT_POST, 'brandgroup_id', FILTER_VALIDATE_INT);
+            $brandgroupchild_id = filter_input(INPUT_POST, 'brandgroupchild_id', FILTER_VALIDATE_INT);
+            $gender             = filter_input(INPUT_POST, 'gender', FILTER_VALIDATE_INT);
+
+            $name_en = filter_input(INPUT_POST, 'name_en');
+            $sizes = filter_input(INPUT_POST, 'sizes', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
+            $sizetop = new TbSizetop;
+            $sizetop->name_cn = $name_en;
+            $sizetop->name_en = $name_en;
+            $sizetop->displayindex = 100;
+            $sizetop->create();
+
+            foreach ($sizes as $key => $size) {
+                $sizecontent = new TbSizecontent;
+
+                $sizecontent->topid        = $sizetop->id;
+                $sizecontent->name         = $size['name'];
+                $sizecontent->displayindex = $key;
+
+                $sizecontent->create();
+            }
+
+            $brandSize = new TbBrandSize;
+
+            $brandSize->brand_id           = $brand_id;
+            $brandSize->brandgroup_id      = $brandgroup_id;
+            $brandSize->brandgroupchild_id = $brandgroupchild_id;
+            $brandSize->gender             = $gender;
+            $brandSize->sizetop_id         = $sizetop->id;
+
+            $brandSize->create();
+
+            return $this->success();
+        }
     }
 }

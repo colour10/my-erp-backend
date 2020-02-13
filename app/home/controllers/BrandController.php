@@ -7,6 +7,7 @@ use Phalcon\Mvc\View;
 use Asa\Erp\TbBrand;
 use Asa\Erp\TbBrandSize;
 use Asa\Erp\TbCountry;
+use Asa\Erp\TbProduct;
 
 class BrandController extends ZadminController {
     private $orderBy = 'name_en ASC';
@@ -291,5 +292,27 @@ class BrandController extends ZadminController {
         $result = $brandSize->toArray();
 
         return $this->success($result);
+    }
+
+    /**
+     * 颜色码对应的颜色名称
+     *
+     * @return void
+     */
+    public function getSuggestColorNameAction()
+    {
+        $brandid = filter_input(INPUT_POST, 'brandid', FILTER_VALIDATE_INT);
+        if ($brandid) {
+            $builder = $this->modelsManager->createBuilder();
+            $builder->from([TbProduct::class])
+                ->columns("wordcode_3, colorname, COUNT(*) AS total")
+                ->where("brandid = {$brandid}")
+                ->orderBy("total DESC");
+            $query = $builder->getQuery();
+            $result = $query->execute()->toArray();
+            return $this->success($result);
+        } else {
+            return $this->success();
+        }
     }
 }
