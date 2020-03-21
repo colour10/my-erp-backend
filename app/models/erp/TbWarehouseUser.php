@@ -2,11 +2,6 @@
 
 namespace Asa\Erp;
 
-use Phalcon\Validation;
-use Phalcon\Mvc\Model\Relation;
-use Phalcon\Validation\Validator\Uniqueness;
-use Phalcon\Validation\Validator\PresenceOf;
-
 /**
  * 仓库表
  */
@@ -22,7 +17,7 @@ class TbWarehouseUser extends BaseModel
             '\Asa\Erp\TbWarehouse',
             'id',
             [
-                'alias' => 'warehouse'
+                'alias' => 'warehouse',
             ]
         );
 
@@ -31,7 +26,7 @@ class TbWarehouseUser extends BaseModel
             '\Asa\Erp\TbUser',
             'id',
             [
-                'alias' => 'user'
+                'alias' => 'user',
             ]
         );
     }

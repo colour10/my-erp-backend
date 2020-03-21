@@ -1,4 +1,5 @@
 <?php
+
 namespace Asa\Erp;
 
 /**
@@ -12,7 +13,8 @@ class TbCurrency extends BaseModel
         $this->setSource('tb_currency');
     }
 
-    function delete() {
+    function delete()
+    {
         throw new \Exception("/1003/币种信息不允许删除/");
     }
 }

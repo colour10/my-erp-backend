@@ -1,6 +1,7 @@
 <?php
 
 namespace Asa\Erp;
+
 use Phalcon\Mvc\Model\Relation;
 
 /**
@@ -18,11 +19,11 @@ class TbWarehouse extends BaseModel
             "\Asa\Erp\TbWarehouseUser",
             "warehouseid",
             [
-                'alias' => 'warehouseUser',
-                'foreignKey' => array(
+                'alias'      => 'warehouseUser',
+                'foreignKey' => [
                     'message' => '#1003#',
-                    'action' => Relation::ACTION_RESTRICT
-                )                
+                    'action'  => Relation::ACTION_RESTRICT,
+                ],
             ]
         );
 
@@ -31,11 +32,11 @@ class TbWarehouse extends BaseModel
             "\Asa\Erp\TbConfirmorder",
             "warehouseid",
             [
-                'alias' => 'confirmorder',
-                'foreignKey' => array(
+                'alias'      => 'confirmorder',
+                'foreignKey' => [
                     'message' => '#1003#',
-                    'action' => Relation::ACTION_RESTRICT
-                )                
+                    'action'  => Relation::ACTION_RESTRICT,
+                ],
             ]
         );
 
@@ -44,17 +45,18 @@ class TbWarehouse extends BaseModel
             "\Asa\Erp\TbProductstock",
             "warehouseid",
             [
-                'alias' => 'productstocks'
+                'alias' => 'productstocks',
             ]
         );
     }
 
     /**
      * 根据另外一个库存对象，查找本库的相同信息的库存对象，如果没有则创建一个数量为0的库存对象
-     * @param  TbProductstock $productstock [description]
+     * @param TbProductstock $productstock [description]
      * @return [type]               [description]
      */
-    function getLocalStock($productstock) {
+    function getLocalStock($productstock)
+    {
         $myproductstock = TbProductstock::findFirst(
             sprintf(
                 "companyid=%d and warehouseid=%d and goodsid=%d",
@@ -64,18 +66,17 @@ class TbWarehouse extends BaseModel
             )
         );
 
-        if($myproductstock!=false) {
+        if ($myproductstock != false) {
             return $myproductstock;
-        }
-        else {
-            $data = array(
-                "productid" => $productstock->productid,
-                "goodsid" => $productstock->goodsid,
-                "warehouseid" => $this->id,
-                "sizecontentid" => $productstock->sizecontentid,
-                "property" => $productstock->property,
-                "defective_level" => $productstock->defective_level
-            );
+        } else {
+            $data = [
+                "productid"       => $productstock->productid,
+                "goodsid"         => $productstock->goodsid,
+                "warehouseid"     => $this->id,
+                "sizecontentid"   => $productstock->sizecontentid,
+                "property"        => $productstock->property,
+                "defective_level" => $productstock->defective_level,
+            ];
             return TbProductstock::initStock($data);
         }
     }

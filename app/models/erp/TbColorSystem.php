@@ -1,7 +1,6 @@
 <?php
-namespace Asa\Erp;
-use Phalcon\Mvc\Model\Relation;
 
+namespace Asa\Erp;
 
 /**
  * 基础资料，颜色色系表

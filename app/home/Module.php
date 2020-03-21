@@ -2,29 +2,31 @@
 
 namespace Multiple\Home;
 
-use Multiple\Home\Controllers\CompanyController;
-use Phalcon\Loader;
-use Phalcon\Mvc\View;
-use Phalcon\DiInterface;
-use Phalcon\Mvc\Dispatcher;
-use Phalcon\Mvc\ModuleDefinitionInterface;
-use Phalcon\Events\Manager as EventsManager;
-use Phalcon\Text;
-use SecurityPlugin;
+use Asa\Erp\StaticReader;
+use Asa\Erp\TbPermissionAction;
+use Asa\Erp\Util;
 use ExceptionPlugin;
-
 use Phalcon\Acl;
 use Phalcon\Acl\Adapter\Memory as AclList;
-use Phalcon\Acl\Resource;
-use Phalcon\Acl\Role;
-use Asa\Erp\Util;
-use Asa\Erp\TbPermissionAction;
-use Asa\Erp\StaticReader;
+use Phalcon\DiInterface;
+use Phalcon\Events\Manager as EventsManager;
+use Phalcon\Loader;
+use Phalcon\Mvc\Dispatcher;
+use Phalcon\Mvc\ModuleDefinitionInterface;
+use Phalcon\Mvc\View;
+use Phalcon\Text;
+use SecurityPlugin;
 
+/**
+ * Home 模块的 Module 控制器
+ * Class Module
+ * @package Multiple\Home
+ */
 class Module implements ModuleDefinitionInterface
 {
     /**
      * 注册自定义加载器
+     * @param DiInterface|null $di
      */
     public function registerAutoloaders(DiInterface $di = null)
     {
@@ -41,6 +43,7 @@ class Module implements ModuleDefinitionInterface
 
     /**
      * 注册自定义服务
+     * @param DiInterface $di
      */
     public function registerServices(DiInterface $di)
     {
@@ -73,8 +76,7 @@ class Module implements ModuleDefinitionInterface
             $eventsManager->attach('dispatch:beforeExecuteRoute', new SecurityPlugin);
 
             // Handle exceptions and not-found exceptions using NotFoundPlugin
-            //$eventsManager->attach('dispatch:beforeException', new NotFoundPlugin);
-            //
+            // $eventsManager->attach('dispatch:beforeException', new NotFoundPlugin);
             $eventsManager->attach('dispatch:beforeException', new ExceptionPlugin);
 
             $dispatcher = new Dispatcher();
@@ -183,7 +185,6 @@ class Module implements ModuleDefinitionInterface
                     foreach ($auth['actions'] as $resource) {
                         $acl->allow($user, $resource['controller'], $resource['action']);
                     }
-                    //print_r($auth['actions']);
                     $session->set("acl", $acl);
                 }
             }
@@ -191,7 +192,7 @@ class Module implements ModuleDefinitionInterface
             return $acl;
         });
 
-        // 增加一个超级管理员用的模板，为了防止和之前的冲突，这里用了mview做区分
+        // 增加一个超级管理员用的模板，为了防止和之前的冲突，这里用了 mview 做区分
         $di->set(
             "mview",
             function () {

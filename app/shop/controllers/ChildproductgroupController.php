@@ -59,14 +59,14 @@ class ChildproductgroupController extends AdminController
         // 子品类名称
         // 多语言字段
         // 名称
-        $name           = $this->getlangfield('name');
+        $name = $this->getlangfield('name');
         $childbrandname = $childbrand->$name;
 
         // 主品类名称
         $brandgroup = $childbrand->brandgroup;
         if ($brandgroup) {
             $brandgroupname = $brandgroup->$name;
-            $brandgroupid   = $brandgroup->id;
+            $brandgroupid = $brandgroup->id;
         }
 
         // 分页
@@ -84,9 +84,9 @@ class ChildproductgroupController extends AdminController
 
         // 加工数据
         // 在取出库存之前，首先获取销售端口
-        $company  = TbCompany::findFirstById($member['companyid']);
+        $company = TbCompany::findFirstById($member['companyid']);
         $saleport = $company->shopSaleport;
-        $array    = $saleport ? Util::recordListColumn($saleport->saleportWarehouses, 'warehouseid') : [];
+        $array = $saleport ? Util::recordListColumn($saleport->saleportWarehouses, 'warehouseid') : [];
 
 
         // 需要拿到每个商品下面所有的尺码，库存数
@@ -106,7 +106,7 @@ class ChildproductgroupController extends AdminController
             ])->toArray() : [];
             // 尺码加入名称，还有最大尺码记录数
             foreach ($sizecontents as $key => $value) {
-                $sizecontentname                       = ($TbSizecontentModel = TbSizecontent::findFirstById($value['sizecontentid'])) ? $TbSizecontentModel->name : '';
+                $sizecontentname = ($TbSizecontentModel = TbSizecontent::findFirstById($value['sizecontentid'])) ? $TbSizecontentModel->name : '';
                 $sizecontents[$key]['sizecontentname'] = $sizecontentname;
             }
             // 尺码组赋值
@@ -124,8 +124,8 @@ class ChildproductgroupController extends AdminController
             for ($i = 0; $i < $count - 1; $i++) {
                 for ($j = 0; $j < $count - $i - 1; $j++) {
                     if ($products[$j]['sum_sizecontents'] > $products[$j + 1]['sum_sizecontents']) {
-                        $temp             = $products[$j];
-                        $products[$j]     = $products[$j + 1];
+                        $temp = $products[$j];
+                        $products[$j] = $products[$j + 1];
                         $products[$j + 1] = $temp;
                     }
                 }

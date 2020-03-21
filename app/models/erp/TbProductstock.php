@@ -6,19 +6,20 @@ use Phalcon\Di;
 
 /**
  * 库存表
- * ErrorCode 1109
+ * Class TbProductstock
+ * @package Asa\Erp
  */
 class TbProductstock extends BaseCompanyModel
 {
-    const SALES = 1; //销售
-    const REQUISITION_IN = 2; //调拨入库
-    const REQUISITION_OUT = 3; //调拨出库
-    const WAREHOSING = 4; //入库
-    const DEFECTIVE = 5; //残次品入库
-    const REQUISITION_PRE_IN = 6; //在途，入库
+    const SALES                     = 1; //销售
+    const REQUISITION_IN            = 2; //调拨入库
+    const REQUISITION_OUT           = 3; //调拨出库
+    const WAREHOSING                = 4; //入库
+    const DEFECTIVE                 = 5; //残次品入库
+    const REQUISITION_PRE_IN        = 6; //在途，入库
     const REQUISITION_PRE_IN_CANCEL = 7; //
-    const REQUISITION_IN_EXECUTE = 8;
-    const REQUISITION = 9;
+    const REQUISITION_IN_EXECUTE    = 8;
+    const REQUISITION               = 9;
 
     //库存变动的列表
     private static $changed_list = [];
@@ -34,7 +35,7 @@ class TbProductstock extends BaseCompanyModel
             '\Asa\Erp\TbProduct',
             'id',
             [
-                'alias' => 'product'
+                'alias' => 'product',
             ]
         );
 
@@ -44,7 +45,7 @@ class TbProductstock extends BaseCompanyModel
             '\Asa\Erp\TbSizecontent',
             'id',
             [
-                'alias' => 'sizecontent'
+                'alias' => 'sizecontent',
             ]
         );
 
@@ -54,7 +55,7 @@ class TbProductstock extends BaseCompanyModel
             '\Asa\Erp\TbWarehouse',
             'id',
             [
-                'alias' => 'warehouse'
+                'alias' => 'warehouse',
             ]
         );
 
@@ -63,16 +64,18 @@ class TbProductstock extends BaseCompanyModel
             '\Asa\Erp\TbGoods',
             'id',
             [
-                'alias' => 'goods'
+                'alias' => 'goods',
             ]
         );
     }
 
-    private static function addToChangeList($productid) {
+    private static function addToChangeList($productid)
+    {
         self::$changed_list[$productid] = 1;
     }
 
-    public static function sendStockChange() {
+    public static function sendStockChange()
+    {
         foreach (self::$changed_list as $productid => $value) {
             Util::sendStockChange($productid);
         }
@@ -80,7 +83,8 @@ class TbProductstock extends BaseCompanyModel
         self::$changed_list = [];
     }
 
-    public function addProductstockLog($old_number, $number, $change_type, $relationid) {
+    public function addProductstockLog($old_number, $number, $change_type, $relationid)
+    {
         $log = new TbProductstockLog();
         $log->warehouseid = $this->warehouseid;
         $log->productstockid = $this->id;
@@ -96,25 +100,29 @@ class TbProductstock extends BaseCompanyModel
 
     /**
      * 预入库，调拨单出库的时候调用
+     * @param int $number
+     * @param string $change_type
+     * @param int $relationid
+     * @return TbProductstock|bool
      */
-    function preAddStock($number, $change_type, $relationid) {
+    function preAddStock($number, $change_type, $relationid)
+    {
         $db = $this->getDI()->get('db');
 
         $db->begin();
         $old_number = $this->number;
 
-        $this->number = $this->number+$number;
+        $this->number = $this->number + $number;
         $this->shipping_number = $this->shipping_number + $number;
         $this->change_time = date("Y-m-d H:i:s");
         $this->change_stuff = $this->getDI()->get('currentUser');
-        if($this->update()) {
+        if ($this->update()) {
             //更新库存成功，记录操作日志
-            if($this->addProductstockLog($old_number, $this->number, $change_type, $relationid)===false) {
+            if ($this->addProductstockLog($old_number, $this->number, $change_type, $relationid) === false) {
                 $db->rollback();
                 return false;
             }
-        }
-        else {
+        } else {
             $db->rollback();
             return false;
         }
@@ -126,22 +134,27 @@ class TbProductstock extends BaseCompanyModel
 
     /**
      * 预出库，锁定库存
+     * @param int $number
+     * @param string $change_type
+     * @param int $relationid
+     * @return TbProductstock
+     * @throws \Exception
      */
-    function preReduceStock($number, $change_type, $relationid) {
+    function preReduceStock($number, $change_type, $relationid)
+    {
         $db = $this->getDI()->get('db');
 
         $db->begin();
         $this->reserve_number = $this->reserve_number + $number;
         $this->change_time = date("Y-m-d H:i:s");
         $this->change_stuff = $this->getDI()->get('currentUser');
-        if($this->update()) {
+        if ($this->update()) {
             //更新库存成功，记录操作日志
-            if($this->addProductstockLog($this->number, $this->number, $change_type, $relationid)===false) {
+            if ($this->addProductstockLog($this->number, $this->number, $change_type, $relationid) === false) {
                 $db->rollback();
                 throw new \Exception("/11090201/库存日志添加失败。/");
             }
-        }
-        else {
+        } else {
             $db->rollback();
             throw new \Exception("/11090202/锁定库存失败。/");
         }
@@ -153,22 +166,26 @@ class TbProductstock extends BaseCompanyModel
 
     /**
      * 预入库库存转入库库存
+     * @param int $number
+     * @param string $change_type
+     * @param int $relationid
+     * @return TbProductstock|bool
      */
-    function preAddStockExecute($number, $change_type, $relationid) {
+    function preAddStockExecute($number, $change_type, $relationid)
+    {
         $db = $this->getDI()->get('db');
 
         $db->begin();
         $this->shipping_number = $this->shipping_number - $number;
         $this->change_time = date("Y-m-d H:i:s");
         $this->change_stuff = $this->getDI()->get('currentUser');
-        if($this->update()) {
+        if ($this->update()) {
             //更新库存成功，记录操作日志
-            if($this->addProductstockLog($this->number, $this->number, $change_type, $relationid)===false) {
+            if ($this->addProductstockLog($this->number, $this->number, $change_type, $relationid) === false) {
                 $db->rollback();
                 return false;
             }
-        }
-        else {
+        } else {
             $db->rollback();
             return false;
         }
@@ -180,35 +197,39 @@ class TbProductstock extends BaseCompanyModel
 
     /**
      * 预出库库存出库
+     * @param int $number
+     * @param string $change_type
+     * @param int $relationid
+     * @return TbProductstock
+     * @throws \Exception
      */
-    function preReduceStockExecute($number, $change_type, $relationid) {
+    function preReduceStockExecute($number, $change_type, $relationid)
+    {
         $db = $this->getDI()->get('db');
 
         $db->begin();
         $old_number = $this->number;
 
-        if($number<=$this->reserve_number && $this->number>=$this->reserve_number) {
+        if ($number <= $this->reserve_number && $this->number >= $this->reserve_number) {
             $this->number = $this->number - $number;
             $this->reserve_number = $this->reserve_number - $number;
-            if($change_type===self::SALES) {
+            if ($change_type === self::SALES) {
                 $this->sales_number = $this->sales_number + $number;
             }
 
             $this->change_time = date("Y-m-d H:i:s");
             $this->change_stuff = $this->getDI()->get('currentUser');
-            if($this->update()) {
+            if ($this->update()) {
                 //更新库存成功，记录操作日志
-                if($this->addProductstockLog($old_number, $this->number, $change_type, $relationid)===false) {
+                if ($this->addProductstockLog($old_number, $this->number, $change_type, $relationid) === false) {
                     $db->rollback();
                     throw new \Exception("/11090301/库存日志添加失败。/");
                 }
-            }
-            else {
+            } else {
                 $db->rollback();
                 throw new \Exception("/11090302/锁定库存转出库失败/");
             }
-        }
-        else {
+        } else {
             throw new \Exception("/11090303/库存不足{$number},{$this->number},{$this->reserve_number}/");
         }
 
@@ -219,25 +240,29 @@ class TbProductstock extends BaseCompanyModel
 
     /**
      * 预入库库存取消
+     * @param int $number
+     * @param string $change_type
+     * @param int $relationid
+     * @return TbProductstock|bool
      */
-    function preAddStockCancel($number, $change_type, $relationid) {
+    function preAddStockCancel($number, $change_type, $relationid)
+    {
         $db = $this->getDI()->get('db');
 
         $db->begin();
         $old_number = $this->number;
 
-        $this->number = $this->number-$number;
+        $this->number = $this->number - $number;
         $this->shipping_number = $this->shipping_number - $number;
         $this->change_time = date("Y-m-d H:i:s");
         $this->change_stuff = $this->getDI()->get('currentUser');
-        if($this->update()) {
+        if ($this->update()) {
             //更新库存成功，记录操作日志
-            if($this->addProductstockLog($old_number, $this->number, $change_type, $relationid)===false) {
+            if ($this->addProductstockLog($old_number, $this->number, $change_type, $relationid) === false) {
                 $db->rollback();
                 return false;
             }
-        }
-        else {
+        } else {
             $db->rollback();
             return false;
         }
@@ -248,22 +273,27 @@ class TbProductstock extends BaseCompanyModel
 
     /**
      * 预出库库存取消
+     * @param int $number
+     * @param string $change_type
+     * @param int $relationid
+     * @return TbProductstock
+     * @throws \Exception
      */
-    function preReduceStockCancel($number, $change_type, $relationid) {
+    function preReduceStockCancel($number, $change_type, $relationid)
+    {
         $db = $this->getDI()->get('db');
 
         $db->begin();
         $this->reserve_number = $this->reserve_number - $number;
         $this->change_time = date("Y-m-d H:i:s");
         $this->change_stuff = $this->getDI()->get('currentUser');
-        if($this->update()) {
+        if ($this->update()) {
             //更新库存成功，记录操作日志
-            if($this->addProductstockLog($this->number, $this->number, $change_type, $relationid)===false) {
+            if ($this->addProductstockLog($this->number, $this->number, $change_type, $relationid) === false) {
                 $db->rollback();
                 throw new \Exception("/11090101/库存日志添加失败。/");
             }
-        }
-        else {
+        } else {
             $db->rollback();
             throw new \Exception("/11090102/取消库存锁定失败。/");
         }
@@ -272,40 +302,45 @@ class TbProductstock extends BaseCompanyModel
         return $this;
     }
 
-    function addStock($number, $change_type, $relationid) {
-        if($number>0) {
+    function addStock($number, $change_type, $relationid)
+    {
+        if ($number > 0) {
             return $this->changeStock($number, $change_type, $relationid);
-        }
-        else {
+        } else {
             return false;
         }
     }
 
-    function reduceStock($number, $change_type, $relationid) {
-        if($number>0 && $number<=$this->number-$this->shipping_number) {
-            return $this->changeStock(-1*abs($number), $change_type, $relationid);
-        }
-        else {
+    function reduceStock($number, $change_type, $relationid)
+    {
+        if ($number > 0 && $number <= $this->number - $this->shipping_number) {
+            return $this->changeStock(-1 * abs($number), $change_type, $relationid);
+        } else {
             throw new \Exception("/11090501/库存不足/");
         }
     }
 
     /**
      * 更改库存
+     * @param int $number
+     * @param string $change_type
+     * @param int $relationid
+     * @return TbProductstock|bool
      */
-    private function changeStock($number, $change_type, $relationid) {
+    private function changeStock($number, $change_type, $relationid)
+    {
         $db = $this->getDI()->get('db');
 
         $db->begin();
         $old_number = $this->number;
 
-        if($change_type===self::SALES && $number<0) {
-            $this->sales_number = $this->sales_number-$number;
+        if ($change_type === self::SALES && $number < 0) {
+            $this->sales_number = $this->sales_number - $number;
         }
-        $this->number = $this->number+$number;
+        $this->number = $this->number + $number;
         $this->change_time = date("Y-m-d H:i:s");
         $this->change_stuff = $this->getDI()->get('currentUser');
-        if($this->update()) {
+        if ($this->update()) {
             //更新库存成功，记录操作日志
             $log = new TbProductstockLog();
             $log->warehouseid = $this->warehouseid;
@@ -317,12 +352,11 @@ class TbProductstock extends BaseCompanyModel
             $log->relationid = $relationid;
             $log->companyid = $this->companyid;
             $log->change_stuff = $this->getDI()->get('currentUser');
-            if($log->create()===false) {
+            if ($log->create() === false) {
                 $db->rollback();
                 return false;
             }
-        }
-        else {
+        } else {
             $db->rollback();
             return false;
         }
@@ -333,9 +367,12 @@ class TbProductstock extends BaseCompanyModel
 
     /**
      * 初始化库存
-     * @return [type] [description]
+     * @param $stock_info
+     * @return TbProductstock [type] [description]
+     * @throws Exception
      */
-    public static function initStock($stock_info) {
+    public static function initStock($stock_info)
+    {
         $di = Di::getDefault();
         $db = $di->get('db');
         $userid = $di->get('currentUser');;
@@ -343,18 +380,17 @@ class TbProductstock extends BaseCompanyModel
 
         $db->begin();
 
-        $column = ["goodsid","productid","warehouseid","sizecontentid","property","defective_level"];
+        $column = ["goodsid", "productid", "warehouseid", "sizecontentid", "property", "defective_level"];
         $productStock = new TbProductstock();
         $productStock->warehouseid = $stock_info['warehouseid'];
-        if(isset($stock_info['goods'])) {
+        if (isset($stock_info['goods'])) {
             $goods = $stock_info['goods'];
             $productStock->goodsid = $goods->id;
             $productStock->productid = $goods->productid;
             $productStock->sizecontentid = $goods->sizecontentid;
             $productStock->property = $goods->property;
             $productStock->defective_level = $goods->defective_level;
-        }
-        else {
+        } else {
             $productStock->goodsid = $stock_info['goodsid'];
             $productStock->productid = $stock_info['productid'];
             $productStock->sizecontentid = $stock_info['sizecontentid'];
@@ -369,7 +405,7 @@ class TbProductstock extends BaseCompanyModel
         $productStock->number = 0;
         $productStock->reserve_number = 0;
         $productStock->shipping_number = 0;
-        if($productStock->create()==false) {
+        if ($productStock->create() == false) {
             $db->rollback();
             $productStock->debug();
             throw new Exception("/1001/不能创建初始库存/");
@@ -379,14 +415,16 @@ class TbProductstock extends BaseCompanyModel
         return $productStock;
     }
 
-    function getAvailableNumber() {
-        return $this->number-max($this->shipping_number, $this->reserve_number);
+    function getAvailableNumber()
+    {
+        return $this->number - max($this->shipping_number, $this->reserve_number);
     }
 
-    public static function getProductStock($productid, $sizecontentid, $warehouseid, $property=1, $defective_level=1) {
+    public static function getProductStock($productid, $sizecontentid, $warehouseid, $property = 1, $defective_level = 1)
+    {
         $di = \Phalcon\DI::getDefault();
         $companyid = $di->get("currentCompany");
-        if($companyid<=0) {
+        if ($companyid <= 0) {
             throw new \Exception("/11090401/数据错误。/");
         }
 
@@ -401,7 +439,7 @@ class TbProductstock extends BaseCompanyModel
             )
         );
 
-        if($goods==false) {
+        if ($goods == false) {
             //创建一个新的
             $goods = new TbGoods();
             $goods->companyid = $companyid;
@@ -412,27 +450,26 @@ class TbProductstock extends BaseCompanyModel
             $goods->change_time = date("Y-m-d H:i:s");
             $goods->change_staff = $di->get("currentUser");
             $goods->price = 0;
-            if($goods->create()===false) {
+            if ($goods->create() === false) {
                 throw new \Exception("/11090402/创建商品条目失败/");
             }
         }
 
-        if($warehouseid>0) {
+        if ($warehouseid > 0) {
             $productstock = TbProductstock::findFirst(
                 sprintf("companyid=%d and warehouseid=%d and goodsid=%d", $companyid, $warehouseid, $goods->id)
             );
 
-            if($productstock==false) {
+            if ($productstock == false) {
                 //创建库存记录
                 $productstock = TbProductstock::initStock([
-                    "goods" => $goods,
-                    "warehouseid" => $warehouseid
+                    "goods"       => $goods,
+                    "warehouseid" => $warehouseid,
                 ]);
             }
 
             return $productstock;
-        }
-        else {
+        } else {
             throw new \Exception("/11090403/数据错误，仓库不能为空。/");
         }
     }

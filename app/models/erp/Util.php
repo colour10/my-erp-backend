@@ -7,11 +7,20 @@ use AlibabaCloud\Client\Exception\ClientException;
 use AlibabaCloud\Client\Exception\ServerException;
 use Endroid\QrCode\QrCode;
 use Gregwar\Image\Image;
+use Phalcon\Di;
 use Phalcon\Http\Response;
+use Phalcon\Logger\Adapter\File;
 use PHPExcel;
+use PHPExcel_Exception;
+use PHPExcel_Reader_Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 use ZipArchive;
 
+/**
+ * 工具类
+ * Class Util
+ * @package Asa\Erp
+ */
 class Util
 {
     /**
@@ -35,18 +44,18 @@ class Util
                 // 并判断是否有子集加不加children
                 if (empty($children)) {
                     $tree[] = [
-                        'id' => $v['id'],
-                        'label' => $v['name'],
-                        'memo' => $v['memo'],
-                        'level' => $level,
+                        'id'       => $v['id'],
+                        'label'    => $v['name'],
+                        'memo'     => $v['memo'],
+                        'level'    => $level,
                         'children' => [],
                     ];
                 } else {
                     $tree[] = [
-                        'id' => $v['id'],
-                        'label' => $v['name'],
-                        'memo' => $v['memo'],
-                        'level' => $level,
+                        'id'       => $v['id'],
+                        'label'    => $v['name'],
+                        'memo'     => $v['memo'],
+                        'level'    => $level,
                         // 新增children
                         'children' => $children,
                     ];
@@ -75,9 +84,9 @@ class Util
             if ($v['up_dp_id'] == $pid) {
                 // 数据合并
                 $tree[] = [
-                    'id' => $v['id'],
+                    'id'    => $v['id'],
                     'label' => str_repeat($str_repeat, $level) . $v['name'],
-                    'memo' => $v['memo'],
+                    'memo'  => $v['memo'],
                     'level' => $level,
                 ];
                 // 继续寻找
@@ -123,7 +132,7 @@ class Util
 
     /**
      * 字符串位数补全
-     * @param $str 字符串
+     * @param string $str 字符串
      * @param int $length 处理后的位数，默认是6位
      * @return bool|string
      */
@@ -187,6 +196,9 @@ class Util
 
     /**
      * 根据查询到的一个结果集，获取指定列，并生成数组
+     * @param $list
+     * @param $column
+     * @return array
      */
     public static function recordListColumn($list, $column)
     {
@@ -211,7 +223,7 @@ class Util
 
     /**
      * 定义登录用户拥有的权限。
-     * @return [type] [description]
+     * @return array [type] [description]
      */
     public static function getAuthResourse()
     {
@@ -281,6 +293,8 @@ class Util
      * 把图片转换成对应的分辨率，都是正方形格式的
      * @param string $filepath 图片的绝对路径，比如：/www/wwwroot/www.jinxiaocun.com/erp/public/upload/product/model4.jpg
      * @param array $resizeArray 分辨率数组，例如[80, 200]，代表裁剪为两组分辨率，分别是80*80、200*200，路径保存在和原来的图片相同的目录下
+     * @param string $type
+     * @param int $quality
      * @throws \Exception
      */
     public static function convertPics($filepath, $resizeArray, $type = 'png', $quality = 80)
@@ -302,8 +316,8 @@ class Util
      * @param string $excelFilePath excel文件的绝对路径
      * @param string $pictureSaveFolder 图片保存的文件夹，具体是指/public/upload下面的具体文件夹名称，比如product
      * @return array|bool
-     * @throws \PHPExcel_Exception
-     * @throws \PHPExcel_Reader_Exception
+     * @throws PHPExcel_Exception
+     * @throws PHPExcel_Reader_Exception
      */
     public static function importExcel($excelFilePath, $pictureSaveFolder)
     {
@@ -360,7 +374,7 @@ class Util
                 $cell->setValue($pictureSaveFolder . '/' . $img);
             }
 
-            // 如果是xlsx
+            // 如果是 xlsx
             if ($drawing instanceof \PHPExcel_Worksheet_Drawing) {
                 // 文件完整路径$filename
                 // 类似于：zip:///data/www/xxx/bdac99339.xlsx#xl/media/image2.jpg
@@ -420,7 +434,7 @@ class Util
      * @param string $savePath
      * @param bool $isDown
      * @return string
-     * @throws \PHPExcel_Exception
+     * @throws PHPExcel_Exception
      */
     public static function excelExport($title = [], $data = [], $fileName = '', $savePath = './', $isDown = true)
     {
@@ -858,8 +872,7 @@ class Util
         }
 
         // 首先关闭错误提示
-        ini_set('display_errors', 'off');
-        error_reporting(0);
+        self::closeDisplayErrors();
 
         // api
         AlibabaCloud::accessKeyClient($accessKeyId, $accessKeySecret)
@@ -901,12 +914,10 @@ class Util
     {
         // 逻辑
         if (substr($path, -1, 1) === '/') {
-            $type = 'Directory';
-        } else {
-            $type = 'File';
+            return 'Directory';
         }
-        // 返回
-        return $type;
+        // 否则返回 File
+        return 'File';
     }
 
     /**
@@ -1027,29 +1038,27 @@ class Util
     /**
      * 通知商品库存发生变化
      * @param  [type] $productid   [description]
-     * @return [type]              [description]
+     * @return void [type]              [description]
      */
     public static function sendStockChange($productid)
     {
-        $config = \Phalcon\DI::getDefault()->get("config");
+        $config = Di::getDefault()->get("config");
 
         $filename = $config->app->log_path . sprintf("/productstock_%s.log", date('Ymd'));
         if (file_exists($filename)) {
             touch($filename);
             chmod($filename, 0777);
         }
-        $logger = new \Phalcon\Logger\Adapter\File($filename);
+        $logger = new File($filename);
 
 
         $url = sprintf("%s/productstock/change/%d", $config->productstock_service->server, $productid);
-        //echo $url." {$productid}\n";
         $response = file_get_contents($url);
         if ($response == '1') {
             $logger->info($productid . '');
         } else {
             $logger->error($productid . '');
         }
-        //echo $url." ++\n";
     }
 
 

@@ -2,6 +2,9 @@
 
 namespace Asa\Erp;
 
+use Phalcon\Mvc\Model\ResultInterface;
+use Phalcon\Mvc\Model\ResultSetInterface;
+
 /**
  * 会员相关，地址信息表
  */
@@ -349,7 +352,7 @@ class TbMemberAddress extends BaseModel
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return TbMemberAddress[]|TbMemberAddress|\Phalcon\Mvc\Model\ResultSetInterface
+     * @return TbMemberAddress[]|TbMemberAddress|ResultSetInterface
      */
     public static function find($parameters = null)
     {
@@ -360,7 +363,7 @@ class TbMemberAddress extends BaseModel
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return TbMemberAddress|\Phalcon\Mvc\Model\ResultInterface
+     * @return TbMemberAddress|ResultInterface
      */
     public static function findFirst($parameters = null)
     {
@@ -376,16 +379,16 @@ class TbMemberAddress extends BaseModel
     public function columnMap()
     {
         return [
-            'id' => 'id',
-            'member_id' => 'member_id',
-            'name' => 'name',
-            'idno' => 'idno',
-            'tel' => 'tel',
-            'zipcode' => 'zipcode',
-            'address' => 'address',
-            'province' => 'province',
-            'city' => 'city',
-            'is_default' => 'is_default',
+            'id'           => 'id',
+            'member_id'    => 'member_id',
+            'name'         => 'name',
+            'idno'         => 'idno',
+            'tel'          => 'tel',
+            'zipcode'      => 'zipcode',
+            'address'      => 'address',
+            'province'     => 'province',
+            'city'         => 'city',
+            'is_default'   => 'is_default',
             'last_used_at' => 'last_used_at',
         ];
     }

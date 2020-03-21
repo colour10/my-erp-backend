@@ -2,13 +2,14 @@
 
 use Asa\Erp\TbProduct;
 use Asa\Erp\TbProductLastmodify;
+use Phalcon\Cli\Task;
 use Phalcon\Mvc\Model\Resultset\Simple as Resultset;
 
 /**
  * 生成产品、品牌、公司对应的最后生成记录
  * Class ReplaceTask
  */
-class CreateproductlmTask extends \Phalcon\CLI\Task
+class CreateproductlmTask extends Task
 {
     /**
      * 生成逻辑

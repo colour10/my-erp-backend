@@ -1,4 +1,5 @@
 <?php
+
 namespace Asa\Erp;
 
 /**
@@ -12,26 +13,27 @@ class TbRequisitionDetail extends BaseCompanyModel
         $this->setSource('tb_requisition_detail');
 
         // 库存-仓库表，一对多反向
-       $this->belongsTo(
+        $this->belongsTo(
             'out_productstockid',
             '\Asa\Erp\TbProductstock',
             'id',
             [
-                'alias' => 'outProductstock'
+                'alias' => 'outProductstock',
             ]
         );
 
-       $this->belongsTo(
+        $this->belongsTo(
             'in_productstockid',
             '\Asa\Erp\TbProductstock',
             'id',
             [
-                'alias' => 'inProductstock'
+                'alias' => 'inProductstock',
             ]
         );
     }
 
-    function delete() {
+    function delete()
+    {
         return false;
     }
 }

@@ -1,14 +1,18 @@
 <?php
+
 namespace Multiple\Home\Controllers;
 
-use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\View;
-use Asa\Erp\TbAliases;
+/**
+ * 别名表
+ * Class AliasesController
+ * @package Multiple\Home\Controllers
+ */
+class AliasesController extends ZadminController
+{
+    public function initialize()
+    {
+        parent::initialize();
 
-class AliasesController extends ZadminController {    
-    public function initialize() {
-	    parent::initialize();
-	    
-	    $this->setModelName('Asa\\Erp\\TbAliases');
+        $this->setModelName('Asa\\Erp\\TbAliases');
     }
 }

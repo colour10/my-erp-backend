@@ -1,17 +1,18 @@
 <?php
-namespace Multiple\Home\Controllers;
 
-use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\View;
-use Asa\Erp\TbProductMaterial;
+namespace Multiple\Home\Controllers;
 
 /**
  * 商品材质表
+ * Class ProductmaterialController
+ * @package Multiple\Home\Controllers
  */
-class ProductmaterialController extends AdminController {
-    public function initialize() {
-	    parent::initialize();
+class ProductmaterialController extends AdminController
+{
+    public function initialize()
+    {
+        parent::initialize();
 
-	    $this->setModelName('Asa\\Erp\\TbProductMaterial');
+        $this->setModelName('Asa\\Erp\\TbProductMaterial');
     }
 }

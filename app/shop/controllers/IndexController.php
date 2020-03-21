@@ -3,6 +3,8 @@
 namespace Multiple\Shop\Controllers;
 
 use Asa\Erp\TbProductSearch;
+use Phalcon\Http\Response;
+use Phalcon\Http\ResponseInterface;
 use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
 
 /**
@@ -14,7 +16,7 @@ class IndexController extends AdminController
 {
     /**
      * 首页
-     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|void
+     * @return Response|ResponseInterface|void
      */
     public function indexAction()
     {
@@ -46,7 +48,7 @@ class IndexController extends AdminController
 
     /**
      * 搜索
-     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|void
+     * @return Response|ResponseInterface|void
      */
     public function searchAction()
     {

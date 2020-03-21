@@ -22,16 +22,17 @@ class TbOrder extends BaseModel
             "\Asa\Erp\TbOrderdetails",
             "orderid",
             [
-                'alias' => 'orderdetails'
+                'alias' => 'orderdetails',
             ]
         );
     }
 
-    public function getRules() {
+    public function getRules()
+    {
         $factory = $this->getValidatorFactory();
         return [
-            'ageseason' => $factory->tableid('niandaijijie'),
-            'supplierid' => $factory->tableid('gonghuoshang')
+            'ageseason'  => $factory->tableid('niandaijijie'),
+            'supplierid' => $factory->tableid('gonghuoshang'),
         ];
     }
 
@@ -39,12 +40,12 @@ class TbOrder extends BaseModel
      * 添加一条明细数据
      * @param [type] $form 表单数据
      */
-    public function addDetail($form) {
+    public function addDetail($form)
+    {
         $row = new TbOrderdetails();
-        if($row->create($form)) {
+        if ($row->create($form)) {
             return $row;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -54,31 +55,31 @@ class TbOrder extends BaseModel
      * @param  [type] $form 表单数据
      * @return [type]       [description]
      */
-    public function updateDetail($form) {
+    public function updateDetail($form)
+    {
         $row = TbOrderdetails::findFirst(
             sprintf("id=%d", $form['id'])
         );
 
-        if($row!=false && $row->companyid == $form['companyid']) {
-            if($row->update($form)) {
+        if ($row != false && $row->companyid == $form['companyid']) {
+            if ($row->update($form)) {
                 return $row;
-            }
-            else {
+            } else {
                 return false;
             }
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     /**
-     *
+     * 获取订单明细
      */
-    function getOrderDetail() {
+    function getOrderDetail()
+    {
         $data = [
             'form' => $this->toArray(),
-            'list'=>[]
+            'list' => [],
         ];
 
         // 循环添加数据
@@ -91,32 +92,36 @@ class TbOrder extends BaseModel
         return $data;
     }
 
-    function getDetailList() {
+    function getDetailList()
+    {
         return TbOrderdetails::find([
             sprintf("orderid=%d", $this->id),
-            "order" => "productid asc"
+            "order" => "productid asc",
         ]);
     }
 
-    function finish() {
+    function finish()
+    {
         $this->status = 2;
-        if($this->update()==false) {
+        if ($this->update() == false) {
             throw new \Exception("/11100101/订单更新失败。/");
         }
     }
 
     /**
      * 检查订单的详情是否已经都生成了品牌订单，如果是则将订单完成。
-     * @return [type] [description]
+     * @return bool|void [type] [description]
+     * @throws \Exception
      */
-    function checkToFinish() {
+    function checkToFinish()
+    {
         $details = $this->orderdetails;
-        if(count($details)==0) {
-            return ;
+        if (count($details) == 0) {
+            return;
         }
 
         foreach ($this->orderdetails as $detail) {
-            if($detail->number>$detail->brand_number) {
+            if ($detail->number > $detail->brand_number) {
                 return false;
             }
         }
@@ -124,13 +129,18 @@ class TbOrder extends BaseModel
         $this->finish();
     }
 
-    function getOrderbrandList() {
+    /**
+     * 获取品牌订单列表
+     * @return array
+     */
+    function getOrderbrandList()
+    {
         $sql = sprintf("SELECT distinct orderbrandid FROM tb_order_brand_detail WHERE orderid=%d", $this->id);
         $rows = $this->getDI()->get('db')->fetchAll($sql);
 
         $result = [];
 
-        if(count($rows)>0) {
+        if (count($rows) > 0) {
             $array = [];
             foreach ($rows as $row) {
                 $array[] = $row['orderbrandid'];

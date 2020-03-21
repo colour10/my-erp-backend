@@ -1,4 +1,5 @@
 <?php
+
 namespace Asa\Erp;
 
 /**
@@ -16,7 +17,7 @@ class TbShippingFee extends BaseModel
             '\Asa\Erp\TbFeename',
             'id',
             [
-                'alias' => 'feename'
+                'alias' => 'feename',
             ]
         );
     }

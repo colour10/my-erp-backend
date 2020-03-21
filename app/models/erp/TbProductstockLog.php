@@ -1,8 +1,11 @@
 <?php
+
 namespace Asa\Erp;
 
 /**
  * 库存日志表
+ * Class TbProductstockLog
+ * @package Asa\Erp
  */
 class TbProductstockLog extends BaseModel
 {

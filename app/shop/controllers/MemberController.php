@@ -6,6 +6,8 @@ use Asa\Erp\TbCompany;
 use Asa\Erp\TbMember;
 use Asa\Erp\TbShoporderCommon;
 use Asa\Erp\TbShoppayment;
+use Phalcon\Http\Response;
+use Phalcon\Http\ResponseInterface;
 use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
 
 /**
@@ -17,7 +19,7 @@ class MemberController extends AdminController
 {
     /**
      * 没有首页
-     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|void
+     * @return Response|ResponseInterface|void
      */
     public function indexAction()
     {
@@ -40,8 +42,8 @@ class MemberController extends AdminController
             // 是否登录
             if ($member = $this->member) {
                 // 需要接受旧密码、新密码，确认新密码三个选项
-                $old_password    = $this->request->get('old_password');
-                $new_password    = $this->request->get('new_password');
+                $old_password = $this->request->get('old_password');
+                $new_password = $this->request->get('new_password');
                 $repeat_password = $this->request->get('repeat_password');
 
                 // 判断密码是否全部填写了
@@ -88,7 +90,7 @@ class MemberController extends AdminController
      * 邀请注册的逻辑：
      * 1、超级用户邀请的用户，必须指定某个公司，且该公司自动成为这个公司的管理员
      * 2、普通用户邀请必须是公司管理员才行，邀请的用户默认是普通用户，不能再次邀请
-     * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|string|void
+     * @return false|Response|ResponseInterface|\Phalcon\Mvc\View|string|void
      */
     public function inviteAction()
     {
@@ -97,14 +99,14 @@ class MemberController extends AdminController
             // 是否登录
             if ($member = $this->member) {
                 // 需要接受邮箱，用户名两个选项，公司名称暂时用session的，也就是邀请人只能隶属于本公司
-                $email    = $this->request->get('email');
+                $email = $this->request->get('email');
                 $username = $this->request->get('username');
                 // 对于companyid的判断，如果当前登录用户是超级用户，那么companyid就是传过来的$this->request->get('companyid')，如果是普通的公司管理员，那么就是当前用户登录的companyid
                 if ($this->issuperadmin) {
-                    $companyid  = $this->request->get('companyid');
+                    $companyid = $this->request->get('companyid');
                     $membertype = '1';
                 } else {
-                    $companyid  = $this->currentCompany;
+                    $companyid = $this->currentCompany;
                     $membertype = '0';
                 }
 
@@ -126,11 +128,11 @@ class MemberController extends AdminController
                 }
 
                 // 默认密码是用户名+123
-                $password        = $username . '123';
+                $password = $username . '123';
                 $bcrypt_password = md5($username . '123');
 
                 // 开始写入数据库
-                $data  = [
+                $data = [
                     'email'        => $email,
                     'name'         => $username,
                     'login_name'   => $username,
@@ -240,7 +242,7 @@ EOT;
         // 判断是否为公司用户，如果是个人用户则报错
         // 如果列表中存在公司用户，那么就添加一个发送支付宝授权的功能
         if ($member = $this->member && $this->member['membertype'] > 0) {
-            $result       = TbMember::find("invoteuser=" . $this->member['id']);
+            $result = TbMember::find("invoteuser=" . $this->member['id']);
             $result_array = $result->toArray();
             foreach ($result->toArray() as $k => $v) {
                 $result_array[$k]['companyname'] = ($company = TbCompany::findFirstById($this->member['companyid'])) ? $company->name : '';
@@ -256,7 +258,7 @@ EOT;
 
     /**
      * 订单列表
-     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|void
+     * @return Response|ResponseInterface|\Phalcon\Mvc\View|void
      */
     public function ordersAction()
     {
@@ -286,7 +288,7 @@ EOT;
         foreach ($orders as $k => $order) {
             $orders_array[$k]['orderdetails'] = $order->getShoporder()->toArray();
             // 下单人
-            $member                          = $order->getMember();
+            $member = $order->getMember();
             $orders_array[$k]['member_name'] = $member->name;
             // 是否显示更改截止时间
             // 要求是未付款订单，有截止时间，并且截止时间有效，还有就是订单不能是关闭状态
@@ -330,7 +332,7 @@ EOT;
 
     /**
      * 支付授权
-     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|void
+     * @return Response|ResponseInterface|\Phalcon\Mvc\View|void
      */
     public function payauthAction()
     {
@@ -358,7 +360,7 @@ EOT;
             }
             $config = $payment ? json_encode($payment->getConfig()) : '';
             // 查找里面是否有app_auth_token字段
-            $is_alipay_allow_auth    = (strpos($config, 'app_auth_token') !== false) ? true : false;
+            $is_alipay_allow_auth = (strpos($config, 'app_auth_token') !== false) ? true : false;
             $is_wechatpay_allow_auth = (strpos($config, 'sub_mch_id') !== false) ? true : false;
             // 判断支付宝是否已授权
             if (!$is_alipay_allow_auth) {
@@ -375,8 +377,8 @@ EOT;
             }
 
             // 发送给模板
-            $url    = ['alipay_url' => $alipay_url, 'wechat_url' => $wechat_url];
-            $h1     = $this->getValidateMessage('pay-authorization');
+            $url = ['alipay_url' => $alipay_url, 'wechat_url' => $wechat_url];
+            $h1 = $this->getValidateMessage('pay-authorization');
             $notice = $this->getValidateMessage('self-payauth-notice');
             $this->view->setVars(compact('url', 'h1', 'notice'));
         } else {
@@ -384,7 +386,7 @@ EOT;
             // 分页
             $currentPage = $this->request->getQuery("page", "int", 1);
             // 查找所有的公司，支付宝和微信授权情况
-            $datas  = TbShoppayment::find("id != " . $this->supercoid);
+            $datas = TbShoppayment::find("id != " . $this->supercoid);
             $return = $datas->toArray();
             foreach ($datas as $k => $data) {
                 // 支付宝是否授权
@@ -403,7 +405,7 @@ EOT;
                 }
 
                 // 变量赋值
-                $return[$k]['companyname']    = $data->company->name;
+                $return[$k]['companyname'] = $data->company->name;
                 $return[$k]['is_alipay_auth'] = $is_alipay_auth;
                 $return[$k]['is_wechat_auth'] = $is_wechat_auth;
             }
@@ -432,7 +434,7 @@ EOT;
 
     /**
      * 当前登录用户的微信支付授权-写入逻辑
-     * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|string|void
+     * @return false|Response|ResponseInterface|string|void
      */
     public function wechatauthAction()
     {
@@ -442,7 +444,7 @@ EOT;
             if ($config = $this->shopPaymentConfig) {
                 // 把原来的wechat配置项中的sub_mch_id写入即可，其他项保持不变
                 $config['wechatpay']['sub_mch_id'] = $this->request->get('sub_mch_id');
-                $model                             = $this->shopPayment;
+                $model = $this->shopPayment;
                 $model->setConfig($config);
                 if (!$model->save()) {
                     return $this->error($model);
@@ -457,7 +459,7 @@ EOT;
     /**
      * 为指定用户进行微信支付授权-写入逻辑
      * @param int $id
-     * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|string|void
+     * @return false|Response|ResponseInterface|string|void
      */
     public function wechatauthbyidAction(int $id)
     {
@@ -485,7 +487,7 @@ EOT;
 
     /**
      * 获取当前登录用户的微信支付授权
-     * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|string|void
+     * @return false|Response|ResponseInterface|string|void
      */
     public function getwechatauthAction()
     {
@@ -505,7 +507,7 @@ EOT;
     /**
      * 获取指定用户的微信支付授权
      * @param int $id
-     * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|string|void
+     * @return false|Response|ResponseInterface|string|void
      */
     public function getwechatauthbyidAction(int $id)
     {
@@ -537,7 +539,7 @@ EOT;
 
     /**
      * 获取支付宝授权有效期
-     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|void
+     * @return Response|ResponseInterface|void
      */
     public function getalipayauthAction()
     {

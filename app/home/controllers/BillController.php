@@ -1,39 +1,44 @@
 <?php
+
 namespace Multiple\Home\Controllers;
 
-use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\View;
 use Asa\Erp\TbBill;
+use Asa\Erp\TbCode;
 use Asa\Erp\TbSalesReceive;
+use Exception;
+
 
 /**
- * 对账单
- * ErrorCode 1118
+ * 对账单控制器
+ * Class BillController
+ * @package Multiple\Home\Controllers
  */
-class BillController extends CadminController {
-    public function initialize() {
-	    parent::initialize();
+class BillController extends CadminController
+{
+    public function initialize()
+    {
+        parent::initialize();
 
-	    $this->setModelName('Asa\\Erp\\TbBill');
+        $this->setModelName('Asa\\Erp\\TbBill');
     }
 
-    function addAction() {
+    function addAction()
+    {
         $params = $this->request->get('params');
         if (!$params) {
-            throw new \Exception("/11180101/参数错误/");
+            throw new Exception("/11180101/参数错误/");
         }
 
         // 转换成数组
         $submitData = json_decode($params, true);
 
-        //print_r($submitData);
-
+        // 采用事务处理
         $this->db->begin();
         try {
             $bill = new TbBill();
             $bill->status = 1;
             $bill->companyid = $this->companyid;
-            $bill->billno = \Asa\Erp\TbCode::getCode($this->companyid, "DZ", date("y"));
+            $bill->billno = TbCode::getCode($this->companyid, "DZ", date("y"));
             $bill->createtime = date('Y-m-d H:i:s');
             $bill->createstaff = $this->currentUser;
             $bill->amount = $submitData['form']['amount'];
@@ -45,23 +50,22 @@ class BillController extends CadminController {
             $bill->memo = $submitData['form']['memo'];
             $bill->amount_origin = $submitData['form']['amount_origin'];
 
-            if($bill->save()==false) {
-                throw new \Exception('/11180102/对账单生成失败/');
+            if ($bill->save() == false) {
+                throw new Exception('/11180102/对账单生成失败/');
             }
 
-            foreach($submitData['list'] as $receiveid) {
+            foreach ($submitData['list'] as $receiveid) {
                 $receive = TbSalesReceive::findFirstById($receiveid);
-                if($receive==false || $receive->companyid!=$this->companyid || $receive->billid>0) {
-                    throw new \Exception('/11180103/对账单明细不存在/');
+                if ($receive == false || $receive->companyid != $this->companyid || $receive->billid > 0) {
+                    throw new Exception('/11180103/对账单明细不存在/');
                 }
 
                 $receive->billid = $bill->id;
-                if($receive->save()==false) {
-                    throw new \Exception('/11180104/对账单明细添加失败/');
+                if ($receive->save() == false) {
+                    throw new Exception('/11180104/对账单明细添加失败/');
                 }
             }
-        }
-        catch(\Exception $e) {
+        } catch (Exception $e) {
             $this->db->rollback();
             throw $e;
         }
@@ -72,12 +76,14 @@ class BillController extends CadminController {
 
     /**
      * 加载对账单的明细数据
-     * @return [type] [description]
+     * @return false|string [type] [description]
+     * @throws Exception
      */
-    function loadAction() {
+    function loadAction()
+    {
         $bill = TbBill::findFirstById($_POST['id']);
-        if($bill==false || $bill->companyid!=$this->companyid) {
-            throw new \Exception('/11180201/对账单不存在/');
+        if ($bill == false || $bill->companyid != $this->companyid) {
+            throw new Exception('/11180201/对账单不存在/');
         }
 
         $rows = TbSalesReceive::find(
@@ -85,11 +91,11 @@ class BillController extends CadminController {
         );
 
         $result = [];
-        foreach($rows as $row) {
+        foreach ($rows as $row) {
             $array = $row->toArray();
             $array['sales'] = $row->sales->toArray();
             $result[] = $array;
         }
-        return $this->success(['form'=>$bill->toArray(), 'list'=>$result]);
+        return $this->success(['form' => $bill->toArray(), 'list' => $result]);
     }
 }

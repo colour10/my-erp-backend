@@ -2,10 +2,14 @@
 
 namespace Asa\Erp;
 
+use Phalcon\Mvc\Model;
 use Phalcon\Mvc\Model\Relation;
+use Phalcon\Mvc\Model\ResultsetInterface;
+
 /**
  * 商品表
- * ErrorCode 1113
+ * Class TbProduct
+ * @package Asa\Erp
  */
 class TbProduct extends BaseCompanyModel
 {
@@ -22,7 +26,7 @@ class TbProduct extends BaseCompanyModel
             '\Asa\Erp\TbCompany',
             'id',
             [
-                'alias' => 'company'
+                'alias' => 'company',
             ]
         );
 
@@ -31,7 +35,7 @@ class TbProduct extends BaseCompanyModel
             '\Asa\Erp\TbSeries',
             'id',
             [
-                'alias' => 'tbseries'
+                'alias' => 'tbseries',
             ]
         );
 
@@ -40,7 +44,7 @@ class TbProduct extends BaseCompanyModel
             '\Asa\Erp\TbBrand',
             'id',
             [
-                'alias' => 'brand'
+                'alias' => 'brand',
             ]
         );
 
@@ -49,7 +53,7 @@ class TbProduct extends BaseCompanyModel
             '\Asa\Erp\TbColortemplate',
             'id',
             [
-                'alias' => 'color'
+                'alias' => 'color',
             ]
         );
 
@@ -58,7 +62,7 @@ class TbProduct extends BaseCompanyModel
             '\Asa\Erp\TbBrandgroupchild',
             'id',
             [
-                'alias' => 'subbrand'
+                'alias' => 'subbrand',
             ]
         );
 
@@ -67,7 +71,7 @@ class TbProduct extends BaseCompanyModel
             '\Asa\Erp\TbProductType',
             'id',
             [
-                'alias' => 'type'
+                'alias' => 'type',
             ]
         );
 
@@ -76,7 +80,7 @@ class TbProduct extends BaseCompanyModel
             '\Asa\Erp\TbCurrency',
             'id',
             [
-                'alias' => 'fpcurrency'
+                'alias' => 'fpcurrency',
             ]
         );
 
@@ -85,7 +89,7 @@ class TbProduct extends BaseCompanyModel
             '\Asa\Erp\TbCurrency',
             'id',
             [
-                'alias' => 'wpcurrency'
+                'alias' => 'wpcurrency',
             ]
         );
 
@@ -94,7 +98,7 @@ class TbProduct extends BaseCompanyModel
             '\Asa\Erp\TbCurrency',
             'id',
             [
-                'alias' => 'npcurrency'
+                'alias' => 'npcurrency',
             ]
         );
 
@@ -103,7 +107,7 @@ class TbProduct extends BaseCompanyModel
             '\Asa\Erp\TbSaleType',
             'id',
             [
-                'alias' => 'saleType'
+                'alias' => 'saleType',
             ]
         );
 
@@ -112,7 +116,7 @@ class TbProduct extends BaseCompanyModel
             "\Asa\Erp\TbProductcode",
             "productid",
             [
-                'alias' => 'productCode'
+                'alias' => 'productCode',
             ]
         );
 
@@ -121,10 +125,10 @@ class TbProduct extends BaseCompanyModel
             "\Asa\Erp\TbProductSizeProperty",
             "productid",
             [
-                'alias' => 'productSizeProperty',
+                'alias'      => 'productSizeProperty',
                 'foreignKey' => [
                     // 关联字段存在性验证
-                    'action' => Relation::ACTION_CASCADE
+                    'action' => Relation::ACTION_CASCADE,
                 ],
             ]
         );
@@ -134,11 +138,11 @@ class TbProduct extends BaseCompanyModel
             "\Asa\Erp\TbProductstock",
             "productid",
             [
-                'alias' => 'productstock',
+                'alias'      => 'productstock',
                 'foreignKey' => [
                     // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message" => "/1003/商品信息存在库存，不能删除。/"
+                    'action'  => Relation::ACTION_RESTRICT,
+                    "message" => "/1003/商品信息存在库存，不能删除。/",
                 ],
             ]
         );
@@ -148,11 +152,11 @@ class TbProduct extends BaseCompanyModel
             "\Asa\Erp\TbOrderdetails",
             "productid",
             [
-                'alias' => 'orderdetails',
+                'alias'      => 'orderdetails',
                 'foreignKey' => [
                     // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message" => "/1003/商品信息存在订单记录，不能删除。/"
+                    'action'  => Relation::ACTION_RESTRICT,
+                    "message" => "/1003/商品信息存在订单记录，不能删除。/",
                 ],
             ]
         );
@@ -162,16 +166,17 @@ class TbProduct extends BaseCompanyModel
             "\Asa\Erp\TbProductMaterial",
             "productid",
             [
-                'alias' => 'productMaterial',
+                'alias'      => 'productMaterial',
                 'foreignKey' => [
                     // 关联字段存在性验证
-                    'action' => Relation::ACTION_CASCADE                ],
+                    'action' => Relation::ACTION_CASCADE],
             ]
         );
     }
 
-    public static function getInstance($productid) {
-        if(!isset(self::$box[$productid])) {
+    public static function getInstance($productid)
+    {
+        if (!isset(self::$box[$productid])) {
             self::$box[$productid] = TbProduct::findFirstById($productid);
         }
 
@@ -182,19 +187,21 @@ class TbProduct extends BaseCompanyModel
      * 设置货号
      * @param [type] $sizecontentid [description]
      * @param [type] $goods_code    [description]
+     * @return TbProductcode|Model
+     * @throws \Exception
      */
-    function setProjectCode($sizecontentid, $goods_code) {
-        if($this->companyid!=$this->getCompanyid()) {
+    function setProjectCode($sizecontentid, $goods_code)
+    {
+        if ($this->companyid != $this->getCompanyid()) {
             throw new \Exception("/11130101/非法访问。/");
 
         }
         $obj = TbProductcode::findFirst(
             sprintf("productid=%d and sizecontentid=%d", $this->id, $sizecontentid)
         );
-        if($obj!=false) {
+        if ($obj != false) {
             $obj->goods_code = $goods_code;
-        }
-        else {
+        } else {
             $obj = new TbProductcode();
             $obj->goods_code = $goods_code;
             $obj->sizecontentid = $sizecontentid;
@@ -202,7 +209,7 @@ class TbProduct extends BaseCompanyModel
             $obj->companyid = $this->companyid;
         }
 
-        if($obj->save()==false) {
+        if ($obj->save() == false) {
             throw new \Exception("/11130102/商品货号保存失败/");
         }
 
@@ -211,11 +218,13 @@ class TbProduct extends BaseCompanyModel
 
     /**
      * 解绑定同款不同色关系
-     * @return [type] [description]
+     * @return void [type] [description]
+     * @throws Exception
      */
-    function cancelBindColor() {
-        if($this->product_group=="") {
-            return ;
+    function cancelBindColor()
+    {
+        if ($this->product_group == "") {
+            return;
         }
 
         $products = TbProduct::find(
@@ -224,7 +233,7 @@ class TbProduct extends BaseCompanyModel
 
         foreach ($products as $key => $product) {
             $product->product_group = "";
-            if($product->update()==false) {
+            if ($product->update() == false) {
                 throw new Exception("#1002#解绑定同款不同色关系失败#");
             }
         }
@@ -233,13 +242,11 @@ class TbProduct extends BaseCompanyModel
     /**
      * 复制同款商品
      * @param  [type] $brandcolor [description]
-     * @param  [type] $wordcode_1 [description]
-     * @param  [type] $wordcode_2 [description]
-     * @param  [type] $wordcode_3 [description]
-     * @param  [type] $wordcode_4 [description]
-     * @return [type]             [description]
+     * @return TbProduct [type]             [description]
+     * @throws Exception
      */
-    function cloneByColor($row) {
+    function cloneByColor($row)
+    {
         $product = new TbProduct();
         $product->wordcode_1 = $row['wordcode_1'];
         $product->wordcode_2 = $row['wordcode_2'];
@@ -287,28 +294,29 @@ class TbProduct extends BaseCompanyModel
         $product->companyid = $this->companyid;
         $product->makestaff = $this->getDI()->get("currentUser");
         $product->maketime = date("Y-m-d H:i:s");
-        if($product->create()==false) {
+        if ($product->create() == false) {
             throw new Exception("/1002/复制商品失败/");
         }
 
         return $product;
     }
 
-    function syncMaterial($product) {
-        foreach($this->productMaterial as $row) {
-            if($row->delete()==false) {
+    function syncMaterial($product)
+    {
+        foreach ($this->productMaterial as $row) {
+            if ($row->delete() == false) {
                 throw new \Exception("/1001/更新商品材质信息失败/");
             }
         }
 
         $materials = $product->productMaterial;
-        foreach($materials as $material) {
+        foreach ($materials as $material) {
             $productMaterial = new TbProductMaterial();
             $productMaterial->productid = $this->id;
             $productMaterial->materialid = $material->materialid;
             $productMaterial->materialnoteid = $material->materialnoteid;
             $productMaterial->percent = $material->percent;
-            if($productMaterial->save()==false) {
+            if ($productMaterial->save() == false) {
                 throw new \Exception("/1001/添加商品材质信息失败/");
             }
         }
@@ -316,12 +324,13 @@ class TbProduct extends BaseCompanyModel
 
     /**
      * 获取同款多色的颜色分组数组
-     * @return [type] [description]
+     * @return array [type] [description]
      */
-    function getColorGroupArray() {
+    function getColorGroupArray()
+    {
         $result = [];
 
-        if($this->product_group=='') {
+        if ($this->product_group == '') {
             return $result;
         }
 
@@ -336,33 +345,35 @@ class TbProduct extends BaseCompanyModel
 
     /**
      * 获取同款多色的各个产品的产品数据
-     * @return [type] [description]
+     * @return array|ResultsetInterface [type] [description]
      */
-    function getColorGroupList() {
+    function getColorGroupList()
+    {
         $ids = array_keys($this->getColorGroupArray());
-        if(count($ids)>0) {
-            return static::findByIdString($ids,'id');
-        }
-        else {
+        if (count($ids) > 0) {
+            return static::findByIdString($ids, 'id');
+        } else {
             return [$this];
         }
     }
 
     /**
      * 获取商品的图片列表
-     * @return [type] [description]
+     * @return ResultsetInterface [type] [description]
      */
-    function getPictureList() {
+    function getPictureList()
+    {
         return TbPicture::find([
             sprintf("productid=%d", $this->id),
-            "order" => 'id desc'
+            "order" => 'id desc',
         ]);
     }
 
-    function getPriceList() {
+    function getPriceList()
+    {
         $prices = TbPrice::find([
             sprintf("companyid=%d", $this->companyid),
-            "order" => "displayindex asc"
+            "order" => "displayindex asc",
         ]);
 
         //特殊设置的价格
@@ -377,8 +388,8 @@ class TbProduct extends BaseCompanyModel
         $temparr = explode(",", $this->ageseason);
         $ageseasonid = $temparr[0];
 
-        foreach($prices as $row) {
-            if(isset($hashTable[$row->id]) && $hashTable[$row->id]->price>0) {
+        foreach ($prices as $row) {
+            if (isset($hashTable[$row->id]) && $hashTable[$row->id]->price > 0) {
                 $is_special = 1;
                 $price = $hashTable[$row->id]->price;
 
@@ -386,61 +397,59 @@ class TbProduct extends BaseCompanyModel
                     $value = TbExchangeRate::convert($this->companyid, $this->factorypricecurrency, $row->currencyid, $this->factoryprice);
 
                     if ($value['number'] > 0) {
-                        $costplus = round(($price-$value['number'])*100/$value['number'], 0);
+                        $costplus = round(($price - $value['number']) * 100 / $value['number'], 0);
                     } else {
                         $costplus = 0;
                     }
 
                     $result[] = [
-                        'id' => $row->id,
-                        'name' => $row->name,
+                        'id'         => $row->id,
+                        'name'       => $row->name,
                         'currencyid' => $row->currencyid,
-                        'discount' => '',
-                        'filter' => $row->filter,
-                        'autoprice' => 0,
-                        'price' => $price,
-                        "is_special"  => 1,
-                        "rate" => '',
-                        "costplus" => $costplus,
-                        "productid" => $this->id
+                        'discount'   => '',
+                        'filter'     => $row->filter,
+                        'autoprice'  => 0,
+                        'price'      => $price,
+                        "is_special" => 1,
+                        "rate"       => '',
+                        "costplus"   => $costplus,
+                        "productid"  => $this->id,
                     ];
+                } catch (\Exception $e) {
                 }
-                catch(\Exception $e) {
-                }
-            }
-            else {
+            } else {
                 $setting = TbPriceSetting::getPriceSetting($this->brandid, $ageseasonid, $this->producttypeid, $this->childbrand, $row->id);
-                if($setting!=false) {
+                if ($setting != false) {
                     $value = TbExchangeRate::convert($this->companyid, $this->wordpricecurrency, $row->currencyid, $this->wordprice);
                     //echo $price;exit;
-                    if($value==false) {
+                    if ($value == false) {
                         //没有设置汇率
                         //echo "2";
                         continue;
                     }
 
-                    $price = $row->getPriceValue($value["number"]*$setting->discount);
+                    $price = $row->getPriceValue($value["number"] * $setting->discount);
 
                     //计算Cost+
-                    $factoryprice = $this->factoryprice*$value["rate"];
+                    $factoryprice = $this->factoryprice * $value["rate"];
                     if ($factoryprice > 0) {
-                        $costplus = round(($price-$factoryprice)*100/$factoryprice,0);
+                        $costplus = round(($price - $factoryprice) * 100 / $factoryprice, 0);
                     } else {
                         $costplus = 0;
                     }
 
                     $result[] = [
-                        'id' => $row->id,
-                        'name' => $row->name,
+                        'id'         => $row->id,
+                        'name'       => $row->name,
                         'currencyid' => $row->currencyid,
-                        'discount' => $setting->discount,
-                        'filter' => $row->filter,
-                        'autoprice' => $price,
-                        'price' => $price,
-                        "is_special"  => 0,
-                        "rate" => $value["rate"],
-                        "costplus" => $costplus,
-                        "productid" => $this->id
+                        'discount'   => $setting->discount,
+                        'filter'     => $row->filter,
+                        'autoprice'  => $price,
+                        'price'      => $price,
+                        "is_special" => 0,
+                        "rate"       => $value["rate"],
+                        "costplus"   => $costplus,
+                        "productid"  => $this->id,
                     ];
                 }
             }
@@ -449,16 +458,23 @@ class TbProduct extends BaseCompanyModel
         return $result;
     }
 
-    function savePrice($priceid, $currencyid, $price) {
+    /**
+     * 保存价格
+     * @param int $priceid
+     * @param int $currencyid
+     * @param string $price
+     * @return bool
+     */
+    function savePrice($priceid, $currencyid, $price)
+    {
         $productPrice = TbProductPrice::findFirst(
             sprintf("productid=%d and priceid=%d", $this->id, $priceid)
         );
 
-        if($productPrice!=false) {
+        if ($productPrice != false) {
             $productPrice->currencyid = $currencyid;
             $productPrice->price = $price;
-        }
-        else {
+        } else {
             $productPrice = new TbProductPrice();
             $productPrice->currencyid = $currencyid;
             $productPrice->price = $price;
@@ -471,30 +487,35 @@ class TbProduct extends BaseCompanyModel
         return $productPrice->save();
     }
 
-    function updateMaterial($materials) {
+    function updateMaterial($materials)
+    {
         $rows = TbProductMaterial::find(
             sprintf("productid=%d", $this->id)
         );
-        foreach($rows as $row) {
-            if($row->delete()==false) {
+        foreach ($rows as $row) {
+            if ($row->delete() == false) {
                 throw new \Exception("/1001/更新商品材质信息失败/");
             }
         }
 
-        foreach($materials as $row) {
+        foreach ($materials as $row) {
             $productMaterial = new TbProductMaterial();
             $productMaterial->productid = $this->id;
             $productMaterial->materialid = $row["materialid"];
             $productMaterial->materialnoteid = $row["materialnoteid"];
             $productMaterial->percent = $row["percent"];
-            if($productMaterial->save()==false) {
+            if ($productMaterial->save() == false) {
                 throw new \Exception("/1001/添加商品材质信息失败/");
             }
         }
     }
 
-    function syncBrandSugest() {
-        if($this->brandcolor!="" && $this->colorname!=""){
+    /**
+     * 同步修改商品
+     */
+    function syncBrandSugest()
+    {
+        if ($this->brandcolor != "" && $this->colorname != "") {
             TbProductLastmodify::add($this->companyid, $this->brandid, $this->wordcode_3, $this->brandcolor, $this->colorname);
         }
     }
@@ -659,7 +680,7 @@ class TbProduct extends BaseCompanyModel
 
     /**
      * 获取同款不同色的商品
-     * 
+     *
      * @return array [
      *     'id' => picture
      * ]
@@ -672,8 +693,8 @@ class TbProduct extends BaseCompanyModel
             $pgArray = explode(',', $pg);
             $product = TbProduct::findFirst($pgArray[0]);
             $result[] = [
-                'id' => $product->id,
-                'picture' => $product->picture
+                'id'      => $product->id,
+                'picture' => $product->picture,
             ];
         }
 
@@ -688,7 +709,7 @@ class TbProduct extends BaseCompanyModel
         $ageseason = TbAgeseason::findFirst(
             [
                 "id in ($this->ageseason)",
-                "order" => "name desc, sessionmark asc"
+                "order" => "name desc, sessionmark asc",
             ]
         );
         $this->ageseason_year = $ageseason->name;

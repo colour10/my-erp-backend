@@ -1,40 +1,57 @@
 <?php
-namespace Asa\Erp;
-use Phalcon\Di\InjectionAwareInterface;
 
-class StaticReader implements InjectionAwareInterface {
+namespace Asa\Erp;
+
+use Phalcon\Config\Adapter\Php;
+use Phalcon\Di\InjectionAwareInterface;
+use Phalcon\DiInterface;
+
+/**
+ * 语言配置
+ * Class StaticReader
+ * @package Asa\Erp
+ */
+class StaticReader implements InjectionAwareInterface
+{
     private $di;
-    function __construct() {
+
+    function __construct()
+    {
     }
 
-    function get($source, $key) {
+    function get($source, $key)
+    {
         $language = $this->getDI()->get("session")->get("language");
-        $lang = new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
-        
-        if(isset($language['list'][$source])) {
+        $lang = new Php(APP_PATH . "/app/config/languages/{$language}.php");
+
+        if (isset($language['list'][$source])) {
             return $language['list'][$source][$key];
-        }
-        else {
+        } else {
             throw new Exception("/1001/数据源不存在{$source}/");
         }
     }
 
-    function label($key) {
+    function label($key)
+    {
         $language = $this->getDI()->get("session")->get("language");
-        $lang = new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
-        if(isset($lang[$key])) {
+        $lang = new Php(APP_PATH . "/app/config/languages/{$language}.php");
+        if (isset($lang[$key])) {
             return $lang[$key];
-        }
-        else {
+        } else {
             throw new Exception("/1001/数据源不存在{$key}/");
         }
     }
 
-    public function setDI($di) {
+    /**
+     * @param DiInterface $di
+     */
+    public function setDI($di)
+    {
         $this->di = $di;
     }
 
-    public function getDI() {
+    public function getDI()
+    {
         return $this->di;
     }
 }

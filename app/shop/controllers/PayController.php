@@ -3,6 +3,7 @@
 namespace Multiple\Shop\Controllers;
 
 use Asa\Erp\Util;
+use Phalcon\Http\Response;
 
 /**
  * 聚合支付类
@@ -16,7 +17,7 @@ class PayController extends AdminController
      * @param int $order_id
      * @return string|void
      */
-    public function payAction(int $order_id)
+    public function payAction($order_id)
     {
         // 逻辑
         $header = $this->request->getHeader('User-Agent');
@@ -36,9 +37,9 @@ class PayController extends AdminController
     /**
      * 聚合付款，生成二维码
      * @param int $order_id
-     * @return \Phalcon\Http\Response
+     * @return Response
      */
-    public function createqrcodeAction(int $order_id)
+    public function createqrcodeAction($order_id)
     {
         // 逻辑
         return Util::createQrcode("http://" . $this->config['app']['shop_host'] . "/pay/pay/" . $order_id);

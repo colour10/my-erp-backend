@@ -2,10 +2,6 @@
 
 namespace Asa\Erp;
 
-use Phalcon\Validation;
-use Phalcon\Validation\Validator\Uniqueness;
-use Phalcon\Validation\Validator\PresenceOf;
-use Phalcon\Validation\Validator\Regex;
 use Phalcon\Mvc\Model\Relation;
 
 /**
@@ -24,7 +20,7 @@ class TbCompany extends BaseModel
             '\Asa\Erp\TbCountry',
             'id',
             [
-                'alias' => 'country'
+                'alias' => 'country',
             ]
         );
 
@@ -34,12 +30,12 @@ class TbCompany extends BaseModel
             "\Asa\Erp\TbDepartment",
             "companyid",
             [
-                'alias' => 'departments',
+                'alias'      => 'departments',
                 'foreignKey' => [
                     // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message"    => "#1003#",
-                ]
+                    'action'  => Relation::ACTION_RESTRICT,
+                    "message" => "#1003#",
+                ],
             ]
         );
 
@@ -49,11 +45,11 @@ class TbCompany extends BaseModel
             "\Asa\Erp\TbProduct",
             "companyid",
             [
-                'alias' => 'products',
+                'alias'      => 'products',
                 'foreignKey' => [
                     // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message"    => $this->getValidateMessage('hasmany-foreign-message', 'product'),
+                    'action'  => Relation::ACTION_RESTRICT,
+                    "message" => $this->getValidateMessage('hasmany-foreign-message', 'product'),
                 ],
             ]
         );
@@ -63,7 +59,7 @@ class TbCompany extends BaseModel
             '\Asa\Erp\TbSaleport',
             'id',
             [
-                'alias' => 'shopSaleport'
+                'alias' => 'shopSaleport',
             ]
         );
     }

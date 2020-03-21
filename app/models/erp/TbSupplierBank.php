@@ -1,8 +1,9 @@
 <?php
+
 namespace Asa\Erp;
 
 /**
- * 
+ *
  */
 class TbSupplierBank extends BaseModel
 {

@@ -1,4 +1,5 @@
 <?php
+
 namespace Asa\Erp;
 
 /**
@@ -17,7 +18,7 @@ class TbSalesdetails extends BaseModel
             '\Asa\Erp\TbSales',
             'id',
             [
-                'alias' => 'sales'
+                'alias' => 'sales',
             ]
         );
 
@@ -26,16 +27,18 @@ class TbSalesdetails extends BaseModel
             '\Asa\Erp\TbProductstock',
             'id',
             [
-                'alias' => 'productstock'
+                'alias' => 'productstock',
             ]
         );
     }
 
-    function getLocalProductstock() {
+    function getLocalProductstock()
+    {
         return $this->sales->warehouse->getLocalStock($this->productstock);
     }
 
-    function preReduceStockExecute() {
+    function preReduceStockExecute()
+    {
         $productstock = $this->getLocalProductstock();
 
         $productstock->preReduceStockExecute($this->number, TbProductstock::SALES, $this->id);

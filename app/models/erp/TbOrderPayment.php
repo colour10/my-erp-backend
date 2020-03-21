@@ -2,12 +2,10 @@
 
 namespace Asa\Erp;
 
-use Phalcon\Validation;
-use Phalcon\Validation\Validator\Regex;
-use Phalcon\Mvc\Model\Relation;
-
 /**
  * 订单付款信息表
+ * Class TbOrderPayment
+ * @package Asa\Erp
  */
 class TbOrderPayment extends BaseModel
 {

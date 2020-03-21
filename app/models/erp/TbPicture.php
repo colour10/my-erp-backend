@@ -1,4 +1,5 @@
 <?php
+
 namespace Asa\Erp;
 
 /**
@@ -12,11 +13,12 @@ class TbPicture extends BaseModel
         $this->setSource('tb_picture');
     }
 
-    public function getRules() {
+    public function getRules()
+    {
         $factory = $this->getValidatorFactory();
         return [
-            'filename' => [$factory->presenceOf('wenjianming')],
-            'productid' => [$factory->tableid('shangpin', false)]
+            'filename'  => [$factory->presenceOf('wenjianming')],
+            'productid' => [$factory->tableid('shangpin', false)],
         ];
     }
 }

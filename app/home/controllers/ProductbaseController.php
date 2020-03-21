@@ -6,6 +6,8 @@ use Asa\Erp\TbProductBase;
 
 /**
  * 商品国际码库
+ * Class ProductbaseController
+ * @package Multiple\Home\Controllers
  */
 class ProductbaseController extends BaseController
 {

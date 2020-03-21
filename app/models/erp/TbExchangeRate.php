@@ -1,9 +1,11 @@
 <?php
+
 namespace Asa\Erp;
 
 /**
  * 汇率表
- ErrorCode 1105
+ * Class TbExchangeRate
+ * @package Asa\Erp
  */
 class TbExchangeRate extends BaseModel
 {
@@ -15,37 +17,43 @@ class TbExchangeRate extends BaseModel
 
     /**
      * 货币汇率转化
-     * @param  [type] $from   [description]
-     * @param  [type] $to     [description]
-     * @param  [type] $number [description]
-     * @return [type]         [description]
+     * @param $companyid
+     * @param $from
+     * @param $to
+     * @param $number
+     * @param string $datetime
+     * @return array [type]         [description]
+     * @throws \Exception
      */
-    public static function convert($companyid, $from, $to, $number, $datetime='') {
+    public static function convert($companyid, $from, $to, $number, $datetime = '')
+    {
         $rate = self::getExchangeRate($companyid, $from, $to, $datetime);
         return [
-            "number" => round($rate*$number,2),
-            "rate" => $rate
+            "number" => round($rate * $number, 2),
+            "rate"   => $rate,
         ];
     }
 
-    public function getRules() {
+    public function getRules()
+    {
         return [
-            'rate' => $this->getValidatorFactory()->numericality('huilv'),
+            'rate'          => $this->getValidatorFactory()->numericality('huilv'),
             'currency_from' => $this->getValidatorFactory()->presenceOf('huichuhuobi'),
-            'currency_to' => $this->getValidatorFactory()->presenceOf('huiruhuobi')
+            'currency_to'   => $this->getValidatorFactory()->presenceOf('huiruhuobi'),
         ];
     }
 
-    public static function getExchangeRate($companyid, $from, $to, $datetime='') {
-        if($datetime=='') {
+    public static function getExchangeRate($companyid, $from, $to, $datetime = '')
+    {
+        if ($datetime == '') {
             $datetime = date('Y-m-d H:i:s');
         }
 
-        if($from==$to) {
+        if ($from == $to) {
             return 1;
         }
 
-        if(!preg_match("#^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$#",$datetime)) {
+        if (!preg_match("#^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$#", $datetime)) {
             throw new \Exception("/11050101/时间格式不合法/");
         }
         $exchange = static::findFirst(
@@ -59,10 +67,9 @@ class TbExchangeRate extends BaseModel
             )
         );
 
-        if($exchange==false) {
+        if ($exchange == false) {
             throw new \Exception("/11050102/请先设置汇率({$from}=>{$to})。/");
-        }
-        else {
+        } else {
             return $exchange->rate;
         }
     }

@@ -1,8 +1,11 @@
 <?php
+
 namespace Asa\Erp;
 
 /**
- * 
+ * 生成订单号表
+ * Class TbCode
+ * @package Asa\Erp
  */
 class TbCode extends BaseModel
 {
@@ -12,17 +15,26 @@ class TbCode extends BaseModel
         $this->setSource('tb_code');
     }
 
-    public static function getCode($companyid, $codetype, $month, $length=4) {
+    /**
+     * 生成订单号并最终返回
+     * @param int $companyid 公司id
+     * @param string $codetype 订单类型
+     * @param string $month 时间
+     * @param int $length 长度
+     * @return string
+     * @throws \Exception
+     */
+    public static function getCode($companyid, $codetype, $month, $length = 4)
+    {
         $object = TbCode::findFirst([
             sprintf("companyid=%d and codetype='%s' and month='%s'", $companyid, addslashes($codetype), addslashes($month)),
-            "order" => "id desc"
+            "order" => "id desc",
         ]);
 
-        if($object==false) {
+        if ($object == false) {
             $codeindex = 1;
-        }
-        else {
-            $codeindex = $object->codeindex +1;
+        } else {
+            $codeindex = $object->codeindex + 1;
         }
 
         $newobj = new TbCode();
@@ -30,10 +42,9 @@ class TbCode extends BaseModel
         $newobj->codetype = $codetype;
         $newobj->month = $month;
         $newobj->codeindex = $codeindex;
-        if($newobj->create()!=false) {
+        if ($newobj->create() != false) {
             return sprintf("%s%s%0{$length}d", $codetype, $month, $codeindex);
-        }
-        else {
+        } else {
             throw new \Exception("/1001/创建订单号失败/");
         }
     }

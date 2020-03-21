@@ -1,4 +1,5 @@
 <?php
+
 namespace Asa\Erp;
 
 /**
@@ -16,15 +17,16 @@ class TbOrderBrand extends BaseModel
             "\Asa\Erp\TbOrderBrandDetail",
             "orderbrandid",
             [
-                'alias' => 'orderbranddetail'
+                'alias' => 'orderbranddetail',
             ]
         );
     }
 
-    function getOrderDetail() {
+    public function getOrderDetail()
+    {
         $data = [
             'form' => $this->toArray(),
-            'list'=>[]
+            'list' => [],
         ];
 
         // 循环添加数据
@@ -35,36 +37,22 @@ class TbOrderBrand extends BaseModel
         return $data;
     }
 
-    function getDetailList() {
+    public function getDetailList()
+    {
         return TbOrderBrandDetail::find([
             sprintf("orderbrandid=%d", $this->id),
-            "order" => "productid asc"
+            "order" => "productid asc",
         ]);
     }
 
-    /*function getOrderList() {
-        $orderids = [];
-        foreach ($this->orderbranddetail as $k => $orderdetail) {
-            $orderids[] = $orderdetail->orderid;
-        }
-
-        if(count($orderids)>0) {
-            return TbOrder::find(
-                sprintf("id in (%s)", implode(',', $orderids))
-            );
-        }
-        else {
-            return [];
-        }
-    }*/
-
-    function getOrderList() {
+    public function getOrderList()
+    {
         $sql = sprintf("SELECT distinct orderid FROM tb_order_brand_detail WHERE orderbrandid=%d", $this->id);
         $rows = $this->getDI()->get('db')->fetchAll($sql);
 
         $result = [];
 
-        if(count($rows)>0) {
+        if (count($rows) > 0) {
             $array = [];
             foreach ($rows as $row) {
                 $array[] = $row['orderid'];
@@ -78,13 +66,14 @@ class TbOrderBrand extends BaseModel
         return $result;
     }
 
-    function getShippingList() {
+    public function getShippingList()
+    {
         $sql = sprintf("SELECT distinct shippingid FROM tb_shipping_detail WHERE orderbrandid=%d", $this->id);
         $rows = $this->getDI()->get('db')->fetchAll($sql);
 
         $result = [];
 
-        if(count($rows)>0) {
+        if (count($rows) > 0) {
             $array = [];
             foreach ($rows as $row) {
                 $array[] = $row['shippingid'];

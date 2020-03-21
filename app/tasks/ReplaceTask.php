@@ -2,23 +2,25 @@
 
 use Asa\Models\Temp\TempTbAliases;
 use Asa\Models\Temp\TempTbBrand;
+use Asa\Models\Temp\TempTbBrandgroupchild;
+use Asa\Models\Temp\TempTbBrandgroupchildProperty2;
 use Asa\Models\Temp\TempTbSeries;
 use Asa\Models\Temp\TempTbSeries2;
 use Asa\Models\Temp\TempTbSizecontent;
-use Asa\Models\Temp\TempTbBrandgroupchild;
-use Asa\Models\Temp\TempTbBrandgroupchildProperty2;
+use Phalcon\Cli\Task;
 
 /**
  * 临时表替换
  * Class ReplaceTask
  */
-class ReplaceTask extends \Phalcon\CLI\Task
+class ReplaceTask extends Task
 {
     /**
      * 临时表替换真实数据
      * @return false|string
      */
-    public function mainAction() {
+    public function mainAction()
+    {
         // 逻辑
         // 采用事务处理
         $this->db->begin();

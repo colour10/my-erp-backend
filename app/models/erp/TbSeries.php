@@ -1,6 +1,9 @@
 <?php
+
 namespace Asa\Erp;
+
 use Phalcon\Mvc\Model\Relation;
+
 /**
  * 品牌系列，品牌相关数据
  */
@@ -16,11 +19,11 @@ class TbSeries extends BaseModel
             "\Asa\Erp\TbProduct",
             "series",
             [
-                'alias' => 'products',
+                'alias'      => 'products',
                 'foreignKey' => [
                     // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message"    => "/1003/系列已经使用，不能删除/"
+                    'action'  => Relation::ACTION_RESTRICT,
+                    "message" => "/1003/系列已经使用，不能删除/",
                 ],
             ]
         );

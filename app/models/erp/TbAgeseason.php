@@ -2,6 +2,9 @@
 
 namespace Asa\Erp;
 
+use Phalcon\Mvc\Model;
+use Phalcon\Mvc\Model\Resultset;
+
 /**
  * 年代季节
  */
@@ -16,7 +19,7 @@ class TbAgeseason extends BaseModel
     public function getRules()
     {
         return [
-            'name' => $this->getValidatorFactory()->year('nianfen'),
+            'name'        => $this->getValidatorFactory()->year('nianfen'),
             'sessionmark' => $this->getValidatorFactory()->presenceOf('fabuji'),
         ];
     }
@@ -39,7 +42,7 @@ class TbAgeseason extends BaseModel
      * 取出当前时间的上一个年代季节
      * @param string $mark 季节
      * @param string $name 年份
-     * @return bool|\Phalcon\Mvc\Model\Resultset|\Phalcon\Mvc\Phalcon\Mvc\Model
+     * @return bool|Resultset|Model
      */
     public static function getPrevAgeseason($mark, $name)
     {

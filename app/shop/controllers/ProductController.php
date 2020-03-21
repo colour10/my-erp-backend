@@ -8,6 +8,9 @@ use Asa\Erp\TbColortemplate;
 use Asa\Erp\TbProduct;
 use Asa\Erp\TbProductSearch;
 use Asa\Erp\TbSizecontent;
+use Phalcon\Http\Response;
+use Phalcon\Http\ResponseInterface;
+use Phalcon\Mvc\View;
 
 /**
  * 产品操作类
@@ -27,7 +30,7 @@ class ProductController extends AdminController
 
     /**
      * 商品详情页
-     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|void
+     * @return Response|ResponseInterface|View|void
      */
     public function detailAction()
     {
@@ -79,10 +82,10 @@ class ProductController extends AdminController
         }
 
         // 定义面包屑导航
-        $brandgroup      = TbBrandgroup::findFirstById($product->brandgroupid);
+        $brandgroup = TbBrandgroup::findFirstById($product->brandgroupid);
         $brandgroupchild = TbBrandgroupchild::findFirstById($product->childbrand);
-        $name            = $this->getlangfield('name');
-        $breadcrumb      = '<li><a href="/">' . $this->getValidateMessage('shouye') . '</a></li><li><a href="/brandgroup/detail/' . $product->brandgroupid . '">' . $brandgroup->$name . '</a></li><li><a href="/childproductgroup/detail/' . $product->childbrand . '">' . $brandgroupchild->$name . '</a></li>';
+        $name = $this->getlangfield('name');
+        $breadcrumb = '<li><a href="/">' . $this->getValidateMessage('shouye') . '</a></li><li><a href="/brandgroup/detail/' . $product->brandgroupid . '">' . $brandgroup->$name . '</a></li><li><a href="/childproductgroup/detail/' . $product->childbrand . '">' . $brandgroupchild->$name . '</a></li>';
 
         // 推送给模板
         $this->view->setVars([
@@ -103,7 +106,7 @@ class ProductController extends AdminController
      * @param int $productid
      * @return string
      */
-    public function getRealPrice(int $productid)
+    public function getRealPrice($productid)
     {
         // 逻辑
         if (!$productModel = TbProduct::findFirstById($productid)) {

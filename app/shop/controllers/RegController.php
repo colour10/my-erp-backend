@@ -4,6 +4,7 @@ namespace Multiple\Shop\Controllers;
 
 use Asa\Erp\TbMember;
 use Asa\Erp\Util;
+use Phalcon\Mvc\Model;
 
 /**
  * 会员注册类
@@ -88,7 +89,7 @@ class RegController extends AdminController
         // 模板赋值
         $this->view->setVars([
             'email' => $email,
-            'c' => $c,
+            'c'     => $c,
         ]);
     }
 
@@ -96,9 +97,9 @@ class RegController extends AdminController
      * 检查$email和$companyid的合法性，是否需要注册逻辑的验证
      * @param string $email
      * @param int $companyid
-     * @return \Phalcon\Mvc\Model|string
+     * @return Model|string
      */
-    public function checkIfInvitationCorrect(string $email, int $companyid)
+    public function checkIfInvitationCorrect($email, $companyid)
     {
         // 逻辑
         // 判断是否存在该email和companyid
@@ -110,7 +111,7 @@ class RegController extends AdminController
         if (!$memberModel = TbMember::findFirst([
             "email = :email: and companyid = :companyid:",
             'bind' => [
-                'email' => $email,
+                'email'     => $email,
                 'companyid' => Util::strCode($companyid, 'DECODE'),
             ],
         ])) {

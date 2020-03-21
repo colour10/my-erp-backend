@@ -1,23 +1,24 @@
 <?php
-use GuzzleHttp\Client;
-use Asa\Erp\TbProduct;
+
 use Asa\Erp\TbCompany;
+use Asa\Erp\TbProduct;
 use Asa\Erp\TbProductstockSearch;
 use Asa\Erp\TbSizecontent;
-
+use Phalcon\Cli\Task;
 
 
 /**
  *
  * Class ReplaceTask
  */
-class TestTask extends \Phalcon\CLI\Task
+class TestTask extends Task
 {
     /**
      * 生成逻辑
      * companyid、brandid、wordcode_3唯一
      */
-    public function mainAction() {
+    public function mainAction()
+    {
         $companyid = 1;
 
         $this->pushCompanyStock($companyid);
@@ -48,32 +49,33 @@ class TestTask extends \Phalcon\CLI\Task
         ];*/
     }
 
-    private function pushCompanyStock($companyid) {
+    private function pushCompanyStock($companyid)
+    {
         $company = TbCompany::findFirstById($companyid);
-        if($company==false) {
+        if ($company == false) {
             throw new \Exception("/21000101/公司不存在/");
         }
 
-        if($company->oms_warehouseids=='' || $company->oms_saleport<=0) {
+        if ($company->oms_warehouseids == '' || $company->oms_saleport <= 0) {
             throw new \Exception("/21000102/没有设置同步仓库或者销售端口/");
         }
 
         //合并计算多个仓库的库存
         $stocks = TbProductstockSearch::find([
             sprintf("warehouseid in (%s) and defective_level=1", $company->oms_warehouseids),
-            "order" => "productid asc"
+            "order" => "productid asc",
         ]);
 
         $result = [];
-        foreach($stocks as $row) {
+        foreach ($stocks as $row) {
             $datalist = $row->getDataList();
-            foreach($datalist as $line) {
+            foreach ($datalist as $line) {
                 $key = $row->productid . ',' . $line['sizecontentid'];
-                if(!isset($result[$key])) {
+                if (!isset($result[$key])) {
                     $result[$key] = 0;
                 }
 
-                $result[$key] += $line['number']-$line['reserve_number'];
+                $result[$key] += $line['number'] - $line['reserve_number'];
             }
         }
 
@@ -82,16 +84,16 @@ class TestTask extends \Phalcon\CLI\Task
         $hashSizecontent = $this->getSizecontents();
 
         $json = [];
-        foreach($result as $key=>$row) {
+        foreach ($result as $key => $row) {
             $temp = explode(',', $key);
             $product = TbProduct::getInstance($temp[0]);
-            if($product==false) {
+            if ($product == false) {
                 continue;
             }
 
             $json[] = [
-                "Sku" => $product->wordcode.'|'.$hashSizecontent[$temp[1]],
-                "Num" => $row
+                "Sku" => $product->wordcode . '|' . $hashSizecontent[$temp[1]],
+                "Num" => $row,
             ];
         }
 
@@ -99,17 +101,18 @@ class TestTask extends \Phalcon\CLI\Task
 
         $client = new GuzzleHttp\Client();
         $res = $client->post("http://10.10.10.4:3002/oms/stock/stockupdate", [
-            'form_params' => ["params"=>json_encode($json)]
+            'form_params' => ["params" => json_encode($json)],
         ]);
         echo $res->getBody();
 
     }
 
-    private function getSizecontents() {
+    private function getSizecontents()
+    {
         $result = [];
 
         $list = TbSizecontent::find();
-        foreach($list as $row) {
+        foreach ($list as $row) {
             $result[$row->id] = $row->name;
         }
 

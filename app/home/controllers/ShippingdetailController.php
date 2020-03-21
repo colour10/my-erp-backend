@@ -1,17 +1,18 @@
 <?php
-namespace Multiple\Home\Controllers;
 
-use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\View;
-use Asa\Erp\TbShippingDetail;
+namespace Multiple\Home\Controllers;
 
 /**
  * 发货单明细表
+ * Class ShippingdetailController
+ * @package Multiple\Home\Controllers
  */
-class ShippingdetailController extends AdminController {
-    public function initialize() {
-	    parent::initialize();
+class ShippingdetailController extends AdminController
+{
+    public function initialize()
+    {
+        parent::initialize();
 
-	    $this->setModelName('Asa\\Erp\\TbShippingDetail');
+        $this->setModelName('Asa\\Erp\\TbShippingDetail');
     }
 }

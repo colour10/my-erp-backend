@@ -84,10 +84,10 @@ class TbBuycar extends BaseModel
             "\Asa\Erp\TbMember",
             "id",
             [
-                'alias' => 'member',
+                'alias'      => 'member',
                 'foreignKey' => [
                     // 关联字段禁止自动删除
-                    'action' => Relation::ACTION_RESTRICT,
+                    'action'  => Relation::ACTION_RESTRICT,
                     "message" => $this->getValidateMessage('belongsto-foreign-message', 'member'),
                 ],
             ]
@@ -99,10 +99,10 @@ class TbBuycar extends BaseModel
             "\Asa\Erp\TbProductSearch",
             "id",
             [
-                'alias' => 'product',
+                'alias'      => 'product',
                 'foreignKey' => [
                     // 关联字段禁止自动删除
-                    'action' => Relation::ACTION_RESTRICT,
+                    'action'  => Relation::ACTION_RESTRICT,
                     "message" => $this->getValidateMessage('belongsto-foreign-message', 'product'),
                 ],
             ]
@@ -119,8 +119,7 @@ class TbBuycar extends BaseModel
 
         return $this->validate($validator);
     }
-
-
+    
     /**
      * 重写多语言版本配置读取函数
      * @param string languages下面语言文件字段的名称 如template模块下面的uniqueness

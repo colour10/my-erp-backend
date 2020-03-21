@@ -1,21 +1,23 @@
 <?php
-namespace Multiple\Home\Controllers;
 
-use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\View;
-use Asa\Erp\TbSaleType;
+namespace Multiple\Home\Controllers;
 
 /**
  * 销售属性表
+ * Class SaletypeController
+ * @package Multiple\Home\Controllers
  */
-class SaletypeController extends AdminController {
-    public function initialize() {
-	    parent::initialize();
+class SaletypeController extends AdminController
+{
+    public function initialize()
+    {
+        parent::initialize();
 
-	    $this->setModelName('Asa\\Erp\\TbSaleType');
+        $this->setModelName('Asa\\Erp\\TbSaleType');
     }
 
-    function before_page() {
+    function before_page()
+    {
         $_POST["__orderby"] = "displayindex asc";
     }
 }

@@ -2,16 +2,16 @@
 
 use Phalcon\Acl;
 use Phalcon\Events\Event;
-use Phalcon\Mvc\User\Plugin;
 use Phalcon\Mvc\Dispatcher;
-use Phalcon\Acl\Adapter\Memory as AclList;
-use Phalcon\Acl\Resource;
-use Phalcon\Acl\Role;
-use Asa\Erp\Util;
-use Asa\Erp\TbPermissionAction;
+use Phalcon\Mvc\User\Plugin;
 
 class SecurityPlugin extends Plugin
 {
+    /**
+     * @param Event $event
+     * @param Dispatcher $dispatcher
+     * @return bool
+     */
     public function beforeExecuteRoute(Event $event, Dispatcher $dispatcher)
     {
         // Check whether the "auth" variable exists in session to define the active role
@@ -27,14 +27,14 @@ class SecurityPlugin extends Plugin
         $action = $dispatcher->getActionName();
 
         //执行重定向
-        if($action=='index' && $controller!='index') {
-            header("location:/#/".$controller);
+        if ($action == 'index' && $controller != 'index') {
+            header("location:/#/" . $controller);
             return false;
         }
 
         //
         $auth = $this->getDI()->get("auth");
-        if($auth && isset($auth['is_super']) && $auth['is_super']=='1') {
+        if ($auth && isset($auth['is_super']) && $auth['is_super'] == '1') {
             return true;
         }
 
@@ -52,7 +52,7 @@ class SecurityPlugin extends Plugin
             header('Access-Control-Allow-Origin: *');
             header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
             header('Access-Control-Allow-Methods: Get,Post,Put,OPTIONS');
-            $result = array();
+            $result = [];
             $result["code"] = "201";
             $result["messages"] = ["Access deny."];
             $result["controller"] = $controller;

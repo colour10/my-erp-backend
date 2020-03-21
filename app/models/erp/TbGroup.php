@@ -2,7 +2,6 @@
 
 namespace Asa\Erp;
 
-use Asa\Erp\Util;
 use Phalcon\Mvc\Model\Relation;
 
 /**
@@ -21,10 +20,10 @@ class TbGroup extends BaseModel
             "\Asa\Erp\TbPermissionGroup",
             "groupid",
             [
-                'alias' => 'permissionGroups',
+                'alias'      => 'permissionGroups',
                 'foreignKey' => [
                     // 关联字段禁止自动删除
-                    'action' => Relation::ACTION_CASCADE
+                    'action' => Relation::ACTION_CASCADE,
                 ],
             ]
         );
@@ -35,20 +34,21 @@ class TbGroup extends BaseModel
             '\Asa\Erp\TbUser',
             'groupid',
             [
-                'alias' => 'users',
+                'alias'      => 'users',
                 'foreignKey' => [
                     // 关联字段禁止自动删除
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message"    => "/1003/用户组使用中，不能删除/",
+                    'action'  => Relation::ACTION_RESTRICT,
+                    "message" => "/1003/用户组使用中，不能删除/",
                 ],
             ]
         );
     }
 
-    public function getRules() {
+    public function getRules()
+    {
         $factory = $this->getValidatorFactory();
         return [
-            'group_name' => $factory->presenceOf('zumingcheng')
+            'group_name' => $factory->presenceOf('zumingcheng'),
         ];
     }
 

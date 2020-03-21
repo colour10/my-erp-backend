@@ -1,5 +1,7 @@
 <?php
+
 namespace Asa\Erp;
+
 use Phalcon\Mvc\Model\Relation;
 
 /**
@@ -17,11 +19,11 @@ class TbProperty extends BaseModel
             "\Asa\Erp\TbBrandgroupchildProperty",
             "propertyid",
             [
-                'alias' => 'brandgroupchildproperties',
+                'alias'      => 'brandgroupchildproperties',
                 'foreignKey' => [
                     // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message"    => "/1003/属性已经使用，不能删除/"
+                    'action'  => Relation::ACTION_RESTRICT,
+                    "message" => "/1003/属性已经使用，不能删除/",
                 ],
             ]
         );

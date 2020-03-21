@@ -4,6 +4,8 @@ namespace Asa\Erp;
 
 /**
  * 销售单收款信息表
+ * Class TbSalesReceive
+ * @package Asa\Erp
  */
 class TbSalesReceive extends BaseModel
 {
@@ -20,7 +22,7 @@ class TbSalesReceive extends BaseModel
             '\Asa\Erp\TbSales',
             'id',
             [
-                'alias' => 'sales'
+                'alias' => 'sales',
             ]
         );
     }

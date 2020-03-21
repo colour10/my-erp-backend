@@ -42,7 +42,7 @@ abstract class CommonTask extends Task
 
         // 初始化日志地址
         $root_path = dirname(dirname(__FILE__));
-        $folder    = $root_path . '/cache/logs/';
+        $folder = $root_path . '/cache/logs/';
         if (!file_exists($folder)) {
             Util::Directory($folder);
         }

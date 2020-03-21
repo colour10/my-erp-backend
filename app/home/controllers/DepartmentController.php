@@ -1,33 +1,38 @@
 <?php
+
 namespace Multiple\Home\Controllers;
 
-use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\View;
 use Asa\Erp\TbDepartment;
 use Asa\Erp\Util;
 
 /**
  * 部门表
+ * Class DepartmentController
+ * @package Multiple\Home\Controllers
  */
-class DepartmentController extends CadminController {
-    public function initialize() {
-	    parent::initialize();
+class DepartmentController extends CadminController
+{
+    public function initialize()
+    {
+        parent::initialize();
 
-	    $this->setModelName('Asa\\Erp\\TbDepartment');
+        $this->setModelName('Asa\\Erp\\TbDepartment');
     }
-    
-    function indexAction() {
+
+    function indexAction()
+    {
     }
-        
-    private function createNode($label, $id, $description) {
-        return array(
-            "label" => $label,
+
+    private function createNode($label, $id, $description)
+    {
+        return [
+            "label"       => $label,
             "description" => $description,
-            "id" => $id,
-            "children" => array()
-        );   
+            "id"          => $id,
+            "children"    => [],
+        ];
     }
-    
+
     /**
      * 取出公司内部部门目录树
      * @return false|string
@@ -45,7 +50,7 @@ class DepartmentController extends CadminController {
 
         // 交给下面的格式化为目录树处理并返回
         return $this->success(Util::format_tree($departments->toArray()));
-    }    
+    }
 
     /**
      * 公司内部部门一维数组
@@ -72,10 +77,10 @@ class DepartmentController extends CadminController {
     {
         // 取出公司下面的所有部门
         $departments = TbDepartment::find([
-            sprintf("companyid=%d", $this->companyid)
+            sprintf("companyid=%d", $this->companyid),
         ]);
 
-        if(!$departments->toArray()) {
+        if (!$departments->toArray()) {
             $msg = $this->getValidateMessage('department-list', 'template', 'notexist');
             return $this->error([$msg]);
         }

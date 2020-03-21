@@ -2,10 +2,10 @@
 
 namespace Asa\Erp;
 
-use Phalcon\Mvc\Model\Relation;
-
 /**
  * 部门表
+ * Class TbDepartment
+ * @package Asa\Erp
  */
 class TbDepartment extends BaseModel
 {
@@ -20,15 +20,16 @@ class TbDepartment extends BaseModel
             '\Asa\Erp\TbCompany',
             'id',
             [
-                'alias' => 'company'
+                'alias' => 'company',
             ]
         );
     }
 
-    public function getRules() {
+    public function getRules()
+    {
         $factory = $this->getValidatorFactory();
         return [
-            'name' => $factory->presenceOf('bumenmingcheng')
+            'name' => $factory->presenceOf('bumenmingcheng'),
         ];
     }
 }

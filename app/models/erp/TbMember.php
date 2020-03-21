@@ -17,7 +17,7 @@ class TbMember extends BaseCompanyModel
     {
         $factory = $this->getValidatorFactory();
         return [
-            'name' => $factory->PresenceOf('niandaijijie'),
+            'name'  => $factory->PresenceOf('niandaijijie'),
             'email' => $factory->email('email'),
         ];
     }

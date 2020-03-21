@@ -9,6 +9,9 @@ use Asa\Erp\TbProductSearch;
 use Asa\Erp\TbProductstock;
 use Asa\Erp\TbSizecontent;
 use Asa\Erp\Util;
+use Phalcon\Http\Response;
+use Phalcon\Http\ResponseInterface;
+use Phalcon\Mvc\View;
 use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
 
 /**
@@ -29,7 +32,7 @@ class BrandController extends AdminController
 
     /**
      * 获取当前品牌下面所有的商品列表，获取商品名称，明天继续做
-     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|void
+     * @return Response|ResponseInterface|View|void
      */
     public function detailAction()
     {
@@ -56,7 +59,7 @@ class BrandController extends AdminController
         // 查找隶属于当前分类的商品
         $productsModel = TbProductSearch::find([
             'conditions' => 'brandid = :brandid: AND companyid = ' . $this->currentCompany,
-            'bind' => ['brandid' => $id],
+            'bind'       => ['brandid' => $id],
         ]);
 
         // 加工数据
@@ -81,7 +84,7 @@ class BrandController extends AdminController
             // 尺码
             $sizecontents = ($item->sizetopid && $array) ? TbProductstock::sum([
                 sprintf("warehouseid in (%s) and defective_level=0 and productid = %s", implode(',', $array), $item->productid),
-                "group" => 'productid, sizecontentid',
+                "group"  => 'productid, sizecontentid',
                 "column" => 'number',
             ])->toArray() : [];
             // 尺码加入名称，还有最大尺码记录数
@@ -120,9 +123,9 @@ class BrandController extends AdminController
         // 创建分页对象，使用数组分页
         $paginator = new PaginatorArray(
             [
-                "data" => $products,
+                "data"  => $products,
                 "limit" => 10,
-                "page" => $currentPage,
+                "page"  => $currentPage,
             ]
         );
 
@@ -135,10 +138,10 @@ class BrandController extends AdminController
         // 推送给模板
         // 再加上当前object对象
         $this->view->setVars([
-            'page' => $page,
-            'id' => $id,
-            'breadcrumb' => $breadcrumb,
-            'title' => $brand->$name,
+            'page'                 => $page,
+            'id'                   => $id,
+            'breadcrumb'           => $breadcrumb,
+            'title'                => $brand->$name,
             'max_sum_sizecontents' => $max_sum_sizecontents,
         ]);
     }
@@ -149,7 +152,7 @@ class BrandController extends AdminController
      * @param int $id
      * @return string
      */
-    public function getdetailAction(int $id)
+    public function getdetailAction($id)
     {
         // 逻辑
         $brand = TbBrand::find('id=' . $id);

@@ -2,13 +2,16 @@
 
 namespace Multiple\Home\Controllers;
 
-use Phalcon\Paginator\Adapter\Model as PaginatorModel;
-use Asa\Erp\TbDepartment;
-use Asa\Erp\TbUser;
-use Phalcon\Mvc\Controller;
+use Exception;
 use Phalcon\Db\Column;
-use  Phalcon\Mvc\Model\Message;
+use Phalcon\Paginator\Adapter\Model as PaginatorModel;
+use ReflectionException;
 
+/**
+ * 后台控制器基类
+ * Class AdminController
+ * @package Multiple\Home\Controllers
+ */
 class AdminController extends BaseController
 {
     protected $modelName;
@@ -19,7 +22,7 @@ class AdminController extends BaseController
 
     public function initialize()
     {
-	    parent::initialize();
+        parent::initialize();
     }
 
     function setModelName($modelName)
@@ -33,7 +36,8 @@ class AdminController extends BaseController
         $this->list_columns = $columns;
     }
 
-    function setLanguageFlag($boolValue) {
+    function setLanguageFlag($boolValue)
+    {
         $this->is_language = $boolValue;
     }
 
@@ -71,29 +75,26 @@ class AdminController extends BaseController
         $primaryKeys = $metaData->getPrimaryKeyAttributes($model);
         $fieldTypes = $metaData->getDataTypes($model);
 
-        //var_dump($fieldTypes);
-
         $array = $model->getSearchBaseCondition();
 
         $keyword = $this->request->get("keyword", "trim");
         $keywords = [];
-        foreach ($fieldTypes as $key=>$value) {
-            if ($fieldTypes[$key] == Column::TYPE_INTEGER || $fieldTypes[$key] == Column::TYPE_BIGINTEGER ) {
+        foreach ($fieldTypes as $key => $value) {
+            if ($fieldTypes[$key] == Column::TYPE_INTEGER || $fieldTypes[$key] == Column::TYPE_BIGINTEGER) {
 
-                if(isset($_REQUEST[$key]) && $_REQUEST[$key]!=="" ) {
+                if (isset($_REQUEST[$key]) && $_REQUEST[$key] !== "") {
                     $array[] = sprintf("%s=%d", $key, $_REQUEST[$key]);
                 }
             } else { //($fieldTypes[$key] == Column::TYPE_CHAR || $fieldTypes[$key] == Column::TYPE_VARCHAR) {
-                if(isset($_REQUEST[$key]) && $_REQUEST[$key]!="" ) {
+                if (isset($_REQUEST[$key]) && $_REQUEST[$key] != "") {
                     $array[] = sprintf("%s='%s'", $key, addslashes($_REQUEST[$key]));
                 }
                 $keywords[] = sprintf("%s like '%%%s%%'", $key, addslashes($keyword));
             }
         }
 
-        if($keyword!="" && count($keywords)>0) {
+        if ($keyword != "" && count($keywords) > 0) {
             $array[] = '(' . implode(" or ", $keywords) . ')';
-            //print_r($keywords);
         }
 
         return implode(' and ', $array);
@@ -106,7 +107,7 @@ class AdminController extends BaseController
         $primaryKeys = $metaData->getPrimaryKeyAttributes($model);
         $fieldTypes = $metaData->getDataTypes($model);
 
-        $array = array();
+        $array = [];
 
         foreach ($primaryKeys as $key) {
             if ($fieldTypes[$key] == Column::TYPE_INTEGER || $fieldTypes[$key] == Column::TYPE_BIGINTEGER) {
@@ -121,18 +122,18 @@ class AdminController extends BaseController
 
     public function indexAction()
     {
-	}
+    }
 
-	function pageAction() {
+    function pageAction()
+    {
         $this->before_page();
         $params = [$this->getSearchCondition()];
-        if(isset($_POST['__orderby'])) {
+        if (isset($_POST['__orderby'])) {
             $params['order'] = $_POST['__orderby'];
         }
-        //print_r($params);
 
-	    $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
-	    $result = $findFirst->invokeArgs(null, [$params]);
+        $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
+        $result = $findFirst->invokeArgs(null, [$params]);
 
         $page = $this->request->getPost("page", "int", 1);
         $pageSize = $this->request->getPost("pageSize", "int", 20);
@@ -149,56 +150,61 @@ class AdminController extends BaseController
         $pageObject = $paginator->getPaginate();
 
         $data = [];
-        foreach($pageObject->items as $row) {
+        foreach ($pageObject->items as $row) {
             $data[] = $this->recordToArray($row);
         }
 
         $pageinfo = [
             //"previous"      => $pageObject->previous,
-            "current"       => $pageObject->current,
-            "totalPages"    => $pageObject->total_pages,
+            "current"    => $pageObject->current,
+            "totalPages" => $pageObject->total_pages,
             //"next"          => $pageObject->next,
-            "total"    => $pageObject->total_items,
-            "pageSize"     => $pageSize
+            "total"      => $pageObject->total_items,
+            "pageSize"   => $pageSize,
         ];
-        echo $this->reportJson(array("data"=>$data, "pagination" => $pageinfo),200,[]);
-	}
+        echo $this->reportJson(["data" => $data, "pagination" => $pageinfo], 200, []);
+    }
 
-	function editAction() {
-	    //print_r($this->dispatcher->getParams());exit;
-	    $this->doEdit();
-	}
+    function editAction()
+    {
+        $this->doEdit();
+    }
 
-	function deleteAction() {
-	    return $this->doDelete();
-	}
+    function deleteAction()
+    {
+        return $this->doDelete();
+    }
 
-	function addAction() {
+    function addAction()
+    {
         try {
             $this->doAdd();
-        }
-	    catch(\Exception $e) {
+        } catch (Exception $e) {
             echo $this->error($e->getMessage());
         }
-	}
+    }
 
-	function doAdd() {
-	    if($this->request->isPost()) {
-	        //更新数据库
-	        $row = $this->getModelObject();
+    /**
+     * 增加
+     */
+    function doAdd()
+    {
+        if ($this->request->isPost()) {
+            // 更新数据库
+            $row = $this->getModelObject();
 
             $this->before_add();
 
-	        $fields = $this->getAttributes();
+            $fields = $this->getAttributes();
 
-	        foreach($fields as $name) {
-	            if(isset($_POST[$name])) {
-	                $row->$name = $_POST[$name];
-	            }
-	        }
+            foreach ($fields as $name) {
+                if (isset($_POST[$name])) {
+                    $row->$name = $_POST[$name];
+                }
+            }
 
-            $result = array("code"=>200, "messages" => array());
-	        if ($row->create() === false) {
+            $result = ["code" => 200, "messages" => []];
+            if ($row->create() === false) {
                 $messages = $row->getMessages();
 
                 foreach ($messages as $message) {
@@ -207,22 +213,19 @@ class AdminController extends BaseController
             } else {
                 $result['is_add'] = "1";
                 $result['id'] = $row->id;
-                //$message['idd'] = "999";
             }
 
             echo json_encode($result);
         }
     }
 
-
-    function doEdit()
+    /**
+     * 修改
+     */
+    public function doEdit()
     {
         if ($this->request->isPost()) {
-            //锟斤拷锟斤拷锟斤拷锟捷匡拷
-            //$findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
-            //$row = $findFirst->invokeArgs(null, array($this->getCondition()));
-
-            $row = call_user_func_array("{$this->modelName}::findFirst",[$this->getCondition()]);
+            $row = call_user_func_array("{$this->modelName}::findFirst", [$this->getCondition()]);
             if ($row != false) {
                 $this->before_edit($row);
 
@@ -230,11 +233,10 @@ class AdminController extends BaseController
                 foreach ($fields as $name) {
                     if (isset($_POST[$name])) {
                         $row->$name = $_POST[$name];
-                        //echo $name."<>";
                     }
                 }
 
-                $result = array("code" => 200, "messages" => array());
+                $result = ["code" => 200, "messages" => []];
                 if ($row->update() === false) {
                     $messages = $row->getMessages();
 
@@ -244,62 +246,71 @@ class AdminController extends BaseController
                 }
 
                 echo json_encode($result);
-    	    }
-    	    else {
-    	        $result = array("code"=>200, "messages" => array("数据不存在"));
+            } else {
+                $result = ["code" => 200, "messages" => ["数据不存在"]];
 
                 echo json_encode($result);
                 exit;
-    	    }
-	    }
-	}
+            }
+        }
+    }
 
-	function doDelete() {
-	    $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
-	    $row = $findFirst->invokeArgs(null, array($this->getCondition()));
+    /**
+     * 删除
+     * @return false|string
+     * @throws ReflectionException
+     */
+    public function doDelete()
+    {
+        $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
+        $row = $findFirst->invokeArgs(null, [$this->getCondition()]);
 
-	    $result = array("code"=>200, "messages" => array());
-	    if($row!=false) {
+        $result = ["code" => 200, "messages" => []];
+        if ($row != false) {
             try {
                 $this->before_delete($row);
 
                 if ($row->delete() == false) {
                     return $this->error($row);
                 }
-            }
-            catch(\Exception $e) {
+            } catch (Exception $e) {
                 return $this->error($e->getMessage());
             }
         }
         return $this->success();
     }
 
-    function before_edit($row) {
+    function before_edit($row)
+    {
 
     }
 
-    function before_add() {
+    function before_add()
+    {
 
     }
 
-    function before_delete($row) {
+    function before_delete($row)
+    {
 
     }
 
-    function before_page() {
+    function before_page()
+    {
 
     }
 
-    function recordToArray($row) {
+    function recordToArray($row)
+    {
         return $row->toArray();
     }
 
-    function injectParam($name, $value, $method='POST') {
+    function injectParam($name, $value, $method = 'POST')
+    {
         $_REQUEST[$name] = $value;
-        if($method=='POST') {
+        if ($method == 'POST') {
             $_POST[$name] = $value;
-        }
-        else {
+        } else {
             $_GET[$name] = $value;
         }
     }

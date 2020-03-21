@@ -1,8 +1,9 @@
 <?php
+
 namespace Asa\Erp;
 
 /**
- * 
+ * 商品价格表
  */
 class TbProductPrice extends BaseModel
 {

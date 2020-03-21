@@ -1,8 +1,11 @@
 <?php
+
 namespace Asa\Erp;
 
 /**
  * 附带配件
+ * Class TbProductparts
+ * @package Asa\Erp
  */
 class TbProductparts extends BaseModel
 {

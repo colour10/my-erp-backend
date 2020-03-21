@@ -1,5 +1,7 @@
 <?php
+
 namespace Asa\Erp;
+
 use Phalcon\Mvc\Model\Relation;
 
 /**
@@ -17,17 +19,18 @@ class TbMaterial extends BaseModel
             "\Asa\Erp\TbProductMaterial",
             "materialid",
             [
-                'alias' => 'productMaterial',
+                'alias'      => 'productMaterial',
                 'foreignKey' => [
                     // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message"    => "/1003/材质已经使用，不能删除/"
+                    'action'  => Relation::ACTION_RESTRICT,
+                    "message" => "/1003/材质已经使用，不能删除/",
                 ],
             ]
         );
     }
 
-    public function getRules() {
+    public function getRules()
+    {
         return [
             'name_cn' => $this->getValidatorFactory()->presenceOfMultiple('mingcheng')
             //'code' => $this->getValidatorFactory()->presenceOf('caizhidaima') 
@@ -41,7 +44,7 @@ class TbMaterial extends BaseModel
     {
         if ($this->materialnoteids) {
             $rows = TbMaterialnote::find([
-                sprintf("id IN (%s)", $this->materialnoteids)
+                sprintf("id IN (%s)", $this->materialnoteids),
             ]);
 
             $lang = $this->getDI()->get("session")->get("language");

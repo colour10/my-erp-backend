@@ -1,4 +1,5 @@
 <?php
+
 namespace Asa\Erp;
 
 /**
@@ -12,11 +13,12 @@ class TbProductMemo extends BaseModel
         $this->setSource('tb_product_memo');
     }
 
-    public function getRules() {
+    public function getRules()
+    {
         $factory = $this->getValidatorFactory();
         return [
-            'name_cn' => [$factory->presenceOfMultiple('mingcheng'), $factory->uniqueness('mingcheng',false)],
-            'name_en' => $factory->uniqueness('mingcheng')
+            'name_cn' => [$factory->presenceOfMultiple('mingcheng'), $factory->uniqueness('mingcheng', false)],
+            'name_en' => $factory->uniqueness('mingcheng'),
         ];
     }
 }

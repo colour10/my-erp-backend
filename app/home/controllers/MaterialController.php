@@ -1,21 +1,24 @@
 <?php
+
 namespace Multiple\Home\Controllers;
 
-use Phalcon\Paginator\Adapter\Model as PaginatorModel;
-use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\View;
 use Asa\Erp\TbMaterial;
+use Phalcon\Paginator\Adapter\Model as PaginatorModel;
 
 /**
  * 基础资料，材质表
+ * Class MaterialController
+ * @package Multiple\Home\Controllers
  */
-class MaterialController extends ZadminController {
+class MaterialController extends ZadminController
+{
     private $orderBy = 'code ASC';
 
-    public function initialize() {
-	    parent::initialize();
+    public function initialize()
+    {
+        parent::initialize();
 
-	    $this->setModelName('Asa\\Erp\\TbMaterial');
+        $this->setModelName('Asa\\Erp\\TbMaterial');
     }
 
     public function getSearchCondition()
@@ -50,7 +53,9 @@ class MaterialController extends ZadminController {
             $this->orderBy = $sort . $orderMethod;
         }
     }
-    public function pageAction() {
+
+    public function pageAction()
+    {
         $this->before_page();
         $params = [$this->getSearchCondition()];
         $params['order'] = $this->orderBy;
@@ -72,7 +77,7 @@ class MaterialController extends ZadminController {
         $pageObject = $paginator->getPaginate();
 
         $data = [];
-        foreach($pageObject->items as $row) {
+        foreach ($pageObject->items as $row) {
             $rowData = $this->recordToArray($row);
             $rowData['materialnotes'] = $row->getMaterialnotes();
             $data[] = $rowData;
@@ -82,9 +87,9 @@ class MaterialController extends ZadminController {
             "current"    => $pageObject->current,
             "totalPages" => $pageObject->total_pages,
             "total"      => $pageObject->total_items,
-            "pageSize"   => $pageSize
+            "pageSize"   => $pageSize,
         ];
-        echo $this->reportJson(array("data"=>$data, "pagination" => $pageinfo),200,[]);
+        echo $this->reportJson(["data" => $data, "pagination" => $pageinfo], 200, []);
     }
 
 
@@ -117,8 +122,8 @@ class MaterialController extends ZadminController {
             }
             $material->materialnoteids = implode(',', $materialnoteids);
 
-            $result = array("code" => 200, "messages" => array());
-            if($material->update() === false) {
+            $result = ["code" => 200, "messages" => []];
+            if ($material->update() === false) {
                 $messages = $row->getMessages();
 
                 foreach ($messages as $message) {

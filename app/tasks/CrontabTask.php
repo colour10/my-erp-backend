@@ -1,14 +1,12 @@
 <?php
-/*
- * php cli task
- */
 
-use Asa\Erp\TbProduct;
 use Asa\Erp\TbCompany;
+use Asa\Erp\TbProduct;
 use Asa\Erp\TbProductSearch;
 use Asa\Erp\Util;
+use Phalcon\Cli\Task;
 
-class CrontabTask extends \Phalcon\CLI\Task
+class CrontabTask extends Task
 {
     public function mainAction()
     {

@@ -1,16 +1,19 @@
 <?php
+
 namespace Multiple\Home\Controllers;
-use Asa\Erp\TbOrderdetails;
-use Asa\Erp\TbCompany;
-use Asa\Erp\Util;
-use Phalcon\Mvc\Controller;
-use Asa\Erp\TbOrder;
-use Asa\Erp\TbProduct;
+
+use Asa\Erp\Sql;
 use Asa\Erp\TbCode;
+use Asa\Erp\TbOrder;
+use Asa\Erp\TbOrderdetails;
+use Asa\Erp\TbProduct;
+use Asa\Erp\Util;
+use Exception;
 
 /**
  * 订单主表
- * ErrorCode 1111
+ * Class OrderController
+ * @package Multiple\Home\Controllers
  */
 class OrderController extends BaseController
 {
@@ -19,7 +22,8 @@ class OrderController extends BaseController
         parent::initialize();
     }
 
-    public function pageAction() {
+    public function pageAction()
+    {
         $params = [$this->getSearchCondition()];
         $params["order"] = "id desc";
 
@@ -40,45 +44,45 @@ class OrderController extends BaseController
         $pageObject = $paginator->getPaginate();
 
         $data = [];
-        foreach($pageObject->items as $row) {
+        foreach ($pageObject->items as $row) {
             $data[] = $row->toArray();
         }
 
         $pageinfo = [
             //"previous"      => $pageObject->previous,
-            "current"       => $pageObject->current,
-            "totalPages"    => $pageObject->total_pages,
+            "current"    => $pageObject->current,
+            "totalPages" => $pageObject->total_pages,
             //"next"          => $pageObject->next,
-            "total"    => $pageObject->total_items,
-            "pageSize"     => $pageSize
+            "total"      => $pageObject->total_items,
+            "pageSize"   => $pageSize,
         ];
-        echo $this->reportJson(array("data"=>$data, "pagination" => $pageinfo),200,[]);
+        echo $this->reportJson(["data" => $data, "pagination" => $pageinfo], 200, []);
     }
 
-    function getSearchCondition() {
-        $where = array(
-            sprintf("companyid=%d", $this->companyid)
-        );
+    function getSearchCondition()
+    {
+        $where = [
+            sprintf("companyid=%d", $this->companyid),
+        ];
 
-        if(isset($_POST["keyword"]) && trim($_POST["keyword"])!="") {
+        if (isset($_POST["keyword"]) && trim($_POST["keyword"]) != "") {
             $where[] = sprintf("orderno like '%%%s%%'", addslashes(strtoupper($_POST["keyword"])));
         }
 
         $names = ['bookingid', 'ageseason', 'supplierid', 'seasontype', 'bussinesstype', 'property'];
         foreach ($names as $name) {
-            if(isset($_POST[$name]) && preg_match("#^\d+(,\d+)*$#", $_POST[$name])) {
-                $where[] = \Asa\Erp\Sql::isInclude($name, $_POST[$name]);
+            if (isset($_POST[$name]) && preg_match("#^\d+(,\d+)*$#", $_POST[$name])) {
+                $where[] = Sql::isInclude($name, $_POST[$name]);
             }
         }
 
         $names = ['brandids'];
         foreach ($names as $name) {
-            if(isset($_POST[$name]) && preg_match("#^\d+(,\d+)*$#", $_POST[$name])) {
-                $where[] = \Asa\Erp\Sql::isMatch($name, $_POST[$name]);
+            if (isset($_POST[$name]) && preg_match("#^\d+(,\d+)*$#", $_POST[$name])) {
+                $where[] = Sql::isMatch($name, $_POST[$name]);
             }
         }
 
-        //echo implode(' and ', $where);
         return implode(' and ', $where);
     }
 
@@ -91,7 +95,7 @@ class OrderController extends BaseController
         // 判断是否有params参数提交过来
         $params = $this->request->get('params');
         if (!$params) {
-            throw new \Exception("/1001/参数错误/");
+            throw new Exception("/1001/参数错误/");
         }
 
         // 转换成数组
@@ -111,8 +115,8 @@ class OrderController extends BaseController
             $order = TbOrder::findFirst(
                 sprintf("id=%d and companyid=%d", $orderid, $this->companyid)
             );
-            if(!$order || $order->status!=1) {
-                throw new \Exception("/1001/订单不存在/");
+            if (!$order || $order->status != 1) {
+                throw new Exception("/1001/订单不存在/");
             }
 
             $order->bookingid = $form['bookingid'];
@@ -141,8 +145,7 @@ class OrderController extends BaseController
                 // 验证类错误给出提示
                 return $this->error($order);
             }
-        }
-        else {
+        } else {
             // 没有订单号就新增
             $order = new TbOrder();
             $order->bookingid = $form['bookingid'];
@@ -172,7 +175,7 @@ class OrderController extends BaseController
             // 生成订单号
 
             $order->orderno = TbCode::getCode($this->companyid, "CB", date("y"));
-            if($order->create() === false) {
+            if ($order->create() === false) {
                 //返回失败信息
                 $this->db->rollback();
                 return $this->error($order);
@@ -193,18 +196,17 @@ class OrderController extends BaseController
             $detail = TbOrderdetails::findFirst(
                 sprintf("companyid=%d and orderid=%d and productid=%d and sizecontentid=%d", $this->companyid, $order->id, $item['productid'], $item['sizecontentid'])
             );
-            if($detail!=false) {
+            if ($detail != false) {
                 $detail->number = $item['number'];
                 $detail->discount = $item['discount'];
                 $detail->factoryprice = $item['factoryprice'];
                 $detail->currencyid = $product->factorypricecurrency;
                 $detail->wordprice = $product->wordprice;
-                if($detail->update()==false) {
+                if ($detail->update() == false) {
                     $this->db->rollback();
-                    throw new \Exception("/1002/更新订单明细失败/");
+                    throw new Exception("/1002/更新订单明细失败/");
                 }
-            }
-            else {
+            } else {
 
                 $detail = new TbOrderdetails();
                 $detail->productid = $item['productid'];
@@ -217,10 +219,10 @@ class OrderController extends BaseController
                 $detail->wordprice = $product->wordprice;
                 $detail->createdate = date("Y-m-d H:i:s");
                 $detail->orderid = $order->id;
-                $detail->orderbrandid= 0;
-                if($detail->create()==false) {
+                $detail->orderbrandid = 0;
+                if ($detail->create() == false) {
                     $this->db->rollback();
-                    throw new \Exception("/1002/添加订单明细失败/");
+                    throw new Exception("/1002/添加订单明细失败/");
                 }
             }
 
@@ -228,22 +230,21 @@ class OrderController extends BaseController
         }
 
         //清除不存在的详情id
-        if(count($detail_id_array)>0) {
+        if (count($detail_id_array) > 0) {
             $details = TbOrderdetails::find(
                 sprintf("orderid=%d and id not in(%s)", $order->id, implode(",", $detail_id_array))
             );
-        }
-        else {
+        } else {
             $details = TbOrderdetails::find(
                 sprintf("orderid=%d", $order->id)
             );
         }
 
-        foreach($details as $detail) {
-            if($detail->orderbrandid>0) {
+        foreach ($details as $detail) {
+            if ($detail->orderbrandid > 0) {
                 //已经确认过的订单明细不能删除
                 $this->db->rollback();
-                throw new \Exception("/1001/不能删除已经加入外部订单的订单明细/");
+                throw new Exception("/1001/不能删除已经加入外部订单的订单明细/");
             }
             $detail->delete();
         }
@@ -266,7 +267,7 @@ class OrderController extends BaseController
         );
 
         // 判断订单是否存在
-        if ($order!=false) {
+        if ($order != false) {
             echo $this->success($order->getOrderDetail());
         }
     }
@@ -274,6 +275,7 @@ class OrderController extends BaseController
     /**
      * 订单删除
      * @return false|string
+     * @throws Exception
      */
     public function deleteAction()
     {
@@ -282,57 +284,58 @@ class OrderController extends BaseController
             sprintf("id=%d and companyid=%d", $_POST["id"], $this->companyid)
         );
         // 判断订单是否存在
-        if ($order!=false) {
+        if ($order != false) {
             $this->db->begin();
             $orderdetails = $order->orderdetails;
             foreach ($orderdetails as $detail) {
-                if($detail->brand_number>0) {
+                if ($detail->brand_number > 0) {
                     //已经加入外部订单的订单明细不能删除
                     $this->db->rollback();
-                    throw new \Exception("/11110301/不能删除已经加入外部订单的订单明细/");
+                    throw new Exception("/11110301/不能删除已经加入外部订单的订单明细/");
                 }
 
-                if($detail->delete()==false) {
+                if ($detail->delete() == false) {
                     $this->db->rollback();
-                    throw new \Exception("/11110302/删除订单明细失败。/");
+                    throw new Exception("/11110302/删除订单明细失败。/");
                 }
             }
 
-            if($order->delete()==false) {
+            if ($order->delete() == false) {
                 $this->db->rollback();
-                    throw new \Exception("/11110303/订单不能删除/");
+                throw new Exception("/11110303/订单不能删除/");
             }
 
             $this->db->commit();
 
             return $this->success();
-        }
-        else {
-            throw new \Exception("/11110304/订单不存在/");
+        } else {
+            throw new Exception("/11110304/订单不存在/");
         }
     }
 
     /**
      * 订单完结
-     * @return [type] [description]
+     * @return void [type] [description]
+     * @throws Exception
      */
-    public function finishAction() {
+    public function finishAction()
+    {
         $orderid = (int)$_POST['id'];
         // 根据orderid查询出当前订单以及订单详情的所有信息
         $order = TbOrder::findFirstById($orderid);
-        if($order!=false && $order->companyid==$this->companyid) {
+        if ($order != false && $order->companyid == $this->companyid) {
             $order->finish();
             $this->success();
-        }
-        else {
-            throw new \Exception("/11110101/订单不存在/");
+        } else {
+            throw new Exception("/11110101/订单不存在/");
         }
     }
 
     /**
      *
      */
-    function searchdetailAction() {
+    function searchdetailAction()
+    {
         $details = TbOrderdetails::find(
             sprintf("companyid=%d and orderbrandid=0", $this->companyid)
         );
@@ -342,26 +345,27 @@ class OrderController extends BaseController
 
     /**
      * 品牌订单导入订单的时候调用
-     * @return [type] [description]
+     * @return false|string [type] [description]
      */
-    function importAction() {
+    function importAction()
+    {
         $conditions = [
-            sprintf("companyid=%d", $this->companyid)
+            sprintf("companyid=%d", $this->companyid),
         ];
 
-        if(isset($_POST['ageseasonid']) && $_POST['ageseasonid']>0) {
+        if (isset($_POST['ageseasonid']) && $_POST['ageseasonid'] > 0) {
             $conditions[] = sprintf("ageseason=%d", $_POST['ageseasonid']);
         }
 
-        if(isset($_POST['bookingid']) && $_POST['bookingid']!="") {
+        if (isset($_POST['bookingid']) && $_POST['bookingid'] != "") {
             $conditions[] = sprintf("bookingid in (%s)", $_POST['bookingid']);
         }
 
-        if(isset($_POST['brandid']) && $_POST['brandid']>0) {
+        if (isset($_POST['brandid']) && $_POST['brandid'] > 0) {
             $conditions[] = sprintf("(brandids='%d' or brandids like '%%,%s%%' or brandids like '%%%s,%%')", $_POST['brandid'], $_POST['brandid'], $_POST['brandid']);
         }
 
-        if(isset($_POST['orderid']) && $_POST['orderid']>0) {
+        if (isset($_POST['orderid']) && $_POST['orderid'] > 0) {
             $conditions[] = sprintf("id = %d", $_POST['orderid']);
         }
 
@@ -372,31 +376,35 @@ class OrderController extends BaseController
         );
 
         //查询订单明细
-        $array = \Asa\Erp\Util::recordListColumn($orders, "id");
-        if(count($array)>0) {
+        $array = Util::recordListColumn($orders, "id");
+        if (count($array) > 0) {
             $rows = TbOrderdetails::find([
                 sprintf("orderid in (%s)", implode(",", $array)),
-                "order" => "productid, orderid"
+                "order" => "productid, orderid",
             ]);
 
             $details = [];
-            foreach($rows as $detail) {
+            foreach ($rows as $detail) {
                 $details[] = $detail->toArray();
             }
-        }
-        else {
+        } else {
             $details = [];
         }
-        return $this->success(["orders"=>$orders->toArray(), "details"=>$details]);
+        return $this->success(["orders" => $orders->toArray(), "details" => $details]);
     }
 
-    function orderbrandlistAction() {
+    /**
+     * 订单列表
+     * @return false|string
+     * @throws Exception
+     */
+    function orderbrandlistAction()
+    {
         $order = TbOrder::findFirstById($_POST['id']);
-        if($order!=false && $order->companyid==$this->companyid) {
+        if ($order != false && $order->companyid == $this->companyid) {
             return $this->success($order->getOrderbrandList());
-        }
-        else {
-            throw new \Exception("/11110201/订单不存在/");
+        } else {
+            throw new Exception("/11110201/订单不存在/");
         }
     }
 }

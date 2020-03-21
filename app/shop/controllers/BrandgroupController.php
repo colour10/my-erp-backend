@@ -9,6 +9,9 @@ use Asa\Erp\TbProductSearch;
 use Asa\Erp\TbProductstock;
 use Asa\Erp\TbSizecontent;
 use Asa\Erp\Util;
+use Phalcon\Http\Response;
+use Phalcon\Http\ResponseInterface;
+use Phalcon\Mvc\View;
 use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
 
 /**
@@ -53,7 +56,7 @@ class BrandgroupController extends AdminController
 
     /**
      * 获取当前主分类产品列表
-     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|void
+     * @return Response|ResponseInterface|View|void
      */
     public function detailAction()
     {
@@ -99,7 +102,7 @@ class BrandgroupController extends AdminController
         $company = TbCompany::findFirstById($member['companyid']);
         // 获取销售端口
         $saleport = $company->shopSaleport;
-        $array    = $saleport ? Util::recordListColumn($saleport->saleportWarehouses, 'warehouseid') : [];
+        $array = $saleport ? Util::recordListColumn($saleport->saleportWarehouses, 'warehouseid') : [];
 
         // 需要拿到每个商品下面所有的尺码，库存数
         $products = $productsModel->toArray();
@@ -118,7 +121,7 @@ class BrandgroupController extends AdminController
             ])->toArray() : [];
             // 尺码加入名称，还有最大尺码记录数
             foreach ($sizecontents as $key => $value) {
-                $sizecontentname                       = ($TbSizecontentModel = TbSizecontent::findFirstById($value['sizecontentid'])) ? $TbSizecontentModel->name : '';
+                $sizecontentname = ($TbSizecontentModel = TbSizecontent::findFirstById($value['sizecontentid'])) ? $TbSizecontentModel->name : '';
                 $sizecontents[$key]['sizecontentname'] = $sizecontentname;
             }
             // 尺码组赋值
@@ -136,8 +139,8 @@ class BrandgroupController extends AdminController
             for ($i = 0; $i < $count - 1; $i++) {
                 for ($j = 0; $j < $count - $i - 1; $j++) {
                     if ($products[$j]['sum_sizecontents'] > $products[$j + 1]['sum_sizecontents']) {
-                        $temp             = $products[$j];
-                        $products[$j]     = $products[$j + 1];
+                        $temp = $products[$j];
+                        $products[$j] = $products[$j + 1];
                         $products[$j + 1] = $temp;
                     }
                 }
@@ -204,8 +207,8 @@ class BrandgroupController extends AdminController
     {
         // 逻辑
         // 判断是否超出了6个，如果超过了6个，那么取前5个，最后一个放more
-        $list     = TbBrandgroup::find();
-        $count    = count($list);
+        $list = TbBrandgroup::find();
+        $count = count($list);
         $leftlist = [];
         if ($count > 5) {
             // 剩下多少条
@@ -283,7 +286,7 @@ class BrandgroupController extends AdminController
      * @param int $id
      * @return string
      */
-    public function getdetailAction(int $id)
+    public function getdetailAction($id)
     {
         // 逻辑
         $brandGroup = TbBrandgroup::find('id=' . $id);

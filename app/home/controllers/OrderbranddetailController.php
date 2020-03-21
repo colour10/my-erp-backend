@@ -1,17 +1,18 @@
 <?php
-namespace Multiple\Home\Controllers;
 
-use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\View;
-use Asa\Erp\TbOrderBrandDetail;
+namespace Multiple\Home\Controllers;
 
 /**
  * 品牌订单明细
+ * Class OrderbranddetailController
+ * @package Multiple\Home\Controllers
  */
-class OrderbranddetailController extends AdminController {
-    public function initialize() {
-	    parent::initialize();
+class OrderbranddetailController extends AdminController
+{
+    public function initialize()
+    {
+        parent::initialize();
 
-	    $this->setModelName('Asa\\Erp\\TbOrderBrandDetail');
+        $this->setModelName('Asa\\Erp\\TbOrderBrandDetail');
     }
 }

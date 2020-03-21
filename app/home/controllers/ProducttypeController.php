@@ -1,17 +1,18 @@
 <?php
-namespace Multiple\Home\Controllers;
 
-use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\View;
-use Asa\Erp\TbProductType;
+namespace Multiple\Home\Controllers;
 
 /**
  * 商品属性表
+ * Class ProducttypeController
+ * @package Multiple\Home\Controllers
  */
-class ProducttypeController extends ZadminController {
-    public function initialize() {
-	    parent::initialize();
+class ProducttypeController extends ZadminController
+{
+    public function initialize()
+    {
+        parent::initialize();
 
-	    $this->setModelName('Asa\\Erp\\TbProductType');
+        $this->setModelName('Asa\\Erp\\TbProductType');
     }
 }

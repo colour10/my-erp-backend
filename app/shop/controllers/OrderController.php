@@ -13,6 +13,8 @@ use Asa\Erp\TbShoporderCommon;
 use Asa\Erp\TbSizecontent;
 use Asa\Erp\Util;
 use Phalcon\Http\Response;
+use Phalcon\Http\ResponseInterface;
+use Phalcon\Mvc\View;
 use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
 use Yansongda\Pay\Log;
 
@@ -37,9 +39,9 @@ class OrderController extends AdminController
     /**
      * 订单详情首页
      * @param int $id
-     * @return false|Response|\Phalcon\Http\ResponseInterface|string|void
+     * @return false|Response|ResponseInterface|string|void
      */
-    public function detailAction(int $id)
+    public function detailAction($id)
     {
         // 如果是post请求
         if ($member = $this->member && $this->request->isPost()) {
@@ -104,9 +106,9 @@ class OrderController extends AdminController
     /**
      * 订单结算页面
      * @param int $id 订单id
-     * @return Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|void
+     * @return Response|ResponseInterface|View|void
      */
-    public function paymentAction(int $id)
+    public function paymentAction($id)
     {
         // 下面是普通的get请求
         // 验证是否登录
@@ -413,7 +415,7 @@ class OrderController extends AdminController
 
     /**
      * 我的订单列表
-     * @return Response|\Phalcon\Http\ResponseInterface|void
+     * @return Response|ResponseInterface|void
      */
     public
     function listAction()
@@ -526,10 +528,10 @@ class OrderController extends AdminController
     /**
      * 用户主动取消订单
      * @param int $id
-     * @return false|Response|\Phalcon\Http\ResponseInterface|string|void
+     * @return false|Response|ResponseInterface|string|void
      */
     public
-    function cancleAction(int $id)
+    function cancleAction($id)
     {
         // 逻辑
         // 先过滤
@@ -607,10 +609,10 @@ class OrderController extends AdminController
     /**
      * 订单申请退款
      * @param int $id
-     * @return false|Response|\Phalcon\Http\ResponseInterface|string|void
+     * @return false|Response|ResponseInterface|string|void
      */
     public
-    function applyrefundAction(int $id)
+    function applyrefundAction($id)
     {
         // 逻辑
         // 判断订单是否存在
@@ -646,7 +648,7 @@ class OrderController extends AdminController
 
     /**
      * 更改未支付订单的截止时间
-     * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|string|void
+     * @return false|\Phalcon\Http\Response|ResponseInterface|string|void
      */
     public
     function updatetimeAction()
@@ -686,7 +688,7 @@ class OrderController extends AdminController
     /**
      * 订单退款逻辑
      * @param TbShoporderCommon $order 订单模型
-     * @return false|Response|\Phalcon\Http\ResponseInterface|string
+     * @return false|Response|ResponseInterface|string
      */
     public
     function refundOrder(TbShoporderCommon $order)
@@ -775,9 +777,9 @@ class OrderController extends AdminController
     /**
      * 同意退款
      * @param int $id 订单编号
-     * @return false|Response|\Phalcon\Http\ResponseInterface|string|void
+     * @return false|Response|ResponseInterface|string|void
      */
-    public function refundagreeAction(int $id)
+    public function refundagreeAction($id)
     {
         // 逻辑
         // 要求必须是post请求，登录状态，而且必须是管理员才能访问
@@ -835,9 +837,9 @@ class OrderController extends AdminController
     /**
      * 不同意退款
      * @param int $id 订单编号
-     * @return false|Response|\Phalcon\Http\ResponseInterface|string|void
+     * @return false|Response|ResponseInterface|string|void
      */
-    public function refunddisagreeAction(int $id)
+    public function refunddisagreeAction($id)
     {
         // 逻辑
         // 要求必须是post请求，登录状态，而且必须是管理员才能访问
@@ -870,9 +872,9 @@ class OrderController extends AdminController
     /**
      * 订单发货，必须是管理员
      * @param int $id 订单编号
-     * @return false|Response|\Phalcon\Http\ResponseInterface|string|void
+     * @return false|Response|ResponseInterface|string|void
      */
-    public function shipAction(int $id)
+    public function shipAction($id)
     {
         // 逻辑
         // 要求必须是post请求，登录状态，而且必须是管理员才能访问
@@ -917,9 +919,9 @@ class OrderController extends AdminController
     /**
      * 确认收货，这个必须是本人才能操作，不需要管理员权限
      * @param int $id 订单编号
-     * @return false|Response|\Phalcon\Http\ResponseInterface|string|void
+     * @return false|Response|ResponseInterface|string|void
      */
-    public function receiveAction(int $id)
+    public function receiveAction($id)
     {
         // 逻辑
         // 要求必须是post请求，登录状态，而且必须是管理员才能访问

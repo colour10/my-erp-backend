@@ -1,21 +1,25 @@
 <?php
+
 namespace Multiple\Home\Controllers;
 
 use Asa\Erp\TbBill;
-use Asa\Erp\TbBillConfirm;
 
 /**
- * 对账单回款表
- * ErrorCode 1119
+ * 对账单回款表控制器
+ * Class BillconfirmController
+ * @package Multiple\Home\Controllers
  */
-class BillconfirmController extends AdminController {
-    public function initialize() {
-	    parent::initialize();
+class BillconfirmController extends AdminController
+{
+    public function initialize()
+    {
+        parent::initialize();
 
-	    $this->setModelName('Asa\\Erp\\TbBillConfirm');
+        $this->setModelName('Asa\\Erp\\TbBillConfirm');
     }
 
-    function before_add() {
+    function before_add()
+    {
         $_POST['createstaff'] = $this->currentUser;
         $_POST['companyid'] = $this->companyid;
         $_POST['createtime'] = date("Y-m-d H:i:s");
@@ -24,21 +28,25 @@ class BillconfirmController extends AdminController {
         $_POST['currencyid'] = $bill->currencyid;
     }
 
-    function before_edit($row) {
+    function before_edit($row)
+    {
         $this->checkBill($row->billid);
     }
 
-    function before_delete($row) {
+    function before_delete($row)
+    {
         $this->checkBill($row->billid);
     }
 
-    function before_page() {
+    function before_page()
+    {
         $this->checkBill($_POST['billid']);
     }
 
-    private function checkBill($billid) {
+    private function checkBill($billid)
+    {
         $bill = TbBill::findFirstById($billid);
-        if($bill==false || $bill->companyid!=$this->companyid) {
+        if ($bill == false || $bill->companyid != $this->companyid) {
             throw new \Exception('/11190101/非法请求/');
         }
 

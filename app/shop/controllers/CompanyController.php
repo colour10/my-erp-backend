@@ -4,6 +4,8 @@ namespace Multiple\Shop\Controllers;
 
 use Asa\Erp\TbCompany;
 use Asa\Erp\TbMember;
+use Phalcon\Http\Response;
+use Phalcon\Http\ResponseInterface;
 
 /**
  * 公司操作类
@@ -30,7 +32,7 @@ class CompanyController extends AdminController
         } else {
             // 如果已经登录了就去数据库查找
             $companyid = $login_result['companyid'];
-            $company   = TbCompany::findFirstById($companyid);
+            $company = TbCompany::findFirstById($companyid);
             // 如果需要判断域名是否已经绑定的话，需要先看看company模型当中的host字段是否为空，如果为空，则默认用主shop域名访问；否则就用里面写好的域名，但是还要在index.php动态添加新的跳转规则，可能会破坏之前的完整性，待商榷...
             // 然后返回结果
             return ['company' => $company, 'webtitle' => $company->name];
@@ -39,7 +41,7 @@ class CompanyController extends AdminController
 
     /**
      * 是否超级管理员用户
-     * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|string
+     * @return false|Response|ResponseInterface|string
      */
     public function issuperadmin()
     {
@@ -66,7 +68,7 @@ class CompanyController extends AdminController
 
     /**
      * 是否管理员用户
-     * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|string
+     * @return false|Response|ResponseInterface|string
      */
     public function isadmin()
     {

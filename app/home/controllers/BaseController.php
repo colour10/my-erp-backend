@@ -3,14 +3,21 @@
 namespace Multiple\Home\Controllers;
 
 use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\View;
 use Phalcon\Mvc\Model;
 
+/**
+ * 控制器基类，设置一些基本信息
+ * Class BaseController
+ * @package Multiple\Home\Controllers
+ */
 class BaseController extends Controller
 {
     protected $default_language;
     protected $companyid;
 
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         //允许跨域请求
@@ -73,7 +80,7 @@ class BaseController extends Controller
     public function reportJson($data = [], $code = 200, $messages = [])
     {
         $result = [
-            "code" => $code,
+            "code"     => $code,
             "messages" => $messages,
         ];
 
@@ -123,6 +130,11 @@ class BaseController extends Controller
         }
     }
 
+    /**
+     * debug 调试
+     * @param $message
+     * @param string $flag
+     */
     function debug($message, $flag = "")
     {
         print_r($message);

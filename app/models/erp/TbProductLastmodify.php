@@ -30,26 +30,26 @@ class TbProductLastmodify extends BaseModel
         if ($model = TbProductLastmodify::findFirst([
             "companyid = :companyid: AND brandid = :brandid: AND wordcode_3 = :wordcode_3:",
             'bind' => [
-                'companyid' => $companyid,
-                'brandid' => $brandid,
+                'companyid'  => $companyid,
+                'brandid'    => $brandid,
                 'wordcode_3' => $wordcode_3,
             ],
         ])) {
             // 存在则修改
             $data = [
                 'brandcolor' => $brandcolor,
-                'colorname' => $colorname,
+                'colorname'  => $colorname,
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
         } else {
             // 如果不存在，则新增
             $model = new TbProductLastmodify();
             $data = [
-                'companyid' => $companyid,
-                'brandid' => $brandid,
+                'companyid'  => $companyid,
+                'brandid'    => $brandid,
                 'wordcode_3' => $wordcode_3,
                 'brandcolor' => $brandcolor,
-                'colorname' => $colorname,
+                'colorname'  => $colorname,
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
         }

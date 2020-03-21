@@ -1,9 +1,11 @@
 <?php
+
 namespace Asa\Erp;
 
 /**
  * 对账单回款表
- * ErrorCode 1120
+ * Class TbBillConfirm
+ * @package Asa\Erp
  */
 class TbBillConfirm extends BaseModel
 {
@@ -17,12 +19,13 @@ class TbBillConfirm extends BaseModel
             '\Asa\Erp\TbBill',
             'id',
             [
-                'alias' => 'bill'
+                'alias' => 'bill',
             ]
         );
     }
 
-    function create($data = NULL, $whiteList = NULL) {
+    function create($data = NULL, $whiteList = NULL)
+    {
         $result = parent::create($data, $whiteList);
 
         $this->updateBillStatus();
@@ -30,7 +33,8 @@ class TbBillConfirm extends BaseModel
         return $result;
     }
 
-    function update($data = NULL, $whiteList = NULL) {
+    function update($data = NULL, $whiteList = NULL)
+    {
         $result = parent::update($data, $whiteList);
 
         $this->updateBillStatus();
@@ -38,7 +42,8 @@ class TbBillConfirm extends BaseModel
         return $result;
     }
 
-    function delete() {
+    function delete()
+    {
         $result = parent::delete();
 
         $this->updateBillStatus();
@@ -46,20 +51,20 @@ class TbBillConfirm extends BaseModel
         return $result;
     }
 
-    private function updateBillStatus() {
+    private function updateBillStatus()
+    {
         $totalAmount = self::sum([
-            "column" => "amount",
-            "conditions" => sprintf("billid=%d", $this->billid)
+            "column"     => "amount",
+            "conditions" => sprintf("billid=%d", $this->billid),
         ]);
 
-        if($totalAmount==0) {
+        if ($totalAmount == 0) {
             $this->bill->status = 1;
-        }
-        else {
-            $this->bill->status = $this->bill->amount<=$totalAmount ? 3 : 2;
+        } else {
+            $this->bill->status = $this->bill->amount <= $totalAmount ? 3 : 2;
         }
 
-        if($this->bill->update()===false) {
+        if ($this->bill->update() === false) {
             throw new \Exception('/11200101/对账单状态更新失败/');
         }
     }

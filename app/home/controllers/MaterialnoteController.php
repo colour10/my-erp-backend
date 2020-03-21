@@ -1,21 +1,23 @@
 <?php
-namespace Multiple\Home\Controllers;
 
-use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\View;
-use Asa\Erp\TbMaterialnote;
+namespace Multiple\Home\Controllers;
 
 /**
  * 材质备注
+ * Class MaterialnoteController
+ * @package Multiple\Home\Controllers
  */
-class MaterialnoteController extends ZadminController {
-    public function initialize() {
-	    parent::initialize();
+class MaterialnoteController extends ZadminController
+{
+    public function initialize()
+    {
+        parent::initialize();
 
-	    $this->setModelName('Asa\\Erp\\TbMaterialnote');
+        $this->setModelName('Asa\\Erp\\TbMaterialnote');
     }
 
-    function before_page() {
+    function before_page()
+    {
         $_POST["__orderby"] = "displayindex asc";
     }
 }

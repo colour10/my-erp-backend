@@ -6,6 +6,8 @@ use Asa\Erp\TbShoporderCommon;
 use Asa\Erp\TbShoppayment;
 use Asa\Erp\Util;
 use Phalcon\Http\Response;
+use Phalcon\Http\ResponseInterface;
+use Phalcon\Mvc\View;
 use Yansongda\Pay\Log;
 
 /**
@@ -20,7 +22,7 @@ class AlipayController extends AdminController
      * @param int $order_id
      * @return bool|Response
      */
-    public function payAction(int $order_id)
+    public function payAction($order_id)
     {
         // 逻辑
         Util::closeDisplayErrors();
@@ -187,7 +189,7 @@ class AlipayController extends AdminController
      * 支付宝回调地址返回通知，生成授权码
      * 授权码一旦授权成功，就不能覆盖，只能删除之后重新授权
      * 是否授权成功，从数据库中提取，如果没有查询到记录，那么就说明没有授权；如果查到了记录说明授权成功了
-     * @return Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View
+     * @return Response|ResponseInterface|View
      */
     public function gettokenAction()
     {
@@ -304,7 +306,7 @@ class AlipayController extends AdminController
 
     /**
      * 获取授权用户基本信息
-     * @return false|Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|string|void
+     * @return false|Response|ResponseInterface|View|string|void
      */
     public function getuserAction()
     {

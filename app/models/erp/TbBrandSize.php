@@ -1,7 +1,12 @@
 <?php
-namespace Asa\Erp;
-use Phalcon\Mvc\Model\Relation;
 
+namespace Asa\Erp;
+
+/**
+ * 品牌尺码表
+ * Class TbBrandSize
+ * @package Asa\Erp
+ */
 class TbBrandSize extends BaseModel
 {
     public function initialize()
@@ -14,7 +19,7 @@ class TbBrandSize extends BaseModel
             '\Asa\Erp\TbBrandgroup',
             'id',
             [
-                'alias' => 'brandgroup'
+                'alias' => 'brandgroup',
             ]
         );
         $this->belongsTo(
@@ -22,7 +27,7 @@ class TbBrandSize extends BaseModel
             '\Asa\Erp\TbBrandgroupchild',
             'id',
             [
-                'alias' => 'brandgroupchild'
+                'alias' => 'brandgroupchild',
             ]
         );
         $this->belongsTo(
@@ -30,7 +35,7 @@ class TbBrandSize extends BaseModel
             '\Asa\Erp\TbSizetop',
             'id',
             [
-                'alias' => 'sizetop'
+                'alias' => 'sizetop',
             ]
         );
     }

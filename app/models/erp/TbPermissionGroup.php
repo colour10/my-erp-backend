@@ -2,10 +2,6 @@
 
 namespace Asa\Erp;
 
-use Phalcon\Validation;
-use Phalcon\Validation\Validator\PresenceOf;
-use Phalcon\Mvc\Model\Relation;
-
 /**
  * 权限-组模型
  */

@@ -1,12 +1,13 @@
 <?php
 
-use Asa\Erp\TbProductstock;
+use Asa\Erp\Util;
+use Phalcon\Cli\Task;
 
 /**
  *
  *
  */
-class ProductstockTask extends \Phalcon\CLI\Task
+class ProductstockTask extends Task
 {
     /**
      * 生成逻辑
@@ -14,15 +15,16 @@ class ProductstockTask extends \Phalcon\CLI\Task
      */
     public function mainAction()
     {
-        \Asa\Erp\Util::sendStockChange(337,2);
+        Util::sendStockChange(337, 2);
     }
 
-    function syncallAction() {
+    function syncallAction()
+    {
         $results = $this->db->fetchAll("select distinct productid from tb_productstock");
 
-        foreach($results as $row) {
+        foreach ($results as $row) {
             print_r($row);
-            \Asa\Erp\Util::sendStockChange($row['productid']);
+            Util::sendStockChange($row['productid']);
         }
     }
 }

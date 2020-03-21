@@ -1,22 +1,25 @@
 <?php
+
 namespace Multiple\Home\Controllers;
 
-use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\View;
 use Asa\Erp\TbExchangeRate;
 
 /**
  * 汇率表
- * ErrorCode:1103
+ * Class ExchangerateController
+ * @package Multiple\Home\Controllers
  */
-class ExchangerateController extends CadminController {
-    public function initialize() {
-	    parent::initialize();
+class ExchangerateController extends CadminController
+{
+    public function initialize()
+    {
+        parent::initialize();
 
-	    $this->setModelName('Asa\\Erp\\TbExchangeRate');
+        $this->setModelName('Asa\\Erp\\TbExchangeRate');
     }
 
-    function before_add() {
+    function before_add()
+    {
         $_POST['companyid'] = $this->companyid;
         $_POST['begin_time'] = date("Y-m-d H:i:s");
         $_POST['status'] = 0;
@@ -26,33 +29,34 @@ class ExchangerateController extends CadminController {
             sprintf("companyid=%d and currency_from=%d and currency_to=%d and status=0", $this->companyid, $_POST['currency_from'], $_POST['currency_to'])
         );
 
-        if($row!=false) {
-            throw new \Exception("/1101/不能重复添加/");            
+        if ($row != false) {
+            throw new \Exception("/1101/不能重复添加/");
         }
     }
 
-    function before_page() {
+    function before_page()
+    {
         $this->injectParam('companyid', $this->companyid);
         $this->injectParam('status', 0);
         $_POST["__orderby"] = "currency_from asc,currency_to asc";
     }
 
-    function editAction() {
+    function editAction()
+    {
         $row = TbExchangeRate::findFirst(
             sprintf("id=%d and status=0", $_POST['id'])
         );
 
-        if($row==false || $row->companyid!=$this->companyid) {
+        if ($row == false || $row->companyid != $this->companyid) {
             throw new \Exception("/1001/数据非法/");
-        }
-        else if($row->rate == $_POST['rate']) {
+        } else if ($row->rate == $_POST['rate']) {
             throw new \Exception("/110301/不需要更改/");
         }
 
         $this->db->begin();
         $row->end_time = date("Y-m-d H:i:s");
         $row->status = 1;
-        if($row->update()==false) {
+        if ($row->update() == false) {
             $this->db->rollback();
             throw new \Exception("/110302/更新汇率失败/");
         }
@@ -63,8 +67,8 @@ class ExchangerateController extends CadminController {
         $newRecord->currency_to = $row->currency_to;
         $newRecord->status = 0;
         $newRecord->begin_time = $row->end_time;
-        $newRecord->rate =  $_POST['rate'];
-        if($newRecord->create()==false) {
+        $newRecord->rate = $_POST['rate'];
+        if ($newRecord->create() == false) {
             $this->db->rollback();
             throw new \Exception("/110303/创建新汇率失败/");
         }
@@ -72,24 +76,25 @@ class ExchangerateController extends CadminController {
         return $this->success();
     }
 
-    function historyAction() {
+    function historyAction()
+    {
         $result = TbExchangeRate::find([
             sprintf("companyid=%d and currency_from=%d and currency_to=%d and status=1", $this->companyid, $_POST['currency_from'], $_POST['currency_to']),
-            "order" => "begin_time desc"
+            "order" => "begin_time desc",
         ]);
 
         return $this->success($result->toArray());
     }
 
-    function getrateAction() {
+    function getrateAction()
+    {
         $result = TbExchangeRate::findFirst([
-            sprintf("companyid=%d and currency_from=%d and currency_to=%d and status=0", $this->companyid, $_POST['currency_from'], $_POST['currency_to'])
+            sprintf("companyid=%d and currency_from=%d and currency_to=%d and status=0", $this->companyid, $_POST['currency_from'], $_POST['currency_to']),
         ]);
 
-        if($result!=false) {
+        if ($result != false) {
             return $this->success($result->rate);
-        }
-        else {
+        } else {
             return $this->success("");
         }
     }

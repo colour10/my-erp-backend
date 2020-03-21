@@ -1,43 +1,49 @@
 <?php
+
 namespace Multiple\Home\Controllers;
 
-use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\View;
 use Asa\Erp\TbPermission;
 use Asa\Erp\Util;
 
 /**
  * 权限表，这个控制器在页面不体现出来，所以只录入就可以了
- * ErrorCode 1117
+ * Class PermissionController
+ * @package Multiple\Home\Controllers
  */
-class PermissionController extends ZadminController {
-    public function initialize() {
+class PermissionController extends ZadminController
+{
+    public function initialize()
+    {
         parent::initialize();
 
         $this->setModelName('Asa\\Erp\\TbPermission');
     }
 
-    function before_edit($row) {
-        $this->check();
-        //print_r($_POST);
-    }
-
-    function before_add() {
+    function before_edit($row)
+    {
         $this->check();
     }
 
-    function before_delete($row) {
+    function before_add()
+    {
         $this->check();
     }
 
-    function before_page() {
+    function before_delete($row)
+    {
+        $this->check();
+    }
+
+    function before_page()
+    {
         $this->check();
 
         $_POST["__orderby"] = "pid asc, display_index asc";
     }
 
-    private function check() {
-        if($this->config->mode!='develop') {
+    private function check()
+    {
+        if ($this->config->mode != 'develop') {
             throw new \Exception("/11170101/内部错误/");
         }
     }
@@ -51,9 +57,9 @@ class PermissionController extends ZadminController {
         // 逻辑
         $permissions = TbPermission::find([
             "is_only_superadmin=0",
-            "order" => "display_index asc"
+            "order" => "display_index asc",
         ]);
-        if(!$permissions) {
+        if (!$permissions) {
             return $this->error(['permissions are not exist']);
         }
 
@@ -67,8 +73,6 @@ class PermissionController extends ZadminController {
             // 保持label为中文，需要传递中文说明
             $permissions_array[$k]['name'] = $permission['memo_cn'];
         }
-
-        // return json_encode($permissions_array);
 
         // 交给下面的格式化为目录树处理并返回
         return $this->success(Util::format_tree($permissions_array));

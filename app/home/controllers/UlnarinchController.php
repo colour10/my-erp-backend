@@ -1,21 +1,23 @@
 <?php
-namespace Multiple\Home\Controllers;
 
-use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\View;
-use Asa\Erp\TbUlnarinch;
+namespace Multiple\Home\Controllers;
 
 /**
  * 基础资料，商品尺寸表
+ * Class UlnarinchController
+ * @package Multiple\Home\Controllers
  */
-class UlnarinchController extends ZadminController {
-    public function initialize() {
-	    parent::initialize();
+class UlnarinchController extends ZadminController
+{
+    public function initialize()
+    {
+        parent::initialize();
 
-	    $this->setModelName('Asa\\Erp\\TbUlnarinch');
+        $this->setModelName('Asa\\Erp\\TbUlnarinch');
     }
 
-    function before_page() {
+    function before_page()
+    {
         $_POST["__orderby"] = "displayindex asc";
     }
 }

@@ -1,8 +1,11 @@
 <?php
+
 namespace Asa\Erp;
 
 /**
  * 商品国际码库
+ * Class TbProductBase
+ * @package Asa\Erp
  */
 class TbProductBase extends BaseModel
 {
@@ -16,7 +19,7 @@ class TbProductBase extends BaseModel
             '\Asa\Erp\TbProduct',
             'id',
             [
-                'alias' => 'product'
+                'alias' => 'product',
             ]
         );
     }

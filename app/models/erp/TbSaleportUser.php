@@ -1,4 +1,5 @@
 <?php
+
 namespace Asa\Erp;
 
 /**
@@ -16,7 +17,7 @@ class TbSaleportUser extends BaseModel
             '\Asa\Erp\TbSaleport',
             'id',
             [
-                'alias' => 'saleport'
+                'alias' => 'saleport',
             ]
         );
 
@@ -25,7 +26,7 @@ class TbSaleportUser extends BaseModel
             '\Asa\Erp\TbUser',
             'id',
             [
-                'alias' => 'user'
+                'alias' => 'user',
             ]
         );
     }

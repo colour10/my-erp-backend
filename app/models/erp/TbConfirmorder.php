@@ -1,5 +1,8 @@
 <?php
+
 namespace Asa\Erp;
+
+use Phalcon\Mvc\Model;
 use Phalcon\Mvc\Model\Relation;
 
 /**
@@ -11,18 +14,18 @@ class TbConfirmorder extends BaseModel
     {
         parent::initialize();
         $this->setSource('tb_confirmorder');
-        
+
         // 订单-订单详情，一对多
         $this->hasMany(
             "id",
             "\Asa\Erp\TbConfirmorderdetails",
             "confirmorderid",
             [
-                'alias' => 'confirmorderdetails',
-                'foreignKey' => array(
+                'alias'      => 'confirmorderdetails',
+                'foreignKey' => [
                     'message' => '#1003#',
-                    'action' => Relation::ACTION_RESTRICT
-                )  
+                    'action'  => Relation::ACTION_RESTRICT,
+                ],
             ]
         );
     }
@@ -30,16 +33,15 @@ class TbConfirmorder extends BaseModel
     /**
      * 添加一条明细数据
      * @param [type] $form 表单数据
+     * @return TbConfirmorderdetails|bool
      */
-    public function addDetail($form) {
+    public function addDetail($form)
+    {
         $row = new TbConfirmorderdetails();
-        //print_r($form);
-        if($row->create($form)) {
-            //print_r($form);
+        if ($row->create($form)) {
             return $row;
-        }
-        else {
-           
+        } else {
+
             return false;
         }
     }
@@ -47,44 +49,39 @@ class TbConfirmorder extends BaseModel
     /**
      * 更新明细数据
      * @param  [type] $form 表单数据
-     * @return [type]       [description]
+     * @return bool|Model [type]       [description]
      */
-    public function updateDetail($form) {
+    public function updateDetail($form)
+    {
         $row = TbConfirmorderdetails::findFirst(
             sprintf("id=%d", $form['id'])
         );
 
-        if($row!=false && $row->companyid == $form['companyid']) {
-            if($row->update($form)) {
+        if ($row != false && $row->companyid == $form['companyid']) {
+            if ($row->update($form)) {
                 return $row;
-            }
-            else {
+            } else {
                 return false;
             }
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     /**
-     * 
+     * 获取订单明细
      */
-    function getOrderDetail() {   
-        $result = $this->confirmorderdetails ;
-
+    function getOrderDetail()
+    {
         // 循环添加数据
-        $productlist = [];
         $list = [];
-            $hashmap = [];
         foreach ($this->confirmorderdetails as $k => $row) {
-            $temp = $row->toArray();
             $list[] = $row->toArray();
         }
 
         return [
             'form' => $this->toArray(),
-            'list' => $this->confirmorderdetails->toArray()
-        ];;
+            'list' => $this->confirmorderdetails->toArray(),
+        ];
     }
 }

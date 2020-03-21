@@ -1,6 +1,6 @@
 <?php
+
 namespace Asa\Erp;
-use Phalcon\Mvc\Model\Relation;
 /**
  * 发货单明细表
  */
@@ -17,7 +17,7 @@ class TbConfirmorderdetails extends BaseModel
             '\Asa\Erp\TbConfirmorder',
             'id',
             [
-                'alias' => 'confirmorder'
+                'alias' => 'confirmorder',
             ]
         );
         // 发货单详情-订单详情表，一对多反向
@@ -26,7 +26,7 @@ class TbConfirmorderdetails extends BaseModel
             '\Asa\Erp\TbOrderdetails',
             'id',
             [
-                'alias' => 'orderdetails'
+                'alias' => 'orderdetails',
             ]
         );
     }

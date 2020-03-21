@@ -2,13 +2,12 @@
 
 namespace Asa\Erp;
 
-use Phalcon\Validation;
-use Phalcon\Validation\Validator\PresenceOf;
-use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Mvc\Model\Relation;
 
 /**
- * 子子品类
+ * 子品类
+ * Class TbBrandgroupchild
+ * @package Asa\Erp
  */
 class TbBrandgroupchild extends BaseModel
 {
@@ -23,7 +22,7 @@ class TbBrandgroupchild extends BaseModel
             '\Asa\Erp\TbBrandgroup',
             'id',
             [
-                'alias' => 'brandgroup'
+                'alias' => 'brandgroup',
             ]
         );
 
@@ -33,11 +32,11 @@ class TbBrandgroupchild extends BaseModel
             "\Asa\Erp\TbProduct",
             "childbrand",
             [
-                'alias' => 'products',
+                'alias'      => 'products',
                 'foreignKey' => [
                     // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message"    => "/1003/子类已经在商品信息中使用/",
+                    'action'  => Relation::ACTION_RESTRICT,
+                    "message" => "/1003/子类已经在商品信息中使用/",
                 ],
             ]
         );
@@ -48,11 +47,11 @@ class TbBrandgroupchild extends BaseModel
             "\Asa\Erp\TbBrandgroupchildProperty",
             "brandgroupchildid",
             [
-                'alias' => 'brandgroupchildProperties',
+                'alias'      => 'brandgroupchildProperties',
                 'foreignKey' => [
                     // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message"    => "/1003/子类已经设置了属性/",
+                    'action'  => Relation::ACTION_RESTRICT,
+                    "message" => "/1003/子类已经设置了属性/",
                 ],
             ]
         );
@@ -63,16 +62,17 @@ class TbBrandgroupchild extends BaseModel
             "\Asa\Erp\TbProductMemoBrandgroupchild",
             "brandgroupchild_id",
             [
-                'alias' => 'productMemoIds'
+                'alias' => 'productMemoIds',
             ]
         );
     }
 
-    public function getRules() {
+    public function getRules()
+    {
         return [
-            'name_cn' => $this->getValidatorFactory()->presenceOfMultiple('zileimingcheng'),
+            'name_cn'      => $this->getValidatorFactory()->presenceOfMultiple('zileimingcheng'),
             'brandgroupid' => $this->getValidatorFactory()->tableid('pinlei'),
-            'displayindex' => $this->getValidatorFactory()->digit('xuhao') 
+            'displayindex' => $this->getValidatorFactory()->digit('xuhao'),
         ];
     }
 

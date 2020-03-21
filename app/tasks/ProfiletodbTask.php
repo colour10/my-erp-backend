@@ -2,12 +2,13 @@
 
 use Asa\Erp\TbLanguage;
 use Asa\Erp\Util;
+use Phalcon\Cli\Task;
 
 /**
  * 配置文件导入数据库
  * Class ReplaceTask
  */
-class ProfiletodbTask extends \Phalcon\CLI\Task
+class ProfiletodbTask extends Task
 {
     /**
      * 逻辑

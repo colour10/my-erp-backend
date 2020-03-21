@@ -1,22 +1,26 @@
 <?php
+
 namespace Multiple\Home\Controllers;
 
-use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\View;
-use Asa\Erp\TbRequisition;
-use Asa\Erp\TbRequisitionDetail;
+use Asa\Erp\Sql;
 use Asa\Erp\TbProductstock;
+use Asa\Erp\TbRequisition;
+use Exception;
 
 /**
  * 调拨单主表
- * ErrorCode 1112
+ * Class RequisitionController
+ * @package Multiple\Home\Controllers
  */
-class RequisitionController extends BaseController {
-    public function initialize() {
-	    parent::initialize();
+class RequisitionController extends BaseController
+{
+    public function initialize()
+    {
+        parent::initialize();
     }
 
-    public function pageAction() {
+    public function pageAction()
+    {
         $params = [$this->getSearchCondition()];
         $params["order"] = "id desc";
 
@@ -37,25 +41,26 @@ class RequisitionController extends BaseController {
         $pageObject = $paginator->getPaginate();
 
         $data = [];
-        foreach($pageObject->items as $row) {
+        foreach ($pageObject->items as $row) {
             $data[] = $row->toArray();
         }
 
         $pageinfo = [
             //"previous"      => $pageObject->previous,
-            "current"       => $pageObject->current,
-            "totalPages"    => $pageObject->total_pages,
+            "current"    => $pageObject->current,
+            "totalPages" => $pageObject->total_pages,
             //"next"          => $pageObject->next,
-            "total"    => $pageObject->total_items,
-            "pageSize"     => $pageSize
+            "total"      => $pageObject->total_items,
+            "pageSize"   => $pageSize,
         ];
-        echo $this->reportJson(array("data"=>$data, "pagination" => $pageinfo),200,[]);
+        echo $this->reportJson(["data" => $data, "pagination" => $pageinfo], 200, []);
     }
 
-    function getSearchCondition() {
-        $where = array(
-            sprintf("companyid=%d", $this->companyid)
-        );
+    function getSearchCondition()
+    {
+        $where = [
+            sprintf("companyid=%d", $this->companyid),
+        ];
 
         /*if(isset($_POST["keyword"]) && trim($_POST["keyword"])!="") {
             $where[] = sprintf("orderno like '%%%s%%'", addslashes(strtoupper($_POST["keyword"])));
@@ -63,19 +68,11 @@ class RequisitionController extends BaseController {
 
         $names = ['out_id', 'in_id', 'status'];
         foreach ($names as $name) {
-            if(isset($_POST[$name]) && preg_match("#^\d+(,\d+)*$#", $_POST[$name])) {
-                $where[] = \Asa\Erp\Sql::isInclude($name, $_POST[$name]);
+            if (isset($_POST[$name]) && preg_match("#^\d+(,\d+)*$#", $_POST[$name])) {
+                $where[] = Sql::isInclude($name, $_POST[$name]);
             }
         }
 
-        /*$names = ['brandids'];
-        foreach ($names as $name) {
-            if(isset($_POST[$name]) && preg_match("#^\d+(,\d+)*$#", $_POST[$name])) {
-                $where[] = \Asa\Erp\Sql::isMatch($name, $_POST[$name]);
-            }
-        }*/
-
-        //echo implode(' and ', $where);
         return implode(' and ', $where);
     }
 
@@ -91,12 +88,11 @@ class RequisitionController extends BaseController {
         $submitData = json_decode($params, true);
 
         $array = [];
-        foreach($submitData['list'] as $row) {
+        foreach ($submitData['list'] as $row) {
             $key = sprintf("%d_%d", $row['out_id'], $row["in_id"]);
-            if(isset($array[$key] )) {
+            if (isset($array[$key])) {
                 $array[$key][] = $row;
-            }
-            else {
+            } else {
                 $array[$key] = [$row];
             }
         }
@@ -105,7 +101,7 @@ class RequisitionController extends BaseController {
         $this->db->begin();
 
         try {
-            foreach($array as $key => $rows) {
+            foreach ($array as $key => $rows) {
                 $temp = explode('_', $key);
 
                 $requisition = new TbRequisition();
@@ -116,24 +112,23 @@ class RequisitionController extends BaseController {
                 $requisition->apply_date = date('Y-m-d H:i:s');
                 $requisition->memo = $submitData['memo'];
                 $requisition->companyid = $this->companyid;
-                if($requisition->create()==false) {
-                    throw new \Exception('/11120101/生成调拨单失败。/');
+                if ($requisition->create() == false) {
+                    throw new Exception('/11120101/生成调拨单失败。/');
                 }
 
                 //增加调拨明细
-                foreach($rows as $row) {
+                foreach ($rows as $row) {
                     $out_productstock = TbProductstock::getProductStock($row['productid'], $row['sizecontentid'], $row['out_id'], $row['property'], $row['defective_level']);
 
                     $requisition->addDetail([
                         "out_productstockid" => $out_productstock->id,
-                        "in_productstockid" => $requisition->inWarehouse->getLocalStock($out_productstock)->id,
-                        "number" => $row['number'],
-                        "requisitionid" => $requisition->id
+                        "in_productstockid"  => $requisition->inWarehouse->getLocalStock($out_productstock)->id,
+                        "number"             => $row['number'],
+                        "requisitionid"      => $requisition->id,
                     ]);
                 }
             }
-        }
-        catch(\Exception $e) {
+        } catch (Exception $e) {
             $this->db->rollback();
             throw $e;
         }
@@ -146,37 +141,34 @@ class RequisitionController extends BaseController {
         echo $this->success();
     }
 
-    function loadAction() {
+    function loadAction()
+    {
         $requisition = TbRequisition::findFirst(
             sprintf("id=%d and companyid=%d", $_POST['id'], $this->companyid)
         );
 
-        if($requisition!=false) {
+        if ($requisition != false) {
             echo $this->success($requisition->getDetail());
-        }
-        else {
-            throw new \Exception("/1001/调拨单不存在/");
+        } else {
+            throw new Exception("/1001/调拨单不存在/");
         }
     }
 
     /**
      * 确认出库
-     * @return [type] [description]
+     * @return void [type] [description]
      */
-    function confirmoutAction() {
+    function confirmoutAction()
+    {
         $submitData = json_decode($_POST["params"], true);
-        $id = $submitData["id"];
         $requisition = TbRequisition::findFirst(
             sprintf("id=%d and companyid=%d", $submitData["id"], $this->companyid)
         );
 
-        //print_r($submitData);
-
-        if($requisition!=false) {
-            if($requisition->doOut($submitData['list'])) {
+        if ($requisition != false) {
+            if ($requisition->doOut($submitData['list'])) {
                 echo $this->success($requisition->getDetail());
-            }
-            else {
+            } else {
                 echo $this->error(['fail']);
             }
         }
@@ -184,37 +176,34 @@ class RequisitionController extends BaseController {
 
     /**
      * 确认入库
-     * @return [type] [description]
+     * @return void [type] [description]
      */
-    function confirminAction() {
+    function confirminAction()
+    {
         $submitData = json_decode($_POST["params"], true);
         $id = $submitData["id"];
         $requisition = TbRequisition::findFirst(
             sprintf("id=%d and companyid=%d", $submitData["id"], $this->companyid)
         );
 
-        //print_r($submitData);
-
-        if($requisition!=false) {
-            if($requisition->doIn($submitData['list'])) {
+        if ($requisition != false) {
+            if ($requisition->doIn($submitData['list'])) {
                 echo $this->success($requisition->getDetail());
-            }
-            else {
+            } else {
                 echo $this->error(['fail']);
             }
         }
     }
 
-    function cancelAction() {
+    function cancelAction()
+    {
         $submitData = json_decode($_POST["params"], true);
-        $id = $submitData["id"];
         $requisition = TbRequisition::findFirst(
             sprintf("id=%d and companyid=%d", $submitData["id"], $this->companyid)
         );
 
-        //print_r($submitData);
 
-        if($requisition!=false) {
+        if ($requisition != false) {
             $requisition->cancel();
             return $this->success($requisition->getDetail());
         }

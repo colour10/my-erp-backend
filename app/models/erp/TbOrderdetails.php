@@ -2,12 +2,6 @@
 
 namespace Asa\Erp;
 
-use Phalcon\Validation;
-use Phalcon\Validation\Validator\Uniqueness;
-use Phalcon\Mvc\Model\Relation;
-use Phalcon\Validation\Validator\PresenceOf;
-use Phalcon\Validation\Validator\Regex;
-
 /**
  * 订单明细表
  */
@@ -24,7 +18,7 @@ class TbOrderdetails extends BaseModel
             '\Asa\Erp\TbProduct',
             'id',
             [
-                'alias' => 'product'
+                'alias' => 'product',
             ]
         );
 
@@ -34,7 +28,7 @@ class TbOrderdetails extends BaseModel
             '\Asa\Erp\TbSizecontent',
             'id',
             [
-                'alias' => 'sizecontent'
+                'alias' => 'sizecontent',
             ]
         );
 
@@ -44,7 +38,7 @@ class TbOrderdetails extends BaseModel
             '\Asa\Erp\TbOrder',
             'id',
             [
-                'alias' => 'order'
+                'alias' => 'order',
             ]
         );
     }

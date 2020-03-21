@@ -5,6 +5,7 @@ namespace Multiple\Shop\Controllers;
 use Asa\Erp\TbShoporderCommon;
 use Asa\Erp\Util;
 use Phalcon\Http\Response;
+use Phalcon\Http\ResponseInterface;
 
 /**
  * 微信支付类
@@ -18,7 +19,7 @@ class WechatpayController extends AdminController
      * @param int $order_id
      * @return bool|Response
      */
-    public function payAction(int $order_id)
+    public function payAction($order_id)
     {
         // 逻辑
         // 首先关闭错误提示
@@ -116,9 +117,9 @@ class WechatpayController extends AdminController
 
         // 开始给用户发送支付成功的邮件
         $memberModel = $order->getMember();
-        $email       = $memberModel->email;
-        $username    = $memberModel->name;
-        $time        = $order->getCreateTime();
+        $email = $memberModel->email;
+        $username = $memberModel->name;
+        $time = $order->getCreateTime();
         // 友好提示
         $msg = sprintf($this->getValidateMessage('order_has_been_paid'), $time);
         // 自动发送一个注册邮件，使用队列进行处理
@@ -146,7 +147,7 @@ class WechatpayController extends AdminController
     /**
      * 查询订单状态
      * @param $out_trade_no
-     * @return false|Response|\Phalcon\Http\ResponseInterface|string
+     * @return false|Response|ResponseInterface|string
      */
     public function queryAction($out_trade_no)
     {
@@ -169,7 +170,7 @@ class WechatpayController extends AdminController
     {
         // 给微信的失败响应
         $failXml = '<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[FAIL]]></return_msg></xml>';
-        $data    = $this->wechat_pay->verify(null, true);
+        $data = $this->wechat_pay->verify(null, true);
 
         // 没有找到对应的订单，原则上不可能发生，保证代码健壮性
         if (!$order = TbShoporderCommon::findFirst("order_no=" . $data['out_trade_no'])) {
@@ -182,7 +183,7 @@ class WechatpayController extends AdminController
             $order->save();
         } else {
             // 退款失败，将具体状态存入 extra 字段，并表退款状态改成失败
-            $extra                       = $order->getExtra();
+            $extra = $order->getExtra();
             $extra['refund_failed_code'] = $data['refund_status'];
             $order->setExtra($extra)->setRefundStatus(TbShoporderCommon::REFUND_STATUS_FAILED);
             $order->save();

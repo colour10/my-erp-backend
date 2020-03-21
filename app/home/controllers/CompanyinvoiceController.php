@@ -2,15 +2,15 @@
 
 namespace Multiple\Home\Controllers;
 
-use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\View;
-use Asa\Erp\TbCompanyInvoice;
-
 /**
  * 分组表
+ * Class CompanyinvoiceController
+ * @package Multiple\Home\Controllers
  */
-class CompanyinvoiceController extends CadminController {
-    public function initialize() {
+class CompanyinvoiceController extends CadminController
+{
+    public function initialize()
+    {
         parent::initialize();
 
         $this->setModelName('Asa\\Erp\\TbCompanyInvoice');

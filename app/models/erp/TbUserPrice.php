@@ -1,8 +1,9 @@
 <?php
+
 namespace Asa\Erp;
 
 /**
- *
+ * 用户价格表
  */
 class TbUserPrice extends BaseModel
 {
@@ -16,12 +17,13 @@ class TbUserPrice extends BaseModel
             '\Asa\Erp\TbPrice',
             'id',
             [
-                'alias' => 'price'
+                'alias' => 'price',
             ]
         );
     }
 
-    function toArrayPipe() {
+    function toArrayPipe()
+    {
         $price = $this->price;
 
         $result = $this->toArray();

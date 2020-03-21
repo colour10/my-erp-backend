@@ -1,16 +1,21 @@
 <?php
+
 namespace Asa\Erp;
-use Phalcon\Mvc\Model\Message as Message;
 
 /**
- * 
+ * 需要获取公司 id 的逻辑
+ * Class BaseCompanyModel
+ * @package Asa\Erp
  */
-class BaseCompanyModel extends BaseModel {   
-    public function initialize() {
+class BaseCompanyModel extends BaseModel
+{
+    public function initialize()
+    {
         parent::initialize();
     }
 
-    function getCompanyid() {
+    function getCompanyid()
+    {
         return $this->getDI()->get("currentCompany");
     }
 }

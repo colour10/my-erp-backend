@@ -1,22 +1,25 @@
 <?php
+
 namespace Multiple\Home\Controllers;
 
-use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\View;
-use Asa\Erp\TbProductMemo;
 use Asa\Erp\TbProductMemoBrandgroupchild;
 
 /**
  * 商品描述
+ * Class ProductmemoController
+ * @package Multiple\Home\Controllers
  */
-class ProductmemoController extends ZadminController {
-    public function initialize() {
-	    parent::initialize();
+class ProductmemoController extends ZadminController
+{
+    public function initialize()
+    {
+        parent::initialize();
 
-	    $this->setModelName('Asa\\Erp\\TbProductMemo');
+        $this->setModelName('Asa\\Erp\\TbProductMemo');
     }
 
-    function before_page() {
+    function before_page()
+    {
         if (!empty($this->request->getPost('sort')) && !empty($this->request->getPost('order'))) {
             $orderby = $this->request->getPost('sort');
             switch ($this->request->getPost('order')) {
@@ -55,14 +58,14 @@ class ProductmemoController extends ZadminController {
 
     public function deleteProductmemoBrand($memo_id)
     {
-        $this->modelsManager->registerNamespaceAlias("ERP","Asa\Erp");
+        $this->modelsManager->registerNamespaceAlias("ERP", "Asa\Erp");
 
         $phql = "DELETE FROM ERP:TbProductMemoBrandgroupchild WHERE memo_id = :memo_id:";
 
         $this->modelsManager->executeQuery(
             $phql,
             [
-                "memo_id" => $memo_id
+                "memo_id" => $memo_id,
             ]
         );
     }

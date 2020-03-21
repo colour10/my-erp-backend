@@ -1,6 +1,7 @@
 <?php
 
 namespace Asa\Erp;
+
 use Phalcon\Mvc\Model\Relation;
 
 /**
@@ -19,11 +20,11 @@ class TbSizetop extends BaseModel
             "\Asa\Erp\TbSizecontent",
             "topid",
             [
-                'alias' => 'sizecontents',
+                'alias'      => 'sizecontents',
                 'foreignKey' => [
                     // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message"    => "/1003/尺码组已经使用，不能删除/",
+                    'action'  => Relation::ACTION_RESTRICT,
+                    "message" => "/1003/尺码组已经使用，不能删除/",
                 ],
             ]
         );
@@ -33,22 +34,23 @@ class TbSizetop extends BaseModel
             "\Asa\Erp\TbProduct",
             "sizetopid",
             [
-                'alias' => 'products',
+                'alias'      => 'products',
                 'foreignKey' => [
                     // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message"    => "/1003/尺码组已经使用，不能删除/"
+                    'action'  => Relation::ACTION_RESTRICT,
+                    "message" => "/1003/尺码组已经使用，不能删除/",
                 ],
             ]
         );
     }
 
-    public function getRules() {
+    public function getRules()
+    {
         $factory = $this->getValidatorFactory();
         return [
-            'name_cn' => $factory->presenceOf('jiancheng'),
-            'name_en' => $factory->presenceOf('mingcheng'),
-            'displayindex' => [$factory->presenceOf('paixu')]
+            'name_cn'      => $factory->presenceOf('jiancheng'),
+            'name_en'      => $factory->presenceOf('mingcheng'),
+            'displayindex' => [$factory->presenceOf('paixu')],
         ];
     }
 }

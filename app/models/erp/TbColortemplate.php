@@ -1,5 +1,7 @@
 <?php
+
 namespace Asa\Erp;
+
 use Phalcon\Mvc\Model\Relation;
 
 
@@ -18,11 +20,11 @@ class TbColortemplate extends BaseModel
             "\Asa\Erp\TbProduct",
             "brandcolor",
             [
-                'alias' => 'products',
+                'alias'      => 'products',
                 'foreignKey' => [
                     // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message"    => "/1003/色系已经使用，不能删除/"
+                    'action'  => Relation::ACTION_RESTRICT,
+                    "message" => "/1003/色系已经使用，不能删除/",
                 ],
             ]
         );
@@ -32,11 +34,11 @@ class TbColortemplate extends BaseModel
             "\Asa\Erp\TbSaleType",
             "colortemplateid",
             [
-                'alias' => 'saleTypes',
+                'alias'      => 'saleTypes',
                 'foreignKey' => [
                     // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message"    => "/1003/色系已经使用，不能删除/"
+                    'action'  => Relation::ACTION_RESTRICT,
+                    "message" => "/1003/色系已经使用，不能删除/",
                 ],
             ]
         );

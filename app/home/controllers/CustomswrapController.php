@@ -1,17 +1,18 @@
 <?php
+
 namespace Multiple\Home\Controllers;
 
-use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\View;
-use Asa\Erp\TbCustomsWrap;
-
 /**
- * 包装代码表
+ * 包装代码表, 但是目前数据库暂时没有这张表
+ * Class CustomswrapController
+ * @package Multiple\Home\Controllers
  */
-class CustomswrapController extends AdminController {
-    public function initialize() {
-	    parent::initialize();
+class CustomswrapController extends AdminController
+{
+    public function initialize()
+    {
+        parent::initialize();
 
-	    $this->setModelName('Asa\\Erp\\TbCustomsWrap');
+        $this->setModelName('Asa\\Erp\\TbCustomsWrap');
     }
 }

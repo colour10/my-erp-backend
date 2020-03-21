@@ -1,9 +1,11 @@
 <?php
+
 namespace Asa\Erp;
 
-/**
+/*
  * 商品材质表
  */
+
 class TbProductMaterial extends BaseModel
 {
     public function initialize()

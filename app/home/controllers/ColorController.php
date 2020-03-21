@@ -2,18 +2,18 @@
 
 namespace Multiple\Home\Controllers;
 
-use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\View;
 use Asa\Erp\TbColorSystem;
 use Asa\Erp\TbColortemplate;
 
 /**
  * 色系颜色管理模块
- *
- * @author zjl
+ * Class ColorController
+ * @package Multiple\Home\Controllers
  */
-class ColorController extends CadminController {
-    public function initialize() {
+class ColorController extends CadminController
+{
+    public function initialize()
+    {
         parent::initialize();
 
         $this->setModelName('Asa\\Erp\\TbColortemplate');
@@ -27,12 +27,12 @@ class ColorController extends CadminController {
     public function getColorSystemAndColorAction()
     {
         $color_systems = TbColorSystem::find([
-            'order' => "id asc"
+            'order' => "id asc",
         ]);
 
         $result = [];
         foreach ($color_systems as $cs) {
-            $result[$cs->id]['id']    = (int)$cs->id;
+            $result[$cs->id]['id'] = (int)$cs->id;
             $result[$cs->id]['title'] = $cs->title;
             $result[$cs->id]['colors'] = [];
         }
@@ -55,10 +55,10 @@ class ColorController extends CadminController {
     {
         $model = new TbColortemplate;
 
-        $model->name_cn         = $this->request->getPost("name_cn");
-        $model->name_en         = $this->request->getPost("name_en");
-        $model->name_it         = $this->request->getPost("name_it");
-        $model->code            = $this->request->getPost("code");
+        $model->name_cn = $this->request->getPost("name_cn");
+        $model->name_en = $this->request->getPost("name_en");
+        $model->name_it = $this->request->getPost("name_it");
+        $model->code = $this->request->getPost("code");
         $model->color_system_id = $this->request->getPost("color_system_id");
 
         $rs = $model->save();
@@ -85,10 +85,10 @@ class ColorController extends CadminController {
             return $this->renderError('make-an-error', 'color-doesnot-exist');
         }
 
-        $model->name_cn         = $this->request->getPost("name_cn");
-        $model->name_en         = $this->request->getPost("name_en");
-        $model->name_it         = $this->request->getPost("name_it");
-        $model->code            = $this->request->getPost("code");
+        $model->name_cn = $this->request->getPost("name_cn");
+        $model->name_en = $this->request->getPost("name_en");
+        $model->name_it = $this->request->getPost("name_it");
+        $model->code = $this->request->getPost("code");
         $model->color_system_id = $this->request->getPost("color_system_id");
 
         $rs = $model->update();
@@ -115,7 +115,7 @@ class ColorController extends CadminController {
             return $this->renderError('make-an-error', 'color-doesnot-exist');
         }
 
-        $rs = $model->delete(); 
+        $rs = $model->delete();
 
         if ($rs) {
             return $this->success();
@@ -133,13 +133,13 @@ class ColorController extends CadminController {
         $lang = $this->getDI()->get("session")->get("language");
 
         $color_systems = TbColorSystem::find([
-            'order' => "id asc"
+            'order' => "id asc",
         ]);
 
         $result = [];
         foreach ($color_systems as $cs) {
-            $result[$cs->id]['id']     = (int)$cs->id;
-            $result[$cs->id]['title']  = $cs->title;
+            $result[$cs->id]['id'] = (int)$cs->id;
+            $result[$cs->id]['title'] = $cs->title;
             $result[$cs->id]['colors'] = [];
         }
 
@@ -148,8 +148,8 @@ class ColorController extends CadminController {
             if (isset($result[$color->color_system_id])) {
                 $title = $color->{'name_' . $lang};
                 $col = [
-                    'id' => (int)$color->id,
-                    'title' => $title
+                    'id'    => (int)$color->id,
+                    'title' => $title,
                 ];
                 $result[$color->color_system_id]['colors'][] = $col;
             }

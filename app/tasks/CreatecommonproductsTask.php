@@ -4,12 +4,13 @@ use Asa\Erp\TbCompany;
 use Asa\Erp\TbProduct;
 use Asa\Erp\TbUser;
 use Asa\Erp\Util;
+use Phalcon\Cli\Task;
 
 /**
  * 在Tb_products生成公共产品库
  * Class ReplaceTask
  */
-class CreatecommonproductsTask extends \Phalcon\CLI\Task
+class CreatecommonproductsTask extends Task
 {
     /**
      * 生成逻辑

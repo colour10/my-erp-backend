@@ -2,6 +2,9 @@
 
 namespace Asa\Erp;
 
+use Phalcon\Mvc\Model\ResultInterface;
+use Phalcon\Mvc\Model\ResultSetInterface;
+
 /**
  * 超级管理员表
  * Class TbManager
@@ -164,7 +167,7 @@ class TbManager extends BaseCompanyModel
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return TbManager[]|TbManager|\Phalcon\Mvc\Model\ResultSetInterface
+     * @return TbManager[]|TbManager|ResultSetInterface
      */
     public static function find($parameters = null)
     {
@@ -175,7 +178,7 @@ class TbManager extends BaseCompanyModel
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return TbManager|\Phalcon\Mvc\Model\ResultInterface
+     * @return TbManager|ResultInterface
      */
     public static function findFirst($parameters = null)
     {
@@ -191,9 +194,9 @@ class TbManager extends BaseCompanyModel
     public function columnMap()
     {
         return [
-            'id' => 'id',
+            'id'         => 'id',
             'login_name' => 'login_name',
-            'password' => 'password',
+            'password'   => 'password',
             'created_at' => 'created_at',
             'updated_at' => 'updated_at',
         ];

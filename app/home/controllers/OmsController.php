@@ -1,25 +1,31 @@
 <?php
+
 namespace Multiple\Home\Controllers;
 
-use Asa\Erp\TbProductBase;
 use GuzzleHttp\Client;
 
 
 /**
- * 商品国际码库
+ * 与 OMS 对接
+ * Class OmsController
+ * @package Multiple\Home\Controllers
  */
-class OmsController extends BaseController {
-    public function initialize() {
+class OmsController extends BaseController
+{
+    public function initialize()
+    {
         parent::initialize();
     }
 
-    function indexAction() {
+    function indexAction()
+    {
     }
 
-    function updateAction() {
+    function updateAction()
+    {
         $client = new Client();
         $res = $client->post($this->config->omsproxy . "/oms/inventory/update", [
-            'form_params' => ["params"=>$_POST['params']]
+            'form_params' => ["params" => $_POST['params']],
         ]);
         echo $res->getBody();
     }

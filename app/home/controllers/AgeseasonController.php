@@ -2,26 +2,31 @@
 
 namespace Multiple\Home\Controllers;
 
+use Asa\Erp\TbAgeseason;
 use Asa\Erp\TbBrandRate;
 use Asa\Erp\TbPriceSetting;
-use Asa\Erp\Util;
-use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\View;
-use Asa\Erp\TbAgeseason;
 
 /**
  * 年代表
+ * Class AgeseasonController
+ * @package Multiple\Home\Controllers
  */
 class AgeseasonController extends AdminController
 {
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
 
         $this->setModelName('Asa\\Erp\\TbAgeseason');
-        //$this->configList("fullname", [ "name","sessionmark" ]);
     }
 
+    /**
+     * @param $row
+     * @return array
+     */
     function beforeOutputListLoop($row)
     {
         return [
@@ -29,13 +34,16 @@ class AgeseasonController extends AdminController
         ];
     }
 
+    /**
+     * 分页前操作
+     */
     function before_page()
     {
         $_POST["__orderby"] = "name desc,sessionmark asc";
     }
 
     /**
-     * 重写doadd方法
+     * 重写 doadd 方法
      */
     function doAdd()
     {
@@ -64,7 +72,6 @@ class AgeseasonController extends AdminController
             } else {
                 $result['is_add'] = "1";
                 $result['id'] = $row->id;
-                //$message['idd'] = "999";
 
                 // 新增连表操作
                 // 如果更新成功，则开始复制记录，去tb_price_setting和tb_brand_rate表中查询是否含有当前年代季节的记录

@@ -1,4 +1,5 @@
 <?php
+
 namespace Asa\Erp;
 
 /**
@@ -16,7 +17,7 @@ class TbSaleport extends BaseModel
             "\Asa\Erp\TbSaleportWarehouse",
             "saleportid",
             [
-                'alias' => 'saleportWarehouses'
+                'alias' => 'saleportWarehouses',
             ]
         );
     }
@@ -25,7 +26,8 @@ class TbSaleport extends BaseModel
      * 获取当前销售端口对应的仓库
      * @return [type] [description]
      */
-    function getWarehouseList() {
+    function getWarehouseList()
+    {
         $array = Util::recordListColumn($this->saleportWarehouses, 'warehouseid');
 
         return TbWarehouse::findByIdString($array, 'id');
@@ -35,7 +37,8 @@ class TbSaleport extends BaseModel
      *  获取该销售端口对应的所有库存
      * @return [type] [description]
      */
-    function getProductstockList() {
+    function getProductstockList()
+    {
         $array = Util::recordListColumn($this->saleportWarehouses, 'warehouseid');
 
         return TbProductstock::findByIdString($array, 'warehouseid');
@@ -45,16 +48,17 @@ class TbSaleport extends BaseModel
      *  获取该销售端口对应的所有商品库存
      * @return [type] [description]
      */
-    function getProductList() {
+    function getProductList()
+    {
         $array = Util::recordListColumn($this->saleportWarehouses, 'warehouseid');
-        if(count($array)==0) {
+        if (count($array) == 0) {
             return $array;
         }
 
         return TbProductstock::sum([
             sprintf("warehouseid in (%s) and defective_level=0", implode(',', $array)),
-            "group" => 'productid',
-            "column" => 'number'
+            "group"  => 'productid',
+            "column" => 'number',
         ]);
     }
 }

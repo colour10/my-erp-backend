@@ -3,6 +3,8 @@
 namespace Multiple\Shop\Controllers;
 
 use Asa\Erp\TbMember;
+use Phalcon\Http\Response;
+use Phalcon\Http\ResponseInterface;
 
 /**
  * 会员登录类
@@ -21,7 +23,7 @@ class LoginController extends AdminController
 
     /**
      * 登录首页
-     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|void
+     * @return Response|ResponseInterface|void
      */
     public function indexAction()
     {

@@ -1,21 +1,27 @@
 <?php
+
 namespace Multiple\Home\Controllers;
 
-use Phalcon\Paginator\Adapter\Model as PaginatorModel;
-use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\View;
 use Asa\Erp\TbBrand;
 use Asa\Erp\TbBrandSize;
 use Asa\Erp\TbCountry;
 use Asa\Erp\TbProduct;
+use Phalcon\Paginator\Adapter\Model as PaginatorModel;
 
-class BrandController extends ZadminController {
+/**
+ * 品牌表控制器
+ * Class BrandController
+ * @package Multiple\Home\Controllers
+ */
+class BrandController extends ZadminController
+{
     private $orderBy = 'name_en ASC';
 
-    public function initialize() {
-	    parent::initialize();
+    public function initialize()
+    {
+        parent::initialize();
 
-	    $this->setModelName('Asa\Erp\TbBrand');
+        $this->setModelName('Asa\Erp\TbBrand');
     }
 
     public function getSearchCondition()
@@ -56,7 +62,9 @@ class BrandController extends ZadminController {
             $this->orderBy = $sort . $orderMethod;
         }
     }
-    public function pageAction() {
+
+    public function pageAction()
+    {
         $this->before_page();
         $params = [$this->getSearchCondition()];
         $params['order'] = $this->orderBy;
@@ -78,7 +86,7 @@ class BrandController extends ZadminController {
         $pageObject = $paginator->getPaginate();
 
         $data = [];
-        foreach($pageObject->items as $row) {
+        foreach ($pageObject->items as $row) {
             $rowData = $this->recordToArray($row);
             $rowData['country'] = $row->getCountry();
             $data[] = $rowData;
@@ -88,9 +96,9 @@ class BrandController extends ZadminController {
             "current"    => $pageObject->current,
             "totalPages" => $pageObject->total_pages,
             "total"      => $pageObject->total_items,
-            "pageSize"   => $pageSize
+            "pageSize"   => $pageSize,
         ];
-        echo $this->reportJson(array("data"=>$data, "pagination" => $pageinfo),200,[]);
+        echo $this->reportJson(["data" => $data, "pagination" => $pageinfo], 200, []);
     }
 
     /**
@@ -117,7 +125,7 @@ class BrandController extends ZadminController {
         $rows = $this->getDI()->get('db')->fetchAll($sql);
 
         $countryIds = [];
-        foreach ($rows as $row ) {
+        foreach ($rows as $row) {
             $countryIds[] = $row['countryid'];
         }
         $countryIds = implode(',', $countryIds);
@@ -135,8 +143,8 @@ class BrandController extends ZadminController {
                 $title = $country->name_en;
             }
             $result[] = [
-                'id' => (int)$country->id,
-                'title' => $title
+                'id'    => (int)$country->id,
+                'title' => $title,
             ];
         }
 
@@ -157,7 +165,7 @@ class BrandController extends ZadminController {
             $brand->worldcode2 = $setting['worldcode2']['action'] . ',' . $setting['worldcode2']['length'];
             $brand->worldcode3 = $setting['worldcode3']['action'] . ',' . $setting['worldcode3']['length'];
 
-            $result = array("code" => 200, "messages" => array());
+            $result = ["code" => 200, "messages" => []];
             if ($brand->update() === false) {
                 $messages = $row->getMessages();
 
@@ -168,7 +176,7 @@ class BrandController extends ZadminController {
 
             echo json_encode($result);
         } else {
-            $result = array("code"=>200, "messages" => array("数据不存在"));
+            $result = ["code" => 200, "messages" => ["数据不存在"]];
             echo json_encode($result);
             exit;
         }
@@ -191,12 +199,12 @@ class BrandController extends ZadminController {
             $length = isset($worldcode1[1]) ? $worldcode1[1] : '';
             $setting['worldcode1'] = [
                 'length' => $length,
-                'action' => $action
+                'action' => $action,
             ];
         } else {
             $setting['worldcode1'] = [
                 'length' => '',
-                'action' => ''
+                'action' => '',
             ];
         }
 
@@ -205,12 +213,12 @@ class BrandController extends ZadminController {
             $length = isset($worldcode2[1]) ? $worldcode2[1] : '';
             $setting['worldcode2'] = [
                 'length' => $length,
-                'action' => $action
+                'action' => $action,
             ];
         } else {
             $setting['worldcode2'] = [
                 'length' => '',
-                'action' => ''
+                'action' => '',
             ];
         }
 
@@ -219,12 +227,12 @@ class BrandController extends ZadminController {
             $length = isset($worldcode3[1]) ? $worldcode3[1] : '';
             $setting['worldcode3'] = [
                 'length' => $length,
-                'action' => $action
+                'action' => $action,
             ];
         } else {
             $setting['worldcode3'] = [
                 'length' => '',
-                'action' => ''
+                'action' => '',
             ];
         }
 
@@ -239,11 +247,11 @@ class BrandController extends ZadminController {
         foreach ($rows as $row) {
             $rowData = [];
 
-            $rowData['id']              = $row->id;
-            $rowData['brandgroup']      = $row->getBrandgroup();
+            $rowData['id'] = $row->id;
+            $rowData['brandgroup'] = $row->getBrandgroup();
             $rowData['brandgroupchild'] = $row->getBrandgroupchild();
-            $rowData['gender']          = $row->getGender();
-            $rowData['sizetop']         = $row->getSizetop();
+            $rowData['gender'] = $row->getGender();
+            $rowData['sizetop'] = $row->getSizetop();
 
             $result[] = $rowData;
         }
@@ -252,22 +260,22 @@ class BrandController extends ZadminController {
 
     public function addSizeAction()
     {
-	    if($this->request->isPost()) {
-            $brand_id           = filter_input(INPUT_POST, 'brand_id', FILTER_VALIDATE_INT);
-            $brandgroup_id      = filter_input(INPUT_POST, 'brandgroup_id', FILTER_VALIDATE_INT);
+        if ($this->request->isPost()) {
+            $brand_id = filter_input(INPUT_POST, 'brand_id', FILTER_VALIDATE_INT);
+            $brandgroup_id = filter_input(INPUT_POST, 'brandgroup_id', FILTER_VALIDATE_INT);
             $brandgroupchild_id = filter_input(INPUT_POST, 'brandgroupchild_id', FILTER_VALIDATE_INT);
-            $gender             = filter_input(INPUT_POST, 'gender', FILTER_VALIDATE_INT);
-            $sizetop_id         = filter_input(INPUT_POST, 'sizetop_id', FILTER_VALIDATE_INT);
+            $gender = filter_input(INPUT_POST, 'gender', FILTER_VALIDATE_INT);
+            $sizetop_id = filter_input(INPUT_POST, 'sizetop_id', FILTER_VALIDATE_INT);
 
             $model = new TbBrandSize;
-            $model->brand_id           = $brand_id;
-            $model->brandgroup_id      = $brandgroup_id;
+            $model->brand_id = $brand_id;
+            $model->brandgroup_id = $brandgroup_id;
             $model->brandgroupchild_id = $brandgroupchild_id;
-            $model->gender             = $gender;
-            $model->sizetop_id         = $sizetop_id;
+            $model->gender = $gender;
+            $model->sizetop_id = $sizetop_id;
 
-            $result = array("code"=>200, "messages" => array());
-	        if ($model->create() === false) {
+            $result = ["code" => 200, "messages" => []];
+            if ($model->create() === false) {
                 $messages = $model->getMessages();
 
                 foreach ($messages as $message) {
@@ -297,7 +305,7 @@ class BrandController extends ZadminController {
     /**
      * 颜色码对应的颜色名称
      *
-     * @return void
+     * @return false|string
      */
     public function getSuggestColorNameAction()
     {

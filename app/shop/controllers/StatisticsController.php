@@ -63,9 +63,9 @@ class StatisticsController extends AdminController
             $params = $this->request->get();
             // 如果没有传入起始销售时间和终止销售时间，那么就默认为昨天一整天的数据
             $start_salesdate = $this->request->get('start_salesdate') ?: date('Y-m-d', time() - 86400);
-            $end_salesdate   = $this->request->get('end_salesdate') ?: date('Y-m-d', time() + 86400);
+            $end_salesdate = $this->request->get('end_salesdate') ?: date('Y-m-d', time() + 86400);
             // 保存rateby、groupby参数
-            $rateby  = $this->request->get('rateby') ?: '1';
+            $rateby = $this->request->get('rateby') ?: '1';
             $groupby = $this->request->get('groupby') ?: '1';
             // 去掉无需直接搜索的参数
             $unsetVals = ['_url', 'start_salesdate', 'end_salesdate', 'rateby', 'groupby'];
@@ -223,37 +223,37 @@ class StatisticsController extends AdminController
             switch ($groupby) {
                 // 1-品牌
                 case '1':
-                    $groupbyStr  = 'brandid';
+                    $groupbyStr = 'brandid';
                     $groupbyDesc = "brandname";
                     break;
                 // 2-销售端口
                 case '2':
-                    $groupbyStr  = 'saleportid';
+                    $groupbyStr = 'saleportid';
                     $groupbyDesc = 'saleportname';
                     break;
                 // 3-品类
                 case '3':
-                    $groupbyStr  = 'brandgroupid';
+                    $groupbyStr = 'brandgroupid';
                     $groupbyDesc = "brandgroupname";
                     break;
                 // 4-部门
                 case '4':
-                    $groupbyStr  = 'departmentid';
+                    $groupbyStr = 'departmentid';
                     $groupbyDesc = 'departmentname';
                     break;
                 // 5-会员
                 case '5':
-                    $groupbyStr  = 'memberid';
+                    $groupbyStr = 'memberid';
                     $groupbyDesc = 'membername';
                     break;
                 // 6-销售人
                 case '6':
-                    $groupbyStr  = 'salesstaff';
+                    $groupbyStr = 'salesstaff';
                     $groupbyDesc = 'salesstaffname';
                     break;
                 // 默认-品牌
                 default:
-                    $groupbyStr  = 'brandid';
+                    $groupbyStr = 'brandid';
                     $groupbyDesc = "brandname";
             }
 
@@ -264,7 +264,7 @@ class StatisticsController extends AdminController
 
             // 4、汇总统计
             // 首先声明一个新数组用来保存最终的结果
-            $return_array          = [];
+            $return_array = [];
             $return_array['items'] = [];
             // 开始对结果进行预处理，计算出全部数量和金额
             // 汇总数量
@@ -313,7 +313,7 @@ class StatisticsController extends AdminController
                     ];
                 } else {
                     // 否则就累计，采用高精度计算
-                    $return_array['items'][$item[$groupbyStr]]['sum_number']    += $item['number'];
+                    $return_array['items'][$item[$groupbyStr]]['sum_number'] += $item['number'];
                     $return_array['items'][$item[$groupbyStr]]['sum_realprice'] += $item['sum_realprice'];
                 }
                 // 添加点击之后的内页数据，直接放在新的details字段中即可。
@@ -323,14 +323,14 @@ class StatisticsController extends AdminController
             // 再把数量比例和金额比例添加到数组中
             foreach ($return_array['items'] as $k => $item) {
                 $return_array['items'][$k]['rate_number'] = round($item['sum_number'] / $total_number * 100, 2) . "%";
-                $return_array['items'][$k]['rate_price']  = round($item['sum_realprice'] / $total_realprice * 100, 2) . "%";
+                $return_array['items'][$k]['rate_price'] = round($item['sum_realprice'] / $total_realprice * 100, 2) . "%";
             }
 
             // 去掉数组的个性化下标，从0开始排
             $return_array['items'] = array_values($return_array['items']);
 
             // 补充total数组
-            $return_array['total']['total_number']    = $total_number;
+            $return_array['total']['total_number'] = $total_number;
             $return_array['total']['total_realprice'] = $total_realprice;
 
             // 返回最终结果
@@ -356,15 +356,15 @@ class StatisticsController extends AdminController
             $params = $this->request->get();
             // 如果没有传入起始销售时间和终止销售时间，那么就默认为昨天一整天的数据
             $start_salesdate = $this->request->get('start_salesdate');
-            $end_salesdate   = $this->request->get('end_salesdate');
+            $end_salesdate = $this->request->get('end_salesdate');
             $start_salesdate = $start_salesdate ? date('Y-m-d', strtotime($params['start_salesdate']) - 86400) : date('Y-m-d', time() - 86400);
-            $end_salesdate   = $end_salesdate ? date('Y-m-d', strtotime($params['end_salesdate']) + 86400) : date('Y-m-d', time() + 86400);
+            $end_salesdate = $end_salesdate ? date('Y-m-d', strtotime($params['end_salesdate']) + 86400) : date('Y-m-d', time() + 86400);
             // 入库日期
             $start_stockdate = $this->request->get('start_stockdate') ? date('Y-m-d', strtotime($params['start_stockdate']) - 86400) : date('Y-m-d', strtotime('0001-01-01 00:00:00'));
-            $end_stockdate   = $this->request->get('end_stockdate') ? date('Y-m-d', strtotime($params['end_stockdate']) + 86400) : date('Y-m-d', time() + 86400);
+            $end_stockdate = $this->request->get('end_stockdate') ? date('Y-m-d', strtotime($params['end_stockdate']) + 86400) : date('Y-m-d', time() + 86400);
             // 保存rateby、groupby参数
-            $orderbyStr     = $this->request->get('orderby') ?: '1';
-            $groupbyStr     = $this->request->get('groupby') ?: '1';
+            $orderbyStr = $this->request->get('orderby') ?: '1';
+            $groupbyStr = $this->request->get('groupby') ?: '1';
             $orderby_method = $this->request->get('orderbymethod') ?: '1';
             // 去掉无需直接搜索的参数
             $unsetVals = ['_url', 'start_salesdate', 'end_salesdate', 'rateby', 'groupby'];
@@ -423,15 +423,15 @@ class StatisticsController extends AdminController
                     // 如果新数组中不存在，就新增
                     // 除了新增数量和金额之外，还需要增加各自的百分比
                     if (!isset($return_array[$item[$groupby]])) {
-                        $return_array[$item[$groupby]][$groupby]        = $item[$groupby];
-                        $return_array[$item[$groupby]]['sellnumber']    = $item['sellnumber'];
-                        $return_array[$item[$groupby]]['number']        = $item['number'];
-                        $return_array[$item[$groupby]]['brandname']     = $item['brandname'];
+                        $return_array[$item[$groupby]][$groupby] = $item[$groupby];
+                        $return_array[$item[$groupby]]['sellnumber'] = $item['sellnumber'];
+                        $return_array[$item[$groupby]]['number'] = $item['number'];
+                        $return_array[$item[$groupby]]['brandname'] = $item['brandname'];
                         $return_array[$item[$groupby]]['brandfilename'] = $item['brandfilename'];
                     } else {
                         // 否则就累计
                         $return_array[$item[$groupby]]['sellnumber'] += $item['sellnumber'];
-                        $return_array[$item[$groupby]]['number']     += $item['number'];
+                        $return_array[$item[$groupby]]['number'] += $item['number'];
                     }
                 }
                 // 接着补充百分比
@@ -481,7 +481,7 @@ class StatisticsController extends AdminController
             // 排序逻辑
             // 取得列的列表
             foreach ($return_array as $key => $row) {
-                $rate[$key]       = $row['rate'];
+                $rate[$key] = $row['rate'];
                 $sellnumber[$key] = $row['sellnumber'];
             }
 
@@ -527,7 +527,7 @@ class StatisticsController extends AdminController
         $season = ceil((date('n')) / 3);
         // 接下来获取本季度时间范围
         $start_season = date('Y-m-d H:i:s', mktime(0, 0, 0, $season * 3 - 3 + 1, 1, date('Y')));
-        $end_season   = date('Y-m-d H:i:s', mktime(23, 59, 59, $season * 3, date('t', mktime(0, 0, 0, $season * 3, 1, date("Y"))), date('Y')));
+        $end_season = date('Y-m-d H:i:s', mktime(23, 59, 59, $season * 3, date('t', mktime(0, 0, 0, $season * 3, 1, date("Y"))), date('Y')));
 
         // 2、获取入库结果集
         $warehousings = $this->getWarehousings($start_season, $end_season);
@@ -572,16 +572,16 @@ class StatisticsController extends AdminController
         // 6、保存最终分组变量
         $return = [];
         // 在外面统计总数量、总结算金额、库销比、
-        $total_number     = 0;
+        $total_number = 0;
         $total_sellnumber = 0;
-        $total_realprice  = 0;
-        $total_rate       = 0;
+        $total_realprice = 0;
+        $total_rate = 0;
         foreach ($return_group_productid as $k => $item) {
             // 如果新数组中不存在，就新增
             if (!isset($return['items'][$item[$groupby]])) {
                 // 拼接当前分组的名字
-                $groupbyname                      = substr($groupby, 0, strlen($groupby) - 2) . 'name';
-                $groupbyvalue                     = $item[$groupbyname];
+                $groupbyname = substr($groupby, 0, strlen($groupby) - 2) . 'name';
+                $groupbyvalue = $item[$groupbyname];
                 $return['items'][$item[$groupby]] = [
                     $groupby         => $item[$groupby],
                     $groupbyname     => $groupbyvalue,
@@ -591,17 +591,17 @@ class StatisticsController extends AdminController
                 ];
             } else {
                 // 否则就累计
-                $return['items'][$item[$groupby]]['sum_number']     += $item['number'];
+                $return['items'][$item[$groupby]]['sum_number'] += $item['number'];
                 $return['items'][$item[$groupby]]['sum_sellnumber'] += $item['sellnumber'];
-                $return['items'][$item[$groupby]]['sum_realprice']  += $item['sum_realprice'];
+                $return['items'][$item[$groupby]]['sum_realprice'] += $item['sum_realprice'];
             }
             // 处理完了之后，增加百分比
             $return['items'][$item[$groupby]]['rate'] = round($return['items'][$item[$groupby]]['sum_sellnumber'] / $return['items'][$item[$groupby]]['sum_number'], 2);
             // 计数器累计
-            $total_number     += $return['items'][$item[$groupby]]['sum_number'];
+            $total_number += $return['items'][$item[$groupby]]['sum_number'];
             $total_sellnumber += $return['items'][$item[$groupby]]['sum_sellnumber'];
-            $total_realprice  += $return['items'][$item[$groupby]]['sum_realprice'];
-            $total_rate       = round($total_sellnumber / $total_number, 2);
+            $total_realprice += $return['items'][$item[$groupby]]['sum_realprice'];
+            $total_rate = round($total_sellnumber / $total_number, 2);
         }
 
         // 补充total数组
@@ -634,34 +634,34 @@ class StatisticsController extends AdminController
             $msg = $this->getValidateMessage('date-required');
             return $this->error([$msg]);
         }
-        $end_stockdate   = date('Y-m-d', strtotime($end_stockdate) + 86400);
+        $end_stockdate = date('Y-m-d', strtotime($end_stockdate) + 86400);
         $end_warehousing = date('Y-m-d', strtotime($end_stockdate) - 86400);
 
         // 1、确定分组字段
         // 处理分组
         // 初始化数据
-        $groupby     = 'productid';
+        $groupby = 'productid';
         $groupbyname = 'productname';
         if (isset($params['groupby']) && $params['groupby']) {
             switch ($params['groupby']) {
                 // 1-品类
                 case 'brandgroupid':
-                    $groupby     = 'brandgroupid';
+                    $groupby = 'brandgroupid';
                     $groupbyname = "brandgroupname";
                     break;
                 // 2-品牌
                 case 'brandid':
-                    $groupby     = 'brandid';
+                    $groupby = 'brandid';
                     $groupbyname = "brandname";
                     break;
                 // 3-仓库
                 case 'warehouseid':
-                    $groupby     = 'warehouseid';
+                    $groupby = 'warehouseid';
                     $groupbyname = 'warehousename';
                     break;
                 // 否则就按照productid汇总
                 default:
-                    $groupby     = 'productid';
+                    $groupby = 'productid';
                     $groupbyname = 'productname';
             }
         }
@@ -718,7 +718,7 @@ class StatisticsController extends AdminController
         }
 
         // 最终数据处理，把缺少的字段全部补齐
-        $keys       = $this->getUniqueMultiArrayKeys($return_arr);
+        $keys = $this->getUniqueMultiArrayKeys($return_arr);
         $return_arr = $this->fillMissingMultiArrayFields($keys, $return_arr);
 
         // 6、保存最终分组变量
@@ -735,7 +735,7 @@ class StatisticsController extends AdminController
         // 库存余额
         $total_realprice = 0;
         // 库销比
-        $total_rate      = 0;
+        $total_rate = 0;
         $return['items'] = $return_arr;
         foreach ($return['items'] as $k => $item) {
             // 每个分组元素统计库销比
@@ -1099,7 +1099,7 @@ class StatisticsController extends AdminController
             foreach ($betweenParams as $betweenParam) {
                 // 确定起始和结尾字段名称
                 $start = isset($searchParams['start_' . $betweenParam]) ? $searchParams['start_' . $betweenParam] : '';
-                $end   = isset($searchParams['end_' . $betweenParam]) ? $searchParams['end_' . $betweenParam] : '';
+                $end = isset($searchParams['end_' . $betweenParam]) ? $searchParams['end_' . $betweenParam] : '';
                 // 如果两个都为空，那么不处理
                 // 分三种情况处理
                 if (empty($start) && !empty($end)) {
@@ -1119,7 +1119,7 @@ class StatisticsController extends AdminController
                     // 判断如果不是json格式就不赋值
                     if (Util::is_json($temp)) {
                         $temp_array = json_decode($temp, true);
-                        $condition  = [];
+                        $condition = [];
                         foreach ($temp_array as $id) {
                             $condition[] = "\$data['$multiParam'] == " . $id;
                         }
@@ -1401,7 +1401,7 @@ class StatisticsController extends AdminController
         // 把差集给第二个数组补齐
         foreach ($diff as $id) {
             $temp[$fieldname] = $id;
-            $SmallArray[$id]  = $temp;
+            $SmallArray[$id] = $temp;
         }
 
         // 开始合并数组
@@ -1445,7 +1445,7 @@ class StatisticsController extends AdminController
     {
         // 逻辑
         // 首先取出$firstArray的$fieldname列表
-        $firstArrayFields  = array_values(array_column($firstArray, $fieldname));
+        $firstArrayFields = array_values(array_column($firstArray, $fieldname));
         $secondArrayFields = array_values(array_column($secondArray, $fieldname));
         return array_values(array_unique(array_diff($firstArrayFields, $secondArrayFields)));
     }

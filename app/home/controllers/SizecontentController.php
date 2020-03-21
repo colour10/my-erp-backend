@@ -1,64 +1,73 @@
 <?php
+
 namespace Multiple\Home\Controllers;
 
-use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\View;
 use Asa\Erp\TbSizecontent;
 
 /**
  * 商品尺码明细信息表
+ * Class SizecontentController
+ * @package Multiple\Home\Controllers
  */
-class SizecontentController extends ZadminController {
-    public function initialize() {
-	    parent::initialize();
+class SizecontentController extends ZadminController
+{
+    public function initialize()
+    {
+        parent::initialize();
 
-	    $this->setModelName('Asa\\Erp\\TbSizecontent');
+        $this->setModelName('Asa\\Erp\\TbSizecontent');
     }
 
-    function pageAction() {
+    function pageAction()
+    {
         $result = TbSizecontent::find([
             sprintf("topid=%d", $_POST['topid']),
-            "order" => "displayindex asc"
+            "order" => "displayindex asc",
         ]);
 
         return $this->success($result->toArray());
     }
 
-    function before_add() {
+    function before_add()
+    {
         $max_displayindex = TbSizecontent::maximum([
             sprintf("topid=%d", $_POST['topid']),
-            "column" => "displayindex"
+            "column" => "displayindex",
         ]);
-        $_POST['displayindex'] = $max_displayindex+1;
+        $_POST['displayindex'] = $max_displayindex + 1;
     }
 
-    function upAction() {
+    function upAction()
+    {
         $properry = TbSizecontent::findFirstById($_POST['id']);
-        if($properry!=false) {
+        if ($properry != false) {
             $properry->doUp();
         }
         return $this->success();
     }
 
-    function downAction() {
+    function downAction()
+    {
         $properry = TbSizecontent::findFirstById($_POST['id']);
-        if($properry!=false) {
+        if ($properry != false) {
             $properry->doDown();
         }
         return $this->success();
     }
 
-    function topAction() {
+    function topAction()
+    {
         $properry = TbSizecontent::findFirstById($_POST['id']);
-        if($properry!=false) {
+        if ($properry != false) {
             $properry->doTop();
         }
         return $this->success();
     }
 
-    function bottomAction() {
+    function bottomAction()
+    {
         $properry = TbSizecontent::findFirstById($_POST['id']);
-        if($properry!=false) {
+        if ($properry != false) {
             $properry->doBottom();
         }
         return $this->success();
