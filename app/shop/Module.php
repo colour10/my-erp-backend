@@ -14,6 +14,7 @@ use Multiple\Shop\Controllers\AdminController;
 use Multiple\Shop\Controllers\BrandgroupController;
 use Multiple\Shop\Controllers\BuycarController;
 use Multiple\Shop\Controllers\CompanyController;
+use Phalcon\Config\Adapter\Php;
 use Phalcon\DiInterface;
 use Phalcon\Events\Manager as EventsManager;
 use Phalcon\Loader;
@@ -161,7 +162,7 @@ class Module implements ModuleDefinitionInterface
 
         // 为了使用共享model数据，需要注册language
         $di->setShared('language', function () use ($language) {
-            return new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
+            return new Php(APP_PATH . "/app/config/languages/{$language}.php");
         });
 
         // language转换成数组

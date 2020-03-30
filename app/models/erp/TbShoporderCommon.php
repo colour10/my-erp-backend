@@ -2,6 +2,8 @@
 
 namespace Asa\Erp;
 
+use Phalcon\Mvc\Model\ResultInterface;
+
 /**
  * 附带ERP商城主表
  * Class TbShoporderCommon
@@ -715,7 +717,7 @@ class TbShoporderCommon extends BaseModel
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return TbShoporderCommon|\Phalcon\Mvc\Model\ResultInterface
+     * @return TbShoporderCommon|ResultInterface
      */
     public static function findFirst($parameters = null)
     {

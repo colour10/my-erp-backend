@@ -26,6 +26,7 @@ class LoginController extends Controller
             $user = TbUser::findFirst([
                 sprintf("login_name='%s' and password='%s'", addslashes($username), md5($password)),
             ]);
+
             if ($user != false) {
                 $group = $user->group;
                 $language = isset($_POST['language']) ? $_POST['language'] : 'cn';

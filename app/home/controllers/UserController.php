@@ -4,6 +4,7 @@ namespace Multiple\Home\Controllers;
 
 use Asa\Erp\TbSaleport;
 use Asa\Erp\TbUser;
+use Asa\Erp\TbUserPermission;
 use Exception;
 
 /**
@@ -32,6 +33,7 @@ class UserController extends CadminController
     {
         $this->doEdit();
     }
+
 
     public function beforeExecuteRoute($dispatcher)
     {
@@ -171,5 +173,151 @@ class UserController extends CadminController
         }
 
         throw new Exception("/11140101/个人信息设置失败。/");
+    }
+
+    /**
+     * 获取所有用户的权限组和权限信息，用作初始化使用
+     */
+    public function grouppermissionsAction()
+    {
+        $users = TbUser::find();
+        $return = [];
+        foreach ($users as $user) {
+            $return[] = [
+                'user_id'          => $user->id,
+                'group'            => empty($user->group) ? [] : $user->group->toArray(),
+                'groupPermissions' => empty($user->group->permissionGroups) ? [] : $user->group->permissionGroups->toArray(),
+            ];
+        }
+        // 返回
+        return $return;
+    }
+
+    /**
+     * 获取当前用户的权限信息，从 userpermission 表中获取最新权限
+     */
+    public function currentpermissionsAction()
+    {
+        if ($this->request->isPost()) {
+            $return = [];
+            if ($user = TbUser::findFirstById($this->request->getPost('user_id'))) {
+                $return = [
+                    'user_id'          => $user->id,
+                    'group'            => empty($user->group) ? [] : $user->group->toArray(),
+                    'groupPermissions' => empty($user->userpermissions) ? [] : $user->userpermissions->toArray(),
+                ];
+            }
+            // 返回
+            echo $this->success($return);
+        }
+    }
+
+
+    /**
+     * 给单用户分配权限, 注意，每个用户的最高权限不能超过用户权限组的，需要做判断
+     * @return false|string
+     * @throws Exception
+     */
+    public function permissionsettingAction()
+    {
+        // 提取参数
+        $user = TbUser::findFirstById($_POST['userid']);
+        // 必须是同公司的才能修改
+        if ($user != false && $user->companyid == $this->companyid) {
+            // 首先拿到当前权限组的所有权限
+            $groupPermissions = $user->group->permissionGroups->toArray();
+            $keys = explode(",", $_POST['keys']);
+            $permissionids = array_column($groupPermissions, 'permissionid');
+
+            // 判断 keys 是否为 $permissionids 的子集
+            if (!empty($keys) && $keys != array_intersect($keys, $permissionids)) {
+                echo $this->error($this->di->get("staticReader")->label('permission-exceed'));
+                exit;
+            }
+
+            // 开始写入操作
+            $this->db->begin();
+            foreach ($user->userpermissions as $row) {
+                if ($row->delete() == false) {
+                    $this->db->rollback();
+                    throw new Exception('/1002/用户清除旧权限失败/');
+                }
+            }
+
+            foreach ($keys as $permissionid) {
+                // 如果 $permissionid 为空，说明用户没有分配任何权限，那么就设置 permissionid 为0
+                $userPermission = new TbUserPermission();
+                $userPermission->userid = $_POST['userid'];
+                $userPermission->groupid = $user->groupid;
+                $userPermission->permissionid = (int)$permissionid;
+                if ($userPermission->create() == false) {
+                    $this->db->rollback();
+                    throw new Exception('/1002/用户设置权限失败/');
+                }
+            }
+
+            $this->db->commit();
+            return $this->success();
+        } else {
+            throw new Exception('/1002/用户不存在。/');
+        }
+    }
+
+    /**
+     * 给多用户分配权限, 注意，每个用户的最高权限不能超过用户权限组的，需要做判断
+     * @return false|string
+     * @throws Exception
+     */
+    public function multipermissionsettingAction()
+    {
+        // 提取参数
+        // 如果不存在，则报非法操作
+        if (!isset($_POST['userIds']) || !isset($_POST['keys'])) {
+            throw new Exception('非法操作');
+        }
+
+        // 用户id列表
+        $userIds = explode(',', $_POST['userIds']);
+        // 开始写入操作
+        $this->db->begin();
+        foreach ($userIds as $userId) {
+            // 必须是同公司的才能修改
+            $user = TbUser::findFirstById($userId);
+            if ($user != false && $user->companyid == $this->companyid) {
+                // 首先拿到当前权限组的所有权限
+                $groupPermissions = $user->group->permissionGroups->toArray();
+                $keys = explode(",", $_POST['keys']);
+                $permissionids = array_column($groupPermissions, 'permissionid');
+
+                // 判断 keys 是否为 $permissionids 的子集
+                if (!empty($keys) && $keys != array_intersect($keys, $permissionids)) {
+                    echo $this->error($this->di->get("staticReader")->label('permission-exceed'));
+                    exit;
+                }
+
+                foreach ($user->userpermissions as $row) {
+                    if ($row->delete() == false) {
+                        $this->db->rollback();
+                        throw new Exception('/1002/用户清除旧权限失败/');
+                    }
+                }
+
+                foreach ($keys as $permissionid) {
+                    // 如果 $permissionid 为空，说明用户没有分配任何权限，那么就设置 permissionid 为0
+                    $userPermission = new TbUserPermission();
+                    $userPermission->userid = $userId;
+                    $userPermission->groupid = $user->groupid;
+                    $userPermission->permissionid = (int)$permissionid;
+                    if ($userPermission->create() == false) {
+                        $this->db->rollback();
+                        throw new Exception('/1002/用户设置权限失败/');
+                    }
+                }
+            } else {
+                throw new Exception('/1002/用户不存在。/');
+            }
+        }
+        $this->db->commit();
+        return $this->success();
     }
 }

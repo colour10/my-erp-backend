@@ -22,6 +22,16 @@ class TbUser extends BaseModel
             ]
         );
 
+        // 用户表-用户权限表，一对多
+        $this->hasMany(
+            "id",
+            "\Asa\Erp\TbUserPermission",
+            "userid",
+            [
+                'alias' => 'userpermissions',
+            ]
+        );
+
         // 用户表-组表，一对多反向
         $this->belongsTo(
             'groupid',
@@ -56,13 +66,13 @@ class TbUser extends BaseModel
     {
         $factory = $this->getValidatorFactory();
         return [
-            'login_name' => [$factory->presenceOf('dengluming'), $factory->uniqueness('dengluming')],
-            'password' => $factory->presenceOf('mima'),
-            'e_mail' => $factory->email('email'),
+            'login_name'   => [$factory->presenceOf('dengluming'), $factory->uniqueness('dengluming')],
+            'password'     => $factory->presenceOf('mima'),
+            'e_mail'       => $factory->email('email'),
             'departmentid' => $factory->tableid('bumen'),
-            'groupid' => $factory->tableid('zu'),
-            'companyid' => $factory->tableid('gongsi'),
-            'countryid' => $factory->tableid('guojia'),
+            'groupid'      => $factory->tableid('zu'),
+            'companyid'    => $factory->tableid('gongsi'),
+            'countryid'    => $factory->tableid('guojia'),
         ];
     }
 
