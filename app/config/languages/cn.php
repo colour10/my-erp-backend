@@ -942,6 +942,10 @@ return [
     'checkAll'                                         => '全选',
     'multiEdit'                                        => '批量编辑',
     'least-one-select'                                 => '请至少选择一个进行操作',
+    'select-childbrand'                                => '==请选择子品类==',
+    'son-colors'                                       => '子颜色',
+    'sexi-cannot-deleted'                              => '色系已经被使用，不能删除',
+    'sexi-unique'                                      => '色系不能重复',
 
     'template' =>
         [

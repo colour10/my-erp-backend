@@ -1,9 +1,13 @@
 <?php
+
 namespace Asa\Erp;
+
 use Phalcon\Mvc\Model\Relation;
 
 /**
  * 品牌表
+ * Class TbBrand
+ * @package Asa\Erp
  */
 class TbBrand extends BaseModel
 {
@@ -18,31 +22,32 @@ class TbBrand extends BaseModel
             '\Asa\Erp\TbCountry',
             'id',
             [
-                'alias' => 'country'
+                'alias' => 'country',
             ]
         );
 
-        //
+        // 品牌-产品表，一对多
         $this->hasMany(
             "id",
             "\Asa\Erp\TbProduct",
             "brandid",
             [
-                'alias' => 'products',
+                'alias'      => 'products',
                 'foreignKey' => [
                     // 关联字段存在性验证
-                    'action' => Relation::ACTION_RESTRICT,
-                    "message"    => "/1003/品牌已经使用，不能删除/"
+                    'action'  => Relation::ACTION_RESTRICT,
+                    "message" => "/1003/品牌已经使用，不能删除/",
                 ],
             ]
         );
     }
 
-    public function getRules() {
+    public function getRules()
+    {
         $factory = $this->getValidatorFactory();
         return [
             'countryid' => $factory->tableid('guishuguojia'),
-            'name_cn' => $factory->presenceOfMultiple('pinpaimingcheng')
+            'name_cn'   => $factory->presenceOfMultiple('pinpaimingcheng'),
         ];
     }
 

@@ -70,6 +70,11 @@ class ColorController extends CadminController
         }
     }
 
+    /**
+     * 更新颜色
+     *
+     * @return false|string
+     */
     public function updateColorAction()
     {
         $params = $this->dispatcher->getParams();
@@ -100,6 +105,11 @@ class ColorController extends CadminController
         }
     }
 
+    /**
+     * 删除颜色
+     *
+     * @return false|string
+     */
     public function deleteColorAction()
     {
         $params = $this->dispatcher->getParams();

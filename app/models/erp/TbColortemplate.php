@@ -15,6 +15,7 @@ class TbColortemplate extends BaseModel
         parent::initialize();
         $this->setSource('tb_colortemplate');
 
+        // 颜色-产品，一对多
         $this->hasMany(
             "id",
             "\Asa\Erp\TbProduct",
@@ -29,6 +30,7 @@ class TbColortemplate extends BaseModel
             ]
         );
 
+        // 颜色-销售类型，一对多
         $this->hasMany(
             "id",
             "\Asa\Erp\TbSaleType",
@@ -40,6 +42,16 @@ class TbColortemplate extends BaseModel
                     'action'  => Relation::ACTION_RESTRICT,
                     "message" => "/1003/色系已经使用，不能删除/",
                 ],
+            ]
+        );
+
+        // 颜色-色系，一对多反向
+        $this->belongsTo(
+            'color_system_id',
+            '\Asa\Erp\TbColorSystem',
+            'id',
+            [
+                'alias' => 'colorsystem',
             ]
         );
     }
