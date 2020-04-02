@@ -21,13 +21,17 @@ class MaterialController extends ZadminController
         $this->setModelName('Asa\\Erp\\TbMaterial');
     }
 
+    /**
+     * 获取搜索条件
+     * @return string
+     */
     public function getSearchCondition()
     {
         $where = [];
 
         $keyword = filter_input(INPUT_POST, 'keyword');
         if ($keyword) {
-            $where[] = sprintf("name_cn LIKE '%%%s%%' OR name_en LIKE '%%%s%%' OR name_it LIKE '%%%s%%'", addslashes(strtoupper($keyword)), addslashes(strtoupper($keyword)), addslashes(strtoupper($keyword)));
+            $where[] = sprintf("name_cn LIKE '%%%s%%' OR name_en LIKE '%%%s%%' OR name_it LIKE '%%%s%%' OR code LIKE '%%%s%%'", addslashes(strtoupper($keyword)), addslashes(strtoupper($keyword)), addslashes(strtoupper($keyword)), addslashes(strtoupper($keyword)));
         }
 
         return implode(' and ', $where);
