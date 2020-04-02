@@ -5,6 +5,8 @@ namespace Multiple\Home\Controllers;
 use Asa\Erp\TbBrandgroup;
 use Asa\Erp\TbBrandgroupchild;
 use Asa\Erp\TbBrandgroupchildProperty;
+use Asa\Erp\TbMaterialnote;
+use Asa\Erp\Util;
 
 /**
  * 品类表控制器
@@ -62,7 +64,12 @@ class BrandgroupController extends ZadminController
         }
     }
 
-    function copypropertyAction()
+    /**
+     * 复制属性
+     *
+     * @return false|string
+     */
+    public function copypropertyAction()
     {
         $result = TbBrandgroupchildProperty::find(
             sprintf("brandgroupchildid=%d", $_POST['brandgroupchildid'])
@@ -93,5 +100,34 @@ class BrandgroupController extends ZadminController
             $this->db->commit();
         }
         return $this->success();
+    }
+
+    /**
+     * 取出当前品类所有的材质备注
+     */
+    public function materialnotesAction()
+    {
+        // brandgroupid 必须传值
+        if (!$brandgroupid = $this->request->getPost('brandgroupid')) {
+            throw new \Exception('brandgroupid is invalid');
+        }
+        // brandgroupid 必须是正整数
+        if (!Util::isPositiveInteger($brandgroupid)) {
+            throw new \Exception('brandgroupid is invalid');
+        }
+        // 先取出所有的材质备注列表
+        $materialnotes = TbMaterialnote::find([
+            'columns' => 'id, brandgroupids',
+        ]);
+        // 进行遍历
+        $result = [];
+        foreach ($materialnotes as $materialnote) {
+            $brandgroupids_array = explode(',', $materialnote->brandgroupids);
+            if (in_array($brandgroupid, $brandgroupids_array)) {
+                $result[] = $materialnote;
+            }
+        }
+        // 返回
+        return $this->success(array_column($result, 'id'));
     }
 }

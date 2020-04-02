@@ -1103,4 +1103,18 @@ class Util
         // 否则就返回原网址
         return $url;
     }
+
+    /**
+     * 判断一个变量是否为正整数
+     *
+     * @param $val
+     * @return bool
+     */
+    public static function isPositiveInteger($val)
+    {
+        if (preg_match("/^[1-9][0-9]*$/", $val)) {
+            return true;
+        }
+        return false;
+    }
 }

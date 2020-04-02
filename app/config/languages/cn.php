@@ -942,6 +942,7 @@ return [
     'checkAll'                                         => '全选',
     'multiEdit'                                        => '批量编辑',
     'least-one-select'                                 => '请至少选择一个进行操作',
+    'select-brandgroup'                                => '==请选择品类==',
     'select-childbrand'                                => '==请选择子品类==',
     'son-colors'                                       => '子颜色',
     'sexi-cannot-deleted'                              => '色系已经被使用，不能删除',
@@ -950,6 +951,8 @@ return [
     'edit-color'                                       => '修改颜色',
     'create-colorsystem'                               => '添加色系',
     'edit-colorsystem'                                 => '修改色系',
+    'create-sizetop'                                   => '新建尺码组',
+    'add-content'                                      => '新建条目',
 
     'template' =>
         [
