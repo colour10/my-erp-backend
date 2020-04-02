@@ -946,6 +946,10 @@ return [
     'son-colors'                                       => '子颜色',
     'sexi-cannot-deleted'                              => '色系已经被使用，不能删除',
     'sexi-unique'                                      => '色系不能重复',
+    'create-color'                                     => '添加颜色',
+    'edit-color'                                       => '修改颜色',
+    'create-colorsystem'                               => '添加色系',
+    'edit-colorsystem'                                 => '修改色系',
 
     'template' =>
         [
