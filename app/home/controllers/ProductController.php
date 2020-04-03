@@ -144,8 +144,9 @@ class ProductController extends CadminController
             $product->color_id = $row['colorId'];
             $product->second_color_id = isset($row['secondColorId'][1]) ? (int)$row['secondColorId'][1] : 0;
 
-            $product->brandgroupid = $params['form']['childbrand'][0];
-            $product->childbrand = $params['form']['childbrand'][1];
+            // 不放在一起了，分开存储
+            $product->brandgroupid = $params['form']['brandgroupid'];
+            $product->childbrand = $params['form']['childbrand'];
             $product->ageseason = implode(',', $params['form']['ageseason']);
             $product->ageseason_season = '';
             $product->ageseason_year = '';
