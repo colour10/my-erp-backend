@@ -953,6 +953,7 @@ return [
     'edit-colorsystem'                                 => '修改色系',
     'create-sizetop'                                   => '新建尺码组',
     'add-content'                                      => '新建条目',
+    'arrive-record'                                    => '到货记录',
 
     'template' =>
         [
