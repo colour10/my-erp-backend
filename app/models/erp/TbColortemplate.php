@@ -4,9 +4,10 @@ namespace Asa\Erp;
 
 use Phalcon\Mvc\Model\Relation;
 
-
 /**
  * 基础资料，ASA颜色模板表
+ * Class TbColortemplate
+ * @package Asa\Erp
  */
 class TbColortemplate extends BaseModel
 {

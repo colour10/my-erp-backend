@@ -7,6 +7,8 @@ use Phalcon\Mvc\Model\Resultset;
 
 /**
  * 年代季节
+ * Class TbAgeseason
+ * @package Asa\Erp
  */
 class TbAgeseason extends BaseModel
 {

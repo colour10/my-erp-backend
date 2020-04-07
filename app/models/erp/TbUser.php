@@ -4,6 +4,8 @@ namespace Asa\Erp;
 
 /**
  * 用户表
+ * Class TbUser
+ * @package Asa\Erp
  */
 class TbUser extends BaseModel
 {

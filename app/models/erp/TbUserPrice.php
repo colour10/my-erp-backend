@@ -4,6 +4,8 @@ namespace Asa\Erp;
 
 /**
  * 用户价格表
+ * Class TbUserPrice
+ * @package Asa\Erp
  */
 class TbUserPrice extends BaseModel
 {

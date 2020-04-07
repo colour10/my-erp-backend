@@ -3,7 +3,9 @@
 namespace Asa\Erp;
 
 /**
- * 仓库表
+ * 仓库-用户关联表
+ * Class TbWarehouseUser
+ * @package Asa\Erp
  */
 class TbWarehouseUser extends BaseModel
 {

@@ -954,6 +954,8 @@ return [
     'create-sizetop'                                   => '新建尺码组',
     'add-content'                                      => '新建条目',
     'arrive-record'                                    => '到货记录',
+    'nianfenjijie'                                     => '年份季节',
+    'zuizhongbenweibi'                                 => '最终本位币',
 
     'template' =>
         [

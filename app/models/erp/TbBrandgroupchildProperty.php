@@ -4,6 +4,8 @@ namespace Asa\Erp;
 
 /**
  * 基础资料，商品尺寸表
+ * Class TbBrandgroupchildProperty
+ * @package Asa\Erp
  */
 class TbBrandgroupchildProperty extends BaseModel
 {

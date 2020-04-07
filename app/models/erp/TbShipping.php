@@ -135,7 +135,6 @@ class TbShipping extends BaseModel
             }
         }
 
-        //print_r($result);
 
         return $result;
     }

@@ -6,6 +6,8 @@ use Phalcon\Mvc\Model\Relation;
 
 /**
  * 基础资料，商品尺寸表
+ * Class TbUlnarinch
+ * @package Asa\Erp
  */
 class TbUlnarinch extends BaseModel
 {

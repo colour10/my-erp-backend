@@ -7,6 +7,8 @@ use Phalcon\Mvc\Model\Relation;
 
 /**
  * 发货单主表
+ * Class TbConfirmorder
+ * @package Asa\Erp
  */
 class TbConfirmorder extends BaseModel
 {

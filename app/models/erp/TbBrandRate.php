@@ -4,6 +4,8 @@ namespace Asa\Erp;
 
 /**
  * 品牌倍率表
+ * Class TbBrandRate
+ * @package Asa\Erp
  */
 class TbBrandRate extends BaseModel
 {

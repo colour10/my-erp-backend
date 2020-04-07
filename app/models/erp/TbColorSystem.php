@@ -6,6 +6,8 @@ use Phalcon\Mvc\Model\Relation;
 
 /**
  * 基础资料，颜色色系表
+ * Class TbColorSystem
+ * @package Asa\Erp
  */
 class TbColorSystem extends BaseModel
 {

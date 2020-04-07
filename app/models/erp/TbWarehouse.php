@@ -6,6 +6,8 @@ use Phalcon\Mvc\Model\Relation;
 
 /**
  * 仓库表
+ * Class TbWarehouse
+ * @package Asa\Erp
  */
 class TbWarehouse extends BaseModel
 {

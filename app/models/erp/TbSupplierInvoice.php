@@ -4,6 +4,8 @@ namespace Asa\Erp;
 
 /**
  * 基公司发票管理
+ * Class TbSupplierInvoice
+ * @package Asa\Erp
  */
 class TbSupplierInvoice extends BaseModel
 {
