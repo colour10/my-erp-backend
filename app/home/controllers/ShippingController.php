@@ -60,35 +60,47 @@ class ShippingController extends AdminController
             // 币种
             $currency_model = TbCurrency::findFirstById($item->currency);
             $currency_code = $currency_model ? $currency_model->code : '';
-            // 成交价和数量分别汇总
-            $sum = 0;
-            $sum_price = 0;
-            $sum_currency_price = 0;
-            $shippingDetails = $item->shippingDetail->toArray();
-            foreach ($shippingDetails as $key => $shippingDetail) {
-                if ($shippingDetail['productid'] != $productid) {
-                    unset($shippingDetails[$key]);
+
+            $shippingDetailsObject = $item->shippingDetail;
+            // 有数据再遍历
+            if ($shippingDetailsObject) {
+                $shippingDetails = $shippingDetailsObject->toArray();
+                foreach ($shippingDetails as $key => $shippingDetail) {
+                    if ($shippingDetail['productid'] != $productid) {
+                        unset($shippingDetails[$key]);
+                    }
                 }
+                // 处理完再汇总，如果为空，则不再统计了
+                if (count($shippingDetails) == 0) {
+                    unset($result_array[$k]);
+                    continue;
+                }
+
+                // 如果数组不为0，则进行汇总
+                // 成交价和数量分别汇总
+                $sum = 0;
+                $sum_price = 0;
+                $sum_currency_price = 0;
+                foreach ($shippingDetails as $key => $shippingDetail) {
+                    // 汇总
+                    // 数量
+                    $sum += $shippingDetail['warehousingnumber'];
+                    // 结算货币价格
+                    $sum_price += $shippingDetail['warehousingnumber'] * $shippingDetail['price'] * $shippingDetail['discount'];
+                    // 本位币价格
+                    $rateInfo = $this->getRateInfo($shippingDetail['currencyid']);
+                    $sum_currency_price = $sum_price * $rateInfo['rate'];
+                }
+                $shippingDetails['sum'] = $sum;
+                // 当前货币【一般是欧元】总价格
+                $shippingDetails['sum_price'] = $sum_price;
+                // 兑换成本位货币的总价格
+                $shippingDetails['sum_current_price'] = $sum_currency_price;
+                // 尺码组id汇总
+                $shippingDetails['sizecontentids'] = implode(',', array_column($shippingDetails, 'sizecontentid'));
+                $result_array[$k]['shippingDetail'] = $shippingDetails;
             }
-            // 处理完再汇总
-            foreach ($shippingDetails as $key => $shippingDetail) {
-                // 汇总
-                // 数量
-                $sum += $shippingDetail['warehousingnumber'];
-                // 结算货币价格
-                $sum_price += $shippingDetail['warehousingnumber'] * $shippingDetail['price'] * $shippingDetail['discount'];
-                // 本位币价格
-                $rateInfo = $this->getRateInfo($shippingDetail['currencyid']);
-                $sum_currency_price = $sum_price * $rateInfo['rate'];
-            }
-            $shippingDetails['sum'] = $sum;
-            // 当前货币【一般是欧元】总价格
-            $shippingDetails['sum_price'] = $sum_price;
-            // 兑换成本位货币的总价格
-            $shippingDetails['sum_current_price'] = $sum_currency_price;
-            // 尺码组id汇总
-            $shippingDetails['sizecontentids'] = implode(',', array_column($shippingDetails, 'sizecontentid'));
-            $result_array[$k]['shippingDetail'] = $shippingDetails;
+
             // 添加新查询的3个字段
             $result_array[$k]['ageseason_name'] = $ageseason_name;
             $result_array[$k]['warehouse_name'] = $warehouse_name;
