@@ -2,12 +2,16 @@
 
 namespace Multiple\Home\Controllers;
 
+use Asa\Erp\TbAgeseason;
 use Asa\Erp\TbCode;
+use Asa\Erp\TbCurrency;
+use Asa\Erp\TbExchangeRate;
 use Asa\Erp\TbOrderBrandDetail;
 use Asa\Erp\TbProduct;
 use Asa\Erp\TbProductstock;
 use Asa\Erp\TbShipping;
 use Asa\Erp\TbShippingDetail;
+use Asa\Erp\TbWarehouse;
 use Exception;
 
 /**
@@ -17,6 +21,8 @@ use Exception;
  */
 class ShippingController extends AdminController
 {
+    private $orderBy = 'id desc';
+
     public function initialize()
     {
         parent::initialize();
@@ -30,6 +36,116 @@ class ShippingController extends AdminController
 
     public function editAction()
     {
+    }
+
+    /**
+     * 分页查询，需要把关联信息也查出来
+     */
+    public function listAction()
+    {
+        // productid
+        $productid = $this->request->getPost('productid');
+        // 查找=2或者=3的，都可以，只有=1状态是在途
+        $result = TbShipping::find("companyid = {$this->companyid} and (status = 2 or status = 3)");
+        // 找出关联部分
+        $result_array = $result->toArray();
+        foreach ($result as $k => $item) {
+            // 查找其中的 productid 符合要求的记录
+            // 年份季节
+            $ageseason_model = TbAgeseason::findFirstById($item->ageseason);
+            $ageseason_name = $ageseason_model ? $ageseason_model->sessionmark . $ageseason_model->name : '';
+            // 入库仓库
+            $warehouse_model = TbWarehouse::findFirstById($item->warehouseid);
+            $warehouse_name = $warehouse_model ? $warehouse_model->name : '';
+            // 币种
+            $currency_model = TbCurrency::findFirstById($item->currency);
+            $currency_code = $currency_model ? $currency_model->code : '';
+            // 成交价和数量分别汇总
+            $sum = 0;
+            $sum_price = 0;
+            $sum_currency_price = 0;
+            $shippingDetails = $item->shippingDetail->toArray();
+            foreach ($shippingDetails as $key => $shippingDetail) {
+                if ($shippingDetail['productid'] != $productid) {
+                    unset($shippingDetails[$key]);
+                }
+            }
+            // 处理完再汇总
+            foreach ($shippingDetails as $key => $shippingDetail) {
+                // 汇总
+                // 数量
+                $sum += $shippingDetail['warehousingnumber'];
+                // 结算货币价格
+                $sum_price += $shippingDetail['warehousingnumber'] * $shippingDetail['price'] * $shippingDetail['discount'];
+                // 本位币价格
+                $rateInfo = $this->getRateInfo($shippingDetail['currencyid']);
+                $sum_currency_price = $sum_price * $rateInfo['rate'];
+            }
+            $shippingDetails['sum'] = $sum;
+            // 当前货币【一般是欧元】总价格
+            $shippingDetails['sum_price'] = $sum_price;
+            // 兑换成本位货币的总价格
+            $shippingDetails['sum_current_price'] = $sum_currency_price;
+            // 尺码组id汇总
+            $shippingDetails['sizecontentids'] = implode(',', array_column($shippingDetails, 'sizecontentid'));
+            $result_array[$k]['shippingDetail'] = $shippingDetails;
+            // 添加新查询的3个字段
+            $result_array[$k]['ageseason_name'] = $ageseason_name;
+            $result_array[$k]['warehouse_name'] = $warehouse_name;
+            $result_array[$k]['currency_code'] = $currency_code;
+        }
+
+        // 返回
+        return $this->success($result_array);
+    }
+
+    /**
+     * 取出汇率
+     * @param int $currency 订单结算货币id
+     * @param string $begin_time
+     * @param string $end_time
+     * @return array
+     * @throws Exception
+     */
+    public function getRateInfo($currency, $begin_time = '', $end_time = '')
+    {
+        // 必须登录
+        if (!$auth = $this->auth) {
+            throw new Exception($this->di->get("staticReader")->label('model-delete-message'));
+        }
+        // 当前用户本位币
+        $current_currency = $auth['company']->currencyid;
+        // 基本sql语句
+        $sql = "currency_from = :currency_from: and currency_to = :currency_to: and companyid = :companyid: and status = 0";
+        $bind = [
+            'currency_from' => $currency,
+            'currency_to'   => $current_currency,
+            'companyid'     => $this->companyid,
+        ];
+        // 判断是否为空
+        if ($begin_time && $end_time) {
+            $sql .= " and begin_time >= :begin_time: and end_time <= :end_time:";
+            $bind['begin_time'] = $begin_time;
+            $bind['end_time'] = $end_time;
+        } elseif ($begin_time && !$end_time) {
+            $sql .= " and begin_time >= :begin_time:";
+            $bind['begin_time'] = $begin_time;
+        } elseif (!$begin_time && $end_time) {
+            $sql = " and end_time <= :end_time:";
+            $bind['end_time'] = $end_time;
+        } else {
+            $sql .= "";
+        }
+        // 取出订单计算货币和本位币的汇率
+        $model = TbExchangeRate::findFirst([
+            'conditions' => $sql,
+            'bind'       => $bind,
+        ]);
+        // 返回
+        if ($model) {
+            return $model->toArray();
+        }
+        return [];
     }
 
     public function getSearchCondition()
@@ -359,7 +475,7 @@ class ShippingController extends AdminController
     }
 
     /**
-     * 确认发货单
+     * 确认发货单, 确认入库接口
      * @return false|string
      * @throws Exception
      */
@@ -427,6 +543,7 @@ class ShippingController extends AdminController
                     $detail->orderbranddetailid = 0;
                 }
 
+                // 入库成功，填写入库数量
                 $detail->warehousingnumber = $item['number'];
 
 
@@ -461,6 +578,7 @@ class ShippingController extends AdminController
 
         $this->db->begin();
 
+        // 取消确认需要把状态改成在途，然后添加入库时间和确认时间【有争议】
         $shipping->status = 1;
         $shipping->warehousingstaff = $this->currentUser;
         $shipping->warehousingtime = date('Y-m-d H:i:s');
@@ -557,8 +675,8 @@ class ShippingController extends AdminController
             $product = TbProduct::getInstance($productid);
 
             if ($product && $row["number"] > 0) {
+                // 入库之后，添加成本、成本货币单位、最后入库时间
                 $product->cost = round($row['amount'] / $row["number"], 2);
-
                 $product->costcurrency = $currencyid;
                 $product->laststoragedate = date("Y-m-d H:i:s");
                 if ($product->update() === false) {
@@ -588,6 +706,7 @@ class ShippingController extends AdminController
             }
         }
 
+        // 添加入库人，入库时间
         $shipping->status = 3;
         $shipping->warehousingstaff = $this->currentUser;
         $shipping->warehousingtime = date('Y-m-d H:i:s');

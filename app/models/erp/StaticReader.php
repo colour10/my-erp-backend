@@ -21,7 +21,7 @@ class StaticReader implements InjectionAwareInterface
 
     function get($source, $key)
     {
-        $language = $this->getDI()->get("session")->get("language");
+        $language = $this->getDI()->get("session")->get("language") ?? 'cn';
         $lang = new Php(APP_PATH . "/app/config/languages/{$language}.php");
 
         if (isset($language['list'][$source])) {
@@ -33,7 +33,7 @@ class StaticReader implements InjectionAwareInterface
 
     function label($key)
     {
-        $language = $this->getDI()->get("session")->get("language");
+        $language = $this->getDI()->get("session")->get("language") ?? 'cn';
         $lang = new Php(APP_PATH . "/app/config/languages/{$language}.php");
         if (isset($lang[$key])) {
             return $lang[$key];

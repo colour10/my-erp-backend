@@ -340,11 +340,15 @@ class ProductController extends CadminController
                 $row->winterproofingid = $params['form']["winterproofingid"];
                 $row->updatetime = date("Y-m-d H:i:s");
 
-                $row->color_system_id = $params['form']['colorId'][0];
-                $row->color_id = $params['form']['colorId'][1];
+                // 分开保存
+                // $row->color_system_id = $params['form']['colorId'][0];
+                $row->color_system_id = $params['form']['colorSystemId'];
+                // $row->color_id = $params['form']['colorId'][1];
+                $row->color_id = $params['form']['colorId'];
+
                 $row->second_color_id = isset($params['form']['secondColorId'][1]) ? (int)$params['form']['secondColorId'][1] : 0;
-                $row->brandgroupid = $params['form']['childbrand'][0];
-                $row->childbrand = $params['form']['childbrand'][1];
+                $row->brandgroupid = $params['form']['brandgroupid'];
+                $row->childbrand = $params['form']['childbrand'];
                 $row->ageseason = empty($params['form']['ageseason']) ? '' : implode(',', $params['form']['ageseason']);
                 $row->countries = empty($params['form']['countries']) ? '' : implode(',', $params['form']['countries']);
                 $row->ulnarinch = empty($params['form']['ulnarinch']) ? '' : implode(',', $params['form']['ulnarinch']);
@@ -1332,8 +1336,9 @@ class ProductController extends CadminController
         foreach ($productMemos as $pm) {
             $title = $pm->{'name_' . $lang};
             $result['productMemos'][] = [
-                'id'    => (int)$pm->id,
-                'title' => $title,
+                'id'                => (int)$pm->id,
+                'title'             => $title,
+                'brandgroupchildid' => (int)$pm->brandgroupchildid,
             ];
         }
 

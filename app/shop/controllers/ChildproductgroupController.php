@@ -9,6 +9,9 @@ use Asa\Erp\TbProductSearch;
 use Asa\Erp\TbProductstock;
 use Asa\Erp\TbSizecontent;
 use Asa\Erp\Util;
+use Phalcon\Http\Response;
+use Phalcon\Http\ResponseInterface;
+use Phalcon\Mvc\View;
 use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
 
 /**
@@ -29,7 +32,7 @@ class ChildproductgroupController extends AdminController
 
     /**
      * 获取当前子分类产品列表
-     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|void
+     * @return Response|ResponseInterface|View|void
      */
     public function detailAction()
     {

@@ -7,6 +7,14 @@ namespace Asa\Erp;
  */
 class TbShipping extends BaseModel
 {
+    // // 定义订单状态, 暂时不能确定1，2,3分别代表什么意思，搁置
+    // // 在途
+    // const SHIPPING_WAY = 1;
+    // // 入库
+    // const SHIPPING_STORAGE = 2;
+    // // 取消
+    // const SHIPPING_CANCEL = 3;
+
     public function initialize()
     {
         parent::initialize();

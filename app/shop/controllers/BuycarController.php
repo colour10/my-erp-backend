@@ -10,6 +10,8 @@ use Asa\Erp\TbProductSearch;
 use Asa\Erp\TbProductstock;
 use Asa\Erp\TbSizecontent;
 use Asa\Erp\Util;
+use Phalcon\Http\Response;
+use Phalcon\Http\ResponseInterface;
 
 /**
  * 购物车操作类
@@ -213,7 +215,7 @@ class BuycarController extends AdminController
 
     /**
      * 添加到购物车
-     * @return array|false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|string|void
+     * @return array|false|Response|ResponseInterface|string|void
      */
     public function addAction()
     {
