@@ -7,7 +7,6 @@ use Asa\Erp\TbCode;
 use Asa\Erp\TbSalesReceive;
 use Exception;
 
-
 /**
  * 对账单控制器
  * Class BillController

@@ -3,6 +3,7 @@
 namespace Multiple\Home\Controllers;
 
 use Asa\Erp\TbCompany;
+use Exception;
 
 /**
  * 公司表
@@ -18,16 +19,28 @@ class CompanyController extends AdminController
         $this->setModelName('Asa\\Erp\\TbCompany');
     }
 
+    /**
+     * 查看公司信息
+     *
+     * @return false|string
+     * @throws Exception
+     */
     function infoAction()
     {
         $company = TbCompany::findFirstById($this->currentCompany);
         if ($company != false) {
             return $this->success($company->toArray());
         } else {
-            throw new \Exception("/1002/公司数据不存在/");
+            throw new Exception("/1002/公司数据不存在/");
         }
     }
 
+    /**
+     * 更新公司信息
+     *
+     * @return false|string
+     * @throws Exception
+     */
     function updateAction()
     {
         $company = TbCompany::findFirstById($this->currentCompany);
@@ -45,7 +58,7 @@ class CompanyController extends AdminController
             }
             return $this->success();
         } else {
-            throw new \Exception("/1002/公司数据不存在/");
+            throw new Exception("/1002/公司数据不存在/");
         }
     }
 }

@@ -24,6 +24,7 @@ class AgeseasonController extends AdminController
     }
 
     /**
+     * 拼接完整的年代季节，如SS2010
      * @param $row
      * @return array
      */

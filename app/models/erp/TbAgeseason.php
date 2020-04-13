@@ -51,16 +51,13 @@ class TbAgeseason extends BaseModel
         // 逻辑
         // 验证季节
         switch ($mark) {
-            // 如果输入月份为下半年，季节变，年份不变
-            case "FW":
-                $prevMark = 'SS';
-                $prevName = $name;
-                break;
             // 如果输入年代为上半年，季节变，年份变-1
             case "SS":
                 $prevMark = 'FW';
                 $prevName = $name - 1;
                 break;
+            case "FW":
+                // 如果输入月份为下半年，季节变，年份不变
             default:
                 $prevMark = 'SS';
                 $prevName = $name;
