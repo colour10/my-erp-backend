@@ -156,12 +156,52 @@ class UserController extends CadminController
     }
 
     /**
+     * 获取某个用户的销售端口，这个用户必须是当前公司的才能操作
+     *
+     * @return false|string [type] [description]
+     */
+    function currentsaleportlistAction()
+    {
+        // 必须存在userId
+        if (!$userId = $this->request->getPost('userId')) {
+            return $this->error($this->di->get("staticReader")->label('make-an-error'));
+        }
+
+        // 查找
+        // 如果不存在，返回空
+        if (!$user = TbUser::findFirst([
+            'conditions' => 'id = :userId: and companyid = :companyid:',
+            'bind'       => [
+                'userId'    => $userId,
+                'companyid' => $this->companyid,
+            ],
+        ])) {
+            return $this->success();
+        }
+
+        // 存在则继续处理
+        $user_array = $user->toArray();
+        // 如果没有销售端口
+        if ($user_array['saleportids'] == "") {
+            return $this->success();
+        }
+
+        // 存在则继续
+        $result = TbSaleport::find(
+            sprintf("id in (%s)", $user_array['saleportids'])
+        );
+        return $this->success($result->toArray());
+    }
+
+    /**
      * 个人设置自己的默认端口号、仓库和价格
      * @return false|string [type] [description]
      * @throws Exception
      */
     function settingAction()
     {
+        return $this->success($this->currentUser);
+
         $user = TbUser::findFirstById($this->currentUser);
         if ($user != false) {
             $user->saleportid = $_POST['saleportid'];
@@ -319,5 +359,33 @@ class UserController extends CadminController
         }
         $this->db->commit();
         return $this->success();
+    }
+
+    /**
+     * 取出某个用户的信息
+     *
+     * @return false|string
+     */
+    public function showAction()
+    {
+        // 必须存在userId
+        if (!$userId = $this->request->getPost('userId')) {
+            return $this->error($this->di->get("staticReader")->label('make-an-error'));
+        }
+
+        // 查找 userId 对应的仓库记录
+        if ($user = TbUser::findFirst([
+            'conditions' => 'id = :userId:',
+            'bind'       => [
+                'userId' => $userId,
+            ],
+        ])) {
+            $user = $user->toArray();
+        } else {
+            $user = [];
+        }
+
+        // 返回
+        return $this->success($user);
     }
 }
