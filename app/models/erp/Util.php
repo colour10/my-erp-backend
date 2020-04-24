@@ -1117,4 +1117,108 @@ class Util
         }
         return false;
     }
+
+    /**
+     * 以$groupby字段作为分组条件，并把二维数组合并为一维数组
+     *
+     * @param array $datas 二维数组
+     * @param string $groupby 分组字段
+     * @param array $mustBeDisplayFields 所有需要展示的字段数组，这些都是共用的，保持原样即可
+     * @param array $totalFields 需要累计做加法的字段数组
+     * @param array $concatFields 需要合并的字段数组，默认返回值用逗号隔开，里面可以放一级数组和二级数组
+     * @param array $specialConcatFields 需要做特殊合并处理的字段，里面包含名称以及拼接规则, name代表对外显示的新字段名称，fields代表所有需要拼接的字段， connector代表拼接之后的连接符 ['name' => 'specialConcat', 'fields' => ['field1', 'field2', 'field3'], 'connector' => ';']
+     * @return array
+     */
+    public static function getGroupArray(array $datas, $groupby, array $mustBeDisplayFields = [], array $totalFields = [], array $concatFields = [], $specialConcatFields = [])
+    {
+        // 逻辑
+        $return = [];
+        // 一级数组组装数据
+        foreach ($datas as $k => $data) {
+            // 首先处理 $specialConcatFields 需要做特殊合并处理的字段
+            $returnSpecialConcatFields = self::getSpecialConcatFields($data, $specialConcatFields);
+            // 判断是否存在了数据
+            if (!isset($return[$data[$groupby]])) {
+                // 必显字段压入新数组
+                foreach ($mustBeDisplayFields as $displayField) {
+                    $return[$data[$groupby]][$displayField] = $data[$displayField];
+                }
+                // $specialConcatFields也进行填入
+                foreach ($returnSpecialConcatFields as $field => $value) {
+                    $return[$data[$groupby]][$field] = $value;
+                }
+            } else {
+                // 数字类型进行累计
+                foreach ($totalFields as $field) {
+                    $return[$data[$groupby]][$field] += $data[$field];
+                }
+                // $specialConcatFields也进行填入
+                foreach ($returnSpecialConcatFields as $field => $value) {
+                    $return[$data[$groupby]][$field] .= ';' . $value;
+                }
+            }
+            // 需要合并的字段如果存在了，那就直接用逗号连接起来
+            foreach ($concatFields as $concatField) {
+                // 需要判断是否存在这个concat字段，如果存在就汇总，并且不能为空
+                if (!empty($data[$concatField])) {
+                    if (isset($return[$data[$groupby]][$concatField])) {
+                        if (strpos($return[$data[$groupby]][$concatField], $data[$concatField]) === false) {
+                            $return[$data[$groupby]][$concatField] .= ',' . $data[$concatField];
+                        }
+                        // 统计里面的元素个数
+                        $return[$data[$groupby]][$concatField . '_count'] = self::getCountByComma($return[$data[$groupby]][$concatField]);
+                    }
+                }
+            }
+
+            // 详情页，把相同的记录放在 details
+            $return[$data[$groupby]]['details'][] = $data;
+        }
+        // 返回，key还原
+        return array_values($return);
+    }
+
+    /**
+     * 取出用逗号分隔的元素个数
+     * @param string $str 待处理字符串
+     * @return int
+     */
+    public static function getCountByComma($str)
+    {
+        // 逻辑
+        $array = explode(',', $str);
+        return count($array);
+    }
+
+    /**
+     * 处理特殊拼接的字段列表
+     *
+     * @param array $data 原数据
+     * @param array specialConcatFields 需要做特殊合并处理的字段，里面包含名称以及拼接规则, name代表对外显示的新字段名称，fields代表所有需要拼接的字段， connector代表拼接之后的连接符 ['name' => 'specialConcat', 'fields' => ['field1', 'field2', 'field3'], 'connector' => ',']
+     * @return array
+     */
+    public static function getSpecialConcatFields(array $data, array $specialConcatFields)
+    {
+        // 逻辑
+        $returnSpecialConcatFields = [];
+        // 如果有特殊拼接的字段，那么也先放在这里处理
+        foreach ($specialConcatFields as $specialConcatField) {
+            // 遍历 $specialConcatField 中的 name、 fields、connector 字段, 如果缺少了，则报错
+            if (!isset($specialConcatField['name']) || !isset($specialConcatField['fields']) || !isset($specialConcatField['connector'])) {
+                return [];
+            }
+            // 存在则继续遍历
+            foreach ($specialConcatField['fields'] as $f => $field) {
+                if ($f == 0) {
+                    // 第一个元素直接赋值
+                    $returnSpecialConcatFields[$specialConcatField['name']] = $data[$field];
+                } else {
+                    // 其余的用连接
+                    $returnSpecialConcatFields[$specialConcatField['name']] .= $specialConcatField['connector'] . $data[$field];
+                }
+            }
+        }
+        // 返回结果
+        return $returnSpecialConcatFields;
+    }
 }

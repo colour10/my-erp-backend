@@ -340,6 +340,7 @@ return [
     'tijiao'                                           => '提交',
     'yushou'                                           => '预售',
     "daishou"                                          => "待售",
+    "zaitu"                                            => "在途",
     'fujian'                                           => '附件',
     'shuliang'                                         => '数量',
     'tijiaoshenhe'                                     => '提交审核',
@@ -956,6 +957,7 @@ return [
     'arrive-record'                                    => '到货记录',
     'nianfenjijie'                                     => '年份季节',
     'zuizhongbenweibi'                                 => '最终本位币',
+    'xiaoshouzhuangtai'                                => '销售状态',
 
     'template' =>
         [
