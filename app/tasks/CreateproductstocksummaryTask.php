@@ -65,7 +65,7 @@ class CreateproductstocksummaryTask extends Task
             $model = new TbProductstockSummary();
             if (!$model->create($productStock)) {
                 $this->db->rollback();
-                return json_encode(['code' => '200', 'messages' => ['数据新增失败']]) . PHP_EOL;
+                return json_encode(['code' => '200', 'messages' => ['库存查询表新增失败']]) . PHP_EOL;
             }
         }
 

@@ -11,6 +11,7 @@ use Asa\Erp\TbProduct;
 use Asa\Erp\TbProductstock;
 use Asa\Erp\TbShipping;
 use Asa\Erp\TbShippingDetail;
+use Asa\Erp\TbSizecontent;
 use Asa\Erp\TbWarehouse;
 use Exception;
 
@@ -97,7 +98,14 @@ class ShippingController extends AdminController
                 // 兑换成本位货币的总价格
                 $shippingDetails['sum_current_price'] = $sum_currency_price;
                 // 尺码组id汇总
-                $shippingDetails['sizecontentids'] = implode(',', array_column($shippingDetails, 'sizecontentid'));
+                $sizecontentids = array_column($shippingDetails, 'sizecontentid');
+                $shippingDetails['sizecontentids'] = implode(',', $sizecontentids);
+                // 尺码组名称汇总
+                $names = [];
+                foreach ($sizecontentids as $sizecontent_id) {
+                    $names[] = TbSizecontent::findFirstById($sizecontent_id)->name;
+                }
+                $shippingDetails['sizecontentid_names'] = implode(',', $names);
                 $result_array[$k]['shippingDetail'] = $shippingDetails;
             }
 

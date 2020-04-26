@@ -86,7 +86,7 @@ class ProductstockController extends BaseController
         // 新库存状态判断 1-待售 2-预售 4-在途，增加在途的判断
         if (isset($_POST['type'])) {
             if ($_POST['type'] == '1') {
-                // 待售：数量 > 预售
+                // 待售：数量 > 预售，保持之前的逻辑，可能有争议
                 $conditions[] = "number>reserve_number";
             } elseif ($_POST['type'] == '2') {
                 // 预售：预售 > 0
@@ -96,16 +96,16 @@ class ProductstockController extends BaseController
                 $conditions[] = "shipping_number>0";
             } elseif ($_POST['type'] == '3') {
                 // 待售+预售
-                $conditions[] = "number>reserve_number or reserve_number>0";
+                $conditions[] = "(number>reserve_number or reserve_number>0)";
             } elseif ($_POST['type'] == '5') {
                 // 待售+在途
-                $conditions[] = "number>reserve_number or shipping_number>0";
+                $conditions[] = "(number>reserve_number or shipping_number>0)";
             } elseif ($_POST['type'] == '6') {
                 // 预售+在途
-                $conditions[] = "reserve_number>0 or shipping_number>0";
+                $conditions[] = "(reserve_number>0 or shipping_number>0)";
             } else {
                 // 待售+预售+在途
-                $conditions[] = "number>reserve_number or reserve_number>0 or shipping_number>0";
+                $conditions[] = "(number>reserve_number or reserve_number>0 or shipping_number>0)";
             }
         } else {
             $conditions[] = "number>0";
@@ -197,7 +197,6 @@ class ProductstockController extends BaseController
         // ];
         //
         // echo $this->success(["data" => $data, "pagination" => $pagination]);
-
 
         // 创建分页对象，使用数组分页
         $paginator = new PaginatorArray(
