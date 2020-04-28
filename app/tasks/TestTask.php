@@ -3,6 +3,7 @@
 use Asa\Erp\TbCompany;
 use Asa\Erp\TbProduct;
 use Asa\Erp\TbProductstockSearch;
+use Asa\Erp\TbProductstockSummary;
 use Asa\Erp\TbSizecontent;
 use Phalcon\Cli\Task;
 
@@ -19,6 +20,13 @@ class TestTask extends Task
      */
     public function mainAction()
     {
+        $result = TbProductstockSummary::find(
+            "companyid=1 and (property=1 or property=2 or property=3) and (defective_level=1) and (number>reserve_number or reserve_number>0 or shipping_number>0) and (laststoragedate between '2018-01-13 00:00:00' and '2020-05-20 00:00:00') and (number < 10)"
+        );
+        echo json_encode($result);
+        exit;
+
+
         $companyid = 1;
 
         $this->pushCompanyStock($companyid);

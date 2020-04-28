@@ -958,6 +958,8 @@ return [
     'nianfenjijie'                                     => '年份季节',
     'zuizhongbenweibi'                                 => '最终本位币',
     'xiaoshouzhuangtai'                                => '销售状态',
+    'qishishijian'                                     => '起始时间',
+    'jieshushijian'                                    => '结束时间',
 
     'template' =>
         [

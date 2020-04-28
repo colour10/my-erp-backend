@@ -28,6 +28,9 @@ class ProductstockController extends BaseController
      */
     function searchAction()
     {
+        // 记录 post 的值
+        error_log('post接收到的值为：' . print_r($_POST, true));
+        // 条件判断
         $conditions = [
             sprintf("companyid=%d", $this->companyid),
         ];
@@ -110,6 +113,12 @@ class ProductstockController extends BaseController
         } else {
             $conditions[] = "number>0";
         }
+
+        // 增加最后入库时间的判断
+        $conditions[] = Sql::betweenAnd('laststoragedate', $_POST['laststoragedate']);
+
+        // 增加库存数量的判断
+        $conditions[] = Sql::betweenAnd('number', $_POST['start_number'], $_POST['end_number']);
 
         // 记录下sql，方便跟踪
         $sql = implode(" and ", $conditions);

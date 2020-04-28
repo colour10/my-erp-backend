@@ -40,6 +40,7 @@ class CreateproductstocksummaryTask extends Task
                     p.summer,
                     p.fall,
                     p.winter,
+                    p.laststoragedate,
                     ps.companyid,
                     ps.warehouseid,
                     ps.productid,
@@ -62,6 +63,8 @@ class CreateproductstocksummaryTask extends Task
         // 先清空查询表
         $this->db->execute('truncate table tb_productstock_summary');
         foreach ($productStocks as $productStock) {
+            // laststoragedate 时间格式，不可传空
+            $productStock['laststoragedate'] = empty($productStock['laststoragedate']) ? null : $productStock['laststoragedate'];
             $model = new TbProductstockSummary();
             if (!$model->create($productStock)) {
                 $this->db->rollback();
