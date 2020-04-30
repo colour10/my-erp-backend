@@ -2,6 +2,7 @@
 
 namespace Multiple\Home\Controllers;
 
+use Asa\Erp\TbPermissionGroup;
 use Asa\Erp\TbSaleport;
 use Asa\Erp\TbUser;
 use Asa\Erp\TbUserPermission;
@@ -313,7 +314,7 @@ class UserController extends CadminController
         // 提取参数
         // 如果不存在，则报非法操作
         if (!isset($_POST['userIds']) || !isset($_POST['keys'])) {
-            throw new Exception('非法操作');
+            throw new Exception($this->di->get("staticReader")->label('params-invalid'));
         }
 
         // 用户id列表
@@ -387,5 +388,35 @@ class UserController extends CadminController
 
         // 返回
         return $this->success($user);
+    }
+
+    /**
+     * 用户新增之后的后续操作
+     *
+     * @param $result
+     */
+    public function after_add($result)
+    {
+        // 如果用户填写了权限组，那么就把权限信息新增到 tb_user_permission 表中
+        if (!empty($result['post']['groupid'])) {
+            // 当前权限组的所有权限
+            $permissions = TbPermissionGroup::find([
+                'conditions' => 'groupid = :groupid:',
+                'columns'    => 'groupid, permissionid',
+                'bind'       => [
+                    'groupid' => $result['post']['groupid'],
+                ],
+            ])->toArray();
+            // 写入权限组表
+            foreach ($permissions as $permission) {
+                $model = new TbUserPermission();
+                $model->userid = $result['result']['id'];
+                $model->groupid = $result['post']['groupid'];
+                $model->permissionid = $permission['permissionid'];
+                if (!$model->create()) {
+                    error_log('新用户写入 tb_user_permission 表失败');
+                }
+            }
+        }
     }
 }

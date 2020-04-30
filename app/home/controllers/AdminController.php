@@ -213,6 +213,12 @@ class AdminController extends BaseController
             } else {
                 $result['is_add'] = "1";
                 $result['id'] = $row->id;
+
+                // 成功之后，这里可能会有后续的一些操作，暂时命名为 after_add 吧
+                $this->after_add([
+                    'post'   => $_POST,
+                    'result' => $result,
+                ]);
             }
 
             echo json_encode($result);
@@ -313,5 +319,15 @@ class AdminController extends BaseController
         } else {
             $_GET[$name] = $value;
         }
+    }
+
+    /**
+     * 新增之后的后续操作
+     *
+     * @param $result
+     */
+    public function after_add($result)
+    {
+
     }
 }

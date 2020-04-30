@@ -39,12 +39,22 @@ class LoginController extends Controller
                     'saleportid'  => $user->saleportid,
                     'saleportids' => $user->saleportids,
                     'company'     => $user->company,
-                    'actions'     => $group->getActionList()->toArray(),
-                    'permissions' => $group->getPermissionList()->toArray(),
+                    // 这里修改一下，action 和 permissions 不通过 group获取了，因为用户可以直接设置权限了，所以通过 tb_user_permission 表
+                    // 'actions'     => $group->getActionList()->toArray(),
+                    // 'permissions' => $group->getPermissionList()->toArray(),
+                    // 新的
+                    'actions'     => $user->getActionList()->toArray(),
+                    'permissions' => $user->getPermissionList()->toArray(),
                     "language"    => $language,
                 ]);
 
                 $this->session->set('language', $language);
+
+                // 在这里记录一下日志，以便追踪, liuzongyang 2020/4/30 15:31
+                $user_array = json_decode(json_encode($this->session->get('user')), true);
+                error_log('当前登录用户，' . $user->login_name . '的登录信息：' . print_r($user_array, true));
+                error_log('当前登录用户，' . $user->login_name . '的权限组信息：' . print_r($group->toArray(), true));
+
                 //Forward to the 'invoices' controller if the user is valid
                 //header("location:/");
                 echo json_encode(['code' => '200', 'auth' => $this->session->get('user'), "session_id" => $this->session->getId(), 'messages' => []]);

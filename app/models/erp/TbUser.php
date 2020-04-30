@@ -80,9 +80,10 @@ class TbUser extends BaseModel
 
     /**
      * 获得用户对指定商品，指定销售端口的价格
-     * @param  [type] $goods    [description]
+     *
+     * @param $goods
      * @param string $saleport [description]
-     * @return [type]           [description]
+     * @return float [type]           [description]
      */
     function getPrice($goods, $saleport)
     {
@@ -110,6 +111,7 @@ class TbUser extends BaseModel
 
     /**
      * 创建唯一的会员名
+     *
      * @param string $pinyin 公司名拼音
      * @return mixed
      */
@@ -126,5 +128,29 @@ class TbUser extends BaseModel
         } while (self::findFirst("login_name='" . $login_name . "'"));
         // 返回
         return $login_name;
+    }
+
+    /**
+     * 获取当前用户下面的所有权限操作
+     *
+     * @return false|string
+     */
+    public function getActionList()
+    {
+        $id_array = Util::recordListColumn($this->userpermissions, "permissionid");
+
+        return TbPermissionAction::findByIdString($id_array, "permissionid");
+    }
+
+    /**
+     * 获取当前用户下面的所有权限
+     *
+     * @return false|string
+     */
+    public function getPermissionList()
+    {
+        $id_array = Util::recordListColumn($this->userpermissions, "permissionid");
+
+        return TbPermission::findByIdString($id_array, "id");
     }
 }

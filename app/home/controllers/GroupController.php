@@ -70,4 +70,21 @@ class GroupController extends CadminController
             throw new Exception('/1002/权限组不存在。/');
         }
     }
+
+    /**
+     * 当前公司下所有的权限组列表
+     *
+     * @return false|string
+     */
+    public function currentlistAction()
+    {
+        // 逻辑
+        return $this->success(TbGroup::find([
+            'conditions' => 'companyid = :companyid:',
+            'columns'    => 'id, group_name',
+            'bind'       => [
+                'companyid' => $this->companyid,
+            ],
+        ]));
+    }
 }
