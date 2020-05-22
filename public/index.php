@@ -1,9 +1,11 @@
 <?php
 
+use Phalcon\Config\Adapter\Php;
 use Phalcon\Db\Adapter\Pdo\Mysql as DbAdapter;
 use Phalcon\DI\FactoryDefault;
 use Phalcon\Events\Manager as EventsManager;
 use Phalcon\Loader;
+use Phalcon\Logger;
 use Phalcon\Logger\Adapter\File as FileLogger;
 use Phalcon\Mvc\Application;
 use Phalcon\Mvc\Router;
@@ -17,7 +19,7 @@ try {
     // error_reporting(E_ALL);
     // ini_set('display_errors', 'On');
 
-    $config = new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/config.php");
+    $config = new Php(APP_PATH . "/app/config/config.php");
 
     // Register an autoloader
     $loader = new Loader();
@@ -36,8 +38,6 @@ try {
         ]
     )->register();
 
-    //require_once(APP_PATH . "/app/models/vendor/autoload.php");
-
     // 添加插件自动加载
     require_once(APP_PATH . "/vendor/autoload.php");
 
@@ -55,8 +55,6 @@ try {
         }
 
         $session->start();
-        //$session->setId(time());
-
         return $session;
     });
 
@@ -70,7 +68,7 @@ try {
             // Listen all the database events
             $eventsManager->attach('db', function ($event, $connection) use ($logger) {
                 if ($event->getType() == 'beforeQuery') {
-                    $logger->log(\Phalcon\Logger::INFO, $connection->getSQLStatement());
+                    $logger->log(Logger::INFO, $connection->getSQLStatement());
                 }
             });
 

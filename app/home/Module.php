@@ -8,6 +8,7 @@ use Asa\Erp\Util;
 use ExceptionPlugin;
 use Phalcon\Acl;
 use Phalcon\Acl\Adapter\Memory as AclList;
+use Phalcon\Config\Adapter\Php;
 use Phalcon\DiInterface;
 use Phalcon\Events\Manager as EventsManager;
 use Phalcon\Loader;
@@ -202,5 +203,12 @@ class Module implements ModuleDefinitionInterface
                 return $view;
             }
         );
+
+        // 为了使用共享model数据，需要注册language，默认语言为 cn
+        $session = $di->get('session');
+        $language = $session->get('language') ?: $config->language;
+        $di->setShared('language', function () use ($language) {
+            return new Php(APP_PATH . "/app/config/languages/{$language}.php");
+        });
     }
 }

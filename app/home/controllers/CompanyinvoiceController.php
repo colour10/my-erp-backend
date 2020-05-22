@@ -3,7 +3,7 @@
 namespace Multiple\Home\Controllers;
 
 /**
- * 分组表
+ * 基公司发票管理表
  * Class CompanyinvoiceController
  * @package Multiple\Home\Controllers
  */
