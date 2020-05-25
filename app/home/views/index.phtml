@@ -5,32 +5,34 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="/favicon.ico">
-    <title><?=isset($__title)?$__title:"ERP"?> - ASA</title>
-    <script src="https://unpkg.com/vue@2.6.9/dist/vue.js"></script>
-    <script src="https://unpkg.com/vuex@3.1.0/dist/vuex.js"></script>
-    <script src="https://unpkg.com/vue-router@3.0.4/dist/vue-router.js"></script>
-
+    <title><?= isset($__title) ? $__title : "ERP" ?> - ASA</title>
+    <script src="/js/vue.js"></script>
+    <script src="/js/vuex.js"></script>
+    <script src="/js/vue-router.js"></script>
 
     <!-- 引入样式 -->
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="//cdn.bootcdn.net/ajax/libs/element-ui/2.13.2/theme-chalk/index.css">
     <!-- 引入组件库 -->
-    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="//cdn.bootcdn.net/ajax/libs/element-ui/2.13.2/index.js"></script>
     <script src="/js/jquery.min.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
-    <script src="https://unpkg.com/vue-chartjs/dist/vue-chartjs.min.js"></script>
+    <script src="/js/Chart.min.js"></script>
+    <script src="/js/vue-chartjs.min.js"></script>
 
 </head>
 
 <style>
-    body{font-family: Arial,sans-serif;}
+    body {
+        font-family: Arial, sans-serif;
+    }
+
     .el-header {
         background-color: #B3C0D1;
         color: #333;
         line-height: 60px;
     }
 
-    .el-footer{
+    .el-footer {
         clear: both;
         display: block;
         text-align: center;
@@ -46,58 +48,65 @@
     .bg-purple-dark {
         background: #99a9bf;
     }
+
     .bg-purple {
         background: #d3dce6;
     }
+
     .bg-purple-light {
         background: #e5e9f2;
     }
+
     .grid-content {
         border-radius: 4px;
         min-height: 36px;
     }
+
     .row-bg {
         padding: 10px 0;
         background-color: #f9fafc;
     }
 
     .el-menu-item a {
-        color:white;
-        text-decoration : none
+        color: white;
+        text-decoration: none
     }
 
-    #ell{margin:5px;}
+    #ell {
+        margin: 5px;
+    }
 
 
     .user-form .width2 .el-input__inner {
-        width:200px;
+        width: 200px;
     }
 
-    .user-form  .width2 .el-input-group {
-        width:200px;
+    .user-form .width2 .el-input-group {
+        width: 200px;
     }
 
     .user-form .width1 .el-input__inner {
-        width:510px;
+        width: 510px;
     }
 
     .user-form .width1 .el-textarea__inner {
-        width:510px;
+        width: 510px;
     }
 
     .user-form .width2 .el-date-editor.el-input {
-        width:150px
+        width: 150px
     }
 
     .user-form .width2 .el-input-group .el-input__inner {
-        width:155px;
+        width: 155px;
     }
+
     .user-form .width2 .el-input-group--prepend .el-input__inner {
-        width:99px;
+        width: 99px;
     }
 
     .user-form .width2 .el-form-item__content {
-        width:200px;
+        width: 200px;
     }
 
     .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item {
@@ -105,110 +114,188 @@
     }
 
     .user-form .el-checkbox {
-        margin-right:12px;
+        margin-right: 12px;
     }
 
     .user-form .el-checkbox__label {
-        padding-left:4px;
+        padding-left: 4px;
     }
 
     .order-form .el-input__inner {
-        width:200px;
+        width: 200px;
     }
 
     .order-form .el-input-group {
-        width:200px;
+        width: 200px;
     }
 
     .order-form .el-input-group .el-input__inner {
-        width:156px;
+        width: 156px;
     }
+
     .order-form .el-input-group--prepend .el-input__inner {
-        width:138px;
+        width: 138px;
     }
 
     .order-form .el-input-group--prepend .el-input-group__prepend .el-input__inner {
-        width:60px;
-        padding:0px 5px;
+        width: 60px;
+        padding: 0px 5px;
     }
 
     .order-form .el-input-group--prepend .el-select {
-        width:60px;
+        width: 60px;
     }
 
 
     /*  */
     .order-form .wordcode .el-form-item__content {
-        width:440px;
+        width: 440px;
     }
 
     .order-form .wordcode .el-form-item__content .el-input {
-        width:99px;
+        width: 99px;
     }
 
     .order-form .wordcode .el-form-item__content .el-input__inner {
-        width:99px;
+        width: 99px;
     }
 
 
     .order-form .el-date-editor.el-input {
-        width:150px
+        width: 150px
     }
 
-    .order-form .twocols .el-input__inner { width:500px; }
-    .order-form .threecols .el-input__inner { width:800px; }
+    .order-form .twocols .el-input__inner {
+        width: 500px;
+    }
+
+    .order-form .threecols .el-input__inner {
+        width: 800px;
+    }
 
     .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item {
         margin-bottom: 5px;
     }
 
-    .order-form .font12 label{
-        font-size:12px;
+    .order-form .font12 label {
+        font-size: 12px;
     }
 
     .order-form .el-checkbox {
-        margin-right:12px;
+        margin-right: 12px;
         line-height: 20px;
     }
 
     .order-form label.siji {
-        margin-right:0px;
+        margin-right: 0px;
 
     }
 
     .order-form .el-checkbox__label {
-        padding-left:10px;
+        padding-left: 10px;
     }
 
-    .order-form .el-radio {line-height: 20px;}
+    .order-form .el-radio {
+        line-height: 20px;
+    }
 
-    .formx .el-form-item__label {padding: 0 5px 0 0;}
-    .formx .el-input .el-input__inner {width:130px;padding: 0px 5px}
-    .formx .el-input-group {width:130px;}
-    .formx .el-input-group--prepend .el-input-group__prepend .el-input__inner { width:60px; padding:0px 5px;}
-    .formx .el-input-group--prepend .el-input__inner { width:69px; }
-    .formx .el-date-editor.el-input { width:130px }
-    .formx .el-date-editor.el-input__inner { width:130px }
-    .formx .productcurrency .el-input__inner { padding:0px 2px; }
-    .formx .el-date-editor.el-range-editor { width:200px; }
-    .formx .el-textarea .el-textarea__inner { width:130px; height:60px; }
-    .formx .twocol.el-form-item .el-input .el-input__inner { width: 380px; }
+    .formx .el-form-item__label {
+        padding: 0 5px 0 0;
+    }
 
-    .formx2 .el-form-item__label {padding: 0 5px 0 0;}
-    .formx2 .el-input .el-input__inner {width:160px;padding: 0px 5px}
-    .formx2 .el-input-group {width:160px;}
-    .formx2 .el-input-group--prepend .el-input-group__prepend .el-input__inner { width:60px; padding:0px 5px;}
-    .formx2 .el-input-group--prepend .el-input__inner { width:69px; }
-    .formx2 .el-date-editor.el-input { width:160px }
-    .formx2 .el-date-editor.el-input__inner { width:130px }
-    .formx2 .productcurrency .el-input__inner { padding:0px 2px; }
-    .formx2 .el-date-editor.el-range-editor { width:200px; }
-    .formx2 .el-textarea .el-textarea__inner { width:160px; height:60px; }
-    .formx2 .twocol.el-form-item .el-input .el-input__inner { width: 410px; }
+    .formx .el-input .el-input__inner {
+        width: 130px;
+        padding: 0px 5px
+    }
+
+    .formx .el-input-group {
+        width: 130px;
+    }
+
+    .formx .el-input-group--prepend .el-input-group__prepend .el-input__inner {
+        width: 60px;
+        padding: 0px 5px;
+    }
+
+    .formx .el-input-group--prepend .el-input__inner {
+        width: 69px;
+    }
+
+    .formx .el-date-editor.el-input {
+        width: 130px
+    }
+
+    .formx .el-date-editor.el-input__inner {
+        width: 130px
+    }
+
+    .formx .productcurrency .el-input__inner {
+        padding: 0px 2px;
+    }
+
+    .formx .el-date-editor.el-range-editor {
+        width: 200px;
+    }
+
+    .formx .el-textarea .el-textarea__inner {
+        width: 130px;
+        height: 60px;
+    }
+
+    .formx .twocol.el-form-item .el-input .el-input__inner {
+        width: 380px;
+    }
+
+    .formx2 .el-form-item__label {
+        padding: 0 5px 0 0;
+    }
+
+    .formx2 .el-input .el-input__inner {
+        width: 160px;
+        padding: 0px 5px
+    }
+
+    .formx2 .el-input-group {
+        width: 160px;
+    }
+
+    .formx2 .el-input-group--prepend .el-input-group__prepend .el-input__inner {
+        width: 60px;
+        padding: 0px 5px;
+    }
+
+    .formx2 .el-input-group--prepend .el-input__inner {
+        width: 69px;
+    }
+
+    .formx2 .el-date-editor.el-input {
+        width: 160px
+    }
+
+    .formx2 .el-date-editor.el-input__inner {
+        width: 130px
+    }
+
+    .formx2 .productcurrency .el-input__inner {
+        padding: 0px 2px;
+    }
+
+    .formx2 .el-date-editor.el-range-editor {
+        width: 200px;
+    }
+
+    .formx2 .el-textarea .el-textarea__inner {
+        width: 160px;
+        height: 60px;
+    }
+
+    .formx2 .twocol.el-form-item .el-input .el-input__inner {
+        width: 410px;
+    }
 
 
     .searchform .searchitem .el-form-item__content {
-        width:100%;
+        width: 100%;
     }
 
     .login-container {
@@ -223,14 +310,17 @@
         background: #fff;
         border: 1px solid #eaeaea;
         box-shadow: 0 0 25px #cac6c6;
+
     .title {
         margin: 0px auto 40px auto;
         text-align: center;
         color: #505458;
     }
+
     .remember {
         margin: 0px 0px 35px 0px;
     }
+
     }
 
     .avatar-uploader .el-upload {
@@ -240,9 +330,11 @@
         position: relative;
         overflow: hidden;
     }
+
     .avatar-uploader .el-upload:hover {
         border-color: #409EFF;
     }
+
     .avatar-uploader-icon {
         font-size: 28px;
         color: #8c939d;
@@ -251,6 +343,7 @@
         line-height: 148px;
         text-align: center;
     }
+
     .avatar {
         width: 148px;
         height: 148px;
@@ -259,14 +352,17 @@
 
     .el-table .el-table__body .success-row {
         color: red !important;
-        background: rgba(103,194,58,.2) !important;
+        background: rgba(103, 194, 58, .2) !important;
     }
 
     .el-table .stripe1 {
         background: oldlace;
     }
 
-    .color-group { margin:3px; float: left; }
+    .color-group {
+        margin: 3px;
+        float: left;
+    }
 
     .color-group .box {
         /*border: 1px dashed #d9d9d9;*/
@@ -274,12 +370,13 @@
         cursor: pointer;
         position: relative;
         overflow: hidden;
-        margin:auto;
+        margin: auto;
     }
 
     .color-group .active {
         border: 1px solid red;
     }
+
     .color-group-icon {
         font-size: 14px;
         color: #8c939d;
@@ -290,49 +387,87 @@
     }
 
 
-    .product .el-table td, .product .el-table th { padding:0px; }
-    .product .el-tabs .el-table td, .product .el-tabs .el-table th { padding:0px 0px; }
-    .product img {padding:0px;margin:0px;display: block;}
-    .product td.picture .cell {padding-left:0px}
-    .product td.nopadding .cell {padding-left: 0px}
-    .product .el-table th div .el-input {display:block; line-height:25px;}
+    .product .el-table td, .product .el-table th {
+        padding: 0px;
+    }
+
+    .product .el-tabs .el-table td, .product .el-tabs .el-table th {
+        padding: 0px 0px;
+    }
+
+    .product img {
+        padding: 0px;
+        margin: 0px;
+        display: block;
+    }
+
+    .product td.picture .cell {
+        padding-left: 0px
+    }
+
+    .product td.nopadding .cell {
+        padding-left: 0px
+    }
+
+    .product .el-table th div .el-input {
+        display: block;
+        line-height: 25px;
+    }
 
     .supermini .el-checkbox__label {
         font-size: 14px
     }
 
     #top-menu {
-        top:0px;
-        position:fixed;
+        top: 0px;
+        position: fixed;
         z-index: 10;
-        width:calc(100% - 30px);
+        width: calc(100% - 30px);
     }
+
     #nav {
-        margin:0px;
-        top:60px;
+        margin: 0px;
+        top: 60px;
         padding: 8px 2px;
-        position:fixed;
+        position: fixed;
         z-index: 10;
-        width:calc(100% - 30px);
+        width: calc(100% - 30px);
         background: white;
         border-bottom: 1px solid #eeeeee
     }
 
     .el-container {
-        padding-top:50px;
+        padding-top: 50px;
     }
 
     #app .el-dialog__body {
-        padding:10px 20px;
+        padding: 10px 20px;
     }
 
-    .el-button {margin:5px;}
-    .cell .el-button {margin:0px;}
+    .el-button {
+        margin: 5px;
+    }
 
-    .imgline .icon{ display: inline-block; width: 30px; height: 20px; margin-right: 3px; vertical-align: middle; background-size: 100%;}
-    .imgline span{ vertical-align: middle;}
+    .cell .el-button {
+        margin: 0px;
+    }
 
-    body .el-select-dropdown__wrap {max-height:500px;}
+    .imgline .icon {
+        display: inline-block;
+        width: 30px;
+        height: 20px;
+        margin-right: 3px;
+        vertical-align: middle;
+        background-size: 100%;
+    }
+
+    .imgline span {
+        vertical-align: middle;
+    }
+
+    body .el-select-dropdown__wrap {
+        max-height: 500px;
+    }
 
     .productcurrency .el-input-group__append {
         background-color: white;
@@ -345,7 +480,9 @@
         border-bottom-right-radius: 4px !important;
     }
 
-    #app button.trimhalf {padding:7px 10px;}
+    #app button.trimhalf {
+        padding: 7px 10px;
+    }
 
     .fade-transform-leave-active,
     .fade-transform-enter-active {
@@ -362,36 +499,115 @@
         transform: translateX(30px);
     }
 
-    .clearpadding .el-table__body .el-table__row .cell {padding-left:0px !important;;padding-right: 0px !important;}
-    .clearpadding .el-table__header .cell {padding-left:0px !important;;padding-right: 0px !important;}
-    .clearpadding.el-input__inner {width:100%;}
+    .clearpadding .el-table__body .el-table__row .cell {
+        padding-left: 0px !important;;
+        padding-right: 0px !important;
+    }
 
-    .sizecontent .el-table__body td, .sizecontent .el-table__header th { padding:0px; }
-    .sizecontent .el-table__body .el-table__row .counter { width:60px; }
-    .sizecontent .el-table__body .el-table__row .counter .cell {padding-left:0px;padding-right: 0px}
-    .sizecontent .el-table__body .el-table__row .counter .el-input__inner { padding:0 5px; }
-    .sizecontent .el-table::before { left: 0; bottom: 0; width: 100%; height: 0px; }
-    .sizecontent div, .sizecontent td, .sizecontent th {border-left: 0px !important;border-right: 0px !important;}
-    .sizecontent input {text-align: center}
+    .clearpadding .el-table__header .cell {
+        padding-left: 0px !important;;
+        padding-right: 0px !important;
+    }
 
-    .sizecontent .el-table__body .cell {line-height: 15px }
-    .sizecontent .el-table__body .sumline td {padding-top:5px}
-    .sizecontent .linetop .el-input__inner {height:15px}
-    .sizecontent .danger .el-input__inner {color:red;}
-    .sizecontent .normal .el-input__inner {color:blue;}
-    .sizecontent .success .el-input__inner {color:green;}
-    .sizecontent .sumline .el-input__inner {background: #99cccc;height:22px}
-    .sizecontent .sumline .sumtotal .el-input__inner { background: #99cccc;height:22px}
-    .sizecontent .sumline .linetop .el-input__inner {height:22px}
-    .sizecontent .sumcolumn .inputsum .el-input__inner{color:yellow; background: #CD9B9B}
-    .sizecontent .footer .el-input__inner{color:yellow;}
+    .clearpadding.el-input__inner {
+        width: 100%;
+    }
 
-    .inputtable .el-table__body .el-table__row .el-input__inner { padding:0 5px; }
+    .sizecontent .el-table__body td, .sizecontent .el-table__header th {
+        padding: 0px;
+    }
 
-    .el-select-dropdown .option1 span {color:#67C23A;}
-    .el-select-dropdown .option2 span {color:#F56C6C;}
+    .sizecontent .el-table__body .el-table__row .counter {
+        width: 60px;
+    }
 
-    .my-autocomplete {width: 600px !important;}
+    .sizecontent .el-table__body .el-table__row .counter .cell {
+        padding-left: 0px;
+        padding-right: 0px
+    }
+
+    .sizecontent .el-table__body .el-table__row .counter .el-input__inner {
+        padding: 0 5px;
+    }
+
+    .sizecontent .el-table::before {
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 0px;
+    }
+
+    .sizecontent div, .sizecontent td, .sizecontent th {
+        border-left: 0px !important;
+        border-right: 0px !important;
+    }
+
+    .sizecontent input {
+        text-align: center
+    }
+
+    .sizecontent .el-table__body .cell {
+        line-height: 15px
+    }
+
+    .sizecontent .el-table__body .sumline td {
+        padding-top: 5px
+    }
+
+    .sizecontent .linetop .el-input__inner {
+        height: 15px
+    }
+
+    .sizecontent .danger .el-input__inner {
+        color: red;
+    }
+
+    .sizecontent .normal .el-input__inner {
+        color: blue;
+    }
+
+    .sizecontent .success .el-input__inner {
+        color: green;
+    }
+
+    .sizecontent .sumline .el-input__inner {
+        background: #99cccc;
+        height: 22px
+    }
+
+    .sizecontent .sumline .sumtotal .el-input__inner {
+        background: #99cccc;
+        height: 22px
+    }
+
+    .sizecontent .sumline .linetop .el-input__inner {
+        height: 22px
+    }
+
+    .sizecontent .sumcolumn .inputsum .el-input__inner {
+        color: yellow;
+        background: #CD9B9B
+    }
+
+    .sizecontent .footer .el-input__inner {
+        color: yellow;
+    }
+
+    .inputtable .el-table__body .el-table__row .el-input__inner {
+        padding: 0 5px;
+    }
+
+    .el-select-dropdown .option1 span {
+        color: #67C23A;
+    }
+
+    .el-select-dropdown .option2 span {
+        color: #F56C6C;
+    }
+
+    .my-autocomplete {
+        width: 600px !important;
+    }
 </style>
 
 <body>
@@ -403,28 +619,28 @@
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function(){
+    $(document).ready(function () {
         var version = '1000';
         let o = new Vue({
-            data:function(){
+            data: function () {
                 return {
-                    isShow:true,
-                    pencent:0
+                    isShow: true,
+                    pencent: 0
                 }
             },
-            mounted:function(){
+            mounted: function () {
                 let self = this;
 
-                let handler = setInterval(function(){
-                    if(self.pencent<=95) {
-                        self.pencent = self.pencent + Math.floor(Math.random()*10)%2+1
+                let handler = setInterval(function () {
+                    if (self.pencent <= 95) {
+                        self.pencent = self.pencent + Math.floor(Math.random() * 10) % 2 + 1
                     }
                 }, 330);
 
-                $.getScript("/dist/asa-" + version + ".js", function(){
+                $.getScript("/dist/asa-" + version + ".js", function () {
                     self.pencent = 100;
                     clearInterval(handler);
-                    setTimeout(function(){
+                    setTimeout(function () {
                         self.isShow = false;
                     }, 500);
                 });
