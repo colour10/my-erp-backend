@@ -499,24 +499,30 @@ class OrderbrandController extends AdminController
         }
     }
 
+    /**
+     * 品牌订单查找，实际上只有前端只有 supplierid 和 ageseason 传递过来
+     *
+     * @return false|string
+     */
     function searchorderAction()
     {
         //首先检索出来确认订单id
         $conditions = [
             sprintf("companyid=%d", $this->companyid),
         ];
-
+        // 供货商id
         if (isset($_POST['supplierid']) && $_POST['supplierid'] > 0) {
             $conditions[] = sprintf("supplierid=%d", $_POST['supplierid']);
         }
-
+        // 年代季节id
         if (isset($_POST['ageseason']) && $_POST['ageseason'] > 0) {
             $conditions[] = sprintf("ageseason=%d", $_POST['ageseason']);
         }
-
+        // 品牌订单id
         if (isset($_POST['orderbrandid']) && $_POST['orderbrandid'] > 0) {
             $conditions[] = sprintf("id=%d", $_POST['orderbrandid']);
         }
+        // 状态为代发货
         $conditions[] = "status=2";
 
         $orders = TbOrderBrand::find(
@@ -524,8 +530,8 @@ class OrderbrandController extends AdminController
         );
 
         $array = Util::recordListColumn($orders, 'id');
-        //print_r($array);
         if (count($array) > 0) {
+            // 查找没有发完的订单
             $details = TbOrderBrandDetail::find(
                 sprintf("orderbrandid in(%s) and shipping_number<confirm_number", implode(",", $array))
             );
