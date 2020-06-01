@@ -31,6 +31,7 @@ use Asa\Erp\TbSizecontent;
 use Asa\Erp\TbSizetop;
 use Asa\Erp\TbUlnarinch;
 use Asa\Erp\TbWinterproofing;
+use Asa\Erp\Util;
 use Exception;
 use Phalcon\Paginator\Adapter\Model;
 
@@ -102,6 +103,12 @@ class ProductController extends CadminController
         echo $this->reportJson(["data" => $data, "pagination" => $pageinfo], 200, []);
     }
 
+    /**
+     * 新建商品
+     *
+     * @return false|string|void
+     * @throws Exception
+     */
     function addAction()
     {
         $params = json_decode($_POST["params"], true);
@@ -202,9 +209,11 @@ class ProductController extends CadminController
                     $product->updateMaterial($params["materials"]);
                 }
             }
-
+            // 同步修改商品
             $product->syncBrandSugest();
+            // 更新ageseason_season,ageseason_year两个字段
             $product->updateAgeseason();
+            // 更新尺码
             $product->updateSizecontentids();
         }
 
@@ -282,6 +291,8 @@ class ProductController extends CadminController
         $params = json_decode($_POST["params"], true);
 
         $product = TbProduct::findFirstById($params['form']['id']);
+        $product_tootip = isset($params['form']['producttypeid_tootip']) ? $params['form']['producttypeid_tootip'] : 0;
+
         if ($product != false && $product->companyid == $this->companyid) {
             $this->db->begin();
             //更新同款多色
@@ -376,6 +387,10 @@ class ProductController extends CadminController
                 //逐个更新，绑定关系
                 foreach ($products as $row) {
                     $row->product_group = $product_group;
+                    // 除了更新同款不同色之外，再写入一个商品属性值
+                    if ($product_tootip) {
+                        $row->producttypeid = $params['form']['producttypeid'];
+                    }
                     if ($row->update() == false) {
                         throw new Exception("#1002#更新product_group字段失败#");
                     }
@@ -1197,7 +1212,7 @@ class ProductController extends CadminController
 
     /**
      * 获取商品相关内容
-     * 年代、品牌、系列、品类、尺码组
+     * 年代、品牌、系列、品类、尺码组、材质备注与材质id对照表
      */
     public function getProductRelatedOptionsAction()
     {
@@ -1418,6 +1433,25 @@ class ProductController extends CadminController
             ];
         }
 
+        // 材质备注与材质id对照表
+        // 名称多语言字段
+        $name = $this->getlangfield('name');
+        // 只取出有关联的数据
+        $productMaterials = TbProductMaterial::find([
+            'conditions' => 'materialnoteid > 0',
+            'columns'    => 'percent, materialid, materialnoteid',
+        ])->toArray();
+        // 然后调出材质中文名称
+        foreach ($productMaterials as $k => $v) {
+            // 多语言字段
+            if ($model = TbMaterial::findFirstById($v['materialid'])) {
+                $productMaterials[$k]['material_name'] = $model->$name;
+            }
+        }
+        // 去重处理
+        $result['productmaterial'] = Util::arrayUniqueMulti($productMaterials);
+
+        // 返回
         return $this->success($result);
     }
 

@@ -1221,4 +1221,18 @@ class Util
         // 返回结果
         return $returnSpecialConcatFields;
     }
+
+    /**
+     * 去除多维数组中的重复值
+     *
+     * @param $arr
+     * @return array
+     */
+    public static function arrayUniqueMulti($arr)
+    {
+        $t = array_map('serialize', $arr);//利用serialize()方法将数组转换为以字符串形式的一维数组
+        $t = array_unique($t);//去掉重复值
+        $new_arr = array_map('unserialize', $t);//然后将刚组建的一维数组转回为php值
+        return $new_arr;
+    }
 }

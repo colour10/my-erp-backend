@@ -9,6 +9,7 @@ use Asa\Erp\TbOrderdetails;
 use Asa\Erp\TbProduct;
 use Asa\Erp\Util;
 use Exception;
+use Phalcon\Paginator\Adapter\Model;
 
 /**
  * 订单主表
@@ -32,7 +33,7 @@ class OrderController extends BaseController
         $page = $this->request->getPost("page", "int", 1);
         $pageSize = $this->request->getPost("pageSize", "int", 20);
 
-        $paginator = new \Phalcon\Paginator\Adapter\Model(
+        $paginator = new Model(
             [
                 "data"  => $result,
                 "limit" => $pageSize,
@@ -45,7 +46,27 @@ class OrderController extends BaseController
 
         $data = [];
         foreach ($pageObject->items as $row) {
-            $data[] = $row->toArray();
+            $array = $row->toArray();
+            // 每一条记录的件数和款数也要分别统计出来
+            $productSum = TbOrderdetails::sum([
+                'conditions' => 'orderid = :orderid:',
+                'column'     => 'number',
+                'bind'       => [
+                    'orderid' => $array['id'],
+                ],
+            ]);
+            // 每一个订单的总件数
+            $array['sum_product'] = (int)$productSum;
+            // 每一个订单的总款数
+            $wordcodeSum = $this->modelsManager->executeQuery(
+                "SELECT od.productid FROM \Asa\Erp\TbOrderdetails as od WHERE od.orderid=:orderid: GROUP BY od.productid",
+                [
+                    "orderid" => $array['id'],
+                ]
+            );
+            // 总款数
+            $array['sum_worldcode'] = count($wordcodeSum);
+            $data[] = $array;
         }
 
         $pageinfo = [
