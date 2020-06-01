@@ -10,6 +10,7 @@ use Asa\Erp\TbOrderBrandDetail;
 use Asa\Erp\TbOrderdetails;
 use Asa\Erp\TbSupplier;
 use Asa\Erp\Util;
+use Phalcon\Paginator\Adapter\Model;
 
 /**
  * 品牌订单
@@ -662,5 +663,55 @@ class OrderbrandController extends AdminController
         } else {
             throw new \Exception("/11020601/品牌订单不存在/");
         }
+    }
+
+    /**
+     * 分页查询，需要增加一个字段 款数 统计，所以重写了父类
+     */
+    public function pageAction()
+    {
+        $params = [$this->getSearchCondition()];
+        $params["order"] = "id desc";
+
+        $result = TbOrderBrand::find($params);
+
+        $page = $this->request->getPost("page", "int", 1);
+        $pageSize = $this->request->getPost("pageSize", "int", 20);
+
+        $paginator = new Model(
+            [
+                "data"  => $result,
+                "limit" => $pageSize,
+                "page"  => $page,
+            ]
+        );
+
+        // Get the paginated results
+        $pageObject = $paginator->getPaginate();
+
+        $data = [];
+        foreach ($pageObject->items as $row) {
+            $array = $row->toArray();
+            // 每一个订单的总款数
+            $wordcodeSum = $this->modelsManager->executeQuery(
+                "SELECT obd.productid FROM \Asa\Erp\TbOrderBrandDetail as obd WHERE obd.orderbrandid=:orderbrandid: GROUP BY obd.productid",
+                [
+                    "orderbrandid" => $array['id'],
+                ]
+            );
+            // 总款数
+            $array['sum_worldcode'] = count($wordcodeSum);
+            $data[] = $array;
+        }
+
+        $pageinfo = [
+            //"previous"      => $pageObject->previous,
+            "current"    => $pageObject->current,
+            "totalPages" => $pageObject->total_pages,
+            //"next"          => $pageObject->next,
+            "total"      => $pageObject->total_items,
+            "pageSize"   => $pageSize,
+        ];
+        echo $this->reportJson(["data" => $data, "pagination" => $pageinfo], 200, []);
     }
 }

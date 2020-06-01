@@ -963,6 +963,7 @@ return [
     'shuxingtishi'                                     => '是否把修改后的商品属性值应用到其他同款不同色商品？',
     'jianshu'                                          => '件数',
     'kuanshu'                                          => '款数',
+    'zongkuanshu'                                      => '总款数',
 
     'template' =>
         [
