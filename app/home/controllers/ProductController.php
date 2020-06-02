@@ -162,7 +162,7 @@ class ProductController extends CadminController
             $product->productmemoids = implode(',', $params['form']['productmemoids']);
 
             foreach ($keys as $key) {
-                $product->$key = trim($params['form'][$key]);
+                $product->$key = $params['form'][$key];
             }
             $product->factorypricecurrency = $params['form']["wordpricecurrency"];
             $product->nationalfactorypricecurrency = $params['form']["nationalpricecurrency"];
