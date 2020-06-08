@@ -740,10 +740,14 @@ class ProductController extends CadminController
 
                 //逐个更新，绑定关系
                 foreach ($products as $row) {
+                    // 不知道怎么了，突然缺少了 brandcolor，暂时补上
+                    $row->brandcolor = isset($row->brandcolor) ? $row->brandcolor : null;
+
                     $row->product_group = $product_group;
 
                     //检验国际码是否重复
                     $where = sprintf("companyid=%d and wordcode='%s' and id<>%d", $this->companyid, addslashes($row->wordcode), $row->id);
+
                     if (TbProduct::count($where) > 0) {
                         throw new Exception("/11160301/国际码不能重复/");
                     }

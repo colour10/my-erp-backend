@@ -59,7 +59,7 @@ class TbProductLastmodify extends BaseModel
             return false;
         }
 
-        // 如果上面无措，则返回成功
+        // 如果上面无错，则返回成功
         return true;
     }
 }

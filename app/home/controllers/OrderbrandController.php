@@ -645,6 +645,12 @@ class OrderbrandController extends AdminController
         }
     }*/
 
+    /**
+     * 客户订单列表，具体走向为：客户订单 <- 品牌订单
+     *
+     * @return false|string
+     * @throws \Exception
+     */
     function orderlistAction()
     {
         $orderbrand = TbOrderBrand::findFirstById($_POST['id']);

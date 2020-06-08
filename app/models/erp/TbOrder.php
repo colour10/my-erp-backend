@@ -8,6 +8,15 @@ namespace Asa\Erp;
  */
 class TbOrder extends BaseModel
 {
+    // 状态使用枚举存储
+    // 未完成
+    const STATUS_UNFINISHED = 1;
+    // 已完成
+    const STATUS_FINISHED = 2;
+
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -100,12 +109,15 @@ class TbOrder extends BaseModel
         ]);
     }
 
+    /**
+     * 订单状态完结
+     */
     function finish()
     {
-        $this->status = 2;
-        if ($this->update() == false) {
-            throw new \Exception("/11100101/订单更新失败。/");
-        }
+        // 状态为 2 说明订单完结
+        $this->status = self::STATUS_FINISHED;
+        // 更新
+        $this->update();
     }
 
     /**
@@ -130,11 +142,13 @@ class TbOrder extends BaseModel
     }
 
     /**
-     * 获取品牌订单列表
+     * 获取该订单后查的品牌订单列表，具体走向为：客户订单 -> 品牌订单
+     *
      * @return array
      */
     function getOrderbrandList()
     {
+        // 获取每个品牌订单中 orderid=传过来的值，仅仅取出唯一的 orderbrandid 即可，这里也可以用groupby orderbrandid，然后查出 orderbrandid 的走向
         $sql = sprintf("SELECT distinct orderbrandid FROM tb_order_brand_detail WHERE orderid=%d", $this->id);
         $rows = $this->getDI()->get('db')->fetchAll($sql);
 
@@ -146,6 +160,7 @@ class TbOrder extends BaseModel
                 $array[] = $row['orderbrandid'];
             }
 
+            // 查询每个品牌订单的详细情况，并转化成数组
             $result = TbOrderBrand::find(
                 sprintf("id in (%s)", implode(',', $array))
             )->toArray();

@@ -50,11 +50,6 @@ class LoginController extends Controller
 
                 $this->session->set('language', $language);
 
-                // 在这里记录一下日志，以便追踪, liuzongyang 2020/4/30 15:31
-                $user_array = json_decode(json_encode($this->session->get('user')), true);
-                error_log('当前登录用户，' . $user->login_name . '的登录信息：' . print_r($user_array, true));
-                error_log('当前登录用户，' . $user->login_name . '的权限组信息：' . print_r($group->toArray(), true));
-
                 //Forward to the 'invoices' controller if the user is valid
                 //header("location:/");
                 echo json_encode(['code' => '200', 'auth' => $this->session->get('user'), "session_id" => $this->session->getId(), 'messages' => []]);

@@ -964,6 +964,9 @@ return [
     'jianshu'                                          => '件数',
     'kuanshu'                                          => '款数',
     'zongkuanshu'                                      => '总款数',
+    'order-notexist'                                   => '订单不存在',
+    'order-finish'                                     => '订单已完结',
+    'order-notexist-or-finish'                         => '订单不存在或订单已完结',
 
     'template' =>
         [

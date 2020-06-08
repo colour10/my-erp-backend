@@ -110,6 +110,8 @@ class OrderController extends BaseController
 
     /**
      * 订单保存
+     *
+     * @throws Exception
      */
     public function saveorderAction()
     {
@@ -136,8 +138,9 @@ class OrderController extends BaseController
             $order = TbOrder::findFirst(
                 sprintf("id=%d and companyid=%d", $orderid, $this->companyid)
             );
-            if (!$order || $order->status != 1) {
-                throw new Exception("/1001/订单不存在/");
+            // 状态非1为已完结，稍微修改下之前的提示，使之更加友好
+            if (!$order || $order->status != TbOrder::STATUS_UNFINISHED) {
+                throw new Exception($this->di->get("staticReader")->label('order-notexist-or-finish'));
             }
 
             $order->bookingid = $form['bookingid'];
@@ -184,7 +187,7 @@ class OrderController extends BaseController
             $order->property = $form['property'];
             $order->memo = $form['memo'];
             $order->orderdate = $form['orderdate'];
-            $order->status = 1;
+            $order->status = TbOrder::STATUS_UNFINISHED;
             $order->total = $form['total'];
             $order->genders = $form['genders'];
             $order->brandids = $form['brandids'];
@@ -294,7 +297,8 @@ class OrderController extends BaseController
     }
 
     /**
-     * 订单删除
+     * 订单删除，只需要注意到加入品牌订单的不能被删除即可
+     *
      * @return false|string
      * @throws Exception
      */
@@ -336,6 +340,7 @@ class OrderController extends BaseController
 
     /**
      * 订单完结
+     *
      * @return void [type] [description]
      * @throws Exception
      */
@@ -346,7 +351,7 @@ class OrderController extends BaseController
         $order = TbOrder::findFirstById($orderid);
         if ($order != false && $order->companyid == $this->companyid) {
             $order->finish();
-            $this->success();
+            echo $this->success();
         } else {
             throw new Exception("/11110101/订单不存在/");
         }
@@ -365,7 +370,7 @@ class OrderController extends BaseController
     }
 
     /**
-     * 品牌订单导入订单的时候调用
+     * 生成品牌订单：品牌订单导入订单的时候调用
      * @return false|string [type] [description]
      */
     function importAction()
@@ -390,7 +395,8 @@ class OrderController extends BaseController
             $conditions[] = sprintf("id = %d", $_POST['orderid']);
         }
 
-        $conditions[] = "status=1";
+        // 状态为未完成
+        $conditions[] = "status=" . TbOrder::STATUS_UNFINISHED;
 
         $orders = TbOrder::find(
             implode(" and ", $conditions)
@@ -415,7 +421,8 @@ class OrderController extends BaseController
     }
 
     /**
-     * 订单列表
+     * 后查：获取品牌订单列表
+     *
      * @return false|string
      * @throws Exception
      */

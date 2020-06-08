@@ -515,7 +515,7 @@ class TbProduct extends BaseCompanyModel
      */
     function syncBrandSugest()
     {
-        if ($this->brandcolor != "" && $this->colorname != "") {
+        if (!empty($this->brandcolor) && !empty($this->colorname)) {
             TbProductLastmodify::add($this->companyid, $this->brandid, $this->wordcode_3, $this->brandcolor, $this->colorname);
         }
     }

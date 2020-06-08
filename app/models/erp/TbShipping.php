@@ -147,8 +147,14 @@ class TbShipping extends BaseModel
         return $result;
     }
 
+    /**
+     * 前查 - 品牌订单
+     *
+     * @return array
+     */
     function getOrderbrandList()
     {
+        // 查找唯一的 orderbrandid，用于前查
         $sql = sprintf("SELECT distinct orderbrandid FROM tb_shipping_detail WHERE shippingid=%d", $this->id);
         $rows = $this->getDI()->get('db')->fetchAll($sql);
 
