@@ -134,7 +134,7 @@ class OrderController extends BaseController
         if ($orderid) {
             // 有订单号就修改
             // 查找订单号是否存在或者非法
-            // 只有status=1的订单才可以修改
+            // 只有status=1 在途的订单才可以修改
             $order = TbOrder::findFirst(
                 sprintf("id=%d and companyid=%d", $orderid, $this->companyid)
             );
@@ -196,8 +196,8 @@ class OrderController extends BaseController
             $order->makestaff = $this->currentUser;
             $order->maketime = date('Y-m-d H:i:s');
             $order->companyid = $this->companyid;
-            // 生成订单号
 
+            // 生成订单号
             $order->orderno = TbCode::getCode($this->companyid, "CB", date("y"));
             if ($order->create() === false) {
                 //返回失败信息
@@ -214,7 +214,6 @@ class OrderController extends BaseController
         $detail_id_array = [];
         foreach ($submitData['list'] as $k => $item) {
             // 使用模型更新
-            //
             $product = TbProduct::getInstance($item['productid']);
 
             $detail = TbOrderdetails::findFirst(

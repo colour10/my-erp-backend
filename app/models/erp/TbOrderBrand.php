@@ -9,6 +9,14 @@ use Phalcon\Mvc\Model\ResultsetInterface;
  */
 class TbOrderBrand extends BaseModel
 {
+    // 品牌订单状态
+    // 1 - 待确认
+    const STATUS_TO_BE_CONFIRMED = 1;
+    // 2 - 代发货
+    const STATUS_TO_BE_DELIVERED = 2;
+    // 3 - 完成
+    CONST STATUS_FINISHED = 3;
+
     public function initialize()
     {
         parent::initialize();

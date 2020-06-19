@@ -967,6 +967,7 @@ return [
     'order-notexist'                                   => '订单不存在',
     'order-finish'                                     => '订单已完结',
     'order-notexist-or-finish'                         => '订单不存在或订单已完结',
+    'status'                                           => '状态',
 
     'template' =>
         [

@@ -370,6 +370,7 @@ class ProductController extends CadminController
                     return $this->error($row);
                 }
 
+                // 更新材质列表，内部会使用遍历处理，注意，这里使用的是$params["materials"]，而不是$params['form']["materials"]
                 $row->updateMaterial($params["materials"]);
 
                 $data[] = $row->id . "," . $row->brandcolor;

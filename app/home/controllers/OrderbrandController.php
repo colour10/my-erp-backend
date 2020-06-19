@@ -10,6 +10,7 @@ use Asa\Erp\TbOrderBrandDetail;
 use Asa\Erp\TbOrderdetails;
 use Asa\Erp\TbSupplier;
 use Asa\Erp\Util;
+use Exception;
 use Phalcon\Paginator\Adapter\Model;
 
 /**
@@ -54,7 +55,7 @@ class OrderbrandController extends AdminController
         // 判断是否有params参数提交过来
         $params = $this->request->get('params');
         if (!$params) {
-            throw new \Exception("/1001/参数错误/");
+            throw new Exception("/1001/参数错误/");
         }
 
         // 转换成数组
@@ -68,7 +69,7 @@ class OrderbrandController extends AdminController
                 //更新
                 $orderBrand = TbOrderBrand::findFirstById($supplier["orderbrandid"]);
                 if ($orderBrand == false || $orderBrand->companyid != $this->companyid) {
-                    throw new \Exception("/110201/客户订单不存在。/");
+                    throw new Exception("/110201/客户订单不存在。/");
                 }
 
                 $orderbrand_id_array[] = $orderBrand->id;
@@ -103,7 +104,7 @@ class OrderbrandController extends AdminController
                         if ($row["id"] > 0) {
                             $detail = TbOrderBrandDetail::findFirst($row['id']);
                             if ($detail == false) {
-                                throw new \Exception("/110203/客户订单明细数据不存在。/");
+                                throw new Exception("/110203/客户订单明细数据不存在。/");
                             }
 
                             $change[$detail->orderdetailid] = isset($change[$detail->orderdetailid]) ? $change[$detail->orderdetailid] + $row['number'] - $detail->number : $row['number'] - $detail->number;
@@ -151,7 +152,7 @@ class OrderbrandController extends AdminController
                         $change[$detail->orderdetailid] = isset($change[$detail->orderdetailid]) ? $change[$detail->orderdetailid] - $detail->number : $detail->number * -1;
                         if ($detail->delete() == false) {
                             $this->db->rollback();
-                            throw new \Exception("/110204/删除客户订单明细失败/");
+                            throw new Exception("/110204/删除客户订单明细失败/");
                         }
                     }
                 }
@@ -168,7 +169,7 @@ class OrderbrandController extends AdminController
                             return $this->error($orderDetail);
                         }
                     } else {
-                        throw new \Exception("/110202/客户订单明细不存在。/");
+                        throw new Exception("/110202/客户订单明细不存在。/");
                     }
                 }
             } else {
@@ -236,7 +237,7 @@ class OrderbrandController extends AdminController
                                 return $this->error($orderDetail);
                             }
                         } else {
-                            throw new \Exception("/110202/客户订单明细不存在。/");
+                            throw new Exception("/110202/客户订单明细不存在。/");
                         }
                     }
                 }
@@ -410,6 +411,7 @@ class OrderbrandController extends AdminController
             }
         }
 
+
         if (count($array) > 0) {
             $orders = TbOrder::find(
                 sprintf("id in (%s)", implode(",", array_keys($array)))
@@ -423,6 +425,7 @@ class OrderbrandController extends AdminController
             }
         }
 
+
         if (count($supplierids) > 0) {
             //print_r($supplierids);
             $suppliers = TbSupplier::find(
@@ -435,12 +438,18 @@ class OrderbrandController extends AdminController
         echo $this->success($result);
     }
 
+    /**
+     * 确认品牌订单
+     *
+     * @return false|string
+     * @throws Exception
+     */
     function confirmAction()
     {
         // 判断是否有params参数提交过来
         $params = $this->request->get('params');
         if (!$params) {
-            throw new \Exception("/1001/参数错误/");
+            throw new Exception("/1001/参数错误/");
         }
 
         // 转换成数组
@@ -458,14 +467,17 @@ class OrderbrandController extends AdminController
                 sprintf("id=%d and companyid=%d", $orderbrandid, $this->companyid)
             );
 
+            // 如果品牌不存在
             if (!$orderbrand) {
-                throw new \Exception("/11020301/品牌订单不存在/");
-            } else if ($orderbrand->status == 2) {
-                throw new \Exception("/11020302/品牌订单已经确认过了，不能重复确认。/");
+                throw new Exception("/11020301/品牌订单不存在/");
+            } else if ($orderbrand->status == TbOrderBrand::STATUS_TO_BE_DELIVERED) {
+                // 如果订单状态是已经确认
+                throw new Exception("/11020302/品牌订单已经确认过了，不能重复确认。/");
             }
             $orderbrand->confirmstaff = $this->currentUser;
             $orderbrand->confirmdate = date('Y-m-d');
-            $orderbrand->status = 2;
+            // 订单状态 - 已确认代发货(status = 2)
+            $orderbrand->status = TbOrderBrand::STATUS_TO_BE_DELIVERED;
 
             // 判断是否成功
             if (!$orderbrand->save()) {
@@ -481,14 +493,15 @@ class OrderbrandController extends AdminController
 
                 if ($detail != false && $detail->orderbrandid == $orderbrand->id) {
                     $detail->confirm_number = $item['number'];
-                    $detail->status = 2;
+                    // 订单状态 - 已确认代发货(status = 2)
+                    $detail->status = TbOrderBrand::STATUS_TO_BE_DELIVERED;
                     if ($detail->update() == false) {
                         $this->db->rollback();
                         throw new Exception("/11020303/品牌订单确认数量更新失败/");
                     }
                 } else {
                     $this->db->rollback();
-                    throw new \Exception("/11020304/品牌订单详情不存在/");
+                    throw new Exception("/11020304/品牌订单详情不存在/");
                 }
             }
 
@@ -523,8 +536,8 @@ class OrderbrandController extends AdminController
         if (isset($_POST['orderbrandid']) && $_POST['orderbrandid'] > 0) {
             $conditions[] = sprintf("id=%d", $_POST['orderbrandid']);
         }
-        // 状态为代发货
-        $conditions[] = "status=2";
+        // 状态为代发货(status = 2)
+        $conditions[] = "status=" . TbOrderBrand::STATUS_TO_BE_DELIVERED;
 
         $orders = TbOrderBrand::find(
             implode(' and ', $conditions)
@@ -557,12 +570,12 @@ class OrderbrandController extends AdminController
                 if ($detail->confirm_number > 0) {
                     //已经确认的订单明细不能删除
                     $this->db->rollback();
-                    throw new \Exception("/11020301/不能删除已经确认的品牌订单明细/");
+                    throw new Exception("/11020301/不能删除已经确认的品牌订单明细/");
                 }
 
                 if ($detail->delete() == false) {
                     $this->db->rollback();
-                    throw new \Exception("/11020302/删除品牌订单明细失败。/");
+                    throw new Exception("/11020302/删除品牌订单明细失败。/");
                 }
 
                 $orderDetail = TbOrderdetails::findFirstById($detail->orderdetailid);
@@ -574,20 +587,20 @@ class OrderbrandController extends AdminController
                         return $this->error($orderDetail);
                     }
                 } else {
-                    throw new \Exception("/11020303/客户订单明细不存在。/");
+                    throw new Exception("/11020303/客户订单明细不存在。/");
                 }
             }
 
             if ($order->delete() == false) {
                 $this->db->rollback();
-                throw new \Exception("/11020304/删除品牌订单失败/");
+                throw new Exception("/11020304/删除品牌订单失败/");
             }
 
             $this->db->commit();
 
             return $this->success();
         } else {
-            throw new \Exception("/11020305/品牌订单不存在/");
+            throw new Exception("/11020305/品牌订单不存在/");
 
         }
     }
@@ -602,34 +615,38 @@ class OrderbrandController extends AdminController
         );
         // 判断订单是否存在
         if ($order != false) {
-
-
             $this->db->begin();
-            $order->status = 1;
+            // 只是把状态改为1，也就是待确认
+            $order->status = TbOrderBrand::STATUS_TO_BE_CONFIRMED;
             if ($order->update() == false) {
                 $this->db->rollback();
-                throw new \Exception("/11020402/更新客户订单状态失败/");
+                throw new Exception("/11020402/更新客户订单状态失败/");
             }
-
+            // 遍历品牌订单明细
             foreach ($order->orderbranddetail as $detail) {
                 if ($detail->shipping_number > 0) {
-                    throw new \Exception("/11020401/已经发货的订单不能取消确认。/");
+                    throw new Exception("/11020401/已经发货的订单不能取消确认。/");
                 }
 
+                // 订单确认数量改为0
                 $detail->confirm_number = 0;
-                $detail->status = 1;
+                // 状态改为1，也就是待确认
+                $detail->status = TbOrderBrand::STATUS_TO_BE_CONFIRMED;
 
+                // 判断是否更新成功
                 if ($detail->update() == false) {
                     $this->db->rollback();
-                    throw new \Exception("/11020403/更新客户订单明细失败/");
+                    throw new Exception("/11020403/更新客户订单明细失败/");
                 }
             }
 
+            // 事务提交
             $this->db->commit();
 
+            // 返回
             return $this->success();
         } else {
-            throw new \Exception("/11020404/品牌订单不存在/");
+            throw new Exception("/11020404/品牌订单不存在/");
         }
     }
 
@@ -646,10 +663,10 @@ class OrderbrandController extends AdminController
     }*/
 
     /**
-     * 客户订单列表，具体走向为：客户订单 <- 品牌订单
+     * 前查 - 客户订单列表，具体走向为：客户订单 <- 品牌订单
      *
      * @return false|string
-     * @throws \Exception
+     * @throws Exception
      */
     function orderlistAction()
     {
@@ -657,17 +674,23 @@ class OrderbrandController extends AdminController
         if ($orderbrand != false && $orderbrand->companyid == $this->companyid) {
             return $this->success($orderbrand->getOrderList()->toArray());
         } else {
-            throw new \Exception("/11020601/品牌订单不存在/");
+            throw new Exception("/11020601/品牌订单不存在/");
         }
     }
 
+    /**
+     * 后查 - 发货单列表；具体走向为：品牌订单 -> 发货单
+     *
+     * @return false|string
+     * @throws Exception
+     */
     function shippinglistAction()
     {
         $orderbrand = TbOrderBrand::findFirstById($_POST['id']);
         if ($orderbrand != false && $orderbrand->companyid == $this->companyid) {
             return $this->success($orderbrand->getShippingList());
         } else {
-            throw new \Exception("/11020601/品牌订单不存在/");
+            throw new Exception("/11020601/品牌订单不存在/");
         }
     }
 

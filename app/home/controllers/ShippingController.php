@@ -14,9 +14,10 @@ use Asa\Erp\TbShippingDetail;
 use Asa\Erp\TbSizecontent;
 use Asa\Erp\TbWarehouse;
 use Exception;
+use Phalcon\Mvc\Model;
 
 /**
- * 发货单主表
+ * 发货单主表 - 和入库单是 一对一关系
  * Class ShippingController
  * @package Multiple\Home\Controllers
  */
@@ -47,7 +48,7 @@ class ShippingController extends AdminController
         // productid
         $productid = $this->request->getPost('productid');
         // 查找=2或者=3的，都可以，只有=1状态是在途
-        $result = TbShipping::find("companyid = {$this->companyid} and (status = 2 or status = 3)");
+        $result = TbShipping::find("companyid = {$this->companyid} and (status = " . TbShipping::STATUS_STORAGE . " or status = " . TbShipping::STATUS_AMORTIZED . ")");
         // 找出关联部分
         $result_array = $result->toArray();
         foreach ($result as $k => $item) {
@@ -168,6 +169,11 @@ class ShippingController extends AdminController
         return [];
     }
 
+    /**
+     * 获得查询条件
+     *
+     * @return string
+     */
     public function getSearchCondition()
     {
         $where = [
@@ -194,6 +200,7 @@ class ShippingController extends AdminController
 
     /**
      * 保存发货单
+     *
      * @return false|string
      * @throws Exception
      */
@@ -212,16 +219,20 @@ class ShippingController extends AdminController
         // 采用事务处理
         $this->db->begin();
 
+        // 存在 id 即为编辑，否则为新建
         if ($form['id'] > 0) {
+            // 判断发货单是否存在
             $shipping = TbShipping::findFirstById($form['id']);
             if ($shipping == false || $shipping->companyid != $this->companyid) {
                 throw new Exception("/11010101/发货单不存在。/");
             }
 
-            if ($shipping->status == 2) {
+            // status = 2 代表已经入库
+            if ($shipping->status == TbShipping::STATUS_STORAGE) {
                 throw new Exception("/11010102/发货单已经入库，不能修改。/");
             }
 
+            // 开始更新
             $shipping->supplierid = $form["supplierid"];
             $shipping->finalsupplierid = $form["finalsupplierid"];
             $shipping->ageseason = $form["ageseason"];
@@ -253,6 +264,7 @@ class ShippingController extends AdminController
             $shipping->paytype = $form["paytype"];
             $shipping->estimatedate = $form["estimatedate"];
 
+            // 如果更新失败则回滚
             if ($shipping->update() === false) {
                 //返回失败信息
                 $this->db->rollback();
@@ -334,7 +346,8 @@ class ShippingController extends AdminController
             }
         } else {
             $shipping = new TbShipping();
-            $shipping->status = 1;
+            // status = 1 代表 在途，这个是默认值
+            $shipping->status = TbShipping::STATUS_WAY;
             $shipping->supplierid = $form["supplierid"];
             $shipping->finalsupplierid = $form["finalsupplierid"];
             $shipping->ageseason = $form["ageseason"];
@@ -378,7 +391,7 @@ class ShippingController extends AdminController
                 return $this->error($shipping);
             }
 
-            // 开始写入订单详情表
+            // 开始写入发货单详情表
             $change = [];
             foreach ($submitData['list'] as $k => $item) {
                 $detail = new TbShippingDetail();
@@ -407,6 +420,7 @@ class ShippingController extends AdminController
             foreach ($change as $orderbranddetailid => $number) {
                 $orderDetail = TbOrderBrandDetail::findFirstById($orderbranddetailid);
                 if ($orderDetail != false) {
+                    // 同时更新每个品牌订单明细的发货数
                     $orderDetail->shipping_number = $orderDetail->shipping_number + $number;
                     if ($orderDetail->update() === false) {
                         //返回失败信息
@@ -441,6 +455,7 @@ class ShippingController extends AdminController
 
     /**
      * 发货单删除
+     *
      * @return false|string
      * @throws Exception
      */
@@ -450,17 +465,22 @@ class ShippingController extends AdminController
         $shipping = TbShipping::findFirst(
             sprintf("id=%d and companyid=%d", $_POST["id"], $this->companyid)
         );
-        // 判断订单是否存在
+
+        // 判断订单是否存在，检查是否入库(status = 2)
         if ($shipping != false) {
-            if ($shipping->status == 2) {
+            if ($shipping->status == TbShipping::STATUS_STORAGE) {
                 throw new Exception("/11010701/已经入库的发货单不能删除。/");
             }
 
+            // 事务处理
             $this->db->begin();
+            // 发货单明细
             $details = $shipping->shippingDetail;
+            // 发货单明细遍历
             foreach ($details as $detail) {
-                //更新品牌订单明细中的发货数量
+                // 更新品牌订单明细中的发货数量
                 if ($detail->orderbranddetailid > 0) {
+                    // 查找对应的品牌订单明细记录
                     $orderbranddetail = TbOrderBrandDetail::findFirstById($detail->orderbranddetailid);
                     if ($orderbranddetail != false) {
                         $orderbranddetail->shipping_number = $orderbranddetail->shipping_number - $detail->number;
@@ -527,7 +547,8 @@ class ShippingController extends AdminController
             }
             $shipping->confirmstaff = $this->currentUser;
             $shipping->confirmtime = date('Y-m-d H:i:s');
-            $shipping->status = 2;
+            // 把状态改为2，也就是入库
+            $shipping->status = TbShipping::STATUS_STORAGE;
 
             // 判断是否成功
             if (!$shipping->save()) {
@@ -566,7 +587,6 @@ class ShippingController extends AdminController
                 // 入库成功，填写入库数量
                 $detail->warehousingnumber = $item['number'];
 
-
                 if ($detail->save() == false) {
                     $this->db->rollback();
                     throw new Exception("/110113/入库单详情入库数量更新失败/");
@@ -576,7 +596,7 @@ class ShippingController extends AdminController
             // 提交事务
             $this->db->commit();
 
-            // 最终成功返回，原来的数据还要保留，再加上订单详情之中每个商品的名称也要放进去
+            // 最终成功返回
             echo $this->success();
         }
     }
@@ -627,7 +647,8 @@ class ShippingController extends AdminController
     }
 
     /**
-     * 入库，修改库存并摊销费用
+     * 入库，修改库存并摊销费用 - 费用输齐
+     *
      * @return false|string [type] [description]
      * @throws Exception
      */
@@ -641,6 +662,7 @@ class ShippingController extends AdminController
         $total_amount = 0;//总金额
         $exchangerate = $shipping->exchangerate;
 
+        // 汇率必须大于0，否则提示不合法
         if ($exchangerate <= 0) {
             throw new Exception('/11011209/汇率不合法。/');
         }
@@ -726,7 +748,7 @@ class ShippingController extends AdminController
             }
         }
 
-        // 添加入库人，入库时间
+        // 添加入库人，入库时间, status=3代表分摊完毕
         $shipping->status = 3;
         $shipping->warehousingstaff = $this->currentUser;
         $shipping->warehousingtime = date('Y-m-d H:i:s');
@@ -756,7 +778,8 @@ class ShippingController extends AdminController
 
         $this->db->begin();
 
-        if ($shipping->status != 3) {
+        // 因为是要把 status=3 的状态进行还原，所以状态代码必须为3
+        if ($shipping->status != TbShipping::STATUS_AMORTIZED) {
             throw new Exception("/11011302/发货单不存在/");
         }
 
@@ -770,11 +793,18 @@ class ShippingController extends AdminController
         }
 
         $costList = $shipping->getCostList();
+
+        // 取出 costList 的值
+        error_log('costList = ' . print_r($costList, true));
+
         $prodctstocks = TbProductstock::sum([
             sprintf("productid in (%s)", implode(",", array_keys($costList))),
             "column" => "number",
             "group"  => "productid",
         ]);
+
+        // 取出 prodctstocks 的值
+        error_log('prodctstocks = ' . print_r($prodctstocks->toArray(), true));
 
         //修改商品信息的成本价
         foreach ($prodctstocks as $row) {
@@ -897,6 +927,12 @@ class ShippingController extends AdminController
         }
     }
 
+    /**
+     * 更新发货单
+     *
+     * @return Model
+     * @throws Exception
+     */
     private function saveinfo()
     {
         $shipping = TbShipping::findFirst(

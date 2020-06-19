@@ -7,13 +7,13 @@ namespace Asa\Erp;
  */
 class TbShipping extends BaseModel
 {
-    // // 定义订单状态, 暂时不能确定1，2,3分别代表什么意思，搁置
-    // // 在途
-    // const SHIPPING_WAY = 1;
-    // // 入库
-    // const SHIPPING_STORAGE = 2;
-    // // 取消
-    // const SHIPPING_CANCEL = 3;
+    // 定义订单状态
+    // 在途
+    const STATUS_WAY = 1;
+    // 待入库
+    const STATUS_STORAGE = 2;
+    // 已入库
+    const STATUS_AMORTIZED = 3;
 
     public function initialize()
     {
@@ -121,7 +121,7 @@ class TbShipping extends BaseModel
 
             if ($shippingFee->feename->is_amortize == 1) {
                 //print_r($shippingFee->feename->toArray());
-
+                // 运费是按照数量摊销
                 if ($shippingFee->feename->amortize_type == 1) {
                     // 按数量摊销
                     if ($total_number > 0) {
@@ -132,6 +132,7 @@ class TbShipping extends BaseModel
                         }
                     }
                 } else {
+                    // 关税是按照金额摊销
                     // 按金额摊销
                     if ($total_amount > 0) {
                         foreach ($result as $key => $row) {
