@@ -18,54 +18,66 @@ class TbSizecontent extends BaseModel
             '\Asa\Erp\TbSizetop',
             'id',
             [
-                'alias' => 'sizetop'
+                'alias' => 'sizetop',
             ]
         );
     }
 
-    function doUp() {
+    /**
+     * 向上
+     *
+     * @throws Exception
+     */
+    function doUp()
+    {
         $property = static::findFirst([
             sprintf("topid=%d and displayindex<%d", $this->topid, $this->displayindex),
-            "order" => "displayindex desc"
+            "order" => "displayindex desc",
         ]);
 
-        if($property!=false) {
+        if ($property != false) {
             $current_index = $this->displayindex;
 
             $db = $this->getDI()->get("db");
 
             $db->begin();
             $this->displayindex = $property->displayindex;
-            if($this->update()==false) {
+            if ($this->update() == false) {
                 $db->rollback();
                 throw new Exception("#1002#更新尺码详情的排序规则失败1#");
             }
 
             $property->displayindex = $current_index;
             $property->update();
-            if($property->update()==false) {
+            if ($property->update() == false) {
                 $db->rollback();
                 throw new Exception("#1002#更新尺码详情的排序规则失败2#");
             }
 
-             $db->commit();
+            $db->commit();
         }
     }
 
-    function doDown() {
+    /**
+     * 向下
+     *
+     * @throws Exception
+     */
+    function doDown()
+    {
         $property = static::findFirst([
             sprintf("topid=%d and displayindex>%d", $this->topid, $this->displayindex),
-            "order" => "displayindex asc"
+            "order" => "displayindex asc",
         ]);
 
-        if($property!=false) {
+        if ($property != false) {
             $current_index = $this->displayindex;
 
             $db = $this->getDI()->get("db");
 
             $db->begin();
             $this->displayindex = $property->displayindex;
-            if($this->update()==false) {
+            if ($this->update() == false) {
                 $this->debug();
                 $db->rollback();
                 throw new Exception("/1002/更新尺码详情的排序规则失败1/");
@@ -73,44 +85,57 @@ class TbSizecontent extends BaseModel
 
             $property->displayindex = $current_index;
             $property->update();
-            if($property->update()==false) {
+            if ($property->update() == false) {
                 $db->rollback();
                 throw new Exception("/1002/更新尺码详情的排序规则失败2/");
             }
 
-             $db->commit();
+            $db->commit();
         }
     }
 
-    function doTop() {
+    /**
+     * 顶部
+     *
+     * @throws Exception
+     */
+    function doTop()
+    {
         $min = static::minimum([
             sprintf("topid=%d", $this->topid),
-            'column' => 'displayindex'
+            'column' => 'displayindex',
         ]);
 
-        $this->displayindex = $min-1;
-        if($this->update()==false) {
+        $this->displayindex = $min - 1;
+        if ($this->update() == false) {
             throw new Exception("#1002#更新尺码详情的排序规则失败1#");
         }
     }
 
-    function doBottom() {
+    /**
+     * 底部
+     *
+     * @throws Exception
+     */
+    function doBottom()
+    {
         $min = static::maximum([
             sprintf("topid=%d", $this->topid),
-            'column' => 'displayindex'
+            'column' => 'displayindex',
         ]);
 
-        $this->displayindex = $min+1;
-        if($this->update()==false) {
+        $this->displayindex = $min + 1;
+        if ($this->update() == false) {
             throw new Exception("#1002#更新尺码详情的排序规则失败1#");
         }
     }
 
-    public function getRules() {
+    public function getRules()
+    {
         $factory = $this->getValidatorFactory();
         return [
-            'name' => [$factory->presenceOf('neirong')],
-            'topid' => [$factory->tableid('chimazu',false)]
+            'name'  => [$factory->presenceOf('neirong')],
+            'topid' => [$factory->tableid('chimazu', false)],
         ];
     }
 }
