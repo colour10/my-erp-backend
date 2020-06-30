@@ -16,14 +16,22 @@ class BrandgroupchildpropertyController extends ZadminController
         $this->setModelName('Asa\\Erp\\TbBrandgroupchildProperty');
     }
 
+    /**
+     * 分页
+     *
+     * @return false|string|void
+     */
     function pageAction()
     {
-        $result = TbBrandgroupchildProperty::find([
-            sprintf("brandgroupchildid=%d", $_POST['brandgroupchildid']),
-            "order" => "displayindex asc",
-        ]);
-
-        return $this->success($result->toArray());
+        if ($this->request->getPost('brandgroupchildid')) {
+            $result = TbBrandgroupchildProperty::find([
+                sprintf("brandgroupchildid=%d", $_POST['brandgroupchildid']),
+                "order" => "displayindex asc",
+            ]);
+            return $this->success($result->toArray());
+        }
+        // 否则直接返回空
+        return $this->success();
     }
 
     function upAction()
