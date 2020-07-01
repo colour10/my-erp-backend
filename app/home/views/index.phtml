@@ -615,7 +615,7 @@
     <router-view></router-view>
 </div>
 <div id="load" style="position:relative;margin:auto;text-align:center;top:200px;">
-    <el-progress type="circle" :percentage="pencent" v-show="isShow"></el-progress>
+    <el-progress type="circle" :percentage="percent" v-show="isShow"></el-progress>
 </div>
 
 <script type="text/javascript">
@@ -625,20 +625,20 @@
             data: function () {
                 return {
                     isShow: true,
-                    pencent: 0
+                    percent: 0
                 }
             },
             mounted: function () {
                 let self = this;
 
                 let handler = setInterval(function () {
-                    if (self.pencent <= 95) {
-                        self.pencent = self.pencent + Math.floor(Math.random() * 10) % 2 + 1
+                    if (self.percent <= 95) {
+                        self.percent = self.percent + Math.floor(Math.random() * 10) % 2 + 1
                     }
                 }, 330);
 
                 $.getScript("/dist/asa-" + version + ".js", function () {
-                    self.pencent = 100;
+                    self.percent = 100;
                     clearInterval(handler);
                     setTimeout(function () {
                         self.isShow = false;
