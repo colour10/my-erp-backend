@@ -30,6 +30,9 @@ class UserController extends CadminController
         }
     }
 
+    /**
+     * 删除组内用户
+     */
     function deletegroupAction()
     {
         $this->doEdit();
