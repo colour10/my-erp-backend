@@ -44,6 +44,27 @@ class AgeseasonController extends AdminController
     }
 
     /**
+     * 这个不允许 sessionmark + name出现重复数据
+     */
+    public function before_add()
+    {
+        $ageseason = TbAgeseason::find([
+            'sessionmark = :sessionmark: AND name = :name:',
+            'bind' => [
+                'sessionmark' => $this->request->get('sessionmark'),
+                'name'        => $this->request->get('name'),
+            ],
+        ]);
+        // 记录变量信息
+        error_log("\$ageseason = " . print_r($ageseason->toArray(), true));
+        if (count($ageseason) > 0) {
+            return true;
+        }
+        return false;
+
+    }
+
+    /**
      * 重写 doadd 方法
      */
     function doAdd()
@@ -53,7 +74,11 @@ class AgeseasonController extends AdminController
             //更新数据库
             $row = $this->getModelObject();
 
-            $this->before_add();
+            // =true说明存在数据，不能重复添加
+            if ($this->before_add() === true) {
+                echo $this->error($this->getValidateMessage('data-exists'));
+                exit();
+            }
 
             $fields = $this->getAttributes();
 
@@ -81,33 +106,35 @@ class AgeseasonController extends AdminController
                 // 采用事务处理
                 $this->db->begin();
                 // 更新tb_price_setting表
-                $tbPriceSettings = TbPriceSetting::find("ageseasonid = " . $prev_ageseasonid);
-                if (count($tbPriceSettings) > 0) {
-                    foreach ($tbPriceSettings->toArray() as $tbPriceSetting) {
-                        $model = new TbPriceSetting();
-                        // 新纪录的ageseasonid重写
-                        $tbPriceSetting['ageseasonid'] = $result['id'];
-                        unset($tbPriceSetting['id']);
-                        if (!$model->save($tbPriceSetting)) {
-                            $this->db->rollback();
-                            echo $this->error($model);
-                            exit;
+                if ($prev_ageseasonid) {
+                    $tbPriceSettings = TbPriceSetting::find("ageseasonid = " . $prev_ageseasonid);
+                    if (count($tbPriceSettings) > 0) {
+                        foreach ($tbPriceSettings->toArray() as $tbPriceSetting) {
+                            $model = new TbPriceSetting();
+                            // 新纪录的ageseasonid重写
+                            $tbPriceSetting['ageseasonid'] = $result['id'];
+                            unset($tbPriceSetting['id']);
+                            if (!$model->save($tbPriceSetting)) {
+                                $this->db->rollback();
+                                echo $this->error($model);
+                                exit;
+                            }
                         }
                     }
-                }
 
-                // 更新tb_brand_rate表
-                $tbBrandRates = TbBrandRate::find("ageseasonid = " . $prev_ageseasonid);
-                if (count($tbBrandRates) > 0) {
-                    foreach ($tbBrandRates->toArray() as $tbBrandRate) {
-                        $model = new TbBrandRate();
-                        // 新纪录的ageseasonid重写
-                        $tbBrandRate['ageseasonid'] = $result['id'];
-                        unset($tbBrandRate['id']);
-                        if (!$model->save($tbBrandRate)) {
-                            $this->db->rollback();
-                            echo $this->error($model);
-                            exit;
+                    // 更新tb_brand_rate表
+                    $tbBrandRates = TbBrandRate::find("ageseasonid = " . $prev_ageseasonid);
+                    if (count($tbBrandRates) > 0) {
+                        foreach ($tbBrandRates->toArray() as $tbBrandRate) {
+                            $model = new TbBrandRate();
+                            // 新纪录的ageseasonid重写
+                            $tbBrandRate['ageseasonid'] = $result['id'];
+                            unset($tbBrandRate['id']);
+                            if (!$model->save($tbBrandRate)) {
+                                $this->db->rollback();
+                                echo $this->error($model);
+                                exit;
+                            }
                         }
                     }
                 }
