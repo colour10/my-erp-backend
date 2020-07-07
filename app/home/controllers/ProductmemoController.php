@@ -70,6 +70,11 @@ class ProductmemoController extends ZadminController
         );
     }
 
+    /**
+     * 获取商品描述 id 对应的子品类 id 列表
+     *
+     * @return false|string
+     */
     public function getProductmemoBrandgroupchildAction()
     {
         $productmemo_id = $this->request->getPost('productmemo_id');

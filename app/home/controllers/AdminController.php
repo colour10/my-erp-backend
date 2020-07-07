@@ -6,9 +6,11 @@ use Exception;
 use Phalcon\Db\Column;
 use Phalcon\Paginator\Adapter\Model as PaginatorModel;
 use ReflectionException;
+use ReflectionMethod;
 
 /**
  * 后台控制器基类
+ *
  * Class AdminController
  * @package Multiple\Home\Controllers
  */
@@ -46,6 +48,12 @@ class AdminController extends BaseController
         return $this->modelName;
     }
 
+    /**
+     * 通过反射获取对象的实例
+     *
+     * @return object
+     * @throws ReflectionException
+     */
     function getModelObject()
     {
         if (!$this->modelObject) {
@@ -56,6 +64,12 @@ class AdminController extends BaseController
         return $this->modelObject;
     }
 
+    /**
+     * 获取动态属性
+     *
+     * @return mixed
+     * @throws ReflectionException
+     */
     function getAttributes()
     {
         $model = $this->getModelObject();
@@ -68,6 +82,12 @@ class AdminController extends BaseController
         }
     }
 
+    /**
+     * 获取搜索条件
+     *
+     * @return string
+     * @throws ReflectionException
+     */
     function getSearchCondition()
     {
         $model = $this->getModelObject();
@@ -100,6 +120,12 @@ class AdminController extends BaseController
         return implode(' and ', $array);
     }
 
+    /**
+     * 获得逻辑执行的条件
+     *
+     * @return string
+     * @throws ReflectionException
+     */
     function getCondition()
     {
         $model = $this->getModelObject();
@@ -124,6 +150,11 @@ class AdminController extends BaseController
     {
     }
 
+    /**
+     * 分页, 这个几乎是90%以上功能的默认接口
+     *
+     * @throws ReflectionException
+     */
     function pageAction()
     {
         $this->before_page();
@@ -132,7 +163,7 @@ class AdminController extends BaseController
             $params['order'] = $_POST['__orderby'];
         }
 
-        $findFirst = new \ReflectionMethod($this->getModelName(), 'find');
+        $findFirst = new ReflectionMethod($this->getModelName(), 'find');
         $result = $findFirst->invokeArgs(null, [$params]);
 
         $page = $this->request->getPost("page", "int", 1);
@@ -165,16 +196,28 @@ class AdminController extends BaseController
         echo $this->reportJson(["data" => $data, "pagination" => $pageinfo], 200, []);
     }
 
+    /**
+     * 编辑
+     */
     function editAction()
     {
         $this->doEdit();
     }
 
+    /**
+     * 删除
+     *
+     * @return false|string
+     * @throws ReflectionException
+     */
     function deleteAction()
     {
         return $this->doDelete();
     }
 
+    /**
+     * 新增
+     */
     function addAction()
     {
         try {
@@ -185,7 +228,7 @@ class AdminController extends BaseController
     }
 
     /**
-     * 增加
+     * 增加逻辑
      */
     function doAdd()
     {
@@ -226,7 +269,7 @@ class AdminController extends BaseController
     }
 
     /**
-     * 修改
+     * 修改逻辑
      */
     public function doEdit()
     {
@@ -262,16 +305,16 @@ class AdminController extends BaseController
     }
 
     /**
-     * 删除
+     * 删除逻辑
+     *
      * @return false|string
      * @throws ReflectionException
      */
     public function doDelete()
     {
-        $findFirst = new \ReflectionMethod($this->getModelName(), 'findFirst');
+        $findFirst = new ReflectionMethod($this->getModelName(), 'findFirst');
         $row = $findFirst->invokeArgs(null, [$this->getCondition()]);
 
-        $result = ["code" => 200, "messages" => []];
         if ($row != false) {
             try {
                 $this->before_delete($row);
@@ -286,11 +329,19 @@ class AdminController extends BaseController
         return $this->success();
     }
 
+    /**
+     * 编辑前的钩子
+     *
+     * @param $row
+     */
     function before_edit($row)
     {
 
     }
 
+    /**
+     * 新增前的钩子
+     */
     function before_add()
     {
 
@@ -301,16 +352,32 @@ class AdminController extends BaseController
 
     }
 
+    /**
+     * 分页前的钩子
+     */
     function before_page()
     {
 
     }
 
+    /**
+     * 对象转数组
+     *
+     * @param $row
+     * @return mixed
+     */
     function recordToArray($row)
     {
         return $row->toArray();
     }
 
+    /**
+     * 选择是 post 还是 get 的判断封装方法
+     *
+     * @param $name
+     * @param $value
+     * @param string $method
+     */
     function injectParam($name, $value, $method = 'POST')
     {
         $_REQUEST[$name] = $value;
