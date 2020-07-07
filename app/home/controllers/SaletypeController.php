@@ -2,6 +2,8 @@
 
 namespace Multiple\Home\Controllers;
 
+use Exception;
+
 /**
  * 销售属性表
  * Class SaletypeController
@@ -14,6 +16,16 @@ class SaletypeController extends AdminController
         parent::initialize();
 
         $this->setModelName('Asa\\Erp\\TbSaleType');
+    }
+
+    /**
+     * 添加前的验证，否则是默认的英文提示，用户体验不好
+     */
+    public function before_add()
+    {
+        if (!$this->request->get('colortemplateid')) {
+            throw new Exception($this->getValidateMessage('colortemplateid', 'template', 'required'));
+        }
     }
 
     function before_page()

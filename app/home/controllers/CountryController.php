@@ -3,6 +3,7 @@
 namespace Multiple\Home\Controllers;
 
 use Asa\Erp\TbCountry;
+use Exception;
 
 /**
  * 基础资料，国家及地区信息表
@@ -24,6 +25,21 @@ class CountryController extends ZadminController
         $_POST["__orderby"] = "name_en asc";
     }
 
+    /**
+     * 添加前的验证，否则是默认的英文提示，用户体验不好
+     */
+    public function before_add()
+    {
+        if (!$this->request->get('code')) {
+            throw new Exception($this->getValidateMessage('guojiadaima3', 'template', 'required'));
+        }
+    }
+
+    /**
+     * 列表展示
+     *
+     * @return false|string
+     */
     public function listAction()
     {
         $lang = $this->getDI()->get("session")->get("language");

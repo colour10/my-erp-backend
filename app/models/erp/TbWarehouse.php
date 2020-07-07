@@ -2,6 +2,7 @@
 
 namespace Asa\Erp;
 
+use Phalcon\Mvc\Model;
 use Phalcon\Mvc\Model\Relation;
 
 /**
@@ -55,7 +56,8 @@ class TbWarehouse extends BaseModel
     /**
      * 根据另外一个库存对象，查找本库的相同信息的库存对象，如果没有则创建一个数量为0的库存对象
      * @param TbProductstock $productstock [description]
-     * @return [type]               [description]
+     * @return TbProductstock|Model [type]               [description]
+     * @throws Exception
      */
     function getLocalStock($productstock)
     {

@@ -335,10 +335,10 @@ class ConfirmorderController extends BaseController
             if (in_array($k, $columns)) {
                 $order->$k = $item;
             }
-        }//        
+        }
 
         if ($order->update() == false) {
-            return $this->error(['updage-fail']);
+            return $this->error($this->getValidateMessage('data', 'db', 'save-success'));
         } else {
             return $this->success($order->getOrderDetail());
         }

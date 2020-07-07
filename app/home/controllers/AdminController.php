@@ -152,6 +152,8 @@ class AdminController extends BaseController
 
     /**
      * 分页, 这个几乎是90%以上功能的默认接口
+     * 但是，这里传过来的 page 要经过计算，最大只能为实际分页的最大 page 值，否则超过最大值的话，数据将为空，体验很不好，用户还以为数据都被清空了呢
+     *
      *
      * @throws ReflectionException
      */
@@ -166,9 +168,15 @@ class AdminController extends BaseController
         $findFirst = new ReflectionMethod($this->getModelName(), 'find');
         $result = $findFirst->invokeArgs(null, [$params]);
 
+        // 当前页码
         $page = $this->request->getPost("page", "int", 1);
+        // 每页显示条数
         $pageSize = $this->request->getPost("pageSize", "int", 20);
+        // 数据条数
+        $count = count($result->toArray());
+        $page = $this->getPage($count, $pageSize, $page);
 
+        // 分页方法
         $paginator = new PaginatorModel(
             [
                 "data"  => $result,
@@ -194,6 +202,29 @@ class AdminController extends BaseController
             "pageSize"   => $pageSize,
         ];
         echo $this->reportJson(["data" => $data, "pagination" => $pageinfo], 200, []);
+    }
+
+    /**
+     * 取出实际的有效页码
+     *
+     * @param int $count 记录条数
+     * @param int $currentPage 传过来的页码
+     * @param int $pageSize 每页显示条数
+     * @return float
+     */
+    function getPage($count, $pageSize, $currentPage = 1)
+    {
+        // 向上取整
+        $maxPage = ceil($count / $pageSize);
+        // 页码最小值为1
+        // 页码如果超过最大值，那么就取最大值
+        if ($currentPage < 1) {
+            $currentPage = 1;
+        } else if ($currentPage > $maxPage) {
+            $currentPage = $maxPage;
+        }
+        // 返回
+        return $currentPage;
     }
 
     /**
@@ -233,38 +264,50 @@ class AdminController extends BaseController
     function doAdd()
     {
         if ($this->request->isPost()) {
-            // 更新数据库
-            $row = $this->getModelObject();
+            // 新增逻辑
+            // 防止有数据库本身的错误，这里使用 try-catch 捕捉
+            try {
+                $row = $this->getModelObject();
 
-            $this->before_add();
+                $this->before_add();
 
-            $fields = $this->getAttributes();
+                $fields = $this->getAttributes();
 
-            foreach ($fields as $name) {
-                if (isset($_POST[$name])) {
-                    $row->$name = $_POST[$name];
+                foreach ($fields as $name) {
+                    if (isset($_POST[$name])) {
+                        $row->$name = $_POST[$name];
+                    }
                 }
-            }
 
-            $result = ["code" => 200, "messages" => []];
-            if ($row->create() === false) {
-                $messages = $row->getMessages();
+                $result = ["code" => 200, "messages" => []];
+                if ($row->create() === false) {
+                    $messages = $row->getMessages();
 
-                foreach ($messages as $message) {
-                    $result["messages"][] = $message->getMessage();
+                    foreach ($messages as $message) {
+                        $result["messages"][] = $message->getMessage();
+                    }
+                } else {
+                    $result['is_add'] = "1";
+                    $result['id'] = $row->id;
+
+                    // 成功之后，这里可能会有后续的一些操作，暂时命名为 after_add 吧
+                    $this->after_add([
+                        'post'   => $_POST,
+                        'result' => $result,
+                    ]);
                 }
-            } else {
-                $result['is_add'] = "1";
-                $result['id'] = $row->id;
 
-                // 成功之后，这里可能会有后续的一些操作，暂时命名为 after_add 吧
-                $this->after_add([
-                    'post'   => $_POST,
-                    'result' => $result,
-                ]);
+                // 返回信息
+                echo json_encode($result);
+                exit();
+            } catch (Exception $e) {
+                // 记录日志
+                error_log("当前 doAdd 操作执行失败，原始错误为：" . $e->getMessage());
+                error_log("当前 doAdd 操作用户提交的原始数据为：" . print_r($this->request->get(), true));
+                // 返回错误
+                echo $this->error($this->getValidateMessage('data', 'db', 'add-failed'));
+                exit();
             }
-
-            echo json_encode($result);
         }
     }
 
@@ -274,32 +317,43 @@ class AdminController extends BaseController
     public function doEdit()
     {
         if ($this->request->isPost()) {
-            $row = call_user_func_array("{$this->modelName}::findFirst", [$this->getCondition()]);
-            if ($row != false) {
-                $this->before_edit($row);
+            // 更新逻辑
+            // 防止有数据库本身的错误，这里使用 try-catch 捕捉
+            try {
+                $row = call_user_func_array("{$this->modelName}::findFirst", [$this->getCondition()]);
+                if ($row != false) {
+                    $this->before_edit($row);
 
-                $fields = $this->getAttributes();
-                foreach ($fields as $name) {
-                    if (isset($_POST[$name])) {
-                        $row->$name = $_POST[$name];
+                    $fields = $this->getAttributes();
+                    foreach ($fields as $name) {
+                        if (isset($_POST[$name])) {
+                            $row->$name = $_POST[$name];
+                        }
                     }
-                }
 
-                $result = ["code" => 200, "messages" => []];
-                if ($row->update() === false) {
-                    $messages = $row->getMessages();
+                    $result = ["code" => 200, "messages" => []];
+                    if ($row->update() === false) {
+                        $messages = $row->getMessages();
 
-                    foreach ($messages as $message) {
-                        $result["messages"][] = $message->getMessage();
+                        foreach ($messages as $message) {
+                            $result["messages"][] = $message->getMessage();
+                        }
                     }
+
+                    echo json_encode($result);
+                } else {
+                    $result = ["code" => 200, "messages" => ["数据不存在"]];
+
+                    echo json_encode($result);
+                    exit;
                 }
-
-                echo json_encode($result);
-            } else {
-                $result = ["code" => 200, "messages" => ["数据不存在"]];
-
-                echo json_encode($result);
-                exit;
+            } catch (Exception $e) {
+                // 记录日志
+                error_log("当前 doEdit 操作执行失败，原始错误为：" . $e->getMessage());
+                error_log("当前 doEdit 操作用户提交的原始数据为：" . print_r($this->request->get(), true));
+                // 返回错误
+                echo $this->error($this->getValidateMessage('data', 'db', 'edit-failed'));
+                exit();
             }
         }
     }
@@ -308,25 +362,36 @@ class AdminController extends BaseController
      * 删除逻辑
      *
      * @return false|string
-     * @throws ReflectionException
      */
     public function doDelete()
     {
-        $findFirst = new ReflectionMethod($this->getModelName(), 'findFirst');
-        $row = $findFirst->invokeArgs(null, [$this->getCondition()]);
+        // 删除逻辑
+        // 防止有数据库本身的错误，这里使用 try-catch 捕捉
+        try {
+            $findFirst = new ReflectionMethod($this->getModelName(), 'findFirst');
+            $row = $findFirst->invokeArgs(null, [$this->getCondition()]);
 
-        if ($row != false) {
-            try {
-                $this->before_delete($row);
+            if ($row != false) {
+                try {
+                    $this->before_delete($row);
 
-                if ($row->delete() == false) {
-                    return $this->error($row);
+                    if ($row->delete() == false) {
+                        return $this->error($row);
+                    }
+                } catch (Exception $e) {
+                    return $this->error($e->getMessage());
                 }
-            } catch (Exception $e) {
-                return $this->error($e->getMessage());
             }
+            // 返回真
+            return $this->success();
+        } catch (Exception $e) {
+            // 记录日志
+            error_log("当前 doDelete 操作执行失败，原始错误为：" . $e->getMessage());
+            error_log("当前 doDelete 操作用户提交的原始数据为：" . print_r($this->request->get(), true));
+            // 返回错误
+            echo $this->error($this->getValidateMessage('data', 'db', 'delete-failed'));
+            exit();
         }
-        return $this->success();
     }
 
     /**

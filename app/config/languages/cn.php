@@ -969,6 +969,8 @@ return [
     'order-notexist-or-finish'                         => '订单不存在或订单已完结',
     'status'                                           => '状态',
     'data-exists'                                      => '数据重复',
+    'colortemplateid'                                  => '颜色',
+    'data'                                             => '数据',
 
     'template' =>
         [
