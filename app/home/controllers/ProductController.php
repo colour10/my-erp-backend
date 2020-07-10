@@ -858,8 +858,15 @@ class ProductController extends CadminController
      */
     function getpropertiesAction()
     {
+        // 如果参数没传过来，则报错
+        if (!isset($_POST['id'])) {
+            return $this->error("#1001#产品数据不存在#");
+        }
+        // 然后取出 id
         $id = (int)$_POST['id'];
+        // 查找是否存在这条记录
         $product = TbProduct::findFirstById($id);
+        // 取出记录的详细信息
         if ($product != false && $product->companyid == $this->companyid) {
             return $this->success($product->productSizeProperty);
         } else {
