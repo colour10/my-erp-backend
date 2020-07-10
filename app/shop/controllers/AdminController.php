@@ -2,8 +2,6 @@
 
 namespace Multiple\Shop\Controllers;
 
-use Phalcon\Assets\Filters\Cssmin;
-use Phalcon\Assets\Filters\Jsmin;
 use Phalcon\Db\Column;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\Model;
@@ -264,7 +262,7 @@ class AdminController extends Controller
         // 逻辑
         // 传递错误，如果没有对应的语言字段，就显示当前传递的内容
         $this->view->setVars([
-            'title' => $this->getValidateMessage($title) ?: $title,
+            'title'   => $this->getValidateMessage($title) ?: $title,
             'message' => $this->getValidateMessage($message) ?: $message,
         ]);
         return $this->view->pick('error/error');
@@ -310,59 +308,4 @@ class AdminController extends Controller
         </html>
 EOT;
     }
-
-    /**
-     * 页面初始化，压缩JS和CSS
-     */
-    public function onConstruct()
-    {
-        // 逻辑
-        // 添加本地CSS资源
-        $headerCollection = $this->assets->collection("header");
-        $headerCollection->setTargetPath(APP_PATH . "/public/shop/assets/static/css/final.css")->setTargetUri("/shop/assets/static/css/final.css");
-        $headerCollection
-            ->addCss(APP_PATH . "/public/shop/assets/plugins/bootstrap/css/bootstrap.min.css")
-            ->addCss(APP_PATH . "/public/shop/assets/pages/css/animate.css")
-            ->addCss(APP_PATH . "/public/shop/assets/plugins/fancybox/source/jquery.fancybox.css")
-            ->addCss(APP_PATH . "/public/shop/assets/plugins/owl.carousel/assets/owl.carousel.css")
-            ->addCss(APP_PATH . "/public/shop/assets/pages/css/components.css")
-            ->addCss(APP_PATH . "/public/shop/assets/pages/css/slider.css")
-            ->addCss(APP_PATH . "/public/shop/assets/pages/css/style-shop.css")
-            ->addCss(APP_PATH . "/public/shop/assets/corporate/css/style.css")
-            ->addCss(APP_PATH . "/public/shop/assets/corporate/css/style-responsive.css")
-            ->addCss(APP_PATH . "/public/shop/assets/corporate/css/themes/red.css")
-            ->addCss(APP_PATH . "/public/shop/assets/static/css/bootstrap-datetimepicker.min.css")
-            ->addCss(APP_PATH . "/public/shop/assets/static/css/bootstrap-submenu.css")
-            ->addCss(APP_PATH . "/public/shop/assets/corporate/css/custom.css")
-            ->join(true)
-            // 使用内置的JsMin过滤器
-            ->addFilter(
-                new Cssmin()
-            );
-
-
-        // 本地JavaScript资源压缩并合并
-        $footerCollection = $this->assets->collection("footer");
-        $footerCollection->setTargetPath(APP_PATH . "/public/shop/assets/custom/final.js")->setTargetUri("/shop/assets/custom/final.js");
-        $footerCollection
-            ->addJs(APP_PATH . "/public/shop/assets/plugins/jquery.min.js")
-            ->addJs(APP_PATH . "/public/shop/assets/plugins/jquery-migrate.min.js")
-            ->addJs(APP_PATH . "/public/shop/assets/plugins/bootstrap/js/bootstrap.min.js")
-            ->addJs(APP_PATH . "/public/shop/assets/corporate/scripts/back-to-top.js")
-            ->addJs(APP_PATH . "/public/shop/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js")
-            ->addJs(APP_PATH . "/public/shop/assets/plugins/fancybox/source/jquery.fancybox.pack.js")
-            ->addJs(APP_PATH . "/public/shop/assets/plugins/owl.carousel/owl.carousel.min.js")
-            ->addJs(APP_PATH . "/public/shop/assets/plugins/zoom/jquery.zoom.min.js")
-            ->addJs(APP_PATH . "/public/shop/assets/plugins/bootstrap-touchspin/bootstrap.touchspin.js")
-            ->addJs(APP_PATH . "/public/shop/assets/plugins/uniform/jquery.uniform.min.js")
-            ->addJs(APP_PATH . "/public/shop/assets/plugins/rateit/src/jquery.rateit.js")
-            ->addJs(APP_PATH . "/public/shop/assets/corporate/scripts/layout.js")
-            ->addJs(APP_PATH . "/public/shop/assets/custom/bootstrap-submenu.js")
-            ->join(true)
-            // 使用内置的JsMin过滤器
-            ->addFilter(
-                new Jsmin()
-            );
-    }
-
 }
