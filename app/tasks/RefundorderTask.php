@@ -8,12 +8,24 @@ use Asa\Erp\TbShoporderCommon;
  */
 class RefundorderTask extends CommonTask
 {
+    /**
+     * 队列名字
+     *
+     * @return string
+     */
     public function getQueueName()
     {
         return 'my_refundorder_tube';
     }
 
-    public function do($logger, $job)
+    /**
+     * 队列执行逻辑
+     *
+     * @param object $logger
+     * @param object $job
+     * @return mixed|void
+     */
+    public function run($logger, $job)
     {
         // 获取任务详情
         // 开始发送邮件
