@@ -91,14 +91,7 @@ class WechatpayController extends AdminController
                     'method'  => 'wechat',
                     'payment' => $this->wechat_pay,
                     'config'  => $this->config,
-                ], [
-                    // 任务优先级
-                    'priority' => 250,
-                    // 延迟时间，表示将job放入ready队列需要等待的秒数，10代表10秒
-                    'delay'    => 10,
-                    // 运行时间，表示允许一个worker执行该job的秒数。这个时间将从一个worker 获取一个job开始计算
-                    'ttr'      => 3600,
-                ]);
+                ], $this->config->queue->toArray());
             }
         }
 
@@ -128,14 +121,7 @@ class WechatpayController extends AdminController
             if ($this->queue) {
                 $this->queue->choose('my_sendemail_tube');
                 // 只把必要的参数传递给队列即可，剩下的逻辑交给Beanstalk吧。
-                $this->queue->put(json_encode([$email, $this->getValidateMessage('payment-success'), $this->paySuccessOutputhtml($username, $msg, $order->getId())]), [
-                    // 任务优先级
-                    'priority' => 250,
-                    // 延迟时间，表示将job放入ready队列需要等待的秒数，10代表10秒
-                    'delay'    => 10,
-                    // 运行时间，表示允许一个worker执行该job的秒数。这个时间将从一个worker 获取一个job开始计算
-                    'ttr'      => 3600,
-                ]);
+                $this->queue->put(json_encode([$email, $this->getValidateMessage('payment-success'), $this->paySuccessOutputhtml($username, $msg, $order->getId())]), $this->config->queue->toArray());
             }
         }
 

@@ -487,6 +487,12 @@ class TbProduct extends BaseCompanyModel
         return $productPrice->save();
     }
 
+    /**
+     * 更新商品材质
+     *
+     * @param $materials
+     * @throws \Exception
+     */
     function updateMaterial($materials)
     {
         $rows = TbProductMaterial::find(

@@ -72,18 +72,18 @@ class CreatecommonproductsTask extends Task
         }
 
         // 转成一维数组
-        $combime = [];
+        $combine = [];
         // 先把键名去掉，以便后面方便处理
         foreach ($return as $k => $groupby) {
             $values = array_values($groupby);
             // 开始统计每个属性值出现的次数
             foreach ($attributes as $attribute) {
-                $combime[$k][$attribute] = Util::getArrayMaxKey(array_count_values(array_filter(array_column($values, $attribute))));
+                $combine[$k][$attribute] = Util::getArrayMaxKey(array_count_values(array_filter(array_column($values, $attribute))));
             }
         }
 
         // 然后查找数据库，并且依次替换
-        foreach ($combime as $wordcode => $item) {
+        foreach ($combine as $wordcode => $item) {
             $model = TbProduct::findFirst([
                 "CONCAT(IFNULL(wordcode_1, ''), IFNULL(wordcode_2, ''), IFNULL(wordcode_3, ''), IFNULL(wordcode_4, '')) = '$wordcode' and companyid = $companyid",
             ]);

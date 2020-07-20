@@ -4,7 +4,10 @@ namespace Multiple\Shop\Controllers;
 
 use Asa\Erp\TbMember;
 use Asa\Erp\Util;
+use Phalcon\Http\Response;
+use Phalcon\Http\ResponseInterface;
 use Phalcon\Mvc\Model;
+use Phalcon\Mvc\View;
 
 /**
  * 会员注册类
@@ -17,7 +20,7 @@ class RegController extends AdminController
      * 邀请注册
      * 用户会通过一个邀请链接进入到注册页面，系统会先检测是否之前邀请过这个邮箱进行注册，如果有邀请记录则允许注册，否则就返回一个错误页面
      * 邀请地址类似于：http://www.myshop.com/reg?invitation_email=84299915@qq.com&c=UA==
-     * @return false|\Phalcon\Http\Response|\Phalcon\Http\ResponseInterface|\Phalcon\Mvc\View|string|void
+     * @return false|Response|ResponseInterface|View|string|void
      */
     public function indexAction()
     {

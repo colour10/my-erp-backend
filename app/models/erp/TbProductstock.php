@@ -74,9 +74,13 @@ class TbProductstock extends BaseCompanyModel
         self::$changed_list[$productid] = 1;
     }
 
+    /**
+     * 发送库存变动
+     */
     public static function sendStockChange()
     {
         foreach (self::$changed_list as $productid => $value) {
+            // 循环发送，精确到颗粒 $productid
             Util::sendStockChange($productid);
         }
 
@@ -99,7 +103,8 @@ class TbProductstock extends BaseCompanyModel
     }
 
     /**
-     * 预入库，调拨单出库的时候调用
+     * 预入库，调拨单出库的时候调用，涉及到库存的变动
+     *
      * @param int $number
      * @param string $change_type
      * @param int $relationid
@@ -133,7 +138,8 @@ class TbProductstock extends BaseCompanyModel
     }
 
     /**
-     * 预出库，锁定库存
+     * 预出库，锁定库存，涉及到库存的变动
+     *
      * @param int $number
      * @param string $change_type
      * @param int $relationid
@@ -165,7 +171,8 @@ class TbProductstock extends BaseCompanyModel
     }
 
     /**
-     * 预入库库存转入库库存
+     * 预入库库存转入库库存，涉及到库存的变动
+     *
      * @param int $number
      * @param string $change_type
      * @param int $relationid
@@ -196,7 +203,8 @@ class TbProductstock extends BaseCompanyModel
     }
 
     /**
-     * 预出库库存出库
+     * 预出库库存出库，涉及到库存的变动
+     *
      * @param int $number
      * @param string $change_type
      * @param int $relationid
@@ -239,7 +247,8 @@ class TbProductstock extends BaseCompanyModel
     }
 
     /**
-     * 预入库库存取消
+     * 预入库库存取消，涉及到库存的变动
+     *
      * @param int $number
      * @param string $change_type
      * @param int $relationid
@@ -257,7 +266,7 @@ class TbProductstock extends BaseCompanyModel
         $this->change_time = date("Y-m-d H:i:s");
         $this->change_stuff = $this->getDI()->get('currentUser');
         if ($this->update()) {
-            //更新库存成功，记录操作日志
+            // 更新库存成功，记录操作日志
             if ($this->addProductstockLog($old_number, $this->number, $change_type, $relationid) === false) {
                 $db->rollback();
                 return false;
@@ -272,7 +281,8 @@ class TbProductstock extends BaseCompanyModel
     }
 
     /**
-     * 预出库库存取消
+     * 预出库库存取消，涉及到库存的变动
+     *
      * @param int $number
      * @param string $change_type
      * @param int $relationid
@@ -302,6 +312,14 @@ class TbProductstock extends BaseCompanyModel
         return $this;
     }
 
+    /**
+     * 增加库存，涉及到库存的变动
+     *
+     * @param $number
+     * @param $change_type
+     * @param $relationid
+     * @return TbProductstock|bool
+     */
     function addStock($number, $change_type, $relationid)
     {
         if ($number > 0) {
@@ -311,6 +329,15 @@ class TbProductstock extends BaseCompanyModel
         }
     }
 
+    /**
+     * 减少库存，涉及到库存的变动
+     *
+     * @param $number
+     * @param $change_type
+     * @param $relationid
+     * @return TbProductstock|bool
+     * @throws \Exception
+     */
     function reduceStock($number, $change_type, $relationid)
     {
         if ($number > 0 && $number <= $this->number - $this->shipping_number) {
@@ -322,6 +349,8 @@ class TbProductstock extends BaseCompanyModel
 
     /**
      * 更改库存
+     * 值的注意的是，库存的数量都是直接从 number 字段开始运算，可见 number 就是保存的可以操作的数量
+     *
      * @param int $number
      * @param string $change_type
      * @param int $relationid

@@ -5,7 +5,9 @@ namespace Multiple\Home;
 use Asa\Erp\StaticReader;
 use Asa\Erp\TbPermissionAction;
 use Asa\Erp\Util;
+use Exception;
 use ExceptionPlugin;
+use Multiple\Home\Controllers\OmsController;
 use Phalcon\Acl;
 use Phalcon\Acl\Adapter\Memory as AclList;
 use Phalcon\Config\Adapter\Php;
@@ -15,6 +17,7 @@ use Phalcon\Loader;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Mvc\ModuleDefinitionInterface;
 use Phalcon\Mvc\View;
+use Phalcon\Queue\Beanstalk;
 use Phalcon\Text;
 use SecurityPlugin;
 
@@ -118,6 +121,46 @@ class Module implements ModuleDefinitionInterface
                 return $user["companyid"];
             } else {
                 return "";
+            }
+        });
+
+        // session 获取 oms_token
+        $di->setShared('oms_token', function () use ($config, $di) {
+            $session = $di->get('session');
+            if (!$session->has("oms_token")) {
+                // 如果不存在，就重新请求接口
+                $obj = new OmsController();
+                return $obj->tokenAction();
+            }
+            // 如果存在，但是已经过了有效期，也要重新执行
+            $token_array = $session->get("oms_token");
+            if (strtotime($token_array['.expires']) < time()) {
+                // 如果不存在，就重新请求接口
+                $obj = new OmsController();
+                return $obj->tokenAction();
+            }
+            // 到这里，说明数据正常，可以直接使用
+            return $token_array["access_token"];
+        });
+
+        // 队列，但是依赖于系统服务beanstalk是否开启
+        $di->setShared('queue', function () {
+            // 屏蔽错误，防止Beanstalk服务没有启动引起报错
+            Util::closeDisplayErrors();
+            // 连接到队列
+            $beanstalk = new Beanstalk(
+                [
+                    "host" => "localhost",
+                    "port" => "11300",
+                ]
+            );
+            try {
+                if ($beanstalk->connect()) {
+                    return $beanstalk;
+                }
+            } catch (Exception $e) {
+                // 如果没有连接，返回否
+                return false;
             }
         });
 

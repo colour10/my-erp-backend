@@ -647,7 +647,7 @@ class ShippingController extends AdminController
     }
 
     /**
-     * 入库，修改库存并摊销费用 - 费用输齐
+     * 入库，修改库存并摊销费用 - 费用输齐，这个涉及到库存表的变动，需要通过 OMS
      *
      * @return false|string [type] [description]
      * @throws Exception

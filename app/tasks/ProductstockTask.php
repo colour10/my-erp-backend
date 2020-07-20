@@ -4,8 +4,9 @@ use Asa\Erp\Util;
 use Phalcon\Cli\Task;
 
 /**
+ * 库存同步
  *
- *
+ * Class ProductstockTask
  */
 class ProductstockTask extends Task
 {
@@ -15,15 +16,17 @@ class ProductstockTask extends Task
      */
     public function mainAction()
     {
-        Util::sendStockChange(337, 2);
+        Util::sendStockChange(337);
     }
 
+    /**
+     * 同步逻辑
+     */
     function syncallAction()
     {
         $results = $this->db->fetchAll("select distinct productid from tb_productstock");
 
         foreach ($results as $row) {
-            print_r($row);
             Util::sendStockChange($row['productid']);
         }
     }

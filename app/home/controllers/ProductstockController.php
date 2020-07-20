@@ -35,6 +35,7 @@ class ProductstockController extends BaseController
             sprintf("companyid=%d", $this->companyid),
         ];
 
+        // 国际码
         if (isset($_POST["wordcode"]) && trim($_POST["wordcode"]) != "") {
             $wordcode = preg_replace("#\s#msi", '', strtoupper($_POST["wordcode"]));
             $conditions[] = sprintf("wordcode like '%%%s%%'", addslashes($wordcode));
@@ -45,6 +46,7 @@ class ProductstockController extends BaseController
             $conditions[] = sprintf("warehouseid=%d", $_POST["warehouseid"]);
         }
 
+        // 多选条件
         $names = ['brandid', 'brandgroupid', 'childbrand', 'brandcolor', 'saletypeid', 'producttypeid', 'gender', 'property', 'defective_level'];
         foreach ($names as $name) {
             if (isset($_POST[$name]) && preg_match("#^\d+(,\d+)*$#", $_POST[$name])) {
@@ -124,7 +126,7 @@ class ProductstockController extends BaseController
         $sql = implode(" and ", $conditions);
         error_log('库存查询的sql为：' . $sql);
 
-        // 需要在库存表中查找
+        // 需要在库存表中查找，因为要统计每个尺码的数量，所以要对 productid 和 sizecontentid 联合分组, to be continued
         $result = TbProductstockSummary::find(
             $sql
         );
@@ -146,6 +148,7 @@ class ProductstockController extends BaseController
                 'ulnarinch',
                 'saletypeid',
                 'producttypeid',
+                'property',
                 'gender',
                 'spring',
                 'summer',
@@ -173,6 +176,9 @@ class ProductstockController extends BaseController
                 ['name' => 'sizecontent_data', 'fields' => ['sizecontentid', 'number', 'reserve_number', 'sales_number', 'shipping_number'], 'connector' => ','],
             ]
         );
+
+        // 记录查询结果
+        error_log('查询的结果为：' . print_r($return, true));
 
         // 需要处理为原来的格式
         // 把查询的结果按照productid分组
@@ -230,7 +236,6 @@ class ProductstockController extends BaseController
         echo $this->success(["data" => $return, "pagination" => $pagination]);
     }
 
-
     function searchstockAction()
     {
         $conditions = [
@@ -256,6 +261,9 @@ class ProductstockController extends BaseController
         echo $this->success($result->toArray());
     }
 
+    /**
+     * 查询每个仓库中某个商品的库存情况
+     */
     function searchproductAction()
     {
         $conditions = [
@@ -271,5 +279,44 @@ class ProductstockController extends BaseController
             implode(" and ", $conditions)
         );
         echo $this->success($result->toArray());
+    }
+
+    /**
+     * 根据 $productid 获取每个尺码的库存情况
+     *
+     * @param $productid
+     * @return
+     */
+    public function getSizecontentsNumForOmsAction($productid)
+    {
+        // 设置分组条件
+        // 记录这个值
+        error_log("\$this->currentCompany = " . print_r($this->currentCompany, true));
+        if ($this->currentCompany) {
+            $phql = "SELECT 
+                        sum(ps.number) as Num,
+                        concat(p.wordcode, '|', s.name) as Sku
+                FROM 
+                    Asa\Erp\TbProductstock as ps,
+                    Asa\Erp\TbProduct as p,
+                    Asa\Erp\TbSizecontent as s
+                WHERE 
+                    ps.productid = p.id AND ps.sizecontentid = s.id
+                GROUP BY
+                    ps.companyid,
+                    ps.productid,
+                    ps.sizecontentid
+                HAVING
+                    ps.companyid = {$this->currentCompany} AND ps.productid = $productid
+                ";
+            $result = $this->modelsManager->executeQuery($phql);
+            $result_array = $result->toArray();
+            // 记录这个值
+            error_log("getSizecontentsNumForOmsAction = " . print_r($result_array, true));
+            // 返回数组
+            return $result_array;
+        }
+        // 如果没有登录，返回空数组
+        return [];
     }
 }

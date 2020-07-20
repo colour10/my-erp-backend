@@ -54,7 +54,8 @@ try {
             $session->setId($_REQUEST["_session_id"]);
         }
 
-        $session->start();
+        // 防止 session 报错，加上 @
+        @$session->start();
         return $session;
     });
 

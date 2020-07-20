@@ -171,7 +171,7 @@ class ReplaceTask extends Task
             }
         }
         // 把新的对应关系写入到一张全新的表中
-        // 但是在插入之前，首先要清空原来的表，否则可能会产品重复数据
+        // 但是在插入之前，首先要清空原来的表，否则可能会产生重复数据
         $this->db->execute("truncate table temp_tb_brandgroupchild_property2");
         // 新表需要有oldtempid字段
         foreach ($results_arr as $item) {

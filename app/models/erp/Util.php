@@ -7,6 +7,8 @@ use AlibabaCloud\Client\Exception\ClientException;
 use AlibabaCloud\Client\Exception\ServerException;
 use Endroid\QrCode\QrCode;
 use Gregwar\Image\Image;
+use Multiple\Home\Controllers\OmsController;
+use Multiple\Home\Controllers\ProductstockController;
 use Phalcon\Di;
 use Phalcon\Http\Response;
 use Phalcon\Logger\Adapter\File;
@@ -1037,6 +1039,7 @@ class Util
 
     /**
      * 通知商品库存发生变化
+     *
      * @param  [type] $productid   [description]
      * @return void [type]              [description]
      */
@@ -1044,20 +1047,33 @@ class Util
     {
         $config = Di::getDefault()->get("config");
 
-        $filename = $config->app->log_path . sprintf("/productstock_%s.log", date('Ymd'));
+        // 写日志
+        $filename = $config->app->log_path . sprintf("productstock_%s.log", date('Ymd'));
         if (file_exists($filename)) {
             touch($filename);
             chmod($filename, 0777);
         }
         $logger = new File($filename);
 
-
+        // 通过 nodejs 同步库存，如果本地没有 nodejs 环境，需要测试的话，就把这大段注释掉，否则会报错，影响程序运行的结果
         $url = sprintf("%s/productstock/change/%d", $config->productstock_service->server, $productid);
         $response = file_get_contents($url);
         if ($response == '1') {
             $logger->info($productid . '');
         } else {
             $logger->error($productid . '');
+        }
+
+        // 向 oms 发送库存同步
+        $productstockController = new ProductstockController();
+        // 如果不为空，说明已经登录，那么就向 oms 发送库存更新
+        $StockInOutDetail = $productstockController->getSizecontentsNumForOmsAction($productid);
+        // 记录下库存情况
+        error_log("\$StockInOutDetail = " . print_r($StockInOutDetail, true));
+        // 开始发送
+        if ($StockInOutDetail) {
+            $omsController = new OmsController();
+            $omsController->stockupdateAction($StockInOutDetail);
         }
     }
 

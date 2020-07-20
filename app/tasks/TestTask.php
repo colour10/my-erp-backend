@@ -106,6 +106,7 @@ class TestTask extends Task
         }
 
         print_r($json);
+        exit;
 
         $client = new GuzzleHttp\Client();
         $res = $client->post("http://10.10.10.4:3002/oms/stock/stockupdate", [

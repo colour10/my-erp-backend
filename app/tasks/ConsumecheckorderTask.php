@@ -14,7 +14,7 @@ class ConsumecheckorderTask extends CommonTask
         return 'my_checkorder_tube';
     }
 
-    public function do($logger, $job)
+    public function run($logger, $job)
     {
         // 获取任务id
         $job_id = $job->getId();

@@ -3,7 +3,8 @@
 namespace Multiple\Home\Controllers;
 
 /**
- * 包装代码表, 但是目前数据库暂时没有这张表
+ * 海关包装代码表
+ *
  * Class CustomswrapController
  * @package Multiple\Home\Controllers
  */

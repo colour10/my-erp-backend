@@ -15,7 +15,7 @@ class ConsumesendemailTask extends CommonTask
     }
 
     // 队列处理逻辑
-    public function do($logger, $job)
+    public function run($logger, $job)
     {
         // 提取出三个必要参数$email、$notice、$content
         list($email, $notice, $content) = json_decode($job->getBody(), true);

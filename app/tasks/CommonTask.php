@@ -20,7 +20,7 @@ abstract class CommonTask extends Task
      * @param object $job 队列对象
      * @return mixed|void
      */
-    abstract function do($logger, $job);
+    abstract function run($logger, $job);
 
     /**
      * 主方法
@@ -58,7 +58,7 @@ abstract class CommonTask extends Task
             // 如果有任务，则进行处理
             if ($job) {
                 // 队列处理逻辑
-                $this->do($logger, $job);
+                $this->run($logger, $job);
             }
             // 保存消息到文件中
             $logger->commit();
