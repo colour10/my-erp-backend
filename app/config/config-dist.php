@@ -136,23 +136,76 @@ return [
         "server" => "",
     ],
 
+    // 队列参数设置
+    'queue'                => [
+        // 任务优先级
+        'priority' => 250,
+        // 延迟时间，表示将job放入ready队列需要等待的秒数，10代表10秒
+        'delay'    => 10,
+        // 运行时间，表示允许一个worker执行该job的秒数。这个时间将从一个worker 获取一个job开始计算
+        'ttr'      => 3600,
+    ],
+
     // OMS 配置
     'oms'                  => [
         // token接口
         'token'            => [
-            'remote_url' => '',
-            'grant_type' => '',
-            'username'   => '',
-            'password'   => '',
+            // 远程请求 url
+            'remote_url' => 'https://api.jingjing.shop/token',
+            // 类型
+            'grant_type' => 'password',
+            // 用户名
+            'username'   => 'testerp@erp.com',
+            // 密码
+            'password'   => 'ERP!@1234erp',
         ],
         // 客户端id
-        'ClientGuid'       => '',
+        'ClientGuid'       => 'c25917bd-8d88-4b8d-8498-56df00ae762a',
         // 客户端名称
-        'ClientName'       => '',
+        'ClientName'       => 'ASA-WEBERP',
+        // 供应商Id，传OMS指定值
+        'VendorId'         => 29,
+        // 供应商Guid，传OMS指定值
+        'VendorGuid'       => '4a9d0661-c0c7-4475-a741-3082a4caf9e8',
         // 商品档案上新和更新接口
         'Inventory_update' => [
             // 远程请求 url
-            'remote_url' => '',
+            // 'remote_url' => 'https://api.jingjing.shop/api/Inventory/update',
+            'remote_url' => 'http://www.erp.test/oms/updates',
+        ],
+        // 库存相关接口
+        'stock'            => [
+            // 库存更新
+            'stockupdate' => [
+                // 远程请求 url
+                // 'remote_url'     => 'https://api.jingjing.shop/api/stock/stockupdate',
+                'remote_url'     => 'http://www.erp.test/oms/updates',
+                // 出入库类型，默认传0
+                'InOutType'      => 0,
+                // 供应商Id，传OMS指定值
+                'SupplierId'     => 29,
+                // 来源仓库Id，传OMS指定值
+                'FromWareHoseID' => 5,
+                // 仓库Id，传OMS指定值
+                'WareHoseId'     => 5,
+                // 发货人Id，传OMS指定值
+                'ConsignorId'    => 9,
+            ],
+        ],
+        // 订单相关接口
+        'order'            => [
+            // 查询
+            'query'    => [
+                // 远程请求 url
+                // 'remote_url'     => 'https://api.jingjing.shop/api/stock/stockupdate',
+                'remote_url' => 'http://www.erp.test/oms/updates',
+            ],
+            // 发货
+            'delivery' => [
+                // 远程请求 url
+                // 'remote_url'     => 'http://161h2715w4.imwork.net:26936/api/order/delivery',
+                'remote_url' => 'http://www.erp.test/oms/updates',
+            ],
         ],
     ],
 
