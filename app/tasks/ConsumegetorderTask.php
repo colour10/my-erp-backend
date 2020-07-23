@@ -67,7 +67,12 @@ class ConsumegetorderTask extends CommonTask
         // 产品id，默认为null
         $productid = null;
         if (!empty($worldcode)) {
-            if ($productModel = TbProduct::findFirst("wordcode=" . $worldcode)) {
+            if ($productModel = TbProduct::findFirst([
+                'conditions' => 'wordcode = :wordcode:',
+                'bind'       => [
+                    'wordcode' => $worldcode,
+                ],
+            ])) {
                 $productid = $productModel->id;
             }
         }
