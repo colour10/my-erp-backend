@@ -1,6 +1,7 @@
 <?php
 
 use Asa\Erp\TbOmsOrder;
+use Asa\Erp\TbProduct;
 
 /**
  * 接收 oms 发送过来的订单
@@ -61,6 +62,15 @@ class ConsumegetorderTask extends CommonTask
         $color = $post['Order']['OrderItems'][0]['OrderItemDetails'][0]['Color'] ?? '';
         // 尺码
         $sizecontent_array = explode('|', $post['Order']['OrderItems'][0]['OrderItemDetails'][0]['AttributeSku']) ?? '';
+        // 如果国际码不存在，就用空值代替
+        $worldcode = $sizecontent_array[0] ?? null;
+        // 产品id，默认为null
+        $productid = null;
+        if (!empty($worldcode)) {
+            if ($productModel = TbProduct::findFirst("wordcode=" . $worldcode)) {
+                $productid = $productModel->id;
+            }
+        }
         // 如果尺码不存在，就用空值代替
         $sizecontent = $sizecontent_array[1] ?? '';
         // 订单状态
@@ -78,6 +88,8 @@ class ConsumegetorderTask extends CommonTask
         $logger->notice("\$consignee_telephone=" . $consignee_telephone);
         $logger->notice("\$consignee_address=" . $consignee_address);
         $logger->notice("\$color=" . $color);
+        $logger->notice("\$worldcode=" . $worldcode);
+        $logger->notice("\$productid=" . $productid);
         $logger->notice("\$sizecontent=" . $sizecontent);
         $logger->notice("\$orderStatus=" . $orderStatus);
         $logger->notice("\$paymentStatus=" . $paymentStatus);
@@ -95,6 +107,7 @@ class ConsumegetorderTask extends CommonTask
             if (!$model) {
                 $m = new TbOmsOrder();
                 // 订单号
+                $m->productid = $productid;
                 $m->orderNo = $OrderNo;
                 $m->extra = $jobInfo;
                 $m->productName = $productName;
@@ -111,6 +124,7 @@ class ConsumegetorderTask extends CommonTask
                 $m->create();
             } else {
                 $model->extra = $jobInfo;
+                $model->productid = $productid;
                 $model->productName = $productName;
                 $model->orderTotal = $orderTotal;
                 $model->consignee = $consignee;
