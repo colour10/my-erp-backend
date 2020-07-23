@@ -42,7 +42,33 @@ class ConsumegetorderTask extends CommonTask
         }
         // 把 json 转成数组
         $post = json_decode($jobInfo, true);
+        error_log("\$post=" . print_r($post, true));
         // 把 post 变量信息按照订单号写到对应的表中，然后分别处理
+        // 以下信息全部来自于原始的 oms 发送过来的信息
+        // 产品名称
+        $productName = $post['Order']['OrderItems'][0]['ItemName'] ?? '';
+        // 订单总金额
+        $orderTotal = $post['Order']['OrderTotal'] ?? 0.00;
+        // 收货人姓名
+        $consignee = $post['Order']['Consignee'] ?? '';
+        // 收货人电话
+        $consignee_telephone = $post['Order']['ConsigneeTelephone'] ?? '';
+        // 收货人地址
+        $consignee_address = $post['Order']['ConsigneeAddress'] ?? '';
+        // 颜色
+        $color = $post['Order']['OrderItems'][0]['OrderItemDetails'][0]['Color'] ?? '';
+        // 尺码
+        $sizecontent_array = explode('|', $post['Order']['OrderItems'][0]['OrderItemDetails'][0]['AttributeSku']) ?? '';
+        // 如果尺码不存在，就用空值代替
+        $sizecontent = $sizecontent_array[1] ?? '';
+        // 订单状态
+        $orderStatus = $post['Order']['OrderStatusId'] ?? TbOmsOrder::STATUS_ORDER_PENDING;
+        // 付款状态
+        $paymentStatus = $post['Order']['PaymentStatusId'] ?? TbOmsOrder::STATUS_PAYMENT_UNPAID;
+        // 下单时间
+        $created_at = $post['Order']['CreatedOnUtc'];
+        // 更新时间
+        $updated_at = $post['Order']['UpdatedOnUtc'];
         // 订单号必须存在，否则不执行
         if ($OrderNo = $post['Order']['OrderNo'] ?? '') {
             $model = TbOmsOrder::findFirst([
@@ -54,11 +80,34 @@ class ConsumegetorderTask extends CommonTask
             // 如果存在，则覆盖，否则新增
             if (!$model) {
                 $m = new TbOmsOrder();
+                // 订单号
                 $m->orderNo = $OrderNo;
                 $m->extra = $jobInfo;
+                $m->productName = $productName;
+                $m->orderTotal = $orderTotal;
+                $m->consignee = $consignee;
+                $m->consignee_telephone = $consignee_telephone;
+                $m->consignee_address = $consignee_address;
+                $m->color = $color;
+                $m->sizecontent = $sizecontent;
+                $m->orderStatus = $orderStatus;
+                $m->paymentStatus = $paymentStatus;
+                $m->created_at = $created_at;
+                $m->updated_at = $updated_at;
                 $m->create();
             } else {
                 $model->extra = $jobInfo;
+                $model->productName = $productName;
+                $model->orderTotal = $orderTotal;
+                $model->consignee = $consignee;
+                $model->consignee_telephone = $consignee_telephone;
+                $model->consignee_address = $consignee_address;
+                $model->color = $color;
+                $model->sizecontent = $sizecontent;
+                $model->orderStatus = $orderStatus;
+                $model->paymentStatus = $paymentStatus;
+                $model->created_at = $created_at;
+                $model->updated_at = $updated_at;
                 $model->update();
             }
             // 返回成功

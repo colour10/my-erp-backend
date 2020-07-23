@@ -193,6 +193,9 @@ class AdminController extends BaseController
             $data[] = $this->recordToArray($row);
         }
 
+        // 如果在进行分页之后数据需要额外做处理的话，在这个函数中进行
+        $data = $this->after_page($data);
+
         $pageinfo = [
             //"previous"      => $pageObject->previous,
             "current"    => $pageObject->current,
@@ -461,5 +464,17 @@ class AdminController extends BaseController
     public function after_add($result)
     {
 
+    }
+
+    /**
+     * 分页之后的额外操作
+     *
+     * @param array $data
+     * @return array
+     */
+    public function after_page($data)
+    {
+        // 默认直接返回即可
+        return $data;
     }
 }

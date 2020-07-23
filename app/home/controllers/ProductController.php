@@ -1557,7 +1557,7 @@ class ProductController extends CadminController
 
         if (!$product = TbProduct::findFirst("id=$id")) {
             // 传递错误
-            return $this->renderError('make-an-error', 'product-doesnot-exist');
+            return $this->error($this->getValidateMessage('product-doesnot-exist'));
         }
         $result = $product->toArray();
         $result['materials'] = $product->productMaterial->toArray();
@@ -1573,7 +1573,8 @@ class ProductController extends CadminController
         $id = $this->request->getPost('id', 'int', 0);
 
         if (!$product = TbProduct::findFirst("id=$id")) {
-            return $this->renderError('make-an-error', 'product-doesnot-exist');
+            // 传递错误
+            return $this->error($this->getValidateMessage('product-doesnot-exist'));
         }
         $result = [];
 
@@ -1600,7 +1601,8 @@ class ProductController extends CadminController
         $id = $this->request->getPost('id', 'int', 0);
 
         if (!$product = TbProduct::findFirst("id=$id")) {
-            return $this->renderError('make-an-error', 'product-doesnot-exist');
+            // 传递错误
+            return $this->error($this->getValidateMessage('product-doesnot-exist'));
         }
 
         $result = TbSizecontent::find("id IN ({$product->sizecontentids})");
@@ -1655,7 +1657,8 @@ class ProductController extends CadminController
         $id = $this->request->getPost('id', 'int', 0);
 
         if (!$product = TbProduct::findFirst("id=$id")) {
-            return $this->renderError('make-an-error', 'product-doesnot-exist');
+            // 传递错误
+            return $this->error($this->getValidateMessage('product-doesnot-exist'));
         }
 
         return $this->success($product->getName());

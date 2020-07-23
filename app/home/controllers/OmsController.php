@@ -3,6 +3,7 @@
 namespace Multiple\Home\Controllers;
 
 
+use Asa\Erp\TbOmsOrder;
 use GuzzleHttp\Client;
 
 /**
@@ -274,7 +275,7 @@ class OmsController extends BaseController
         // 逻辑
         // 需要从外部接收 post 请求
         $post = @file_get_contents("php://input");
-        // 把这个新订单推送到队列中，如果1个小时不付款，那么就直接删除该订单
+        // 把这个新订单推送到任务队列
         if ($queue = $this->queue) {
             $queue->choose('oms_get_order');
             // 只把必要的参数传递给队列即可，剩下的逻辑交给Beanstalk吧。
@@ -284,36 +285,8 @@ class OmsController extends BaseController
             exit();
         }
         // 否则返回失败
-        echo $this->jsonOmsError();
+        echo $this->jsonOmsError($this->getValidateMessage(1002));
         exit();
-
-
-        // // 把 post 变量信息按照订单号写到对应的表中，然后分别处理
-        // // 订单号必须存在，否则不执行
-        // if ($OrderNo = $post['Order']['OrderNo'] ?? '') {
-        //     $model = TbOmsOrder::findFirst([
-        //         'conditions' => 'orderNo = :orderNo:',
-        //         'bind'       => [
-        //             'orderNo' => $OrderNo,
-        //         ],
-        //     ]);
-        //     // 如果存在，则覆盖，否则新增
-        //     if (!$model) {
-        //         $m = new TbOmsOrder();
-        //         $m->orderNo = $OrderNo;
-        //         $m->extra = @file_get_contents("php://input");
-        //         $m->create();
-        //     } else {
-        //         $model->extra = @file_get_contents("php://input");
-        //         $model->update();
-        //     }
-        //     // 返回成功
-        //     echo $this->jsonOmsSuccess();
-        //     exit();
-        // }
-        // // 否则返回失败
-        // echo $this->jsonOmsError();
-        // exit();
     }
 
     /**
@@ -327,6 +300,14 @@ class OmsController extends BaseController
             echo $this->error('参数错误');
             exit();
         }
+
+        // 是否拒绝发货为必填
+        if (is_null($post['isRefuse'])) {
+            // 模拟错误
+            echo $this->jsonOmsError($this->getValidateMessage('is-refuse-delivery', 'template', 'required'));
+            exit();
+        }
+
         // 获取 token 配置项
         $config_token = $this->getOmsConfig();
         // 待传递的完整参数
@@ -342,15 +323,15 @@ class OmsController extends BaseController
                 // 供应商Guid，必填
                 'VendorGuid'      => $config_token->VendorGuid,
                 // 订单号，oms传过来，必填
-                'OrderNo'         => $post['OrderNo'],
+                'OrderNo'         => $post['orderNo'],
                 // 快递公司代码，oms传过来，如果是虚拟物流，则非必填；如果是爱莎之外的发送到银丰仓库，则需要填写物流信息，如果不填写，默认填空
-                'ShipmentCopCode' => $post['ShipmentCopCode'] ?? '',
+                'ShipmentCopCode' => $post['shipmentCopCode'] ?? null,
                 // 快递单号，oms传过来，非必填，如果是虚拟物流，则非必填；如果是爱莎之外的发送到银丰仓库，则需要填写物流信息单号，如果不填写，默认填空
-                'TrackingNumber'  => $post['TrackingNumber'] ?? '',
+                'TrackingNumber'  => $post['trackingNumber'] ?? null,
                 // 是否拒绝发货, 0：正常发货; 1：拒绝发货
-                'IsRefuse'        => $post['IsRefuse'],
+                'IsRefuse'        => $post['isRefuse'],
                 // 是否无需物流, 0：正常发货; 1：自行送货
-                'IsNoExpress'     => $post['IsNoExpress'],
+                'IsNoExpress'     => $post['isNoExpress'],
                 // 如果 IsRefuse 的值是 1 也就是拒绝发货；或者 IsNoExpress 的值是 1，也就是不需要物流，则必传 Note 字段
             ],
         ];
@@ -358,14 +339,33 @@ class OmsController extends BaseController
         // 判断是否需要加 Note
         if ($params['ShipmentInfo']['IsRefuse'] == 1 || $params['ShipmentInfo']['IsNoExpress'] == 1) {
             // 必须加 Note，如果 Note 为空，则报错
-            if (empty($post['Note'])) {
+            if (empty($post['note'])) {
                 // 模拟错误
-                echo $this->jsonOmsError();
+                echo $this->jsonOmsError($this->getValidateMessage('note', 'template', 'required'));
                 exit();
             }
             // 如果没有错误，则进行 Note 赋值
-            $params['ShipmentInfo']['Note'] = $post['Note'];
+            $params['ShipmentInfo']['Note'] = $post['note'];
         }
+
+        // 可以把 post 的值记录到数据库中了
+        if ($model = TbOmsOrder::findFirst("id=" . $post['id'])) {
+            // 是否拒绝发货
+            $model->isRefuse = $post['isRefuse'];
+            // 是否无需物流
+            $model->isNoExpress = $post['isNoExpress'];
+            // 快递公司代码
+            $model->shipmentCopCode = $post['shipmentCopCode'];
+            // 快递单号
+            $model->trackingNumber = $post['trackingNumber'];
+            // 备注
+            $model->note = $post['note'];
+            // 更新时间
+            $model->updated_at = date('Y-m-d H:i:s');
+            // 更新所有字段
+            $model->update();
+        }
+
         // 记录下待发送给 oms 的参数，json格式, 便于查找问题所在
         error_log("deliveryAction待传递的参数json格式是 = " . json_encode($params));
         // 发送 application/x-www-form-urlencoded POST请求需要传入 form_params 数组参数，数组内指定POST的字段。
@@ -387,11 +387,7 @@ class OmsController extends BaseController
      */
     function updatesAction()
     {
-        if (time() % 2 == 0) {
-            echo $this->jsonOmsSuccess();
-        } else {
-            echo $this->jsonOmsError();
-        }
+        echo $this->jsonOmsSuccess();
         $this->view->disable();
     }
 
@@ -435,15 +431,14 @@ class OmsController extends BaseController
     /**
      *  OMS 请求成功
      *
-     * @param string $msg
      * @return false|string
      */
-    function jsonOmsSuccess($msg = '操作成功')
+    function jsonOmsSuccess()
     {
         return json_encode([
             'success' => true,
             'code'    => 200,
-            'msg'     => $msg,
+            'msg'     => $this->getValidateMessage('success'),
             'data'    => '',
         ]);
     }
@@ -451,19 +446,19 @@ class OmsController extends BaseController
     /**
      * OMS 请求失败
      *
-     * @param string $ErrorMsg
+     * @param string $msg
      * @return false|string
      */
-    function jsonOmsError($ErrorMsg = '操作失败')
+    function jsonOmsError($msg = '')
     {
         return json_encode([
             'success' => false,
             'code'    => 200,
-            'msg'     => '操作失败',
+            'msg'     => $msg,
             'data'    => [
                 'ErpProductSpecItem' => [],
                 'Sku'                => '',
-                'ErrorMsg'           => $ErrorMsg,
+                'ErrorMsg'           => $msg,
             ],
         ]);
     }
