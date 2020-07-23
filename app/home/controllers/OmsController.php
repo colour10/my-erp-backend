@@ -273,8 +273,12 @@ class OmsController extends BaseController
     function orderAction()
     {
         // 逻辑
-        // 需要从外部接收 post 请求
-        $post = @file_get_contents("php://input");
+        // 需要从外部接收 post 请求，但是必须有数据，否则直接报错返回
+        if (!$post = @file_get_contents("php://input")) {
+            // 非法数据
+            echo $this->jsonOmsError($this->getValidateMessage(1001));
+            exit();
+        }
         // 把这个新订单推送到任务队列
         if ($queue = $this->queue) {
             $queue->choose('oms_get_order');
