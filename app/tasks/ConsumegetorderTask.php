@@ -42,7 +42,9 @@ class ConsumegetorderTask extends CommonTask
         }
         // 把 json 转成数组
         $post = json_decode($jobInfo, true);
+        // 记录日志
         error_log("\$post=" . print_r($post, true));
+        $logger->notice("\$post=" . print_r($post, true));
         // 把 post 变量信息按照订单号写到对应的表中，然后分别处理
         // 以下信息全部来自于原始的 oms 发送过来的信息
         // 产品名称
@@ -69,6 +71,18 @@ class ConsumegetorderTask extends CommonTask
         $created_at = $post['Order']['CreatedOnUtc'];
         // 更新时间
         $updated_at = $post['Order']['UpdatedOnUtc'];
+        // 记录上面各个变量的日志
+        $logger->notice("\$productName=" . $productName);
+        $logger->notice("\$orderTotal=" . $orderTotal);
+        $logger->notice("\$consignee=" . $consignee);
+        $logger->notice("\$consignee_telephone=" . $consignee_telephone);
+        $logger->notice("\$consignee_address=" . $consignee_address);
+        $logger->notice("\$color=" . $color);
+        $logger->notice("\$sizecontent=" . $sizecontent);
+        $logger->notice("\$orderStatus=" . $orderStatus);
+        $logger->notice("\$paymentStatus=" . $paymentStatus);
+        $logger->notice("\$created_at=" . $created_at);
+        $logger->notice("\$updated_at=" . $updated_at);
         // 订单号必须存在，否则不执行
         if ($OrderNo = $post['Order']['OrderNo'] ?? '') {
             $model = TbOmsOrder::findFirst([
