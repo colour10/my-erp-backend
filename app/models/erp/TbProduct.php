@@ -39,6 +39,7 @@ class TbProduct extends BaseCompanyModel
             ]
         );
 
+        // 商品-品牌，一对多反向
         $this->belongsTo(
             'brandid',
             '\Asa\Erp\TbBrand',
@@ -48,6 +49,7 @@ class TbProduct extends BaseCompanyModel
             ]
         );
 
+        // 商品-色系，一对多反向
         $this->belongsTo(
             'color_id',
             '\Asa\Erp\TbColortemplate',
@@ -57,6 +59,7 @@ class TbProduct extends BaseCompanyModel
             ]
         );
 
+        // 商品-子品类，一对多反向
         $this->belongsTo(
             'childbrand',
             '\Asa\Erp\TbBrandgroupchild',
@@ -66,6 +69,7 @@ class TbProduct extends BaseCompanyModel
             ]
         );
 
+        // 商品-商品类型，一对多反向
         $this->belongsTo(
             'producttypeid',
             '\Asa\Erp\TbProductType',
@@ -75,6 +79,7 @@ class TbProduct extends BaseCompanyModel
             ]
         );
 
+        // 商品-出厂价格表，一对多反向
         $this->belongsTo(
             'factorypricecurrency',
             '\Asa\Erp\TbCurrency',
@@ -84,6 +89,7 @@ class TbProduct extends BaseCompanyModel
             ]
         );
 
+        // 商品-国际零售价格，一对多反向
         $this->belongsTo(
             'wordpricecurrency',
             '\Asa\Erp\TbCurrency',
@@ -93,6 +99,7 @@ class TbProduct extends BaseCompanyModel
             ]
         );
 
+        // 商品-国内价格，一对多反向
         $this->belongsTo(
             'nationalpricecurrency',
             '\Asa\Erp\TbCurrency',
@@ -102,6 +109,7 @@ class TbProduct extends BaseCompanyModel
             ]
         );
 
+        // 商品-销售属性，一对多反向
         $this->belongsTo(
             'saletypeid',
             '\Asa\Erp\TbSaleType',
@@ -111,6 +119,7 @@ class TbProduct extends BaseCompanyModel
             ]
         );
 
+        // 商品-销货号表，一对多
         $this->hasMany(
             "id",
             "\Asa\Erp\TbProductcode",
@@ -120,6 +129,7 @@ class TbProduct extends BaseCompanyModel
             ]
         );
 
+        // 商品-商品尺码描述主表，一对多
         $this->hasMany(
             "id",
             "\Asa\Erp\TbProductSizeProperty",
@@ -133,6 +143,7 @@ class TbProduct extends BaseCompanyModel
             ]
         );
 
+        // 商品-商品库存表，一对多
         $this->hasMany(
             "id",
             "\Asa\Erp\TbProductstock",
@@ -147,6 +158,7 @@ class TbProduct extends BaseCompanyModel
             ]
         );
 
+        // 商品-订单详情表，一对多
         $this->hasMany(
             "id",
             "\Asa\Erp\TbOrderdetails",
@@ -161,6 +173,7 @@ class TbProduct extends BaseCompanyModel
             ]
         );
 
+        // 商品-商品材质表，一对多
         $this->hasMany(
             "id",
             "\Asa\Erp\TbProductMaterial",
@@ -174,6 +187,12 @@ class TbProduct extends BaseCompanyModel
         );
     }
 
+    /**
+     * 商品单例模式
+     *
+     * @param $productid
+     * @return mixed
+     */
     public static function getInstance($productid)
     {
         if (!isset(self::$box[$productid])) {

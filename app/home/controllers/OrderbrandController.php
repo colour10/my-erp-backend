@@ -476,7 +476,7 @@ class OrderbrandController extends AdminController
             }
             $orderbrand->confirmstaff = $this->currentUser;
             $orderbrand->confirmdate = date('Y-m-d');
-            // 订单状态 - 已确认代发货(status = 2)
+            // 订单状态 - 已确认待发货(status = 2)
             $orderbrand->status = TbOrderBrand::STATUS_TO_BE_DELIVERED;
 
             // 判断是否成功
@@ -536,7 +536,7 @@ class OrderbrandController extends AdminController
         if (isset($_POST['orderbrandid']) && $_POST['orderbrandid'] > 0) {
             $conditions[] = sprintf("id=%d", $_POST['orderbrandid']);
         }
-        // 状态为代发货(status = 2)
+        // 状态为待发货(status = 2)
         $conditions[] = "status=" . TbOrderBrand::STATUS_TO_BE_DELIVERED;
 
         $orders = TbOrderBrand::find(
@@ -545,7 +545,7 @@ class OrderbrandController extends AdminController
 
         $array = Util::recordListColumn($orders, 'id');
         if (count($array) > 0) {
-            // 查找没有发完的订单
+            // 查找没有发完的订单，即发货数量小于确认数量
             $details = TbOrderBrandDetail::find(
                 sprintf("orderbrandid in(%s) and shipping_number<confirm_number", implode(",", $array))
             );

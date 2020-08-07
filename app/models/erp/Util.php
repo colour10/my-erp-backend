@@ -7,6 +7,7 @@ use AlibabaCloud\Client\Exception\ClientException;
 use AlibabaCloud\Client\Exception\ServerException;
 use Endroid\QrCode\QrCode;
 use Gregwar\Image\Image;
+use Illuminate\Support\Optional;
 use Multiple\Home\Controllers\OmsController;
 use Multiple\Home\Controllers\ProductstockController;
 use Phalcon\Di;
@@ -1055,7 +1056,7 @@ class Util
         }
         $logger = new File($filename);
 
-        // 通过 nodejs 同步库存，如果本地没有 nodejs 环境，需要测试的话，就把这大段注释掉，否则会报错，影响程序运行的结果
+        // 通过 nodejs 同步库存
         $url = sprintf("%s/productstock/change/%d", $config->productstock_service->server, $productid);
         $response = file_get_contents($url);
         if ($response == '1') {
@@ -1076,7 +1077,6 @@ class Util
             $omsController->stockupdateAction($StockInOutDetail);
         }
     }
-
 
     /**
      * 判断一个远程文件是否存在
@@ -1250,5 +1250,46 @@ class Util
         $t = array_unique($t);//去掉重复值
         $new_arr = array_map('unserialize', $t);//然后将刚组建的一维数组转回为php值
         return $new_arr;
+    }
+
+    /**
+     * 把一个二维数组按照里面的键值进行合并和分组，如果相同的字段+相同的值会自动保留一条
+     *
+     * @param array $datas 二维数组
+     * @param string $key 分组后的 key 值
+     * @param array $groupByFields 分组字段
+     * @param array $sumGroupFields 需要累加的字段
+     * @return array
+     */
+    public static function getArrayGroupResult(array $datas, string $key = '', array $groupByFields = [], array $sumGroupFields = [])
+    {
+        // 逻辑
+        $return = [];
+        // 遍历
+        foreach ($datas as $k => $data) {
+            if (!isset($return[$data[$key]])) {
+                // 首先进行全部赋值
+                $return[$data[$key]] = $data;
+                // 如果分组统计字段存在，则按照分组字段进行汇总
+                foreach ($groupByFields as $groupByField) {
+                    $return[$data[$key]][$groupByField] = [$data[$groupByField]];
+                }
+                // 如果累加存在，则赋值
+                foreach ($sumGroupFields as $groupField) {
+                    $return[$data[$key]][$groupField] = $data[$groupField];
+                }
+            } else {
+                // 如果分组统计字段存在，则按照分组字段进行汇总
+                foreach ($groupByFields as $groupByField) {
+                    $return[$data[$key]][$groupByField][] = $data[$groupByField];
+                }
+                // 如果累计存在，则进行累计
+                foreach ($sumGroupFields as $groupField) {
+                    $return[$data[$key]][$groupField] += $data[$groupField];
+                }
+            }
+        }
+        // 返回
+        return $return;
     }
 }

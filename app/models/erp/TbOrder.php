@@ -2,6 +2,8 @@
 
 namespace Asa\Erp;
 
+use Phalcon\Mvc\Model;
+
 /**
  * 订单主表
  * ErrorCode 1110
@@ -9,7 +11,7 @@ namespace Asa\Erp;
 class TbOrder extends BaseModel
 {
     // 状态使用枚举存储
-    // 未完成
+    // 未完成，刚刚保存状态
     const STATUS_UNFINISHED = 1;
     // 已完成
     const STATUS_FINISHED = 2;
@@ -28,14 +30,39 @@ class TbOrder extends BaseModel
         // 订单-订单详情，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbOrderdetails",
+            TbOrderdetails::class,
             "orderid",
             [
                 'alias' => 'orderdetails',
             ]
         );
+
+        // 订单-订货客户，一对多反向
+        $this->belongsTo(
+            "bookingid",
+            TbSupplier::class,
+            "id",
+            [
+                'alias' => 'booking',
+            ]
+        );
+
+        // 订单-订货币种，一对多反向
+        $this->belongsTo(
+            "currency",
+            TbCurrency::class,
+            "id",
+            [
+                'alias' => 'currencyModel',
+            ]
+        );
     }
 
+    /**
+     * 设置验证
+     *
+     * @return array
+     */
     public function getRules()
     {
         $factory = $this->getValidatorFactory();
@@ -47,7 +74,9 @@ class TbOrder extends BaseModel
 
     /**
      * 添加一条明细数据
+     *
      * @param [type] $form 表单数据
+     * @return TbOrderdetails|bool
      */
     public function addDetail($form)
     {
@@ -61,8 +90,9 @@ class TbOrder extends BaseModel
 
     /**
      * 更新明细数据
+     *
      * @param  [type] $form 表单数据
-     * @return [type]       [description]
+     * @return bool|Model [type]       [description]
      */
     public function updateDetail($form)
     {

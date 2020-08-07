@@ -76,6 +76,12 @@ class RequisitionController extends BaseController
         return implode(' and ', $where);
     }
 
+    /**
+     * 生成调拨单
+     *
+     * @return false|string
+     * @throws Exception
+     */
     public function saveAction()
     {
         // 判断是否有params参数提交过来
@@ -156,6 +162,7 @@ class RequisitionController extends BaseController
 
     /**
      * 确认出库
+     *
      * @return void [type] [description]
      */
     function confirmoutAction()

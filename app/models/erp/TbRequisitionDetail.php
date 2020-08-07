@@ -12,7 +12,7 @@ class TbRequisitionDetail extends BaseCompanyModel
         parent::initialize();
         $this->setSource('tb_requisition_detail');
 
-        // 库存-仓库表，一对多反向
+        // 库存-调入仓库，一对多反向
         $this->belongsTo(
             'out_productstockid',
             '\Asa\Erp\TbProductstock',
@@ -22,6 +22,7 @@ class TbRequisitionDetail extends BaseCompanyModel
             ]
         );
 
+        // 调拨表-调出仓库，一对多反向
         $this->belongsTo(
             'in_productstockid',
             '\Asa\Erp\TbProductstock',

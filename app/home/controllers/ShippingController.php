@@ -2,6 +2,7 @@
 
 namespace Multiple\Home\Controllers;
 
+use Asa\Erp\Sql;
 use Asa\Erp\TbAgeseason;
 use Asa\Erp\TbCode;
 use Asa\Erp\TbCurrency;
@@ -15,6 +16,7 @@ use Asa\Erp\TbSizecontent;
 use Asa\Erp\TbWarehouse;
 use Exception;
 use Phalcon\Mvc\Model;
+use Phalcon\Paginator\Adapter\NativeArray as PaginatorArray;
 
 /**
  * 发货单主表 - 和入库单是 一对一关系
@@ -42,15 +44,20 @@ class ShippingController extends AdminController
 
     /**
      * 分页查询，需要把关联信息也查出来
+     *
+     * @throws Exception
      */
     public function listAction()
     {
-        // productid
-        $productid = $this->request->getPost('productid');
+        // 赋值
+        $productid = $this->request->get('productid');
+
         // 查找=2或者=3的，都可以，只有=1状态是在途
-        $result = TbShipping::find("companyid = {$this->companyid} and (status = " . TbShipping::STATUS_STORAGE . " or status = " . TbShipping::STATUS_AMORTIZED . ")");
+        $result = TbShipping::find("companyid = {$this->companyid} and (status = " . TbShipping::STATUS_STORAGE . " or status = " . TbShipping::STATUS_AMORTIZED . ") order by " . $this->orderBy);
         // 找出关联部分
         $result_array = $result->toArray();
+
+        // 遍历统计
         foreach ($result as $k => $item) {
             // 查找其中的 productid 符合要求的记录
             // 年份季节
@@ -77,6 +84,9 @@ class ShippingController extends AdminController
                     unset($result_array[$k]);
                     continue;
                 }
+
+                // 记录下 $shippingDetails 的值
+                error_log('ShippingController => listAction => $shippingDetails的值是：' . print_r($shippingDetails, true));
 
                 // 如果数组不为0，则进行汇总
                 // 成交价和数量分别汇总
@@ -116,8 +126,37 @@ class ShippingController extends AdminController
             $result_array[$k]['currency_code'] = $currency_code;
         }
 
+        // 创建分页对象，使用数组分页
+        // 分页
+        $currentPage = $this->request->getPost("page", "int", 1);
+        // 每页显示条数
+        $pageSize = $this->request->getPost("pageSize", "int", 10);
+        $paginator = new PaginatorArray(
+            [
+                "data"  => $result_array,
+                "limit" => $pageSize,
+                "page"  => $currentPage,
+            ]
+        );
+
+        // 展示分页，并处理数据
+        $pageObject = $paginator->getPaginate();
+        $data = [];
+        foreach ($pageObject->items as $row) {
+            $data[] = $row;
+        }
+        // 赋值
+        $pageinfo = [
+            //"previous"      => $pageObject->previous,
+            "current"    => $pageObject->current,
+            "totalPages" => $pageObject->total_pages,
+            //"next"          => $pageObject->next,
+            "total"      => $pageObject->total_items,
+            "pageSize"   => $pageSize,
+        ];
         // 返回
-        return $this->success($result_array);
+        echo $this->reportJson(["data" => $data, "pagination" => $pageinfo], 200, []);
+        exit();
     }
 
     /**
@@ -187,11 +226,10 @@ class ShippingController extends AdminController
             }
         }
 
-
         $names = ['warehouseid', 'ageseason', 'supplierid', 'seasontype', 'bussinesstype', 'property', 'status'];
         foreach ($names as $name) {
             if (isset($_POST[$name]) && preg_match("#^\d+(,\d+)*$#", $_POST[$name])) {
-                $where[] = \Asa\Erp\Sql::isInclude($name, $_POST[$name]);
+                $where[] = Sql::isInclude($name, $_POST[$name]);
             }
         }
 
@@ -215,6 +253,9 @@ class ShippingController extends AdminController
         // 转换成数组
         $submitData = json_decode($params, true);
         $form = $submitData['form'];
+
+        // 记录下这个值，方便错误排查
+        error_log('ShippingController => saveAction => $submitData的值是：' . print_r($submitData, true));
 
         // 采用事务处理
         $this->db->begin();
@@ -275,6 +316,7 @@ class ShippingController extends AdminController
             $change = [];
             $detail_id_array = [];
             foreach ($submitData['list'] as $k => $item) {
+                // 编辑
                 if ($item["id"] > 0) {
                     $detail = TbShippingDetail::findFirstById($item["id"]);
                     if ($detail == false) {
@@ -290,6 +332,7 @@ class ShippingController extends AdminController
                         throw new Exception("/11010104/更新发货单明细失败/");
                     }
                 } else {
+                    // 新增
                     $detail = new TbShippingDetail();
                     $detail->productid = $item['productid'];
                     $detail->sizecontentid = $item['sizecontentid'];
@@ -416,7 +459,7 @@ class ShippingController extends AdminController
                 $change[$detail->orderbranddetailid] = isset($change[$detail->orderbranddetailid]) ? $change[$detail->orderbranddetailid] + $item['number'] : $item['number'];
             }
 
-            //更新订单明细中的，brand_number 字段
+            // 更新订单明细中的，brand_number 字段，也就是每个品牌订单的发货数量
             foreach ($change as $orderbranddetailid => $number) {
                 $orderDetail = TbOrderBrandDetail::findFirstById($orderbranddetailid);
                 if ($orderDetail != false) {
@@ -516,6 +559,7 @@ class ShippingController extends AdminController
 
     /**
      * 确认发货单, 确认入库接口
+     *
      * @return false|string
      * @throws Exception
      */
@@ -529,6 +573,9 @@ class ShippingController extends AdminController
 
         // 转换成数组
         $submitData = json_decode($params, true);
+
+        // 记录下这个值，方便错误排查
+        error_log('ShippingController => confirmAction => $submitData的值是：' . print_r($submitData, true));
 
         // 判断是否有订单号，分别进行
         $id = $submitData['form']['id'];
@@ -547,7 +594,7 @@ class ShippingController extends AdminController
             }
             $shipping->confirmstaff = $this->currentUser;
             $shipping->confirmtime = date('Y-m-d H:i:s');
-            // 把状态改为2，也就是入库
+            // 把状态改为2，也就是待入库
             $shipping->status = TbShipping::STATUS_STORAGE;
 
             // 判断是否成功
@@ -627,21 +674,23 @@ class ShippingController extends AdminController
         }
 
         foreach ($shipping->shippingDetail as $detail) {
+            // 修改入库数量为0
             $detail->warehousingnumber = 0;
-
+            // 如果订单不存在，就删除发货单明细
             if ($detail->orderid == 0) {
                 if ($detail->delete() == false) {
                     $this->db->rollback();
                     throw new Exception("/101116/删除发货单明细失败。/");
                 }
             } else {
+                // 否则就直接更新入库数量
                 if ($detail->save() == false) {
                     $this->db->rollback();
                     throw new Exception("/101116/发货单明细取消入库失败。/");
                 }
             }
         }
-
+        // 提交并返回
         $this->db->commit();
         return $this->success();
     }
@@ -749,7 +798,7 @@ class ShippingController extends AdminController
         }
 
         // 添加入库人，入库时间, status=3代表分摊完毕
-        $shipping->status = 3;
+        $shipping->status = TbShipping::STATUS_AMORTIZED;
         $shipping->warehousingstaff = $this->currentUser;
         $shipping->warehousingtime = date('Y-m-d H:i:s');
         if ($shipping->save() == false) {

@@ -10,6 +10,12 @@ use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Regex;
 use Phalcon\Validation\Validator\Uniqueness;
 
+/**
+ * 验证类
+ *
+ * Class ValidatorFactory
+ * @package Asa\Erp
+ */
 class ValidatorFactory implements InjectionAwareInterface
 {
     private $di;

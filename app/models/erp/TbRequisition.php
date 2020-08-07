@@ -11,11 +11,27 @@ use Phalcon\Di;
  */
 class TbRequisition extends BaseCompanyModel
 {
+    // 调拨单状态
+    // 出库拒绝
+    const STATUS_DELIVERY_REJECTION = 1;
+    // 出库待确认
+    const STATUS_DELIVERY_TO_BE_CONFIRMED = 2;
+    // 在途
+    const STATUS_ON_THE_WAY = 3;
+    // 出库待确认
+    const STATUS_WAREHOUSING_REJECTION = 4;
+    // 出库待确认
+    const STATUS_FINISHED = 5;
+    // 取消
+    const STATUS_CANCELLED = 6;
+
+    // 初始化
     public function initialize()
     {
         parent::initialize();
         $this->setSource('tb_requisition');
 
+        // 调拨单-调拨单明细，一对多
         $this->hasMany(
             "id",
             "\Asa\Erp\TbRequisitionDetail",
@@ -54,7 +70,8 @@ class TbRequisition extends BaseCompanyModel
         $db->begin();
 
         $requisition = new TbRequisition();
-        $requisition->status = 2;
+        // 入库待确认
+        $requisition->status = self::STATUS_DELIVERY_TO_BE_CONFIRMED;
         $requisition->out_id = $outWarehouseId;
         $requisition->in_id = $inWarehouseId;
         $requisition->apply_staff = $di->get("currentUser");
@@ -95,6 +112,14 @@ class TbRequisition extends BaseCompanyModel
         return $requisition;
     }
 
+    /**
+     * 添加明细
+     *
+     * @param $data
+     * @param bool $lockProductstock
+     * @return TbRequisitionDetail
+     * @throws \Exception
+     */
     public function addDetail($data, $lockProductstock = true)
     {
         $row = new TbRequisitionDetail();
@@ -111,13 +136,18 @@ class TbRequisition extends BaseCompanyModel
 
     /**
      * 处理出库操作
+     *
      * @param  [type] $list [description]
      * @return bool [type]       [description]
      * @throws \Exception
      */
     public function doOut($list)
     {
-        //检查一下是否有允许出库的
+        // 记录一下 $list 和 $this->requisitionDetail 的值
+        error_log('TbRequisition => doOut => $list的值是：' . print_r($list, true));
+        error_log('TbRequisition => doOut => $this->requisitionDetail的值是：' . print_r($this->requisitionDetail->toArray(), true));
+
+        // 检查一下是否有允许出库的，如果默认没有填写，或者填写为0，则为拒绝出库
         $total = 0;
         foreach ($list as $value) {
             $total += $value;
@@ -130,8 +160,9 @@ class TbRequisition extends BaseCompanyModel
 
         try {
             if ($total > 0) {
-                //出库
-                $this->status = 3;
+                // 出库
+                // 初始状态为 3，在途中
+                $this->status = self::STATUS_ON_THE_WAY;
                 $this->turnout_staff = $di->get("currentUser");
                 $this->turnout_date = date("Y-m-d H:i:s");
                 if ($this->update() == false) {
@@ -150,6 +181,7 @@ class TbRequisition extends BaseCompanyModel
                     }
 
                     //锁定库存生效，出库
+                    // 首先从调出仓库出库
                     $detail->outProductstock->preReduceStockExecute($detail->out_number, TbProductstock::REQUISITION, $detail->id);
                     $detail->inProductstock->preAddStock($detail->out_number, TbProductstock::REQUISITION_PRE_IN, $detail->id);
 
@@ -170,7 +202,8 @@ class TbRequisition extends BaseCompanyModel
                 if (count($details) > 0) {
                     //生成拒绝的调拨单
                     $newrequisition = new TbRequisition();
-                    $newrequisition->status = 1;
+                    // 出库拒绝，状态码为1
+                    $newrequisition->status = self::STATUS_DELIVERY_REJECTION;
                     $newrequisition->out_id = $this->out_id;
                     $newrequisition->in_id = $this->out_id;
                     $newrequisition->apply_staff = $this->apply_staff;
@@ -187,8 +220,8 @@ class TbRequisition extends BaseCompanyModel
                     }
                 }
             } else {
-                //出库拒绝
-                $this->status = 1;
+                // 出库拒绝，状态码为1
+                $this->status = self::STATUS_DELIVERY_REJECTION;
                 $this->turnout_staff = $di->get("currentUser");
                 $this->turnout_date = date("Y-m-d H:i:s");
 
@@ -211,6 +244,12 @@ class TbRequisition extends BaseCompanyModel
         return true;
     }
 
+    /**
+     * 取消
+     *
+     * @return bool
+     * @throws \Exception
+     */
     public function cancel()
     {
         $di = $this->getDI();
@@ -220,7 +259,7 @@ class TbRequisition extends BaseCompanyModel
 
         try {
             // 取消
-            $this->status = 6; // 取消
+            $this->status = self::STATUS_CANCELLED; // 取消
             $this->turnout_staff = $di->get("currentUser");
             $this->turnout_date = date("Y-m-d H:i:s");
 
@@ -242,8 +281,19 @@ class TbRequisition extends BaseCompanyModel
         return true;
     }
 
+    /**
+     * 处理入库操作
+     *
+     * @param $list
+     * @return bool
+     * @throws \Exception
+     */
     public function doIn($list)
     {
+        // 记录一下 $list 和 $this->requisitionDetail 的值
+        error_log('TbRequisition => doIn => $list的值是：' . print_r($list, true));
+        error_log('TbRequisition => doIn => $this->requisitionDetail的值是：' . print_r($this->requisitionDetail->toArray(), true));
+
         //检查一下是否有允许出库的
         $total = 0;
         foreach ($list as $value) {
@@ -256,8 +306,8 @@ class TbRequisition extends BaseCompanyModel
         $db->begin();
         try {
             if ($total > 0) {
-                //入库
-                $this->status = 5;
+                // 入库, 状态完毕
+                $this->status = self::STATUS_FINISHED;
                 $this->turnin_staff = $di->get("currentUser");
                 $this->turnin_date = date("Y-m-d H:i:s");
                 if ($this->update() == false) {
@@ -291,9 +341,10 @@ class TbRequisition extends BaseCompanyModel
                 }
 
                 if (count($details) > 0) {
-                    //生成反向调拨单
+                    // 生成反向调拨单
                     $newrequisition = new TbRequisition();
-                    $newrequisition->status = 3;
+                    // 状态-在途中
+                    $newrequisition->status = self::STATUS_ON_THE_WAY;
                     $newrequisition->out_id = $this->in_id;
                     $newrequisition->in_id = $this->out_id;
                     $newrequisition->apply_staff = $di->get("currentUser");
@@ -316,16 +367,18 @@ class TbRequisition extends BaseCompanyModel
                     }
                 }
             } else {
-                $this->status = 4;
+                // 状态，入库拒绝
+                $this->status = self::STATUS_WAREHOUSING_REJECTION;
                 $this->turnin_staff = $di->get("currentUser");
                 $this->turnin_date = date("Y-m-d H:i:s");
                 if ($this->update() == false) {
                     throw new \Exception("/11050209/调拨单拒绝入库失败。/");
                 }
 
-                //生成反向调拨单
+                // 生成反向调拨单
                 $newrequisition = new TbRequisition();
-                $newrequisition->status = 3;
+                // 状态 - 在途
+                $newrequisition->status = self::STATUS_ON_THE_WAY;
                 $newrequisition->out_id = $this->in_id;
                 $newrequisition->in_id = $this->out_id;
                 $newrequisition->apply_staff = $di->get("currentUser");
@@ -370,6 +423,11 @@ class TbRequisition extends BaseCompanyModel
         return true;
     }
 
+    /**
+     * 获取明细
+     *
+     * @return array
+     */
     public function getDetail()
     {
         $result = TbRequisitionDetail::find(

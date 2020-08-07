@@ -14,7 +14,7 @@ class TbShippingFee extends BaseModel
 
         $this->belongsTo(
             'feenameid',
-            '\Asa\Erp\TbFeename',
+            TbFeename::class,
             'id',
             [
                 'alias' => 'feename',

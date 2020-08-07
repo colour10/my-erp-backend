@@ -12,6 +12,7 @@ use Asa\Erp\TbShoporder;
 use Asa\Erp\TbShoporderCommon;
 use Asa\Erp\TbSizecontent;
 use Asa\Erp\Util;
+use Exception;
 use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;
 use Phalcon\Mvc\View;
@@ -704,7 +705,7 @@ class OrderController extends AdminController
                         // 微信支付的退款结果并不是实时返回的，而是通过退款回调来通知，因此这里需要配上退款回调接口地址
                         'notify_url'    => $this->config['pay']['wechat']['notify_url'],
                     ]);
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     // 定义退款失败
                     // 把失败原因记录日志
                     Log::error('订单号' . $order->getOrderNo() . '退款失败：', $e->raw);
@@ -727,7 +728,7 @@ class OrderController extends AdminController
                         'refund_amount'  => $order->getFinalPrice(), // 退款金额，单位元
                         'out_request_no' => $refundNo, // 退款订单号
                     ]);
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     // 定义退款失败
                     // 把失败原因记录日志
                     Log::error('订单号' . $order->getOrderNo() . '退款失败：', $e->raw);

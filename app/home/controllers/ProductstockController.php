@@ -30,6 +30,7 @@ class ProductstockController extends BaseController
     {
         // 记录 post 的值
         error_log('post接收到的值为：' . print_r($_POST, true));
+
         // 条件判断
         $conditions = [
             sprintf("companyid=%d", $this->companyid),
@@ -126,10 +127,13 @@ class ProductstockController extends BaseController
         $sql = implode(" and ", $conditions);
         error_log('库存查询的sql为：' . $sql);
 
-        // 需要在库存表中查找，因为要统计每个尺码的数量，所以要对 productid 和 sizecontentid 联合分组, to be continued
+        // 需要在库存表中查找，因为要统计每个尺码的数量，所以要对 productid 和 sizecontentid 联合分组, 这个 sql 语句有点复杂，所以这里用原生的来实现
         $result = TbProductstockSummary::find(
             $sql
         );
+
+        // 记录查询的结果，方便追踪
+        error_log('库存查询的 result 的结果为：' . print_r($result->toArray(), true));
 
         // 然后按照 productid 汇总
         $return = Util::getGroupArray(
@@ -178,7 +182,7 @@ class ProductstockController extends BaseController
         );
 
         // 记录查询结果
-        error_log('查询的结果为：' . print_r($return, true));
+        error_log('searchAction查询的结果为：' . print_r($return, true));
 
         // 需要处理为原来的格式
         // 把查询的结果按照productid分组
@@ -236,6 +240,9 @@ class ProductstockController extends BaseController
         echo $this->success(["data" => $return, "pagination" => $pagination]);
     }
 
+    /**
+     * 库存查找
+     */
     function searchstockAction()
     {
         $conditions = [
@@ -262,7 +269,7 @@ class ProductstockController extends BaseController
     }
 
     /**
-     * 查询每个仓库中某个商品的库存情况
+     * 查询每个仓库中某个商品的库存情况，这个在 tb_productstock_search 中查找
      */
     function searchproductAction()
     {
@@ -282,7 +289,7 @@ class ProductstockController extends BaseController
     }
 
     /**
-     * 根据 $productid 获取每个尺码的库存情况
+     * 根据 $productid 获取每个尺码的库存情况，用于向 OMS 发送库存更新时使用
      *
      * @param $productid
      * @return

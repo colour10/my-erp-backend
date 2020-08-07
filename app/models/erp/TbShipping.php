@@ -12,9 +12,12 @@ class TbShipping extends BaseModel
     const STATUS_WAY = 1;
     // 待入库
     const STATUS_STORAGE = 2;
-    // 已入库
+    // 已入库，费用已经摊销
     const STATUS_AMORTIZED = 3;
 
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -23,7 +26,7 @@ class TbShipping extends BaseModel
         // 订单-订单详情，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbShippingDetail",
+            TbShippingDetail::class,
             "shippingid",
             [
                 'alias' => 'shippingDetail',
@@ -33,7 +36,7 @@ class TbShipping extends BaseModel
         // 订单-订单详情，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbShippingFee",
+            TbShippingFee::class,
             "shippingid",
             [
                 'alias' => 'shippingFee',
@@ -76,8 +79,8 @@ class TbShipping extends BaseModel
             "shippingdetails"   => $details->toArray(),
             "orderbrands"       => $orderbrands,
             "orderbranddetails" => $orderbranddetails,
-            // 只有已经确认过的入库单，才显示成本。
-            "costs"             => $this->status == 2 || $this->status == 3 ? $this->getCostList() : [],
+            // 只有已经确认过的入库单，才显示成本, 也就是状态为2或3
+            "costs"             => $this->status == self::STATUS_STORAGE || $this->status == self::STATUS_AMORTIZED ? $this->getCostList() : [],
         ];
     }
 
@@ -87,7 +90,8 @@ class TbShipping extends BaseModel
         $total_number = 0;
         $total_amount = 0;
         foreach ($this->shippingDetail as $detail) {
-            if ($this->status == 3) {
+            // 状态为3
+            if ($this->status == self::STATUS_AMORTIZED) {
                 $amount = $detail->warehousingnumber * $detail->cost;
             } else {
                 $amount = $detail->warehousingnumber * $detail->price;
@@ -149,7 +153,7 @@ class TbShipping extends BaseModel
     }
 
     /**
-     * 前查 - 品牌订单
+     * 前查 - 品牌订单，这个是正常流程的
      *
      * @return array
      */
@@ -168,6 +172,33 @@ class TbShipping extends BaseModel
             }
 
             $result = TbOrderBrand::find(
+                sprintf("id in (%s)", implode(',', $array))
+            )->toArray();
+        }
+
+        return $result;
+    }
+
+    /**
+     * 前查 - 普通订单，这个是简易流程
+     *
+     * @return array
+     */
+    function getOrderList()
+    {
+        // 查找唯一的 orderid，用于前查
+        $sql = sprintf("SELECT distinct orderid FROM tb_shipping_detail WHERE shippingid=%d", $this->id);
+        $rows = $this->getDI()->get('db')->fetchAll($sql);
+
+        $result = [];
+
+        if (count($rows) > 0) {
+            $array = [];
+            foreach ($rows as $row) {
+                $array[] = $row['orderid'];
+            }
+
+            $result = TbOrder::find(
                 sprintf("id in (%s)", implode(',', $array))
             )->toArray();
         }

@@ -63,6 +63,7 @@ return [
     'menu-4-2'                                         => '供货商报价',
     'menu-4-3'                                         => '供货商级别',
     'menu-5'                                           => '供应链管理',
+    'menu-9'                                           => '供应链管理(简化版)',
     'menu-5-1'                                         => '订单管理',
     'menu-5-1-2'                                       => '订单状态查询',
     'shuxingdingyi'                                    => '属性定义',
@@ -71,6 +72,7 @@ return [
     'menu-5-3-2'                                       => '入库单查询',
     'menu-6'                                           => '库存管理',
     'menu-6-1'                                         => '调拨相关',
+    'menu-6-5'                                         => '调拨相关(调拨即入库)',
     'fuzhishuxing'                                     => '复制属性',
     'gengxinren'                                       => '更新人',
     'gengxinshijian'                                   => '更新时间',
@@ -990,6 +992,10 @@ return [
     'self-delivery'                                    => '自行送货',
     'note'                                             => '备注',
     'dingdanshijian'                                   => '订单时间',
+    'shippingsimple'                                   => '发货单(简化版)',
+    'shengchengfahuodansimple'                         => '生成发货单(简化版)',
+    'menu-9-10'                                        => '发货入库',
+    'simple-order'                                     => '普通订单',
 
     'template' =>
         [

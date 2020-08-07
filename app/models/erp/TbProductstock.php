@@ -3,6 +3,7 @@
 namespace Asa\Erp;
 
 use Phalcon\Di;
+use Phalcon\Mvc\Model;
 
 /**
  * 库存表
@@ -449,6 +450,17 @@ class TbProductstock extends BaseCompanyModel
         return $this->number - max($this->shipping_number, $this->reserve_number);
     }
 
+    /**
+     * 获取库存
+     *
+     * @param $productid
+     * @param $sizecontentid
+     * @param $warehouseid
+     * @param int $property
+     * @param int $defective_level
+     * @return TbProductstock|Model
+     * @throws Exception
+     */
     public static function getProductStock($productid, $sizecontentid, $warehouseid, $property = 1, $defective_level = 1)
     {
         $di = \Phalcon\DI::getDefault();
