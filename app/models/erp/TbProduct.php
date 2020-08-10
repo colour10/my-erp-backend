@@ -364,6 +364,7 @@ class TbProduct extends BaseCompanyModel
 
     /**
      * 获取同款多色的各个产品的产品数据
+     *
      * @return array|ResultsetInterface [type] [description]
      */
     function getColorGroupList()

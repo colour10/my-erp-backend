@@ -218,6 +218,7 @@ class ProductController extends CadminController
                         }
 
                         $products[] = $product;
+                        // 第一个数代表 productid, 第二个数代表 色系id
                         $colors[] = $product->id . "," . $product->color_id;
                     }
                 } else {
@@ -237,6 +238,7 @@ class ProductController extends CadminController
             }
 
             $output = [];
+            // | 后面的变量代表颜色
             $product_group = implode('|', $colors);
             //逐个更新，绑定关系
             foreach ($products as $row) {
@@ -819,7 +821,7 @@ class ProductController extends CadminController
                     $product_group = implode('|', $data);
                 }
 
-                //逐个更新，绑定关系
+                // 逐个更新，绑定关系
                 foreach ($products as $row) {
                     // 不知道怎么了，突然缺少了 brandcolor，暂时补上
                     $row->brandcolor = isset($row->brandcolor) ? $row->brandcolor : null;
@@ -891,42 +893,60 @@ class ProductController extends CadminController
     }
 
     /**
-     * 保存商品属性
+     * tab标签 - 商品尺寸保存逻辑
      *
      * @return false|string [type] [description]
      */
     function savepropertyAction()
     {
         $params = json_decode($_POST['params'], true);
-        //print_r($params);
 
         $id = (int)$params['id'];
         $product = TbProduct::findFirstById($id);
         if ($product != false && $product->companyid == $this->companyid) {
+
+            // 取出所有的同款不同色商品，做统一修改
+            // 取出分组数据
+            $groups = explode('|', $product->product_group);
+            // 然后把每一项逗号前面的 productid 取出来即可
+            $productIds = [];
+            foreach ($groups as $group) {
+                $productIds[] = substr($group, 0, strpos($group, ','));
+            }
+
+            // 启用事务
             $this->db->begin();
 
-            $result = [];
-            foreach ($params['list'] as $key => $row) {
-                // 按照sizecontentid_propertyid进行拆分
-                if (preg_match("#^(\d+)_(\d+)$#", $key, $match)) {
-                    $object = TbProductSizeProperty::findFirst(
-                        sprintf("productid=%d and sizecontentid=%d and propertyid=%d", $product->id, $match[1], $match[2])
-                    );
-                    if ($object == false) {
-                        $object = new  TbProductSizeProperty();
-                        $object->productid = $id;
-                        $object->sizecontentid = $match[1];
-                        $object->propertyid = $match[2];
-                    }
-                    $object->content = $row;
-                    if ($object->save() == false) {
-                        $this->db->rollback();
-                        return $this->error("/1002/更新或者新增商品属性失败/");
-                    }
+            // 接下来就是修改所有的同款不同色的商品属性数据
+            foreach ($productIds as $productId) {
+                // 商品必须存在
+                $product = TbProduct::findFirstById($productId);
+                if ($product != false && $product->companyid == $this->companyid) {
+                    $result = [];
+                    foreach ($params['list'] as $key => $row) {
+                        // 按照sizecontentid_propertyid进行拆分
+                        if (preg_match("#^(\d+)_(\d+)$#", $key, $match)) {
+                            $object = TbProductSizeProperty::findFirst(
+                                sprintf("productid=%d and sizecontentid=%d and propertyid=%d", $productId, $match[1], $match[2])
+                            );
+                            if ($object == false) {
+                                $object = new  TbProductSizeProperty();
+                                $object->productid = $productId;
+                                $object->sizecontentid = $match[1];
+                                $object->propertyid = $match[2];
+                            }
+                            $object->content = $row;
+                            if ($object->save() == false) {
+                                $this->db->rollback();
+                                return $this->error("/1002/更新或者新增商品属性失败/");
+                            }
 
-                    $result[] = $object->toArray();
+                            $result[] = $object->toArray();
+                        }
+                    }
                 }
             }
+            // 提交
             $this->db->commit();
             return $this->success($result);
         } else {
