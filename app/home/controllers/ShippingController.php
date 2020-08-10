@@ -34,6 +34,14 @@ class ShippingController extends AdminController
         $this->setModelName('Asa\\Erp\\TbShipping');
     }
 
+    /**
+     * 加入id降序
+     */
+    public function before_page()
+    {
+        $_POST['__orderby'] = $this->orderBy;
+    }
+
     public function addAction()
     {
     }
@@ -103,11 +111,11 @@ class ShippingController extends AdminController
                     $rateInfo = $this->getRateInfo($shippingDetail['currencyid']);
                     $sum_currency_price = $sum_price * $rateInfo['rate'];
                 }
-                $shippingDetails['sum'] = $sum;
+                $shippingDetails['sum'] = round($sum, 2);
                 // 当前货币【一般是欧元】总价格
-                $shippingDetails['sum_price'] = $sum_price;
+                $shippingDetails['sum_price'] = round($sum_price, 2);
                 // 兑换成本位货币的总价格
-                $shippingDetails['sum_current_price'] = $sum_currency_price;
+                $shippingDetails['sum_current_price'] = round($sum_currency_price, 2);
                 // 尺码组id汇总
                 $sizecontentids = array_column($shippingDetails, 'sizecontentid');
                 $shippingDetails['sizecontentids'] = implode(',', $sizecontentids);

@@ -158,9 +158,9 @@ class ProductController extends CadminController
                 $product->picture2 = $row['picture2'];
                 $product->wordcode = $this->filterCode($row['wordcode_1']) . $this->filterCode($row['wordcode_2']) . $this->filterCode($row['wordcode_3']);
 
-                $product->color_system_id = $row['colorSystemId'];
-                $product->color_id = $row['colorId'];
-                $product->second_color_id = isset($row['secondColorId'][1]) ? (int)$row['secondColorId'][1] : 0;
+                $product->brandcolor = $row['colorSystemId'];
+                $product->color_id = $row['color_id'];
+                $product->second_color_id = isset($row['second_color_id'][1]) ? (int)$row['second_color_id'][1] : 0;
 
                 // 不放在一起了，分开存储
                 $product->brandgroupid = $params['form']['brandgroupid'];
@@ -373,8 +373,13 @@ class ProductController extends CadminController
                         $row->wordcode_2 = $this->filterCode($params['form']["wordcode_2"]);
                         $row->wordcode_3 = $this->filterCode($params['form']["wordcode_3"]);
                         $row->wordcode_4 = $this->filterCode($params['form']["wordcode_4"]);
+                        // 色系、颜色、副颜色只针对当前商品修改，其他的同款多色保持不变
                         // 色系
                         $row->brandcolor = $params['form']["brandcolor"];
+                        // 颜色
+                        $row->color_id = $params['form']['color_id'];
+                        // 副颜色取第二个数，这个是个数组
+                        $row->second_color_id = isset($params['form']['second_color_id'][1]) ? (int)$params['form']['second_color_id'][1] : 0;
                         $row->picture = $params['form']["picture"];
                         $row->picture2 = $params['form']["picture2"];
                         $row->laststoragedate = $params['form']["laststoragedate"];
@@ -383,6 +388,7 @@ class ProductController extends CadminController
                         $row->wordcode = $wordcode;
                     }
 
+                    // 下面是更新同款多色的数据
                     $row->brandid = $params['form']["brandid"];
                     $row->series = $params['form']["series"];
                     $row->factoryprice = $params['form']["factoryprice"];
@@ -404,14 +410,6 @@ class ProductController extends CadminController
                     $row->saletypeid = $params['form']["saletypeid"];
                     $row->winterproofingid = $params['form']["winterproofingid"];
                     $row->updatetime = date("Y-m-d H:i:s");
-
-                    // 分开保存
-                    // $row->color_system_id = $params['form']['colorId'][0];
-                    $row->color_system_id = $params['form']['colorSystemId'];
-                    // $row->color_id = $params['form']['colorId'][1];
-                    $row->color_id = $params['form']['colorId'];
-
-                    $row->second_color_id = isset($params['form']['secondColorId'][1]) ? (int)$params['form']['secondColorId'][1] : 0;
                     $row->brandgroupid = $params['form']['brandgroupid'];
                     $row->childbrand = $params['form']['childbrand'];
                     $row->ageseason = empty($params['form']['ageseason']) ? '' : implode(',', $params['form']['ageseason']);
@@ -798,9 +796,10 @@ class ProductController extends CadminController
                         $product_else->saletypeid = $product->saletypeid;
                     }
 
-                    $product_else->color_system_id = $row['colorId'][0];
-                    $product_else->color_id = $row['colorId'][1];
-                    $product_else->second_color_id = isset($row['secondColorId'][1]) ? (int)$row['secondColorId'][1] : 0;
+                    // 色系统一用 brandcolor
+                    $product_else->brandcolor = $row['brandcolor'];
+                    $product_else->color_id = $row['color_id'];
+                    $product_else->second_color_id = isset($row['second_color_id'][1]) ? (int)$row['second_color_id'][1] : 0;
                     $product_else->wordcode_1 = $this->filterCode($row['wordcode_1']);
                     $product_else->wordcode_2 = $this->filterCode($row['wordcode_2']);
                     $product_else->wordcode_3 = $this->filterCode($row['wordcode_3']);
@@ -893,6 +892,7 @@ class ProductController extends CadminController
 
     /**
      * 保存商品属性
+     *
      * @return false|string [type] [description]
      */
     function savepropertyAction()
@@ -907,6 +907,7 @@ class ProductController extends CadminController
 
             $result = [];
             foreach ($params['list'] as $key => $row) {
+                // 按照sizecontentid_propertyid进行拆分
                 if (preg_match("#^(\d+)_(\d+)$#", $key, $match)) {
                     $object = TbProductSizeProperty::findFirst(
                         sprintf("productid=%d and sizecontentid=%d and propertyid=%d", $product->id, $match[1], $match[2])
@@ -935,6 +936,7 @@ class ProductController extends CadminController
 
     /**
      * 获取商品的尺码描述信息
+     *
      * @return false|string [type] [description]
      */
     function getpropertiesAction()
@@ -1553,15 +1555,32 @@ class ProductController extends CadminController
      */
     public function infoAction()
     {
-        $id = $this->request->getPost('id', 'int', 0);
+        $id = $this->request->get('id', 'int', 0);
 
         if (!$product = TbProduct::findFirst("id=$id")) {
             // 传递错误
             return $this->error($this->getValidateMessage('product-doesnot-exist'));
         }
         $result = $product->toArray();
+        // 材质列表
         $result['materials'] = $product->productMaterial->toArray();
-
+        // 尺码列表
+        $sizecontents = explode(',', $product->sizecontentids);
+        foreach ($sizecontents as $sizecontent) {
+            // 把 id 和 name 添加进去
+            if ($sizecontent_model = TbSizecontent::findFirstById($sizecontent)) {
+                $result['sizecontents'][] = [
+                    'id'   => $sizecontent,
+                    'name' => $sizecontent_model->name,
+                ];
+            } else {
+                $result['sizecontents'][] = [
+                    'id'   => $sizecontent,
+                    'name' => '',
+                ];
+            }
+        }
+        // 返回
         return $this->success($result);
     }
 
