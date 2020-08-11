@@ -6,10 +6,156 @@ use Phalcon\Mvc\Model;
 
 /**
  * 订单主表
- * ErrorCode 1110
+ *
+ * Class TbOrder
+ * @package Asa\Erp
  */
 class TbOrder extends BaseModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var integer
+     */
+    public $makestaff;
+
+    /**
+     *
+     * @var integer
+     */
+    public $supplierid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $finalsupplierid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $bookingid;
+
+    /**
+     *
+     * @var string
+     */
+    public $orderno;
+
+    /**
+     *
+     * @var double
+     */
+    public $total;
+
+    /**
+     *
+     * @var string
+     */
+    public $currency;
+
+    /**
+     *
+     * @var string
+     */
+    public $bookingorderno;
+
+    /**
+     *
+     * @var integer
+     */
+    public $isstatus;
+
+    /**
+     *
+     * @var string
+     */
+    public $memo;
+
+    /**
+     *
+     * @var integer
+     */
+    public $linkmanid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $ageseason;
+
+    /**
+     *
+     * @var integer
+     */
+    public $seasontype;
+
+    /**
+     *
+     * @var double
+     */
+    public $taxrebate;
+
+    /**
+     *
+     * @var integer
+     */
+    public $bussinesstype;
+
+    /**
+     *
+     * @var double
+     */
+    public $discount;
+
+    /**
+     *
+     * @var integer
+     */
+    public $property;
+
+    /**
+     *
+     * @var integer
+     */
+    public $companyid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $status;
+
+    /**
+     *
+     * @var string
+     */
+    public $maketime;
+
+    /**
+     *
+     * @var string
+     */
+    public $orderdate;
+
+    /**
+     *
+     * @var string
+     */
+    public $genders;
+
+    /**
+     *
+     * @var string
+     */
+    public $brandids;
+    
     // 状态使用枚举存储
     // 未完成，刚刚保存状态
     const STATUS_UNFINISHED = 1;

@@ -9,6 +9,39 @@ namespace Asa\Erp;
  */
 class TbCode extends BaseModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var string
+     */
+    public $codetype;
+
+    /**
+     *
+     * @var string
+     */
+    public $month;
+
+    /**
+     *
+     * @var integer
+     */
+    public $codeindex;
+
+    /**
+     *
+     * @var integer
+     */
+    public $companyid;
+
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -17,6 +50,7 @@ class TbCode extends BaseModel
 
     /**
      * 生成订单号并最终返回
+     *
      * @param int $companyid 公司id
      * @param string $codetype 订单类型
      * @param string $month 时间

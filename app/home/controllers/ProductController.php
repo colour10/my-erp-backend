@@ -43,6 +43,9 @@ use Phalcon\Paginator\Adapter\Model;
  */
 class ProductController extends CadminController
 {
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -101,6 +104,8 @@ class ProductController extends CadminController
             "total"      => $pageObject->total_items,
             "pageSize"   => $pageSize,
         ];
+
+        // 返回
         echo $this->reportJson(["data" => $data, "pagination" => $pageinfo], 200, []);
     }
 
@@ -204,12 +209,12 @@ class ProductController extends CadminController
                         // 新增成功
                         // 添加材质信息
                         if (is_array($params["materials"])) {
-                            foreach ($params['materials'] as $row) {
+                            foreach ($params['materials'] as $material) {
                                 $productMaterial = new TbProductMaterial();
                                 $productMaterial->productid = $product->id;
-                                $productMaterial->materialid = $row["materialid"];
-                                $productMaterial->materialnoteid = $row["materialnoteid"];
-                                $productMaterial->percent = $row["percent"];
+                                $productMaterial->materialid = $material["materialid"];
+                                $productMaterial->materialnoteid = $material["materialnoteid"];
+                                $productMaterial->percent = $material["percent"];
                                 if ($productMaterial->save() == false) {
                                     $this->db->rollback();
                                     return $this->error($productMaterial);
@@ -708,15 +713,21 @@ class ProductController extends CadminController
     function codelistAction()
     {
         $result = TbProductcode::find(
-            sprintf("productid=%d", $_POST['id'])
+            sprintf("productid=%d", $this->request->get('id'))
         );
-
-        echo $this->success($result->toArray());
+        // 然后把 sizecontentid 换成名称
+        $items = $result->toArray();
+        foreach ($items as &$item) {
+            $item['sizecontent_name'] = ($model = TbSizecontent::findFirstById($item['sizecontentid'])) ? $model->name : '';
+        }
+        // 返回
+        echo $this->success($items);
     }
 
     /**
      * 保存商品货号
-     * @return [type] [description]
+     *
+     * @return false|string [type] [description]
      */
     function savecodeAction()
     {
@@ -1331,7 +1342,11 @@ class ProductController extends CadminController
      */
     public function getProductRelatedOptionsAction()
     {
-        $lang = $this->getDI()->get("session")->get("language");
+        // 如果未登录，那么默认为 cn
+        if (!$lang = $this->getDI()->get("session")->get("language")) {
+            $lang = 'cn';
+        }
+
         $result = [];
 
         $result['ageseasons'] = [];

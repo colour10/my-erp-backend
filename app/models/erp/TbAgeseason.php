@@ -12,12 +12,38 @@ use Phalcon\Mvc\Model\Resultset;
  */
 class TbAgeseason extends BaseModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var string
+     */
+    public $sessionmark;
+
+    /**
+     *
+     * @var string
+     */
+    public $name;
+
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
         $this->setSource('tb_ageseason');
     }
 
+    /**
+     * 验证规则
+     *
+     * @return array
+     */
     public function getRules()
     {
         return [
@@ -26,6 +52,11 @@ class TbAgeseason extends BaseModel
         ];
     }
 
+    /**
+     * 转成数组
+     *
+     * @return array
+     */
     public function toArrayPipe()
     {
         $fullname = sprintf("%s%s", $this->sessionmark, $this->name);
@@ -34,6 +65,12 @@ class TbAgeseason extends BaseModel
         return $array;
     }
 
+    /**
+     * 删除判定
+     *
+     * @return bool|void
+     * @throws \Exception
+     */
     function delete()
     {
         throw new \Exception("/1003/款式年代数据不允许删除/");
@@ -42,6 +79,7 @@ class TbAgeseason extends BaseModel
 
     /**
      * 取出当前时间的上一个年代季节
+     *
      * @param string $mark 季节
      * @param string $name 年份
      * @return bool|Resultset|Model

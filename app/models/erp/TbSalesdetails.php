@@ -3,10 +3,76 @@
 namespace Asa\Erp;
 
 /**
- * 销售单 明细表
+ * 销售单明细表
+ *
+ * Class TbSalesdetails
+ * @package Asa\Erp
  */
 class TbSalesdetails extends BaseModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var integer
+     */
+    public $salesid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $productstockid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $number;
+
+    /**
+     *
+     * @var double
+     */
+    public $dealprice;
+
+    /**
+     *
+     * @var double
+     */
+    public $price;
+
+    /**
+     *
+     * @var integer
+     */
+    public $priceid;
+
+    /**
+     *
+     * @var double
+     */
+    public $cost;
+
+    /**
+     *
+     * @var integer
+     */
+    public $costcurrency;
+
+    /**
+     *
+     * @var integer
+     */
+    public $update_time;
+
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -15,16 +81,17 @@ class TbSalesdetails extends BaseModel
         // 销售详情表-销售主表，一对多反向
         $this->belongsTo(
             'salesid',
-            '\Asa\Erp\TbSales',
+            TbSales::class,
             'id',
             [
                 'alias' => 'sales',
             ]
         );
 
+        // 销售详情表-库存表，一对多反向
         $this->belongsTo(
             'productstockid',
-            '\Asa\Erp\TbProductstock',
+            TbProductstock::class,
             'id',
             [
                 'alias' => 'productstock',

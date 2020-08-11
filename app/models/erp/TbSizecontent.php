@@ -7,15 +7,54 @@ namespace Asa\Erp;
  */
 class TbSizecontent extends BaseModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var integer
+     */
+    public $topid;
+
+    /**
+     *
+     * @var string
+     */
+    public $name;
+
+    /**
+     *
+     * @var integer
+     */
+    public $displayindex;
+
+    /**
+     *
+     * @var string
+     */
+    public $created_at;
+
+    /**
+     *
+     * @var string
+     */
+    public $updated_at;
+
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
         $this->setSource('tb_sizecontent');
 
-        // 尺码详情-尺码组-尺码详情，一对多反向
+        // 尺码详情-尺码组，一对多反向
         $this->belongsTo(
             'topid',
-            '\Asa\Erp\TbSizetop',
+            TbSizetop::class,
             'id',
             [
                 'alias' => 'sizetop',
@@ -130,6 +169,11 @@ class TbSizecontent extends BaseModel
         }
     }
 
+    /**
+     * 验证规则
+     *
+     * @return array
+     */
     public function getRules()
     {
         $factory = $this->getValidatorFactory();

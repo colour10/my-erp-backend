@@ -9,6 +9,39 @@ namespace Asa\Erp;
  */
 class TbProductSizeProperty extends BaseModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var integer
+     */
+    public $productid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $sizecontentid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $propertyid;
+
+    /**
+     *
+     * @var string
+     */
+    public $content;
+
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();

@@ -81,7 +81,7 @@ class TbBuycar extends BaseModel
         // 与用户表关联，一对多反向
         $this->belongsTo(
             "member_id",
-            "\Asa\Erp\TbMember",
+            TbMember::class,
             "id",
             [
                 'alias'      => 'member',
@@ -96,7 +96,7 @@ class TbBuycar extends BaseModel
         // 与产品表关联，一对多反向
         $this->belongsTo(
             "product_id",
-            "\Asa\Erp\TbProductSearch",
+            TbProductSearch::class,
             "id",
             [
                 'alias'      => 'product',
@@ -111,6 +111,8 @@ class TbBuycar extends BaseModel
     }
 
     /**
+     * 验证
+     *
      * @return bool
      */
     public function validation()
@@ -119,7 +121,7 @@ class TbBuycar extends BaseModel
 
         return $this->validate($validator);
     }
-    
+
     /**
      * 重写多语言版本配置读取函数
      * @param string languages下面语言文件字段的名称 如template模块下面的uniqueness

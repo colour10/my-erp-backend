@@ -7,6 +7,132 @@ namespace Asa\Erp;
  */
 class TbOmsOrder extends BaseModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var integer
+     */
+    public $productid;
+
+    /**
+     *
+     * @var string
+     */
+    public $orderNo;
+
+    /**
+     *
+     * @var string
+     */
+    public $productName;
+
+    /**
+     *
+     * @var double
+     */
+    public $orderTotal;
+
+    /**
+     *
+     * @var string
+     */
+    public $consignee;
+
+    /**
+     *
+     * @var string
+     */
+    public $consignee_telephone;
+
+    /**
+     *
+     * @var string
+     */
+    public $consignee_address;
+
+    /**
+     *
+     * @var string
+     */
+    public $color;
+
+    /**
+     *
+     * @var string
+     */
+    public $sizecontent;
+
+    /**
+     *
+     * @var integer
+     */
+    public $orderStatus;
+
+    /**
+     *
+     * @var integer
+     */
+    public $paymentStatus;
+
+    /**
+     *
+     * @var integer
+     */
+    public $shippingStatus;
+
+    /**
+     *
+     * @var string
+     */
+    public $shipmentCopCode;
+
+    /**
+     *
+     * @var string
+     */
+    public $trackingNumber;
+
+    /**
+     *
+     * @var integer
+     */
+    public $isRefuse;
+
+    /**
+     *
+     * @var integer
+     */
+    public $isNoExpress;
+
+    /**
+     *
+     * @var string
+     */
+    public $note;
+
+    /**
+     *
+     * @var string
+     */
+    public $extra;
+
+    /**
+     *
+     * @var string
+     */
+    public $created_at;
+
+    /**
+     *
+     * @var string
+     */
+    public $updated_at;
+
     // 初始化
     public function initialize()
     {

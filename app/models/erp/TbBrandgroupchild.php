@@ -11,6 +11,75 @@ use Phalcon\Mvc\Model\Relation;
  */
 class TbBrandgroupchild extends BaseModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_cn;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_en;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_hk;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_fr;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_it;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_sp;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_de;
+
+    /**
+     *
+     * @var integer
+     */
+    public $brandgroupid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $displayindex;
+
+    /**
+     *
+     * @var string
+     */
+    public $diagram;
+
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -19,7 +88,7 @@ class TbBrandgroupchild extends BaseModel
         // 子品类-品类，一对多反向
         $this->belongsTo(
             'brandgroupid',
-            '\Asa\Erp\TbBrandgroup',
+            TbBrandgroup::class,
             'id',
             [
                 'alias' => 'brandgroup',
@@ -29,7 +98,7 @@ class TbBrandgroupchild extends BaseModel
         // 子品类-商品，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbProduct",
+            TbProduct::class,
             "childbrand",
             [
                 'alias'      => 'products',
@@ -44,7 +113,7 @@ class TbBrandgroupchild extends BaseModel
         // 子品类-商品，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbBrandgroupchildProperty",
+            TbBrandgroupchildProperty::class,
             "brandgroupchildid",
             [
                 'alias'      => 'brandgroupchildProperties',
@@ -59,7 +128,7 @@ class TbBrandgroupchild extends BaseModel
         // 子品类和商品描述的关联表，一对多的关系
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbProductMemoBrandgroupchild",
+            TbProductMemoBrandgroupchild::class,
             "brandgroupchild_id",
             [
                 'alias' => 'productMemoIds',
@@ -67,6 +136,11 @@ class TbBrandgroupchild extends BaseModel
         );
     }
 
+    /**
+     * 验证规则
+     *
+     * @return array
+     */
     public function getRules()
     {
         return [

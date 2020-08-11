@@ -9,6 +9,57 @@ namespace Asa\Erp;
  */
 class TbExchangeRate extends BaseModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var integer
+     */
+    public $currency_from;
+
+    /**
+     *
+     * @var integer
+     */
+    public $currency_to;
+
+    /**
+     *
+     * @var double
+     */
+    public $rate;
+
+    /**
+     *
+     * @var integer
+     */
+    public $companyid;
+
+    /**
+     *
+     * @var string
+     */
+    public $begin_time;
+
+    /**
+     *
+     * @var string
+     */
+    public $end_time;
+
+    /**
+     *
+     * @var integer
+     */
+    public $status;
+
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -17,6 +68,7 @@ class TbExchangeRate extends BaseModel
 
     /**
      * 货币汇率转化
+     *
      * @param $companyid
      * @param $from
      * @param $to
@@ -34,6 +86,11 @@ class TbExchangeRate extends BaseModel
         ];
     }
 
+    /**
+     * 验证规则
+     *
+     * @return array
+     */
     public function getRules()
     {
         return [

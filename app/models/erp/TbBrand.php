@@ -11,6 +11,99 @@ use Phalcon\Mvc\Model\Relation;
  */
 class TbBrand extends BaseModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_cn;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_en;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_hk;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_fr;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_it;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_sp;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_de;
+
+    /**
+     *
+     * @var integer
+     */
+    public $countryid;
+
+    /**
+     *
+     * @var string
+     */
+    public $filename;
+
+    /**
+     *
+     * @var string
+     */
+    public $memo;
+
+    /**
+     *
+     * @var string
+     */
+    public $officialwebsite;
+
+    /**
+     *
+     * @var string
+     */
+    public $worldcode1;
+
+    /**
+     *
+     * @var string
+     */
+    public $worldcode2;
+
+    /**
+     *
+     * @var string
+     */
+    public $worldcode3;
+
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -19,7 +112,7 @@ class TbBrand extends BaseModel
         // 品牌-国家表，一对多反向
         $this->belongsTo(
             'countryid',
-            '\Asa\Erp\TbCountry',
+            TbCountry::class,
             'id',
             [
                 'alias' => 'country',
@@ -29,7 +122,7 @@ class TbBrand extends BaseModel
         // 品牌-产品表，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbProduct",
+            TbProduct::class,
             "brandid",
             [
                 'alias'      => 'products',
@@ -42,6 +135,11 @@ class TbBrand extends BaseModel
         );
     }
 
+    /**
+     * 验证规则
+     *
+     * @return array
+     */
     public function getRules()
     {
         $factory = $this->getValidatorFactory();

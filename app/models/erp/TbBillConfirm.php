@@ -9,6 +9,69 @@ namespace Asa\Erp;
  */
 class TbBillConfirm extends BaseModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var integer
+     */
+    public $billid;
+
+    /**
+     *
+     * @var double
+     */
+    public $amount;
+
+    /**
+     *
+     * @var string
+     */
+    public $createtime;
+
+    /**
+     *
+     * @var integer
+     */
+    public $createstaff;
+
+    /**
+     *
+     * @var string
+     */
+    public $bankaccount;
+
+    /**
+     *
+     * @var string
+     */
+    public $invoice;
+
+    /**
+     *
+     * @var integer
+     */
+    public $currencyid;
+
+    /**
+     *
+     * @var string
+     */
+    public $memo;
+
+    /**
+     *
+     * @var string
+     */
+    public $enterdate;
+
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -16,7 +79,7 @@ class TbBillConfirm extends BaseModel
 
         $this->belongsTo(
             'billid',
-            '\Asa\Erp\TbBill',
+            TbBill::class,
             'id',
             [
                 'alias' => 'bill',
@@ -24,6 +87,14 @@ class TbBillConfirm extends BaseModel
         );
     }
 
+    /**
+     * 增
+     *
+     * @param null $data
+     * @param null $whiteList
+     * @return bool
+     * @throws \Exception
+     */
     function create($data = NULL, $whiteList = NULL)
     {
         $result = parent::create($data, $whiteList);
@@ -33,6 +104,14 @@ class TbBillConfirm extends BaseModel
         return $result;
     }
 
+    /**
+     * 改
+     *
+     * @param null $data
+     * @param null $whiteList
+     * @return bool
+     * @throws \Exception
+     */
     function update($data = NULL, $whiteList = NULL)
     {
         $result = parent::update($data, $whiteList);
@@ -42,6 +121,12 @@ class TbBillConfirm extends BaseModel
         return $result;
     }
 
+    /**
+     * 删
+     *
+     * @return bool
+     * @throws \Exception
+     */
     function delete()
     {
         $result = parent::delete();
@@ -51,6 +136,11 @@ class TbBillConfirm extends BaseModel
         return $result;
     }
 
+    /**
+     * 更新订单状态
+     *
+     * @throws \Exception
+     */
     private function updateBillStatus()
     {
         $totalAmount = self::sum([

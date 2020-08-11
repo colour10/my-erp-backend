@@ -6,11 +6,66 @@ use Phalcon\Mvc\Model\Relation;
 
 /**
  * 价格定义表
+ *
+ * Class TbPrice
+ * @package Asa\Erp
  */
 class TbPrice extends BaseModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var integer
+     */
+    public $countryid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $pricetype;
+
+    /**
+     *
+     * @var integer
+     */
+    public $currencyid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $companyid;
+
+    /**
+     *
+     * @var string
+     */
+    public $name;
+
+    /**
+     *
+     * @var integer
+     */
+    public $displayindex;
+
+    /**
+     *
+     * @var integer
+     */
+    public $filter;
+
+    // 单例模式
     private static $box;
 
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -18,7 +73,7 @@ class TbPrice extends BaseModel
 
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbPriceSetting",
+            TbPriceSetting::class,
             "priceid",
             [
                 'alias'      => 'prices',
@@ -31,6 +86,12 @@ class TbPrice extends BaseModel
         );
     }
 
+    /**
+     * 返回单例
+     *
+     * @param $id
+     * @return mixed
+     */
     public static function getInstance($id)
     {
         if (!isset(self::$box[$id])) {
@@ -40,6 +101,13 @@ class TbPrice extends BaseModel
         return self::$box[$id];
     }
 
+    /**
+     * 搜索条件
+     *
+     * @param $name
+     * @param $ids
+     * @return string
+     */
     private function getCondition($name, $ids)
     {
         $array = [];
@@ -50,6 +118,11 @@ class TbPrice extends BaseModel
         return '(' . implode(' or ', $array) . ')';
     }
 
+    /**
+     * 验证规则
+     *
+     * @return array
+     */
     public function getRules()
     {
         $factory = $this->getValidatorFactory();

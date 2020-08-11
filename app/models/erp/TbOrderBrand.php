@@ -6,9 +6,156 @@ use Phalcon\Mvc\Model\ResultsetInterface;
 
 /**
  * 品牌订单
+ *
+ * Class TbOrderBrand
+ * @package Asa\Erp
  */
 class TbOrderBrand extends BaseModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var integer
+     */
+    public $makestaff;
+
+    /**
+     *
+     * @var integer
+     */
+    public $supplierid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $finalsupplierid;
+
+    /**
+     *
+     * @var string
+     */
+    public $orderno;
+
+    /**
+     *
+     * @var string
+     */
+    public $foreignorderno;
+
+    /**
+     *
+     * @var string
+     */
+    public $memo;
+
+    /**
+     *
+     * @var integer
+     */
+    public $ageseason;
+
+    /**
+     *
+     * @var integer
+     */
+    public $seasontype;
+
+    /**
+     *
+     * @var string
+     */
+    public $brandid;
+
+    /**
+     *
+     * @var double
+     */
+    public $taxrebate;
+
+    /**
+     *
+     * @var double
+     */
+    public $discount;
+
+    /**
+     *
+     * @var integer
+     */
+    public $companyid;
+
+    /**
+     *
+     * @var string
+     */
+    public $maketime;
+
+    /**
+     *
+     * @var string
+     */
+    public $confirmdate;
+
+    /**
+     *
+     * @var integer
+     */
+    public $confirmstaff;
+
+    /**
+     *
+     * @var double
+     */
+    public $total;
+
+    /**
+     *
+     * @var integer
+     */
+    public $status;
+
+    /**
+     *
+     * @var integer
+     */
+    public $bussinesstype;
+
+    /**
+     *
+     * @var integer
+     */
+    public $quantum;
+
+    /**
+     *
+     * @var integer
+     */
+    public $total_number;
+
+    /**
+     *
+     * @var double
+     */
+    public $total_price;
+
+    /**
+     *
+     * @var double
+     */
+    public $total_discount_price;
+
+    /**
+     *
+     * @var integer
+     */
+    public $currency;
+
     // 品牌订单状态
     // 1 - 待确认
     const STATUS_TO_BE_CONFIRMED = 1;
@@ -24,7 +171,7 @@ class TbOrderBrand extends BaseModel
 
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbOrderBrandDetail",
+            TbOrderBrandDetail::class,
             "orderbrandid",
             [
                 'alias' => 'orderbranddetail',
@@ -32,6 +179,11 @@ class TbOrderBrand extends BaseModel
         );
     }
 
+    /**
+     * 获取订单明细
+     *
+     * @return array
+     */
     public function getOrderDetail()
     {
         $data = [
@@ -47,6 +199,11 @@ class TbOrderBrand extends BaseModel
         return $data;
     }
 
+    /**
+     * 获取明细列表
+     *
+     * @return ResultsetInterface
+     */
     public function getDetailList()
     {
         return TbOrderBrandDetail::find([

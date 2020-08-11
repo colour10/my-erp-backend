@@ -12,6 +12,103 @@ use Phalcon\Mvc\Model;
  */
 class TbProductstock extends BaseCompanyModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var integer
+     */
+    public $goodsid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $productid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $sizecontentid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $defective_level;
+
+    /**
+     *
+     * @var integer
+     */
+    public $property;
+
+    /**
+     *
+     * @var integer
+     */
+    public $warehouseid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $companyid;
+
+    /**
+     *
+     * @var string
+     */
+    public $create_time;
+
+    /**
+     *
+     * @var integer
+     */
+    public $create_stuff;
+
+    /**
+     *
+     * @var string
+     */
+    public $change_time;
+
+    /**
+     *
+     * @var integer
+     */
+    public $change_stuff;
+
+    /**
+     *
+     * @var integer
+     */
+    public $number;
+
+    /**
+     *
+     * @var integer
+     */
+    public $reserve_number;
+
+    /**
+     *
+     * @var integer
+     */
+    public $shipping_number;
+
+    /**
+     *
+     * @var integer
+     */
+    public $sales_number;
+
+    // 常量列表
     const SALES                     = 1; //销售
     const REQUISITION_IN            = 2; //调拨入库
     const REQUISITION_OUT           = 3; //调拨出库
@@ -33,7 +130,7 @@ class TbProductstock extends BaseCompanyModel
         // 库存-商品主表，一对多反向
         $this->belongsTo(
             'productid',
-            '\Asa\Erp\TbProduct',
+            TbProduct::class,
             'id',
             [
                 'alias' => 'product',
@@ -43,7 +140,7 @@ class TbProductstock extends BaseCompanyModel
         // 库存-尺码表，一对多反向
         $this->belongsTo(
             'sizecontentid',
-            '\Asa\Erp\TbSizecontent',
+            TbSizecontent::class,
             'id',
             [
                 'alias' => 'sizecontent',
@@ -53,16 +150,17 @@ class TbProductstock extends BaseCompanyModel
         // 库存-仓库表，一对多反向
         $this->belongsTo(
             'warehouseid',
-            '\Asa\Erp\TbWarehouse',
+            TbWarehouse::class,
             'id',
             [
                 'alias' => 'warehouse',
             ]
         );
 
+        // 库存-商品条目表，一对多反向
         $this->belongsTo(
             'goodsid',
-            '\Asa\Erp\TbGoods',
+            TbGoods::class,
             'id',
             [
                 'alias' => 'goods',
@@ -88,6 +186,15 @@ class TbProductstock extends BaseCompanyModel
         self::$changed_list = [];
     }
 
+    /**
+     * 添加库存日志
+     *
+     * @param $old_number
+     * @param $number
+     * @param $change_type
+     * @param $relationid
+     * @return bool
+     */
     public function addProductstockLog($old_number, $number, $change_type, $relationid)
     {
         $log = new TbProductstockLog();

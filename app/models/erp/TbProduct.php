@@ -13,8 +13,366 @@ use Phalcon\Mvc\Model\ResultsetInterface;
  */
 class TbProduct extends BaseCompanyModel
 {
+    /**
+     *
+     * @var integer
+     */
+    protected $id;
+
+    /**
+     *
+     * @var string
+     */
+    public $productname;
+
+    /**
+     *
+     * @var string
+     */
+    public $wordcode_1;
+
+    /**
+     *
+     * @var string
+     */
+    public $wordcode_2;
+
+    /**
+     *
+     * @var string
+     */
+    public $wordcode_3;
+
+    /**
+     *
+     * @var string
+     */
+    public $wordcode_4;
+
+    /**
+     *
+     * @var string
+     */
+    public $wordcode;
+
+    /**
+     *
+     * @var double
+     */
+    public $wordprice;
+
+    /**
+     *
+     * @var integer
+     */
+    public $wordpricecurrency;
+
+    /**
+     *
+     * @var string
+     */
+    public $gender;
+
+    /**
+     *
+     * @var integer
+     */
+    public $brandid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $brandgroupid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $childbrand;
+
+    /**
+     *
+     * @var integer
+     */
+    public $brandcolor;
+
+    /**
+     *
+     * @var string
+     */
+    public $picture2;
+
+    /**
+     *
+     * @var string
+     */
+    public $picture;
+
+    /**
+     *
+     * @var string
+     */
+    public $ageseason;
+
+    /**
+     *
+     * @var string
+     */
+    public $ageseason_season;
+
+    /**
+     *
+     * @var string
+     */
+    public $ageseason_year;
+
+    /**
+     *
+     * @var string
+     */
+    public $countries;
+
+    /**
+     *
+     * @var integer
+     */
+    public $material;
+
+    /**
+     *
+     * @var integer
+     */
+    public $producttemplate;
+
+    /**
+     *
+     * @var integer
+     */
+    public $spring;
+
+    /**
+     *
+     * @var integer
+     */
+    public $summer;
+
+    /**
+     *
+     * @var integer
+     */
+    public $fall;
+
+    /**
+     *
+     * @var integer
+     */
+    public $winter;
+
+    /**
+     *
+     * @var string
+     */
+    public $laststoragedate;
+
+    /**
+     *
+     * @var string
+     */
+    public $aliases;
+
+    /**
+     *
+     * @var string
+     */
+    public $series;
+
+    /**
+     *
+     * @var string
+     */
+    public $series2;
+
+    /**
+     *
+     * @var string
+     */
+    public $ulnarinch;
+
+    /**
+     *
+     * @var double
+     */
+    public $factoryprice;
+
+    /**
+     *
+     * @var integer
+     */
+    public $factorypricecurrency;
+
+    /**
+     *
+     * @var double
+     */
+    public $nationalfactoryprice;
+
+    /**
+     *
+     * @var integer
+     */
+    public $nationalfactorypricecurrency;
+
+    /**
+     *
+     * @var string
+     */
+    public $product_group;
+
+    /**
+     *
+     * @var integer
+     */
+    public $nationalpricecurrency;
+
+    /**
+     *
+     * @var double
+     */
+    public $nationalprice;
+
+    /**
+     *
+     * @var string
+     */
+    public $memo;
+
+    /**
+     *
+     * @var string
+     */
+    public $sizecontentids;
+
+    /**
+     *
+     * @var integer
+     */
+    public $sizetopid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $companyid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $makestaff;
+
+    /**
+     *
+     * @var string
+     */
+    public $productmemoids;
+
+    /**
+     *
+     * @var string
+     */
+    public $updatetime;
+
+    /**
+     *
+     * @var string
+     */
+    public $maketime;
+
+    /**
+     *
+     * @var string
+     */
+    public $colorname;
+
+    /**
+     *
+     * @var integer
+     */
+    public $saletypeid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $producttypeid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $winterproofingid;
+
+    /**
+     *
+     * @var double
+     */
+    public $cost;
+
+    /**
+     *
+     * @var integer
+     */
+    public $costcurrency;
+
+    /**
+     * 这个已经用 brandcolor 代替了
+     * @var integer
+     */
+    public $color_system_id;
+
+    /**
+     *
+     * @var integer
+     */
+    public $color_id;
+
+    /**
+     *
+     * @var integer
+     */
+    public $second_color_id;
+
+    /**
+     *
+     * @var integer
+     */
+    public $oms_update_status;
+
+    /**
+     *
+     * @var string
+     */
+    public $oms_update_extra;
+
+    /**
+     *
+     * @var string
+     */
+    public $created_at;
+
+    /**
+     *
+     * @var string
+     */
+    public $updated_at;
+
+    // 单例模型
     private static $box;
 
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -23,16 +381,17 @@ class TbProduct extends BaseCompanyModel
         // 商品-公司表，一对多反向
         $this->belongsTo(
             'companyid',
-            '\Asa\Erp\TbCompany',
+            TbCompany::class,
             'id',
             [
                 'alias' => 'company',
             ]
         );
 
+        // 商品-系列，一对多反向
         $this->belongsTo(
             'series',
-            '\Asa\Erp\TbSeries',
+            TbSeries::class,
             'id',
             [
                 'alias' => 'tbseries',
@@ -42,7 +401,7 @@ class TbProduct extends BaseCompanyModel
         // 商品-品牌，一对多反向
         $this->belongsTo(
             'brandid',
-            '\Asa\Erp\TbBrand',
+            TbBrand::class,
             'id',
             [
                 'alias' => 'brand',
@@ -52,7 +411,7 @@ class TbProduct extends BaseCompanyModel
         // 商品-色系，一对多反向
         $this->belongsTo(
             'color_id',
-            '\Asa\Erp\TbColortemplate',
+            TbColortemplate::class,
             'id',
             [
                 'alias' => 'color',
@@ -62,7 +421,7 @@ class TbProduct extends BaseCompanyModel
         // 商品-子品类，一对多反向
         $this->belongsTo(
             'childbrand',
-            '\Asa\Erp\TbBrandgroupchild',
+            TbBrandgroupchild::class,
             'id',
             [
                 'alias' => 'subbrand',
@@ -72,7 +431,7 @@ class TbProduct extends BaseCompanyModel
         // 商品-商品类型，一对多反向
         $this->belongsTo(
             'producttypeid',
-            '\Asa\Erp\TbProductType',
+            TbProductType::class,
             'id',
             [
                 'alias' => 'type',
@@ -82,7 +441,7 @@ class TbProduct extends BaseCompanyModel
         // 商品-出厂价格表，一对多反向
         $this->belongsTo(
             'factorypricecurrency',
-            '\Asa\Erp\TbCurrency',
+            TbCurrency::class,
             'id',
             [
                 'alias' => 'fpcurrency',
@@ -92,7 +451,7 @@ class TbProduct extends BaseCompanyModel
         // 商品-国际零售价格，一对多反向
         $this->belongsTo(
             'wordpricecurrency',
-            '\Asa\Erp\TbCurrency',
+            TbCurrency::class,
             'id',
             [
                 'alias' => 'wpcurrency',
@@ -102,7 +461,7 @@ class TbProduct extends BaseCompanyModel
         // 商品-国内价格，一对多反向
         $this->belongsTo(
             'nationalpricecurrency',
-            '\Asa\Erp\TbCurrency',
+            TbCurrency::class,
             'id',
             [
                 'alias' => 'npcurrency',
@@ -112,7 +471,7 @@ class TbProduct extends BaseCompanyModel
         // 商品-销售属性，一对多反向
         $this->belongsTo(
             'saletypeid',
-            '\Asa\Erp\TbSaleType',
+            TbSaleType::class,
             'id',
             [
                 'alias' => 'saleType',
@@ -122,7 +481,7 @@ class TbProduct extends BaseCompanyModel
         // 商品-销货号表，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbProductcode",
+            TbProductcode::class,
             "productid",
             [
                 'alias' => 'productCode',
@@ -132,7 +491,7 @@ class TbProduct extends BaseCompanyModel
         // 商品-商品尺码描述主表，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbProductSizeProperty",
+            TbProductSizeProperty::class,
             "productid",
             [
                 'alias'      => 'productSizeProperty',
@@ -146,7 +505,7 @@ class TbProduct extends BaseCompanyModel
         // 商品-商品库存表，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbProductstock",
+            TbProductstock::class,
             "productid",
             [
                 'alias'      => 'productstock',
@@ -161,7 +520,7 @@ class TbProduct extends BaseCompanyModel
         // 商品-订单详情表，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbOrderdetails",
+            TbOrderdetails::class,
             "productid",
             [
                 'alias'      => 'orderdetails',
@@ -176,7 +535,7 @@ class TbProduct extends BaseCompanyModel
         // 商品-商品材质表，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbProductMaterial",
+            TbProductMaterial::class,
             "productid",
             [
                 'alias'      => 'productMaterial',
@@ -237,6 +596,7 @@ class TbProduct extends BaseCompanyModel
 
     /**
      * 解绑定同款不同色关系
+     *
      * @return void [type] [description]
      * @throws Exception
      */
@@ -260,6 +620,7 @@ class TbProduct extends BaseCompanyModel
 
     /**
      * 复制同款商品
+     *
      * @param  [type] $brandcolor [description]
      * @return TbProduct [type]             [description]
      * @throws Exception
@@ -320,6 +681,12 @@ class TbProduct extends BaseCompanyModel
         return $product;
     }
 
+    /**
+     * 同步商品材质
+     *
+     * @param $product
+     * @throws \Exception
+     */
     function syncMaterial($product)
     {
         foreach ($this->productMaterial as $row) {
@@ -389,6 +756,12 @@ class TbProduct extends BaseCompanyModel
         ]);
     }
 
+    /**
+     * 获取价格列表
+     *
+     * @return array
+     * @throws \Exception
+     */
     function getPriceList()
     {
         $prices = TbPrice::find([
@@ -405,8 +778,8 @@ class TbProduct extends BaseCompanyModel
         $result = [];
 
         //年代季节是多选，获得最新的年代季节id
-        $temparr = explode(",", $this->ageseason);
-        $ageseasonid = $temparr[0];
+        $tempArr = explode(",", $this->ageseason);
+        $ageseasonid = $tempArr[0];
 
         foreach ($prices as $row) {
             if (isset($hashTable[$row->id]) && $hashTable[$row->id]->price > 0) {

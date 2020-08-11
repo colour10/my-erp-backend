@@ -437,19 +437,19 @@ class TbShoporder extends BaseModel
     public function columnMap()
     {
         return [
-            'id' => 'id',
-            'product_id' => 'product_id',
+            'id'             => 'id',
+            'product_id'     => 'product_id',
             'order_commonid' => 'order_commonid',
-            'product_name' => 'product_name',
-            'price' => 'price',
-            'number' => 'number',
-            'total_price' => 'total_price',
-            'picture' => 'picture',
-            'picture2' => 'picture2',
-            'color_id' => 'color_id',
-            'color_name' => 'color_name',
-            'size_id' => 'size_id',
-            'size_name' => 'size_name',
+            'product_name'   => 'product_name',
+            'price'          => 'price',
+            'number'         => 'number',
+            'total_price'    => 'total_price',
+            'picture'        => 'picture',
+            'picture2'       => 'picture2',
+            'color_id'       => 'color_id',
+            'color_name'     => 'color_name',
+            'size_id'        => 'size_id',
+            'size_name'      => 'size_name',
         ];
     }
 

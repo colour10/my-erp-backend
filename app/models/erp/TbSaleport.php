@@ -2,19 +2,55 @@
 
 namespace Asa\Erp;
 
+use Phalcon\Mvc\Model\ResultsetInterface;
+
 /**
  * 销售端口表
  */
 class TbSaleport extends BaseModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var string
+     */
+    public $name;
+
+    /**
+     *
+     * @var double
+     */
+    public $discount;
+
+    /**
+     *
+     * @var string
+     */
+    public $create_time;
+
+    /**
+     *
+     * @var integer
+     */
+    public $companyid;
+
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
         $this->setSource('tb_saleport');
 
+        // 销售端口表-（销售端口-仓库对应表），一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbSaleportWarehouse",
+            TbSaleportWarehouse::class,
             "saleportid",
             [
                 'alias' => 'saleportWarehouses',
@@ -24,7 +60,7 @@ class TbSaleport extends BaseModel
 
     /**
      * 获取当前销售端口对应的仓库
-     * @return [type] [description]
+     * @return array|ResultsetInterface [type] [description]
      */
     function getWarehouseList()
     {
@@ -35,7 +71,7 @@ class TbSaleport extends BaseModel
 
     /**
      *  获取该销售端口对应的所有库存
-     * @return [type] [description]
+     * @return array|ResultsetInterface [type] [description]
      */
     function getProductstockList()
     {
@@ -46,7 +82,7 @@ class TbSaleport extends BaseModel
 
     /**
      *  获取该销售端口对应的所有商品库存
-     * @return [type] [description]
+     * @return array|mixed [type] [description]
      */
     function getProductList()
     {

@@ -9,6 +9,237 @@ namespace Asa\Erp;
  */
 class TbUser extends BaseModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var string
+     */
+    public $login_name;
+
+    /**
+     *
+     * @var string
+     */
+    public $password;
+
+    /**
+     *
+     * @var string
+     */
+    public $real_name;
+
+    /**
+     *
+     * @var integer
+     */
+    public $departmentid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $companyid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $groupid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $storeid;
+
+    /**
+     *
+     * @var string
+     */
+    public $sex;
+
+    /**
+     *
+     * @var string
+     */
+    public $section;
+
+    /**
+     *
+     * @var string
+     */
+    public $date;
+
+    /**
+     *
+     * @var string
+     */
+    public $phone;
+
+    /**
+     *
+     * @var string
+     */
+    public $mobilephone;
+
+    /**
+     *
+     * @var string
+     */
+    public $e_mail;
+
+    /**
+     *
+     * @var string
+     */
+    public $email_password;
+
+    /**
+     *
+     * @var string
+     */
+    public $memo;
+
+    /**
+     *
+     * @var integer
+     */
+    public $countryid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $departmentid2;
+
+    /**
+     *
+     * @var string
+     */
+    public $address;
+
+    /**
+     *
+     * @var string
+     */
+    public $contactor;
+
+    /**
+     *
+     * @var string
+     */
+    public $leave_date;
+
+    /**
+     *
+     * @var string
+     */
+    public $idno;
+
+    /**
+     *
+     * @var string
+     */
+    public $education;
+
+    /**
+     *
+     * @var string
+     */
+    public $collegemajor;
+
+    /**
+     *
+     * @var string
+     */
+    public $degree;
+
+    /**
+     *
+     * @var string
+     */
+    public $graduatedcollege;
+
+    /**
+     *
+     * @var string
+     */
+    public $stateofmarriage;
+
+    /**
+     *
+     * @var string
+     */
+    public $censusregistration;
+
+    /**
+     *
+     * @var string
+     */
+    public $status;
+
+    /**
+     *
+     * @var string
+     */
+    public $reason;
+
+    /**
+     *
+     * @var string
+     */
+    public $contactorphone;
+
+    /**
+     *
+     * @var string
+     */
+    public $costdisplay;
+
+    /**
+     *
+     * @var string
+     */
+    public $wechat;
+
+    /**
+     *
+     * @var string
+     */
+    public $openid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $saleportid;
+
+    /**
+     *
+     * @var string
+     */
+    public $saleportids;
+
+    /**
+     *
+     * @var integer
+     */
+    public $warehouseid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $priceid;
+
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -17,7 +248,7 @@ class TbUser extends BaseModel
         // 用户表-部门表，一对多反向
         $this->belongsTo(
             'departmentid',
-            '\Asa\Erp\TbDepartment',
+            TbDepartment::class,
             'id',
             [
                 'alias' => 'department',
@@ -27,7 +258,7 @@ class TbUser extends BaseModel
         // 用户表-用户权限表，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbUserPermission",
+            TbUserPermission::class,
             "userid",
             [
                 'alias' => 'userpermissions',
@@ -37,7 +268,7 @@ class TbUser extends BaseModel
         // 用户表-组表，一对多反向
         $this->belongsTo(
             'groupid',
-            '\Asa\Erp\TbGroup',
+            TbGroup::class,
             'id',
             [
                 'alias' => 'group',
@@ -47,16 +278,17 @@ class TbUser extends BaseModel
         // 用户表-组表，一对多反向
         $this->belongsTo(
             'saleportid',
-            '\Asa\Erp\TbSaleport',
+            TbSaleport::class,
             'id',
             [
                 'alias' => 'saleport',
             ]
         );
 
+        // 用户表-公司表，一对多反向
         $this->belongsTo(
             'companyid',
-            '\Asa\Erp\TbCompany',
+            TbCompany::class,
             'id',
             [
                 'alias' => 'company',
@@ -64,6 +296,11 @@ class TbUser extends BaseModel
         );
     }
 
+    /**
+     * 验证规则
+     *
+     * @return array
+     */
     public function getRules()
     {
         $factory = $this->getValidatorFactory();

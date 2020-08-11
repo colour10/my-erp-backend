@@ -11,6 +11,144 @@ use Phalcon\Di;
  */
 class TbRequisition extends BaseCompanyModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var integer
+     */
+    public $feecurrencyid;
+
+    /**
+     *
+     * @var double
+     */
+    public $fee;
+
+    /**
+     *
+     * @var integer
+     */
+    public $apply_staff;
+
+    /**
+     *
+     * @var string
+     */
+    public $apply_date;
+
+    /**
+     *
+     * @var integer
+     */
+    public $turnin_staff;
+
+    /**
+     *
+     * @var string
+     */
+    public $turnin_date;
+
+    /**
+     *
+     * @var integer
+     */
+    public $turnout_staff;
+
+    /**
+     *
+     * @var string
+     */
+    public $turnout_date;
+
+    /**
+     *
+     * @var integer
+     */
+    public $out_id;
+
+    /**
+     *
+     * @var integer
+     */
+    public $in_id;
+
+    /**
+     *
+     * @var string
+     */
+    public $memo;
+
+    /**
+     *
+     * @var integer
+     */
+    public $status;
+
+    /**
+     *
+     * @var string
+     */
+    public $requisitionno;
+
+    /**
+     *
+     * @var integer
+     */
+    public $salesid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $ism;
+
+    /**
+     *
+     * @var integer
+     */
+    public $is_quality;
+
+    /**
+     *
+     * @var integer
+     */
+    public $is_amortized;
+
+    /**
+     *
+     * @var integer
+     */
+    public $expresscomoany;
+
+    /**
+     *
+     * @var string
+     */
+    public $address;
+
+    /**
+     *
+     * @var string
+     */
+    public $markno;
+
+    /**
+     *
+     * @var integer
+     */
+    public $is_return;
+
+    /**
+     *
+     * @var integer
+     */
+    public $companyid;
+
     // 调拨单状态
     // 出库拒绝
     const STATUS_DELIVERY_REJECTION = 1;
@@ -34,7 +172,7 @@ class TbRequisition extends BaseCompanyModel
         // 调拨单-调拨单明细，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbRequisitionDetail",
+            TbRequisitionDetail::class,
             "requisitionid",
             [
                 'alias' => 'requisitionDetail',
@@ -44,7 +182,7 @@ class TbRequisition extends BaseCompanyModel
         // 库存-仓库表，一对多反向
         $this->belongsTo(
             'out_id',
-            '\Asa\Erp\TbWarehouse',
+            TbWarehouse::class,
             'id',
             [
                 'alias' => 'outWarehouse',
@@ -54,7 +192,7 @@ class TbRequisition extends BaseCompanyModel
         // 库存-仓库表，一对多反向
         $this->belongsTo(
             'in_id',
-            '\Asa\Erp\TbWarehouse',
+            TbWarehouse::class,
             'id',
             [
                 'alias' => 'inWarehouse',
@@ -62,6 +200,15 @@ class TbRequisition extends BaseCompanyModel
         );
     }
 
+    /**
+     * 增加调拨单
+     *
+     * @param $outWarehouseId
+     * @param $inWarehouseId
+     * @param $products
+     * @return TbRequisition
+     * @throws \Exception
+     */
     public static function addRequisition($outWarehouseId, $inWarehouseId, $products)
     {
         $di = Di::getDefault();
@@ -433,7 +580,6 @@ class TbRequisition extends BaseCompanyModel
         $result = TbRequisitionDetail::find(
             sprintf("requisitionid=%d", $this->id)
         );
-        //print_r($result->toArray());
         $array = [];
         foreach ($result as $row) {
             $productstock = $row->outProductstock;

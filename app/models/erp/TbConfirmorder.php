@@ -12,6 +12,309 @@ use Phalcon\Mvc\Model\Relation;
  */
 class TbConfirmorder extends BaseModel
 {
+    /**
+     *
+     * @var integer
+     */
+    protected $id;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $companyid;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $status;
+
+    /**
+     *
+     * @var string
+     */
+    protected $orderno;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $supplierid;
+
+    /**
+     *
+     * @var string
+     */
+    protected $makedate;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $makestaff;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $currency;
+
+    /**
+     *
+     * @var double
+     */
+    protected $total;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $isstatus;
+
+    /**
+     *
+     * @var string
+     */
+    protected $memo;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $brandid;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $ageseasonid;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $seasontype;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $auditstaff;
+
+    /**
+     *
+     * @var string
+     */
+    protected $auditdate;
+
+    /**
+     *
+     * @var double
+     */
+    protected $exchangerate;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $finalsupplierid;
+
+    /**
+     *
+     * @var string
+     */
+    protected $flightno;
+
+    /**
+     *
+     * @var string
+     */
+    protected $flightdate;
+
+    /**
+     *
+     * @var string
+     */
+    protected $arrivaldate;
+
+    /**
+     *
+     * @var string
+     */
+    protected $mblno;
+
+    /**
+     *
+     * @var string
+     */
+    protected $hblno;
+
+    /**
+     *
+     * @var string
+     */
+    protected $dispatchport;
+
+    /**
+     *
+     * @var string
+     */
+    protected $deliveryport;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $transcompany;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $isexamination;
+
+    /**
+     *
+     * @var string
+     */
+    protected $examinationresult;
+
+    /**
+     *
+     * @var string
+     */
+    protected $clearancedate;
+
+    /**
+     *
+     * @var string
+     */
+    protected $pickingdate;
+
+    /**
+     *
+     * @var string
+     */
+    protected $motortransportpool;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $warehouseid;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $box_number;
+
+    /**
+     *
+     * @var double
+     */
+    protected $weight;
+
+    /**
+     *
+     * @var double
+     */
+    protected $volume;
+
+    /**
+     *
+     * @var string
+     */
+    protected $issjyh;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $sellerid;
+
+    /**
+     *
+     * @var string
+     */
+    protected $sjyhresult;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $buyerid;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $transporttype;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $paytype;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $property;
+
+    /**
+     *
+     * @var string
+     */
+    protected $payoutpercentage;
+
+    /**
+     *
+     * @var string
+     */
+    protected $pickingaddress;
+
+    /**
+     *
+     * @var double
+     */
+    protected $chargedweight;
+
+    /**
+     *
+     * @var string
+     */
+    protected $paydate;
+
+    /**
+     *
+     * @var string
+     */
+    protected $apickingdate;
+
+    /**
+     *
+     * @var string
+     */
+    protected $aarrivaldate;
+
+    /**
+     *
+     * @var string
+     */
+    protected $invoiceno;
+
+    /**
+     *
+     * @var integer
+     */
+    protected $dd_company;
+
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -20,7 +323,7 @@ class TbConfirmorder extends BaseModel
         // 订单-订单详情，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbConfirmorderdetails",
+            TbConfirmorderdetails::class,
             "confirmorderid",
             [
                 'alias'      => 'confirmorderdetails',

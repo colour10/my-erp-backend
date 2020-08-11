@@ -5,10 +5,88 @@ namespace Asa\Erp;
 use Phalcon\Mvc\Model\Relation;
 
 /**
- * 商品尺码信息
+ * 尺码组
+ *
+ * Class TbSizetop
+ * @package Asa\Erp
  */
 class TbSizetop extends BaseModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_cn;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_en;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_hk;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_fr;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_it;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_sp;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_de;
+
+    /**
+     *
+     * @var string
+     */
+    public $code;
+
+    /**
+     *
+     * @var integer
+     */
+    public $displayindex;
+
+    /**
+     *
+     * @var string
+     */
+    public $created_at;
+
+    /**
+     *
+     * @var string
+     */
+    public $updated_at;
+
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -17,7 +95,7 @@ class TbSizetop extends BaseModel
         // 尺码组-尺码详情，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbSizecontent",
+            TbSizecontent::class,
             "topid",
             [
                 'alias'      => 'sizecontents',
@@ -29,9 +107,10 @@ class TbSizetop extends BaseModel
             ]
         );
 
+        // 尺码组-商品表，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbProduct",
+            TbProduct::class,
             "sizetopid",
             [
                 'alias'      => 'products',
@@ -44,6 +123,11 @@ class TbSizetop extends BaseModel
         );
     }
 
+    /**
+     * 验证信息
+     *
+     * @return array
+     */
     public function getRules()
     {
         $factory = $this->getValidatorFactory();

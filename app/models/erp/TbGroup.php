@@ -6,9 +6,45 @@ use Phalcon\Mvc\Model\Relation;
 
 /**
  * 分组表
+ *
+ * Class TbGroup
+ * @package Asa\Erp
  */
 class TbGroup extends BaseModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var string
+     */
+    public $group_name;
+
+    /**
+     *
+     * @var string
+     */
+    public $group_memo;
+
+    /**
+     *
+     * @var integer
+     */
+    public $companyid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $is_super;
+
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -17,7 +53,7 @@ class TbGroup extends BaseModel
         // 组-权限组关联，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbPermissionGroup",
+            TbPermissionGroup::class,
             "groupid",
             [
                 'alias'      => 'permissionGroups',
@@ -31,7 +67,7 @@ class TbGroup extends BaseModel
         // 组-用户关联，一对多
         $this->hasMany(
             'id',
-            '\Asa\Erp\TbUser',
+            TbUser::class,
             'groupid',
             [
                 'alias'      => 'users',
@@ -44,6 +80,11 @@ class TbGroup extends BaseModel
         );
     }
 
+    /**
+     * 验证规则
+     *
+     * @return array
+     */
     public function getRules()
     {
         $factory = $this->getValidatorFactory();

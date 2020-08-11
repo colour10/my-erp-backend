@@ -3,10 +3,64 @@
 namespace Asa\Erp;
 
 /**
- * 调拨单相关，调拨单明细表
+ * 调拨单明细表
+ *
+ * Class TbRequisitionDetail
+ * @package Asa\Erp
  */
 class TbRequisitionDetail extends BaseCompanyModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var integer
+     */
+    public $requisitionid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $out_productstockid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $in_productstockid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $number;
+
+    /**
+     *
+     * @var string
+     */
+    public $memo;
+
+    /**
+     *
+     * @var integer
+     */
+    public $out_number;
+
+    /**
+     *
+     * @var integer
+     */
+    public $in_number;
+
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -15,7 +69,7 @@ class TbRequisitionDetail extends BaseCompanyModel
         // 库存-调入仓库，一对多反向
         $this->belongsTo(
             'out_productstockid',
-            '\Asa\Erp\TbProductstock',
+            TbProductstock::class,
             'id',
             [
                 'alias' => 'outProductstock',
@@ -25,7 +79,7 @@ class TbRequisitionDetail extends BaseCompanyModel
         // 调拨表-调出仓库，一对多反向
         $this->belongsTo(
             'in_productstockid',
-            '\Asa\Erp\TbProductstock',
+            TbProductstock::class,
             'id',
             [
                 'alias' => 'inProductstock',
@@ -33,6 +87,11 @@ class TbRequisitionDetail extends BaseCompanyModel
         );
     }
 
+    /**
+     * 删除
+     *
+     * @return bool
+     */
     function delete()
     {
         return false;

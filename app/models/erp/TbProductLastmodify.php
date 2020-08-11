@@ -4,9 +4,57 @@ namespace Asa\Erp;
 
 /**
  * 基础资料，最后一次修改产品品牌颜色的统计
+ *
+ * Class TbProductLastmodify
+ * @package Asa\Erp
  */
 class TbProductLastmodify extends BaseModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var integer
+     */
+    public $companyid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $brandid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $brandcolor;
+
+    /**
+     *
+     * @var string
+     */
+    public $colorname;
+
+    /**
+     *
+     * @var string
+     */
+    public $wordcode_3;
+
+    /**
+     *
+     * @var string
+     */
+    public $updated_at;
+
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -15,6 +63,7 @@ class TbProductLastmodify extends BaseModel
 
     /**
      * 当更新tb_product表时，同步更新tb_product_lastmodify表记录
+     *
      * @param int $companyid 公司id
      * @param int $brandid 品牌id
      * @param int $brandcolor 色系id

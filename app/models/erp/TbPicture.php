@@ -7,12 +7,44 @@ namespace Asa\Erp;
  */
 class TbPicture extends BaseModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var string
+     */
+    public $name;
+
+    /**
+     *
+     * @var string
+     */
+    public $filename;
+
+    /**
+     *
+     * @var integer
+     */
+    public $productid;
+
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
         $this->setSource('tb_picture');
     }
 
+    /**
+     * 验证规则
+     *
+     * @return array
+     */
     public function getRules()
     {
         $factory = $this->getValidatorFactory();

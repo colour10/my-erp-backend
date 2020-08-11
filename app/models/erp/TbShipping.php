@@ -4,9 +4,330 @@ namespace Asa\Erp;
 
 /**
  * 发货单主表
+ *
+ * Class TbShipping
+ * @package Asa\Erp
  */
 class TbShipping extends BaseModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var integer
+     */
+    public $companyid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $status;
+
+    /**
+     *
+     * @var string
+     */
+    public $orderno;
+
+    /**
+     *
+     * @var integer
+     */
+    public $supplierid;
+
+    /**
+     *
+     * @var string
+     */
+    public $maketime;
+
+    /**
+     *
+     * @var integer
+     */
+    public $makestaff;
+
+    /**
+     *
+     * @var integer
+     */
+    public $currency;
+
+    /**
+     *
+     * @var double
+     */
+    public $total;
+
+    /**
+     *
+     * @var string
+     */
+    public $memo;
+
+    /**
+     *
+     * @var integer
+     */
+    public $brandid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $ageseason;
+
+    /**
+     *
+     * @var integer
+     */
+    public $seasontype;
+
+    /**
+     *
+     * @var double
+     */
+    public $exchangerate;
+
+    /**
+     *
+     * @var integer
+     */
+    public $finalsupplierid;
+
+    /**
+     *
+     * @var string
+     */
+    public $flightno;
+
+    /**
+     *
+     * @var string
+     */
+    public $flightdate;
+
+    /**
+     *
+     * @var string
+     */
+    public $arrivaldate;
+
+    /**
+     *
+     * @var string
+     */
+    public $mblno;
+
+    /**
+     *
+     * @var string
+     */
+    public $hblno;
+
+    /**
+     *
+     * @var string
+     */
+    public $dispatchport;
+
+    /**
+     *
+     * @var string
+     */
+    public $deliveryport;
+
+    /**
+     *
+     * @var integer
+     */
+    public $transcompany;
+
+    /**
+     *
+     * @var integer
+     */
+    public $isexamination;
+
+    /**
+     *
+     * @var string
+     */
+    public $examinationresult;
+
+    /**
+     *
+     * @var string
+     */
+    public $clearancedate;
+
+    /**
+     *
+     * @var string
+     */
+    public $pickingdate;
+
+    /**
+     *
+     * @var string
+     */
+    public $motortransportpool;
+
+    /**
+     *
+     * @var integer
+     */
+    public $warehouseid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $box_number;
+
+    /**
+     *
+     * @var double
+     */
+    public $weight;
+
+    /**
+     *
+     * @var double
+     */
+    public $volume;
+
+    /**
+     *
+     * @var string
+     */
+    public $issjyh;
+
+    /**
+     *
+     * @var integer
+     */
+    public $sellerid;
+
+    /**
+     *
+     * @var string
+     */
+    public $sjyhresult;
+
+    /**
+     *
+     * @var integer
+     */
+    public $buyerid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $transporttype;
+
+    /**
+     *
+     * @var integer
+     */
+    public $paytype;
+
+    /**
+     *
+     * @var integer
+     */
+    public $property;
+
+    /**
+     *
+     * @var string
+     */
+    public $payoutpercentage;
+
+    /**
+     *
+     * @var string
+     */
+    public $pickingaddress;
+
+    /**
+     *
+     * @var double
+     */
+    public $chargedweight;
+
+    /**
+     *
+     * @var string
+     */
+    public $paydate;
+
+    /**
+     *
+     * @var string
+     */
+    public $apickingdate;
+
+    /**
+     *
+     * @var string
+     */
+    public $aarrivaldate;
+
+    /**
+     *
+     * @var string
+     */
+    public $invoiceno;
+
+    /**
+     *
+     * @var integer
+     */
+    public $dd_company;
+
+    /**
+     *
+     * @var string
+     */
+    public $estimatedate;
+
+    /**
+     *
+     * @var integer
+     */
+    public $bussinesstype;
+
+    /**
+     *
+     * @var string
+     */
+    public $warehousingtime;
+
+    /**
+     *
+     * @var integer
+     */
+    public $warehousingstaff;
+
+    /**
+     *
+     * @var string
+     */
+    public $confirmtime;
+
+    /**
+     *
+     * @var integer
+     */
+    public $confirmstaff;
+
     // 定义订单状态
     // 在途
     const STATUS_WAY = 1;

@@ -9,14 +9,36 @@ namespace Asa\Erp;
  */
 class TbUserPrice extends BaseModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var integer
+     */
+    public $userid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $priceid;
+
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
         $this->setSource('tb_user_price');
 
+        // 用户价格表-价格表, 一对多反向
         $this->belongsTo(
             'priceid',
-            '\Asa\Erp\TbPrice',
+            TbPrice::class,
             'id',
             [
                 'alias' => 'price',

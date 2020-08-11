@@ -11,6 +11,87 @@ use Phalcon\Mvc\Model\Relation;
  */
 class TbColortemplate extends BaseModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_cn;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_en;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_hk;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_fr;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_it;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_sp;
+
+    /**
+     *
+     * @var string
+     */
+    public $name_de;
+
+    /**
+     *
+     * @var string
+     */
+    public $picture;
+
+    /**
+     *
+     * @var string
+     */
+    public $code;
+
+    /**
+     *
+     * @var integer
+     */
+    public $color_system_id;
+
+    /**
+     *
+     * @var string
+     */
+    public $created_at;
+
+    /**
+     *
+     * @var string
+     */
+    public $updated_at;
+
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -19,7 +100,7 @@ class TbColortemplate extends BaseModel
         // 颜色-产品，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbProduct",
+            TbProduct::class,
             "brandcolor",
             [
                 'alias'      => 'products',
@@ -34,7 +115,7 @@ class TbColortemplate extends BaseModel
         // 颜色-销售类型，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbSaleType",
+            TbSaleType::class,
             "colortemplateid",
             [
                 'alias'      => 'saleTypes',
@@ -49,7 +130,7 @@ class TbColortemplate extends BaseModel
         // 颜色-色系，一对多反向
         $this->belongsTo(
             'color_system_id',
-            '\Asa\Erp\TbColorSystem',
+            TbColorSystem::class,
             'id',
             [
                 'alias' => 'colorsystem',

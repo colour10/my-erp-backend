@@ -11,6 +11,147 @@ use Phalcon\Mvc\Model\Relation;
  */
 class TbCompany extends BaseModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var string
+     */
+    public $name;
+
+    /**
+     *
+     * @var integer
+     */
+    public $countryid;
+
+    /**
+     *
+     * @var string
+     */
+    public $memo;
+
+    /**
+     *
+     * @var integer
+     */
+    public $randid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $saleportid;
+
+    /**
+     *
+     * @var integer
+     */
+    public $currencyid;
+
+    /**
+     *
+     * @var string
+     */
+    public $language;
+
+    /**
+     *
+     * @var string
+     */
+    public $address;
+
+    /**
+     *
+     * @var string
+     */
+    public $phone;
+
+    /**
+     *
+     * @var string
+     */
+    public $zipcode;
+
+    /**
+     *
+     * @var string
+     */
+    public $fax;
+
+    /**
+     *
+     * @var string
+     */
+    public $legal;
+
+    /**
+     *
+     * @var string
+     */
+    public $website;
+
+    /**
+     *
+     * @var string
+     */
+    public $registeredcapital;
+
+    /**
+     *
+     * @var string
+     */
+    public $businesslicense;
+
+    /**
+     *
+     * @var string
+     */
+    public $heading;
+
+    /**
+     *
+     * @var integer
+     */
+    public $hkgcost;
+
+    /**
+     *
+     * @var integer
+     */
+    public $eurcost;
+
+    /**
+     *
+     * @var integer
+     */
+    public $chncost;
+
+    /**
+     *
+     * @var integer
+     */
+    public $bdacost;
+
+    /**
+     *
+     * @var integer
+     */
+    public $oms_saleport;
+
+    /**
+     *
+     * @var string
+     */
+    public $oms_warehouseids;
+
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -19,7 +160,7 @@ class TbCompany extends BaseModel
         // 公司-国家，一对多反向
         $this->belongsTo(
             'countryid',
-            '\Asa\Erp\TbCountry',
+            TbCountry::class,
             'id',
             [
                 'alias' => 'country',
@@ -29,7 +170,7 @@ class TbCompany extends BaseModel
         // 公司-部门，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbDepartment",
+            TbDepartment::class,
             "companyid",
             [
                 'alias'      => 'departments',
@@ -44,7 +185,7 @@ class TbCompany extends BaseModel
         // 公司-商品表，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbProduct",
+            TbProduct::class,
             "companyid",
             [
                 'alias'      => 'products',
@@ -56,9 +197,10 @@ class TbCompany extends BaseModel
             ]
         );
 
+        // 公司-销售端口，一对多反向
         $this->belongsTo(
             'saleportid',
-            '\Asa\Erp\TbSaleport',
+            TbSaleport::class,
             'id',
             [
                 'alias' => 'shopSaleport',

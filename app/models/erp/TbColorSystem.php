@@ -11,6 +11,21 @@ use Phalcon\Mvc\Model\Relation;
  */
 class TbColorSystem extends BaseModel
 {
+    /**
+     *
+     * @var integer
+     */
+    public $id;
+
+    /**
+     *
+     * @var string
+     */
+    public $title;
+
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -19,7 +34,7 @@ class TbColorSystem extends BaseModel
         // 色系-颜色表，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbColortemplate",
+            TbColortemplate::class,
             "color_system_id",
             [
                 'alias'      => 'colors',
