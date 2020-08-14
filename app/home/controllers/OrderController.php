@@ -18,11 +18,17 @@ use Phalcon\Paginator\Adapter\Model;
  */
 class OrderController extends BaseController
 {
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
     }
 
+    /**
+     * 分页展示
+     */
     public function pageAction()
     {
         $params = [$this->getSearchCondition()];
@@ -80,6 +86,11 @@ class OrderController extends BaseController
         echo $this->reportJson(["data" => $data, "pagination" => $pageinfo], 200, []);
     }
 
+    /**
+     * 搜索条件
+     *
+     * @return string
+     */
     function getSearchCondition()
     {
         $where = [

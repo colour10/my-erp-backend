@@ -93,6 +93,14 @@ class TbBill extends BaseModel
      */
     public $billtype;
 
+    // 对账单的三种状态
+    // 1、未回款
+    const STATUS_NOT_PAYMENT = 1;
+    // 2、部分回款
+    const STATUS_PART_PAYMENT = 2;
+    // 3、已回款
+    const STATUS_ALL_PAYMENT = 3;
+
     /**
      * 初始化
      */

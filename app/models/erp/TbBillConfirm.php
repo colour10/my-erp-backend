@@ -143,17 +143,22 @@ class TbBillConfirm extends BaseModel
      */
     private function updateBillStatus()
     {
+        // 查找 bill_confirm表中当前 billid 的累计回款值
         $totalAmount = self::sum([
             "column"     => "amount",
             "conditions" => sprintf("billid=%d", $this->billid),
         ]);
 
+        // 判断回款状态
         if ($totalAmount == 0) {
-            $this->bill->status = 1;
+            // 如果金额为0，说明未回款
+            $this->bill->status = TbBill::STATUS_NOT_PAYMENT;
         } else {
-            $this->bill->status = $this->bill->amount <= $totalAmount ? 3 : 2;
+            // 如果回款金额 >= 对账单金额，说明回款完毕；否则是部分回款
+            $this->bill->status = $this->bill->amount <= $totalAmount ? TbBill::STATUS_ALL_PAYMENT : TbBill::STATUS_PART_PAYMENT;
         }
 
+        // 下面这句话只是为了让程序更加健壮
         if ($this->bill->update() === false) {
             throw new \Exception('/11200101/对账单状态更新失败/');
         }

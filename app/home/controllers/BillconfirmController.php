@@ -3,6 +3,7 @@
 namespace Multiple\Home\Controllers;
 
 use Asa\Erp\TbBill;
+use Exception;
 
 /**
  * 对账单回款表控制器
@@ -11,6 +12,9 @@ use Asa\Erp\TbBill;
  */
 class BillconfirmController extends AdminController
 {
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -47,7 +51,7 @@ class BillconfirmController extends AdminController
     {
         $bill = TbBill::findFirstById($billid);
         if ($bill == false || $bill->companyid != $this->companyid) {
-            throw new \Exception('/11190101/非法请求/');
+            throw new Exception('/11190101/非法请求/');
         }
 
         return $bill;

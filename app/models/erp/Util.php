@@ -278,6 +278,11 @@ class Util
         ];
     }
 
+    /**
+     * 公共权限
+     *
+     * @return array
+     */
     public static function getPublicResourse()
     {
         return [
@@ -294,6 +299,7 @@ class Util
 
     /**
      * 把图片转换成对应的分辨率，都是正方形格式的
+     *
      * @param string $filepath 图片的绝对路径，比如：/www/wwwroot/www.jinxiaocun.com/erp/public/upload/product/model4.jpg
      * @param array $resizeArray 分辨率数组，例如[80, 200]，代表裁剪为两组分辨率，分别是80*80、200*200，路径保存在和原来的图片相同的目录下
      * @param string $type
@@ -304,18 +310,19 @@ class Util
     {
         // 逻辑
         // 首先获取图片的参数
-        $pathinfo = pathinfo($filepath);
+        $pathInfo = pathinfo($filepath);
         foreach ($resizeArray as $resize) {
             // 开始处理
             Image::open($filepath)
                 ->resize($resize, $resize)
-                ->save(dirname($filepath) . '/' . $pathinfo['basename'] . '_' . $resize . 'x' . $resize . '.' . $type, $type, $quality);
+                ->save(dirname($filepath) . '/' . $pathInfo['basename'] . '_' . $resize . 'x' . $resize . '.' . $type, $type, $quality);
         }
     }
 
 
     /**
      * 导入带图片格式的excel，即使是每一列含有多张图片也没有问题
+     *
      * @param string $excelFilePath excel文件的绝对路径
      * @param string $pictureSaveFolder 图片保存的文件夹，具体是指/public/upload下面的具体文件夹名称，比如product
      * @return array|bool
@@ -1083,7 +1090,7 @@ class Util
      * @param $url
      * @return bool
      */
-    public static function checkRemoteFileExists($url)
+    public static function isRemoteFileExist($url)
     {
         // 逻辑
         $curl = curl_init($url);
@@ -1113,7 +1120,7 @@ class Util
     public static function getCorrentImgUrl($url)
     {
         // 逻辑
-        if (!self::checkRemoteFileExists($url)) {
+        if (!self::isRemoteFileExist($url)) {
             return '/imgs/none.png';
         }
         // 否则就返回原网址

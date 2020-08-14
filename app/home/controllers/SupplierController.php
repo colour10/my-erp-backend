@@ -9,10 +9,12 @@ namespace Multiple\Home\Controllers;
  */
 class SupplierController extends AdminController
 {
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
-
         $this->setModelName('Asa\\Erp\\TbSupplier');
     }
 }

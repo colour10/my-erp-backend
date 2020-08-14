@@ -11,6 +11,9 @@ use Asa\Erp\TbWarehouseUser;
  */
 class WarehouseUserController extends CadminController
 {
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();

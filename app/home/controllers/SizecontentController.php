@@ -11,6 +11,9 @@ use Asa\Erp\TbSizecontent;
  */
 class SizecontentController extends ZadminController
 {
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -18,6 +21,11 @@ class SizecontentController extends ZadminController
         $this->setModelName('Asa\\Erp\\TbSizecontent');
     }
 
+    /**
+     * 分页
+     *
+     * @return false|string|void
+     */
     function pageAction()
     {
         $result = TbSizecontent::find([

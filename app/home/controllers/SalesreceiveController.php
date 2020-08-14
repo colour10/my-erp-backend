@@ -12,6 +12,9 @@ use Exception;
  */
 class SalesreceiveController extends CadminController
 {
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -19,6 +22,11 @@ class SalesreceiveController extends CadminController
         $this->setModelName('Asa\\Erp\\TbSalesReceive');
     }
 
+    /**
+     * 添加前执行
+     *
+     * @throws Exception
+     */
     function before_add()
     {
         $_POST['makestaff'] = $this->currentUser;

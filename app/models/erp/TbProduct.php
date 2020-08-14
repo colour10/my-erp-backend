@@ -17,7 +17,7 @@ class TbProduct extends BaseCompanyModel
      *
      * @var integer
      */
-    protected $id;
+    public $id;
 
     /**
      *

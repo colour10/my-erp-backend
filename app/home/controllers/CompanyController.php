@@ -12,6 +12,9 @@ use Exception;
  */
 class CompanyController extends AdminController
 {
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();

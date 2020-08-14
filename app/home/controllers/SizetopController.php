@@ -9,6 +9,9 @@ namespace Multiple\Home\Controllers;
  */
 class SizetopController extends ZadminController
 {
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -16,6 +19,9 @@ class SizetopController extends ZadminController
         $this->setModelName('Asa\\Erp\\TbSizetop');
     }
 
+    /**
+     * 分页前调用
+     */
     function before_page()
     {
         $_POST["__orderby"] = "displayindex asc";

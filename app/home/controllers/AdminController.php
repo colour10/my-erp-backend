@@ -242,7 +242,6 @@ class AdminController extends BaseController
      * 删除
      *
      * @return false|string
-     * @throws ReflectionException
      */
     function deleteAction()
     {

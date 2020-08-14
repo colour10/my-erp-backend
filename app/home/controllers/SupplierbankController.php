@@ -9,6 +9,9 @@ namespace Multiple\Home\Controllers;
  */
 class SupplierbankController extends CadminController
 {
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();

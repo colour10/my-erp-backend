@@ -11,6 +11,9 @@ use Asa\Erp\TbSupplierInvoice;
  */
 class SupplierinvoiceController extends CadminController
 {
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();

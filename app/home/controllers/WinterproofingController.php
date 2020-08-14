@@ -9,6 +9,9 @@ namespace Multiple\Home\Controllers;
  */
 class WinterproofingController extends ZadminController
 {
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();

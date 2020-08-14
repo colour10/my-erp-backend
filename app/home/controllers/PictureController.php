@@ -5,6 +5,7 @@ namespace Multiple\Home\Controllers;
 use Asa\Erp\TbPicture;
 use Asa\Erp\TbProduct;
 use Asa\Erp\Util;
+use Exception;
 
 /**
  * 图片表控制器
@@ -13,6 +14,9 @@ use Asa\Erp\Util;
  */
 class PictureController extends AdminController
 {
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -35,18 +39,18 @@ class PictureController extends AdminController
                 foreach ($pictures as $row) {
                     if ($row->delete() == false) {
                         $this->db->rollback();
-                        throw new \Exception("/1001/操作失败/");
+                        throw new Exception("/1001/操作失败/");
                     }
                 }
 
                 $this->db->commit();
                 return $this->success();
             } else {
-                throw new \Exception("/1001/参数错误/");
+                throw new Exception("/1001/参数错误/");
             }
 
         } else {
-            throw new \Exception("/1001/不允许删除/");
+            throw new Exception("/1001/不允许删除/");
         }
     }
 
@@ -58,7 +62,7 @@ class PictureController extends AdminController
 
         foreach ($products as $product) {
             if ($product->companyid != $this->companyid) {
-                throw new \Exception('/11210101/没有权限/');
+                throw new Exception('/11210101/没有权限/');
             }
         }
 

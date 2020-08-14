@@ -405,6 +405,11 @@ class TbShipping extends BaseModel
         ];
     }
 
+    /**
+     * 获取成本列表
+     *
+     * @return array
+     */
     function getCostList()
     {
         $result = [];
@@ -413,14 +418,18 @@ class TbShipping extends BaseModel
         foreach ($this->shippingDetail as $detail) {
             // 状态为3
             if ($this->status == self::STATUS_AMORTIZED) {
+                // 如果已经入库，总价格 = 入库数量 * 成本价
                 $amount = $detail->warehousingnumber * $detail->cost;
             } else {
+                // 如果未入库(状态2：费用未摊销)，总价格 = 入库数量 * 商品价格
                 $amount = $detail->warehousingnumber * $detail->price;
             }
 
+            // 累计总数量和总金额
             $total_number += $detail->warehousingnumber;
             $total_amount += $amount;
 
+            // 按照 key 值 productid 进行汇总
             if (isset($result[$detail->productid])) {
                 $row = $result[$detail->productid];
             } else {
@@ -437,15 +446,15 @@ class TbShipping extends BaseModel
         }
 
         // 如果已经入库了，说明已经分摊过了，直接返回结果
-        if ($this->status == 3) {
+        if ($this->status == self::STATUS_AMORTIZED) {
             return $result;
         }
 
+        // 费用遍历
         foreach ($this->shippingFee as $shippingFee) {
             $fee_amount = round($shippingFee->amount * $shippingFee->exchangerate, 2);
 
             if ($shippingFee->feename->is_amortize == 1) {
-                //print_r($shippingFee->feename->toArray());
                 // 运费是按照数量摊销
                 if ($shippingFee->feename->amortize_type == 1) {
                     // 按数量摊销
@@ -469,7 +478,7 @@ class TbShipping extends BaseModel
             }
         }
 
-
+        // 返回
         return $result;
     }
 

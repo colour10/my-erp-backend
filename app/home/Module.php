@@ -102,6 +102,7 @@ class Module implements ModuleDefinitionInterface
             return $reader;
         });
 
+        // 当前登录用户
         $di->setShared('currentUser', function () use ($config, $di) {
             $session = $di->get('session');
             if ($session->has("user")) {
@@ -113,6 +114,7 @@ class Module implements ModuleDefinitionInterface
             }
         });
 
+        // 当前用户所属公司
         $di->setShared('currentCompany', function () use ($config, $di) {
             $session = $di->get('session');
             if ($session->has("user")) {

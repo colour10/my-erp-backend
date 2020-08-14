@@ -3,6 +3,7 @@
 namespace Multiple\Home\Controllers;
 
 use Asa\Erp\Util;
+use Phalcon\Config\Adapter\Php;
 
 /**
  * 公共控制器
@@ -35,7 +36,7 @@ class CommonController extends BaseController
 
         $this->session->set('language', $language);
 
-        $lang = new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
+        $lang = new Php(APP_PATH . "/app/config/languages/{$language}.php");
         $lang->lang = $language;
 
 
@@ -177,6 +178,9 @@ class CommonController extends BaseController
         echo json_encode($output);
     }
 
+    /**
+     * 公共列表
+     */
     function listAction()
     {
         $maps = [
@@ -267,7 +271,7 @@ class CommonController extends BaseController
     public function gendersAction()
     {
         $language = $this->getDI()->get("session")->get("language");
-        $lang = new \Phalcon\Config\Adapter\Php(APP_PATH . "/app/config/languages/{$language}.php");
+        $lang = new Php(APP_PATH . "/app/config/languages/{$language}.php");
 
         $genders = isset($lang['list']['gender']) ? $lang['list']['gender'] : [];
         return $this->success($genders);

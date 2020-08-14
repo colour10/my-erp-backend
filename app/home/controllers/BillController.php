@@ -14,6 +14,9 @@ use Exception;
  */
 class BillController extends CadminController
 {
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -21,6 +24,12 @@ class BillController extends CadminController
         $this->setModelName('Asa\\Erp\\TbBill');
     }
 
+    /**
+     * 添加逻辑
+     *
+     * @return false|string|void
+     * @throws Exception
+     */
     function addAction()
     {
         $params = $this->request->get('params');
@@ -35,7 +44,8 @@ class BillController extends CadminController
         $this->db->begin();
         try {
             $bill = new TbBill();
-            $bill->status = 1;
+            // 未回款1
+            $bill->status = TbBill::STATUS_NOT_PAYMENT;
             $bill->companyid = $this->companyid;
             $bill->billno = TbCode::getCode($this->companyid, "DZ", date("y"));
             $bill->createtime = date('Y-m-d H:i:s');
