@@ -6,6 +6,8 @@ use Asa\Erp\TbCompany;
 use Asa\Erp\TbMember;
 use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;
+use Phalcon\Mvc\Model\Resultset;
+use Phalcon\Mvc\Phalcon\Mvc\Model;
 
 /**
  * 公司操作类
@@ -82,7 +84,7 @@ class CompanyController extends AdminController
 
     /**
      * 取出虚拟公司的id
-     * @return bool|\Phalcon\Mvc\Model\Resultset|\Phalcon\Mvc\Phalcon\Mvc\Model
+     * @return bool|Resultset|Model
      */
     public function getSuperCoId()
     {

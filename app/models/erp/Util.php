@@ -16,6 +16,8 @@ use Phalcon\Logger\Adapter\File;
 use PHPExcel;
 use PHPExcel_Exception;
 use PHPExcel_Reader_Exception;
+use PHPExcel_Worksheet_Drawing;
+use PHPExcel_Worksheet_MemoryDrawing;
 use PHPMailer\PHPMailer\PHPMailer;
 use ZipArchive;
 
@@ -352,7 +354,7 @@ class Util
         foreach ($AllImages as $drawing) {
             // xls和xlsx对于图片处理有着不同的逻辑，所以要进行分别处理
             // 如果是xls
-            if ($drawing instanceof \PHPExcel_Worksheet_MemoryDrawing) {
+            if ($drawing instanceof PHPExcel_Worksheet_MemoryDrawing) {
                 // 原始文件名
                 $filename = $drawing->getIndexedFilename();
 
@@ -385,7 +387,7 @@ class Util
             }
 
             // 如果是 xlsx
-            if ($drawing instanceof \PHPExcel_Worksheet_Drawing) {
+            if ($drawing instanceof PHPExcel_Worksheet_Drawing) {
                 // 文件完整路径$filename
                 // 类似于：zip:///data/www/xxx/bdac99339.xlsx#xl/media/image2.jpg
                 $filename = $drawing->getPath();
@@ -504,7 +506,7 @@ class Util
                         // 然后把图片列的内容清空
                         $obj->getActiveSheet()->setCellValue($cellName[$j] . ($i + $_row), '');
                         // 处理图片显示位置
-                        $img = new \PHPExcel_Worksheet_Drawing();
+                        $img = new PHPExcel_Worksheet_Drawing();
                         $img->setPath(APP_PATH . '/public/upload/' . $_cell);//写入图片路径
                         $img->setHeight(80);//写入图片高度
                         $img->setWidth(80);//写入图片宽度

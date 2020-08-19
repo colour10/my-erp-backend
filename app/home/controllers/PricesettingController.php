@@ -1,21 +1,23 @@
 <?php
+
 namespace Multiple\Home\Controllers;
 
-use Phalcon\Mvc\Controller;
-use Phalcon\Mvc\View;
 use Asa\Erp\TbPriceSetting;
 
 /**
- * 
+ *
  */
-class PricesettingController extends AdminController {
-    public function initialize() {
-	    parent::initialize();
+class PricesettingController extends AdminController
+{
+    public function initialize()
+    {
+        parent::initialize();
 
-	    $this->setModelName('Asa\\Erp\\TbPriceSetting');
+        $this->setModelName('Asa\\Erp\\TbPriceSetting');
     }
 
-    function before_page() {
+    function before_page()
+    {
         $_POST['companyid'] = $this->companyid;
         $_POST["__orderby"] = "priceid desc,sort_value asc";
     }
@@ -24,7 +26,8 @@ class PricesettingController extends AdminController {
      * 格式化排序字段
      * @return [type] [description]
      */
-    private function getSortValue() {
+    private function getSortValue()
+    {
         $brandid = $this->request->getPost("brandid", "int", 0);
         $brandgroupid = $this->request->getPost("brandgroupid", "int", 0);
         $brandgroupchildid = $this->request->getPost("brandgroupchildid", "int", 0);
@@ -33,20 +36,37 @@ class PricesettingController extends AdminController {
         return sprintf("%012d%012d%012d%012d%012d", $brandid, $brandgroupid, $brandgroupchildid, $ageseasonid, $seriesid);
     }
 
-    function loadAction() {
+    /**
+     * 取出列表
+     *
+     * @return false|string
+     */
+    function loadAction()
+    {
         $result = TbPriceSetting::find([
             sprintf("companyid=%d and (brandid=%d or brandid=0) and (ageseasonid=%d or ageseasonid=0) and discount>0", $this->companyid, $_POST['brandid'], $_POST['ageseasonid']),
-            "order" => "brandgroupchildid asc,producttypeid asc"
+            "order" => "brandgroupchildid asc,producttypeid asc",
         ]);
         return $this->success($result->toArray());
     }
 
-    function addAction() {
+    /**
+     * 添加或修改价格
+     *
+     * @return false|string|void
+     * @throws \Exception
+     */
+    function addAction()
+    {
         $params = $this->request->get('params');
         $submitData = json_decode($params, true);
 
+        // 记录这个值
+        error_log('PricesettingController => addAction => $submitData的结果是： ' . print_r($submitData, true));
+
         $this->db->begin();
-        foreach($submitData['list'] as $row) {
+        foreach ($submitData['list'] as $row) {
+            // 需要查询 6 个唯一
             $setting = TbPriceSetting::findFirst(
                 sprintf(
                     "companyid=%d and brandid=%d and ageseasonid=%d and producttypeid=%d and brandgroupchildid=%d and priceid=%d",
@@ -59,7 +79,7 @@ class PricesettingController extends AdminController {
                 )
             );
 
-            if($setting==false) {
+            if ($setting == false) {
                 $setting = new TbPriceSetting();
                 $setting->companyid = $this->companyid;
             }
@@ -70,9 +90,9 @@ class PricesettingController extends AdminController {
             $setting->priceid = $row["priceid"];
             $setting->discount = $row["discount"];
 
-            if($setting->save()==false) {
+            if ($setting->save() == false) {
                 $this->db->rollback();
-                throw new \Exception("/1001/更是失败/");
+                throw new \Exception("/1001/更新失败/");
             }
         }
         $this->db->commit();

@@ -2,16 +2,21 @@
 
 namespace Multiple\Home\Controllers;
 
+use Asa\Erp\TbUser;
 use Asa\Erp\Util;
 use Phalcon\Config\Adapter\Php;
 
 /**
  * 公共控制器
+ *
  * Class CommonController
  * @package Multiple\Home\Controllers
  */
 class CommonController extends BaseController
 {
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -22,6 +27,11 @@ class CommonController extends BaseController
 
     }
 
+    /**
+     * 获取语言列表
+     *
+     * @return false|string
+     */
     function systemlanguageAction()
     {
         $config = $this->config;
@@ -46,9 +56,15 @@ class CommonController extends BaseController
         $lang["_datetime"] = date("Y-m-d H:i:s");
         $lang["_date"] = date("Y-m-d");
 
+        // 返回
         return $this->success($lang);
     }
 
+    /**
+     * 个人设置
+     *
+     * @return false|string
+     */
     function settingAction()
     {
         $config = $this->config;
@@ -65,7 +81,7 @@ class CommonController extends BaseController
             $setting["_currencyid"] = $auth['company']->currencyid;
         }
 
-        $user = \Asa\Erp\TbUser::findFirstById($this->currentUser);
+        $user = TbUser::findFirstById($this->currentUser);
         if ($user != false) {
             $setting['saleportid'] = $user->saleportid;
             $setting['warehouseid'] = $user->warehouseid;
@@ -268,6 +284,11 @@ class CommonController extends BaseController
 
     }
 
+    /**
+     * 获取性别列表
+     *
+     * @return false|string
+     */
     public function gendersAction()
     {
         $language = $this->getDI()->get("session")->get("language");

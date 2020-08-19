@@ -329,6 +329,13 @@ class TbMemberAddress extends BaseModel
         return $this->last_used_at;
     }
 
+    // 枚举
+    // 是否默认
+    // 默认地址
+    const STATUS_DEFAULT_ADDRESS = 1;
+    // 非默认地址
+    const STATUS_NON_DEFAULT_ADDRESS = 0;
+
     /**
      * 初始化
      */
@@ -340,7 +347,7 @@ class TbMemberAddress extends BaseModel
         // 会员地址表-会员表，一对多反向
         $this->belongsTo(
             'member_id',
-            '\Asa\Erp\TbMember',
+            TbMember::class,
             'id',
             [
                 'alias' => 'member',

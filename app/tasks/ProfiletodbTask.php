@@ -43,10 +43,10 @@ class ProfiletodbTask extends Task
                 // 如果数据库存在此条记录，则无需新增
                 if (!$model = TbLanguage::findFirst("code='" . $key . "'")) {
                     // 开始新增
-                    $tblanguage = new TbLanguage();
-                    $tblanguage->code = $key;
-                    $tblanguage->$name = $value;
-                    if (!$tblanguage->create()) {
+                    $language = new TbLanguage();
+                    $language->code = $key;
+                    $language->$name = $value;
+                    if (!$language->create()) {
                         $this->db->rollback();
                         // 报错
                         return json_encode(['code' => '200', 'messages' => ['ERROR']]);

@@ -54,7 +54,7 @@ class MemberaddressController extends AdminController
             $tel = $this->request->get('mobile', 'int');
             $address = $this->request->get('address', 'string');
             // 默认地址选项，如果当前用户一个地址也没有保存，那么就设置为默认，否则为非默认
-            $is_default = TbMemberAddress::count("member_id=" . $member_id) ? 0 : 1;
+            $is_default = TbMemberAddress::count("member_id=" . $member_id) ? TbMemberAddress::STATUS_NON_DEFAULT_ADDRESS : TbMemberAddress::STATUS_DEFAULT_ADDRESS;
             // 不能为空
             if (!$name || !$tel || !$address) {
                 return $this->error($this->getValidateMessage('fill-out-required-fields'));
@@ -139,6 +139,8 @@ class MemberaddressController extends AdminController
             // 传递错误
             return $this->renderError('make-an-error', $address);
         }
+
+        // 传递至模板
         $this->view->setVars([
             'address' => $address->toArray(),
         ]);
@@ -191,7 +193,7 @@ class MemberaddressController extends AdminController
             $addresses = TbMemberAddress::find("member_id=" . $member['id']);
             foreach ($addresses as $address) {
                 // 非默认
-                $is_default = '0';
+                $is_default = TbMemberAddress::STATUS_NON_DEFAULT_ADDRESS;
                 if (!$address->save(compact('is_default'))) {
                     // 回滚
                     $this->db->rollback();
@@ -199,7 +201,7 @@ class MemberaddressController extends AdminController
                 }
             }
             // 把当前地址改为默认
-            $is_default = '1';
+            $is_default = TbMemberAddress::STATUS_DEFAULT_ADDRESS;
             if (!$addressModel->save(compact('is_default'))) {
                 // 回滚
                 $this->db->rollback();

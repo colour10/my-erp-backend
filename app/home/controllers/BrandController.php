@@ -17,6 +17,9 @@ class BrandController extends ZadminController
 {
     private $orderBy = 'name_en ASC';
 
+    /*
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -24,6 +27,11 @@ class BrandController extends ZadminController
         $this->setModelName('Asa\Erp\TbBrand');
     }
 
+    /**
+     * 搜索条件
+     *
+     * @return string
+     */
     public function getSearchCondition()
     {
         $where = [];
@@ -103,13 +111,15 @@ class BrandController extends ZadminController
 
     /**
      * 获取品牌信息
+     *
+     * @return false|string
      */
     public function infoAction()
     {
         $id = $this->request->getPost('id', 'int', 0);
 
         if (!$brand = TbBrand::findFirst("id=$id")) {
-            return $this->renderError('make-an-error', 'brand-doesnot-exist');
+            return $this->error($this->getValidateMessage('pinpai', 'template', 'notexist'));
         }
         $result = $brand->toArray();
 
@@ -118,6 +128,8 @@ class BrandController extends ZadminController
 
     /**
      * 获取品牌归属的国家集合
+     *
+     * @return false|string
      */
     public function countriesAction()
     {
@@ -167,11 +179,8 @@ class BrandController extends ZadminController
 
             $result = ["code" => 200, "messages" => []];
             if ($brand->update() === false) {
-                $messages = $row->getMessages();
-
-                foreach ($messages as $message) {
-                    $result["messages"][] = $message->getMessage();
-                }
+                echo $this->error($brand);
+                exit();
             }
 
             echo json_encode($result);
@@ -239,6 +248,11 @@ class BrandController extends ZadminController
         return $this->success($setting);
     }
 
+    /**
+     * 获取品牌尺码表
+     *
+     * @return false|string
+     */
     public function sizesAction()
     {
         $brand_id = filter_input(INPUT_POST, 'brand_id', FILTER_VALIDATE_INT);
@@ -258,6 +272,9 @@ class BrandController extends ZadminController
         return $this->success($result);
     }
 
+    /**
+     * 添加尺码
+     */
     public function addSizeAction()
     {
         if ($this->request->isPost()) {
@@ -290,12 +307,17 @@ class BrandController extends ZadminController
         }
     }
 
+    /**
+     * 查看尺码信息
+     *
+     * @return false|string
+     */
     public function sizeInfoAction()
     {
         $id = $this->request->getPost('id', 'int', 0);
 
         if (!$brandSize = TbBrandSize::findFirst("id=$id")) {
-            return $this->renderError('make-an-error', 'brand-size-doesnot-exist');
+            return $this->error($this->getValidateMessage('pinpai', 'template', 'notexist'));
         }
         $result = $brandSize->toArray();
 

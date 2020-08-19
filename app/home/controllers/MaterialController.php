@@ -105,7 +105,7 @@ class MaterialController extends ZadminController
         $id = $this->request->getPost('id', 'int', 0);
 
         if (!$material = TbMaterial::findFirst("id=$id")) {
-            return $this->renderError('make-an-error', 'material-doesnot-exist');
+            return $this->error($this->getValidateMessage('caizhi', 'template', 'notexist'));
         }
         $result = $material->toArray();
 
@@ -122,17 +122,13 @@ class MaterialController extends ZadminController
         if ($id && $materialnoteids) {
             $material = TbMaterial::findFirstById($id);
             if (!$material) {
-                return $this->renderError('make-an-error', 'material-doesnot-exist');
+                return $this->error($this->getValidateMessage('caizhi', 'template', 'notexist'));
             }
             $material->materialnoteids = implode(',', $materialnoteids);
 
             $result = ["code" => 200, "messages" => []];
             if ($material->update() === false) {
-                $messages = $row->getMessages();
-
-                foreach ($messages as $message) {
-                    $result["messages"][] = $message->getMessage();
-                }
+                return $this->error($material);
             }
 
             echo json_encode($result);

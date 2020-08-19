@@ -10,6 +10,7 @@ use Asa\Erp\TbCurrency;
 use Asa\Erp\TbProductSearch;
 use Asa\Erp\TbShoppayment;
 use Asa\Erp\Util;
+use Exception;
 use Multiple\Shop\Controllers\AdminController;
 use Multiple\Shop\Controllers\BrandgroupController;
 use Multiple\Shop\Controllers\BuycarController;
@@ -275,7 +276,7 @@ class Module implements ModuleDefinitionInterface
             // 连接到队列
             $beanstalk = new Beanstalk(
                 [
-                    "host" => "localhost",
+                    "host" => "127.0.0.1",
                     "port" => "11300",
                 ]
             );
@@ -283,7 +284,9 @@ class Module implements ModuleDefinitionInterface
                 if ($beanstalk->connect()) {
                     return $beanstalk;
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
+                // 记录错误信息
+                error_log('Beanstalk开启失败，错误信息是：' . $e->getMessage());
                 // 如果没有连接，返回否
                 return false;
             }
