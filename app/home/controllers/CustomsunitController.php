@@ -10,6 +10,9 @@ namespace Multiple\Home\Controllers;
  */
 class CustomsunitController extends AdminController
 {
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();

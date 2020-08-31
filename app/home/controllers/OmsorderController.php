@@ -22,25 +22,25 @@ class OmsorderController extends ZadminController
     /**
      * 分页之后的操作
      *
-     * @param $datas
+     * @param array $data
      * @return array
      */
-    public function after_page($datas)
+    public function after_page(array $data)
     {
         // 逻辑
         // 把几个数字的状态更换为 string 类型的，人类看得懂的
-        foreach ($datas as $k => $data) {
+        foreach ($data as $k => $data) {
             // 订单状态
-            $datas[$k]['orderStatus'] = $this->getOrderStatus($data['orderStatus']);
+            $data[$k]['orderStatus'] = $this->getOrderStatus($data['orderStatus']);
             // 支付状态
-            $datas[$k]['paymentStatus'] = $this->getPaymentStatus($data['paymentStatus']);
+            $data[$k]['paymentStatus'] = $this->getPaymentStatus($data['paymentStatus']);
             // 是否拒绝发货
-            $datas[$k]['isRefuseText'] = is_null($data['isRefuse']) ? '' : $this->getRefuseStatus($data['isRefuse']);
+            $data[$k]['isRefuseText'] = is_null($data['isRefuse']) ? '' : $this->getRefuseStatus($data['isRefuse']);
             // 是否拒绝快递
-            $datas[$k]['isNoExpressText'] = is_null($data['isNoExpress']) ? '' : $this->getNoExpressStatus($data['isNoExpress']);
+            $data[$k]['isNoExpressText'] = is_null($data['isNoExpress']) ? '' : $this->getNoExpressStatus($data['isNoExpress']);
         }
         // 返回
-        return $datas;
+        return $data;
     }
 
     /**

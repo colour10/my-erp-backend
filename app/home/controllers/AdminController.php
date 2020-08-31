@@ -22,6 +22,9 @@ class AdminController extends BaseController
     protected $list_columns;
     protected $is_language = false;
 
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -471,7 +474,7 @@ class AdminController extends BaseController
      * @param array $data
      * @return array
      */
-    public function after_page($data)
+    public function after_page(array $data)
     {
         // 默认直接返回即可
         return $data;

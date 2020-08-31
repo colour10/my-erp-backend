@@ -28,6 +28,9 @@ class ConfirmorderController extends BaseController
         $this->permission_msg = $this->getValidateMessage('confirmorder-gurd-alert-message');
     }
 
+    /**
+     * 分页逻辑
+     */
     public function pageAction()
     {
         $result = TbConfirmorder::find(
@@ -78,7 +81,7 @@ class ConfirmorderController extends BaseController
             }
 
             $result = [
-                'list'        => $result->toArray(),
+                'list' => $result->toArray(),
                 'productlist' => $productlist,
             ];
 
@@ -176,10 +179,10 @@ class ConfirmorderController extends BaseController
         foreach ($submitData['list'] as $k => $item) {
             // 使用模型更新
             $data = [
-                'price'          => $item['price'],
-                'number'         => $item['number'],
+                'price' => $item['price'],
+                'number' => $item['number'],
                 'orderdetailsid' => $item['orderdetailsid'],
-                'companyid'      => $this->companyid,
+                'companyid' => $this->companyid,
                 'confirmorderid' => $order->id,
             ];
             if (isset($item['id']) && $item['id'] != '') {

@@ -12,16 +12,23 @@ use Phalcon\Paginator\Adapter\Model;
 
 /**
  * 销售单主表
+ *
  * Class SalesController
  * @package Multiple\Home\Controllers
  */
 class SalesController extends BaseController
 {
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
     }
 
+    /**
+     * 分页
+     */
     public function pageAction()
     {
         $params = [$this->getSearchCondition()];
@@ -34,9 +41,9 @@ class SalesController extends BaseController
 
         $paginator = new Model(
             [
-                "data"  => $result,
+                "data" => $result,
                 "limit" => $pageSize,
-                "page"  => $page,
+                "page" => $page,
             ]
         );
 
@@ -50,15 +57,20 @@ class SalesController extends BaseController
 
         $pageinfo = [
             //"previous"      => $pageObject->previous,
-            "current"    => $pageObject->current,
+            "current" => $pageObject->current,
             "totalPages" => $pageObject->total_pages,
             //"next"          => $pageObject->next,
-            "total"      => $pageObject->total_items,
-            "pageSize"   => $pageSize,
+            "total" => $pageObject->total_items,
+            "pageSize" => $pageSize,
         ];
         echo $this->reportJson(["data" => $data, "pagination" => $pageinfo], 200, []);
     }
 
+    /**
+     * 获取搜索条件
+     *
+     * @return string
+     */
     public function getSearchCondition()
     {
         $where = [
@@ -213,14 +225,14 @@ class SalesController extends BaseController
 
                 $detail = $sale->addDetail([
                     'productstockid' => $productstock->id,
-                    'dealprice'      => $item['dealprice'],
-                    'number'         => $item['number'],
-                    'price'          => $item['price'],
-                    'priceid'        => $item['priceid'],
-                    'salesid'        => $sale->id,
-                    'update_time'    => time(),
-                    'cost'           => $productstock->product->cost,
-                    'costcurrency'   => $productstock->product->costcurrency,
+                    'dealprice' => $item['dealprice'],
+                    'number' => $item['number'],
+                    'price' => $item['price'],
+                    'priceid' => $item['priceid'],
+                    'salesid' => $sale->id,
+                    'update_time' => time(),
+                    'cost' => $productstock->product->cost,
+                    'costcurrency' => $productstock->product->costcurrency,
                 ]);
 
                 //本地锁定库存
@@ -242,7 +254,7 @@ class SalesController extends BaseController
                 }
                 $array[$key][] = [
                     "productstockid" => $productstock->id,
-                    "number"         => $row['number'],
+                    "number" => $row['number'],
                 ];
             }
 

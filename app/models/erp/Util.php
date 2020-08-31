@@ -7,7 +7,6 @@ use AlibabaCloud\Client\Exception\ClientException;
 use AlibabaCloud\Client\Exception\ServerException;
 use Endroid\QrCode\QrCode;
 use Gregwar\Image\Image;
-use Illuminate\Support\Optional;
 use Multiple\Home\Controllers\OmsController;
 use Multiple\Home\Controllers\ProductstockController;
 use Phalcon\Di;
@@ -23,6 +22,7 @@ use ZipArchive;
 
 /**
  * 工具类
+ *
  * Class Util
  * @package Asa\Erp
  */
@@ -30,6 +30,7 @@ class Util
 {
     /**
      * 格式化为目录树
+     *
      * @param array $result 结果集
      * @param int $pid 上级id
      * @param int $level 上级等级
@@ -49,18 +50,18 @@ class Util
                 // 并判断是否有子集加不加children
                 if (empty($children)) {
                     $tree[] = [
-                        'id'       => $v['id'],
-                        'label'    => $v['name'],
-                        'memo'     => $v['memo'],
-                        'level'    => $level,
+                        'id' => $v['id'],
+                        'label' => $v['name'],
+                        'memo' => $v['memo'],
+                        'level' => $level,
                         'children' => [],
                     ];
                 } else {
                     $tree[] = [
-                        'id'       => $v['id'],
-                        'label'    => $v['name'],
-                        'memo'     => $v['memo'],
-                        'level'    => $level,
+                        'id' => $v['id'],
+                        'label' => $v['name'],
+                        'memo' => $v['memo'],
+                        'level' => $level,
                         // 新增children
                         'children' => $children,
                     ];
@@ -73,6 +74,7 @@ class Util
 
     /**
      * 格式化为目录树-一维数组
+     *
      * @param array $result 结果集
      * @param int $pid 上级id
      * @param int $level 上级等级
@@ -89,9 +91,9 @@ class Util
             if ($v['up_dp_id'] == $pid) {
                 // 数据合并
                 $tree[] = [
-                    'id'    => $v['id'],
+                    'id' => $v['id'],
                     'label' => str_repeat($str_repeat, $level) . $v['name'],
-                    'memo'  => $v['memo'],
+                    'memo' => $v['memo'],
                     'level' => $level,
                 ];
                 // 继续寻找
@@ -104,6 +106,7 @@ class Util
 
     /**
      * 字符串转为数组
+     *
      * @param $str
      * @return array
      */
@@ -121,6 +124,7 @@ class Util
 
     /**
      * 判断id类字段是否合法
+     *
      * @param $id
      * @return bool
      */
@@ -137,6 +141,7 @@ class Util
 
     /**
      * 字符串位数补全
+     *
      * @param string $str 字符串
      * @param int $length 处理后的位数，默认是6位
      * @return bool|string
@@ -159,6 +164,7 @@ class Util
 
     /**
      * 把货币改成简写
+     *
      * @param $currency
      * @return string
      */
@@ -186,6 +192,7 @@ class Util
 
     /**
      * 判断一个字符串是否为合法网址
+     *
      * @param $str
      * @return bool
      */
@@ -201,6 +208,7 @@ class Util
 
     /**
      * 根据查询到的一个结果集，获取指定列，并生成数组
+     *
      * @param $list
      * @param $column
      * @return array
@@ -216,6 +224,11 @@ class Util
 
     /**
      * 根据查询到的一个结果集，指定两列，生成哈希表
+     *
+     * @param $list
+     * @param $columnKey
+     * @param string $columnValue
+     * @return array
      */
     public static function recordToHashtable($list, $columnKey, $columnValue = '')
     {
@@ -228,6 +241,7 @@ class Util
 
     /**
      * 定义登录用户拥有的权限。
+     *
      * @return array [type] [description]
      */
     public static function getAuthResourse()
@@ -420,6 +434,7 @@ class Util
 
     /**
      * 返回去掉首行，并且重新组合的数组
+     *
      * @param $array
      * @return array|bool
      */
@@ -440,6 +455,7 @@ class Util
 
     /**
      * excel导出功能，带图片
+     *
      * @param array $title
      * @param array $data
      * @param string $fileName
@@ -476,7 +492,7 @@ class Util
             // $_row++;
             $i = 0;
             // 设置列标题
-            foreach ($title AS $v) {
+            foreach ($title as $v) {
                 $obj->setActiveSheetIndex(0)->setCellValue($cellName[$i] . $_row, $v);
                 $i++;
             }

@@ -59,14 +59,17 @@ class BrandrateController extends AdminController
                     throw new Exception("/1002/添加品牌倍率失败/");
                 }
             }
-            $this->db->commit();
-            return $this->success();
+
         } catch (Exception $e) {
             // 记录错误日志
             error_log('添加出错了，具体错误为：' . print_r($e->getMessage(), true));
             $this->db->rollback();
             throw new Exception($this->getValidateMessage('data-exists'));
         }
+
+        // 成功则提交
+        $this->db->commit();
+        return $this->success();
     }
 
     function before_page()

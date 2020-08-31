@@ -109,15 +109,15 @@ class TbProductstock extends BaseCompanyModel
     public $sales_number;
 
     // 常量列表
-    const SALES                     = 1; //销售
-    const REQUISITION_IN            = 2; //调拨入库
-    const REQUISITION_OUT           = 3; //调拨出库
-    const WAREHOSING                = 4; //入库
-    const DEFECTIVE                 = 5; //残次品入库
-    const REQUISITION_PRE_IN        = 6; //在途，入库
+    const SALES = 1; //销售
+    const REQUISITION_IN = 2; //调拨入库
+    const REQUISITION_OUT = 3; //调拨出库
+    const WAREHOSING = 4; //入库
+    const DEFECTIVE = 5; //残次品入库
+    const REQUISITION_PRE_IN = 6; //在途，入库
     const REQUISITION_PRE_IN_CANCEL = 7; //
-    const REQUISITION_IN_EXECUTE    = 8;
-    const REQUISITION               = 9;
+    const REQUISITION_IN_EXECUTE = 8;
+    const REQUISITION = 9;
 
     //库存变动的列表
     private static $changed_list = [];
@@ -279,7 +279,7 @@ class TbProductstock extends BaseCompanyModel
     }
 
     /**
-     * 预入库库存转入库库存，涉及到库存的变动
+     * 增加库存 - 预入库库存转入库库存，涉及到库存的变动
      *
      * @param int $number
      * @param string $change_type
@@ -311,7 +311,7 @@ class TbProductstock extends BaseCompanyModel
     }
 
     /**
-     * 预出库库存出库，涉及到库存的变动
+     * 减少库存 - 预出库库存出库，涉及到库存的变动
      *
      * @param int $number
      * @param string $change_type
@@ -611,7 +611,7 @@ class TbProductstock extends BaseCompanyModel
             if ($productstock == false) {
                 //创建库存记录
                 $productstock = TbProductstock::initStock([
-                    "goods"       => $goods,
+                    "goods" => $goods,
                     "warehouseid" => $warehouseid,
                 ]);
             }

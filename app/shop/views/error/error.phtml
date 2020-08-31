@@ -32,10 +32,10 @@
         <div class="row margin-bottom-40">
             <!-- BEGIN CONTENT -->
             <div class="col-md-12 col-sm-12">
-                <h1><?php echo $title; ?></h1>
+                <h1><?php echo $title ?? 'Error'; ?></h1>
                 <div class="shopping-cart-page">
                     <div class="shopping-cart-data clearfix">
-                        <p><?php echo $message; ?></p>
+                        <p><?php echo $message ?? 'Unknown error'; ?></p>
                     </div>
                 </div>
             </div>

@@ -12,6 +12,9 @@ use Exception;
  */
 class CountryController extends ZadminController
 {
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();

@@ -7,6 +7,9 @@ namespace Multiple\Home\Controllers;
  */
 class BrandgroupchildController extends ZadminController
 {
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -14,6 +17,9 @@ class BrandgroupchildController extends ZadminController
         $this->setModelName('Asa\\Erp\\TbBrandgroupchild');
     }
 
+    /**
+     * 分页前
+     */
     function before_page()
     {
         $_POST["__orderby"] = "displayindex asc";

@@ -12,6 +12,9 @@ use Exception;
  */
 class ColorsystemController extends ZadminController
 {
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         parent::initialize();
@@ -27,7 +30,7 @@ class ColorsystemController extends ZadminController
         // 名称
         if (TbColorSystem::findFirst([
             'conditions' => 'title = :title:',
-            'bind'       => [
+            'bind' => [
                 'title' => $this->request->getPost('title'),
             ],
         ])) {

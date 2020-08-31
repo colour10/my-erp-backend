@@ -87,6 +87,19 @@ class TbOrderPayment extends BaseModel
      */
     public $memo;
 
+    // 添加枚举
+    // 付款状态
+    // 未付款
+    const STATUS_UNPAID = 0;
+    // 已付款
+    const STATUS_PAID = 1;
+
+    // 付款类型
+    // 定金
+    const TYPE_DEPOSIT = 1;
+    // 货款
+    const TYPE_GOODS = 2;
+
     /**
      * 初始化
      */

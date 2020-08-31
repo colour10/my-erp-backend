@@ -2,6 +2,7 @@
 
 namespace Multiple\Home\Controllers;
 
+use Asa\Erp\Sql;
 use Asa\Erp\TbBrand;
 use Asa\Erp\TbBrandSize;
 use Asa\Erp\TbCountry;
@@ -44,21 +45,21 @@ class BrandController extends ZadminController
         $countryid = filter_input(INPUT_POST, 'countryid', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
         if ($countryid) {
             $countryid = implode(',', $countryid);
-            $where[] = \Asa\Erp\Sql::isMatch('countryid', $countryid);
+            $where[] = Sql::isMatch('countryid', $countryid);
         }
 
         return implode(' and ', $where);
     }
 
+    /**
+     * 分页前调用
+     */
     public function before_page()
     {
         $sort = filter_input(INPUT_POST, 'sort');
         $order = filter_input(INPUT_POST, 'order');
         if ($sort && $order) {
             switch ($order) {
-                case 'ascending':
-                    $orderMethod = ' asc';
-                    break;
                 case 'descending':
                     $orderMethod = ' desc';
                     break;
@@ -84,9 +85,9 @@ class BrandController extends ZadminController
 
         $paginator = new PaginatorModel(
             [
-                "data"  => $result,
+                "data" => $result,
                 "limit" => $pageSize,
-                "page"  => $page,
+                "page" => $page,
             ]
         );
 
@@ -101,10 +102,10 @@ class BrandController extends ZadminController
         }
 
         $pageinfo = [
-            "current"    => $pageObject->current,
+            "current" => $pageObject->current,
             "totalPages" => $pageObject->total_pages,
-            "total"      => $pageObject->total_items,
-            "pageSize"   => $pageSize,
+            "total" => $pageObject->total_items,
+            "pageSize" => $pageSize,
         ];
         echo $this->reportJson(["data" => $data, "pagination" => $pageinfo], 200, []);
     }
@@ -155,7 +156,7 @@ class BrandController extends ZadminController
                 $title = $country->name_en;
             }
             $result[] = [
-                'id'    => (int)$country->id,
+                'id' => (int)$country->id,
                 'title' => $title,
             ];
         }
@@ -193,6 +194,8 @@ class BrandController extends ZadminController
 
     /**
      * 获取品牌国际码长度设置
+     *
+     * @return false|string
      */
     public function worldcodeSettingAction()
     {
