@@ -996,6 +996,9 @@ return [
     'shengchengfahuodansimple'                         => '生成发货单(简化版)',
     'menu-9-10'                                        => '发货入库',
     'simple-order'                                     => '普通订单',
+    'picture-list'                                     => '主图列表',
+    'picture2-list'                                    => '副图列表',
+    'download'                                         => '下载',
 
     'template' =>
         [

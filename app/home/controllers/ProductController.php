@@ -110,6 +110,62 @@ class ProductController extends CadminController
     }
 
     /**
+     * 根据国际码请求所有的记录，包含所有的公司
+     * 分页逻辑
+     */
+    function wordcodepageAction()
+    {
+        $result = TbProduct::find([
+            'conditions' => 'wordcode = :wordcode:',
+            'bind'       => [
+                'wordcode' => trim($this->request->getPost('wordcode')),
+            ],
+        ]);
+
+        $page = $this->request->getPost("page", "int", 1);
+        $pageSize = $this->request->getPost("pageSize", "int", 20);
+
+        $paginator = new Model(
+            [
+                "data"  => $result,
+                "limit" => $pageSize,
+                "page"  => $page,
+            ]
+        );
+
+        // Get the paginated results
+        $pageObject = $paginator->getPaginate();
+
+        $data = [];
+        foreach ($pageObject->items as $row) {
+            $rowData = $row->toArray();
+            $rowData['name'] = $row->getName();
+            $rowData['season'] = $row->getSeason();
+            $rowData['worldcode'] = $row->getWorldCode();
+            $rowData['type'] = $row->getType();
+            $rowData['fpCurrencyCode'] = $row->getFactoryPriceCurrencyLabel();
+            $rowData['times'] = $row->getTimes();
+            $rowData['wpCurrencyCode'] = $row->getWordPriceCurrencyLabel();
+            $rowData['discountRate'] = $row->getDiscountRate();
+            $rowData['npCurrencyCode'] = $row->getNationalPriceCurrencyLabel();
+            $rowData['saleType'] = $row->getSaleType();
+            $rowData['colors'] = $row->getColors();
+            $rowData['seriesTitle'] = $row->getSeries();
+            $data[] = $rowData;
+        }
+
+        $pageinfo = [
+            "current"    => $pageObject->current,
+            "totalPages" => $pageObject->total_pages,
+            "total"      => $pageObject->total_items,
+            "pageSize"   => $pageSize,
+        ];
+
+        // 返回
+        echo $this->reportJson(["data" => $data, "pagination" => $pageinfo], 200, []);
+    }
+
+    /**
      * 新建商品，需要和 OMS 同步
      *
      * @return false|string|void

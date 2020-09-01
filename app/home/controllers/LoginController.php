@@ -43,8 +43,8 @@ class LoginController extends Controller
                     // 'actions'     => $group->getActionList()->toArray(),
                     // 'permissions' => $group->getPermissionList()->toArray(),
                     // 新的
-                    'actions'     => $user->getActionList()->toArray(),
-                    'permissions' => $user->getPermissionList()->toArray(),
+                    'actions'     => !is_array($user->getActionList()) ? $user->getActionList()->toArray() : $user->getActionList(),
+                    'permissions' => !is_array($user->getPermissionList()) ? $user->getPermissionList()->toArray() : $user->getPermissionList(),
                     "language"    => $language,
                 ]);
 

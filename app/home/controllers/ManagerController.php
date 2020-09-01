@@ -16,6 +16,7 @@ use Asa\Erp\TbProduct;
 use Asa\Erp\TbSeries;
 use Asa\Erp\TbShoppayment;
 use Asa\Erp\TbUser;
+use Asa\Erp\TbUserPermission;
 use Asa\Erp\Util;
 use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;
@@ -162,7 +163,7 @@ class ManagerController extends AdminController
             // 添加默认部门
             // 分割为数组
             // 默认departmentid为null
-            $departmentid = NULL;
+            $departmentid = null;
             foreach (explode(',', $department) as $k => $v) {
                 if (TbDepartment::findFirst("name='$v' AND companyid=$companyid and up_dp_id=0")) {
                     $this->db->rollback();
@@ -198,6 +199,9 @@ class ManagerController extends AdminController
                 return $this->error('shop商城用户名创建失败');
             }
 
+            // 取出 user_id
+            $userId = $userModel->id;
+
             // 给所属的权限组添加权限
             // 管理员组所属的权限是所有
             $permissions = TbPermission::find("is_only_superadmin=0");
@@ -209,13 +213,31 @@ class ManagerController extends AdminController
                     return $this->error('原有的权限删除失败');
                 }
             }
+
+            $ups = TbUserPermission::find("userid=$userId");
+            foreach ($ups as $up) {
+                if (!$up->delete()) {
+                    $this->db->rollback();
+                    return $this->error('原有的用户权限删除失败');
+                }
+            }
             // 新增权限
             foreach ($permissions as $permission) {
-                $pgmodel = new TbPermissionGroup();
+                $pgModel = new TbPermissionGroup();
                 $data = ['groupid' => $groupid, 'permissionid' => $permission->id];
-                if (!$pgmodel->create($data)) {
+                if (!$pgModel->create($data)) {
                     $this->db->rollback();
                     return $this->error('权限创建失败');
+                }
+
+                // 再把这个管理员的权限全部添加到 user_permission 表
+                $model = new TbUserPermission();
+                $model->userid = $userModel->id;
+                $model->groupid = $groupid;
+                $model->permissionid = $permission->id;
+                if (!$model->save()) {
+                    $this->db->rollback();
+                    return $this->error('用户权限创建失败');
                 }
             }
 
