@@ -170,8 +170,7 @@ class Module implements ModuleDefinitionInterface
             $session = $di->get('session');
             if ($session->has("user")) {
                 // Retrieve its value
-                $user = $session->get("user");
-                return $user;
+                return $session->get("user");
             } else {
                 return false;
             }
@@ -190,6 +189,7 @@ class Module implements ModuleDefinitionInterface
             }
         );
 
+        // 权限
         $di->set("acl", function () use ($config, $di) {
             $session = $di->get('session');
             $acl = $session->get("acl");

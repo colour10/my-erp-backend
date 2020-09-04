@@ -88,12 +88,23 @@ try {
         }
     };
 
+    // 增加临时数据库
+    $di->set('tpk', function () use ($config) {
+        return new DbAdapter([
+            'host'     => $config->tpk->host,
+            'username' => $config->tpk->username,
+            'password' => $config->tpk->password,
+            'dbname'   => $config->tpk->dbname,
+        ]);
+    });
+
+    // 路由规则
     $di->set("router", function () use ($config, $di) {
         $router = new Router();
 
         $router->setDefaultModule("home");
 
-        //ERP系统路由规则
+        // ERP系统路由规则
         $router->add(
             "/",
             [

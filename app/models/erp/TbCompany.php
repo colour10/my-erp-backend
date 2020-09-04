@@ -206,5 +206,15 @@ class TbCompany extends BaseModel
                 'alias' => 'shopSaleport',
             ]
         );
+
+        // 公司-仓库表，一对多
+        $this->hasMany(
+            "id",
+            TbWarehouse::class,
+            "companyid",
+            [
+                'alias' => 'warehouses',
+            ]
+        );
     }
 }

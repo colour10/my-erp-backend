@@ -37,4 +37,5 @@ class WarehouseController extends CadminController
 
         echo $this->success($array);
     }
+
 }

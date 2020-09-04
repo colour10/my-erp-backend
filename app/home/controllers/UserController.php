@@ -422,4 +422,29 @@ class UserController extends CadminController
             }
         }
     }
+
+    /**
+     * 获取当前用户的所有仓库列表
+     *
+     * @return false|string
+     */
+    public function warehousesAction()
+    {
+        // 逻辑
+        // 不存在，返回空
+        $params = $this->dispatcher->getParams();
+        if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
+            // 传递错误
+            return $this->success();
+        }
+
+        // 赋值
+        $id = $params[0];
+        // 判断是否存在
+        if (!$id || (!$user = TbUser::findFirstById($id))) {
+            return $this->success();
+        }
+        // 否则返回所有的仓库数据
+        return $this->success($user->company->warehouses);
+    }
 }

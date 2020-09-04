@@ -50,6 +50,7 @@ class PermissionController extends ZadminController
 
     /**
      * 获取权限目录树
+     * 特别说明：权限理论上无限级，但是因为前段部分页面绑定了二级分类的名字，而提交的时候，如果当前分类下还有子分类，那么发送过来的 keys 只能包含它的下级分类的id，这样的话就会影响菜单的正常显示了。
      * @return false|string
      */
     public function treeAction()

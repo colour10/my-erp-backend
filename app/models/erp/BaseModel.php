@@ -48,6 +48,13 @@ class BaseModel extends Model
     {
     }
 
+    /**
+     * 根据 id 读取
+     *
+     * @param $idstring
+     * @param $column
+     * @return array|Model\ResultsetInterface
+     */
     public static function findByIdString($idstring, $column)
     {
         if (is_array($idstring)) {

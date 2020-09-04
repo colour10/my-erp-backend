@@ -50,18 +50,20 @@ class Util
                 // 并判断是否有子集加不加children
                 if (empty($children)) {
                     $tree[] = [
-                        'id' => $v['id'],
-                        'label' => $v['name'],
-                        'memo' => $v['memo'],
-                        'level' => $level,
+                        'id'       => $v['id'],
+                        'label'    => $v['name'],
+                        'memo'     => $v['memo'],
+                        'level'    => $level,
+                        'pid'      => $pid,
                         'children' => [],
                     ];
                 } else {
                     $tree[] = [
-                        'id' => $v['id'],
-                        'label' => $v['name'],
-                        'memo' => $v['memo'],
-                        'level' => $level,
+                        'id'       => $v['id'],
+                        'label'    => $v['name'],
+                        'memo'     => $v['memo'],
+                        'level'    => $level,
+                        'pid'      => $pid,
                         // 新增children
                         'children' => $children,
                     ];
@@ -91,9 +93,9 @@ class Util
             if ($v['up_dp_id'] == $pid) {
                 // 数据合并
                 $tree[] = [
-                    'id' => $v['id'],
+                    'id'    => $v['id'],
                     'label' => str_repeat($str_repeat, $level) . $v['name'],
-                    'memo' => $v['memo'],
+                    'memo'  => $v['memo'],
                     'level' => $level,
                 ];
                 // 继续寻找

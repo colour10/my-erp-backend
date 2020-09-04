@@ -1774,9 +1774,15 @@ class ProductController extends CadminController
         return $this->success($product->getName());
     }
 
+    /**
+     * 添加尺码组
+     *
+     * @return false|string
+     */
     public function addSizeAction()
     {
         if ($this->request->isPost()) {
+            // 验证
             $brand_id = filter_input(INPUT_POST, 'brand_id', FILTER_VALIDATE_INT);
             $brandgroup_id = filter_input(INPUT_POST, 'brandgroup_id', FILTER_VALIDATE_INT);
             $brandgroupchild_id = filter_input(INPUT_POST, 'brandgroupchild_id', FILTER_VALIDATE_INT);
@@ -1785,12 +1791,14 @@ class ProductController extends CadminController
             $name_en = filter_input(INPUT_POST, 'name_en');
             $sizes = filter_input(INPUT_POST, 'sizes', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
 
+            // 尺码组
             $sizetop = new TbSizetop;
             $sizetop->name_cn = $name_en;
             $sizetop->name_en = $name_en;
             $sizetop->displayindex = 100;
             $sizetop->create();
 
+            // 尺码明细
             foreach ($sizes as $key => $size) {
                 $sizecontent = new TbSizecontent;
 
@@ -1801,6 +1809,7 @@ class ProductController extends CadminController
                 $sizecontent->create();
             }
 
+            // 品牌尺码表
             $brandSize = new TbBrandSize;
 
             $brandSize->brand_id = $brand_id;

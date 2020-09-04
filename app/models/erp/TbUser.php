@@ -294,6 +294,19 @@ class TbUser extends BaseModel
                 'alias' => 'company',
             ]
         );
+
+        // 用户表-价格表，多对多
+        $this->hasManyToMany(
+            'id',
+            TbUserPrice::class,
+            'userid',
+            'priceid',
+            TbPrice::class,
+            'id',
+            [
+                'alias' => 'prices',
+            ]
+        );
     }
 
     /**
