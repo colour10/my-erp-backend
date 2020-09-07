@@ -275,7 +275,7 @@ class TbUser extends BaseModel
             ]
         );
 
-        // 用户表-组表，一对多反向
+        // 用户表-默认销售端口，一对多反向
         $this->belongsTo(
             'saleportid',
             TbSaleport::class,
@@ -305,6 +305,19 @@ class TbUser extends BaseModel
             'id',
             [
                 'alias' => 'prices',
+            ]
+        );
+
+        // 用户表-仓库表，多对多
+        $this->hasManyToMany(
+            'id',
+            TbWarehouseUser::class,
+            'userid',
+            'warehouseid',
+            TbWarehouse::class,
+            'id',
+            [
+                'alias' => 'warehouses',
             ]
         );
     }
@@ -403,4 +416,5 @@ class TbUser extends BaseModel
 
         return TbPermission::findByIdString($id_array, "id");
     }
+
 }

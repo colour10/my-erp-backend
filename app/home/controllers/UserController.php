@@ -6,6 +6,8 @@ use Asa\Erp\TbPermissionGroup;
 use Asa\Erp\TbSaleport;
 use Asa\Erp\TbUser;
 use Asa\Erp\TbUserPermission;
+use Asa\Erp\TbWarehouse;
+use Asa\Erp\TbWarehouseUser;
 use Exception;
 
 /**
@@ -167,7 +169,7 @@ class UserController extends CadminController
     function currentsaleportlistAction()
     {
         // 必须存在userId
-        if (!$userId = $this->request->getPost('userId')) {
+        if (!$userId = $this->request->get('userId')) {
             return $this->error($this->di->get("staticReader")->label('make-an-error'));
         }
 
@@ -195,6 +197,34 @@ class UserController extends CadminController
             sprintf("id in (%s)", $user_array['saleportids'])
         );
         return $this->success($result->toArray());
+    }
+
+    /**
+     * 获取某个用户的价格列表，这个用户必须是当前公司的才能操作
+     *
+     * @return false|string [type] [description]
+     */
+    function currentuserpricelistAction()
+    {
+        // 必须存在userId
+        if (!$userId = $this->request->get('userId')) {
+            return $this->error($this->di->get("staticReader")->label('make-an-error'));
+        }
+
+        // 查找
+        // 如果不存在，返回空
+        if (!$user = TbUser::findFirst([
+            'conditions' => 'id = :userId: and companyid = :companyid:',
+            'bind'       => [
+                'userId'    => $userId,
+                'companyid' => $this->companyid,
+            ],
+        ])) {
+            return $this->success();
+        }
+
+        // 存在则继续处理
+        return $this->success($user->prices);
     }
 
     /**
@@ -424,27 +454,46 @@ class UserController extends CadminController
     }
 
     /**
-     * 获取当前用户的所有仓库列表
+     * 获取登录用户所属公司的所有仓库列表
      *
      * @return false|string
      */
     public function warehousesAction()
     {
         // 逻辑
-        // 不存在，返回空
-        $params = $this->dispatcher->getParams();
-        if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
-            // 传递错误
-            return $this->success();
-        }
+        return $this->success(TbUser::findFirstById($this->currentUser)->company->warehouses);
+    }
 
-        // 赋值
-        $id = $params[0];
-        // 判断是否存在
-        if (!$id || (!$user = TbUser::findFirstById($id))) {
-            return $this->success();
+    /**
+     * 获取当前用户所属公司的所有仓库列表
+     *
+     * @return false|string
+     */
+    public function currentwarehousesAction()
+    {
+        // 逻辑
+        // 查找 $user->warehouses 其中 warehouseroleid=2的
+        $result = [];
+        foreach (TbWarehouseUser::find([
+            'conditions' => 'userid=:userId: AND companyid = :companyid: AND warehouseroleid = ' . TbWarehouseUser::ROLE_SELLER,
+            'bind'       => [
+                'userId'    => $this->request->get('userId'),
+                'companyid' => $this->currentCompany,
+            ],
+        ]) as $data) {
+            $result[] = $data->warehouse->toArray();
         }
-        // 否则返回所有的仓库数据
-        return $this->success($user->company->warehouses);
+        // 最终返回
+        return $this->success($result);
+    }
+
+    /**
+     * 获取登录用户所属公司的销售端口列表
+     *
+     * @return false|string
+     */
+    public function saleportsAction()
+    {
+        return $this->success(TbUser::findFirstById($this->currentUser)->company->saleports);
     }
 }

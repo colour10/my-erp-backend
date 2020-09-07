@@ -207,6 +207,16 @@ class TbCompany extends BaseModel
             ]
         );
 
+        // 另外一种情况：公司-销售端口，一对多
+        $this->hasMany(
+            'id',
+            TbSaleport::class,
+            'companyid',
+            [
+                'alias' => 'saleports',
+            ]
+        );
+
         // 公司-仓库表，一对多
         $this->hasMany(
             "id",
