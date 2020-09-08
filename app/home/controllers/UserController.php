@@ -6,7 +6,6 @@ use Asa\Erp\TbPermissionGroup;
 use Asa\Erp\TbSaleport;
 use Asa\Erp\TbUser;
 use Asa\Erp\TbUserPermission;
-use Asa\Erp\TbWarehouse;
 use Asa\Erp\TbWarehouseUser;
 use Exception;
 
@@ -166,7 +165,7 @@ class UserController extends CadminController
      *
      * @return false|string [type] [description]
      */
-    function currentsaleportlistAction()
+    function saleportsAction()
     {
         // 必须存在userId
         if (!$userId = $this->request->get('userId')) {
@@ -204,7 +203,7 @@ class UserController extends CadminController
      *
      * @return false|string [type] [description]
      */
-    function currentuserpricelistAction()
+    function pricesAction()
     {
         // 必须存在userId
         if (!$userId = $this->request->get('userId')) {
@@ -234,8 +233,6 @@ class UserController extends CadminController
      */
     function settingAction()
     {
-        return $this->success($this->currentUser);
-
         $user = TbUser::findFirstById($this->currentUser);
         if ($user != false) {
             $user->saleportid = $_POST['saleportid'];
@@ -377,7 +374,7 @@ class UserController extends CadminController
                 }
 
                 foreach ($keys as $permissionid) {
-                    // 如果 $permissionid 为空，说明用户没有分配任何权限，那么就设置 permissionid 为0
+                    // 如果 $permissionid 为空，说明用户没有分配任何权限，那么就设置 permissionid 为 0
                     $userPermission = new TbUserPermission();
                     $userPermission->userid = $userId;
                     $userPermission->groupid = $user->groupid;
@@ -454,22 +451,11 @@ class UserController extends CadminController
     }
 
     /**
-     * 获取登录用户所属公司的所有仓库列表
+     * 获取当前用户的所有仓库列表
      *
      * @return false|string
      */
     public function warehousesAction()
-    {
-        // 逻辑
-        return $this->success(TbUser::findFirstById($this->currentUser)->company->warehouses);
-    }
-
-    /**
-     * 获取当前用户所属公司的所有仓库列表
-     *
-     * @return false|string
-     */
-    public function currentwarehousesAction()
     {
         // 逻辑
         // 查找 $user->warehouses 其中 warehouseroleid=2的
@@ -488,12 +474,21 @@ class UserController extends CadminController
     }
 
     /**
-     * 获取登录用户所属公司的销售端口列表
+     * 获得当前用户拥有销售权限的仓库列表
      *
-     * @return false|string
+     * @return void [type] [description]
      */
-    public function saleportsAction()
+    function saleWarehousesAction()
     {
-        return $this->success(TbUser::findFirstById($this->currentUser)->company->saleports);
+        $result = TbWarehouseUser::find(
+            sprintf("userid=%d and warehouseroleid=2", $this->request->get('userId'))
+        );
+
+        $array = [];
+        foreach ($result as $key => $value) {
+            $array[] = $value->warehouse->toArray();
+        }
+
+        echo $this->success($array);
     }
 }

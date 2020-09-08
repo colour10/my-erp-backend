@@ -38,22 +38,4 @@ class WarehouseController extends CadminController
         echo $this->success($array);
     }
 
-    /**
-     * 获得当前用户仓库的销售员的人员列表，warehouseroleid=2代表销售库
-     *
-     * @return void [type] [description]
-     */
-    function currentwarehouselistAction()
-    {
-        $result = TbWarehouseUser::find(
-            sprintf("userid=%d and warehouseroleid=2", $this->request->get('userId'))
-        );
-
-        $array = [];
-        foreach ($result as $key => $value) {
-            $array[] = $value->warehouse->toArray();
-        }
-
-        echo $this->success($array);
-    }
 }

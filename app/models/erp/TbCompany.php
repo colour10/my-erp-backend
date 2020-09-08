@@ -226,5 +226,15 @@ class TbCompany extends BaseModel
                 'alias' => 'warehouses',
             ]
         );
+
+        // 公司-用户表，一对多
+        $this->hasMany(
+            "id",
+            TbUser::class,
+            "companyid",
+            [
+                'alias' => 'users',
+            ]
+        );
     }
 }

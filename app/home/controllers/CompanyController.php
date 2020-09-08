@@ -12,6 +12,9 @@ use Exception;
  */
 class CompanyController extends AdminController
 {
+    // 当前公司
+    protected $company;
+
     /**
      * 初始化
      */
@@ -20,6 +23,9 @@ class CompanyController extends AdminController
         parent::initialize();
 
         $this->setModelName('Asa\\Erp\\TbCompany');
+
+        // 当前公司的节点
+        $this->company = TbCompany::findFirstById($this->currentCompany);
     }
 
     /**
@@ -30,7 +36,7 @@ class CompanyController extends AdminController
      */
     function infoAction()
     {
-        $company = TbCompany::findFirstById($this->currentCompany);
+        $company = $this->company;
         if ($company != false) {
             return $this->success($company->toArray());
         } else {
@@ -46,7 +52,7 @@ class CompanyController extends AdminController
      */
     function updateAction()
     {
-        $company = TbCompany::findFirstById($this->currentCompany);
+        $company = $this->company;
         if ($company != false) {
             $array = ['id', 'uniqid'];
 
@@ -63,5 +69,36 @@ class CompanyController extends AdminController
         } else {
             throw new Exception("/1002/公司数据不存在/");
         }
+    }
+
+    /**
+     * 获取登录用户所属公司的所有用户列表
+     *
+     * @return false|string
+     */
+    public function usersAction()
+    {
+        return $this->success($this->company->users);
+    }
+
+    /**
+     * 获取登录用户所属公司的所有仓库列表
+     *
+     * @return false|string
+     */
+    public function warehousesAction()
+    {
+        // 逻辑
+        return $this->success($this->company->warehouses);
+    }
+
+    /**
+     * 获取登录用户所属公司的销售端口列表
+     *
+     * @return false|string
+     */
+    public function saleportsAction()
+    {
+        return $this->success($this->company->saleports);
     }
 }
