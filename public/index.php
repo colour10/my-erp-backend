@@ -132,6 +132,7 @@ try {
             ]
         )->setHostName($config->app->main_host);
 
+        // list列表，控制器在 CommonController/listAction
         $router->add(
             "/l/([a-z]+)",
             [

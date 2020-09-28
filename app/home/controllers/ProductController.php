@@ -31,7 +31,6 @@ use Asa\Erp\TbSizecontent;
 use Asa\Erp\TbSizetop;
 use Asa\Erp\TbUlnarinch;
 use Asa\Erp\TbWinterproofing;
-use Asa\Erp\Util;
 use Exception;
 use Phalcon\Paginator\Adapter\Model;
 
@@ -83,6 +82,14 @@ class ProductController extends CadminController
         $data = [];
         foreach ($pageObject->items as $row) {
             $rowData = $row->toArray();
+            // 添加缩略图
+            $rowData['picture_40'] = $rowData['picture'] ? $rowData['picture'] . '_40x40.jpg' : '';
+            $rowData['picture_150'] = $rowData['picture'] ? $rowData['picture'] . '_150x150.jpg' : '';
+            $rowData['picture2_40'] = $rowData['picture2'] ? $rowData['picture2'] . '_40x40.jpg' : '';
+            $rowData['picture2_150'] = $rowData['picture2'] ? $rowData['picture2'] . '_150x150.jpg' : '';
+            $rowData['name'] = $row->getName();
+            $rowData['name'] = $row->getName();
+            $rowData['name'] = $row->getName();
             $rowData['name'] = $row->getName();
             $rowData['season'] = $row->getSeason();
             $rowData['worldcode'] = $row->getWorldCode();

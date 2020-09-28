@@ -274,7 +274,12 @@ class CommonController extends BaseController
 
             $list = [];
             foreach ($result as $row) {
-                $list[] = $row->toArrayPipe();
+                // 去掉 $row 中的时间变量，以及 displayindex
+                $row_array = $row->toArrayPipe();
+                unset($row_array['created_at']);
+                unset($row_array['updated_at']);
+                unset($row_array['displayindex']);
+                $list[] = $row_array;
             }
 
             echo $this->reportJson(["data" => $list]);

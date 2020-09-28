@@ -1094,6 +1094,7 @@ class TbProduct extends BaseCompanyModel
             $result[] = [
                 'id'      => $product->id,
                 'picture' => $product->picture,
+                'picture_40' => $product->picture ? $product->picture . '_40x40.jpg' : '',
             ];
         }
 
