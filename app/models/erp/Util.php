@@ -324,7 +324,7 @@ class Util
      * @param int $quality
      * @throws \Exception
      */
-    public static function convertPics($filepath, $resizeArray, $type = 'png', $quality = 80)
+    public static function convertPics(string $filepath, array $resizeArray, $type = 'jpg', $quality = 80)
     {
         // 逻辑
         // 首先获取图片的参数
