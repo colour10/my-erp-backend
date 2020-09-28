@@ -1619,23 +1619,23 @@ class ProductController extends CadminController
             ];
         }
 
-        // 材质备注与材质id对照表
-        // 名称多语言字段
-        $name = $this->getlangfield('name');
-        // 只取出有关联的数据
-        $productMaterials = TbProductMaterial::find([
-            'conditions' => 'materialnoteid > 0',
-            'columns'    => 'percent, materialid, materialnoteid',
-        ])->toArray();
-        // 然后调出材质中文名称
-        foreach ($productMaterials as $k => $v) {
-            // 多语言字段
-            if ($model = TbMaterial::findFirstById($v['materialid'])) {
-                $productMaterials[$k]['material_name'] = $model->$name;
-            }
-        }
-        // 去重处理
-        $result['productmaterial'] = Util::arrayUniqueMulti($productMaterials);
+        // // 材质备注与材质id对照表
+        // // 名称多语言字段
+        // $name = $this->getlangfield('name');
+        // // 只取出有关联的数据
+        // $productMaterials = TbProductMaterial::find([
+        //     'conditions' => 'materialnoteid > 0',
+        //     'columns'    => 'percent, materialid, materialnoteid',
+        // ])->toArray();
+        // // 然后调出材质中文名称
+        // foreach ($productMaterials as $k => $v) {
+        //     // 多语言字段
+        //     if ($model = TbMaterial::findFirstById($v['materialid'])) {
+        //         $productMaterials[$k]['material_name'] = $model->$name;
+        //     }
+        // }
+        // // 去重处理
+        // $result['productmaterial'] = Util::arrayUniqueMulti($productMaterials);
 
         // 返回
         return $this->success($result);
