@@ -327,7 +327,7 @@ class TbRequisition extends BaseCompanyModel
                         throw new \Exception("/11050103/调拨单【明细】确认出库失败。/");
                     }
 
-                    //锁定库存生效，出库
+                    // 锁定库存生效，出库
                     // 首先从调出仓库出库
                     $detail->outProductstock->preReduceStockExecute($detail->out_number, TbProductstock::REQUISITION, $detail->id);
                     $detail->inProductstock->preAddStock($detail->out_number, TbProductstock::REQUISITION_PRE_IN, $detail->id);

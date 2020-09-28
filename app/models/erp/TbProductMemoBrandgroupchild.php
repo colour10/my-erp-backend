@@ -40,6 +40,6 @@ class TbProductMemoBrandgroupchild extends BaseModel
     public function initialize()
     {
         parent::initialize();
-        $this->setSource('tb_product_memo_barndgroupchild');
+        $this->setSource('tb_product_memo_brandgroupchild');
     }
 }
