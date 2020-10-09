@@ -1091,10 +1091,13 @@ class TbProduct extends BaseCompanyModel
         foreach ($productGroup as $pg) {
             $pgArray = explode(',', $pg);
             $product = TbProduct::findFirst($pgArray[0]);
+            $productModel = TbProduct::findFirst("filename = '".$product->picture."'");
             $result[] = [
                 'id'      => $product->id,
                 'picture' => $product->picture,
-                'picture_40' => $product->picture ? $product->picture . '_40x40.jpg' : '',
+                // 暂时注释
+                // 'picture_40' => $product->picture ? $product->picture . '_40x40.jpg' : '',
+                'picture_40' => $productModel->filename_40,
             ];
         }
 
