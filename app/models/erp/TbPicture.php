@@ -4,6 +4,9 @@ namespace Asa\Erp;
 
 /**
  * 图片表
+ *
+ * Class TbPicture
+ * @package Asa\Erp
  */
 class TbPicture extends BaseModel
 {
@@ -24,6 +27,18 @@ class TbPicture extends BaseModel
      * @var string
      */
     public $filename;
+
+    /**
+     *
+     * @var string
+     */
+    public $filename_40;
+
+    /**
+     *
+     * @var string
+     */
+    public $filename_150;
 
     /**
      *

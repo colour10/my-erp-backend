@@ -15,6 +15,7 @@ use Asa\Erp\TbCurrency;
 use Asa\Erp\TbExchangeRate;
 use Asa\Erp\TbMaterial;
 use Asa\Erp\TbMaterialnote;
+use Asa\Erp\TbPicture;
 use Asa\Erp\TbPrice;
 use Asa\Erp\TbProduct;
 use Asa\Erp\TbProductcode;
@@ -82,11 +83,24 @@ class ProductController extends CadminController
         $data = [];
         foreach ($pageObject->items as $row) {
             $rowData = $row->toArray();
-            // 添加缩略图
-            $rowData['picture_40'] = $rowData['picture'] ? $rowData['picture'] . '_40x40.jpg' : '';
-            $rowData['picture_150'] = $rowData['picture'] ? $rowData['picture'] . '_150x150.jpg' : '';
-            $rowData['picture2_40'] = $rowData['picture2'] ? $rowData['picture2'] . '_40x40.jpg' : '';
-            $rowData['picture2_150'] = $rowData['picture2'] ? $rowData['picture2'] . '_150x150.jpg' : '';
+            // 添加缩略图，缩略图默认都存在 tb_picture 表中
+            // 主图
+            if ($pictureModel = TbPicture::findFirst("filename = '".$rowData['picture']."'")) {
+                $rowData['picture_40'] = $pictureModel->filename_40;
+                $rowData['picture_150'] = $pictureModel->filename_150;
+            } else {
+                $rowData['picture_40'] = $rowData['picture'] ? $rowData['picture'] . '_40x40.jpg' : '';
+                $rowData['picture_150'] = $rowData['picture'] ? $rowData['picture'] . '_150x150.jpg' : '';
+            }
+            // 附图
+            if ($pictureModel = TbPicture::findFirst("filename = '".$rowData['picture2']."'")) {
+                $rowData['picture2_40'] = $pictureModel->filename_40;
+                $rowData['picture2_150'] = $pictureModel->filename_150;
+            } else {
+                $rowData['picture2_40'] = $rowData['picture2'] ? $rowData['picture2'] . '_40x40.jpg' : '';
+                $rowData['picture2_150'] = $rowData['picture2'] ? $rowData['picture2'] . '_150x150.jpg' : '';
+            }
+
             $rowData['name'] = $row->getName();
             $rowData['name'] = $row->getName();
             $rowData['name'] = $row->getName();
