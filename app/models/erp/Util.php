@@ -7,13 +7,16 @@ use AlibabaCloud\Client\Exception\ClientException;
 use AlibabaCloud\Client\Exception\ServerException;
 use Endroid\QrCode\QrCode;
 use Gregwar\Image\Image;
+use Intervention\Image\ImageManagerStatic;
 use Multiple\Home\Controllers\OmsController;
 use Multiple\Home\Controllers\ProductstockController;
 use Phalcon\Di;
 use Phalcon\Http\Response;
 use Phalcon\Logger\Adapter\File;
 use PHPExcel;
+use PHPExcel_Cell;
 use PHPExcel_Exception;
+use PHPExcel_IOFactory;
 use PHPExcel_Reader_Exception;
 use PHPExcel_Worksheet_Drawing;
 use PHPExcel_Worksheet_MemoryDrawing;
@@ -341,8 +344,8 @@ class Util
     /**
      * 导入带图片格式的excel，即使是每一列含有多张图片也没有问题
      *
-     * @param string $excelFilePath excel文件的绝对路径
-     * @param string $pictureSaveFolder 图片保存的文件夹，具体是指/public/upload下面的具体文件夹名称，比如product
+     * @param $excelFilePath -excel文件的绝对路径
+     * @param $pictureSaveFolder -图片保存的文件夹，具体是指/public/upload下面的具体文件夹名称，比如product
      * @return array|bool
      * @throws PHPExcel_Exception
      * @throws PHPExcel_Reader_Exception
@@ -358,8 +361,8 @@ class Util
 
         // 图片保存逻辑
         // 使用 PHPExcel_IOFactory 来鉴别文件应该使用哪一个读取类
-        $inputFileType = \PHPExcel_IOFactory::identify($excelFilePath);
-        $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+        $inputFileType = PHPExcel_IOFactory::identify($excelFilePath);
+        $objReader = PHPExcel_IOFactory::createReader($inputFileType);
         // 载入文件
         $objPHPExcel = $objReader->load($excelFilePath);
         // 取出数据
@@ -548,7 +551,7 @@ class Util
         if (!$fileName) {
             $fileName = uniqid(time(), true);
         }
-        $objWrite = \PHPExcel_IOFactory::createWriter($obj, 'Excel5');
+        $objWrite = PHPExcel_IOFactory::createWriter($obj, 'Excel5');
 
         // 网页下载
         if ($isDown) {
@@ -670,16 +673,16 @@ class Util
      * // 获得文件列表
      * $json_files = $this->request->get('files');
      * // 开始导出
-     * Util::exportFiles($json_files);
+     * self::exportFiles($json_files);
      * }
      *
      * @param string $json_files 一个前台经过JSON.stringify处理过的json字符串，需要转成数组遍历
      */
-    public static function exportFiles($json_files)
+    public static function exportFiles(string $json_files)
     {
         // 逻辑
         // 如果是json，则把传过来的json字符串转成数组
-        if (Util::is_json($json_files)) {
+        if (self::is_json($json_files)) {
             $files = json_decode($json_files, true);
         }
 
@@ -733,7 +736,7 @@ class Util
      * @param string $day2
      * @return number
      */
-    public static function diffBetweenTwoDays($day1, $day2)
+    public static function diffBetweenTwoDays(string $day1, string $day2)
     {
         $second1 = strtotime($day1);
         $second2 = strtotime($day2);
@@ -769,13 +772,14 @@ class Util
     /**
      * 加密、解密字符串
      * ENCODE为加密，DECODE为解密
+     *
      * @param string $string 待处理字符串
      * @param string $action 操作，ENCODE|DECODE
      * @return string
      * @global array $pwServer
      * @global string $db_hash
      */
-    public static function strCode($string, $action = 'ENCODE')
+    public static function strCode(string $string, $action = 'ENCODE')
     {
         $action != 'ENCODE' && $string = base64_decode($string);
         $code = '';
@@ -792,12 +796,13 @@ class Util
 
     /**
      * 功能函数 - 发送email
+     *
      * @param string $toemail 要发送到的email地址, 多个使用一维数组即可;
      * @param string $subject email标题
      * @param string $body email主体内容
      * @return bool
      */
-    public static function sendEmail($toemail, $subject, $body)
+    public static function sendEmail(string $toemail, string $subject, string $body)
     {
         //示例化PHPMailer核心类
         //vendor模式
@@ -870,6 +875,7 @@ class Util
 
     /**
      * 手动刷新阿里云cdn缓存
+     *
      * @param string|array $path 文件列表，里面的链接必须是完整的路径（包含http://或者https://）
      * @return mixed
      * @throws ClientException
@@ -894,11 +900,11 @@ class Util
         }
         // 判断是文件夹还是文件，如果每个链接后面都有/则为目录，否则为文件
         if (is_array($path)) {
-            $type = Util::isFileOrDirectory($path[0]);
+            $type = self::isFileOrDirectory($path[0]);
             // api中要求每个链接地址用"\n"或者"\r\n"分割
             $path = implode("\n", $path);
         } else {
-            $type = Util::isFileOrDirectory($path);
+            $type = self::isFileOrDirectory($path);
         }
 
         // 首先关闭错误提示
@@ -962,9 +968,10 @@ class Util
 
     /**
      * 根据ID逗号分隔符查出对应的文字项，给出友好提示
-     * @param string $model 模型字符串，比如TbProduct::class
-     * @param string $ids id列表，每个id之间以逗号分隔
-     * @param array $displayFields 要显示的字段
+     *
+     * @param $model -模型字符串，比如TbProduct::class
+     * @param $ids -id列表，每个id之间以逗号分隔
+     * @param $displayFields -要显示的字段
      * @return array|string
      */
     public static function getCommasValues($model, $ids, array $displayFields = [])
@@ -1009,6 +1016,7 @@ class Util
 
     /**
      * 生成一个随机字符串
+     *
      * @return string
      */
     public static
@@ -1319,4 +1327,349 @@ class Util
         // 返回
         return $return;
     }
+
+    /**
+     * 导入不含图片的 excel 格式
+     *
+     * @param $excelFilePath -Excel路径
+     * @return array|false
+     * @throws PHPExcel_Exception
+     * @throws PHPExcel_Reader_Exception
+     */
+    public static function importExcelWithoutPictures($excelFilePath)
+    {
+        // 逻辑
+        // 使用 PHPExcel_IOFactory 来鉴别文件应该使用哪一个读取类
+        $inputFileType = PHPExcel_IOFactory::identify($excelFilePath);
+        $objReader = PHPExcel_IOFactory::createReader($inputFileType); // 2003版本-Excel5; 2007版本-Excel2007
+        $objPHPExcel = $objReader->load($excelFilePath);
+        $objWorksheet = $objPHPExcel->getActiveSheet();
+        $highestRow = $objWorksheet->getHighestRow();
+
+        // 在导入时，启动行号为1，第1行为标题，第2行开始为数据
+        // 如果没有数据
+        if ($highestRow <= 1) {
+            return false;
+        }
+
+        // 有数据继续进行
+        $highestColumn = $objWorksheet->getHighestColumn();
+        $highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumn);//总列数
+        $data_res = [];
+        //注意下面以$row=2开始，在导入时，启动行号为1，第1行为标题，第2行开始为数据
+        for ($row = 2; $row <= $highestRow; $row++) {
+            $strs = [];
+            //注意highestColumnIndex的列数索引从0开始
+            for ($col = 0; $col < $highestColumnIndex; $col++) {
+                $strs[$col] = trim($objWorksheet->getCellByColumnAndRow($col, $row)->getValue());
+            }
+            array_push($data_res, $strs);
+        }
+
+        // unlink($excelFilePath);   //删除上传的文件
+        // 返回，并删除空值
+        $datas = json_decode(json_encode($data_res), true);
+        foreach ($datas as $k => $data) {
+            $datas[$k] = array_filter($data);
+        }
+        return array_filter($datas);
+    }
+
+    /**
+     * 找出两个字符串之间的交集
+     *
+     * @param string $str1
+     * @param string $str2
+     * @return bool
+     */
+    public static function stringDiff(string $str1, string $str2)
+    {
+        // 逻辑
+        // 初始化一个变量
+        $result = false;
+        for ($i = 0; $i < mb_strlen($str1); $i++) {
+            // 当前外层元素
+            $currentStr1 = mb_substr($str1, $i, 1);
+            for ($j = 0; $j < mb_strlen($str2); $j++) {
+                // 当前内层元素
+                $currentStr2 = mb_substr($str2, $j, 1);
+                // 如果相等，说明找到了
+                if ($currentStr2 == $currentStr1) {
+                    $result = true;
+                    break;
+                }
+            }
+        }
+        // 返回
+        return $result;
+    }
+
+    /**
+     * 下载远程图片
+     *
+     * @param string $url
+     * @return false|string
+     */
+    public static function downloadImage(string $url)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // 信任任何证书
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+        $file = curl_exec($ch);
+        curl_close($ch);
+
+        // 取出文件名
+        $pathinfo = pathinfo($url);
+        $filename = md5(uniqid(time() . mt_rand(1000, 9999))) . '.' . $pathinfo['extension'];
+        // 取出文件大小
+        $filesize = self::getRemoteFilesize($url);
+        // 最终文件路径
+        $filepath = APP_PATH . '/public/upload/product/' . $filename;
+        // 如果文件存在，则不再重复下载，节省对方服务器资源
+        if (is_file($filepath) && getimagesize($filepath)) {
+            // 文件存在，说明之前也是下载成功了，这个时候就返回 文件名
+            return $filename;
+        }
+
+        // 如果图片不存在，则继续往下执行
+        $resource = @fopen($filepath, 'a');
+        // 这里的$return返回写入文件的大小
+        $return = fwrite($resource, $file);
+        fclose($resource);
+
+        // 如果$return和原始图片大小一致，那么则认为下载完毕，返回成功
+        // 但是如果远程图片大小为0，或者图片不存在，也有可能网络超时，我们这里只判断大小大于0才算成功
+        if ($return == $filesize && $filesize > 0) {
+            return $filename;
+        }
+
+        // 否则就是下载失败，返回 false
+        return false;
+    }
+
+    /**
+     * 通过 curl 获取一个远程文件的大小(字节数)
+     *
+     * @param string $uri 远程文件地址
+     * @param string $user
+     * @param string $pw
+     * @return bool|string
+     */
+    public static function getRemoteFilesize(string $uri, $user = '', $pw = '')
+    {
+        // start output buffering
+        ob_start();
+        // initialize curl with given uri
+        $ch = curl_init($uri);
+        // make sure we get the header
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        // make it a http HEAD request
+        curl_setopt($ch, CURLOPT_NOBODY, 1);
+        // if auth is needed, do it here
+        if (!empty($user) && !empty($pw)) {
+            $headers = ['Authorization: Basic ' . base64_encode($user . ':' . $pw)];
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        }
+        $okay = curl_exec($ch);
+        curl_close($ch);
+        // get the output buffer
+        $head = ob_get_contents();
+        // clean the output buffer and return to previous
+        // buffer settings
+        ob_end_clean();
+
+        // gets you the numeric value from the Content-Length
+        // field in the http header
+        $regex = '/Content-Length:\s([0-9].+?)\s/';
+        $count = preg_match($regex, $head, $matches);
+
+        // if there was a Content-Length field, its value
+        // will now be in $matches[1]
+        if (isset($matches[1])) {
+            $size = $matches[1];
+        } else {
+            // 找不到，则为0
+            $size = 0;
+        }
+        // $last=round($size/(1024*1024),3);
+        // return $last.' MB';
+        return $size;
+    }
+
+    /**
+     * 制作正方形图片，同时保留原来的路径和图片名称
+     *
+     * @param string $src_file 图片路径
+     * @param int $width 宽度
+     * @param int $height 高度
+     * @return false|void
+     */
+    public static function resizeImage(string $src_file, $width = 40, $height = 40)
+    {
+        // 逻辑
+        // 取出图片的高度，如果图片不存在，则直接退出
+        if (!$size = getimagesize($src_file)) {
+            return false;
+        }
+        // 存在则继续
+        // 修改指定图片的大小
+        $img = ImageManagerStatic::make($src_file)->resize($width, $height);
+        // 取出图片大小
+        $filesize = ceil(filesize($src_file) / 1024);
+        // 将处理后的图片重新保存到其他路径
+        // 临时图片路径
+        $pathinfo = pathinfo($src_file);
+        $dst_file = $pathinfo['dirname'] . '/' . md5($pathinfo['filename'] . '_' . uniqid(time() . mt_rand(10000, 99999))) . '.' . $pathinfo['extension'];
+        $img->save($dst_file, self::setQuality($filesize));
+        // 返回新文件的路径，只保留 product/1.jpg 这样的格式
+        $pathinfo = pathinfo($dst_file);
+        $endPos = strrpos($pathinfo['dirname'], '/');
+        return substr($dst_file, $endPos + 1);
+    }
+
+    /**
+     * 设置图片压缩质量
+     *
+     * @param string $filesize 单位KB
+     * @return float|int
+     */
+    public static function setQuality(string $filesize)
+    {
+        // 逻辑
+        // 如果$filesize小于100K的话，无需压缩
+        if ($filesize > 500) {
+            $rate = 40;
+        } else if ($filesize > 400) {
+            $rate = 45;
+        } else if ($filesize > 300) {
+            $rate = 50;
+        } else if ($filesize > 200) {
+            $rate = 55;
+        } else if ($filesize > 100) {
+            $rate = 60;
+        } else {
+            $rate = 90;
+        }
+        // 返回
+        return $rate;
+    }
+
+    /**
+     * 获取远程图片的宽高和体积大小
+     *
+     * @param string $url 远程图片的链接
+     * @param string $type 获取远程图片资源的方式, 默认为 curl 可选 fread
+     * @param boolean $isGetFilesize 是否获取远程图片的体积大小, 默认false不获取, 设置为 true 时 $type 将强制为 fread
+     * @return false|array
+     */
+    public static function myGetImageSize(string $url, $type = 'curl', $isGetFilesize = false)
+    {
+        // 定义一个空数组
+        $result = [];
+        // 若需要获取图片体积大小则默认使用 fread 方式
+        $type = $isGetFilesize ? 'fread' : $type;
+        if ($type == 'fread') {
+            // 或者使用 socket 二进制方式读取, 需要获取图片体积大小最好使用此方法
+            $handle = fopen($url, 'rb');
+            if (!$handle) {
+                return false;
+            }
+            // 只取头部固定长度168字节数据
+            $dataBlock = fread($handle, 168);
+        } else {
+            // 据说 CURL 能缓存DNS 效率比 socket 高
+            $ch = curl_init($url);
+            // 超时设置
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            // 取前面 168 个字符 通过四张测试图读取宽高结果都没有问题,若获取不到数据可适当加大数值
+            curl_setopt($ch, CURLOPT_RANGE, '0-167');
+            // 跟踪301跳转
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+            // 返回结果
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $dataBlock = curl_exec($ch);
+            curl_close($ch);
+            if (!$dataBlock) {
+                return false;
+            }
+        }
+        // 将读取的图片信息转化为图片路径并获取图片信息,经测试,这里的转化设置 jpeg 对获取png,gif的信息没有影响,无须分别设置
+        // 有些图片虽然可以在浏览器查看但实际已被损坏可能无法解析信息
+        //$size = getimagesize('data://image/jpeg;base64,' . base64_encode($dataBlock));
+        $size = @getimagesize($url);
+
+        if (empty($size)) {
+            return false;
+        }
+        $result['width'] = $size[0];
+        $result['height'] = $size[1];
+        $result['img_type'] = $size['mime'];
+        // 是否获取图片体积大小
+        if ($isGetFilesize) {
+            // 获取文件数据流信息
+            $meta = stream_get_meta_data($handle);
+            // nginx 的信息保存在 headers 里，apache 则直接在 wrapper_data
+            $dataInfo = isset($meta['wrapper_data']['headers']) ? $meta['wrapper_data']['headers'] : $meta['wrapper_data'];
+            foreach ($dataInfo as $va) {
+                if (preg_match('/length/iU', $va)) {
+                    $ts = explode(':', $va);
+                    $result['size'] = trim(array_pop($ts));
+                    break;
+                }
+            }
+        }
+        if ($type == 'fread') {
+            fclose($handle);
+        }
+        // 返回
+        return $result;
+    }
+
+    /**
+     * 制作 800*800 图片，同时保留原来的路径和图片名称
+     *
+     * @param string $src_file 图片路径
+     * @return void
+     */
+    public static function makeImage(string $src_file)
+    {
+        // 逻辑
+        // 取出图片的高度，如果图片不存在，则直接退出
+        if (!$size = getimagesize($src_file)) {
+            return;
+        }
+        // 存在则继续
+        $width = $size[0];
+        $height = $size[1];
+        // 如果宽度不是800，那么就先压缩到800px
+        if ($width > 800) {
+            $new_width = 800;
+            $new_height = intval($height * 800 / $width);
+            ImageManagerStatic::make($src_file)->resize($new_width, $new_height)->save($src_file);
+        }
+        // 设置1067*1067的透明画布
+        $img = ImageManagerStatic::canvas($height, $height, '#ffffff');
+        // 设置居中位置
+        $width = intval(($height - 800) / 2);
+        // 插入图片
+        $img->insert($src_file, 'top-left', $width, 0);
+        // 图片裁剪
+        $img->resize(800, 800);
+        // 取出图片大小
+        $filesize = ceil(filesize($src_file) / 1024);
+        // 处理图片
+        // 临时图片路径
+        $pathinfo = pathinfo($src_file);
+        $dst_file = $pathinfo['dirname'] . '/' . $pathinfo['filename'] . '_' . uniqid(time() . mt_rand(10000, 99999)) . '.' . $pathinfo['extension'];
+        $img->save($dst_file, self::setQuality($filesize));
+        // 删除原图片
+        @unlink($src_file);
+        // 同时把新文件修改回原来的名称
+        @rename($dst_file, $src_file);
+    }
+
+
+
 }

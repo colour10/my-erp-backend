@@ -8,21 +8,12 @@ use Phalcon\Mvc\Model\Relation;
  * 基础资料，颜色色系表
  * Class TbColorSystem
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property string $title 名称
+ * @property-read TbColortemplate $colors 颜色列表
  */
 class TbColorSystem extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var string
-     */
-    public $title;
-
     /**
      * 初始化
      */

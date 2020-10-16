@@ -9,69 +9,20 @@ use Phalcon\Mvc\Model\Relation;
  *
  * Class TbMaterial
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property string|null $name_cn 中文名称
+ * @property string|null $name_en 英文名称
+ * @property string|null $name_hk 粤语名称
+ * @property string|null $name_fr 法语名称
+ * @property string|null $name_it 意大利语名称
+ * @property string|null $name_sp 西班牙语名称
+ * @property string|null $name_de 德语名称
+ * @property string|null $code 编码
+ * @property string|null $materialnoteids 材质备注列表
+ * @property-read TbProductMaterial $productMaterial 商品材质表
  */
 class TbMaterial extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_cn;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_en;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_hk;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_fr;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_it;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_sp;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_de;
-
-    /**
-     *
-     * @var string
-     */
-    public $code;
-
-    /**
-     *
-     * @var string
-     */
-    public $materialnoteids;
-
     /**
      * 初始化
      */

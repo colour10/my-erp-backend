@@ -6,71 +6,23 @@ use Phalcon\Mvc\Model\Relation;
 
 /**
  * 基础资料，商品尺寸表
+ *
  * Class TbUlnarinch
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property string|null $name_cn 中文名称
+ * @property string|null $name_en 英文名称
+ * @property string|null $name_hk 粤语名称
+ * @property string|null $name_fr 法语名称
+ * @property string|null $name_it 意大利语名称
+ * @property string|null $name_sp 西班牙语名称
+ * @property string|null $name_de 德语名称
+ * @property int|null $displayindex 排序
+ * @property int|null $brandgroupchildid 子品类id
+ * @property-read TbProduct $products 商品列表
  */
 class TbUlnarinch extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_cn;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_en;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_hk;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_fr;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_it;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_sp;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_de;
-
-    /**
-     *
-     * @var integer
-     */
-    public $displayindex;
-
-    /**
-     *
-     * @var integer
-     */
-    public $brandgroupchildid;
-
     /**
      * 初始化
      */

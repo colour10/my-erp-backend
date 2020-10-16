@@ -9,81 +9,23 @@ use Phalcon\Mvc\Model\Relation;
  *
  * Class TbSizetop
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property string|null $name_cn 中文名称
+ * @property string|null $name_en 英文名称
+ * @property string|null $name_hk 粤语名称
+ * @property string|null $name_fr 法语名称
+ * @property string|null $name_it 意大利语名称
+ * @property string|null $name_sp 西班牙语名称
+ * @property string|null $name_de 德语名称
+ * @property string|null $code 编码
+ * @property int|null $displayindex 排序
+ * @property null $created_at 创建时间
+ * @property null $updated_at 更新时间
+ * @property-read TbSizecontent $sizecontents 尺码明细
+ * @property-read TbProduct $products 商品列表
  */
 class TbSizetop extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_cn;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_en;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_hk;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_fr;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_it;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_sp;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_de;
-
-    /**
-     *
-     * @var string
-     */
-    public $code;
-
-    /**
-     *
-     * @var integer
-     */
-    public $displayindex;
-
-    /**
-     *
-     * @var string
-     */
-    public $created_at;
-
-    /**
-     *
-     * @var string
-     */
-    public $updated_at;
-
     /**
      * 初始化
      */

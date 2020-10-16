@@ -2,6 +2,7 @@
 
 namespace Multiple\Home\Controllers;
 
+use Phalcon\Logger\Adapter\File as FileAdapter;
 use Phalcon\Mvc\Controller;
 use Phalcon\Mvc\Model;
 
@@ -14,6 +15,8 @@ class BaseController extends Controller
 {
     protected $default_language;
     protected $companyid;
+    protected $logFile;
+    protected $userId;
 
     /**
      * 初始化
@@ -28,7 +31,16 @@ class BaseController extends Controller
         $auth = $this->auth;
         if ($auth) {
             $this->companyid = (int)$auth["companyid"];
+            $this->userId = (int)$auth["id"];
         }
+        // 日志文件夹初始化
+        $logFile = APP_PATH . '/app/cache/logs/' . date('Y') . '_' . date('m') . '_' . date('d');
+        // 不存在则创建
+        if (!file_exists($logFile)) {
+            mkdir($logFile);
+        }
+        // 创建当前日期的日志
+        $this->logFile = new FileAdapter($logFile . '/log.txt');
     }
 
     function indexAction()
@@ -115,6 +127,24 @@ class BaseController extends Controller
         return sprintf($language->$module_name[$module_rule], $human_name);
     }
 
+    /**
+     * 多语言版本配置读取函数 - 多参数版本
+     *
+     * @param $module_name -多模块名称，比如cn.php中的template
+     * @param $module_rule -模块验证规则，比如cn.php中的template模块下面的uniqueness
+     * @param mixed ...$field_names
+     * @return string
+     */
+    public function getValidateMessages($module_name, $module_rule, ...$field_names)
+    {
+        // 逻辑
+        // 定义变量
+        // 取出当前语言版本
+        $language = $this->getDI()->get('language');
+        // 展示模块和信息组合后的结果
+        return sprintf($language->$module_name[$module_rule], ...$field_names);
+    }
+
 
     /**
      * 对单个模型的单个记录的修改、更新或者删除，并返回标准json输出
@@ -139,4 +169,5 @@ class BaseController extends Controller
     {
         print_r($message);
     }
+
 }

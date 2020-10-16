@@ -100,6 +100,7 @@ return [
     'button-submit'                                    => '提交',
     'button-delete'                                    => '删除',
     'button-ok'                                        => '确定',
+    'button-export'                                    => '导入',
     'bumenmingcheng'                                   => '部门名称',
     'depart-parent'                                    => '上级部门',
     'depart-create'                                    => '新建部门',
@@ -592,6 +593,7 @@ return [
     "yingwendizhi"                                     => "英文地址",
     "kehuleixing"                                      => "客户类型",
     "quedingshanchu"                                   => "确定删除吗？",
+    "handle-delete"                                    => "确定移除",
     "lingshoubi"                                       => "零售比",
     "cankaobeilv"                                      => "参考倍率",
     "qiye"                                             => "企业",
@@ -999,6 +1001,18 @@ return [
     'picture-list'                                     => '主图列表',
     'picture2-list'                                    => '副图列表',
     'download'                                         => '下载',
+    'upload-text'                                      => '将文件拖到此处，或',
+    'upload-click-text'                                => '点击上传',
+    'upload-tip'                                       => '只能上传xlsx文件，且不超过2MB',
+    'upload-filetype'                                  => '上传文件只允许 xls 或 xlsx 格式',
+    'upload-filesize-2mb'                              => '上传文件大小不能超过 2MB',
+    'upload-success'                                   => '上传成功',
+    'upload-warning'                                   => '您只能上传 1 个文件',
+    'results-preview'                                  => '结果预览',
+    'results-preview-loading'                          => '正在生成结果预览，请稍候...',
+    'click-button-to-complete'                         => '点击按钮完成导入',
+    'results-finish-loading'                           => '正在导入，请稍候...',
+    'results-finished'                                 => '导入成功',
 
     'template' =>
         [
@@ -1010,6 +1024,7 @@ return [
             'hasmany-foreign-message'   => '正在使用，不能删除，因为有%s正在使用它',
             'belongsto-foreign-message' => '%s上不存在',
             'notexist'                  => '%s不存在',
+            'import-excel-result'       => '预计新增 %s 条，修改 %s 条，忽略 %s 条',
         ],
     'db'       =>
         [

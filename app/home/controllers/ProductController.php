@@ -227,8 +227,9 @@ class ProductController extends CadminController
                 }
 
                 $product->companyid = $this->companyid;
-                $product->maketime = date("Y-m-d H:i:s");
-                $product->updatetime = date("Y-m-d H:i:s");
+                // 两个字段已经去掉了
+                // $product->maketime = date("Y-m-d H:i:s");
+                // $product->updatetime = date("Y-m-d H:i:s");
                 $product->makestaff = $this->currentUser;
                 $product->wordcode_1 = $this->filterCode($row['wordcode_1']);
                 $product->wordcode_2 = $this->filterCode($row['wordcode_2']);

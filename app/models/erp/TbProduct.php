@@ -10,365 +10,111 @@ use Phalcon\Mvc\Model\ResultsetInterface;
  * 商品表
  * Class TbProduct
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property string|null $productname 商品名称
+ * @property string|null $wordcode_1 国际码第1段：款式
+ * @property string|null $wordcode_2 国际码第2段：尺码
+ * @property string|null $wordcode_3 国际码第3段：颜色
+ * @property string|null $wordcode_4 国际码第4段：自定义的部分
+ * @property string|null $wordcode 国际码
+ * @property float|null $wordprice 国际零售价
+ * @property int|null $wordpricecurrency 国际零售价币种
+ * @property string|null $gender 1-男士；2-女士；3-中性；4-男童；5-女童；6-儿童
+ * @property int|null $brandid 品牌
+ * @property int|null $brandgroupid 品类
+ * @property int|null $childbrand 子品类
+ * @property int|null $brandcolor 色系id
+ * @property string|null $picture2 副图
+ * @property string|null $picture 主图
+ * @property string|null $ageseason 年代
+ * @property string $ageseason_season 年代拆分出的季节，只保留最新的
+ * @property string $ageseason_year 年代拆分出的年份，只保留最新的
+ * @property string|null $countries 产地
+ * @property int|null $material 材质
+ * @property int|null $producttemplate 商品尺码描述
+ * @property bool|null $spring 是否春季：0-否；1-是
+ * @property bool|null $summer 是否夏季：0-否；1-是
+ * @property bool|null $fall 是否秋季：0-否；1-是
+ * @property bool|null $winter 是否冬季：0-否；1-是
+ * @property string|null $laststoragedate 最后入库时间
+ * @property string|null $aliases 别名
+ * @property string|null $series 系列1
+ * @property string|null $series2 系列2
+ * @property string|null $ulnarinch 商品尺寸
+ * @property float|null $factoryprice 出厂价
+ * @property int|null $factorypricecurrency 出厂价币种
+ * @property float|null $nationalfactoryprice 国内出厂价
+ * @property int|null $nationalfactorypricecurrency 国内出厂价币种
+ * @property string|null $product_group 同款不同色数据
+ * @property int|null $nationalpricecurrency 本国零售价币种
+ * @property float|null $nationalprice 国内价格
+ * @property string|null $memo 备注
+ * @property string|null $sizecontentids 尺码ids
+ * @property int|null $sizetopid 尺码模板
+ * @property int|null $companyid 公司id
+ * @property int|null $makestaff 建档人
+ * @property string|null $productmemoids 商品描述表id列表
+ * @property string|null $colorname 品牌颜色名称
+ * @property int|null $saletypeid 销售属性
+ * @property int|null $producttypeid 商品属性
+ * @property int|null $winterproofingid 防寒指数
+ * @property float|null $cost 成本
+ * @property int|null $costcurrency 成本货币单位
+ * @property int|null $color_system_id 色系id
+ * @property int|null $color_id 主颜色id
+ * @property int|null $second_color_id 副颜色id
+ * @property bool|null $oms_update_status 是否已经上新：0-未上新；1-已上新
+ * @property string|null $oms_update_extra 上新原始数据
+ * @property null $created_at 创建时间
+ * @property null $updated_at 更新时间
+ * @property-read TbCompany $company 商品-公司
+ * @property-read TbSeries $tbseries 商品-系列
+ * @property-read TbBrand $brand 商品-品牌
+ * @property-read TbColortemplate $color 商品-主颜色
+ * @property-read TbBrandgroupchild $subbrand 商品-子品类
+ * @property-read TbProductType $type 商品-商品类型
+ * @property-read TbCurrency $fpcurrency 商品-出厂价
+ * @property-read TbCurrency $wpcurrency 商品-国际零售价
+ * @property-read TbCurrency $npcurrency 商品-国内价
+ * @property-read TbSaleType $saleType 商品-销售属性
+ * @property-read TbProductcode $productCode 商品-销货号
+ * @property-read TbProductSizeProperty $productSizeProperty 商品-商品尺码描述
+ * @property-read TbProductstock $productstock 商品-商品库存
+ * @property-read TbOrderdetails $orderdetails 商品-订单详情
+ * @property-read TbProductMaterial $productMaterial 商品-商品材质
  */
 class TbProduct extends BaseCompanyModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var string
-     */
-    public $productname;
-
-    /**
-     *
-     * @var string
-     */
-    public $wordcode_1;
-
-    /**
-     *
-     * @var string
-     */
-    public $wordcode_2;
-
-    /**
-     *
-     * @var string
-     */
-    public $wordcode_3;
-
-    /**
-     *
-     * @var string
-     */
-    public $wordcode_4;
-
-    /**
-     *
-     * @var string
-     */
-    public $wordcode;
-
-    /**
-     *
-     * @var double
-     */
-    public $wordprice;
-
-    /**
-     *
-     * @var integer
-     */
-    public $wordpricecurrency;
-
-    /**
-     *
-     * @var string
-     */
-    public $gender;
-
-    /**
-     *
-     * @var integer
-     */
-    public $brandid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $brandgroupid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $childbrand;
-
-    /**
-     *
-     * @var integer
-     */
-    public $brandcolor;
-
-    /**
-     *
-     * @var string
-     */
-    public $picture2;
-
-    /**
-     *
-     * @var string
-     */
-    public $picture;
-
-    /**
-     *
-     * @var string
-     */
-    public $ageseason;
-
-    /**
-     *
-     * @var string
-     */
-    public $ageseason_season;
-
-    /**
-     *
-     * @var string
-     */
-    public $ageseason_year;
-
-    /**
-     *
-     * @var string
-     */
-    public $countries;
-
-    /**
-     *
-     * @var integer
-     */
-    public $material;
-
-    /**
-     *
-     * @var integer
-     */
-    public $producttemplate;
-
-    /**
-     *
-     * @var integer
-     */
-    public $spring;
-
-    /**
-     *
-     * @var integer
-     */
-    public $summer;
-
-    /**
-     *
-     * @var integer
-     */
-    public $fall;
-
-    /**
-     *
-     * @var integer
-     */
-    public $winter;
-
-    /**
-     *
-     * @var string
-     */
-    public $laststoragedate;
-
-    /**
-     *
-     * @var string
-     */
-    public $aliases;
-
-    /**
-     *
-     * @var string
-     */
-    public $series;
-
-    /**
-     *
-     * @var string
-     */
-    public $series2;
-
-    /**
-     *
-     * @var string
-     */
-    public $ulnarinch;
-
-    /**
-     *
-     * @var double
-     */
-    public $factoryprice;
-
-    /**
-     *
-     * @var integer
-     */
-    public $factorypricecurrency;
-
-    /**
-     *
-     * @var double
-     */
-    public $nationalfactoryprice;
-
-    /**
-     *
-     * @var integer
-     */
-    public $nationalfactorypricecurrency;
-
-    /**
-     *
-     * @var string
-     */
-    public $product_group;
-
-    /**
-     *
-     * @var integer
-     */
-    public $nationalpricecurrency;
-
-    /**
-     *
-     * @var double
-     */
-    public $nationalprice;
-
-    /**
-     *
-     * @var string
-     */
-    public $memo;
-
-    /**
-     *
-     * @var string
-     */
-    public $sizecontentids;
-
-    /**
-     *
-     * @var integer
-     */
-    public $sizetopid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $companyid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $makestaff;
-
-    /**
-     *
-     * @var string
-     */
-    public $productmemoids;
-
-    /**
-     *
-     * @var string
-     */
-    public $updatetime;
-
-    /**
-     *
-     * @var string
-     */
-    public $maketime;
-
-    /**
-     *
-     * @var string
-     */
-    public $colorname;
-
-    /**
-     *
-     * @var integer
-     */
-    public $saletypeid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $producttypeid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $winterproofingid;
-
-    /**
-     *
-     * @var double
-     */
-    public $cost;
-
-    /**
-     *
-     * @var integer
-     */
-    public $costcurrency;
-
-    /**
-     * 这个已经用 brandcolor 代替了
-     * @var integer
-     */
-    public $color_system_id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $color_id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $second_color_id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $oms_update_status;
-
-    /**
-     *
-     * @var string
-     */
-    public $oms_update_extra;
-
-    /**
-     *
-     * @var string
-     */
-    public $created_at;
-
-    /**
-     *
-     * @var string
-     */
-    public $updated_at;
-
     // 单例模型
     private static $box;
+
+    // 枚举 - 性别字段
+    public static $genderName = [
+        // 男性
+        '男士' => '1',
+        // 女性
+        '女士' => '2',
+        // 中性
+        '中性' => '3',
+        // 男孩
+        '男童' => '4',
+        // 女孩
+        '女童' => '5',
+        // 儿童
+        '儿童' => '6',
+    ];
+
+    // 枚举 - 四季字段
+    public static $seasonName = [
+        // 男性
+        '春季' => 'spring',
+        // 女性
+        '夏季' => 'summer',
+        // 中性
+        '秋季' => 'fall',
+        // 男孩
+        '冬季' => 'winter',
+    ];
 
     /**
      * 初始化
@@ -673,7 +419,6 @@ class TbProduct extends BaseCompanyModel
         $product->winter = $this->winter;
         $product->companyid = $this->companyid;
         $product->makestaff = $this->getDI()->get("currentUser");
-        $product->maketime = date("Y-m-d H:i:s");
         if ($product->create() == false) {
             throw new Exception("/1002/复制商品失败/");
         }
@@ -1091,13 +836,13 @@ class TbProduct extends BaseCompanyModel
         foreach ($productGroup as $pg) {
             $pgArray = explode(',', $pg);
             $product = TbProduct::findFirst($pgArray[0]);
-            $pictureModel = TbPicture::findFirst("filename = '".$product->picture."'");
+            $pictureModel = TbPicture::findFirst("filename = '" . $product->picture . "'");
             $result[] = [
-                'id'      => $product->id,
-                'picture' => $product->picture,
+                'id'         => $product->id,
+                'picture'    => $product->picture,
                 // 暂时注释
                 // 'picture_40' => $product->picture ? $product->picture . '_40x40.jpg' : '',
-                'picture_40' => $pictureModel->filename_40,
+                'picture_40' => $pictureModel->filename_40 ?? '',
             ];
         }
 

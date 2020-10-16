@@ -149,6 +149,16 @@ class BaseModel extends Model
         } else {
             return true;
         }
+    }
 
+    /**
+     * 添加 findFirstById 方法提示，给 phpstorm 看的
+     *
+     * @param null $parameters
+     * @return Model
+     */
+    public static function findFirstById($parameters = null)
+    {
+        return parent::findFirstById($parameters);
     }
 }
