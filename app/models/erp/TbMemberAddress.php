@@ -2,11 +2,27 @@
 
 namespace Asa\Erp;
 
-use Phalcon\Mvc\Model\ResultInterface;
-use Phalcon\Mvc\Model\ResultSetInterface;
-
 /**
  * 会员相关，地址信息表
+ */
+
+/**
+ * 地址信息表
+ *
+ * Class TbMemberAddress
+ * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int|null $member_id 会员id
+ * @property string|null $name 名字
+ * @property string|null $idno 身份证号
+ * @property string|null $tel 电话
+ * @property string|null $zipcode 邮编
+ * @property string|null $address 地址
+ * @property string|null $province 省
+ * @property string|null $city 市
+ * @property string|null $is_default 是否默认地址：0-否 1-是
+ * @property null $last_used_at 最后使用时间
+ * @property-read TbMember|null $member 会员
  */
 class TbMemberAddress extends BaseModel
 {
@@ -353,51 +369,6 @@ class TbMemberAddress extends BaseModel
                 'alias' => 'member',
             ]
         );
-    }
-
-    /**
-     * Allows to query a set of records that match the specified conditions
-     *
-     * @param mixed $parameters
-     * @return TbMemberAddress[]|TbMemberAddress|ResultSetInterface
-     */
-    public static function find($parameters = null)
-    {
-        return parent::find($parameters);
-    }
-
-    /**
-     * Allows to query the first record that match the specified conditions
-     *
-     * @param mixed $parameters
-     * @return TbMemberAddress|ResultInterface
-     */
-    public static function findFirst($parameters = null)
-    {
-        return parent::findFirst($parameters);
-    }
-
-    /**
-     * Independent Column Mapping.
-     * Keys are the real names in the table and the values their names in the application
-     *
-     * @return array
-     */
-    public function columnMap()
-    {
-        return [
-            'id'           => 'id',
-            'member_id'    => 'member_id',
-            'name'         => 'name',
-            'idno'         => 'idno',
-            'tel'          => 'tel',
-            'zipcode'      => 'zipcode',
-            'address'      => 'address',
-            'province'     => 'province',
-            'city'         => 'city',
-            'is_default'   => 'is_default',
-            'last_used_at' => 'last_used_at',
-        ];
     }
 
     /**

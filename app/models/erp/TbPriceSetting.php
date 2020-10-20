@@ -7,59 +7,20 @@ use Phalcon\Mvc\Model;
 
 /**
  * 价格设置表
+ *
  * Class TbPriceSetting
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int|null $companyid 公司id
+ * @property int|null $brandid 品牌id
+ * @property int|null $brandgroupchildid 子品类id
+ * @property int|null $ageseasonid 年代季节id
+ * @property int|null $producttypeid 商品属性
+ * @property float|null $discount 系数
+ * @property int|null $priceid 价格id
  */
 class TbPriceSetting extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $companyid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $brandid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $brandgroupchildid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $ageseasonid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $producttypeid;
-
-    /**
-     *
-     * @var double
-     */
-    public $discount;
-
-    /**
-     *
-     * @var integer
-     */
-    public $priceid;
-
     /**
      * 初始化
      */

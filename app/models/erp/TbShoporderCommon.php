@@ -2,12 +2,35 @@
 
 namespace Asa\Erp;
 
-use Phalcon\Mvc\Model\ResultInterface;
-
 /**
  * 附带ERP商城主表
+ *
  * Class TbShoporderCommon
  * @package Asa\Erp
+ * @property int $id 主键ID
+ * @property string|null $order_no 订单号
+ * @property int|null $member_id 会员id
+ * @property int|null $company_id 会员所属公司id
+ * @property string|null $address 收件人地址信息
+ * @property float|null $total_price 商品总计
+ * @property float|null $send_price 运费
+ * @property float|null $final_price 成交价
+ * @property string|null $payment_method 支付方式：wechat-微信支付；alipay-支付宝支付
+ * @property string|null $payment_no 支付单号
+ * @property string $refund_status 退款状态：pending-未退款；applied-已申请退款；processing-退款中；success-退款成功；failed-退款失败
+ * @property string|null $refund_no 退款单号
+ * @property bool $closed 订单是否已关闭：0-未关闭；1-已关闭；默认为0-未关闭
+ * @property string $ship_status 物流状态：pending-未发货；delivered-已发货；received-已收货
+ * @property string|null $ship_data 物流数据
+ * @property string|null $remark 备注
+ * @property null $create_time 创建时间
+ * @property null $expire_time 库存锁定截止时间，默认为1个小时
+ * @property null $pay_time 支付时间
+ * @property null $update_time 更新时间
+ * @property string|null $extra 其他额外的数据
+ * @property-read TbShoporder|null $shoporder 订单详情
+ * @property-read TbMember|null $member 会员
+ * @property-read TbCompany|null $company 公司
  */
 class TbShoporderCommon extends BaseModel
 {
@@ -622,15 +645,15 @@ class TbShoporderCommon extends BaseModel
     }
 
     // 退款和发货相关状态设定
-    const REFUND_STATUS_PENDING    = 'pending';
-    const REFUND_STATUS_APPLIED    = 'applied';
+    const REFUND_STATUS_PENDING = 'pending';
+    const REFUND_STATUS_APPLIED = 'applied';
     const REFUND_STATUS_PROCESSING = 'processing';
-    const REFUND_STATUS_SUCCESS    = 'success';
-    const REFUND_STATUS_FAILED     = 'failed';
+    const REFUND_STATUS_SUCCESS = 'success';
+    const REFUND_STATUS_FAILED = 'failed';
 
-    const SHIP_STATUS_PENDING   = 'pending';
+    const SHIP_STATUS_PENDING = 'pending';
     const SHIP_STATUS_DELIVERED = 'delivered';
-    const SHIP_STATUS_RECEIVED  = 'received';
+    const SHIP_STATUS_RECEIVED = 'received';
 
     /**
      * Initialize method for model.
@@ -644,7 +667,7 @@ class TbShoporderCommon extends BaseModel
         // 与订单详情表关联，一对多
         $this->hasMany(
             "id",
-            "\Asa\Erp\TbShoporder",
+            TbShoporder::class,
             "order_commonid",
             [
                 'alias' => 'shoporder',
@@ -655,7 +678,7 @@ class TbShoporderCommon extends BaseModel
         // 与会员表关联，一对多反向
         $this->belongsTo(
             "member_id",
-            "\Asa\Erp\TbMember",
+            TbMember::class,
             "id",
             [
                 'alias' => 'member',
@@ -666,7 +689,7 @@ class TbShoporderCommon extends BaseModel
         // 与公司表关联，一对多反向
         $this->belongsTo(
             "company_id",
-            "\Asa\Erp\TbCompany",
+            TbCompany::class,
             "id",
             [
                 'alias' => 'company',
@@ -700,61 +723,6 @@ class TbShoporderCommon extends BaseModel
     public function getSource()
     {
         return 'tb_shoporder_common';
-    }
-
-    /**
-     * Allows to query a set of records that match the specified conditions
-     *
-     * @param mixed $parameters
-     * @return TbShoporderCommon[]|TbShoporderCommon|\Phalcon\Mvc\Model\ResultSetInterface
-     */
-    public static function find($parameters = null)
-    {
-        return parent::find($parameters);
-    }
-
-    /**
-     * Allows to query the first record that match the specified conditions
-     *
-     * @param mixed $parameters
-     * @return TbShoporderCommon|ResultInterface
-     */
-    public static function findFirst($parameters = null)
-    {
-        return parent::findFirst($parameters);
-    }
-
-    /**
-     * Independent Column Mapping.
-     * Keys are the real names in the table and the values their names in the application
-     *
-     * @return array
-     */
-    public function columnMap()
-    {
-        return [
-            'id'             => 'id',
-            'order_no'       => 'order_no',
-            'member_id'      => 'member_id',
-            'company_id'     => 'company_id',
-            'address'        => 'address',
-            'total_price'    => 'total_price',
-            'send_price'     => 'send_price',
-            'final_price'    => 'final_price',
-            'payment_method' => 'payment_method',
-            'payment_no'     => 'payment_no',
-            'refund_status'  => 'refund_status',
-            'refund_no'      => 'refund_no',
-            'closed'         => 'closed',
-            'ship_status'    => 'ship_status',
-            'ship_data'      => 'ship_data',
-            'remark'         => 'remark',
-            'create_time'    => 'create_time',
-            'expire_time'    => 'expire_time',
-            'pay_time'       => 'pay_time',
-            'update_time'    => 'update_time',
-            'extra'          => 'extra',
-        ];
     }
 
     /**

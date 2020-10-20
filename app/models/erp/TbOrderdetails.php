@@ -7,105 +7,28 @@ namespace Asa\Erp;
  *
  * Class TbOrderdetails
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int $orderid 订单id
+ * @property int $sizecontentid 尺码id
+ * @property int $number 数量
+ * @property int $productid 产品id
+ * @property int|null $currencyid 货币id
+ * @property float|null $price 零售价
+ * @property int|null $confirm_number 确认数量
+ * @property int|null $companyid 公司id
+ * @property null $createdate 创建时间
+ * @property bool|null $status 状态
+ * @property float|null $discount 折扣
+ * @property int|null $shipping_number 已发货数量
+ * @property int|null $brand_number 品牌订单数量
+ * @property float|null $factoryprice 出厂价
+ * @property float|null $wordprice 零售价
+ * @property-read TbProduct|null $product 商品
+ * @property-read TbSizecontent|null $sizecontent 商品尺码
+ * @property-read TbOrder|null $order 订单
  */
 class TbOrderdetails extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $orderid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $sizecontentid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $number;
-
-    /**
-     *
-     * @var integer
-     */
-    public $productid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $currencyid;
-
-    /**
-     *
-     * @var double
-     */
-    public $price;
-
-    /**
-     *
-     * @var integer
-     */
-    public $confirm_number;
-
-    /**
-     *
-     * @var integer
-     */
-    public $companyid;
-
-    /**
-     *
-     * @var string
-     */
-    public $createdate;
-
-    /**
-     *
-     * @var integer
-     */
-    public $status;
-
-    /**
-     *
-     * @var double
-     */
-    public $discount;
-
-    /**
-     *
-     * @var integer
-     */
-    public $shipping_number;
-
-    /**
-     *
-     * @var integer
-     */
-    public $brand_number;
-
-    /**
-     *
-     * @var double
-     */
-    public $factoryprice;
-
-    /**
-     *
-     * @var double
-     */
-    public $wordprice;
-
     /**
      * 初始化
      */
@@ -134,7 +57,7 @@ class TbOrderdetails extends BaseModel
             ]
         );
 
-        // 订单详情-商品主表，一对多反向
+        // 订单详情-订单，一对多反向
         $this->belongsTo(
             'orderid',
             TbOrder::class,

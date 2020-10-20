@@ -4,45 +4,19 @@ namespace Asa\Erp;
 
 /**
  * 商品尺码明细信息表
+ *
+ * Class TbSizecontent
+ * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int|null $topid 尺码组主键id
+ * @property string|null $name 中文代码名称
+ * @property int|null $displayindex 排序
+ * @property null $created_at 创建时间
+ * @property null $updated_at 更新时间
+ * @property-read TbSizetop|null $sizetop 尺码组
  */
 class TbSizecontent extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $topid;
-
-    /**
-     *
-     * @var string
-     */
-    public $name;
-
-    /**
-     *
-     * @var integer
-     */
-    public $displayindex;
-
-    /**
-     *
-     * @var string
-     */
-    public $created_at;
-
-    /**
-     *
-     * @var string
-     */
-    public $updated_at;
-
     /**
      * 初始化
      */
@@ -181,5 +155,38 @@ class TbSizecontent extends BaseModel
             'name'  => [$factory->presenceOf('neirong')],
             'topid' => [$factory->tableid('chimazu', false)],
         ];
+    }
+    
+    /**
+     * find方法，给 phpstorm 提示用的
+     *
+     * @param mixed $parameters
+     * @return TbSizecontent[]|TbSizecontent|\Phalcon\Mvc\Model\ResultSetInterface
+     */
+    public static function find($parameters = null)
+    {
+        return parent::find($parameters);
+    }
+
+    /**
+     * findFirst方法，给 phpstorm 提示用的
+     *
+     * @param mixed $parameters
+     * @return TbSizecontent|\Phalcon\Mvc\Model\ResultInterface
+     */
+    public static function findFirst($parameters = null)
+    {
+        return parent::findFirst($parameters);
+    }
+
+    /**
+     * findFirstById方法，给 phpstorm 提示用的
+     *
+     * @param $id
+     * @return TbSizecontent|\Phalcon\Mvc\Model\ResultInterface
+     */
+    public static function findFirstById($id)
+    {
+        return parent::findFirst("id = " . $id);
     }
 }

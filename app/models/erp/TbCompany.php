@@ -6,149 +6,39 @@ use Phalcon\Mvc\Model\Relation;
 
 /**
  * 公司表
+ *
  * Class TbCompany
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property string|null $name 中文名称
+ * @property int|null $countryid 国家id
+ * @property string|null $memo 备注说明
+ * @property int|null $randid 随机id，防止暴露真实的companyid
+ * @property int|null $saleportid 商城的销售端口
+ * @property int|null $currencyid 本币
+ * @property string|null $language 默认语言
+ * @property string|null $address 地址
+ * @property string|null $phone 电话
+ * @property string|null $zipcode 邮编
+ * @property string|null $fax 传真
+ * @property string|null $legal
+ * @property string|null $website 网址
+ * @property string|null $registeredcapital 注册资本
+ * @property string|null $businesslicense 营业执照
+ * @property string|null $heading
+ * @property int|null $hkgcost 香港供货价
+ * @property int|null $eurcost 欧洲供货价
+ * @property int|null $chncost 国内供货价
+ * @property int|null $bdacost 保税供货价
+ * @property int|null $oms_saleport OMS的销售端口
+ * @property string|null $oms_warehouseids OMS的可用仓库
+ * @property-read TbCountry|null $country 国家
+ * @property-read TbDepartment|null $departments 部门
+ * @property-read TbProduct|null $products 商品
+ * @property-read TbWarehouse|null $warehouses 仓库
  */
 class TbCompany extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var string
-     */
-    public $name;
-
-    /**
-     *
-     * @var integer
-     */
-    public $countryid;
-
-    /**
-     *
-     * @var string
-     */
-    public $memo;
-
-    /**
-     *
-     * @var integer
-     */
-    public $randid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $saleportid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $currencyid;
-
-    /**
-     *
-     * @var string
-     */
-    public $language;
-
-    /**
-     *
-     * @var string
-     */
-    public $address;
-
-    /**
-     *
-     * @var string
-     */
-    public $phone;
-
-    /**
-     *
-     * @var string
-     */
-    public $zipcode;
-
-    /**
-     *
-     * @var string
-     */
-    public $fax;
-
-    /**
-     *
-     * @var string
-     */
-    public $legal;
-
-    /**
-     *
-     * @var string
-     */
-    public $website;
-
-    /**
-     *
-     * @var string
-     */
-    public $registeredcapital;
-
-    /**
-     *
-     * @var string
-     */
-    public $businesslicense;
-
-    /**
-     *
-     * @var string
-     */
-    public $heading;
-
-    /**
-     *
-     * @var integer
-     */
-    public $hkgcost;
-
-    /**
-     *
-     * @var integer
-     */
-    public $eurcost;
-
-    /**
-     *
-     * @var integer
-     */
-    public $chncost;
-
-    /**
-     *
-     * @var integer
-     */
-    public $bdacost;
-
-    /**
-     *
-     * @var integer
-     */
-    public $oms_saleport;
-
-    /**
-     *
-     * @var string
-     */
-    public $oms_warehouseids;
-
     /**
      * 初始化
      */

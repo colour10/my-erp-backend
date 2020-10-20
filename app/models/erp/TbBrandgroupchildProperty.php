@@ -4,77 +4,24 @@ namespace Asa\Erp;
 
 /**
  * 基础资料，商品尺寸表
+ *
  * Class TbBrandgroupchildProperty
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property string|null $name_cn 中文名称
+ * @property string|null $name_en 英文名称
+ * @property string|null $name_hk 粤语名称
+ * @property string|null $name_fr 法语名称
+ * @property string|null $name_it 意大利语名称
+ * @property string|null $name_sp 西班牙语名称
+ * @property string|null $name_de 德语名称
+ * @property int|null $brandgroupchildid 所属id
+ * @property int|null $displayindex 显示顺序
+ * @property int|null $propertyid 属性id
  */
 class TbBrandgroupchildProperty extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_cn;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_en;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_hk;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_fr;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_it;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_sp;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_de;
-
-    /**
-     *
-     * @var integer
-     */
-    public $brandgroupchildid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $displayindex;
-
-    /**
-     *
-     * @var integer
-     */
-    public $propertyid;
-
+    // 默认品类
     const BRANDGROUPCHILD = 1;
 
     /**

@@ -9,111 +9,29 @@ use Phalcon\Mvc\Model;
  *
  * Class TbShippingDetail
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int|null $shippingid 发货单id
+ * @property int|null $productid 产品id
+ * @property int|null $sizecontentid 尺码id
+ * @property float|null $price 价格
+ * @property float|null $discount 折扣率
+ * @property int|null $number 数量
+ * @property int|null $orderid 订单id
+ * @property int|null $orderdetailid 明细表id
+ * @property null $createdate 创建时间
+ * @property int|null $warehousingnumber 入库数量
+ * @property int|null $orderbrandid 客户订单id
+ * @property int|null $orderbranddetailid 客户订单明细id
+ * @property int|null $currencyid 币种id
+ * @property float|null $cost 成本价
+ * @property int|null $costcurrency 成本价的货币单位
+ * @property float|null $factoryprice 出厂价
+ * @property-read TbOrderdetails|null $orderdetails 订单明细
+ * @property-read TbOrder|null $order 订单
+ * @property-read TbShipping|null $shipping 发货单
  */
 class TbShippingDetail extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $shippingid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $productid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $sizecontentid;
-
-    /**
-     *
-     * @var double
-     */
-    public $price;
-
-    /**
-     *
-     * @var double
-     */
-    public $discount;
-
-    /**
-     *
-     * @var integer
-     */
-    public $number;
-
-    /**
-     *
-     * @var integer
-     */
-    public $orderid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $orderdetailid;
-
-    /**
-     *
-     * @var string
-     */
-    public $createdate;
-
-    /**
-     *
-     * @var integer
-     */
-    public $warehousingnumber;
-
-    /**
-     *
-     * @var integer
-     */
-    public $orderbrandid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $orderbranddetailid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $currencyid;
-
-    /**
-     *
-     * @var double
-     */
-    public $cost;
-
-    /**
-     *
-     * @var integer
-     */
-    public $costcurrency;
-
-    /**
-     *
-     * @var double
-     */
-    public $factoryprice;
-
     /**
      * 初始化
      */

@@ -4,51 +4,21 @@ namespace Asa\Erp;
 
 /**
  * 发货单明细表
+ *
+ * Class TbConfirmorderdetails
+ * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int|null $confirmorderid 发货单id
+ * @property int|null $orderdetailsid 订单明细id
+ * @property int|null $number 发货数量
+ * @property float|null $price 单价
+ * @property int|null $actualnumber 到货数量
+ * @property int|null $companyid 公司id
+ * @property-read TbConfirmorder|null $confirmorder 发货单
+ * @property-read TbOrderdetails|null $orderdetails 订单详情
  */
 class TbConfirmorderdetails extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $confirmorderid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $orderdetailsid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $number;
-
-    /**
-     *
-     * @var double
-     */
-    public $price;
-
-    /**
-     *
-     * @var integer
-     */
-    public $actualnumber;
-
-    /**
-     *
-     * @var integer
-     */
-    public $companyid;
-
     /**
      * 初始化
      */

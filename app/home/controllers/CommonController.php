@@ -6,7 +6,6 @@ use Asa\Erp\TbAgeseason;
 use Asa\Erp\TbBrand;
 use Asa\Erp\TbBrandgroup;
 use Asa\Erp\TbBrandgroupchild;
-use Asa\Erp\TbColorSystem;
 use Asa\Erp\TbColortemplate;
 use Asa\Erp\TbCountry;
 use Asa\Erp\TbCurrency;
@@ -368,7 +367,7 @@ class CommonController extends BaseController
     {
         // 逻辑
         // 如果未登录
-        if (!$this->currentCompany) {
+        if (!$this->companyid) {
             return $this->error($this->getValidateMessage('model-delete-message'));
         }
 
@@ -446,7 +445,8 @@ class CommonController extends BaseController
         }
 
         // 导入 excel 数据
-        if ($datas = Util::importExcelWithoutPictures(APP_PATH . '/public/upload/' . $path)) {
+        $absolutePath = APP_PATH . '/public/upload/' . $path;
+        if ($datas = Util::importExcelWithoutPictures($absolutePath)) {
             // 遍历
             foreach ($datas as $data) {
                 // 采用事务处理
@@ -476,13 +476,14 @@ class CommonController extends BaseController
                 }
 
                 // 开始处理
-                // // 判断companyid=1的商品国际码是否存在，如果存在，则更新，不存在则创建
-                // if (TbProduct::find("wordcode = '" . $data[0] . "' AND companyid = " . $this->companyid)) {
-                //     // 记录日志
-                //     $this->logFile->log('wordcode = ' . $data[0] . '的商品已经存在，接下来将进行更新操作');
-                //     // 忽略
-                //     continue;
-                // }
+                // 判断companyid=1的商品国际码是否存在，如果存在，则更新，不存在则创建
+                $dbColors = [];
+                if ($dbProducts = TbProduct::find("wordcode = '" . $data[0] . "' AND companyid = " . $this->companyid)) {
+                    // 记录日志
+                    $this->logFile->log('wordcode = ' . $data[0] . '的商品已经存在');
+                    // 拿到数据库中存在的颜色
+                    $dbColors = array_column($dbProducts->toArray(), 'color_id');
+                }
 
                 // 品牌，先转换成小写再统一比较，如果不存在则忽略
                 if (!$brandid = $this->getIds($data[1], TbBrand::class, function ($value) {
@@ -535,8 +536,8 @@ class CommonController extends BaseController
                 $sizetopid = $size['sizetopid'];
                 $sizecontentids = $size['sizecontentids'];
 
-                // 主颜色，英文
-                if (!$color_id = $this->getIds($data[6], TbColortemplate::class, function ($value) {
+                // 主颜色列表，英文
+                if (!$colorIds = $this->getIds($data[6], TbColortemplate::class, function ($value) {
                     return "lower(name_en) = '" . strtolower($value) . "'";
                 })) {
                     // 提示
@@ -544,6 +545,8 @@ class CommonController extends BaseController
                     // 忽略
                     continue;
                 }
+                // 颜色需要转成数组
+                $excelColorIds = explode(',', $colorIds);
 
                 // 以下为选填字段
                 // 副颜色
@@ -633,8 +636,6 @@ class CommonController extends BaseController
                     'sizetopid'                    => $sizetopid,
                     // 尺码明细
                     'sizecontentids'               => $sizecontentids,
-                    // 主颜色
-                    'color_id'                     => $color_id,
                     // 性别
                     'gender'                       => $gender,
                     // 副颜色
@@ -690,8 +691,8 @@ class CommonController extends BaseController
                 }
 
                 // 色系及主颜色
-                // 回添加的 model 和 id
-                $productColorsResults = $this->_createColor($insertData);
+                // 回添加的 model 和 id，如果 $dbColors 为空，则全部新增；如果不为空，则取出交集和差集
+                $productColorsResults = $this->_createColor($insertData, $excelColorIds, $dbColors);
                 $productModels = $productColorsResults['models'];
                 $productIds = $productColorsResults['ids'];
                 // 数据库查询 sql语句
@@ -707,6 +708,9 @@ class CommonController extends BaseController
                 $this->db->commit();
             }
         }
+
+        // 上传完毕后删除文件
+        @unlink($absolutePath);
 
         // 返回
         return $this->success();
@@ -802,86 +806,55 @@ class CommonController extends BaseController
      * 创建颜色
      *
      * @param array $data
+     * @param array $excelColors -excel 中的颜色列表
+     * @param array $dbColors -原来数据库中存在的颜色列表
      * @return array|TbProduct
-     * @throws \Exception
      */
-    private function _createColor(array $data)
+    private function _createColor(array $data, array $excelColors, array $dbColors)
     {
-        // 定义一个包含model的空数组 + id列表
-        $productModels = [];
-        $productIds = [];
-        // 英文颜色
-        $colorEnArr = explode(',', $data['color_id']);
-        // 可能会有多个颜色，这个时候要用遍历获取
-        // 如果颜色为空，那么就单纯添加一条记录即可。
-        if (count($colorEnArr) == 0) {
-            // 如果没有颜色，那么就只需要增加一条记录即可
-            $productModel = new TbProduct();
-            if (!$productModel->create($data)) {
-                // 记录错误信息
-                $this->db->rollback();
-                $this->logFile->log('product => create 失败了，错误信息为：' . json_encode($productModel->getMessages()));
-            }
-            // 返回 $productModel 和 $productId，单条记录
-            return [
-                'models' => [$productModel],
-                'ids'    => [$productModel->id],
-            ];
-        }
-
-        // 否则至少有一种颜色，预计多次写入
-        foreach ($colorEnArr as $k => $colorName) {
-            if (!$colorModel = TbColortemplate::findFirst([
-                'conditions' => 'lower(name_en) = :name_en:',
-                'bind'       => [
-                    'name_en' => strtolower($colorName),
-                ],
-            ])) {
-                // 涉及到颜色新增，但是色系不知道，这个时候需要预测色系，我们规定，如果颜色当中有任何一个字存在某个色系文字里，那么就属于该色系的颜色
-                $color_system_id = 0;
-                foreach (TbColorSystem::find() as $colorSystem) {
-                    // 去掉色系中的“色”字
-                    $outColor = str_replace('色', '', $colorSystem->title);
-                    // 还有 蓝 和 兰 也是通用的，如果颜色中含有任何一个 lan 字，那么就匹配所有的 lan
-                    $outColor = (strpos($outColor, '兰') !== false || strpos($outColor, '蓝') !== false) ? $outColor . '兰蓝' : $outColor;
-                    // 如果找到了, 则记录下来
-                    if (Util::stringDiff($colorName, $outColor) === true) {
-                        $color_system_id = $colorSystem->id;
-                        continue;
-                    }
-                }
-                // 添加颜色，英文和中文都默认为小写传入的颜色
-                $colorModel = new TbColortemplate();
-                if (!$colorModel->create([
-                    'name_cn'         => strtolower($colorName),
-                    'name_en'         => strtolower($colorName),
-                    // 理论上 color_system_id 的值不能为 0，否则会有意想不到的 bug，这个时候我们强行规定其为混色好了
-                    'color_system_id' => $color_system_id === 0 ? 9 : $color_system_id,
-                ])) {
-                    $this->db->rollback();
-                    $this->logFile->log('Colortemplate => create 失败了，错误信息为：' . json_encode($colorModel->getMessages()));
-                }
-            }
-
-            // 颜色赋值
-            $data['color_id'] = $colorModel->id;
-            // 色系赋值
-            $data['brandcolor'] = $data['color_system_id'] = $colorModel->color_system_id;
-
+        // 差集
+        $diffs = array_diff($excelColors, $dbColors);
+        // 交集
+        $intersects = array_intersect($excelColors, $dbColors);
+        // 差集新增
+        foreach ($diffs as $diff) {
+            $product = new TbProduct();
+            // 主颜色模型，这个 100% 存在
+            $colorModel = TbColortemplate::findFirstById($diff);
+            // 色系模型
+            $colorSystemModel = $colorModel->colorsystem;
+            // 主颜色
+            $data['color_id'] = $diff;
+            // 主颜色名称
+            $data['colorname'] = $colorModel->name_en;
+            // 色系
+            $data['brandcolor'] = $data['color_system_id'] = $colorSystemModel ? $colorSystemModel->id : 9;
             // 开始写入
-            // 因为要统计同款不同色，所以，先把每个 $productModel 的值缓存起来，便于更新
-            $productModels[$k] = new TbProduct();
-            if (!$productModels[$k]->create($data)) {
+            if (!$product->create($data)) {
                 // 记录错误信息
                 $this->db->rollback();
-                $this->logFile->log('product => create 失败了，错误信息为：' . json_encode($productModels[$k]->getMessages()));
+                $this->logFile->log('product => create 失败了，错误信息为：' . json_encode($product->getMessages()));
             }
-            // 记录包含 product_id 的列表
-            $productIds[$k] = $productModels[$k]->id;
         }
 
+        // 交集更新
+        foreach ($intersects as $intersect) {
+            // 找到 color_id = $intersect 的唯一一条记录
+            $product = TbProduct::findFirst("color_id = " . $intersect . " AND wordcode = '" . $data['wordcode'] . "' AND companyid = " . $this->companyid);
+            // 开始写入
+            if (!$product->update($data)) {
+                // 记录错误信息
+                $this->db->rollback();
+                $this->logFile->log('product => update 失败了，错误信息为：' . json_encode($product->getMessages()));
+            }
+        }
+
+        // 然后把所有的国际码为当前值都取出来
+        $productModels = TbProduct::find("wordcode = '" . $data['wordcode'] . "' AND companyid = " . $this->companyid);
+        // 记录 id 列表
+        $productIds = array_column($productModels->toArray(), 'id');
         // 更新同款不同色数据
-        if (count($productModels) > 0) {
+        if (count($productModels->toArray()) > 0) {
             // 获取 product_group
             $product_group = [];
             // 几个新增的模型
@@ -1096,62 +1069,18 @@ class CommonController extends BaseController
         }
 
         // 主图名字
-        $picture = pathinfo($data[10], PATHINFO_BASENAME);
+        $picture = $data[10];
         // 附图名字
-        $picture2 = pathinfo($data[11], PATHINFO_BASENAME);
-
-        // 待添加的所有图片，$data[12] 是所有的详情图图片，并且以逗号隔开的，把元素统一添加到这里
+        $picture2 = $data[11];
+        // 详情图
         $detailImages = explode(',', $data[12]);
-        array_push($detailImages, $data[10], $data[11]);
-        // 如果有重复的图片，则只下载一次
-        $detailImages = array_unique($detailImages);
-
-        // 如果有图片，则开始下载所有图片
-        foreach ($detailImages as $image) {
-            // 取出文件名
-            $imageName = pathinfo($image, PATHINFO_BASENAME);
-            // 开始下载, 并写入数据库
-            if (($downloadResult = Util::downloadImage($image)) !== false) {
-                // 获取图片的真实尺寸
-                $imageInfo = Util::myGetImageSize($image);
-                // 如果下载的图片高度不是 800px，则处理成 800*800
-                if (isset($imageInfo['width']) && $imageInfo['width'] != 800 && isset($imageInfo['height']) && $imageInfo['height'] != 800) {
-                    Util::makeImage($this->pictureDir . '/' . $downloadResult);
-                }
-                // 所有的 product_ids 都添加一遍
-                foreach ($productModels as $productModel) {
-                    // 添加
-                    $TbPictureModel = new TbPicture();
-                    if (!$TbPictureModel->create([
-                        'name'      => $imageName,
-                        'filename'  => 'product/' . $downloadResult,
-                        'productid' => $productModel->id,
-                    ])) {
-                        $this->db->rollback();
-                        $this->logFile->log('TbPictureModel => create失败了，错误信息为：' . json_encode($TbPictureModel->getMessages()));
-                    }
-
-                    // 如果当前下载的文件就是主图，还要写入主图url字段
-                    if ($picture == $imageName) {
-                        if (!$productModel->update([
-                            'picture' => 'product/' . $downloadResult,
-                        ])) {
-                            $this->db->rollback();
-                            $this->logFile->log('productModel => update picture失败了，错误信息为：' . json_encode($productModel->getMessages()));
-                        }
-                    }
-
-                    // 如果当前下载的文件就是附图，还要写入附图url字段
-                    if ($picture2 == $imageName) {
-                        if (!$productModel->update([
-                            'picture2' => 'product/' . $downloadResult,
-                        ])) {
-                            $this->db->rollback();
-                            $this->logFile->log('productModel => update picture2失败了，错误信息为：' . json_encode($productModel->getMessages()));
-                        }
-                    }
-                }
-            }
+        // 下载主图
+        $this->_createPicture($productModels, $picture, TbProduct::PICTURE_TYPE_MAIN);
+        // 下载附图
+        $this->_createPicture($productModels, $picture2, TbProduct::PICTURE_TYPE_ATTACH);
+        // 下载详情图
+        foreach ($detailImages as $detailImage) {
+            $this->_createPicture($productModels, $detailImage, TbProduct::PICTURE_TYPE_DETAIL);
         }
     }
 
@@ -1177,5 +1106,78 @@ class CommonController extends BaseController
         }
         // 返回字符串格式
         return implode(',', $return);
+    }
+
+    /**
+     * 下载图片并写入数据库
+     *
+     * @param $productModels -待更新的商品模型
+     * @param $picture -待下载的单个图片
+     * @param $pictureType -图片所属类型，分别是picture(主图) picture2(附图) detail(详情图)
+     * @return void
+     */
+    private function _createPicture($productModels, $picture, $pictureType = TbProduct::PICTURE_TYPE_MAIN)
+    {
+        // 如果下载成功
+        if (($downloadResult = Util::downloadImage($picture)) !== false) {
+            // 记录结果
+            $this->logFile->log($picture . '下载的结果为：' . $downloadResult . PHP_EOL);
+            // 下载后的本地完整路径
+            $img = $this->pictureDir . '/' . $downloadResult;
+            // 如果下载成功，生成缩略图
+            // 获取图片的真实尺寸
+            $imageInfo = Util::myGetImageSize($img);
+            // 如果图片存在，就继续
+            if ($imageInfo) {
+                // 如果下载的图片高度不是 800px，则处理成 800*800
+                if (isset($imageInfo['width']) && $imageInfo['width'] != 800 && isset($imageInfo['height']) && $imageInfo['height'] != 800) {
+                    Util::makeImage($img);
+                }
+                // 再生成 40*40 和 150*150 两种尺寸，并返回 MD5 之后的格式
+                $filename_40 = Util::resizeImage($img, 40, 40);
+                $filename_150 = Util::resizeImage($img, 150, 150);
+                // 所有的 product_ids 都添加一遍
+                foreach ($productModels as $productModel) {
+                    // 添加
+                    $TbPictureModel = new TbPicture();
+                    if (!$TbPictureModel->create([
+                        // 文件名
+                        'name'         => pathinfo($picture, PATHINFO_BASENAME),
+                        'filename'     => 'product/' . $downloadResult,
+                        'filename_40'  => $filename_40,
+                        'filename_150' => $filename_150,
+                        'productid'    => $productModel->id,
+                    ])) {
+                        $this->db->rollback();
+                        $this->logFile->log('TbPictureModel => create失败了，错误信息为：' . json_encode($TbPictureModel->getMessages()));
+                    }
+
+                    // 主图还要写入主图url字段
+                    switch ($pictureType) {
+                        // 如果是主图
+                        case TbProduct::PICTURE_TYPE_MAIN:
+                            if (!$productModel->update([
+                                'picture' => 'product/' . $downloadResult,
+                            ])) {
+                                $this->db->rollback();
+                                $this->logFile->log('productModel => update picture失败了，错误信息为：' . json_encode($productModel->getMessages()));
+                            }
+                            break;
+                        // 如果是附图
+                        case TbProduct::PICTURE_TYPE_ATTACH:
+                            if (!$productModel->update([
+                                'picture2' => 'product/' . $downloadResult,
+                            ])) {
+                                $this->db->rollback();
+                                $this->logFile->log('productModel => update picture失败了，错误信息为：' . json_encode($productModel->getMessages()));
+                            }
+                            break;
+                        // 如果是详情图，不需要额外操作
+                        default:
+                    }
+
+                }
+            }
+        }
     }
 }

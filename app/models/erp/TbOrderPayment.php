@@ -4,89 +4,25 @@ namespace Asa\Erp;
 
 /**
  * 订单付款信息表
+ *
  * Class TbOrderPayment
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int|null $shippingid 发货单id
+ * @property int|null $currency 币种
+ * @property float|null $amount 金额
+ * @property int|null $makestaff 添加人
+ * @property null $maketime 添加时间
+ * @property int|null $confirmstaff 付款确认人
+ * @property null $confirmtime 付款确认时间
+ * @property string|null $paymentdate 付款日期
+ * @property int|null $companyid 公司id
+ * @property int|null $status 付款状态：0=未支付；1=已支付
+ * @property int|null $payment_type 收款类型：1=定金；2=货款
+ * @property string|null $memo 备注
  */
 class TbOrderPayment extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $shippingid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $currency;
-
-    /**
-     *
-     * @var double
-     */
-    public $amount;
-
-    /**
-     *
-     * @var integer
-     */
-    public $makestaff;
-
-    /**
-     *
-     * @var string
-     */
-    public $maketime;
-
-    /**
-     *
-     * @var integer
-     */
-    public $confirmstaff;
-
-    /**
-     *
-     * @var string
-     */
-    public $confirmtime;
-
-    /**
-     *
-     * @var string
-     */
-    public $paymentdate;
-
-    /**
-     *
-     * @var integer
-     */
-    public $companyid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $status;
-
-    /**
-     *
-     * @var integer
-     */
-    public $payment_type;
-
-    /**
-     *
-     * @var string
-     */
-    public $memo;
-
     // 添加枚举
     // 付款状态
     // 未付款

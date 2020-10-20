@@ -7,327 +7,64 @@ namespace Asa\Erp;
  *
  * Class TbShipping
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int|null $companyid 公司id
+ * @property bool|null $status 状态：1-在途；2=待入库；3=已入库
+ * @property string|null $orderno 发货单号
+ * @property int|null $supplierid 供货商id
+ * @property null $maketime 制单日期
+ * @property int|null $makestaff 制单人
+ * @property int|null $currency 货币类型
+ * @property float|null $total 总金额
+ * @property string|null $memo 备注
+ * @property int|null $brandid 品牌id
+ * @property int|null $ageseason 年份季节id
+ * @property bool|null $seasontype 0-pre ,1-main ,2-fashion show
+ * @property float|null $exchangerate 汇率
+ * @property int|null $finalsupplierid 供货单位id
+ * @property string|null $flightno 航班号
+ * @property string|null $flightdate 起飞时间
+ * @property string|null $arrivaldate 预计到货时间
+ * @property string|null $mblno 主单号
+ * @property string|null $hblno 子单号
+ * @property string|null $dispatchport 发货港
+ * @property string|null $deliveryport 到货港
+ * @property int|null $transcompany 空运商
+ * @property bool|null $isexamination 是否海关验货
+ * @property string|null $examinationresult 验货结果
+ * @property null $clearancedate 放行时间
+ * @property null $pickingdate 预计提货时间
+ * @property string|null $motortransportpool 车队
+ * @property int|null $warehouseid 仓库id
+ * @property int|null $box_number 箱数
+ * @property float|null $weight 重量
+ * @property float|null $volume 体积
+ * @property string|null $issjyh 是否商检验货
+ * @property int|null $sellerid 销售人id
+ * @property string|null $sjyhresult 商检验货结果
+ * @property int|null $buyerid 购买人id
+ * @property bool|null $transporttype 0-by air 1-快递 2-中转
+ * @property bool|null $paytype 0- t/t
+ * @property bool|null $property 0-自采 1-代销
+ * @property string|null $payoutpercentage 属性
+ * @property string|null $pickingaddress 国外提货地址
+ * @property float|null $chargedweight 计费重量
+ * @property string|null $paydate 付款时间
+ * @property string|null $apickingdate 安排提货时间
+ * @property string|null $aarrivaldate 到库时间
+ * @property string|null $invoiceno 国外发票号
+ * @property int|null $dd_company 代垫单位
+ * @property string|null $estimatedate 预计到达日期
+ * @property int|null $bussinesstype 货物属性：0-期货 1-现货
+ * @property null $warehousingtime 入库时间
+ * @property int|null $warehousingstaff 入库人
+ * @property null $confirmtime 确认时间
+ * @property int|null $confirmstaff 确认人
+ * @property-read TbShippingDetail|null $shippingDetail 订单详情
+ * @property-read TbShippingFee|null $shippingFee 发货单费用
  */
 class TbShipping extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $companyid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $status;
-
-    /**
-     *
-     * @var string
-     */
-    public $orderno;
-
-    /**
-     *
-     * @var integer
-     */
-    public $supplierid;
-
-    /**
-     *
-     * @var string
-     */
-    public $maketime;
-
-    /**
-     *
-     * @var integer
-     */
-    public $makestaff;
-
-    /**
-     *
-     * @var integer
-     */
-    public $currency;
-
-    /**
-     *
-     * @var double
-     */
-    public $total;
-
-    /**
-     *
-     * @var string
-     */
-    public $memo;
-
-    /**
-     *
-     * @var integer
-     */
-    public $brandid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $ageseason;
-
-    /**
-     *
-     * @var integer
-     */
-    public $seasontype;
-
-    /**
-     *
-     * @var double
-     */
-    public $exchangerate;
-
-    /**
-     *
-     * @var integer
-     */
-    public $finalsupplierid;
-
-    /**
-     *
-     * @var string
-     */
-    public $flightno;
-
-    /**
-     *
-     * @var string
-     */
-    public $flightdate;
-
-    /**
-     *
-     * @var string
-     */
-    public $arrivaldate;
-
-    /**
-     *
-     * @var string
-     */
-    public $mblno;
-
-    /**
-     *
-     * @var string
-     */
-    public $hblno;
-
-    /**
-     *
-     * @var string
-     */
-    public $dispatchport;
-
-    /**
-     *
-     * @var string
-     */
-    public $deliveryport;
-
-    /**
-     *
-     * @var integer
-     */
-    public $transcompany;
-
-    /**
-     *
-     * @var integer
-     */
-    public $isexamination;
-
-    /**
-     *
-     * @var string
-     */
-    public $examinationresult;
-
-    /**
-     *
-     * @var string
-     */
-    public $clearancedate;
-
-    /**
-     *
-     * @var string
-     */
-    public $pickingdate;
-
-    /**
-     *
-     * @var string
-     */
-    public $motortransportpool;
-
-    /**
-     *
-     * @var integer
-     */
-    public $warehouseid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $box_number;
-
-    /**
-     *
-     * @var double
-     */
-    public $weight;
-
-    /**
-     *
-     * @var double
-     */
-    public $volume;
-
-    /**
-     *
-     * @var string
-     */
-    public $issjyh;
-
-    /**
-     *
-     * @var integer
-     */
-    public $sellerid;
-
-    /**
-     *
-     * @var string
-     */
-    public $sjyhresult;
-
-    /**
-     *
-     * @var integer
-     */
-    public $buyerid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $transporttype;
-
-    /**
-     *
-     * @var integer
-     */
-    public $paytype;
-
-    /**
-     *
-     * @var integer
-     */
-    public $property;
-
-    /**
-     *
-     * @var string
-     */
-    public $payoutpercentage;
-
-    /**
-     *
-     * @var string
-     */
-    public $pickingaddress;
-
-    /**
-     *
-     * @var double
-     */
-    public $chargedweight;
-
-    /**
-     *
-     * @var string
-     */
-    public $paydate;
-
-    /**
-     *
-     * @var string
-     */
-    public $apickingdate;
-
-    /**
-     *
-     * @var string
-     */
-    public $aarrivaldate;
-
-    /**
-     *
-     * @var string
-     */
-    public $invoiceno;
-
-    /**
-     *
-     * @var integer
-     */
-    public $dd_company;
-
-    /**
-     *
-     * @var string
-     */
-    public $estimatedate;
-
-    /**
-     *
-     * @var integer
-     */
-    public $bussinesstype;
-
-    /**
-     *
-     * @var string
-     */
-    public $warehousingtime;
-
-    /**
-     *
-     * @var integer
-     */
-    public $warehousingstaff;
-
-    /**
-     *
-     * @var string
-     */
-    public $confirmtime;
-
-    /**
-     *
-     * @var integer
-     */
-    public $confirmstaff;
-
     // 定义订单状态
     // 在途
     const STATUS_WAY = 1;
@@ -354,7 +91,7 @@ class TbShipping extends BaseModel
             ]
         );
 
-        // 订单-订单详情，一对多
+        // 订单-发货单费用，一对多
         $this->hasMany(
             "id",
             TbShippingFee::class,

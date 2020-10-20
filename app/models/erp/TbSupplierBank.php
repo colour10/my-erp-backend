@@ -7,75 +7,20 @@ namespace Asa\Erp;
  *
  * Class TbSupplierBank
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int|null $supplierid 供应商
+ * @property int|null $companyid 公司id
+ * @property string|null $name 账户名称
+ * @property string|null $address 地址
+ * @property string|null $bank_name 银行名称
+ * @property string|null $bank_address 银行地址
+ * @property string|null $bank_depart 分行名称
+ * @property string|null $account 银行账号
+ * @property string|null $bank_code 银行国际码
+ * @property int|null $currency 币种
  */
 class TbSupplierBank extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $supplierid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $companyid;
-
-    /**
-     *
-     * @var string
-     */
-    public $name;
-
-    /**
-     *
-     * @var string
-     */
-    public $address;
-
-    /**
-     *
-     * @var string
-     */
-    public $bank_name;
-
-    /**
-     *
-     * @var string
-     */
-    public $bank_address;
-
-    /**
-     *
-     * @var string
-     */
-    public $bank_depart;
-
-    /**
-     *
-     * @var string
-     */
-    public $account;
-
-    /**
-     *
-     * @var string
-     */
-    public $bank_code;
-
-    /**
-     *
-     * @var integer
-     */
-    public $currency;
-
     /**
      * 初始化
      */

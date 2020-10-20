@@ -6,6 +6,9 @@ use Phalcon\Mvc\Model\ResultsetInterface;
 
 /**
  * 销售端口表
+ *
+ * Class TbSaleport
+ * @package Asa\Erp
  */
 class TbSaleport extends BaseModel
 {

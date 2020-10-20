@@ -4,71 +4,23 @@ namespace Asa\Erp;
 
 /**
  * 对账单回款表
+ *
  * Class TbBillConfirm
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int|null $billid 账单id
+ * @property float|null $amount 回款金额
+ * @property null $createtime 操作时间
+ * @property int|null $createstaff 操作人
+ * @property string|null $bankaccount 回款账户
+ * @property string|null $invoice 发票编号
+ * @property int|null $currencyid 币种
+ * @property string|null $memo 备注
+ * @property null $enterdate 入账日期
+ * @property-read TbBill|null $bill 账单
  */
 class TbBillConfirm extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $billid;
-
-    /**
-     *
-     * @var double
-     */
-    public $amount;
-
-    /**
-     *
-     * @var string
-     */
-    public $createtime;
-
-    /**
-     *
-     * @var integer
-     */
-    public $createstaff;
-
-    /**
-     *
-     * @var string
-     */
-    public $bankaccount;
-
-    /**
-     *
-     * @var string
-     */
-    public $invoice;
-
-    /**
-     *
-     * @var integer
-     */
-    public $currencyid;
-
-    /**
-     *
-     * @var string
-     */
-    public $memo;
-
-    /**
-     *
-     * @var string
-     */
-    public $enterdate;
-
     /**
      * 初始化
      */
@@ -77,6 +29,7 @@ class TbBillConfirm extends BaseModel
         parent::initialize();
         $this->setSource('tb_bill_confirm');
 
+        // 对账单回款表-账单，一对多反向
         $this->belongsTo(
             'billid',
             TbBill::class,

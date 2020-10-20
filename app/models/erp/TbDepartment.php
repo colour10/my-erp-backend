@@ -4,59 +4,21 @@ namespace Asa\Erp;
 
 /**
  * 部门表
+ *
  * Class TbDepartment
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property string|null $name 名称
+ * @property string|null $memo 备注
+ * @property int $companyid 公司id
+ * @property int|null $priceid 基础价格id
+ * @property int|null $spotid 销售端口编号
+ * @property int|null $up_dp_id 上级部门ID
+ * @property string|null $checkingflag 核算部门
+ * @property-read TbCompany|null $company 公司
  */
 class TbDepartment extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var string
-     */
-    public $name;
-
-    /**
-     *
-     * @var string
-     */
-    public $memo;
-
-    /**
-     *
-     * @var integer
-     */
-    public $companyid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $priceid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $spotid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $up_dp_id;
-
-    /**
-     *
-     * @var string
-     */
-    public $checkingflag;
-
     /**
      * 初始化
      */

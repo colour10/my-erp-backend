@@ -4,29 +4,16 @@ namespace Asa\Erp;
 
 /**
  * 用户价格表
+ *
  * Class TbUserPrice
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int|null $userid 用户id
+ * @property int|null $priceid 价格id
+ * @property-read TbPrice|null $price 价格
  */
 class TbUserPrice extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $userid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $priceid;
-
     /**
      * 初始化
      */

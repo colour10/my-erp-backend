@@ -9,39 +9,16 @@ use Phalcon\Mvc\Model\Relation;
  *
  * Class TbGroup
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property string|null $group_name 名称
+ * @property string|null $group_memo 备注
+ * @property int|null $companyid 公司id
+ * @property bool|null $is_super 是否超级管理员
+ * @property-read TbPermissionGroup|null $permissionGroups 权限组
+ * @property-read TbUser|null $users 用户
  */
 class TbGroup extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var string
-     */
-    public $group_name;
-
-    /**
-     *
-     * @var string
-     */
-    public $group_memo;
-
-    /**
-     *
-     * @var integer
-     */
-    public $companyid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $is_super;
-
     /**
      * 初始化
      */

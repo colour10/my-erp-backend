@@ -7,45 +7,15 @@ namespace Asa\Erp;
  *
  * Class TbPicture
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property string|null $name 名称
+ * @property string|null $filename 文件路径800*800
+ * @property string|null $filename_40 文件路径40*40
+ * @property string|null $filename_150 文件路径150*150
+ * @property int|null $productid 商品id
  */
 class TbPicture extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var string
-     */
-    public $name;
-
-    /**
-     *
-     * @var string
-     */
-    public $filename;
-
-    /**
-     *
-     * @var string
-     */
-    public $filename_40;
-
-    /**
-     *
-     * @var string
-     */
-    public $filename_150;
-
-    /**
-     *
-     * @var integer
-     */
-    public $productid;
-
     /**
      * 初始化
      */

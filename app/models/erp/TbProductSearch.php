@@ -4,8 +4,23 @@ namespace Asa\Erp;
 
 /**
  * 商品查询表
+ *
  * Class TbProductSearch
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property string|null $productname 商品名称
+ * @property int|null $productid 商品id
+ * @property int|null $sizetopid 尺码组id
+ * @property int|null $brandid 品牌id
+ * @property string|null $gender 性别
+ * @property int|null $brandgroupid 品类id
+ * @property int|null $childbrand 子品类id
+ * @property int|null $number 库存数量
+ * @property string|null $picture 主图
+ * @property string|null $picture2 副图
+ * @property string|null $color 颜色
+ * @property string|null $color_group 同组颜色
+ * @property int|null $companyid 公司id
  */
 class TbProductSearch extends BaseCompanyModel
 {

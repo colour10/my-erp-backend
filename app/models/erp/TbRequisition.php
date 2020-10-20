@@ -6,149 +6,38 @@ use Phalcon\Di;
 
 /**
  * 调拨单主表
+ *
  * Class TbRequisition
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int|null $feecurrencyid 相关费用币种
+ * @property float|null $fee 相关费用
+ * @property int $apply_staff 制单_操作人
+ * @property null $apply_date 制单时间
+ * @property int|null $turnin_staff 调入_操作人
+ * @property null $turnin_date 调入时间
+ * @property int|null $turnout_staff 调出_操作人
+ * @property null $turnout_date 调出时间
+ * @property int $out_id 调出库id
+ * @property int $in_id 调入库id
+ * @property string|null $memo 备注
+ * @property bool|null $status 1=出库拒绝 2=出库待确认 3=在途 4=入库拒绝 5=完成
+ * @property string|null $requisitionno 调拨单号
+ * @property int|null $salesid 销售单id
+ * @property bool|null $ism 1-主单，0或者空-子单或单对单库调拨单
+ * @property bool|null $is_quality 0-合格品 1-残品
+ * @property bool|null $is_amortized 是否摊销费用
+ * @property int|null $expresscomoany 0-顺丰 1-德邦 2-京东 3-其他
+ * @property string|null $address 收货地址
+ * @property string|null $markno 流水号
+ * @property bool|null $is_return 0-普通调拨单，1-反向调拨单
+ * @property int $companyid 公司id
+ * @property-read TbRequisitionDetail|null $requisitionDetail 调拨单明细
+ * @property-read TbWarehouse|null $outWarehouse 调出仓库
+ * @property-read TbWarehouse|null $inWarehouse 调入仓库
  */
 class TbRequisition extends BaseCompanyModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $feecurrencyid;
-
-    /**
-     *
-     * @var double
-     */
-    public $fee;
-
-    /**
-     *
-     * @var integer
-     */
-    public $apply_staff;
-
-    /**
-     *
-     * @var string
-     */
-    public $apply_date;
-
-    /**
-     *
-     * @var integer
-     */
-    public $turnin_staff;
-
-    /**
-     *
-     * @var string
-     */
-    public $turnin_date;
-
-    /**
-     *
-     * @var integer
-     */
-    public $turnout_staff;
-
-    /**
-     *
-     * @var string
-     */
-    public $turnout_date;
-
-    /**
-     *
-     * @var integer
-     */
-    public $out_id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $in_id;
-
-    /**
-     *
-     * @var string
-     */
-    public $memo;
-
-    /**
-     *
-     * @var integer
-     */
-    public $status;
-
-    /**
-     *
-     * @var string
-     */
-    public $requisitionno;
-
-    /**
-     *
-     * @var integer
-     */
-    public $salesid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $ism;
-
-    /**
-     *
-     * @var integer
-     */
-    public $is_quality;
-
-    /**
-     *
-     * @var integer
-     */
-    public $is_amortized;
-
-    /**
-     *
-     * @var integer
-     */
-    public $expresscomoany;
-
-    /**
-     *
-     * @var string
-     */
-    public $address;
-
-    /**
-     *
-     * @var string
-     */
-    public $markno;
-
-    /**
-     *
-     * @var integer
-     */
-    public $is_return;
-
-    /**
-     *
-     * @var integer
-     */
-    public $companyid;
-
     // 调拨单状态
     // 出库拒绝
     const STATUS_DELIVERY_REJECTION = 1;

@@ -9,153 +9,36 @@ use Phalcon\Mvc\Model;
  *
  * Class TbOrder
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int|null $makestaff 制单人
+ * @property int|null $supplierid 供货商
+ * @property int|null $finalsupplierid 发货单位
+ * @property int|null $bookingid 客户id
+ * @property string|null $orderno 公司订单号
+ * @property float|null $total 总金额
+ * @property string|null $currency 总金额货币
+ * @property string|null $bookingorderno 客户订单号
+ * @property bool|null $isstatus 0-未完结 1-已完结
+ * @property string|null $memo 备注
+ * @property int|null $linkmanid 客户联系人
+ * @property int|null $ageseason 年代季节
+ * @property bool|null $seasontype 0-pre ,1-main ,2-fashion show
+ * @property float|null $taxrebate 退税率
+ * @property bool|null $bussinesstype 订单类型：0-期货 1-现货
+ * @property float|null $discount 折扣
+ * @property bool|null $property 采购类型：0-自采; 1-代销
+ * @property int|null $companyid 公司id
+ * @property int|null $status 订单状态：1=保存；2=已完结
+ * @property null $maketime 订单时间
+ * @property string|null $orderdate 订货日期
+ * @property string|null $genders 性别
+ * @property string|null $brandids 品牌
+ * @property-read TbOrderdetails|null $orderdetails 订单详情
+ * @property-read TbSupplier|null $booking 订货客户
+ * @property-read TbCurrency|null $currencyModel 订货币种
  */
 class TbOrder extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $makestaff;
-
-    /**
-     *
-     * @var integer
-     */
-    public $supplierid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $finalsupplierid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $bookingid;
-
-    /**
-     *
-     * @var string
-     */
-    public $orderno;
-
-    /**
-     *
-     * @var double
-     */
-    public $total;
-
-    /**
-     *
-     * @var string
-     */
-    public $currency;
-
-    /**
-     *
-     * @var string
-     */
-    public $bookingorderno;
-
-    /**
-     *
-     * @var integer
-     */
-    public $isstatus;
-
-    /**
-     *
-     * @var string
-     */
-    public $memo;
-
-    /**
-     *
-     * @var integer
-     */
-    public $linkmanid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $ageseason;
-
-    /**
-     *
-     * @var integer
-     */
-    public $seasontype;
-
-    /**
-     *
-     * @var double
-     */
-    public $taxrebate;
-
-    /**
-     *
-     * @var integer
-     */
-    public $bussinesstype;
-
-    /**
-     *
-     * @var double
-     */
-    public $discount;
-
-    /**
-     *
-     * @var integer
-     */
-    public $property;
-
-    /**
-     *
-     * @var integer
-     */
-    public $companyid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $status;
-
-    /**
-     *
-     * @var string
-     */
-    public $maketime;
-
-    /**
-     *
-     * @var string
-     */
-    public $orderdate;
-
-    /**
-     *
-     * @var string
-     */
-    public $genders;
-
-    /**
-     *
-     * @var string
-     */
-    public $brandids;
-    
     // 状态使用枚举存储
     // 未完成，刚刚保存状态
     const STATUS_UNFINISHED = 1;
@@ -169,9 +52,6 @@ class TbOrder extends BaseModel
     {
         parent::initialize();
         $this->setSource('tb_order');
-
-        // 动态更新
-        $this->useDynamicUpdate(true);
 
         // 订单-订单详情，一对多
         $this->hasMany(

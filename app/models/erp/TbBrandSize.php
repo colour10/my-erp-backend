@@ -6,59 +6,23 @@ use Phalcon\Config\Adapter\Php;
 
 /**
  * 品牌尺码表
+ *
  * Class TbBrandSize
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int $brand_id 品牌id
+ * @property int $brandgroup_id 品类id
+ * @property int $brandgroupchild_id 子品类id
+ * @property int $gender 性别
+ * @property int $sizetop_id 尺码组id
+ * @property null $created_at 创建时间
+ * @property null $updated_at 更新时间
+ * @property-read TbBrandgroup $brandgroup 品类
+ * @property-read TbBrandgroupchild $brandgroupchild 子品类
+ * @property-read TbSizetop $sizetop 尺码组
  */
 class TbBrandSize extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $brand_id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $brandgroup_id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $brandgroupchild_id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $gender;
-
-    /**
-     *
-     * @var integer
-     */
-    public $sizetop_id;
-
-    /**
-     *
-     * @var string
-     */
-    public $created_at;
-
-    /**
-     *
-     * @var string
-     */
-    public $updated_at;
-
     /**
      * 初始化
      */

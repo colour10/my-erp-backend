@@ -7,63 +7,18 @@ namespace Asa\Erp;
  *
  * Class TbGoods
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int $productid 商品id
+ * @property int $sizecontentid 尺码id
+ * @property bool|null $defective_level 残次品等级；0=合格品 1=残次品
+ * @property bool|null $property 采购类型：0-自采; 1-代销
+ * @property null $change_time 修改时间
+ * @property int|null $change_stuff 修改人
+ * @property float $price 价格
+ * @property int $companyid 公司id
  */
 class TbGoods extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $productid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $sizecontentid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $defective_level;
-
-    /**
-     *
-     * @var integer
-     */
-    public $property;
-
-    /**
-     *
-     * @var string
-     */
-    public $change_time;
-
-    /**
-     *
-     * @var integer
-     */
-    public $change_stuff;
-
-    /**
-     *
-     * @var double
-     */
-    public $price;
-
-    /**
-     *
-     * @var integer
-     */
-    public $companyid;
-
     /**
      * 初始化
      */

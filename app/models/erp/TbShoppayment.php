@@ -2,17 +2,20 @@
 
 namespace Asa\Erp;
 
-use Phalcon\Mvc\Model\ResultInterface;
-use Phalcon\Mvc\Model\ResultSetInterface;
-
 /**
  * ERP附带商城支付配置表
+ *
  * Class TbShoppayment
  * @package Asa\Erp
+ * @property int $id 主键ID
+ * @property int|null $companyid 所属公司id
+ * @property string|null $config 支付配置
+ * @property null $created_at 创建时间
+ * @property null $updated_at 更新时间
+ * @property-read TbCompany|null $company 公司
  */
 class TbShoppayment extends BaseModel
 {
-
     /**
      *
      * @var integer
@@ -168,7 +171,7 @@ class TbShoppayment extends BaseModel
         // 支付配置表-公司表，一对一
         $this->belongsTo(
             'companyid',
-            '\Asa\Erp\TbCompany',
+            TbCompany::class,
             'id',
             [
                 'alias' => 'company',
@@ -184,45 +187,6 @@ class TbShoppayment extends BaseModel
     public function getSource()
     {
         return 'tb_shoppayment';
-    }
-
-    /**
-     * Allows to query a set of records that match the specified conditions
-     *
-     * @param mixed $parameters
-     * @return TbShoppayment[]|TbShoppayment|ResultSetInterface
-     */
-    public static function find($parameters = null)
-    {
-        return parent::find($parameters);
-    }
-
-    /**
-     * Allows to query the first record that match the specified conditions
-     *
-     * @param mixed $parameters
-     * @return TbShoppayment|ResultInterface
-     */
-    public static function findFirst($parameters = null)
-    {
-        return parent::findFirst($parameters);
-    }
-
-    /**
-     * Independent Column Mapping.
-     * Keys are the real names in the table and the values their names in the application
-     *
-     * @return array
-     */
-    public function columnMap()
-    {
-        return [
-            'id'         => 'id',
-            'companyid'  => 'companyid',
-            'config'     => 'config',
-            'created_at' => 'created_at',
-            'updated_at' => 'updated_at',
-        ];
     }
 
 }

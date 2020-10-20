@@ -7,69 +7,21 @@ namespace Asa\Erp;
  *
  * Class TbSalesdetails
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int $salesid 销售单id
+ * @property int|null $productstockid 库存id
+ * @property int|null $number 数量
+ * @property float|null $dealprice 成交总价
+ * @property float|null $price 基准单价
+ * @property int|null $priceid 价格id
+ * @property float|null $cost 成本
+ * @property int|null $costcurrency 成本货币单位id
+ * @property int|null $update_time 更新时间
+ * @property-read TbSales|null $sales 销售主表
+ * @property-read TbProductstock|null $productstock 库存表
  */
 class TbSalesdetails extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $salesid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $productstockid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $number;
-
-    /**
-     *
-     * @var double
-     */
-    public $dealprice;
-
-    /**
-     *
-     * @var double
-     */
-    public $price;
-
-    /**
-     *
-     * @var integer
-     */
-    public $priceid;
-
-    /**
-     *
-     * @var double
-     */
-    public $cost;
-
-    /**
-     *
-     * @var integer
-     */
-    public $costcurrency;
-
-    /**
-     *
-     * @var integer
-     */
-    public $update_time;
-
     /**
      * 初始化
      */

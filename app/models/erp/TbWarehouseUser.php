@@ -4,47 +4,20 @@ namespace Asa\Erp;
 
 /**
  * 仓库-用户关联表
+ *
  * Class TbWarehouseUser
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int $warehouseid 仓库id
+ * @property int $userid 用户id
+ * @property int|null $warehouseroleid 仓库角色：1=管理员；2：销售
+ * @property null $create_time 创建时间
+ * @property int|null $companyid 公司id
+ * @property-read TbWarehouse|null $warehouse 仓库
+ * @property-read TbUser|null $user 用户
  */
 class TbWarehouseUser extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $warehouseid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $userid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $warehouseroleid;
-
-    /**
-     *
-     * @var string
-     */
-    public $create_time;
-
-    /**
-     *
-     * @var integer
-     */
-    public $companyid;
-
     // 定义角色常量
     // 管理员
     const ROLE_MANAGER = 1;

@@ -7,113 +7,33 @@ use Phalcon\Mvc\Model\Relation;
 
 /**
  * 仓库表
+ *
  * Class TbWarehouse
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int|null $countryid 国家ID
+ * @property string|null $city 城市名称
+ * @property string|null $name 仓库名称
+ * @property string|null $address 仓库地址
+ * @property string|null $contact 联系人
+ * @property string|null $toll
+ * @property string|null $fax
+ * @property string|null $mobile
+ * @property string|null $othercontact
+ * @property string|null $code
+ * @property string|null $defaultstore
+ * @property string|null $zipcode
+ * @property string|null $is_real
+ * @property int|null $maxstock
+ * @property int|null $maxsku
+ * @property int|null $companyid
+ * @property-read TbWarehouseUser|null $users 用户列表
+ * @property-read TbWarehouseUser|null $warehouseUser 用户列表
+ * @property-read TbConfirmorder|null $confirmorder 发货单列表
+ * @property-read TbProductstock|null $productstocks 库存列表
  */
 class TbWarehouse extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $countryid;
-
-    /**
-     *
-     * @var string
-     */
-    public $city;
-
-    /**
-     *
-     * @var string
-     */
-    public $name;
-
-    /**
-     *
-     * @var string
-     */
-    public $address;
-
-    /**
-     *
-     * @var string
-     */
-    public $contact;
-
-    /**
-     *
-     * @var string
-     */
-    public $toll;
-
-    /**
-     *
-     * @var string
-     */
-    public $fax;
-
-    /**
-     *
-     * @var string
-     */
-    public $mobile;
-
-    /**
-     *
-     * @var string
-     */
-    public $othercontact;
-
-    /**
-     *
-     * @var string
-     */
-    public $code;
-
-    /**
-     *
-     * @var string
-     */
-    public $defaultstore;
-
-    /**
-     *
-     * @var string
-     */
-    public $zipcode;
-
-    /**
-     *
-     * @var string
-     */
-    public $is_real;
-
-    /**
-     *
-     * @var integer
-     */
-    public $maxstock;
-
-    /**
-     *
-     * @var integer
-     */
-    public $maxsku;
-
-    /**
-     *
-     * @var integer
-     */
-    public $companyid;
-
     /**
      * 初始化
      */
@@ -122,7 +42,20 @@ class TbWarehouse extends BaseModel
         parent::initialize();
         $this->setSource('tb_warehouse');
 
-        // 仓库表-仓库-用户关联表，一对多
+        // 仓库表-用户表，多对多
+        $this->hasManyToMany(
+            'id',
+            TbWarehouseUser::class,
+            'warehouseid',
+            'userid',
+            TbUser::class,
+            'id',
+            [
+                'alias' => 'users',
+            ]
+        );
+
+        // 仓库表-仓库用户关联表，一对多
         $this->hasMany(
             "id",
             TbWarehouseUser::class,

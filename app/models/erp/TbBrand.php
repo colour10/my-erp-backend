@@ -6,101 +6,29 @@ use Phalcon\Mvc\Model\Relation;
 
 /**
  * 品牌表
+ *
  * Class TbBrand
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property string|null $name_cn 中文名称
+ * @property string|null $name_en 英文名称
+ * @property string|null $name_hk 粤语名称
+ * @property string|null $name_fr 法语名称
+ * @property string|null $name_it 意大利语名称
+ * @property string|null $name_sp 西班牙语名称
+ * @property string|null $name_de 德语名称
+ * @property int|null $countryid 公司id
+ * @property string|null $filename LOGO
+ * @property string|null $memo 备注
+ * @property string|null $officialwebsite 网址
+ * @property string|null $worldcode1 国际码前3位
+ * @property string|null $worldcode2 国际码中间3位
+ * @property string|null $worldcode3 国际码后3位
+ * @property-read TbCountry|null $country 国家
+ * @property-read TbProduct|null $products 产品
  */
 class TbBrand extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_cn;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_en;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_hk;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_fr;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_it;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_sp;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_de;
-
-    /**
-     *
-     * @var integer
-     */
-    public $countryid;
-
-    /**
-     *
-     * @var string
-     */
-    public $filename;
-
-    /**
-     *
-     * @var string
-     */
-    public $memo;
-
-    /**
-     *
-     * @var string
-     */
-    public $officialwebsite;
-
-    /**
-     *
-     * @var string
-     */
-    public $worldcode1;
-
-    /**
-     *
-     * @var string
-     */
-    public $worldcode2;
-
-    /**
-     *
-     * @var string
-     */
-    public $worldcode3;
-
     /**
      * 初始化
      */

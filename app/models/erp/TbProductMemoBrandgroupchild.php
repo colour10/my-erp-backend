@@ -7,33 +7,14 @@ namespace Asa\Erp;
  *
  * Class TbProductMemoBrandgroupchild
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int $memo_id 商品描述id
+ * @property int $brandgroupchild_id 子品类id
+ * @property null $created_at
+ * @property null $updated_at
  */
 class TbProductMemoBrandgroupchild extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $memo_id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $brandgroupchild_id;
-
-    /**
-     *
-     * @var string
-     */
-    public $created_at;
-
-    /**
-     *
-     * @var string
-     */
-    public $updated_at;
-
     /**
      * 初始化
      */

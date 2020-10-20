@@ -4,59 +4,20 @@ namespace Asa\Erp;
 
 /**
  * 汇率表
+ *
  * Class TbExchangeRate
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int|null $currency_from 原货币
+ * @property int|null $currency_to 目标货币
+ * @property float|null $rate 汇率
+ * @property int|null $companyid 公司id
+ * @property null $begin_time 开始时间
+ * @property null $end_time 截止时间
+ * @property int|null $status 1=历史汇率；0=当前汇率
  */
 class TbExchangeRate extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $currency_from;
-
-    /**
-     *
-     * @var integer
-     */
-    public $currency_to;
-
-    /**
-     *
-     * @var double
-     */
-    public $rate;
-
-    /**
-     *
-     * @var integer
-     */
-    public $companyid;
-
-    /**
-     *
-     * @var string
-     */
-    public $begin_time;
-
-    /**
-     *
-     * @var string
-     */
-    public $end_time;
-
-    /**
-     *
-     * @var integer
-     */
-    public $status;
-
     /**
      * 初始化
      */

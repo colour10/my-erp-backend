@@ -7,33 +7,13 @@ namespace Asa\Erp;
  *
  * Class TbPaymentway
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property string|null $name 名称
+ * @property int|null $companyid 公司id
+ * @property int|null $displayindex 排序
  */
 class TbPaymentway extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var string
-     */
-    public $name;
-
-    /**
-     *
-     * @var integer
-     */
-    public $companyid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $displayindex;
-
     /**
      * 初始化
      */

@@ -3,63 +3,26 @@
 namespace Asa\Erp;
 
 use Phalcon\Mvc\Model\Relation;
+use Phalcon\Mvc\Model\ResultInterface;
+use Phalcon\Mvc\Model\ResultSetInterface;
 
 /**
  * 价格定义表
  *
  * Class TbPrice
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int|null $countryid 国家id
+ * @property int|null $pricetype 1=零售价；2=批发价；3=一口价
+ * @property int|null $currencyid 货币id
+ * @property int|null $companyid 公司id
+ * @property string|null $name 价格名称
+ * @property int|null $displayindex 排序
+ * @property int|null $filter 取整规则
+ * @property-read TbPriceSetting|null $prices 价格
  */
 class TbPrice extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $countryid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $pricetype;
-
-    /**
-     *
-     * @var integer
-     */
-    public $currencyid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $companyid;
-
-    /**
-     *
-     * @var string
-     */
-    public $name;
-
-    /**
-     *
-     * @var integer
-     */
-    public $displayindex;
-
-    /**
-     *
-     * @var integer
-     */
-    public $filter;
-
     // 单例模式
     private static $box;
 

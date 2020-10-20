@@ -1013,6 +1013,7 @@ return [
     'click-button-to-complete'                         => '点击按钮完成导入',
     'results-finish-loading'                           => '正在导入，请稍候...',
     'results-finished'                                 => '导入成功',
+    'excel-download'                                 => '下载 Excel 模板',
 
     'template' =>
         [

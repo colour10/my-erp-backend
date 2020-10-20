@@ -4,6 +4,7 @@ namespace Asa\Erp;
 
 use Phalcon\Mvc\Model;
 use Phalcon\Mvc\Model\Relation;
+use Phalcon\Mvc\Model\ResultInterface;
 use Phalcon\Mvc\Model\ResultsetInterface;
 
 /**
@@ -115,6 +116,14 @@ class TbProduct extends BaseCompanyModel
         // 男孩
         '冬季' => 'winter',
     ];
+
+    // 枚举 - 图片的三种类型
+    // 主图
+    const PICTURE_TYPE_MAIN = 1;
+    // 附图
+    const PICTURE_TYPE_ATTACH = 2;
+    // 详情图
+    const PICTURE_TYPE_DETAIL = 3;
 
     /**
      * 初始化
@@ -888,5 +897,39 @@ class TbProduct extends BaseCompanyModel
         }
         $this->sizecontentids = implode(',', $sizecontentids);
         $this->update();
+    }
+
+
+    /**
+     * find方法，给 phpstorm 提示用的
+     *
+     * @param mixed $parameters
+     * @return TbProduct[]|TbProduct|ResultsetInterface
+     */
+    public static function find($parameters = null)
+    {
+        return parent::find($parameters);
+    }
+
+    /**
+     * findFirst方法，给 phpstorm 提示用的
+     *
+     * @param mixed $parameters
+     * @return TbProduct|ResultInterface
+     */
+    public static function findFirst($parameters = null)
+    {
+        return parent::findFirst($parameters);
+    }
+
+    /**
+     * findFirstById方法，给 phpstorm 提示用的
+     *
+     * @param $id
+     * @return TbProduct|ResultInterface
+     */
+    public static function findFirstById($id)
+    {
+        return parent::findFirst("id = " . $id);
     }
 }

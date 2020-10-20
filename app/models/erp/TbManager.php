@@ -2,13 +2,16 @@
 
 namespace Asa\Erp;
 
-use Phalcon\Mvc\Model\ResultInterface;
-use Phalcon\Mvc\Model\ResultSetInterface;
-
 /**
  * 超级管理员表
+ *
  * Class TbManager
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property string|null $login_name 登录名
+ * @property string|null $password 密码
+ * @property null $created_at 创建时间
+ * @property null $updated_at 更新时间
  */
 class TbManager extends BaseCompanyModel
 {
@@ -161,44 +164,5 @@ class TbManager extends BaseCompanyModel
     {
         parent::initialize();
         $this->setSource('tb_manager');
-    }
-
-    /**
-     * Allows to query a set of records that match the specified conditions
-     *
-     * @param mixed $parameters
-     * @return TbManager[]|TbManager|ResultSetInterface
-     */
-    public static function find($parameters = null)
-    {
-        return parent::find($parameters);
-    }
-
-    /**
-     * Allows to query the first record that match the specified conditions
-     *
-     * @param mixed $parameters
-     * @return TbManager|ResultInterface
-     */
-    public static function findFirst($parameters = null)
-    {
-        return parent::findFirst($parameters);
-    }
-
-    /**
-     * Independent Column Mapping.
-     * Keys are the real names in the table and the values their names in the application
-     *
-     * @return array
-     */
-    public function columnMap()
-    {
-        return [
-            'id'         => 'id',
-            'login_name' => 'login_name',
-            'password'   => 'password',
-            'created_at' => 'created_at',
-            'updated_at' => 'updated_at',
-        ];
     }
 }

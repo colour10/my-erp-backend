@@ -7,68 +7,27 @@ use Phalcon\Validation;
 
 /**
  * 购物车表
+ *
  * Class TbBuycar
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int|null $product_id 商品id
+ * @property string|null $product_name 商品名称
+ * @property int|null $color_id 颜色id
+ * @property string|null $color_name 颜色名称
+ * @property int|null $size_id 规格id
+ * @property string|null $size_name 规格名称
+ * @property int|null $member_id 用户id
+ * @property int|null $number 数量
+ * @property float|null $price 价格
+ * @property float|null $total_price 总价格
+ * @property string|null $picture 商品主图
+ * @property string|null $picture2 商品附图
+ * @property-read TbMember|null $member 用户
+ * @property-read TbProductSearch|null $product 商品
  */
 class TbBuycar extends BaseModel
 {
-
-    /**
-     * @var
-     */
-    public $id;
-
-    /**
-     * @var
-     */
-    public $product_id;
-
-    /**
-     * @var
-     */
-    public $product_name;
-
-    /**
-     * @var
-     */
-    public $price;
-
-    /**
-     * @var
-     */
-    public $number;
-
-    /**
-     * @var
-     */
-    public $total_price;
-
-    /**
-     * @var
-     */
-    public $color_id;
-
-    /**
-     * @var
-     */
-    public $color_name;
-
-    /**
-     * @var
-     */
-    public $size_id;
-
-    /**
-     * @var
-     */
-    public $size_name;
-
-    /**
-     * @var
-     */
-    public $member_id;
-
-
     /**
      * 初始化
      */

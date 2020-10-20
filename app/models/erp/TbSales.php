@@ -7,129 +7,32 @@ use Phalcon\Mvc\Model;
 /**
  * 销售单主表
  * ErrorCode 1108
+ * @property int $id 主键id
+ * @property int|null $memberid 会员ID
+ * @property int|null $salesstaff 销售人员ID
+ * @property string|null $salesdate 销售日期
+ * @property float|null $discount 折扣
+ * @property int|null $saleportid 销售端口id
+ * @property int $companyid 公司id
+ * @property string|null $ordercode 对账单号
+ * @property int|null $warehouseid 销售仓库id
+ * @property string|null $expressno 快递单号
+ * @property bool|null $expresspaidtype 0-预付 1-到付 2-第三方付费 3-储值卡 4-转账 5-协议结算
+ * @property float|null $expressfee 快递费用
+ * @property bool $status 1-预售 2-已售 3-作废
+ * @property string|null $address 地址
+ * @property string|null $externalno 外部订单号
+ * @property bool|null $pickingtype 0-自提 1-快递 2-门店直发
+ * @property int $makestaff 制单人
+ * @property null $makedate 制单日期
+ * @property string $orderno 订单号
+ * @property int|null $priceid 价格id
+ * @property-read TbSalesdetails|null $salesdetails 订单详情
+ * @property-read TbSaleport|null $saleport 销售端口
+ * @property-read TbWarehouse|null $warehouse 仓库
  */
 class TbSales extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $memberid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $salesstaff;
-
-    /**
-     *
-     * @var string
-     */
-    public $salesdate;
-
-    /**
-     *
-     * @var double
-     */
-    public $discount;
-
-    /**
-     *
-     * @var integer
-     */
-    public $saleportid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $companyid;
-
-    /**
-     *
-     * @var string
-     */
-    public $ordercode;
-
-    /**
-     *
-     * @var integer
-     */
-    public $warehouseid;
-
-    /**
-     *
-     * @var string
-     */
-    public $expressno;
-
-    /**
-     *
-     * @var integer
-     */
-    public $expresspaidtype;
-
-    /**
-     *
-     * @var double
-     */
-    public $expressfee;
-
-    /**
-     *
-     * @var integer
-     */
-    public $status;
-
-    /**
-     *
-     * @var string
-     */
-    public $address;
-
-    /**
-     *
-     * @var string
-     */
-    public $externalno;
-
-    /**
-     *
-     * @var integer
-     */
-    public $pickingtype;
-
-    /**
-     *
-     * @var integer
-     */
-    public $makestaff;
-
-    /**
-     *
-     * @var string
-     */
-    public $makedate;
-
-    /**
-     *
-     * @var string
-     */
-    public $orderno;
-
-    /**
-     *
-     * @var integer
-     */
-    public $priceid;
-
     /**
      * 初始化
      */

@@ -7,29 +7,15 @@ use Phalcon\Mvc\Model\Resultset;
 
 /**
  * 年代季节
+ *
  * Class TbAgeseason
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property string|null $sessionmark 年代标识，如SS, FW
+ * @property string|null $name 年代4位数字，如2020
  */
 class TbAgeseason extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var string
-     */
-    public $sessionmark;
-
-    /**
-     *
-     * @var string
-     */
-    public $name;
-
     /**
      * 初始化
      */
@@ -80,11 +66,11 @@ class TbAgeseason extends BaseModel
     /**
      * 取出当前时间的上一个年代季节
      *
-     * @param string $mark 季节
-     * @param string $name 年份
+     * @param string $mark -季节
+     * @param string $name -年份
      * @return bool|Resultset|Model
      */
-    public static function getPrevAgeseason($mark, $name)
+    public static function getPrevAgeseason(string $mark, string $name)
     {
         // 逻辑
         // 验证季节

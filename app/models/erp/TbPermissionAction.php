@@ -7,33 +7,13 @@ namespace Asa\Erp;
  *
  * Class TbPermissionAction
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int|null $permissionid 权限id
+ * @property string|null $controller 控制器名称
+ * @property string|null $action 方法名称
  */
 class TbPermissionAction extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $permissionid;
-
-    /**
-     *
-     * @var string
-     */
-    public $controller;
-
-    /**
-     *
-     * @var string
-     */
-    public $action;
-
     /**
      * 初始化
      */

@@ -4,29 +4,16 @@ namespace Asa\Erp;
 
 /**
  * 商品国际码库
+ *
  * Class TbProductBase
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int|null $productid 商品id
+ * @property string|null $wordcode 国际码
+ * @property-read TbProduct|null $product 商品
  */
 class TbProductBase extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $productid;
-
-    /**
-     *
-     * @var string
-     */
-    public $wordcode;
-
     /**
      * 初始化
      */

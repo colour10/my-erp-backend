@@ -7,57 +7,19 @@ namespace Asa\Erp;
  *
  * Class TbRequisitionDetail
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int $requisitionid 调拨单id
+ * @property int|null $out_productstockid 调出库存id
+ * @property int|null $in_productstockid 调入库存id
+ * @property int|null $number 数量
+ * @property string|null $memo 备注
+ * @property int|null $out_number 出库数量
+ * @property int|null $in_number 入库数量
+ * @property-read TbProductstock|null $outProductstock 调入仓库
+ * @property-read TbProductstock|null $inProductstock 调出仓库
  */
 class TbRequisitionDetail extends BaseCompanyModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $requisitionid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $out_productstockid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $in_productstockid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $number;
-
-    /**
-     *
-     * @var string
-     */
-    public $memo;
-
-    /**
-     *
-     * @var integer
-     */
-    public $out_number;
-
-    /**
-     *
-     * @var integer
-     */
-    public $in_number;
-
     /**
      * 初始化
      */

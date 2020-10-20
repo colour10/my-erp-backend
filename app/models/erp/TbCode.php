@@ -4,41 +4,17 @@ namespace Asa\Erp;
 
 /**
  * 生成订单号表
+ *
  * Class TbCode
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property string|null $codetype 订单类型
+ * @property string|null $month 时间种子
+ * @property int|null $codeindex 标识，通过计算而来
+ * @property int|null $companyid 公司id
  */
 class TbCode extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var string
-     */
-    public $codetype;
-
-    /**
-     *
-     * @var string
-     */
-    public $month;
-
-    /**
-     *
-     * @var integer
-     */
-    public $codeindex;
-
-    /**
-     *
-     * @var integer
-     */
-    public $companyid;
-
     /**
      * 初始化
      */

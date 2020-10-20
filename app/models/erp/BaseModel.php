@@ -17,6 +17,7 @@ class BaseModel extends Model
 
     public function initialize()
     {
+        // 动态更新，只更新变化的字段，非常有用
         $this->useDynamicUpdate(true);
     }
 
@@ -152,13 +153,35 @@ class BaseModel extends Model
     }
 
     /**
-     * 添加 findFirstById 方法提示，给 phpstorm 看的
+     * find方法，给 phpstorm 提示用的
      *
-     * @param null $parameters
-     * @return Model
+     * @param mixed $parameters
+     * @return static[]|static|\Phalcon\Mvc\Model\ResultSetInterface
      */
-    public static function findFirstById($parameters = null)
+    public static function find($parameters = null)
     {
-        return parent::findFirstById($parameters);
+        return parent::find($parameters);
+    }
+
+    /**
+     * findFirst方法，给 phpstorm 提示用的
+     *
+     * @param mixed $parameters
+     * @return static|\Phalcon\Mvc\Model\ResultInterface
+     */
+    public static function findFirst($parameters = null)
+    {
+        return parent::findFirst($parameters);
+    }
+
+    /**
+     * findFirstById方法，给 phpstorm 提示用的
+     *
+     * @param $id
+     * @return static|\Phalcon\Mvc\Model\ResultInterface
+     */
+    public static function findFirstById($id)
+    {
+        return parent::findFirst("id = " . $id);
     }
 }

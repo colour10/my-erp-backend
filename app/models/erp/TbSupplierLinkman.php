@@ -4,83 +4,24 @@ namespace Asa\Erp;
 
 /**
  * 供应商，联系人信息
+ *
  * Class TbSupplierLinkman
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int|null $supplierid 供货商id
+ * @property string|null $name 姓名
+ * @property string|null $phone 座机号
+ * @property string|null $email 邮箱
+ * @property bool|null $gender 性别
+ * @property string|null $duty 职务
+ * @property string|null $fax 传真
+ * @property string|null $department 部门
+ * @property string|null $address 地址
+ * @property string|null $zipcode 邮编
+ * @property string|null $mobile 手机号
  */
 class TbSupplierLinkman extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $supplierid;
-
-    /**
-     *
-     * @var string
-     */
-    public $name;
-
-    /**
-     *
-     * @var string
-     */
-    public $phone;
-
-    /**
-     *
-     * @var string
-     */
-    public $email;
-
-    /**
-     *
-     * @var integer
-     */
-    public $gender;
-
-    /**
-     *
-     * @var string
-     */
-    public $duty;
-
-    /**
-     *
-     * @var string
-     */
-    public $fax;
-
-    /**
-     *
-     * @var string
-     */
-    public $department;
-
-    /**
-     *
-     * @var string
-     */
-    public $address;
-
-    /**
-     *
-     * @var string
-     */
-    public $zipcode;
-
-    /**
-     *
-     * @var string
-     */
-    public $mobile;
-
     /**
      * 初始化
      */

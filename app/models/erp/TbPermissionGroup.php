@@ -7,27 +7,12 @@ namespace Asa\Erp;
  *
  * Class TbPermissionGroup
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int $groupid 组id
+ * @property int $permissionid 权限id
  */
 class TbPermissionGroup extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $groupid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $permissionid;
-
     /**
      * 初始化
      */

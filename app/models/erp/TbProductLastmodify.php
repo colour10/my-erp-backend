@@ -7,51 +7,16 @@ namespace Asa\Erp;
  *
  * Class TbProductLastmodify
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int $companyid 公司id
+ * @property int $brandid 品牌id
+ * @property int $brandcolor 色系id
+ * @property string|null $colorname 品牌颜色名称
+ * @property string|null $wordcode_3 国际码颜色
+ * @property string $updated_at 更新时间
  */
 class TbProductLastmodify extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $companyid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $brandid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $brandcolor;
-
-    /**
-     *
-     * @var string
-     */
-    public $colorname;
-
-    /**
-     *
-     * @var string
-     */
-    public $wordcode_3;
-
-    /**
-     *
-     * @var string
-     */
-    public $updated_at;
-
     /**
      * 初始化
      */

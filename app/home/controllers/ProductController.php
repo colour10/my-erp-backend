@@ -59,6 +59,7 @@ class ProductController extends CadminController
     function pageAction()
     {
         $this->before_page();
+        // todo
         $params = [$this->getSearchCondition()];
         if (isset($_POST['__orderby'])) {
             $params['order'] = $_POST['__orderby'];
@@ -101,9 +102,6 @@ class ProductController extends CadminController
                 $rowData['picture2_150'] = $rowData['picture2'] ? $rowData['picture2'] . '_150x150.jpg' : '';
             }
 
-            $rowData['name'] = $row->getName();
-            $rowData['name'] = $row->getName();
-            $rowData['name'] = $row->getName();
             $rowData['name'] = $row->getName();
             $rowData['season'] = $row->getSeason();
             $rowData['worldcode'] = $row->getWorldCode();
@@ -713,6 +711,7 @@ class ProductController extends CadminController
      */
     function getSearchCondition()
     {
+        // 逻辑
         $where = [
             sprintf("companyid=%d", $this->companyid),
         ];
@@ -740,7 +739,7 @@ class ProductController extends CadminController
         $names = ['brandid', 'brandgroupid', 'childbrand', 'brandcolor', 'saletypeid', 'producttypeid', 'gender'];
         foreach ($names as $name) {
             if (isset($_POST[$name]) && preg_match("#^\d+(,\d+)*$#", $_POST[$name])) {
-                $where[] = \Asa\Erp\Sql::isInclude($name, $_POST[$name]);
+                $where[] = Sql::isInclude($name, $_POST[$name]);
             }
         }
 
@@ -1844,5 +1843,19 @@ class ProductController extends CadminController
 
             return $this->success();
         }
+    }
+
+    /**
+     * 只根据国际码第二位搜索
+     */
+    public function getOnlyWordcodeCondition()
+    {
+        // 逻辑
+        $where = [];
+        if (isset($_POST["wordcode"]) && trim($_POST["wordcode"]) != "") {
+            $where[] = sprintf("wordcode like '%%%s%%' ORDER BY companyid asc", addslashes(strtoupper($_POST["wordcode"])));
+        }
+        // 返回
+        return implode(' and ', $where);
     }
 }

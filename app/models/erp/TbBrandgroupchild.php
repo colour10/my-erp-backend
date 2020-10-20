@@ -6,77 +6,27 @@ use Phalcon\Mvc\Model\Relation;
 
 /**
  * 子品类
+ *
  * Class TbBrandgroupchild
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property string|null $name_cn 中文名称
+ * @property string|null $name_en 英文名称
+ * @property string|null $name_hk 粤语名称
+ * @property string|null $name_fr 法语名称
+ * @property string|null $name_it 意大利语名称
+ * @property string|null $name_sp 西班牙语名称
+ * @property string|null $name_de 德语名称
+ * @property int|null $brandgroupid 品类id
+ * @property int|null $displayindex 序号
+ * @property string|null $diagram 示意图
+ * @property-read TbBrandgroup|null $brandgroup 品类
+ * @property-read TbProduct|null $products 商品
+ * @property-read TbBrandgroupchildProperty|null $brandgroupchildProperties 商品尺寸
+ * @property-read TbProductMemoBrandgroupchild|null $productMemoIds 子品类和商品描述的关联表
  */
 class TbBrandgroupchild extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_cn;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_en;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_hk;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_fr;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_it;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_sp;
-
-    /**
-     *
-     * @var string
-     */
-    public $name_de;
-
-    /**
-     *
-     * @var integer
-     */
-    public $brandgroupid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $displayindex;
-
-    /**
-     *
-     * @var string
-     */
-    public $diagram;
-
     /**
      * 初始化
      */
@@ -110,7 +60,7 @@ class TbBrandgroupchild extends BaseModel
             ]
         );
 
-        // 子品类-商品，一对多
+        // 子品类-商品尺寸，一对多
         $this->hasMany(
             "id",
             TbBrandgroupchildProperty::class,

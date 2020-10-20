@@ -4,8 +4,22 @@ namespace Asa\Erp;
 
 /**
  * 附带ERP商城订单详情表
+ *
  * Class TbShoporder
  * @package Asa\Erp
+ * @property int $id 主键ID
+ * @property int|null $product_id 商品id
+ * @property int|null $order_commonid 订单公共表id
+ * @property string|null $product_name 商品名称
+ * @property float|null $price 价格
+ * @property int|null $number 数量
+ * @property float|null $total_price 此商品的总价格
+ * @property string|null $picture 商品主图
+ * @property string|null $picture2 商品附图
+ * @property string|null $color_id 颜色id
+ * @property string|null $color_name 颜色名称
+ * @property int|null $size_id 规格id
+ * @property string|null $size_name 规格名称
  */
 class TbShoporder extends BaseModel
 {
@@ -404,53 +418,6 @@ class TbShoporder extends BaseModel
     public function getSource()
     {
         return 'tb_shoporder';
-    }
-
-    /**
-     * Allows to query a set of records that match the specified conditions
-     *
-     * @param mixed $parameters
-     * @return TbShoporder[]|TbShoporder|\Phalcon\Mvc\Model\ResultSetInterface
-     */
-    public static function find($parameters = null)
-    {
-        return parent::find($parameters);
-    }
-
-    /**
-     * Allows to query the first record that match the specified conditions
-     *
-     * @param mixed $parameters
-     * @return TbShoporder|\Phalcon\Mvc\Model\ResultInterface
-     */
-    public static function findFirst($parameters = null)
-    {
-        return parent::findFirst($parameters);
-    }
-
-    /**
-     * Independent Column Mapping.
-     * Keys are the real names in the table and the values their names in the application
-     *
-     * @return array
-     */
-    public function columnMap()
-    {
-        return [
-            'id'             => 'id',
-            'product_id'     => 'product_id',
-            'order_commonid' => 'order_commonid',
-            'product_name'   => 'product_name',
-            'price'          => 'price',
-            'number'         => 'number',
-            'total_price'    => 'total_price',
-            'picture'        => 'picture',
-            'picture2'       => 'picture2',
-            'color_id'       => 'color_id',
-            'color_name'     => 'color_name',
-            'size_id'        => 'size_id',
-            'size_name'      => 'size_name',
-        ];
     }
 
 }

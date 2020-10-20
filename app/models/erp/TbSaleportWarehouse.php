@@ -7,33 +7,13 @@ namespace Asa\Erp;
  *
  * Class TbSaleportWarehouse
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int|null $saleportid 销售端口id
+ * @property int|null $warehouseid 仓库id
+ * @property null $create_time 创建时间
  */
 class TbSaleportWarehouse extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $saleportid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $warehouseid;
-
-    /**
-     *
-     * @var string
-     */
-    public $create_time;
-
     /**
      * 初始化
      */

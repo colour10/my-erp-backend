@@ -7,81 +7,21 @@ namespace Asa\Erp;
  *
  * Class TbPermission
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int $pid 所属权限id，默认0为顶级权限
+ * @property string $name 权限名称
+ * @property string|null $memo_cn 中文描述
+ * @property string|null $memo_en 英文描述
+ * @property string|null $memo_hk 粤语描述
+ * @property string|null $memo_fr 法语描述
+ * @property string|null $memo_it 意大利语描述
+ * @property string|null $memo_sp 西班牙语描述
+ * @property string|null $memo_de 德语描述
+ * @property bool $is_only_superadmin 是否为专属超级管理员权限，0-不是 1-是
+ * @property int|null $display_index 排序
  */
 class TbPermission extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $pid;
-
-    /**
-     *
-     * @var string
-     */
-    public $name;
-
-    /**
-     *
-     * @var string
-     */
-    public $memo_cn;
-
-    /**
-     *
-     * @var string
-     */
-    public $memo_en;
-
-    /**
-     *
-     * @var string
-     */
-    public $memo_hk;
-
-    /**
-     *
-     * @var string
-     */
-    public $memo_fr;
-
-    /**
-     *
-     * @var string
-     */
-    public $memo_it;
-
-    /**
-     *
-     * @var string
-     */
-    public $memo_sp;
-
-    /**
-     *
-     * @var string
-     */
-    public $memo_de;
-
-    /**
-     *
-     * @var integer
-     */
-    public $is_only_superadmin;
-
-    /**
-     *
-     * @var integer
-     */
-    public $display_index;
-
     /**
      * 初始化
      */

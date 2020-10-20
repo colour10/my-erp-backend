@@ -4,69 +4,23 @@ namespace Asa\Erp;
 
 /**
  * 发货单费用表
+ *
+ * Class TbShippingFee
+ * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int|null $shippingid 发货单id
+ * @property int|null $currencyid 币种
+ * @property float|null $amount 金额
+ * @property int|null $makestaff 添加人
+ * @property null $maketime 添加时间
+ * @property int|null $companyid 公司id
+ * @property int|null $feenameid 费用名称
+ * @property string|null $memo 备注
+ * @property float|null $exchangerate 汇率
+ * @property-read TbFeename|null $feename 费用表
  */
 class TbShippingFee extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $shippingid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $currencyid;
-
-    /**
-     *
-     * @var double
-     */
-    public $amount;
-
-    /**
-     *
-     * @var integer
-     */
-    public $makestaff;
-
-    /**
-     *
-     * @var string
-     */
-    public $maketime;
-
-    /**
-     *
-     * @var integer
-     */
-    public $companyid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $feenameid;
-
-    /**
-     *
-     * @var string
-     */
-    public $memo;
-
-    /**
-     *
-     * @var double
-     */
-    public $exchangerate;
-    
     /**
      * 初始化
      */

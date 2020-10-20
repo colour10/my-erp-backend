@@ -7,311 +7,63 @@ use Phalcon\Mvc\Model\Relation;
 
 /**
  * 发货单主表
+ *
  * Class TbConfirmorder
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int|null $companyid 公司id
+ * @property bool|null $status 状态:1-未提交审核；2-待审核；3-审核完成,4-作废
+ * @property string|null $orderno 发货单号
+ * @property int|null $supplierid 供货商id
+ * @property null $makedate 制单日期
+ * @property int|null $makestaff 制单人
+ * @property int|null $currency 货币类型
+ * @property float|null $total 总金额
+ * @property bool|null $isstatus 0-在途未入库，1-已入库，2-已备货未发出
+ * @property string|null $memo 备注
+ * @property int|null $brandid 品牌id
+ * @property int|null $ageseasonid 年份季节id
+ * @property bool|null $seasontype 0-pre ,1-main ,2-fashion show
+ * @property int|null $auditstaff 审核人
+ * @property null $auditdate 审核日期
+ * @property float|null $exchangerate
+ * @property int|null $finalsupplierid 供货单位id
+ * @property string|null $flightno 航班号
+ * @property string|null $flightdate
+ * @property string|null $arrivaldate
+ * @property string|null $mblno 主单号
+ * @property string|null $hblno 子单号
+ * @property string|null $dispatchport
+ * @property string|null $deliveryport
+ * @property int|null $transcompany
+ * @property bool|null $isexamination
+ * @property string|null $examinationresult
+ * @property null $clearancedate
+ * @property null $pickingdate
+ * @property string|null $motortransportpool
+ * @property int|null $warehouseid
+ * @property int|null $box_number 箱数
+ * @property float|null $weight 重量
+ * @property float|null $volume 体积
+ * @property string|null $issjyh
+ * @property int|null $sellerid
+ * @property string|null $sjyhresult
+ * @property int|null $buyerid
+ * @property bool|null $transporttype 0-by air 1-快递 2-中转
+ * @property bool|null $paytype 0- t/t
+ * @property bool|null $property 0-自采 1-代销
+ * @property string|null $payoutpercentage 属性
+ * @property string|null $pickingaddress
+ * @property float|null $chargedweight 计费重量
+ * @property string|null $paydate
+ * @property string|null $apickingdate 安排提货时间
+ * @property string|null $aarrivaldate 到库时间
+ * @property string|null $invoiceno
+ * @property int|null $dd_company
+ * @property-read TbConfirmorderdetails|null $confirmorderdetails 订单详情
  */
 class TbConfirmorder extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    protected $id;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $companyid;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $status;
-
-    /**
-     *
-     * @var string
-     */
-    protected $orderno;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $supplierid;
-
-    /**
-     *
-     * @var string
-     */
-    protected $makedate;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $makestaff;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $currency;
-
-    /**
-     *
-     * @var double
-     */
-    protected $total;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $isstatus;
-
-    /**
-     *
-     * @var string
-     */
-    protected $memo;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $brandid;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $ageseasonid;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $seasontype;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $auditstaff;
-
-    /**
-     *
-     * @var string
-     */
-    protected $auditdate;
-
-    /**
-     *
-     * @var double
-     */
-    protected $exchangerate;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $finalsupplierid;
-
-    /**
-     *
-     * @var string
-     */
-    protected $flightno;
-
-    /**
-     *
-     * @var string
-     */
-    protected $flightdate;
-
-    /**
-     *
-     * @var string
-     */
-    protected $arrivaldate;
-
-    /**
-     *
-     * @var string
-     */
-    protected $mblno;
-
-    /**
-     *
-     * @var string
-     */
-    protected $hblno;
-
-    /**
-     *
-     * @var string
-     */
-    protected $dispatchport;
-
-    /**
-     *
-     * @var string
-     */
-    protected $deliveryport;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $transcompany;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $isexamination;
-
-    /**
-     *
-     * @var string
-     */
-    protected $examinationresult;
-
-    /**
-     *
-     * @var string
-     */
-    protected $clearancedate;
-
-    /**
-     *
-     * @var string
-     */
-    protected $pickingdate;
-
-    /**
-     *
-     * @var string
-     */
-    protected $motortransportpool;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $warehouseid;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $box_number;
-
-    /**
-     *
-     * @var double
-     */
-    protected $weight;
-
-    /**
-     *
-     * @var double
-     */
-    protected $volume;
-
-    /**
-     *
-     * @var string
-     */
-    protected $issjyh;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $sellerid;
-
-    /**
-     *
-     * @var string
-     */
-    protected $sjyhresult;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $buyerid;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $transporttype;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $paytype;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $property;
-
-    /**
-     *
-     * @var string
-     */
-    protected $payoutpercentage;
-
-    /**
-     *
-     * @var string
-     */
-    protected $pickingaddress;
-
-    /**
-     *
-     * @var double
-     */
-    protected $chargedweight;
-
-    /**
-     *
-     * @var string
-     */
-    protected $paydate;
-
-    /**
-     *
-     * @var string
-     */
-    protected $apickingdate;
-
-    /**
-     *
-     * @var string
-     */
-    protected $aarrivaldate;
-
-    /**
-     *
-     * @var string
-     */
-    protected $invoiceno;
-
-    /**
-     *
-     * @var integer
-     */
-    protected $dd_company;
-
     /**
      * 初始化
      */

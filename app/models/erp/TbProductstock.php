@@ -7,107 +7,32 @@ use Phalcon\Mvc\Model;
 
 /**
  * 库存表
+ *
  * Class TbProductstock
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property int|null $goodsid 库存id
+ * @property int $productid 商品id 【冗余字段】
+ * @property int $sizecontentid 尺码id 【冗余字段】
+ * @property int|null $defective_level 残次品等级；0=合格品 1=残次品  【冗余字段】
+ * @property bool|null $property 0-自采 1-代销  【冗余字段】
+ * @property int $warehouseid 仓库id
+ * @property int $companyid 公司id  【冗余字段】
+ * @property null $create_time 创建时间
+ * @property int|null $create_stuff 创建人
+ * @property null $change_time 修改时间
+ * @property int|null $change_stuff 修改人
+ * @property int $number 数量
+ * @property int|null $reserve_number 预售数量
+ * @property int|null $shipping_number 在途数量
+ * @property int|null $sales_number 已售数量
+ * @property-read TbProduct|null $product 商品
+ * @property-read TbSizecontent|null $sizecontent 尺码
+ * @property-read TbWarehouse|null $warehouse 仓库
+ * @property-read TbGoods|null $goods 商品条目
  */
 class TbProductstock extends BaseCompanyModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var integer
-     */
-    public $goodsid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $productid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $sizecontentid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $defective_level;
-
-    /**
-     *
-     * @var integer
-     */
-    public $property;
-
-    /**
-     *
-     * @var integer
-     */
-    public $warehouseid;
-
-    /**
-     *
-     * @var integer
-     */
-    public $companyid;
-
-    /**
-     *
-     * @var string
-     */
-    public $create_time;
-
-    /**
-     *
-     * @var integer
-     */
-    public $create_stuff;
-
-    /**
-     *
-     * @var string
-     */
-    public $change_time;
-
-    /**
-     *
-     * @var integer
-     */
-    public $change_stuff;
-
-    /**
-     *
-     * @var integer
-     */
-    public $number;
-
-    /**
-     *
-     * @var integer
-     */
-    public $reserve_number;
-
-    /**
-     *
-     * @var integer
-     */
-    public $shipping_number;
-
-    /**
-     *
-     * @var integer
-     */
-    public $sales_number;
-
     // 常量列表
     const SALES = 1; //销售
     const REQUISITION_IN = 2; //调拨入库
