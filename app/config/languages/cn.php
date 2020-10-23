@@ -1003,7 +1003,7 @@ return [
     'download'                                         => '下载',
     'upload-text'                                      => '将文件拖到此处，或',
     'upload-click-text'                                => '点击上传',
-    'upload-tip'                                       => '只能上传xlsx文件，且不超过2MB',
+    'upload-tip'                                       => '只能上传 xls 或 xlsx 格式文件，且大小不超过2MB',
     'upload-filetype'                                  => '上传文件只允许 xls 或 xlsx 格式',
     'upload-filesize-2mb'                              => '上传文件大小不能超过 2MB',
     'upload-success'                                   => '上传成功',
@@ -1018,6 +1018,7 @@ return [
     'save-db-picture'                                  => '保存并下载图片',
     'click-confirm-to-finish'                          => '点击确定按钮完成操作',
     'click-save-button-to-finish'                      => '点击保存按钮完成图片下载和保存',
+    'click-download-excel'                             => '模板需要点击右侧 "下载 excel 模板" 按钮获取',
 
     'template' =>
         [
