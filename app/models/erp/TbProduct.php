@@ -68,21 +68,22 @@ use Phalcon\Mvc\Model\ResultsetInterface;
  * @property string|null $oms_update_extra 上新原始数据
  * @property null $created_at 创建时间
  * @property null $updated_at 更新时间
- * @property-read TbCompany $company 商品-公司
- * @property-read TbSeries $tbseries 商品-系列
- * @property-read TbBrand $brand 商品-品牌
- * @property-read TbColortemplate $color 商品-主颜色
- * @property-read TbBrandgroupchild $subbrand 商品-子品类
- * @property-read TbProductType $type 商品-商品类型
- * @property-read TbCurrency $fpcurrency 商品-出厂价
- * @property-read TbCurrency $wpcurrency 商品-国际零售价
- * @property-read TbCurrency $npcurrency 商品-国内价
- * @property-read TbSaleType $saleType 商品-销售属性
- * @property-read TbProductcode $productCode 商品-销货号
- * @property-read TbProductSizeProperty $productSizeProperty 商品-商品尺码描述
- * @property-read TbProductstock $productstock 商品-商品库存
- * @property-read TbOrderdetails $orderdetails 商品-订单详情
- * @property-read TbProductMaterial $productMaterial 商品-商品材质
+ * @property-read TbCompany|null $company 商品-公司
+ * @property-read TbSeries|null $tbseries 商品-系列
+ * @property-read TbBrand|null $brand 商品-品牌
+ * @property-read TbColortemplate|null $color 商品-主颜色
+ * @property-read TbBrandgroupchild|null $subbrand 商品-子品类
+ * @property-read TbProductType|null $type 商品-商品类型
+ * @property-read TbCurrency|null $fpcurrency 商品-出厂价
+ * @property-read TbCurrency|null $wpcurrency 商品-国际零售价
+ * @property-read TbCurrency|null $npcurrency 商品-国内价
+ * @property-read TbSaleType|null $saleType 商品-销售属性
+ * @property-read TbProductcode|null $productCode 商品-销货号
+ * @property-read TbProductSizeProperty|null $productSizeProperty 商品-商品尺码描述
+ * @property-read TbProductstock|null $productstock 商品-商品库存
+ * @property-read TbOrderdetails|null $orderdetails 商品-订单详情
+ * @property-read TbProductMaterial|null $productMaterial 商品-商品材质
+ * @property-read TbPicture|null $pictures 商品-商品图片
  */
 class TbProduct extends BaseCompanyModel
 {
@@ -299,6 +300,16 @@ class TbProduct extends BaseCompanyModel
                     'action' => Relation::ACTION_CASCADE],
             ]
         );
+
+        // 商品-商品图片，一对多
+        $this->hasMany(
+            "id",
+            TbPicture::class,
+            "productid",
+            [
+                'alias'      => 'pictures',
+            ]
+        );
     }
 
     /**
@@ -464,6 +475,7 @@ class TbProduct extends BaseCompanyModel
 
     /**
      * 获取同款多色的颜色分组数组
+     *
      * @return array [type] [description]
      */
     function getColorGroupArray()
@@ -844,15 +856,25 @@ class TbProduct extends BaseCompanyModel
         $productGroup = explode('|', $this->product_group);
         foreach ($productGroup as $pg) {
             $pgArray = explode(',', $pg);
-            $product = TbProduct::findFirst($pgArray[0]);
-            $pictureModel = TbPicture::findFirst("filename = '" . $product->picture . "'");
-            $result[] = [
-                'id'         => $product->id,
-                'picture'    => $product->picture,
-                // 暂时注释
-                // 'picture_40' => $product->picture ? $product->picture . '_40x40.jpg' : '',
-                'picture_40' => $pictureModel->filename_40 ?? '',
-            ];
+            if ($product = TbProduct::findFirst($pgArray[0])) {
+                $pictureModel = TbPicture::findFirst("filename = '" . $product->picture . "'");
+                $result[] = [
+                    'id'         => $product->id,
+                    'picture'    => $product->picture,
+                    // 暂时注释
+                    // 'picture_40' => $product->picture ? $product->picture . '_40x40.jpg' : '',
+                    'picture_40' => $pictureModel->filename_40 ?? '',
+                ];
+            } else {
+                // 如果不存在，设置默认值
+                $result[] = [
+                    'id'         => '',
+                    'picture'    => '',
+                    // 暂时注释
+                    // 'picture_40' => $product->picture ? $product->picture . '_40x40.jpg' : '',
+                    'picture_40' => '',
+                ];
+            }
         }
 
         return $result;

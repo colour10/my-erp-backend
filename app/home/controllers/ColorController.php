@@ -115,14 +115,14 @@ class ColorController extends CadminController
         $params = $this->dispatcher->getParams();
         if (!$params || !preg_match('/^[1-9]+\d*$/', $params[0])) {
             // 传递错误
-            return $this->renderError();
+            return $this->error($this->getValidateMessage('params-error'));
         }
         // 赋值
         $id = $params[0];
 
-        if (!$model = TbColortemplate::findFirst("id=$id")) {
+        if (!$model = TbColortemplate::findFirstById($id)) {
             // 传递错误
-            return $this->renderError('make-an-error', 'color-doesnot-exist');
+            return $this->error($this->getValidateMessage('color-doesnot-exist'));
         }
 
         $rs = $model->delete();
@@ -136,7 +136,9 @@ class ColorController extends CadminController
 
     /**
      * 获取色系和颜色
-     * 用于cascader级联选择器
+     * 用于 cascader 级联选择器
+     *
+     * @return false|string
      */
     public function getColorSystemAndColorForCascaderAction()
     {
@@ -165,6 +167,7 @@ class ColorController extends CadminController
             }
         }
 
+        // 返回
         return $this->success(array_values($result));
     }
 }

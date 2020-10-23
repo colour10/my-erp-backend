@@ -1013,7 +1013,11 @@ return [
     'click-button-to-complete'                         => '点击按钮完成导入',
     'results-finish-loading'                           => '正在导入，请稍候...',
     'results-finished'                                 => '导入成功',
-    'excel-download'                                 => '下载 Excel 模板',
+    'excel-download'                                   => '下载 Excel 模板',
+    'wordcode-length-limit'                            => '国际码长度不能小于 4 位',
+    'save-db-picture'                                  => '保存并下载图片',
+    'click-confirm-to-finish'                          => '点击确定按钮完成操作',
+    'click-save-button-to-finish'                      => '点击保存按钮完成图片下载和保存',
 
     'template' =>
         [

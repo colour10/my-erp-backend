@@ -52,25 +52,28 @@ class BaseModel extends Model
     /**
      * 根据 id 读取
      *
-     * @param $idstring
+     * @param $idString
      * @param $column
      * @return array|Model\ResultsetInterface
      */
-    public static function findByIdString($idstring, $column)
+    public static function findByIdString($idString, $column)
     {
-        if (is_array($idstring)) {
-            $idstring = implode(',', $idstring);
+        if (is_array($idString)) {
+            $idString = implode(',', $idString);
         }
 
-        if (preg_match("#^\d+(,\d+)*$#", $idstring)) {
+        if (preg_match("#^\d+(,\d+)*$#", $idString)) {
             return static::find(
-                sprintf("{$column} in (%s)", $idstring)
+                sprintf("{$column} in (%s)", $idString)
             );
         } else {
             return [];
         }
     }
 
+    /**
+     * 调试
+     */
     function debug()
     {
         foreach ($this->getMessages() as $message) {
@@ -78,11 +81,23 @@ class BaseModel extends Model
         }
     }
 
+    /**
+     * 转成数组
+     *
+     * @return array
+     */
     public function toArrayPipe()
     {
         return $this->toArray();
     }
 
+    /**
+     * 获取搜索条件
+     *
+     * @param $form
+     * @return string
+     * @throws \ReflectionException
+     */
     public static function getSearchCondition($form)
     {
         $class = new \ReflectionClass(get_called_class());

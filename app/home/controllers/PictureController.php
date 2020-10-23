@@ -24,6 +24,12 @@ class PictureController extends AdminController
         $this->setModelName('Asa\\Erp\\TbPicture');
     }
 
+    /**
+     * 图片删除
+     *
+     * @return false|string
+     * @throws Exception
+     */
     function deleteAction()
     {
         $array = explode(',', $_POST['ids']);
@@ -54,6 +60,10 @@ class PictureController extends AdminController
         }
     }
 
+    /**
+     * @return false|string
+     * @throws Exception
+     */
     function ofproductsAction()
     {
         $products = TbProduct::find(
@@ -71,5 +81,17 @@ class PictureController extends AdminController
         );
 
         return $this->success($pictures->toArray());
+    }
+
+    /**
+     * 新增前的钩子
+     */
+    function before_add()
+    {
+        // 逻辑
+        $fileName = dirname($this->pictureDir) . '/' . $_POST['filename'];
+        // 上传图片，我们需要生成40*40和150*150分辨率的缩略图
+        $_POST['filename_40'] = Util::resizeImage($fileName, 40, 40);
+        $_POST['filename_150'] = Util::resizeImage($fileName, 150, 150);
     }
 }

@@ -24,7 +24,7 @@ class BillconfirmController extends AdminController
 
     function before_add()
     {
-        $_POST['createstaff'] = $this->currentUser;
+        $_POST['createstaff'] = $this->userId;
         $_POST['companyid'] = $this->companyid;
         $_POST['createtime'] = date("Y-m-d H:i:s");
 

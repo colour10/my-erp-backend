@@ -10,8 +10,10 @@ use Asa\Erp\TbBrandgroup;
 use Asa\Erp\TbBrandgroupchild;
 use Asa\Erp\TbBrandgroupchildProperty;
 use Asa\Erp\TbBrandSize;
+use Asa\Erp\TbColortemplate;
 use Asa\Erp\TbCountry;
 use Asa\Erp\TbCurrency;
+use Asa\Erp\TbDownload;
 use Asa\Erp\TbExchangeRate;
 use Asa\Erp\TbMaterial;
 use Asa\Erp\TbMaterialnote;
@@ -54,12 +56,11 @@ class ProductController extends CadminController
     }
 
     /**
-     * 分页逻辑
+     * 普通分页逻辑
      */
     function pageAction()
     {
         $this->before_page();
-        // todo
         $params = [$this->getSearchCondition()];
         if (isset($_POST['__orderby'])) {
             $params['order'] = $_POST['__orderby'];
@@ -86,7 +87,7 @@ class ProductController extends CadminController
             $rowData = $row->toArray();
             // 添加缩略图，缩略图默认都存在 tb_picture 表中
             // 主图
-            if ($pictureModel = TbPicture::findFirst("filename = '".$rowData['picture']."'")) {
+            if ($pictureModel = TbPicture::findFirst("filename = '" . $rowData['picture'] . "'")) {
                 $rowData['picture_40'] = $pictureModel->filename_40;
                 $rowData['picture_150'] = $pictureModel->filename_150;
             } else {
@@ -94,7 +95,7 @@ class ProductController extends CadminController
                 $rowData['picture_150'] = $rowData['picture'] ? $rowData['picture'] . '_150x150.jpg' : '';
             }
             // 附图
-            if ($pictureModel = TbPicture::findFirst("filename = '".$rowData['picture2']."'")) {
+            if ($pictureModel = TbPicture::findFirst("filename = '" . $rowData['picture2'] . "'")) {
                 $rowData['picture2_40'] = $pictureModel->filename_40;
                 $rowData['picture2_150'] = $pictureModel->filename_150;
             } else {
@@ -114,6 +115,85 @@ class ProductController extends CadminController
             $rowData['saleType'] = $row->getSaleType();
             $rowData['colors'] = $row->getColors();
             $rowData['seriesTitle'] = $row->getSeries();
+            $data[] = $rowData;
+        }
+
+        $pageinfo = [
+            "current"    => $pageObject->current,
+            "totalPages" => $pageObject->total_pages,
+            "total"      => $pageObject->total_items,
+            "pageSize"   => $pageSize,
+        ];
+
+        // 返回
+        echo $this->reportJson(["data" => $data, "pagination" => $pageinfo], 200, []);
+    }
+
+    /**
+     * 根据国际码前 2 段的分页逻辑
+     */
+    function secondWordcodeSearchPageAction()
+    {
+        $this->before_page();
+        // 只根据国际码搜索，而且不限制公司
+        $params = [$this->getOnlyWordcodeCondition()];
+
+        $result = TbProduct::find($params);
+
+        $page = $this->request->getPost("page", "int", 1);
+        $pageSize = $this->request->getPost("pageSize", "int", 20);
+
+        $paginator = new Model(
+            [
+                "data"  => $result,
+                "limit" => $pageSize,
+                "page"  => $page,
+            ]
+        );
+
+        // Get the paginated results
+        $pageObject = $paginator->getPaginate();
+
+        $data = [];
+        foreach ($pageObject->items as $row) {
+            $rowData = $row->toArray();
+            // 添加缩略图，缩略图默认都存在 tb_picture 表中
+            // 主图
+            if ($pictureModel = TbPicture::findFirst("filename = '" . $rowData['picture'] . "'")) {
+                $rowData['picture_40'] = $pictureModel->filename_40;
+                $rowData['picture_150'] = $pictureModel->filename_150;
+            } else {
+                $rowData['picture_40'] = $rowData['picture'] ? $rowData['picture'] . '_40x40.jpg' : '';
+                $rowData['picture_150'] = $rowData['picture'] ? $rowData['picture'] . '_150x150.jpg' : '';
+            }
+            // 附图
+            if ($pictureModel = TbPicture::findFirst("filename = '" . $rowData['picture2'] . "'")) {
+                $rowData['picture2_40'] = $pictureModel->filename_40;
+                $rowData['picture2_150'] = $pictureModel->filename_150;
+            } else {
+                $rowData['picture2_40'] = $rowData['picture2'] ? $rowData['picture2'] . '_40x40.jpg' : '';
+                $rowData['picture2_150'] = $rowData['picture2'] ? $rowData['picture2'] . '_150x150.jpg' : '';
+            }
+
+            $rowData['name'] = $row->getName();
+            $rowData['season'] = $row->getSeason();
+            $rowData['worldcode'] = $row->getWorldCode();
+            $rowData['type'] = $row->getType();
+            $rowData['fpCurrencyCode'] = $row->getFactoryPriceCurrencyLabel();
+            $rowData['times'] = $row->getTimes();
+            $rowData['wpCurrencyCode'] = $row->getWordPriceCurrencyLabel();
+            $rowData['discountRate'] = $row->getDiscountRate();
+            $rowData['npCurrencyCode'] = $row->getNationalPriceCurrencyLabel();
+            $rowData['saleType'] = $row->getSaleType();
+            $rowData['colors'] = $row->getColors();
+            $rowData['seriesTitle'] = $row->getSeries();
+            // 把副颜色处理成数组格式
+            if ($row->second_color_id && $colorModel = TbColortemplate::findFirstById($row->second_color_id)) {
+                $rowData['second_color_id'] = [
+                    (int)$colorModel->color_system_id,
+                    (int)$row->second_color_id,
+                ];
+            }
             $data[] = $rowData;
         }
 
@@ -185,7 +265,7 @@ class ProductController extends CadminController
     }
 
     /**
-     * 新建商品，需要和 OMS 同步
+     * 新建商品，需要和 OMS 同步，这个是标准的商品新增
      *
      * @return false|string|void
      * @throws Exception
@@ -195,7 +275,7 @@ class ProductController extends CadminController
         // 拿到请求的参数
         $params = json_decode($_POST["params"], true);
         // 记录 params 的值，方便纠错
-        error_log("\$add-params = " . print_r($params, true));
+        $this->logFile->log("\$add-params = " . json_encode($params));
 
         $products = [];
         $colors = [];
@@ -214,142 +294,361 @@ class ProductController extends CadminController
             throw new Exception($this->getValidateMessage('ageseason') . $this->getValidateMessage('8000'));
         }
 
+        // 开启事务
         $this->db->begin();
-        // 使用 try-catch 捕捉
-        try {
-            foreach ($params['colors'] as $row) {
-                if (!empty($row['id'])) {
-                    $product = TbProduct::findFirstById($row['id']);
-                } else {
-                    $product = new TbProduct();
-                }
 
-                $product->companyid = $this->companyid;
-                // 两个字段已经去掉了
-                // $product->maketime = date("Y-m-d H:i:s");
-                // $product->updatetime = date("Y-m-d H:i:s");
-                $product->makestaff = $this->currentUser;
-                $product->wordcode_1 = $this->filterCode($row['wordcode_1']);
-                $product->wordcode_2 = $this->filterCode($row['wordcode_2']);
-                $product->wordcode_3 = $this->filterCode($row['wordcode_3']);
-                $product->wordcode_4 = $this->filterCode($row['wordcode_4']);
-                $product->brandcolor = $row['brandcolor'];
-                $product->colorname = $row['colorname'];
-                $product->picture = $row['picture'];
-                $product->picture2 = $row['picture2'];
-                $product->wordcode = $this->filterCode($row['wordcode_1']) . $this->filterCode($row['wordcode_2']) . $this->filterCode($row['wordcode_3']);
+        // $params['colors']是待录入的商品，如果是多个则是同款不同色
+        foreach ($params['colors'] as $row) {
+            // 没有 id 字段说明是新增
+            if (!empty($row['id'])) {
+                $product = TbProduct::findFirstById($row['id']);
+            } else {
+                $product = new TbProduct();
+            }
 
-                $product->brandcolor = $row['colorSystemId'];
-                $product->color_id = $row['color_id'];
-                $product->second_color_id = isset($row['second_color_id'][1]) ? (int)$row['second_color_id'][1] : 0;
+            $product->companyid = $this->companyid;
+            // 时间字段
+            $product->created_at = date("Y-m-d H:i:s");
+            $product->updated_at = date("Y-m-d H:i:s");
+            $product->makestaff = $this->userId;
+            $product->wordcode_1 = $this->filterCode($row['wordcode_1']);
+            $product->wordcode_2 = $this->filterCode($row['wordcode_2']);
+            $product->wordcode_3 = $this->filterCode($row['wordcode_3']);
+            $product->wordcode_4 = $this->filterCode($row['wordcode_4']);
+            // 色系，以 colorSystemId 为准
+            // $product->brandcolor = $row['brandcolor'];
+            $product->colorname = $row['colorname'];
+            $product->picture = $row['picture'];
+            $product->picture2 = $row['picture2'];
+            $product->wordcode = $this->filterCode($row['wordcode_1']) . $this->filterCode($row['wordcode_2']) . $this->filterCode($row['wordcode_3']);
 
-                // 不放在一起了，分开存储
-                $product->brandgroupid = $params['form']['brandgroupid'];
-                $product->childbrand = $params['form']['childbrand'];
-                $product->ageseason = implode(',', $params['form']['ageseason']);
-                // 这里之所以赋值为空，原因是下面有函数会修改这两个值
-                $product->ageseason_season = '';
-                $product->ageseason_year = '';
-                $product->countries = implode(',', $params['form']['countries']);
-                $product->ulnarinch = implode(',', $params['form']['ulnarinch']);
-                $product->productmemoids = implode(',', $params['form']['productmemoids']);
+            // 色系
+            $product->brandcolor = $row['brandcolor'];
+            // 再复制一遍，防止系统有用到这个字段的地方
+            $product->color_system_id = $row['brandcolor'];
+            // 主颜色
+            $product->color_id = $row['color_id'];
+            // 副颜色
+            $product->second_color_id = isset($row['second_color_id'][1]) ? (int)$row['second_color_id'][1] : 0;
 
-                foreach ($keys as $key) {
-                    $product->$key = $params['form'][$key];
-                }
-                $product->factorypricecurrency = $params['form']["wordpricecurrency"];
-                $product->nationalfactorypricecurrency = $params['form']["nationalpricecurrency"];
+            // 不放在一起了，分开存储
+            $product->brandgroupid = $params['form']['brandgroupid'];
+            $product->childbrand = $params['form']['childbrand'];
+            $product->ageseason = implode(',', $params['form']['ageseason']);
+            // 这里之所以赋值为空，原因是下面有函数会修改这两个值
+            $product->ageseason_season = '';
+            $product->ageseason_year = '';
+            $product->countries = implode(',', $params['form']['countries']);
+            $product->ulnarinch = implode(',', $params['form']['ulnarinch']);
+            $product->productmemoids = implode(',', $params['form']['productmemoids']);
 
-                // 判断是否存在 id 字段
-                // 检验国际码是否重复
-                if (empty($row['id'])) {
-                    // 如果是新增
-                    $where = sprintf("companyid=%d and wordcode='%s'", $this->companyid, addslashes($product->wordcode));
-                } else {
-                    // 如果是编辑
-                    $where = sprintf("companyid=%d and wordcode='%s' and id<>%d", $this->companyid, addslashes($product->wordcode), $product->id);
-                }
-                if (TbProduct::count($where) > 0) {
+            foreach ($keys as $key) {
+                $product->$key = $params['form'][$key];
+            }
+            $product->factorypricecurrency = $params['form']["wordpricecurrency"];
+            $product->nationalfactorypricecurrency = $params['form']["nationalpricecurrency"];
+
+            // 判断是否存在 id 字段
+            // 检验国际码是否重复
+            if (empty($row['id'])) {
+                // 如果是新增
+                $where = sprintf("companyid=%d and wordcode='%s'", $this->companyid, addslashes($product->wordcode));
+            } else {
+                // 如果是编辑
+                $where = sprintf("companyid=%d and wordcode='%s' and id<>%d", $this->companyid, addslashes($product->wordcode), $product->id);
+            }
+            // 有记录说明国际码重复
+            if (TbProduct::count($where) > 0) {
+                $this->db->rollback();
+                throw new Exception("/11160101/国际码不能重复/");
+            }
+
+            // 开始执行新增或删除操作
+            // 判断是否存在 id 字段
+            if (empty($row['id'])) {
+                // id为空，说明为新增
+                if ($product->create() == false) {
+                    // 新增失败
                     $this->db->rollback();
-                    throw new Exception("/11160101/国际码不能重复/");
-                }
-
-                // 判断是否存在 id 字段
-                if (empty($row['id'])) {
-                    // id为空，说明为新增
-                    if ($product->create() == false) {
-                        // 新增失败
-                        $this->db->rollback();
-                        return $this->error($product);
-                    } else {
-                        // 新增成功
-                        // 添加材质信息
-                        if (is_array($params["materials"])) {
-                            foreach ($params['materials'] as $material) {
-                                $productMaterial = new TbProductMaterial();
-                                $productMaterial->productid = $product->id;
-                                $productMaterial->materialid = $material["materialid"];
-                                $productMaterial->materialnoteid = $material["materialnoteid"];
-                                $productMaterial->percent = $material["percent"];
-                                if ($productMaterial->save() == false) {
-                                    $this->db->rollback();
-                                    return $this->error($productMaterial);
-                                }
+                    return $this->error($product);
+                } else {
+                    // 新增成功
+                    // 添加材质信息
+                    if (is_array($params["materials"])) {
+                        foreach ($params['materials'] as $material) {
+                            $productMaterial = new TbProductMaterial();
+                            $productMaterial->productid = $product->id;
+                            $productMaterial->materialid = $material["materialid"];
+                            $productMaterial->materialnoteid = $material["materialnoteid"];
+                            $productMaterial->percent = $material["percent"];
+                            if ($productMaterial->save() == false) {
+                                $this->db->rollback();
+                                return $this->error($productMaterial);
                             }
                         }
-
-                        $products[] = $product;
-                        // 第一个数代表 productid, 第二个数代表 色系id
-                        $colors[] = $product->id . "," . $product->color_id;
                     }
+                }
+            } else {
+                if ($product->update() == false) {
+                    $this->db->rollback();
+                    return $this->error($product);
                 } else {
-                    if ($product->update() == false) {
-                        $this->db->rollback();
-                        return $this->error($product);
-                    } else {
-                        $product->updateMaterial($params["materials"]);
-                    }
+                    $product->updateMaterial($params["materials"]);
                 }
-                // 同步修改商品
-                $product->syncBrandSugest();
-                // 更新ageseason_season,ageseason_year两个字段
-                $product->updateAgeseason();
-                // 更新尺码
-                $product->updateSizecontentids();
             }
 
-            $output = [];
-            // | 后面的变量代表颜色
-            $product_group = implode('|', $colors);
-            //逐个更新，绑定关系
-            foreach ($products as $row) {
-                $row->product_group = $product_group;
-                if ($row->update() == false) {
-                    throw new Exception("/1002/更新product_group字段失败/");
-                }
-                $output[] = $row->toArray();
-            }
-            // 打印出 $output 的值
-            error_log("\$output = " . print_r($output, true));
+            // 同步修改商品
+            $product->syncBrandSugest();
+            // 更新ageseason_season,ageseason_year两个字段
+            $product->updateAgeseason();
+            // 更新尺码
+            $product->updateSizecontentids();
 
-            // 如果到这里没有出错，那么就推送该商品到 OMS，这里采用队列处理
-            if ($this->queue) {
-                $this->queue->choose('oms_inventory_update');
-                // 把 $output的id 传递给队列即可，剩下的逻辑交给Beanstalk吧。
-                $this->queue->put($output['id'], $this->config->queue->toArray());
+            // 记录要更新的商品列表，因为更新同款不同色还要用到它。
+            $products[] = $product;
+            // 第一个数代表 productid, 第二个数代表 主颜色id
+            $colors[] = $product->id . "," . $product->color_id;
+        }
+        // 保存最后的输出变量
+        $output = [];
+        // | 后面的变量代表颜色
+        $product_group = implode('|', $colors);
+        // 逐个更新，绑定关系
+        foreach ($products as $row) {
+            $row->product_group = $product_group;
+            if ($row->update() == false) {
+                $this->db->rollback();
+                throw new Exception("/1002/更新product_group字段失败/");
             }
-
-            // 提交
-            $this->db->commit();
-            return $this->success($output);
-        } catch (Exception $e) {
-            // 记录错误日志
-            error_log("ProductController - addAction执行失败，错误信息是：" . $e->getMessage());
-            // 返回
-            $this->db->rollback();
-            return $this->error($this->getValidateMessage('product', 'db', 'save-failed'));
+            $output[] = $row->toArray();
         }
 
+        // 如果到这里没有出错，那么就推送该商品到 OMS，这里采用队列处理
+        if ($this->queue) {
+            $this->queue->choose('oms_inventory_update');
+            // 把 $output的id 传递给队列即可，剩下的逻辑交给Beanstalk吧。
+            $this->queue->put($output['id'], $this->config->queue->toArray());
+        }
+
+        // 无错误则提交
+        $this->db->commit();
+        // 返回
+        return $this->success($output);
+    }
+
+    /**
+     * 新建商品并且需要保存图片，需要和 OMS 同步
+     *
+     * @return false|string|void
+     * @throws Exception
+     */
+    function addWithSavePicturesAction()
+    {
+        // 拿到请求的参数
+        $params = json_decode($_POST["params"], true);
+        // 记录 params 的值，方便纠错
+        $this->logFile->log("\$add-params = " . json_encode($params));
+
+        $products = [];
+        $colors = [];
+        $keys = [
+            "brandid",
+            "series", "factoryprice", "nationalpricecurrency",
+            "nationalprice", "memo", "wordprice", "wordpricecurrency", "gender",
+            "spring", "summer", "fall", "winter",
+            "sizetopid",
+            "nationalfactoryprice", "wordprice", "wordpricecurrency",
+            "saletypeid", "producttypeid", "winterproofingid",
+        ];
+
+        // ageseason不能为空，之所以在这里重新写一遍，是怕前台封不住
+        if (empty($params['form']['ageseason'])) {
+            throw new Exception($this->getValidateMessage('ageseason') . $this->getValidateMessage('8000'));
+        }
+
+        // 开启事务
+        $this->db->begin();
+
+        // $params['colors']是待录入的商品，如果是多个则是同款不同色
+        foreach ($params['colors'] as $row) {
+            // 检验国际码是否重复
+            if (TbProduct::findFirst("wordcode = '" . $row['wordcode'] . "' AND companyid = " . $this->companyid)) {
+                $this->db->rollback();
+                $this->logFile->log("国际码" . $row['wordcode'] . "重复了：");
+                throw new Exception($this->getValidateMessage('guojima', 'template', 'uniqueness'));
+            }
+
+            // 不重复执行创建
+            $product = new TbProduct();
+            // 预处理
+            $product->companyid = $this->companyid;
+            // 时间字段
+            $product->created_at = date("Y-m-d H:i:s");
+            $product->updated_at = date("Y-m-d H:i:s");
+            $product->makestaff = $this->userId;
+            $product->wordcode_1 = $this->filterCode($row['wordcode_1']);
+            $product->wordcode_2 = $this->filterCode($row['wordcode_2']);
+            $product->wordcode_3 = $this->filterCode($row['wordcode_3']);
+            $product->wordcode_4 = $this->filterCode($row['wordcode_4']);
+            // 色系，以 colorSystemId 为准
+            // $product->brandcolor = $row['brandcolor'];
+            $product->colorname = $row['colorname'];
+            $product->picture = $row['picture'];
+            $product->picture2 = $row['picture2'];
+            $product->wordcode = $this->filterCode($row['wordcode_1']) . $this->filterCode($row['wordcode_2']) . $this->filterCode($row['wordcode_3']);
+
+            // 色系
+            $product->brandcolor = $row['brandcolor'];
+            // 再复制一遍，防止系统有用到这个字段的地方
+            $product->color_system_id = $row['brandcolor'];
+            // 主颜色
+            $product->color_id = $row['color_id'];
+            // 副颜色
+            $product->second_color_id = isset($row['second_color_id'][1]) ? (int)$row['second_color_id'][1] : 0;
+
+            // 不放在一起了，分开存储
+            $product->brandgroupid = $params['form']['brandgroupid'];
+            $product->childbrand = $params['form']['childbrand'];
+            $product->ageseason = implode(',', $params['form']['ageseason']);
+            // 这里之所以赋值为空，原因是下面有函数会修改这两个值
+            $product->ageseason_season = '';
+            $product->ageseason_year = '';
+            $product->countries = implode(',', $params['form']['countries']);
+            $product->ulnarinch = implode(',', $params['form']['ulnarinch']);
+            $product->productmemoids = implode(',', $params['form']['productmemoids']);
+
+            foreach ($keys as $key) {
+                $product->$key = $params['form'][$key];
+            }
+            $product->factorypricecurrency = $params['form']["wordpricecurrency"];
+            $product->nationalfactorypricecurrency = $params['form']["nationalpricecurrency"];
+
+            // 开始执行新增或修改操作
+            if ($product->save() == false) {
+                // 新增失败
+                $this->db->rollback();
+                $this->logFile->log("\$product => create 操作失败了，错误原因是：" . json_encode($product->getMessages()));
+                throw new Exception($product->getMessages()[0]);
+            }
+
+            // 如果材质有录入，那么就更新材质
+            if (count($params["materials"]) > 0) {
+                // 先把原来的材质都清除掉
+                foreach ($product->productMaterial as $obj) {
+                    if ($obj->delete() == false) {
+                        $this->db->rollback();
+                        $this->logFile->log("\$productMaterial => delete 操作失败了，错误原因是：" . json_encode($obj->getMessages()));
+                        throw new Exception($obj->getMessages()[0]);
+                    }
+                }
+
+                // 添加材质
+                foreach ($params['materials'] as $material) {
+                    $productMaterial = new TbProductMaterial();
+                    $productMaterial->productid = $product->id;
+                    $productMaterial->materialid = $material["materialid"];
+                    $productMaterial->materialnoteid = $material["materialnoteid"];
+                    $productMaterial->percent = $material["percent"];
+                    $productMaterial->created_at = date('Y-m-d H:i:s');
+                    $productMaterial->updated_at = date('Y-m-d H:i:s');
+                    // 开始添加
+                    if ($productMaterial->create() == false) {
+                        $this->db->rollback();
+                        $this->logFile->log("\$productMaterial => create 操作失败了，错误原因是：" . json_encode($productMaterial->getMessages()));
+                        throw new Exception($productMaterial->getMessages()[0]);
+                    }
+                }
+            }
+
+            // 开始处理图片下载的逻辑
+            // 如果存在id，就把图片导入进来
+            if (isset($params['isNeedSavePictures']) && $params['isNeedSavePictures']) {
+                if (isset($row['id']) && $row['id']) {
+                    // 商品模型
+                    $originProductModel = TbProduct::findFirstById($row['id']);
+                    // 图片模型
+                    $originPictureModel = $originProductModel->pictures;
+                    // 图片模型转数组
+                    $originPictures = $originPictureModel->toArray();
+
+                    // 添加新图片之前，先把 $product 所属的图片全部删除
+                    foreach ($product->pictures as $currentPictureModel) {
+                        if ($currentPictureModel->delete() === false) {
+                            $this->db->rollback();
+                            $this->logFile->log("\$currentPictureModel => delete 操作失败了，错误原因是：" . json_encode($currentPictureModel->getMessages()));
+                            throw new Exception($currentPictureModel->getMessages()[0]);
+                        }
+                    }
+
+                    // 添加新图片, 遍历
+                    foreach ($originPictures as $originPicture) {
+                        // 图片表新增
+                        $pictureModel = new TbPicture();
+                        $pictureModel->name = $originPicture['name'];
+                        $pictureModel->filename = $originPicture['filename'];
+                        $pictureModel->filename_40 = $originPicture['filename_40'];
+                        $pictureModel->filename_150 = $originPicture['filename_150'];
+                        // productid 要写新商品的 id
+                        $pictureModel->productid = $product->id;
+                        // 更新
+                        if ($pictureModel->create() === false) {
+                            $this->db->rollback();
+                            $this->logFile->log("\$pictureModel => create 操作失败了，错误原因是：" . json_encode($pictureModel->getMessages()));
+                            throw new Exception($pictureModel->getMessages()[0]);
+                        }
+
+                        // 下载表新增
+                        $downloadModel = new TbDownload();
+                        $downloadModel->picture_id = $originPicture['id'];
+                        $downloadModel->user_id = $this->userId;
+                        $downloadModel->created_at = date('Y-m-d H:i:s');
+                        $downloadModel->updated_at = date('Y-m-d H:i:s');
+                        if ($downloadModel->create() === false) {
+                            $this->db->rollback();
+                            $this->logFile->log("\$downloadModel => create 操作失败了，错误原因是：" . json_encode($downloadModel->getMessages()));
+                            throw new Exception($downloadModel->getMessages()[0]);
+                        }
+                    }
+                }
+            }
+
+            // 同步修改商品
+            $product->syncBrandSugest();
+            // 更新ageseason_season,ageseason_year两个字段
+            $product->updateAgeseason();
+            // 更新尺码
+            $product->updateSizecontentids();
+
+            // 记录要更新的商品列表，因为更新同款不同色还要用到它。
+            $products[] = $product;
+            // 第一个数代表 productid, 第二个数代表 主颜色id
+            $colors[] = $product->id . "," . $product->color_id;
+        }
+        // 保存最后的输出变量
+        $output = [];
+        // | 后面的变量代表颜色
+        $product_group = implode('|', $colors);
+        // 逐个更新，绑定关系
+        foreach ($products as $row) {
+            $row->product_group = $product_group;
+            if ($row->update() == false) {
+                $this->db->rollback();
+                throw new Exception("/1002/更新product_group字段失败/");
+            }
+            $output[] = $row->toArray();
+        }
+
+        // 如果到这里没有出错，那么就推送该商品到 OMS，这里采用队列处理
+        if ($this->queue) {
+            $this->queue->choose('oms_inventory_update');
+            // 把 $output的id 传递给队列即可，剩下的逻辑交给Beanstalk吧。
+            $this->queue->put($output['id'], $this->config->queue->toArray());
+        }
+
+        // 无错误则提交
+        $this->db->commit();
+        // 返回
+        return $this->success($output);
     }
 
     /**
@@ -362,7 +661,7 @@ class ProductController extends CadminController
     {
         $params = json_decode($_POST["params"], true);
         // 记录 params 的值，方便纠错
-        error_log("\$modify-params = " . print_r($params, true));
+        $this->logFile->log("\$modify-params = " . json_encode($params));
 
         $productids = implode(',', $params['products']);
 
@@ -384,7 +683,7 @@ class ProductController extends CadminController
                         $row->$key = trim($params['form'][$key]);
                     }
                 }
-                $row->updatetime = date("Y-m-d H:i:s");
+                $row->updated_at = date("Y-m-d H:i:s");
 
 
                 if ($row->update() == false) {
@@ -413,9 +712,6 @@ class ProductController extends CadminController
     function editAction()
     {
         $params = json_decode($_POST["params"], true);
-        // 记录 params 的值，方便纠错
-        error_log("\$edit-params = " . print_r($params, true));
-
         $product = TbProduct::findFirstById($params['form']['id']);
         $product_tootip = isset($params['form']['producttypeid_tootip']) ? $params['form']['producttypeid_tootip'] : 0;
 
@@ -423,128 +719,130 @@ class ProductController extends CadminController
         if (empty($params['form']['ageseason'])) {
             throw new Exception($this->getValidateMessage('ageseason') . $this->getValidateMessage('8000'));
         }
-
+        // 商品存在并且只能修改当前公司的商品
         if ($product != false && $product->companyid == $this->companyid) {
+            // 启用事务
             $this->db->begin();
-            // 使用 try-catch 捕捉
-            try {
 
-                //更新同款多色
-                if ($product->product_group == "") {
-                    $products = [$product];
-                } else {
-                    $products = TbProduct::find(
-                        sprintf("product_group='%s'", $product->product_group)
-                    );
-                }
-
-                $wordcode = $this->filterCode($params['form']['wordcode_1']) . $this->filterCode($params['form']['wordcode_2']) . $this->filterCode($params['form']['wordcode_3']);
-                //检验国际码是否重复
-                $where = sprintf("companyid=%d and wordcode='%s' and id<>%d", $this->companyid, addslashes($wordcode), $product->id);
-                if (TbProduct::count($where) > 0) {
-                    $this->db->rollback();
-                    throw new Exception("/11160201/国际码不能重复/");
-                }
-
-                //生成绑定的颜色组的字符串
-                $data = [];
-                foreach ($products as $row) {
-                    // 如果是当前的 sku，需要单独修改的字段
-                    if ($row->id == $product->id) {
-                        $row->colorname = $params['form']["colorname"];
-                        $row->wordcode_1 = $this->filterCode($params['form']["wordcode_1"]);
-                        $row->wordcode_2 = $this->filterCode($params['form']["wordcode_2"]);
-                        $row->wordcode_3 = $this->filterCode($params['form']["wordcode_3"]);
-                        $row->wordcode_4 = $this->filterCode($params['form']["wordcode_4"]);
-                        // 色系、颜色、副颜色只针对当前商品修改，其他的同款多色保持不变
-                        // 色系
-                        $row->brandcolor = $params['form']["brandcolor"];
-                        // 颜色
-                        $row->color_id = $params['form']['color_id'];
-                        // 副颜色取第二个数，这个是个数组
-                        $row->second_color_id = isset($params['form']['second_color_id'][1]) ? (int)$params['form']['second_color_id'][1] : 0;
-                        $row->picture = $params['form']["picture"];
-                        $row->picture2 = $params['form']["picture2"];
-                        $row->laststoragedate = $params['form']["laststoragedate"];
-                        // 品牌属性
-                        $row->producttypeid = $params['form']["producttypeid"];
-                        $row->wordcode = $wordcode;
-                    }
-
-                    // 下面是更新同款多色的数据
-                    $row->brandid = $params['form']["brandid"];
-                    $row->series = $params['form']["series"];
-                    $row->factoryprice = $params['form']["factoryprice"];
-                    $row->factorypricecurrency = $params['form']["wordpricecurrency"];
-                    $row->nationalpricecurrency = $params['form']["nationalpricecurrency"];
-                    $row->nationalprice = $params['form']["nationalprice"];
-                    $row->memo = $params['form']["memo"];
-                    $row->wordprice = $params['form']["wordprice"];
-                    $row->wordpricecurrency = $params['form']["wordpricecurrency"];
-                    $row->gender = $params['form']["gender"];
-                    $row->spring = $params['form']["spring"];
-                    $row->summer = $params['form']["summer"];
-                    $row->fall = $params['form']["fall"];
-                    $row->winter = $params['form']["winter"];
-                    $row->sizetopid = $params['form']["sizetopid"];
-                    $row->productmemoids = $params['form']["productmemoids"];
-                    $row->nationalfactorypricecurrency = $params['form']["nationalpricecurrency"];
-                    $row->nationalfactoryprice = $params['form']["nationalfactoryprice"];
-                    $row->saletypeid = $params['form']["saletypeid"];
-                    $row->winterproofingid = $params['form']["winterproofingid"];
-                    $row->updatetime = date("Y-m-d H:i:s");
-                    $row->brandgroupid = $params['form']['brandgroupid'];
-                    $row->childbrand = $params['form']['childbrand'];
-                    $row->ageseason = empty($params['form']['ageseason']) ? '' : implode(',', $params['form']['ageseason']);
-                    $row->countries = empty($params['form']['countries']) ? '' : implode(',', $params['form']['countries']);
-                    $row->ulnarinch = empty($params['form']['ulnarinch']) ? '' : implode(',', $params['form']['ulnarinch']);
-                    $row->productmemoids = empty($params['form']['productmemoids']) ? '' : implode(',', $params['form']['productmemoids']);
-
-                    if ($row->update() == false) {
-                        $this->db->rollback();
-                        return $this->error($row);
-                    }
-
-                    // 更新材质列表，内部会使用遍历处理，注意，这里使用的是$params["materials"]，而不是$params['form']["materials"]
-                    $row->updateMaterial($params["materials"]);
-
-                    $data[] = $row->id . "," . $row->brandcolor;
-
-                    //更新颜色提示数据
-                    $row->syncBrandSugest();
-
-                    $row->updateAgeseason();
-                    $row->updateSizecontentids();
-                }
-
-                if (count($products) > 1) {
-                    $product_group = implode('|', $data);
-
-                    //逐个更新，绑定关系
-                    foreach ($products as $row) {
-                        $row->product_group = $product_group;
-                        // 除了更新同款不同色之外，再写入一个商品属性值
-                        if ($product_tootip) {
-                            $row->producttypeid = $params['form']['producttypeid'];
-                        }
-                        if ($row->update() == false) {
-                            throw new Exception("#1002#更新product_group字段失败#");
-                        }
-                    }
-                }
-
-
-                $this->db->commit();
-                return $this->success();
-            } catch (Exception $e) {
-                // 记录错误日志
-                error_log("ProductController - editAction执行失败，错误信息是：" . $e->getMessage());
-                // 返回
-                $this->db->rollback();
-                return $this->error($this->getValidateMessage('product', 'db', 'save-failed'));
+            //更新同款多色
+            if ($product->product_group == "") {
+                $products = [$product];
+            } else {
+                $products = TbProduct::find(
+                    sprintf("product_group='%s'", $product->product_group)
+                );
             }
-        } else {
-            throw new Exception("/1002/数据非法/");
+
+            $wordcode = $this->filterCode($params['form']['wordcode_1']) . $this->filterCode($params['form']['wordcode_2']) . $this->filterCode($params['form']['wordcode_3']);
+            //检验国际码是否重复
+            $where = sprintf("companyid=%d and wordcode='%s' and id<>%d", $this->companyid, addslashes($wordcode), $product->id);
+            if (TbProduct::count($where) > 0) {
+                $this->db->rollback();
+                throw new Exception("/11160201/国际码不能重复/");
+            }
+
+            //生成绑定的颜色组的字符串
+            $data = [];
+            foreach ($products as $row) {
+                // 如果是当前的 sku，需要单独修改的字段
+                if ($row->id == $product->id) {
+                    $row->colorname = $params['form']["colorname"];
+                    $row->wordcode_1 = $this->filterCode($params['form']["wordcode_1"]);
+                    $row->wordcode_2 = $this->filterCode($params['form']["wordcode_2"]);
+                    $row->wordcode_3 = $this->filterCode($params['form']["wordcode_3"]);
+                    $row->wordcode_4 = $this->filterCode($params['form']["wordcode_4"]);
+                    // 色系、颜色、副颜色只针对当前商品修改，其他的同款多色保持不变
+                    // 色系
+                    $row->brandcolor = $params['form']["brandcolor"];
+                    $row->color_system_id = $params['form']["brandcolor"];
+                    // 颜色
+                    $row->color_id = $params['form']['color_id'];
+                    // 副颜色，分两种情况
+                    // 1、如果是一个数，说明没有修改 second_color_id
+                    // 2、如果是个数组，说明已经修改
+                    if (is_array($params['form']['second_color_id'])) {
+                        // 取数组第二个数
+                        $second_color_id = (int)$params['form']['second_color_id'][1];
+                    } else {
+                        // 直接保持现状
+                        $second_color_id = (int)$params['form']['second_color_id'];
+                    }
+                    // 副颜色赋值
+                    $row->second_color_id = $second_color_id;
+                    $row->picture = $params['form']["picture"];
+                    $row->picture2 = $params['form']["picture2"];
+                    $row->laststoragedate = $params['form']["laststoragedate"];
+                    // 品牌属性
+                    $row->producttypeid = $params['form']["producttypeid"];
+                    $row->wordcode = $wordcode;
+                }
+
+                // 下面是更新同款多色的数据
+                $row->brandid = $params['form']["brandid"];
+                $row->series = $params['form']["series"];
+                $row->factoryprice = $params['form']["factoryprice"];
+                $row->factorypricecurrency = $params['form']["wordpricecurrency"];
+                $row->nationalpricecurrency = $params['form']["nationalpricecurrency"];
+                $row->nationalprice = $params['form']["nationalprice"];
+                $row->memo = $params['form']["memo"];
+                $row->wordprice = $params['form']["wordprice"];
+                $row->wordpricecurrency = $params['form']["wordpricecurrency"];
+                $row->gender = $params['form']["gender"];
+                $row->spring = $params['form']["spring"];
+                $row->summer = $params['form']["summer"];
+                $row->fall = $params['form']["fall"];
+                $row->winter = $params['form']["winter"];
+                $row->sizetopid = $params['form']["sizetopid"];
+                $row->productmemoids = $params['form']["productmemoids"];
+                $row->nationalfactorypricecurrency = $params['form']["nationalpricecurrency"];
+                $row->nationalfactoryprice = $params['form']["nationalfactoryprice"];
+                $row->saletypeid = $params['form']["saletypeid"];
+                $row->winterproofingid = $params['form']["winterproofingid"];
+                $row->updated_at = date("Y-m-d H:i:s");
+                $row->brandgroupid = $params['form']['brandgroupid'];
+                $row->childbrand = $params['form']['childbrand'];
+                $row->ageseason = empty($params['form']['ageseason']) ? '' : implode(',', $params['form']['ageseason']);
+                $row->countries = empty($params['form']['countries']) ? '' : implode(',', $params['form']['countries']);
+                $row->ulnarinch = empty($params['form']['ulnarinch']) ? '' : implode(',', $params['form']['ulnarinch']);
+                $row->productmemoids = empty($params['form']['productmemoids']) ? '' : implode(',', $params['form']['productmemoids']);
+
+                if ($row->update() == false) {
+                    $this->db->rollback();
+                    return $this->error($row);
+                }
+
+                // 更新材质列表，内部会使用遍历处理，注意，这里使用的是$params["materials"]，而不是$params['form']["materials"]
+                $row->updateMaterial($params["materials"]);
+
+                $data[] = $row->id . "," . $row->brandcolor;
+
+                //更新颜色提示数据
+                $row->syncBrandSugest();
+
+                $row->updateAgeseason();
+                $row->updateSizecontentids();
+            }
+
+            if (count($products) > 1) {
+                $product_group = implode('|', $data);
+
+                //逐个更新，绑定关系
+                foreach ($products as $row) {
+                    $row->product_group = $product_group;
+                    // 除了更新同款不同色之外，再写入一个商品属性值
+                    if ($product_tootip) {
+                        $row->producttypeid = $params['form']['producttypeid'];
+                    }
+                    if ($row->update() == false) {
+                        throw new Exception("#1002#更新product_group字段失败#");
+                    }
+                }
+            }
+
+            // 无错则提交
+            $this->db->commit();
+            // 返回
+            return $this->success();
         }
     }
 
@@ -561,42 +859,40 @@ class ProductController extends CadminController
             throw new Exception('/11160501/数据非法/');
         }
 
+        // 启用事务
         $this->db->begin();
 
-        try {
-            $product_group = $product->product_group;
-            if ($product->delete() === false) {
-                throw new Exception('/11160502/删除失败/');
-            }
-
-            //更新同款不同色
-            $products = TbProduct::find(
-                sprintf("companyid=%d and product_group='%s'", $this->companyid, addslashes($product_group))
-            );
-
-            $data = [];
-            foreach ($products as $row) {
-                $data[] = $row->id . "," . $row->brandcolor;
-            }
-            $product_group = implode('|', $data);
-            foreach ($products as $row) {
-                $row->product_group = $product_group;
-                if ($row->update() == false) {
-                    throw new  Exception('/11160503/删除失败/');
-                }
-            }
-
-            $this->db->commit();
-            return $this->success();
-        } catch (Exception $e) {
-            // 记录日志
-            $this->error("商品删除接口执行失败，错误信息为：" . $e->getMessage());
-            $this->db->rollback();
-            throw $e;
+        $product_group = $product->product_group;
+        if ($product->delete() === false) {
+            throw new Exception('/11160502/删除失败/');
         }
+
+        // 更新同款不同色
+        $products = TbProduct::find(
+            sprintf("companyid=%d and product_group='%s'", $this->companyid, addslashes($product_group))
+        );
+
+        $data = [];
+        foreach ($products as $row) {
+            $data[] = $row->id . "," . $row->brandcolor;
+        }
+        $product_group = implode('|', $data);
+        foreach ($products as $row) {
+            $row->product_group = $product_group;
+            if ($row->update() == false) {
+                throw new Exception('/11160503/删除失败/');
+            }
+        }
+
+        // 无错则提交
+        $this->db->commit();
+        // 返回
+        return $this->success();
     }
 
-    private function reverseOrderMethod($orderMethod)
+
+    private
+    function reverseOrderMethod($orderMethod)
     {
         return $orderMethod == 'asc' ? 'desc' : 'asc';
     }
@@ -830,6 +1126,7 @@ class ProductController extends CadminController
      * 保存同款不同色数据
      *
      * @return false|string [type] [description]
+     * @throws \Asa\Erp\Exception
      */
     function savecolorgroupAction()
     {
@@ -839,113 +1136,116 @@ class ProductController extends CadminController
 
         $product = TbProduct::findFirstById($form['productid']);
         if ($product != false && $product->companyid == $this->companyid) {
-            try {
-                $this->db->begin();
 
-                //先解绑颜色组
-                $product->cancelBindColor();
+            // 使用事务
+            $this->db->begin();
 
-                $products = [];
-                $data = [];//[$product->id.",".$product->brandcolor];
-                //处理新增的记录
-                foreach ($form['list'] as &$row) {
-                    if ($row['id'] == '') {
-                        $product_else = $product->cloneByColor($row);
-                    } else {
-                        $product_else = TbProduct::findFirstById($row['id']);
-                        if ($product_else == false) {
-                            throw new Exception("/11160304/绑定的商品不存在/");
-                        }
+            //先解绑颜色组
+            $product->cancelBindColor();
 
-                        $product_else->brandid = $product->brandid;
-                        $product_else->brandgroupid = $product->brandgroupid;
-                        $product_else->childbrand = $product->childbrand;
-                        $product_else->countries = $product->countries;
-                        $product_else->series = $product->series;
-                        $product_else->ulnarinch = $product->ulnarinch;
-                        $product_else->factoryprice = $product->factoryprice;
-                        $product_else->factorypricecurrency = $product->factorypricecurrency;
-                        $product_else->nationalpricecurrency = $product->nationalpricecurrency;
-                        $product_else->nationalprice = $product->nationalprice;
-                        $product_else->memo = $product->memo;
-                        $product_else->wordprice = $product->wordprice;
-                        $product_else->wordpricecurrency = $product->wordpricecurrency;
-                        $product_else->gender = $product->gender;
-                        $product_else->spring = $product->spring;
-                        $product_else->summer = $product->summer;
-                        $product_else->fall = $product->fall;
-                        $product_else->winter = $product->winter;
-                        $product_else->ageseason = $product->ageseason;
-                        $product_else->ageseason_season = $product->ageseason_season;
-                        $product_else->ageseason_year = $product->ageseason_year;
-                        $product_else->sizetopid = $product->sizetopid;
-                        $product_else->sizecontentids = $product->sizecontentids;
-                        $product_else->productmemoids = $product->productmemoids;
-                        $product_else->nationalfactorypricecurrency = $product->nationalfactorypricecurrency;
-                        $product_else->nationalfactoryprice = $product->nationalfactoryprice;
-                        $product_else->saletypeid = $product->saletypeid;
-                    }
-
-                    // 色系统一用 brandcolor
-                    $product_else->brandcolor = $row['brandcolor'];
-                    $product_else->color_id = $row['color_id'];
-                    $product_else->second_color_id = isset($row['second_color_id'][1]) ? (int)$row['second_color_id'][1] : 0;
-                    $product_else->wordcode_1 = $this->filterCode($row['wordcode_1']);
-                    $product_else->wordcode_2 = $this->filterCode($row['wordcode_2']);
-                    $product_else->wordcode_3 = $this->filterCode($row['wordcode_3']);
-                    $product_else->wordcode_4 = $this->filterCode($row['wordcode_4']);
-                    $product_else->colorname = $row['colorname'];
-                    $product_else->picture = $row['picture'];
-                    $product_else->picture2 = $row['picture2'];
-                    $product_else->wordcode = $product_else->wordcode_1 . $product_else->wordcode_2 . $product_else->wordcode_3;
-
-                    $products[] = $product_else;
-                    $data[] = $product_else->id . "," . $product_else->color_id;
-                }
-
-                if (count($data) == 1) {
-                    $product_group = "";
+            $products = [];
+            $data = [];//[$product->id.",".$product->brandcolor];
+            //处理新增的记录
+            foreach ($form['list'] as &$row) {
+                if ($row['id'] == '') {
+                    $product_else = $product->cloneByColor($row);
                 } else {
-                    $product_group = implode('|', $data);
-                }
-
-                // 逐个更新，绑定关系
-                foreach ($products as $row) {
-                    // 不知道怎么了，突然缺少了 brandcolor，暂时补上
-                    $row->brandcolor = isset($row->brandcolor) ? $row->brandcolor : null;
-
-                    $row->product_group = $product_group;
-
-                    //检验国际码是否重复
-                    $where = sprintf("companyid=%d and wordcode='%s' and id<>%d", $this->companyid, addslashes($row->wordcode), $row->id);
-
-                    if (TbProduct::count($where) > 0) {
-                        throw new Exception("/11160301/国际码不能重复/");
+                    $product_else = TbProduct::findFirstById($row['id']);
+                    if ($product_else == false) {
+                        $this->db->rollback();
+                        throw new Exception("/11160304/绑定的商品不存在/");
                     }
 
-                    $row->updatetime = date("Y-m-d H:i:s");
-                    if ($row->update() == false) {
-                        throw new Exception("/11160302/更新product_group字段失败/");
-                    }
-
-                    $row->syncMaterial($product);
-                    $row->syncBrandSugest();
+                    $product_else->brandid = $product->brandid;
+                    $product_else->brandgroupid = $product->brandgroupid;
+                    $product_else->childbrand = $product->childbrand;
+                    $product_else->countries = $product->countries;
+                    $product_else->series = $product->series;
+                    $product_else->ulnarinch = $product->ulnarinch;
+                    $product_else->factoryprice = $product->factoryprice;
+                    $product_else->factorypricecurrency = $product->factorypricecurrency;
+                    $product_else->nationalpricecurrency = $product->nationalpricecurrency;
+                    $product_else->nationalprice = $product->nationalprice;
+                    $product_else->memo = $product->memo;
+                    $product_else->wordprice = $product->wordprice;
+                    $product_else->wordpricecurrency = $product->wordpricecurrency;
+                    $product_else->gender = $product->gender;
+                    $product_else->spring = $product->spring;
+                    $product_else->summer = $product->summer;
+                    $product_else->fall = $product->fall;
+                    $product_else->winter = $product->winter;
+                    $product_else->ageseason = $product->ageseason;
+                    $product_else->ageseason_season = $product->ageseason_season;
+                    $product_else->ageseason_year = $product->ageseason_year;
+                    $product_else->sizetopid = $product->sizetopid;
+                    $product_else->sizecontentids = $product->sizecontentids;
+                    $product_else->productmemoids = $product->productmemoids;
+                    $product_else->nationalfactorypricecurrency = $product->nationalfactorypricecurrency;
+                    $product_else->nationalfactoryprice = $product->nationalfactoryprice;
+                    $product_else->saletypeid = $product->saletypeid;
                 }
 
-                $this->db->commit();
+                // 色系统一用 brandcolor
+                $product_else->brandcolor = $row['brandcolor'];
+                $product_else->color_id = $row['color_id'];
+                $product_else->second_color_id = isset($row['second_color_id'][1]) ? (int)$row['second_color_id'][1] : 0;
+                $product_else->wordcode_1 = $this->filterCode($row['wordcode_1']);
+                $product_else->wordcode_2 = $this->filterCode($row['wordcode_2']);
+                $product_else->wordcode_3 = $this->filterCode($row['wordcode_3']);
+                $product_else->wordcode_4 = $this->filterCode($row['wordcode_4']);
+                $product_else->colorname = $row['colorname'];
+                $product_else->picture = $row['picture'];
+                $product_else->picture2 = $row['picture2'];
+                $product_else->wordcode = $product_else->wordcode_1 . $product_else->wordcode_2 . $product_else->wordcode_3;
 
-                $product = TbProduct::findFirstById($form['productid']);
-                return $this->success(["list" => $product->getColorGroupList(), "form" => $product->toArray()]);
-            } catch (Exception $e) {
-                $this->db->rollback();
-                return $this->error($e->getMessage());
+                $products[] = $product_else;
+                $data[] = $product_else->id . "," . $product_else->color_id;
             }
+
+            if (count($data) == 1) {
+                $product_group = "";
+            } else {
+                $product_group = implode('|', $data);
+            }
+
+            // 逐个更新，绑定关系
+            foreach ($products as $row) {
+                // 不知道怎么了，突然缺少了 brandcolor，暂时补上
+                $row->brandcolor = isset($row->brandcolor) ? $row->brandcolor : null;
+
+                $row->product_group = $product_group;
+
+                //检验国际码是否重复
+                $where = sprintf("companyid=%d and wordcode='%s' and id<>%d", $this->companyid, addslashes($row->wordcode), $row->id);
+
+                if (TbProduct::count($where) > 0) {
+                    $this->db->rollback();
+                    throw new Exception("/11160301/国际码不能重复/");
+                }
+
+                $row->updated_at = date("Y-m-d H:i:s");
+                if ($row->update() == false) {
+                    $this->db->rollback();
+                    throw new Exception("/11160302/更新product_group字段失败/");
+                }
+
+                $row->syncMaterial($product);
+                $row->syncBrandSugest();
+            }
+
+            // 无错则提交
+            $this->db->commit();
+
+            // 返回
+            $product = TbProduct::findFirstById($form['productid']);
+            return $this->success(["list" => $product->getColorGroupList(), "form" => $product->toArray()]);
         } else {
             return $this->error("/11160303/产品数据不存在/");
         }
     }
 
-    private function filterCode($code)
+    private
+    function filterCode($code)
     {
         return preg_replace("#\s+#msi", "", $code);
     }
@@ -959,8 +1259,22 @@ class ProductController extends CadminController
         $id = (int)$_POST['id'];
         $product = TbProduct::findFirstById($id);
         if ($product != false) {
-            return $this->success($product->getColorGroupList());
+            // 处理副颜色
+            // 把副颜色处理成数组格式
+            $products = $product->getColorGroupList();
+            $products = is_array($products) ? $products : $products->toArray();
+            foreach ($products as $k => $product) {
+                if ($product['second_color_id'] && $colorModel = TbColortemplate::findFirstById($product['second_color_id'])) {
+                    $products[$k]['second_color_id'] = [
+                        (int)$colorModel->color_system_id,
+                        (int)$product['second_color_id'],
+                    ];
+                }
+            }
+            // 返回成功
+            return $this->success($products);
         } else {
+            // 返回错误
             return $this->error("#1001#产品数据不存在#");
         }
     }
@@ -1205,7 +1519,7 @@ class ProductController extends CadminController
                         }
 
                         $productPrice->price = $priceValue;
-                        $productPrice->updatetime = date('Y-m-d H:i:s');
+                        $productPrice->updated_at = date('Y-m-d H:i:s');
                         $productPrice->updatestaff = $this->currentUser;
 
                         if ($productPrice->save() == false) {
@@ -1261,7 +1575,8 @@ class ProductController extends CadminController
      * 3、string model 款式，如果不传默认为新款
      * @return false|string|void
      */
-    public function createimageAction()
+    public
+    function createimageAction()
     {
         // 采用post接收
         if ($this->request->isPost()) {
@@ -1406,7 +1721,8 @@ class ProductController extends CadminController
      * @param $fieldname
      * @return string
      */
-    public function getlangfield($fieldname)
+    public
+    function getlangfield($fieldname)
     {
         // 默认语言是cn
         $lang = $this->session->get('language') ?: 'cn';
@@ -1417,7 +1733,8 @@ class ProductController extends CadminController
      * 获取商品相关内容
      * 年代、品牌、系列、品类、尺码组、材质备注与材质id对照表
      */
-    public function getProductRelatedOptionsAction()
+    public
+    function getProductRelatedOptionsAction()
     {
         // 如果未登录，那么默认为 cn
         if (!$lang = $this->getDI()->get("session")->get("language")) {
@@ -1665,14 +1982,16 @@ class ProductController extends CadminController
     /**
      * 获取商品信息
      */
-    public function infoAction()
+    public
+    function infoAction()
     {
         $id = $this->request->get('id', 'int', 0);
 
-        if (!$product = TbProduct::findFirst("id=$id")) {
+        if (!$product = TbProduct::findFirstById($id)) {
             // 传递错误
             return $this->error($this->getValidateMessage('product-doesnot-exist'));
         }
+        // 转成数组
         $result = $product->toArray();
         // 材质列表
         $result['materials'] = $product->productMaterial->toArray();
@@ -1699,7 +2018,8 @@ class ProductController extends CadminController
     /**
      * 获取商品尺码和尺码规格
      */
-    public function sizecontentsAndPropertiesAction()
+    public
+    function sizecontentsAndPropertiesAction()
     {
         $id = $this->request->getPost('id', 'int', 0);
 
@@ -1727,7 +2047,8 @@ class ProductController extends CadminController
     /**
      * 获取商品尺码数据
      */
-    public function sizecontentsAction()
+    public
+    function sizecontentsAction()
     {
         $id = $this->request->getPost('id', 'int', 0);
 
@@ -1743,7 +2064,8 @@ class ProductController extends CadminController
     /**
      * 获取商品条码信息
      */
-    public function getProductCodesAction()
+    public
+    function getProductCodesAction()
     {
         $id = (int)$_POST['id'];
         $product = TbProduct::findFirstById($id);
@@ -1758,7 +2080,8 @@ class ProductController extends CadminController
      * 保存商品条码
      * @return false|string [type] [description]
      */
-    public function saveProductCodeAction()
+    public
+    function saveProductCodeAction()
     {
         $form = json_decode($_POST["params"], true);
         // 记录 params 的值，方便纠错
@@ -1783,7 +2106,8 @@ class ProductController extends CadminController
     /**
      * 获取商品标题
      */
-    public function titleAction()
+    public
+    function titleAction()
     {
         $id = $this->request->getPost('id', 'int', 0);
 
@@ -1800,7 +2124,8 @@ class ProductController extends CadminController
      *
      * @return false|string
      */
-    public function addSizeAction()
+    public
+    function addSizeAction()
     {
         if ($this->request->isPost()) {
             // 验证
@@ -1848,7 +2173,8 @@ class ProductController extends CadminController
     /**
      * 只根据国际码第二位搜索
      */
-    public function getOnlyWordcodeCondition()
+    public
+    function getOnlyWordcodeCondition()
     {
         // 逻辑
         $where = [];

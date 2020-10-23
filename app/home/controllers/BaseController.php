@@ -8,14 +8,21 @@ use Phalcon\Mvc\Model;
 
 /**
  * 控制器基类，设置一些基本信息
+ *
  * Class BaseController
  * @package Multiple\Home\Controllers
  */
 class BaseController extends Controller
 {
+    // 默认语言
     protected $default_language;
+    // 公司id
     protected $companyid;
+    // 日志文件目录
     protected $logFile;
+    // 图片文件目录
+    protected $pictureDir;
+    // 当前操作用户
     protected $userId;
 
     /**
@@ -28,6 +35,7 @@ class BaseController extends Controller
         header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
         header('Access-Control-Allow-Methods: Get,Post,Put,OPTIONS');
 
+        // 当前登陆人
         $auth = $this->auth;
         if ($auth) {
             $this->companyid = (int)$auth["companyid"];
@@ -41,14 +49,24 @@ class BaseController extends Controller
         }
         // 创建当前日期的日志
         $this->logFile = new FileAdapter($logFile . '/log.txt');
+        // 图片文件夹初始化
+        $this->pictureDir = APP_PATH . '/public/upload/product';
+        // 不存在则创建
+        if (!file_exists($this->pictureDir)) {
+            mkdir($this->pictureDir);
+        }
     }
 
+    /**
+     * 列表
+     */
     function indexAction()
     {
     }
 
     /**
      * 返回正确的json信息
+     *
      * @param string $code 状态码，默认是200
      * @param array $data 如果有数据返回，那么就填充数据
      * @return false|string
@@ -61,6 +79,7 @@ class BaseController extends Controller
 
     /**
      * 返回错误的json信息
+     *
      * @param string $code 状态码，默认是200
      * @param array $messages 如果有错误信息，这里必须填充
      * @return false|string
@@ -84,6 +103,7 @@ class BaseController extends Controller
 
     /**
      * 返回输出的json信息
+     *
      * @param array $data
      * @param int $code
      * @param array $messages
@@ -106,6 +126,7 @@ class BaseController extends Controller
 
     /**
      * 多语言版本配置读取函数
+     *
      * @param string $field_name 验证字段的提示名称，比如cn.php中上面的自定义变量名system_name
      * @param string $module_name 模块名称，比如cn.php中的template
      * @param string $module_rule 模块验证规则，比如cn.php中的template模块下面的uniqueness
@@ -148,6 +169,7 @@ class BaseController extends Controller
 
     /**
      * 对单个模型的单个记录的修改、更新或者删除，并返回标准json输出
+     *
      * @param $model
      * @param $action
      */
@@ -162,6 +184,7 @@ class BaseController extends Controller
 
     /**
      * debug 调试
+     *
      * @param $message
      * @param string $flag
      */
