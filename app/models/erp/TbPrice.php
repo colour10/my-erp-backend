@@ -3,8 +3,6 @@
 namespace Asa\Erp;
 
 use Phalcon\Mvc\Model\Relation;
-use Phalcon\Mvc\Model\ResultInterface;
-use Phalcon\Mvc\Model\ResultSetInterface;
 
 /**
  * 价格定义表
@@ -98,8 +96,9 @@ class TbPrice extends BaseModel
 
     /**
      * 取整，1=个位；2=十位；3=不取整
+     *
      * @param  [type] $value [description]
-     * @return [type]        [description]
+     * @return false|float|int [type]        [description]
      */
     function getPriceValue($value)
     {
@@ -116,8 +115,9 @@ class TbPrice extends BaseModel
 
     /**
      * 个位取整
+     *
      * @param  [type] $value [description]
-     * @return [type]        [description]
+     * @return false|float|int [type]        [description]version
      */
     private function myRound($value)
     {

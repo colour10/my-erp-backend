@@ -194,6 +194,9 @@ class ProductController extends CadminController
                     (int)$row->second_color_id,
                 ];
             }
+            // 次数
+            $rowData['used_count'] = (int)$row->used_count;
+            // 赋值
             $data[] = $rowData;
         }
 
@@ -531,6 +534,18 @@ class ProductController extends CadminController
                 throw new Exception($product->getMessages()[0]);
             }
 
+            // 如果上面的商品新增成功，那么就再给调用的商品增加一次记录
+            if ($originProduct = TbProduct::findFirstById($row['id'])) {
+                // 增加1
+                $originProduct->used_count++;
+                // 如果更新失败
+                if (!$originProduct->save()) {
+                    $this->db->rollback();
+                    $this->logFile->log("\$originProduct => save 操作失败了，错误原因是：" . json_encode($originProduct->getMessages()));
+                    throw new Exception($originProduct->getMessages()[0]);
+                }
+            }
+
             // 如果材质有录入，那么就更新材质
             if (count($params["materials"]) > 0) {
                 // 先把原来的材质都清除掉
@@ -561,7 +576,7 @@ class ProductController extends CadminController
             }
 
             // 开始处理图片下载的逻辑
-            // 如果存在id，就把图片导入进来
+            // 如果isNeedSavePictures的值是true，则下载图片
             if (isset($params['isNeedSavePictures']) && $params['isNeedSavePictures']) {
                 if (isset($row['id']) && $row['id']) {
                     // 商品模型
@@ -2172,6 +2187,7 @@ class ProductController extends CadminController
 
     /**
      * 只根据国际码第二位搜索
+     * 并默认按照 使用次数 降序，公司升序的方式进行查询
      */
     public
     function getOnlyWordcodeCondition()
@@ -2179,7 +2195,7 @@ class ProductController extends CadminController
         // 逻辑
         $where = [];
         if (isset($_POST["wordcode"]) && trim($_POST["wordcode"]) != "") {
-            $where[] = sprintf("wordcode like '%%%s%%' ORDER BY companyid asc", addslashes(strtoupper($_POST["wordcode"])));
+            $where[] = sprintf("wordcode like '%%%s%%' ORDER BY used_count desc, companyid asc", addslashes(strtoupper($_POST["wordcode"])));
         }
         // 返回
         return implode(' and ', $where);

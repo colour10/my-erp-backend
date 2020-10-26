@@ -66,6 +66,7 @@ use Phalcon\Mvc\Model\ResultsetInterface;
  * @property int|null $second_color_id 副颜色id
  * @property bool|null $oms_update_status 是否已经上新：0-未上新；1-已上新
  * @property string|null $oms_update_extra 上新原始数据
+ * @property int $used_count 被使用的次数
  * @property null $created_at 创建时间
  * @property null $updated_at 更新时间
  * @property-read TbCompany|null $company 商品-公司

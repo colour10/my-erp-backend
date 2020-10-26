@@ -15,12 +15,20 @@ class BaseModel extends Model
 {
     protected $validatorFactory;
 
+    /**
+     * 初始化
+     */
     public function initialize()
     {
         // 动态更新，只更新变化的字段，非常有用
         $this->useDynamicUpdate(true);
     }
 
+    /**
+     * 验证规则
+     *
+     * @return ValidatorFactory
+     */
     function getValidatorFactory()
     {
         if (!$this->validatorFactory) {
@@ -33,6 +41,7 @@ class BaseModel extends Model
 
     /**
      * 获取查询时候的必须条件，为了保证和软删除表的一致性
+     *
      * @return array [type] [description]
      */
     function getSearchBaseCondition()
@@ -42,8 +51,8 @@ class BaseModel extends Model
 
     /**
      * 多语言版本配置读取函数
-     * @param string $template languages下面语言文件字段的名称，如template模块下面的uniqueness
-     * @param string $name 待验证字段的编号，显示为当前语言的友好性提示
+     * @param $template -languages下面语言文件字段的名称，如template模块下面的uniqueness
+     * @param $name -待验证字段的编号，显示为当前语言的友好性提示
      */
     function getValidateMessage($template, $name)
     {
