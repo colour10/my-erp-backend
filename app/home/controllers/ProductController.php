@@ -1142,6 +1142,7 @@ class ProductController extends CadminController
      *
      * @return false|string [type] [description]
      * @throws \Asa\Erp\Exception
+     * @throws Exception
      */
     function savecolorgroupAction()
     {

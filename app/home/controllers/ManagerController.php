@@ -2,7 +2,6 @@
 
 namespace Multiple\Home\Controllers;
 
-use Asa\Erp\TbAgeseason;
 use Asa\Erp\TbBrand;
 use Asa\Erp\TbBrandgroup;
 use Asa\Erp\TbCompany;
@@ -13,11 +12,12 @@ use Asa\Erp\TbMember;
 use Asa\Erp\TbPermission;
 use Asa\Erp\TbPermissionGroup;
 use Asa\Erp\TbProduct;
+use Asa\Erp\TbSaleport;
 use Asa\Erp\TbSeries;
 use Asa\Erp\TbShoppayment;
 use Asa\Erp\TbUser;
 use Asa\Erp\TbUserPermission;
-use Asa\Erp\Util;
+use Asa\Erp\TbWarehouse;
 use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;
 
@@ -181,6 +181,48 @@ class ManagerController extends AdminController
                 }
             }
 
+            // 添加仓库，默认是天津，上海
+            $warehouseModel = new TbWarehouse();
+            $warehouseModel->companyid = $companyid;
+            $warehouseModel->name = '天津仓库';
+            $warehouseModel->is_real = 1;
+            $warehouseModel->city = '天津';
+            $warehouseModel->countryid = 66;
+            if (!$warehouseModel->create()) {
+                $this->db->rollback();
+                return $this->error('创建天津仓库失败');
+            }
+
+            $warehouseModel = new TbWarehouse();
+            $warehouseModel->companyid = $companyid;
+            $warehouseModel->name = '上海仓库';
+            $warehouseModel->is_real = 1;
+            $warehouseModel->city = '上海';
+            $warehouseModel->countryid = 66;
+            if (!$warehouseModel->create()) {
+                $this->db->rollback();
+                return $this->error('创建上海仓库失败');
+            }
+
+            // 添加销售端口，默认是天津，上海
+            $saleportModel = new TbSaleport();
+            $saleportModel->name = 'B2C天津';
+            $saleportModel->discount = 1;
+            $saleportModel->companyid = $companyid;
+            if (!$warehouseModel->create()) {
+                $this->db->rollback();
+                return $this->error('创建天津销售端口失败');
+            }
+
+            $saleportModel = new TbSaleport();
+            $saleportModel->name = 'B2B上海';
+            $saleportModel->discount = 1;
+            $saleportModel->companyid = $companyid;
+            if (!$warehouseModel->create()) {
+                $this->db->rollback();
+                return $this->error('创建上海销售端口失败');
+            }
+
             // 添加user管理员
             $login_name = TbUser::getAvailableNo($admin);
             $userModel = new TbUser();
@@ -282,28 +324,40 @@ class ManagerController extends AdminController
         }
 
         // 取出虚拟公司id
-        $companydid = $companyModel->id;
+        $companyid = $companyModel->id;
 
         // 开始统计
-        $companys = TbCompany::find("id != " . $companydid);
+        $companies = TbCompany::find([
+            'conditions' => 'id != ' . $companyid,
+            'columns'    => 'id, name',
+        ])->toArray();
+
         $datas = [];
         $total_members_count = 0;
         $total_users_count = 0;
         $total_products_count = 0;
-        foreach ($companys as $k => $company) {
+
+        // 遍历
+        foreach ($companies as $k => $company) {
             // 用户表
-            $users = TbUser::find("companyid = " . $company->id);
+            $users = TbUser::find([
+                'conditions' => "companyid = " . $company['id'],
+                'columns'    => 'id, login_name, departmentid, groupid, companyid, sex, mobilephone, e_mail, address',
+            ])->toArray();
+
             // 取出用户表一些关键信息，部门，组，公司
             // 保存最后的结果
             $return_users = [];
             // 循环遍历
-            foreach ($users->toArray() as $j => $user) {
-                $departmentModel = TbDepartment::findFirstById($user['departmentid']);
-                $groupModel = TbGroup::findFirstById($user['groupid']);
-                $companyModel = TbCompany::findFirstById($user['companyid']);
-                $user['departmentname'] = $departmentModel ? $departmentModel->name : '';
-                $user['groupname'] = $groupModel ? $groupModel->group_name : '';
-                $user['companyname'] = $companyModel ? $companyModel->name : '';
+            foreach ($users as $j => $user) {
+                // 部门名称
+                $user['departmentname'] = $this->_getAttributeName($user['departmentid'], TbDepartment::class, 'name');
+                // 组名称
+                $user['groupname'] = $this->_getAttributeName($user['groupid'], TbGroup::class, 'group_name');
+                // 公司名称
+                $user['companyname'] = $this->_getAttributeName($user['companyid'], TbCompany::class, 'name');
+                // 性别, 1男 0女
+                $user['sexname'] = $user['sex'] ? '男' : '女';
                 // 如果有为null，则赋值为空
                 foreach (array_keys($user) as $key) {
                     if (is_null($user[$key])) {
@@ -315,14 +369,17 @@ class ManagerController extends AdminController
             }
 
             // 会员表
-            $members = TbMember::find("companyid = " . $company->id);
+            $members = TbMember::find([
+                'conditions' => "companyid = " . $company['id'],
+                'columns'    => 'id, companyid, gender, email, address, login_name, phoneno',
+            ])->toArray();
+
             // 保存最后的结果
             $return_members = [];
             // 循环遍历
-            foreach ($members->toArray() as $i => $member) {
-                $companyModel = TbCompany::findFirstById($member['companyid']);
-                $member['companyname'] = $companyModel ? $companyModel->name : '';
-
+            foreach ($members as $i => $member) {
+                // 公司名称
+                $member['companyname'] = $this->_getAttributeName($member['companyid'], TbCompany::class, 'name');
                 // 性别
                 switch ($member['gender']) {
                     case '0':
@@ -350,25 +407,18 @@ class ManagerController extends AdminController
             }
 
             // 产品表
-            $products = TbProduct::find("companyid = " . $company->id);
+            $products = TbProduct::find([
+                'conditions' => "companyid = " . $company['id'],
+                'columns'    => 'id, series, companyid, brandid, brandgroupid, gender, ageseason, wordcode, productmemoids, color_id, ageseason_season, ageseason_year, created_at',
+            ]);
             // 保存最后的结果，年代、性别、品牌、品类
             $return_products = [];
             // 循环遍历
-            foreach ($products->toArray() as $l => $product) {
-                // 系列
-                $seriesModel = TbSeries::findFirstById($product['series']);
-                $product['seriesname'] = $seriesModel ? $seriesModel->name_cn : '';
-                // 公司名
-                $companyModel = TbCompany::findFirstById($product['companyid']);
-                $product['companyname'] = $companyModel ? $companyModel->name : '';
-                // 品牌
-                $brandModel = TbBrand::findFirstById($product['brandid']);
-                $product['brandname'] = $brandModel ? $brandModel->name_cn : '';
-                // 品类
-                $brandgroupModel = TbBrandgroup::findFirstById($product['brandgroupid']);
-                $product['brandgroupname'] = $brandgroupModel ? $brandgroupModel->name_cn : '';
+            foreach ($products as $l => $product) {
+                // 转成数组
+                $productArray = $product->toArray();
                 // 性别
-                switch ($product['gender']) {
+                switch ($product->gender) {
                     case '0':
                         $gender = '女士';
                         break;
@@ -381,44 +431,54 @@ class ManagerController extends AdminController
                     default:
                         $gender = '';
                 }
-                $product['gendername'] = $gender;
-                // 季节
-                $product['ageseasonname'] = Util::getCommasValues(TbAgeseason::class, $product['ageseason'], ['sessionmark', 'name']);
+                $productArray['genderName'] = $gender;
+                // 系列
+                $productArray['seriesName'] = $this->_getAttributeName($product->series, TbSeries::class, 'name_cn');
+                // 公司名
+                $productArray['companyName'] = $this->_getAttributeName($product->companyid, TbCompany::class, 'name');
+                // 品牌
+                $productArray['brandName'] = $this->_getAttributeName($product->brandid, TbBrand::class, 'name_cn');
+                // 品类
+                $productArray['brandgroupName'] = $this->_getAttributeName($product->brandgroupid, TbBrandgroup::class, 'name_cn');
+                // 年代季节
+                $productArray['ageseasonName'] = $product->ageseason_season . $product->ageseason_year;
+                // 商品名称
+                $productArray['productName'] = '';
 
                 // 如果有为null，则赋值为空
-                foreach (array_keys($product) as $key) {
-                    if (is_null($product[$key])) {
-                        $product[$key] = '';
+                foreach (array_keys($productArray) as $key) {
+                    if (is_null($productArray[$key])) {
+                        $productArray[$key] = '';
                     }
                 }
-                // 重新赋值
-                $return_products[$l] = $product;
+                // 赋值
+                $return_products[] = $productArray;
             }
 
             // 赋值
             $datas['items'][$k] = [
                 // 公司模型
-                'company'  => $company->toArray(),
+                'company'  => $company,
                 // 公司用户
                 'users'    => [
-                    'count'   => $users->count(),
+                    'count'   => count($users),
                     'details' => $return_users,
                 ],
                 // 公司下属会员
                 'members'  => [
-                    'count'   => $members->count(),
+                    'count'   => count($members),
                     'details' => $return_members,
                 ],
                 // 公司下属产品
                 'products' => [
-                    'count'   => $products->count(),
+                    'count'   => count($return_products),
                     'details' => $return_products,
                 ],
             ];
             // 累计
-            $total_members_count += $members->count();
-            $total_users_count += $users->count();
-            $total_products_count += $products->count();
+            $total_members_count += count($members);
+            $total_users_count += count($users);
+            $total_products_count += count($products);
         }
 
         // 添加累计值
@@ -431,6 +491,24 @@ class ManagerController extends AdminController
         // 渲染模板
         $this->mview->setVars(compact('datas'));
         $this->mview->partial('manager/statis');
+    }
+
+    /**
+     * 根据 id 取出模型中的字段值
+     *
+     * @param $id -id
+     * @param $model -model
+     * @param $attribute -字段属性
+     * @return string
+     */
+    private function _getAttributeName($id, $model, $attribute)
+    {
+        // 如果存在 $id, 就去寻找对应的模型，否则直接返回null
+        if (!$id || !$model = $model::findFirstById($id)) {
+            return '';
+        }
+        // 返回
+        return $model->$attribute ?? '';
     }
 
 }

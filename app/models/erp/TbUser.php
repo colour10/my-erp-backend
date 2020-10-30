@@ -20,8 +20,8 @@ namespace Asa\Erp;
  * @property string|null $date 出生年月
  * @property string|null $phone 电话
  * @property string|null $mobilephone 手机
- * @property string|null $e_mail 邮箱密码
- * @property string|null $email_password 用于自动发送邮件
+ * @property string|null $e_mail 邮箱
+ * @property string|null $email_password 邮箱密码，用于自动发送邮件
  * @property string|null $memo 备注
  * @property int|null $countryid 国家id
  * @property int|null $departmentid2 部门2 id

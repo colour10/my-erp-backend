@@ -308,7 +308,7 @@ class TbProduct extends BaseCompanyModel
             TbPicture::class,
             "productid",
             [
-                'alias'      => 'pictures',
+                'alias' => 'pictures',
             ]
         );
     }
@@ -750,8 +750,8 @@ class TbProduct extends BaseCompanyModel
         $gender = $this->getGenderName();
         $color = $this->getColorName();
         $product_memo = $this->getProductMemoNames();
-        $subbrand = $this->getSubbrand();
-        return $brand . $gender . $color . $product_memo . $subbrand;
+        $subBrand = $this->getSubbrand();
+        return $brand . $gender . $color . $product_memo . $subBrand;
     }
 
     /**

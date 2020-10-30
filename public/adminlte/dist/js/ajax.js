@@ -78,7 +78,7 @@ function showdetails(obj) {
                 '<td>' + detail[i].departmentname + '</td>' +
                 '<td>' + detail[i].groupname + '</td>' +
                 '<td>' + detail[i].companyname + '</td>' +
-                '<td>' + detail[i].sex + '</td>' +
+                '<td>' + detail[i].sexname + '</td>' +
                 '<td>' + detail[i].mobilephone + '</td>' +
                 '<td>' + detail[i].e_mail + '</td>' +
                 '<td>' + detail[i].address + '</td>' +
@@ -100,14 +100,14 @@ function showdetails(obj) {
             html +=
                 '<tr>' +
                 '<td>' + detail[i].id + '</td>' +
-                '<td>' + detail[i].productname + '</td>' +
-                '<td>' + detail[i].wordcode_1 + detail[i].wordcode_2 + detail[i].wordcode_3 + detail[i].wordcode_4 + '</td>' +
-                '<td>' + detail[i].seriesname + '</td>' +
-                '<td>' + detail[i].ageseasonname + '</td>' +
-                '<td>' + detail[i].gendername + '</td>' +
-                '<td>' + detail[i].brandname + '</td>' +
-                '<td>' + detail[i].brandgroupname + '</td>' +
-                '<td>' + detail[i].maketime + '</td>' +
+                '<td>' + detail[i].productName + '</td>' +
+                '<td>' + detail[i].wordcode + '</td>' +
+                '<td>' + detail[i].seriesName + '</td>' +
+                '<td>' + detail[i].ageseasonName + '</td>' +
+                '<td>' + detail[i].genderName + '</td>' +
+                '<td>' + detail[i].brandName + '</td>' +
+                '<td>' + detail[i].brandgroupName + '</td>' +
+                '<td>' + detail[i].created_at + '</td>' +
                 '</tr>'
             ;
         }
