@@ -209,7 +209,8 @@ class ManagerController extends AdminController
             $saleportModel->name = 'B2C天津';
             $saleportModel->discount = 1;
             $saleportModel->companyid = $companyid;
-            if (!$warehouseModel->create()) {
+            $saleportModel->create_time = date('Y-m-d H:i:s');
+            if (!$saleportModel->create()) {
                 $this->db->rollback();
                 return $this->error('创建天津销售端口失败');
             }
@@ -218,7 +219,8 @@ class ManagerController extends AdminController
             $saleportModel->name = 'B2B上海';
             $saleportModel->discount = 1;
             $saleportModel->companyid = $companyid;
-            if (!$warehouseModel->create()) {
+            $saleportModel->create_time = date('Y-m-d H:i:s');
+            if (!$saleportModel->create()) {
                 $this->db->rollback();
                 return $this->error('创建上海销售端口失败');
             }

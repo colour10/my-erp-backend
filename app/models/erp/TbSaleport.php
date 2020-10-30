@@ -9,39 +9,14 @@ use Phalcon\Mvc\Model\ResultsetInterface;
  *
  * Class TbSaleport
  * @package Asa\Erp
+ * @property int $id 主键id
+ * @property string|null $name 名称
+ * @property float|null $discount 折扣
+ * @property null $create_time 创建时间
+ * @property int|null $companyid 公司id
  */
 class TbSaleport extends BaseModel
 {
-    /**
-     *
-     * @var integer
-     */
-    public $id;
-
-    /**
-     *
-     * @var string
-     */
-    public $name;
-
-    /**
-     *
-     * @var double
-     */
-    public $discount;
-
-    /**
-     *
-     * @var string
-     */
-    public $create_time;
-
-    /**
-     *
-     * @var integer
-     */
-    public $companyid;
-
     /**
      * 初始化
      */
