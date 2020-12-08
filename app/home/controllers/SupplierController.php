@@ -7,7 +7,7 @@ namespace Multiple\Home\Controllers;
  * Class SupplierController
  * @package Multiple\Home\Controllers
  */
-class SupplierController extends AdminController
+class SupplierController extends CadminController
 {
     /**
      * 初始化

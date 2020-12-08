@@ -127,8 +127,10 @@ class ManagerController extends AdminController
             // 如果不报错，则开始添加
             // 添加公司
             $companyModel = new TbCompany();
-            $data = ['name' => trim($company)];
-            if (!$companyModel->create($data)) {
+            $companyModel->name = trim($company);
+            // 默认本位币为欧元，id为9
+            $companyModel->currencyid = 9;
+            if (!$companyModel->create()) {
                 $this->db->rollback();
                 return $this->error('公司名创建失败');
             }

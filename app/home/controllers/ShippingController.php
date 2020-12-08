@@ -807,14 +807,17 @@ class ShippingController extends AdminController
 
         // 添加入库人，入库时间, status=3代表分摊完毕
         $shipping->status = TbShipping::STATUS_AMORTIZED;
-        $shipping->warehousingstaff = $this->currentUser;
+        $shipping->warehousingstaff = $this->userId;
         $shipping->warehousingtime = date('Y-m-d H:i:s');
         if ($shipping->save() == false) {
             throw new Exception("/11011202/发货单入库失败。/");
         }
 
+        // 提交
         $this->db->commit();
+        // 库存变动通知
         TbProductstock::sendStockChange();
+        // 返回
         return $this->success();
     }
 
@@ -851,17 +854,11 @@ class ShippingController extends AdminController
 
         $costList = $shipping->getCostList();
 
-        // 取出 costList 的值
-        error_log('costList = ' . print_r($costList, true));
-
         $prodctstocks = TbProductstock::sum([
             sprintf("productid in (%s)", implode(",", array_keys($costList))),
             "column" => "number",
             "group"  => "productid",
         ]);
-
-        // 取出 prodctstocks 的值
-        error_log('prodctstocks = ' . print_r($prodctstocks->toArray(), true));
 
         //修改商品信息的成本价
         foreach ($prodctstocks as $row) {
@@ -917,14 +914,18 @@ class ShippingController extends AdminController
             }
         }
 
-        $shipping->status = 2;
+        // 库存状态修改为待入库
+        $shipping->status = TbShipping::STATUS_STORAGE;
         if ($shipping->save() == false) {
             $this->db->rollback();
             throw new Exception("/11011308/发货单取消入库失败。/");
         }
 
+        // 提交
         $this->db->commit();
+        // 发送库存通知
         TbProductstock::sendStockChange();
+        // 返回
         return $this->success();
     }
 

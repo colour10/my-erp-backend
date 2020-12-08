@@ -318,8 +318,6 @@ class ProductController extends CadminController
             $product->wordcode_2 = $this->filterCode($row['wordcode_2']);
             $product->wordcode_3 = $this->filterCode($row['wordcode_3']);
             $product->wordcode_4 = $this->filterCode($row['wordcode_4']);
-            // 色系，以 colorSystemId 为准
-            // $product->brandcolor = $row['brandcolor'];
             $product->colorname = $row['colorname'];
             $product->picture = $row['picture'];
             $product->picture2 = $row['picture2'];
@@ -350,6 +348,8 @@ class ProductController extends CadminController
             }
             $product->factorypricecurrency = $params['form']["wordpricecurrency"];
             $product->nationalfactorypricecurrency = $params['form']["nationalpricecurrency"];
+            // 补充sizecontentids
+            $product->sizecontentids = implode(',', array_column(TbSizetop::findFirstById($params['form']["sizetopid"])->sizecontents->toArray(), 'id'));
 
             // 判断是否存在 id 字段
             // 检验国际码是否重复
@@ -416,14 +416,16 @@ class ProductController extends CadminController
         $output = [];
         // | 后面的变量代表颜色
         $product_group = implode('|', $colors);
-        // 逐个更新，绑定关系
+        // 逐个更新，绑定关系，但是直接更新可能会出现bug，所以再重新转换一次
         foreach ($products as $row) {
-            $row->product_group = $product_group;
-            if ($row->update() == false) {
+            // 重新查找，直接用 $row 可能会更新失败，切记切记
+            $productModel = TbProduct::findFirstById($row->id);
+            $productModel->product_group = $product_group;
+            if ($productModel->update() == false) {
                 $this->db->rollback();
                 throw new Exception("/1002/更新product_group字段失败/");
             }
-            $output[] = $row->toArray();
+            $output[] = $productModel->toArray();
         }
 
         // 如果到这里没有出错，那么就推送该商品到 OMS，这里采用队列处理
@@ -1162,10 +1164,12 @@ class ProductController extends CadminController
             $products = [];
             $data = [];//[$product->id.",".$product->brandcolor];
             //处理新增的记录
-            foreach ($form['list'] as &$row) {
+            foreach ($form['list'] as $row) {
+                // id为空是新增
                 if ($row['id'] == '') {
                     $product_else = $product->cloneByColor($row);
                 } else {
+                    // 这个是修改
                     $product_else = TbProduct::findFirstById($row['id']);
                     if ($product_else == false) {
                         $this->db->rollback();
@@ -1201,7 +1205,7 @@ class ProductController extends CadminController
                     $product_else->saletypeid = $product->saletypeid;
                 }
 
-                // 色系统一用 brandcolor
+                // 统一修改部分
                 $product_else->brandcolor = $row['brandcolor'];
                 $product_else->color_id = $row['color_id'];
                 $product_else->second_color_id = isset($row['second_color_id'][1]) ? (int)$row['second_color_id'][1] : 0;
@@ -1213,7 +1217,15 @@ class ProductController extends CadminController
                 $product_else->picture = $row['picture'];
                 $product_else->picture2 = $row['picture2'];
                 $product_else->wordcode = $product_else->wordcode_1 . $product_else->wordcode_2 . $product_else->wordcode_3;
+                // 更新
+                if ($product_else->save() == false) {
+                    $this->db->rollback();
+                    // 记录错误，以后可以用记录日志的方式来查找错误
+                    $this->logFile->log("商品更新失败，错误原因是：" . $this->error($product_else));
+                    throw new Exception("商品更新失败");
+                }
 
+                // 记录操作model
                 $products[] = $product_else;
                 $data[] = $product_else->id . "," . $product_else->color_id;
             }
@@ -1225,28 +1237,28 @@ class ProductController extends CadminController
             }
 
             // 逐个更新，绑定关系
-            foreach ($products as $row) {
-                // 不知道怎么了，突然缺少了 brandcolor，暂时补上
-                $row->brandcolor = isset($row->brandcolor) ? $row->brandcolor : null;
+            foreach ($products as $productModel) {
+                // 重新查找，直接用 $row 可能会更新失败，切记切记
+                $rowModel = TbProduct::findFirstById($productModel->id);
 
-                $row->product_group = $product_group;
+                $rowModel->product_group = $product_group;
 
                 //检验国际码是否重复
-                $where = sprintf("companyid=%d and wordcode='%s' and id<>%d", $this->companyid, addslashes($row->wordcode), $row->id);
+                $where = sprintf("companyid=%d and wordcode='%s' and id<>%d", $this->companyid, addslashes($rowModel->wordcode), $rowModel->id);
 
                 if (TbProduct::count($where) > 0) {
                     $this->db->rollback();
                     throw new Exception("/11160301/国际码不能重复/");
                 }
 
-                $row->updated_at = date("Y-m-d H:i:s");
-                if ($row->update() == false) {
+                $rowModel->updated_at = date("Y-m-d H:i:s");
+                if ($rowModel->update() == false) {
                     $this->db->rollback();
                     throw new Exception("/11160302/更新product_group字段失败/");
                 }
 
-                $row->syncMaterial($product);
-                $row->syncBrandSugest();
+                $rowModel->syncMaterial($product);
+                $rowModel->syncBrandSugest();
             }
 
             // 无错则提交
@@ -1996,7 +2008,7 @@ class ProductController extends CadminController
     }
 
     /**
-     * 获取商品信息
+     * 获取商品信息，如果sizecontents为空，那么自动去源表查找
      */
     public
     function infoAction()
@@ -2011,22 +2023,38 @@ class ProductController extends CadminController
         $result = $product->toArray();
         // 材质列表
         $result['materials'] = $product->productMaterial->toArray();
-        // 尺码列表
-        $sizecontents = explode(',', $product->sizecontentids);
-        foreach ($sizecontents as $sizecontent) {
-            // 把 id 和 name 添加进去
-            if ($sizecontent_model = TbSizecontent::findFirstById($sizecontent)) {
-                $result['sizecontents'][] = [
-                    'id'   => $sizecontent,
-                    'name' => $sizecontent_model->name,
-                ];
-            } else {
-                $result['sizecontents'][] = [
-                    'id'   => $sizecontent,
-                    'name' => '',
-                ];
+        // 判断尺码列表
+        // 这里面加个判断，如果尺码列表为空，那么就去tb_sizecontents表去查
+        if (empty($product->sizecontentids)) {
+            if ($sizetopModel = TbSizetop::findFirstById($product->sizetopid)) {
+                $sizecontents = $sizetopModel->sizecontents->toArray();
+                foreach ($sizecontents as $sizecontent) {
+                    $result['sizecontents'][] = [
+                        'id'   => $sizecontent['id'],
+                        'name' => $sizecontent['name'],
+                    ];
+                }
+            }
+        } else {
+            // 尺码列表转换
+            $sizecontents = explode(',', $product->sizecontentids);
+            // 找到了更好，直接查找
+            foreach ($sizecontents as $sizecontent) {
+                // 把 id 和 name 添加进去
+                if ($sizecontent_model = TbSizecontent::findFirstById($sizecontent)) {
+                    $result['sizecontents'][] = [
+                        'id'   => $sizecontent,
+                        'name' => $sizecontent_model->name,
+                    ];
+                } else {
+                    $result['sizecontents'][] = [
+                        'id'   => $sizecontent,
+                        'name' => '',
+                    ];
+                }
             }
         }
+
         // 返回
         return $this->success($result);
     }
