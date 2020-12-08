@@ -126,5 +126,15 @@ class TbCompany extends BaseModel
                 'alias' => 'users',
             ]
         );
+
+        // 公司-客户列表，一对多
+        $this->hasMany(
+            "id",
+            TbSupplier::class,
+            "companyid",
+            [
+                'alias' => 'suppliers',
+            ]
+        );
     }
 }

@@ -101,4 +101,42 @@ class CompanyController extends AdminController
     {
         return $this->success($this->company->saleports);
     }
+
+    /**
+     * 获取登录用户所属公司的所有客户列表
+     *
+     * @return false|string
+     */
+    public function customersAction()
+    {
+        // 逻辑
+        $return = [];
+        $suppliers = $this->company->suppliers->toArray();
+        foreach ($suppliers as $supplier) {
+            if ($supplier['suppliertype'] == 2) {
+                $return[] = $supplier;
+            }
+        }
+        // 返回
+        return $this->success($return);
+    }
+
+    /**
+     * 获取登录用户所属公司的所有供货商列表
+     *
+     * @return false|string
+     */
+    public function suppliersAction()
+    {
+        // 逻辑
+        $return = [];
+        $suppliers = $this->company->suppliers->toArray();
+        foreach ($suppliers as $supplier) {
+            if ($supplier['suppliertype'] == 4) {
+                $return[] = $supplier;
+            }
+        }
+        // 返回
+        return $this->success($return);
+    }
 }
