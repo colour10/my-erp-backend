@@ -5,7 +5,7 @@ namespace Multiple\Home\Controllers;
 use Asa\Erp\TbBrandgroupchildProperty;
 
 /**
- * 基础资料，ASA颜色模板表
+ * 基础资料，子品类属性关联表
  */
 class BrandgroupchildpropertyController extends ZadminController
 {

@@ -139,4 +139,15 @@ class CompanyController extends AdminController
         // 返回
         return $this->success($return);
     }
+
+    /**
+     * 获取登录用户所属公司的所有会员列表
+     *
+     * @return false|string
+     */
+    public function membersAction()
+    {
+        // 逻辑
+        return $this->success($this->company->members);
+    }
 }

@@ -234,7 +234,7 @@ class CommonController extends BaseController
     }
 
     /**
-     * 公共列表
+     * 公共列表, 对应路由l/模块名称, 比如l/user, l/sales等等。
      */
     public function listAction()
     {

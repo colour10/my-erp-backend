@@ -3,7 +3,7 @@
 namespace Asa\Erp;
 
 /**
- * 基础资料，商品尺寸表
+ * 基础资料，子品类属性关联表
  *
  * Class TbBrandgroupchildProperty
  * @package Asa\Erp

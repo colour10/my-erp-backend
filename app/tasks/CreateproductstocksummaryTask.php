@@ -4,7 +4,7 @@ use Asa\Erp\TbProductstockSummary;
 use Phalcon\Cli\Task;
 
 /**
- * 生成新的 productstock_summary 记录，只是把缺少的字段补齐而已
+ * 生成新的 productstock_summary 记录，只是把缺少的字段补齐而已，其中shipping_number可以为负数
  *
  * Class CreateproductstocksummaryTask
  */
@@ -59,6 +59,7 @@ class CreateproductstocksummaryTask extends Task
                 ";
         // 获取所有记录
         $productStocks = $this->modelsManager->executeQuery($sql)->toArray();
+
         // 开始无差别写入
         // 先清空查询表
         $this->db->execute('truncate table tb_productstock_summary');

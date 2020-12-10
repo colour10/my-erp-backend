@@ -28,9 +28,6 @@ class ProductstockController extends BaseController
      */
     function searchAction()
     {
-        // 记录 post 的值
-        error_log('post接收到的值为：' . print_r($_POST, true));
-
         // 条件判断
         $conditions = [
             sprintf("companyid=%d", $this->companyid),
@@ -125,7 +122,7 @@ class ProductstockController extends BaseController
 
         // 记录下sql，方便跟踪
         $sql = implode(" and ", $conditions);
-        error_log('库存查询的sql为：' . $sql);
+        $this->logFile->log('库存查询的sql为：' . $sql);
 
         // 需要在库存表中查找，因为要统计每个尺码的数量，所以要对 productid 和 sizecontentid 联合分组, 这个 sql 语句有点复杂，所以这里用原生的来实现
         $result = TbProductstockSummary::find(
@@ -133,7 +130,7 @@ class ProductstockController extends BaseController
         );
 
         // 记录查询的结果，方便追踪
-        error_log('库存查询的 result 的结果为：' . print_r($result->toArray(), true));
+        $this->logFile->log('库存查询的 result 的结果为：'.json_encode($result->toArray()));
 
         // 然后按照 productid 汇总
         $return = Util::getGroupArray(
@@ -182,7 +179,7 @@ class ProductstockController extends BaseController
         );
 
         // 记录查询结果
-        error_log('searchAction查询的结果为：' . print_r($return, true));
+        $this->logFile->log('searchAction查询的结果为：'.json_encode($return));
 
         // 需要处理为原来的格式
         // 把查询的结果按照productid分组

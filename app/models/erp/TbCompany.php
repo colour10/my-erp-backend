@@ -36,6 +36,7 @@ use Phalcon\Mvc\Model\Relation;
  * @property-read TbDepartment|null $departments 部门
  * @property-read TbProduct|null $products 商品
  * @property-read TbWarehouse|null $warehouses 仓库
+ * @property-read TbMember|null $members 会员
  */
 class TbCompany extends BaseModel
 {
@@ -134,6 +135,16 @@ class TbCompany extends BaseModel
             "companyid",
             [
                 'alias' => 'suppliers',
+            ]
+        );
+
+        // 公司-会员，一对多
+        $this->hasMany(
+            "id",
+            TbMember::class,
+            "companyid",
+            [
+                'alias' => 'members',
             ]
         );
     }

@@ -134,13 +134,15 @@ class BrandController extends ZadminController
      */
     public function countriesAction()
     {
-        $sql = sprintf("SELECT distinct countryid FROM tb_brand");
+        // 过滤null和0
+        $sql = sprintf("SELECT distinct countryid FROM tb_brand where countryid is not null and countryid > 0");
         $rows = $this->getDI()->get('db')->fetchAll($sql);
 
         $countryIds = [];
         foreach ($rows as $row) {
             $countryIds[] = $row['countryid'];
         }
+
         $countryIds = implode(',', $countryIds);
         $countries = TbCountry::find([
             sprintf("id IN (%s)", $countryIds),
